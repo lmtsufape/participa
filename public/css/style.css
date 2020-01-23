@@ -1,0 +1,16 @@
+/* 
+color primary: #114048ff
+color secondary: #196572ff
+color dark: #071b1eff
+
+*/
+
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Nunito', sans-serif;
+}
+
+.jumbotron{
+    background: none;
+}
