@@ -10,6 +10,9 @@ body{
     padding: 0;
     font-family: 'Nunito', sans-serif;
 }
+#rowCarrousel{
+    margin-top: 15px;
+}
 
 .jumbotron{
     margin-top: auto;
@@ -28,7 +31,9 @@ body{
     padding-left: 7%;
     padding-right: 7%;
 }
-
+.floatF{
+    float: left;
+}
 .texto{
     height: 70vh;
     display: table-cell;
@@ -48,11 +53,13 @@ body{
 #divModulo2{
     height: 70vh;
     background-color:white;
+    display: table;
 }
 #divModulo3{
     height: 70vh;
     background-color:#114048ff;
     color: white;
+    display: table;
 }
 .rowModulo{
     height: 70vh;
@@ -63,6 +70,7 @@ body{
     margin-bottom: auto;
     padding-left:10px;
     padding-right:7%;
+    justify-content: center;
 }
 
 .textoModuloR{
@@ -91,6 +99,14 @@ body{
     background-color:grey;
     border-radius: 50%;
 }
+.imagemModuloCelular{
+    margin-top:auto;
+    margin-bottom: auto;
+    display: none;
+}
+#none{
+    display: block;
+}
 @media screen and (max-width:576px){
     
     #descSistema p{
@@ -118,5 +134,18 @@ body{
     .imagem{
         width:150px; 
         height:150px;
+    }
+    #none{
+        display: none;
+    }
+    .imagemModuloCelular{
+        display: block;
+        margin-top: 20px;
+    }
+    .imagemCelular{
+        width:150px; 
+        height:150px;
+        background-color:grey;
+        border-radius: 50%;
     }
 }

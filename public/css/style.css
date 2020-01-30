@@ -11,3 +11,7 @@ body{
     font-family: 'Nunito', sans-serif;
 }
 
+.navbar{
+    background-color: #114048ff;
+    color: white;
+}

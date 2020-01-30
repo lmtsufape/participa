@@ -81,7 +81,7 @@
     </div>
 
     {{-- Descrição Módulo 1 --}}
-    <div class="row justify-content-center">
+    <div class="row justify-content">
         <div id="divModulo1" class="col-sm-12">
             <div class="row justify-content-center rowModulo">
               <div class="col-sm-4 imagemModulo">
@@ -113,42 +113,52 @@
     {{-- Descrição Módulo 2 --}}
     <div class="row justify-content-center">
       <div id="divModulo2" class="col-sm-12">
-          <div class="row justify-content-center rowModulo">
-            {{-- Texto --}}
-            <div class="col-sm-8 textoModuloR">
-              <div class="row justify-content-center">
-
-                <h1>Módulo 2</h1>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                  Sed facilisis nisl non lorem tincidunt ultricies. 
-                  Maecenas ullamcorper, justo at egestas congue,
-                  magna est egestas elit, id sollicitudin ipsum lacus non nibh.
-                  Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed, 
-                  porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit 
-                  amet dui dapibus posuere. Maecenas in lorem sem.
-                </p>
+        <div class="row justify-content-center rowModulo">
+            
+          {{-- imagem --}}
+          <div class="col-sm-4 imagemModuloCelular">
+            <div class="row justify-content-center">
+              <div class="imagemCelular">
+                <img src="" alt="">
               </div>
             </div>
+          </div>
+          
+          {{-- Texto --}}
+          <div class="col-sm-8 textoModuloR">
+            <div class="row justify-content-center">
 
-            {{-- imagem --}}
-            <div class="col-sm-4 imagemModulo">
-              <div class="row justify-content-center">
-                <div class="imagem">
-                  <img src="" alt="">
-                </div>
+              <h1>Módulo 2</h1>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                Sed facilisis nisl non lorem tincidunt ultricies. 
+                Maecenas ullamcorper, justo at egestas congue,
+                magna est egestas elit, id sollicitudin ipsum lacus non nibh.
+                Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed, 
+                porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit 
+                amet dui dapibus posuere. Maecenas in lorem sem.
+              </p>
+            </div>
+          </div>
+
+          {{-- imagem --}}
+          <div id="none" class="col-sm-4 imagemModulo">
+            <div class="row justify-content-center">
+              <div class="imagem">
+                <img src="" alt="">
               </div>
             </div>
+          </div>
 
             
-          </div>
+        </div>
       </div>
     </div>
 
   {{-- Descrição Módulo 3 --}}
   <div class="row justify-content-center">
     <div id="divModulo3" class="col-sm-12">
-        <div class="row justify-content-center rowModulo">
+      <div class="row justify-content-center rowModulo">
           <div class="col-sm-4 imagemModulo">
             <div class="row justify-content-center">
               <div class="imagem">
@@ -182,12 +192,16 @@
 
 @section('javascript')
 <script type="application/javascript">
+  
+ 
+  
   $(function(){
 
     // Função que leva para div específica ao clicar no botão
     autoScroll();
-
+    
   });
+
 
   function autoScroll(){
     $("#modulo1").click(function(){
@@ -208,6 +222,7 @@
         'slow');
     });
   }
+
 
 </script>
 
