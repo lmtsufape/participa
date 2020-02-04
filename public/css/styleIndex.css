@@ -57,6 +57,7 @@ body{
 .info-modulo-body{
     height: 200px;
     background-color: #ccc ;
+    margin-top: -5%;
     /* color: #fff; */
 
 }
