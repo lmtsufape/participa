@@ -76,10 +76,14 @@
                 </div>
             </div>
         </nav>
-       
-        <main class="container-fluid">
-            @yield('content')
-        </main>
+
+        @hasSection ('sidebar')
+            @yield('sidebar')
+        @endif
+
+        {{-- <main class="container-fluid"> --}}
+        @yield('content')
+        {{-- </main> --}}
 
         @hasSection ('javascript')
             @yield('javascript')

@@ -23,6 +23,11 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+// rotas de teste
 Route::get('/coordenador/home',function(){
     return view('coordenador.home');
 })->name('coord.home');
+
+Route::get('/coordenador/evento/detalhes',function(){
+    return view('coordenador.detalhesEvento');
+})->name('coord.detalhesEvento');
