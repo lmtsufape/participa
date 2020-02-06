@@ -16,7 +16,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'cpf', 'instituicao', 'celular',
+        'especProfissional', 'enderecoId',
     ];
 
     /**
@@ -36,4 +37,37 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function trabalho(){
+        $this->hasMany('App\Trabalho', 'autorId');
+    }
+
+    public function coautor(){
+        $this->hasMany('App\Coautor', 'autorId');
+    }
+
+    public function parecer(){
+        $this->hasMany('App\Parecer', 'revisorId');
+    }
+
+    public function atribuicao(){
+        $this->hasMany('App\Atribuicao', 'revisorId');
+    }
+
+    public function pertence(){
+        $this->hasMany('App\Pertence', 'revisorId');
+    }
+
+    public function recurso(){
+        $this->hasMany('App\Recurso', 'comissaoId');
+    }
+
+    public function mensagem(){
+        $this->hasMany('App\Mensagem', 'comissaoId');
+    }
+
+    public function endereco(){
+        $this->belongsTo('App\Endereco', 'enderecoId');
+    }
+
 }
