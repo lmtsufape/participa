@@ -3,227 +3,249 @@
 @section('content')
 
 <div class="content">
-    <div id="rowCarrousel"class="row justify-content-center">
-        <div class="col-sm-12">
-            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                <ol class="carousel-indicators">
-                  <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                  <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                  <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                </ol>
-                <div class="carousel-inner">
-                  <div class="carousel-item active">
-                      <img class="d-block w-100" src="{{asset('img/colorscheme.png')}}" alt="First slide">
-                      <div class="carousel-caption d-none d-md-block">
-                        {{-- Jumbotron Explicando resumidamente o Módulo --}}
-                        <div class="jumbotron" style="background:none">
-                            <h1 class="display-4">Primeiro Módulo</h1>
-                            <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-                            <p class="lead">
-                              <a class="btn btn-outline-light btn-lg"  id="modulo1" href="#" role="button">Saber mais</a>
-                            </p>
-                        </div>{{-- End Jumbotron--}}
-                      </div>
-                  </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="{{asset('img/colorscheme.png')}}" alt="Second slide">
-                    <div class="carousel-caption d-none d-md-block">
-                        {{-- Jumbotron Explicando resumidamente o Módulo --}}
-                        <div class="jumbotron" style="background:none">
-                            <h1 class="display-4">Segundo Módulo</h1>
-                            <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-                            <p class="lead">
-                              <a class="btn btn-outline-light btn-lg" id="modulo2" href="#" role="button">Saber mais</a>
-                            </p>
-                        </div>{{-- End Jumbotron--}}
-                      </div>
-                  </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="{{asset('img/colorscheme.png')}}" alt="Third slide">
-                    <div class="carousel-caption d-none d-md-block">
-                        {{-- Jumbotron Explicando resumidamente o Módulo --}}
-                        <div class="jumbotron" style="background:none">
-                            <h1 class="display-4">Terceiro Módulo</h1>
-                            <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-                            <p class="lead">
-                              <a class="btn btn-outline-light btn-lg" id="modulo3" href="#" role="button">Saber mais</a>
-                            </p>
-                        </div>{{-- End Jumbotron--}}
-                      </div>
-                  </div>
-                </div>
-                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Next</span>
-                </a>
-              </div>
-        </div>
+   <div class="row justify-content-center curved" style="margin-bottom:-5px">
+    <div class=" col-sm-8 text">
+      <h1>Nome do Sistema</h1>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Quisque sit amet rutrum arcu, et rutrum arcu. Nam vitae suscipit leo. 
+        Donec vestibulum laoreet lacinia. Aenean ultricies est odio, non venenatis lorem mattis a. 
+        Maecenas aliquet neque felis, a malesuada nisi blandit lobortis. 
+        Suspendisse a ultrices libero, eleifend dignissim neque.
+      </p>
     </div>
-    {{-- Descrição Geral do Sistema --}}
-    <div class="row justify-content-center">
-      <div id="descSistema" class="col-sm-12">
-        <div class="texto">
-          <h1>Nome do sistema</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-            Sed facilisis nisl non lorem tincidunt ultricies. 
-            Maecenas ullamcorper, justo at egestas congue,
-             magna est egestas elit, id sollicitudin ipsum lacus non nibh.
-              Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed, 
-              porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit 
-              amet dui dapibus posuere. Maecenas in lorem sem.</p>
-
-        </div>
-      </div>
+    <div class="col-sm-4">
+      <img src="{{asset('img/pc.png')}}" alt="">
     </div>
+    <a class="btn btn-outline-light btn-lg"  id="modulo1" href="#" 
+    style="margin-bottom:10px;" role="button" data-toggle="modal" data-target="#modalLogin">Criar Evento</a>
+  </div>
 
-    {{-- Descrição Módulo 1 --}}
-    <div class="row justify-content">
-        <div id="divModulo1" class="col-sm-12">
-            <div class="row justify-content-center rowModulo">
-              <div class="col-sm-4 imagemModulo">
-                <div class="row justify-content-center">
-                  <div class="imagem">
-                    <img src="" alt="">
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-8 textoModulo">
-                <div class="row justify-content-center">
-
-                  <h1>Módulo 1</h1>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                    Sed facilisis nisl non lorem tincidunt ultricies. 
-                    Maecenas ullamcorper, justo at egestas congue,
-                    magna est egestas elit, id sollicitudin ipsum lacus non nibh.
-                    Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed, 
-                    porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit 
-                    amet dui dapibus posuere. Maecenas in lorem sem.
-                  </p>
-                </div>
-              </div>
-            </div>
-        </div>
+  
+  <div class="row justify-content-center" style="margin-bottom:5%">
+    <div class="col-sm-12" style="padding:0">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#114048ff" 
+        fill-opacity="1" d="M0,288L80,261.3C160,235,320,181,480,176C640,171,800,213,960,
+        218.7C1120,224,1280,192,1360,176L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,
+        0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+      </svg>
     </div>
-
-    {{-- Descrição Módulo 2 --}}
-    <div class="row justify-content-center">
-      <div id="divModulo2" class="col-sm-12">
-        <div class="row justify-content-center rowModulo">
-            
-          {{-- imagem --}}
-          <div class="col-sm-4 imagemModuloCelular">
-            <div class="row justify-content-center">
-              <div class="imagemCelular">
-                <img src="" alt="">
-              </div>
-            </div>
-          </div>
-          
-          {{-- Texto --}}
-          <div class="col-sm-8 textoModuloR">
-            <div class="row justify-content-center">
-
-              <h1>Módulo 2</h1>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Sed facilisis nisl non lorem tincidunt ultricies. 
-                Maecenas ullamcorper, justo at egestas congue,
-                magna est egestas elit, id sollicitudin ipsum lacus non nibh.
-                Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed, 
-                porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit 
-                amet dui dapibus posuere. Maecenas in lorem sem.
-              </p>
-            </div>
-          </div>
-
-          {{-- imagem --}}
-          <div id="none" class="col-sm-4 imagemModulo">
-            <div class="row justify-content-center">
-              <div class="imagem">
-                <img src="" alt="">
-              </div>
-            </div>
-          </div>
-
-            
-        </div>
-      </div>
-    </div>
-
-  {{-- Descrição Módulo 3 --}}
-  <div class="row justify-content-center">
-    <div id="divModulo3" class="col-sm-12">
-      <div class="row justify-content-center rowModulo">
-          <div class="col-sm-4 imagemModulo">
-            <div class="row justify-content-center">
-              <div class="imagem">
-                <img src="" alt="">
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-8 textoModulo">
-            <div class="row justify-content-center">
-
-              <h1>Módulo 3</h1>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Sed facilisis nisl non lorem tincidunt ultricies. 
-                Maecenas ullamcorper, justo at egestas congue,
-                magna est egestas elit, id sollicitudin ipsum lacus non nibh.
-                Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed, 
-                porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit 
-                amet dui dapibus posuere. Maecenas in lorem sem.
-              </p>
-            </div>
-          </div>
-        </div>
-    </div>
-</div>
-    
+  </div>
         
-</div>
 
-@endsection
+  <div class="row justify-content-center" style="padding:0 5% 0 5%">
+    <div class="col-sm-4">
+      <div class="info-modulo">
+        <div class="info-modulo-head">
+          <img src="{{asset('img/iphone.png')}}" alt="">
+          <h1>Módulo 1</h1>
+          
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ccc" fill-opacity="1" d="M0,224L120,213.3C240,203,480,181,720,160C960,139,1200,117,1320,106.7L1440,96L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
+        <div class="info-modulo-body">
 
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Proin nec volutpat urna, et interdum turpis. Ut aliquam quis 
+            tortor sit amet scelerisque. Etiam vehicula nulla a odio 
+            imperdiet dictum. In id pretium nisi. In sed nisi sit amet 
+            dolor suscipit mollis eu ut sapien. Nam id velit at libero varius cursus. </p>
+          </div>
+      </div>
+    </div>
+
+    <div class="col-sm-4">
+      <div class="info-modulo">
+        <div class="info-modulo-head">
+          <img src="{{asset('img/iphone.png')}}" alt="">
+          <h1>Módulo 2</h1>
+          
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ccc" fill-opacity="1" d="M0,224L120,213.3C240,203,480,181,720,160C960,139,1200,117,1320,106.7L1440,96L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
+        <div class="info-modulo-body">
+
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Proin nec volutpat urna, et interdum turpis. Ut aliquam quis 
+            tortor sit amet scelerisque. Etiam vehicula nulla a odio 
+            imperdiet dictum. In id pretium nisi. In sed nisi sit amet 
+            dolor suscipit mollis eu ut sapien. Nam id velit at libero varius cursus. </p>
+          </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="info-modulo">
+        <div class="info-modulo-head">
+          <img src="{{asset('img/iphone.png')}}" alt="">
+          <h1>Módulo 3</h1>
+          
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ccc" fill-opacity="1" d="M0,224L120,213.3C240,203,480,181,720,160C960,139,1200,117,1320,106.7L1440,96L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
+        <div class="info-modulo-body">
+
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Proin nec volutpat urna, et interdum turpis. Ut aliquam quis 
+            tortor sit amet scelerisque. Etiam vehicula nulla a odio 
+            imperdiet dictum. In id pretium nisi. In sed nisi sit amet 
+            dolor suscipit mollis eu ut sapien. Nam id velit at libero varius cursus. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Modal Login-->
+  <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="modalLogin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <form method="POST" action="{{ route('login') }}">
+            @csrf
+
+            <div class="row justify-content-center">
+                <div class="titulo-login-cadastro">Login</div>
+            </div>
+
+            <div class="form-group row">
+                
+                <div class="col-md-12">
+                    <label for="email" class="col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+                    @error('email')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="form-group row">
+                
+                <div class="col-md-12">
+                    <label for="password" class="col-form-label text-md-right">{{ __('Password') }}</label>
+                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+
+                    @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+
+                        <label class="form-check-label" for="remember">
+                            {{ __('Remember Me') }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row mb-0">
+                
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary" style="width:100%">
+                        {{ __('Login') }}
+                    </button>
+                    <div class="row justify-content-center">
+                    
+                        @if (Route::has('password.request'))
+                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                            {{ __('Forgot Your Password?') }}
+                        </a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Modal Cadastro-->
+    <div class="modal fade" id="modalCadastro" tabindex="-1" role="dialog" aria-labelledby="modalCadastro" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <form method="POST" action="{{ route('register') }}">
+              @csrf
+
+              <div class="row justify-content-center">
+                  <div class="titulo-login-cadastro">Cadastro</div>
+              </div>
+
+              <div class="form-group row">
+                  
+                  <div class="col-md-12">
+                      <label for="name" class="col-form-label">{{ __('Name') }}</label>
+                      <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+
+                      @error('name')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                      @enderror
+                  </div>
+              </div>
+
+              <div class="form-group row">
+                  
+                  <div class="col-md-12">
+                      <label for="email" class="col-form-label">{{ __('E-Mail Address') }}</label>
+                      <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+
+                      @error('email')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                      @enderror
+                  </div>
+              </div>
+
+              <div class="form-group row">
+                  
+                  <div class="col-md-12">
+                      <label for="password" class="col-form-label">{{ __('Password') }}</label>
+                      <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+
+                      @error('password')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                      @enderror
+                  </div>
+              </div>
+
+              <div class="form-group row">
+                  
+                  <div class="col-md-12">
+                      <label for="password-confirm" class="col-form-label">{{ __('Confirm Password') }}</label>
+                      <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                  </div>
+              </div>
+
+              <div class="form-group row mb-0">
+                  <div class="col-md-12">
+                      <button type="submit" class="btn btn-primary" style="width:100%">
+                          {{ __('Register') }}
+                      </button>
+                  </div>
+              </div>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  @endsection
+  
 @section('javascript')
-<script type="application/javascript">
   
- 
-  
-  $(function(){
-
-    // Função que leva para div específica ao clicar no botão
-    autoScroll();
-    
-  });
-
-
-  function autoScroll(){
-    $("#modulo1").click(function(){
-      $('html,body').animate({
-        scrollTop: $('#divModulo1').offset().top},
-        'slow');
-    });
-
-    $("#modulo2").click(function(){
-      $('html,body').animate({
-        scrollTop: $('#divModulo2').offset().top},
-        'slow');
-    });
-
-    $("#modulo3").click(function(){
-      $('html,body').animate({
-        scrollTop: $('#divModulo3').offset().top},
-        'slow');
-    });
-  }
-
-
-</script>
 
 @endsection

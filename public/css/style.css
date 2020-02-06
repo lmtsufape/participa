@@ -24,6 +24,10 @@ body{
     background-color: #196572ff;
     border-color: #196572ff;
 }
+
+.rounded{
+    border-radius: 50%;
+}
 .card-login-cadastro{
     margin-top: 7vh;
 }
