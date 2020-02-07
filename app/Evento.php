@@ -15,7 +15,7 @@ class Evento extends Model
       'nome', 'numeroParticipantes', 'tipo', 'dataInicio', 'dataFim',
       'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao',
       'inicioResultado', 'fimResultado', 'possuiTaxa', 'valorTaxa', 'fotoEvento',
-      'enderecoId',
+      'enderecoId', 'coordenadorId',
   ];
 
   public function endereco(){
@@ -28,5 +28,9 @@ class Evento extends Model
 
   public function area(){
       $this->hasOne('App\Area', 'eventoId');
+  }
+
+  public function coordenador(){
+      $this->belongsTo('App\User');
   }
 }

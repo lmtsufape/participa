@@ -68,6 +68,7 @@ class EventoController extends Controller
           'possuiTaxa'          => ['required', 'boolean'],
           'valorTaxa'           => ['required', 'integer'],
           'fotoEvento'          => ['file'],
+          'isCoordenador'       => ['required', 'boolean'],
         }
 
         // validacao normal
@@ -87,6 +88,7 @@ class EventoController extends Controller
           'possuiTaxa'          => ['required', 'boolean'],
           'valorTaxa'           => ['required', 'integer'],
           'fotoEvento'          => ['file'],
+          'isCoordenador'       => ['required', 'boolean'],
         ]);
 
         // validar endereco
@@ -134,6 +136,13 @@ class EventoController extends Controller
           $nome = $count . ".pdf";
           Storage::putFileAs($path, $file, $nome);
           $evento->fotoEvento = $path . $nome;
+          $evento->save();
+        }
+
+        // se vou me tornar coordenador do Evento
+
+        if($request->isCoordenador == true){
+          $evento->coordenadorId = Auth::user()->id;
           $evento->save();
         }
 

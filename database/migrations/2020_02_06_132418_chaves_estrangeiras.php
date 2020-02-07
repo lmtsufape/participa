@@ -54,6 +54,9 @@ class ChavesEstrangeiras extends Migration
       Schema::table('eventos', function (Blueprint $table) {
           $table->foreign('enderecoId')->references('id')->on('enderecos');
       });
+      Schema::table('eventos', function (Blueprint $table) {
+          $table->foreign('coordenadorId')->references('id')->on('users');
+      });
 
       //------------------------------------------------------------------------
 

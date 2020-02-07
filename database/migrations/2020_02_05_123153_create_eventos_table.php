@@ -31,7 +31,8 @@ class CreateEventosTable extends Migration
             $table->double('valorTaxa');
             $table->string('fotoEvento')->nullable();
 
-            $table->integer('enderecoId');
+            $table->integer('enderecoId')->nullable();
+            $table->integer('coordenadorId')->nullable();
         });
     }
 

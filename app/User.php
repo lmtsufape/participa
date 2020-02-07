@@ -71,4 +71,8 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->belongsTo('App\Endereco', 'enderecoId');
     }
 
+    public function evento(){
+        $this->hasMany('App\Evento', 'coordenadorId');
+    }
+
 }
