@@ -15,6 +15,11 @@
                     @endif
 
                     You are logged in!
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a class="btn btn-primary" href="{{route('perfil')}}">Perfil</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

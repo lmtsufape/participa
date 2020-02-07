@@ -29,3 +29,4 @@ Route::get('/coordenador/evento/detalhes',function(){
 })->name('coord.detalhesEvento');
 
 Route::get('/perfil','UserController@perfil')->name('perfil');
+Route::post('/perfil','UserController@editarPerfil')->name('perfil');
