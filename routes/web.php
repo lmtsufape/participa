@@ -19,10 +19,6 @@ Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
 // rotas de teste
 Route::get('/coordenador/home',function(){
     return view('coordenador.home');

@@ -29,7 +29,7 @@ class CreateEventosTable extends Migration
             $table->date('fimResultado');
             $table->boolean('possuiTaxa');
             $table->double('valorTaxa');
-            $table->string('fotoEvento');
+            $table->string('fotoEvento')->nullable();
 
             $table->integer('enderecoId');
         });
