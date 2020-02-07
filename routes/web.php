@@ -27,3 +27,5 @@ Route::get('/coordenador/home',function(){
 Route::get('/coordenador/evento/detalhes',function(){
     return view('coordenador.detalhesEvento');
 })->name('coord.detalhesEvento');
+
+Route::get('/perfil','UserController@perfil')->name('perfil');
