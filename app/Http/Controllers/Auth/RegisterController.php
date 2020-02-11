@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use App\User;
+use App\Endereco;
 class RegisterController extends Controller
 {
     /*
@@ -49,10 +50,23 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        
+
+
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'cpf' => ['required'],
+            'celular' => ['required','integer'],
+            'instituicao' => ['required','string','max:255'],
+            // 'especProfissional' => [],
+            'rua' => ['required','string','max:255'],
+            'numero' => ['required','integer'],
+            'bairro' => ['required','string','max:255'],
+            'cidade' => ['required','string','max:255'],
+            'uf' => ['required','string'],
+            'cep' => ['required','integer'],
         ]);
     }
 
@@ -64,10 +78,32 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        
+        // endereço
+        $end = new Endereco();
+        $end->rua = $data['rua'];
+        $end->numero = $data['numero'];
+        $end->bairro = $data['bairro'];
+        $end->cidade = $data['cidade'];
+        $end->uf = $data['uf'];
+        $end->cep = $data['cep'];
+
+        $end->save();
+        // dd($end)
+
+        $user = new User();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->password = bcrypt($data['password']);
+        $user->cpf = $data['cpf'];
+        $user->celular = $data['celular'];
+        $user->instituicao = $data['instituicao'];
+        $user->especProfissional = $data['especProfissional'];
+        $user->enderecoId = $end->id;
+        $user->save();
+        
+
+        return view('index');
+        
     }
 }
