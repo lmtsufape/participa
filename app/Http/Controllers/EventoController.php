@@ -6,19 +6,18 @@ use App\Evento;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use App\Endereco;
 
 class EventoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //
-        return view('evento.criarEvento');
+        $eventos = Evento::all();
+        // dd($eventos);
+        return view('coordenador.home',['eventos'=>$eventos]);
+        
     }
 
     /**
@@ -29,6 +28,7 @@ class EventoController extends Controller
     public function create()
     {
         //
+        return view('evento.criarEvento');
     }
 
     /**
@@ -128,6 +128,7 @@ class EventoController extends Controller
           'possuiTaxa'          => $request->possuiTaxa,
           'valorTaxa'           => $request->valorTaxa,
           'enderecoId'          => $endereco->id,
+          'coordenadorId'       => Auth::user()->id,
         ]);
 
         // se o evento tem foto
@@ -143,10 +144,10 @@ class EventoController extends Controller
 
         // se vou me tornar coordenador do Evento
 
-        if($request->isCoordenador == true){
-          $evento->coordenadorId = Auth::user()->id;
-          $evento->save();
-        }
+        // if($request->isCoordenador == true){
+        //   $evento->coordenadorId = Auth::user()->id;
+        //   $evento->save();
+        // }
 
         return redirect()->route('coord.home');
     }

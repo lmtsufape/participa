@@ -154,13 +154,8 @@
         
         {{-- isCoordenador | Foto Evento --}}
         <div class="row justify-content-center">
-            <div class="col-sm-6">
-                <div class="form-check">
-                    <input name="isCoordenador" type="checkbox" class="form-check-input" id="isCoordenador" value="true">
-                    <label class="form-check-label" for="isCoordenador">Quero Ser coordenador</label>
-                </div>    
-            </div>
-            <div class="col-sm-6">
+            
+            <div class="col-sm-12">
                 <div class="form-group">
                     <label for="fotoEvento">Foto do Evento</label>
                     <input type="file" class="form-control-file @error('isCoordenador') is-invalid @enderror" name="isCoordenador" value="{{ old('isCoordenador') }}" id="fotoEvento">

@@ -8,22 +8,25 @@
     </div>
     <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
 
-    <div class="row justify-content-center">
+    <div class="row">
 
-        @for ($i = 0; $i < 10; $i++)
-            
+        
+        @foreach ($eventos as $evento)
             <div class="card" style="width: 18rem;">
                 <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h4 class="card-title">Nome do Evento</h4>
-                    <p class="card-text">Data: 02/02/2020</p>
-                    <p class="card-text">Status: Revisão</p>
+                    <h4 class="card-title">{{$evento->nome}}</h4>
+                    <p class="card-text">
+                        <strong>Início:</strong> {{$evento->dataInicio}}<br>
+                        <strong>Fim:</strong> {{$evento->dataFim}}<br>
+                        <strong>Número de Vagas:</strong> {{$evento->numeroParticipantes}}
+                    </p>
                     
-                    <a href="#" class="btn btn-primary">Ver Detalhes</a>
+                    
+                    <a href="" class="btn btn-primary">Ver Detalhes</a>
                 </div>
             </div>
-
-        @endfor
+        @endforeach
     </div>
 
 </div>
