@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row titulo">        
+    <div class="row titulo">
         <h1>{Novo Evento}</h1>
     </div>
 
@@ -13,7 +13,7 @@
             <div class="col-sm-6">
                 <label for="nome" class="col-form-label">{{ __('Nome do Evento') }}</label>
                 <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
-                
+
                 @error('nome')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -24,7 +24,7 @@
             <div class="col-sm-3">
                 <label for="numeroParticipantes" class="col-form-label">{{ __('N° de Participantes') }}</label>
                 <input id="numeroParticipantes" type="number" class="form-control @error('numeroParticipantes') is-invalid @enderror" name="numeroParticipantes" value="{{ old('numeroParticipantes') }}" required autocomplete="numeroParticipantes" autofocus>
-                
+
                 @error('numeroParticipantes')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -35,7 +35,7 @@
             <div class="col-sm-3">
                 <label for="tipo" class="col-form-label">{{ __('Tipo do Evento') }}</label>
                 <input id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" value="{{ old('tipo') }}" required autocomplete="tipo" autofocus>
-                
+
                 @error('tipo')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -49,7 +49,7 @@
             <div class="col-sm-3">
                 <label for="dataInicio" class="col-form-label">{{ __('Início do Evento') }}</label>
                 <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror" name="dataInicio" value="{{ old('dataInicio') }}" required autocomplete="dataInicio" autofocus>
-                
+
                 @error('dataInicio')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -59,7 +59,7 @@
             <div class="col-sm-3">
                 <label for="dataFim" class="col-form-label">{{ __('Fim do Evento') }}</label>
                 <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror" name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim" autofocus>
-                
+
                 @error('dataFim')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -69,7 +69,7 @@
             <div class="col-sm-3">
                 <label for="inicioSubmissao" class="col-form-label">{{ __('Início da Submissão') }}</label>
                 <input id="inicioSubmissao" type="date" class="form-control @error('inicioSubmissao') is-invalid @enderror" name="inicioSubmissao" value="{{ old('inicioSubmissao') }}" required autocomplete="inicioSubmissao" autofocus>
-                
+
                 @error('inicioSubmissao')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -79,7 +79,7 @@
             <div class="col-sm-3">
                 <label for="fimSubmissao" class="col-form-label">{{ __('Fim da Submissão') }}</label>
                 <input id="fimSubmissao" type="date" class="form-control @error('fimSubmissao') is-invalid @enderror" name="fimSubmissao" value="{{ old('fimSubmissao') }}" required autocomplete="fimSubmissao" autofocus>
-                
+
                 @error('fimSubmissao')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -87,13 +87,13 @@
                 @enderror
             </div>
         </div>{{-- end dataInicio | dataFim | inicioSubmissao | fimSubmissao --}}
-        
+
         {{-- inicioRevisao | fimRevisao | inicioResultado | fimResultado--}}
         <div class="row justify-content-center">
             <div class="col-sm-3">
                 <label for="inicioRevisao" class="col-form-label">{{ __('Início da Revisão') }}</label>
                 <input id="inicioRevisao" type="date" class="form-control @error('inicioRevisao') is-invalid @enderror" name="inicioRevisao" value="{{ old('inicioRevisao') }}" required autocomplete="inicioRevisao" autofocus>
-                
+
                 @error('inicioRevisao')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -103,7 +103,7 @@
             <div class="col-sm-3">
                 <label for="fimRevisao" class="col-form-label">{{ __('Fim da Revisão') }}</label>
                 <input id="fimRevisao" type="date" class="form-control @error('fimRevisao') is-invalid @enderror" name="fimRevisao" value="{{ old('fimRevisao') }}" required autocomplete="fimRevisao" autofocus>
-                
+
                 @error('fimRevisao')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -113,7 +113,7 @@
             <div class="col-sm-3">
                 <label for="inicioResultado" class="col-form-label">{{ __('Início do Resultado') }}</label>
                 <input id="inicioResultado" type="date" class="form-control @error('inicioResultado') is-invalid @enderror" name="inicioResultado" value="{{ old('inicioResultado') }}" required autocomplete="inicioResultado" autofocus>
-                
+
                 @error('inicioResultado')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -123,7 +123,7 @@
             <div class="col-sm-3">
                 <label for="fimResultado" class="col-form-label">{{ __('Fim do Resultado') }}</label>
                 <input id="fimResultado" type="date" class="form-control @error('fimResultado') is-invalid @enderror" name="fimResultado" value="{{ old('fimResultado') }}" required autocomplete="fimResultado" autofocus>
-                
+
                 @error('fimResultado')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -139,11 +139,16 @@
                     <input name="possuiTaxa" type="checkbox" class="form-check-input" id="possuiTaxa" value="true">
                     <label class="form-check-label" for="possuiTaxa">Possui taxa de Inscrição</label>
                 </div>
+                @error('possuiTaxa')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
             </div>
             <div class="col-sm-6">
                 <label for="valorTaxa" class="col-form-label">{{ __('Valor da Taxa') }}</label>
                 <input id="valorTaxa" type="number" class="form-control @error('valorTaxa') is-invalid @enderror" name="valorTaxa" value="{{ old('valorTaxa') }}" required autocomplete="valorTaxa" autofocus>
-                
+
                 @error('valorTaxa')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -151,10 +156,10 @@
                 @enderror
             </div>
         </div>{{-- possuiTaxa | valorTaxa --}}
-        
+
         {{-- isCoordenador | Foto Evento --}}
         <div class="row justify-content-center">
-            
+
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="fotoEvento">Foto do Evento</label>
@@ -173,7 +178,7 @@
             <div class="col-sm-6">
                 <label for="rua" class="col-form-label">{{ __('Rua') }}</label>
                 <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" value="{{ old('rua') }}" required autocomplete="rua" autofocus>
-                
+
                 @error('rua')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -183,7 +188,7 @@
             <div class="col-sm-2">
                 <label for="numero" class="col-form-label">{{ __('Número') }}</label>
                 <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" value="{{ old('numero') }}" required autocomplete="numero" autofocus>
-                
+
                 @error('numero')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -193,21 +198,21 @@
             <div class="col-sm-4">
                 <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
                 <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" value="{{ old('bairro') }}" required autocomplete="bairro" autofocus>
-                
+
                 @error('bairro')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
             </div>
-            
+
         </div>{{--end Rua | Número | Bairro --}}
 
         <div class="row justify-content-center">
             <div class="col-sm-4">
                 <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
                 <input id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" value="{{ old('cidade') }}" required autocomplete="cidade" autofocus>
-                
+
                 @error('cidade')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -247,7 +252,7 @@
                     <option value="SE">Sergipe</option>
                     <option value="TO">Tocantins</option>
                 </select>
-                
+
                 @error('uf')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -257,7 +262,7 @@
             <div class="col-sm-4">
                 <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
                 <input id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" value="{{ old('cep') }}" required autocomplete="cep" autofocus>
-                
+
                 @error('cep')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
