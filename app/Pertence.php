@@ -16,10 +16,10 @@ class Pertence extends Model
   ];
 
   public function user(){
-      $this->belongsTo('App\User', 'revisorId');
+      return $this->belongsTo('App\User', 'revisorId');
   }
 
   public function area(){
-      $this->belongsTo('App\Area', 'areaId');
+      return $this->belongsTo('App\Area', 'areaId');
   }
 }

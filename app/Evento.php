@@ -19,18 +19,18 @@ class Evento extends Model
   ];
 
   public function endereco(){
-      $this->belongsTo('App\Endereco', 'enderecoId');
+      return $this->belongsTo('App\Endereco', 'enderecoId');
   }
 
   public function atividade(){
-      $this->hasOne('App\Atividade', 'eventoId');
+      return $this->hasOne('App\Atividade', 'eventoId');
   }
 
   public function area(){
-      $this->hasOne('App\Area', 'eventoId');
+      return $this->hasOne('App\Area', 'eventoId');
   }
 
   public function coordenador(){
-      $this->belongsTo('App\User');
+      return $this->belongsTo('App\User', 'coordenadorId');
   }
 }

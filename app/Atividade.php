@@ -16,6 +16,6 @@ class Atividade extends Model
   ];
 
   public function evento(){
-      $this->belongsTo('App\Evento', 'eventoId');
+      return $this->belongsTo('App\Evento', 'eventoId');
   }
 }

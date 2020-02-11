@@ -40,39 +40,39 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     public function trabalho(){
-        $this->hasMany('App\Trabalho', 'autorId');
+        return $this->hasMany('App\Trabalho', 'autorId');
     }
 
     public function coautor(){
-        $this->hasMany('App\Coautor', 'autorId');
+        return $this->hasMany('App\Coautor', 'autorId');
     }
 
     public function parecer(){
-        $this->hasMany('App\Parecer', 'revisorId');
+        return $this->hasMany('App\Parecer', 'revisorId');
     }
 
     public function atribuicao(){
-        $this->hasMany('App\Atribuicao', 'revisorId');
+        return $this->hasMany('App\Atribuicao', 'revisorId');
     }
 
     public function pertence(){
-        $this->hasMany('App\Pertence', 'revisorId');
+        return $this->hasMany('App\Pertence', 'revisorId');
     }
 
     public function recurso(){
-        $this->hasMany('App\Recurso', 'comissaoId');
+        return $this->hasMany('App\Recurso', 'comissaoId');
     }
 
     public function mensagem(){
-        $this->hasMany('App\Mensagem', 'comissaoId');
+        return $this->hasMany('App\Mensagem', 'comissaoId');
     }
 
     public function endereco(){
-        $this->belongsTo('App\Endereco', 'enderecoId');
+        return $this->belongsTo('App\Endereco', 'enderecoId');
     }
 
     public function evento(){
-        $this->hasMany('App\Evento', 'coordenadorId');
+        return $this->hasMany('App\Evento', 'coordenadorId');
     }
 
 }

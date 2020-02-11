@@ -16,10 +16,10 @@ class Coautor extends Model
   ];
 
   public function user(){
-      $this->belongsTo('App\User', 'autorId');
+      return $this->belongsTo('App\User', 'autorId');
   }
 
   public function trabalho(){
-      $this->belongsTo('App\Trabalho', 'trabalhoId');
+      return $this->belongsTo('App\Trabalho', 'trabalhoId');
   }
 }

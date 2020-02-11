@@ -16,34 +16,34 @@ class Trabalho extends Model
   ];
 
   public function recurso(){
-      $this->hasMany('App\Recurso', 'trabalhoId');
+      return $this->hasMany('App\Recurso', 'trabalhoId');
   }
 
   public function arquivo(){
-      $this->hasMany('App\Arquivo', 'trabalhoId');
+      return $this->hasMany('App\Arquivo', 'trabalhoId');
   }
 
   public function modalidade(){
-      $this->belongsTo('App\Modalidade', 'modalidadeId');
+      return $this->belongsTo('App\Modalidade', 'modalidadeId');
   }
 
   public function area(){
-      $this->belongsTo('App\Area', 'areaId');
+      return $this->belongsTo('App\Area', 'areaId');
   }
 
   public function autor(){
-      $this->belongsTo('App\User', 'autorId');
+      return $this->belongsTo('App\User', 'autorId');
   }
 
   public function coautor(){
-      $this->hasMany('App\Coautor', 'trabalhoId');
+      return $this->hasMany('App\Coautor', 'trabalhoId');
   }
 
   public function parecer(){
-      $this->hasMany('App\Parecer', 'trabalhoId');
+      return $this->hasMany('App\Parecer', 'trabalhoId');
   }
 
   public function atribuicao(){
-      $this->hasMany('App\Atribuicao', 'trabalhoId');
+      return $this->hasMany('App\Atribuicao', 'trabalhoId');
   }
 }
