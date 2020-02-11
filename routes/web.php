@@ -42,3 +42,5 @@ Route::delete('/evento/excluir/{id}','EventoController@destroy')->name('evento.d
 Route::get('/evento/editar/{id}','EventoController@edit')->name('evento.editar');
 Route::post('/evento/editar/{id}','EventoController@update')->name('evento.editar');
 
+// Cadastrar Comissão
+Route::post('/evento/cadastrarComissao','ComissaoController@store')->name('cadastrar.comissao');

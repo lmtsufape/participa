@@ -87,12 +87,12 @@
         @yield('content')
         {{-- </main> --}}
 
-        @hasSection ('javascript')
-            @yield('javascript')
-        @else
-        @endif
-    
+        
     </div>
+    @hasSection ('javascript')
+        @yield('javascript')
+    @else
+    @endif
 
     
 </body>
