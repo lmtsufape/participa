@@ -16,10 +16,10 @@ class Endereco extends Model
   ];
 
   public function user(){
-      $this->hasOne('App\User', 'enderecoId');
+      return $this->hasOne('App\User', 'enderecoId');
   }
 
   public function evento(){
-      $this->hasOne('App\Evento', 'enderecoId');
+      return $this->hasOne('App\Evento', 'enderecoId');
   }
 }

@@ -16,10 +16,10 @@ class Recurso extends Model
   ];
 
   public function trabalho(){
-      $this->belongsTo('App\Trabalho', 'trabalhoId');
+      return $this->belongsTo('App\Trabalho', 'trabalhoId');
   }
 
   public function user(){
-      $this->belongsTo('App\User', 'comissaoId');
+      return $this->belongsTo('App\User', 'comissaoId');
   }
 }

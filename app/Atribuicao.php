@@ -16,10 +16,10 @@ class Atribuicao extends Model
   ];
 
   public function user(){
-      $this->belongsTo('App\User', 'revisorId');
+      return $this->belongsTo('App\User', 'revisorId');
   }
 
   public function trabalho(){
-      $this->belongsTo('App\Trabalho', 'trabalhoId');
+      return $this->belongsTo('App\Trabalho', 'trabalhoId');
   }
 }

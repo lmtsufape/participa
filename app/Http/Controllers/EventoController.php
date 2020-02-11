@@ -234,4 +234,10 @@ class EventoController extends Controller
 
         return redirect()->back();
     }
+
+    public function detalhes(Request $request){
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+        return view('coordenador.detalhesEvento');
+    }
 }

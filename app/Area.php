@@ -16,18 +16,18 @@ class Area extends Model
   ];
 
   public function modalidade(){
-      $this->belongsTo('App\Modalidade', 'modalidadeId');
+      return $this->belongsTo('App\Modalidade', 'modalidadeId');
   }
 
   public function trabalho(){
-      $this->hasMany('App\Trabalho', 'areaId');
+      return $this->hasMany('App\Trabalho', 'areaId');
   }
 
   public function pertence(){
-      $this->hasMany('App\Pertence', 'areaId');
+      return $this->hasMany('App\Pertence', 'areaId');
   }
 
   public function evento(){
-      $this->belongsTo('App\Evento', 'eventoId');
+      return $this->belongsTo('App\Evento', 'eventoId');
   }
 }

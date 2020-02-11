@@ -22,13 +22,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 // rotas de teste
 Route::get('/coordenador/home','EventoController@index')->name('coord.home');
 
-Route::get('/coordenador/evento/detalhes',function(){
-    return view('coordenador.detalhesEvento');
-})->name('coord.detalhesEvento');
-Route::get('/coordenador/evento/detalhes',function(){
-    return view('coordenador.detalhesEvento');
-})->name('coord.detalhesEvento');
-
+Route::get('/coordenador/evento/detalhes', 'EventoController@detalhes')->name('coord.detalhesEvento');
 
 Route::get('/perfil','UserController@perfil')->name('perfil');
 Route::post('/perfil','UserController@editarPerfil')->name('perfil');
@@ -41,4 +35,3 @@ Route::delete('/evento/excluir/{id}','EventoController@destroy')->name('evento.d
 // editar evento
 Route::get('/evento/editar/{id}','EventoController@edit')->name('evento.editar');
 Route::post('/evento/editar/{id}','EventoController@update')->name('evento.editar');
-

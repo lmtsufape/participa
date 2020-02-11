@@ -16,6 +16,6 @@ class Arquivo extends Model
   ];
 
   public function trabalho(){
-      $this->belongsTo('App\Trabalho', 'trabalhoId');
+      return $this->belongsTo('App\Trabalho', 'trabalhoId');
   }
 }
