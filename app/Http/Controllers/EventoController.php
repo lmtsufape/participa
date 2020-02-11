@@ -192,8 +192,14 @@ class EventoController extends Controller
      * @param  \App\Evento  $evento
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Evento $evento)
+    public function destroy($id)
     {
-        //
+        $evento = Evento::find($id);
+        // dd($id);
+        $endereco = Endereco::find($evento->enderecoId);
+        $evento->delete();
+        $endereco->delete();
+
+        return redirect()->back();
     }
 }

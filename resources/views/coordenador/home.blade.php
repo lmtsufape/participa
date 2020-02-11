@@ -22,8 +22,23 @@
                         <strong>Número de Vagas:</strong> {{$evento->numeroParticipantes}}
                     </p>
                     
-                    
-                    <a href="" class="btn btn-primary">Ver Detalhes</a>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <a href="" class="btn btn-primary">Ver Detalhes</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <a href="" class="btn btn-secondary">Editar</a>
+                        </div>
+                        <div class="col-sm-4">
+                            <form method="POST" action="{{route('evento.deletar',$evento->id)}}">
+                                {{ csrf_field() }}
+                                {{ method_field('DELETE') }}
+                                <button type="submit" class="btn btn-danger">Deletar</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         @endforeach

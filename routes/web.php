@@ -36,3 +36,5 @@ Route::post('/perfil','UserController@editarPerfil')->name('perfil');
 //criar evento
 Route::get('/evento/criar','EventoController@create')->name('evento.criar');
 Route::post('/evento/criar','EventoController@store')->name('evento.criar');
+// excluir evento
+Route::delete('/evento/excluir/{id}','EventoController@destroy')->name('evento.deletar');
