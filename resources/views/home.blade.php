@@ -18,6 +18,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <a class="btn btn-primary" href="{{route('perfil')}}">Perfil</a>
+                            <a class="btn btn-primary" href="{{route('coord.home')}}">Eventos</a>
                         </div>
                     </div>
                 </div>

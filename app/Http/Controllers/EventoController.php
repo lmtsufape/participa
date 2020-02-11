@@ -18,6 +18,7 @@ class EventoController extends Controller
     public function index()
     {
         //
+        return view('evento.criarEvento');
     }
 
     /**
@@ -42,65 +43,66 @@ class EventoController extends Controller
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
 
+        // dd($request);
         // validar datas nulas antes, pois pode gerar um bug
 
-        if(
-          $request->dataInicio == null      ||
-          $request->dataFim == null         ||
-          $request->inicioSubmissao == null ||
-          $request->fimSubmissao == null    ||
-          $request->inicioRevisao == null   ||
-          $request->fimRevisao == null      ||
-          $request->inicioResultado == null ||
-          $request->fimResultado == null    ||
-        ){
-          'nome'                => ['required', 'string'],
-          'numeroParticipantes' => ['required', 'integer', 'gt:0'],
-          'tipo'                => ['required', 'string'],
-          'dataInicio'          => ['required', 'date','after:'. $yesterday],
-          'dataFim'             => ['required', 'date'],
-          'inicioSubmissao'     => ['required', 'date'],
-          'fimSubmissao'        => ['required', 'date'],
-          'inicioRevisao'       => ['required', 'date'],
-          'fimRevisao'          => ['required', 'date'],
-          'inicioResultado'     => ['required', 'date'],
-          'fimResultado'        => ['required', 'date'],
-          'possuiTaxa'          => ['required', 'boolean'],
-          'valorTaxa'           => ['required', 'integer'],
-          'fotoEvento'          => ['file'],
-          'isCoordenador'       => ['required', 'boolean'],
-        }
+        // if(
+        //   $request->dataInicio == null      ||
+        //   $request->dataFim == null         ||
+        //   $request->inicioSubmissao == null ||
+        //   $request->fimSubmissao == null    ||
+        //   $request->inicioRevisao == null   ||
+        //   $request->fimRevisao == null      ||
+        //   $request->inicioResultado == null ||
+        //   $request->fimResultado == null
+        // ){
+        //   'nome'                => ['required', 'string'],
+        //   'numeroParticipantes' => ['required', 'integer', 'gt:0'],
+        //   'tipo'                => ['required', 'string'],
+        //   'dataInicio'          => ['required', 'date','after:'. $yesterday],
+        //   'dataFim'             => ['required', 'date'],
+        //   'inicioSubmissao'     => ['required', 'date'],
+        //   'fimSubmissao'        => ['required', 'date'],
+        //   'inicioRevisao'       => ['required', 'date'],
+        //   'fimRevisao'          => ['required', 'date'],
+        //   'inicioResultado'     => ['required', 'date'],
+        //   'fimResultado'        => ['required', 'date'],
+        //   'possuiTaxa'          => ['required', 'boolean'],
+        //   'valorTaxa'           => ['required', 'integer'],
+        //   'fotoEvento'          => ['file'],
+        //   'isCoordenador'       => ['required', 'boolean'],
+        // }
 
         // validacao normal
 
-        $validatedData = $request->validate([
-          'nome'                => ['required', 'string'],
-          'numeroParticipantes' => ['required', 'integer', 'gt:0'],
-          'tipo'                => ['required', 'string'],
-          'dataInicio'          => ['required', 'date', 'after:' . $yesterday],
-          'dataFim'             => ['required', 'date', 'after:' . $request->dataInicio],
-          'inicioSubmissao'     => ['required', 'date', 'after:' . $yesterday],
-          'fimSubmissao'        => ['required', 'date', 'after:' . $request->inicioSubmissao],
-          'inicioRevisao'       => ['required', 'date', 'after:' . $yesterday],
-          'fimRevisao'          => ['required', 'date', 'after:' . $request->inicioRevisao],
-          'inicioResultado'     => ['required', 'date', 'after:' . $yesterday],
-          'fimResultado'        => ['required', 'date', 'after:' . $request->inicioResultado],
-          'possuiTaxa'          => ['required', 'boolean'],
-          'valorTaxa'           => ['required', 'integer'],
-          'fotoEvento'          => ['file'],
-          'isCoordenador'       => ['required', 'boolean'],
-        ]);
+        // $validatedData = $request->validate([
+        //   'nome'                => ['required', 'string'],
+        //   'numeroParticipantes' => ['required', 'integer', 'gt:0'],
+        //   'tipo'                => ['required', 'string'],
+        //   'dataInicio'          => ['required', 'date', 'after:' . $yesterday],
+        //   'dataFim'             => ['required', 'date', 'after:' . $request->dataInicio],
+        //   'inicioSubmissao'     => ['required', 'date', 'after:' . $yesterday],
+        //   'fimSubmissao'        => ['required', 'date', 'after:' . $request->inicioSubmissao],
+        //   'inicioRevisao'       => ['required', 'date', 'after:' . $yesterday],
+        //   'fimRevisao'          => ['required', 'date', 'after:' . $request->inicioRevisao],
+        //   'inicioResultado'     => ['required', 'date', 'after:' . $yesterday],
+        //   'fimResultado'        => ['required', 'date', 'after:' . $request->inicioResultado],
+        //   'possuiTaxa'          => ['required', 'boolean'],
+        //   'valorTaxa'           => ['required', 'integer'],
+        //   'fotoEvento'          => ['file'],
+        //   'isCoordenador'       => ['required', 'boolean'],
+        // ]);
 
-        // validar endereco
+        // // validar endereco
 
-        $validatedData = $request->validate([
-          'rua'                 => ['required', 'string'],
-          'numero'              => ['required', 'string'],
-          'bairro'              => ['required', 'string'],
-          'cidade'              => ['required', 'string'],
-          'uf'                  => ['required', 'string'],
-          'cep'                 => ['required', 'string'],
-        ]);
+        // $validatedData = $request->validate([
+        //   'rua'                 => ['required', 'string'],
+        //   'numero'              => ['required', 'string'],
+        //   'bairro'              => ['required', 'string'],
+        //   'cidade'              => ['required', 'string'],
+        //   'uf'                  => ['required', 'string'],
+        //   'cep'                 => ['required', 'string'],
+        // ]);
 
         $endereco = Endereco::create([
           'rua'                 => $request->rua,
@@ -132,7 +134,7 @@ class EventoController extends Controller
 
         if($request->fotoEvento != null){
           $file = $request->fotoEvento;
-          $path =  . '/' . $ppc->id . '/';
+          $path =  '/' . $ppc->id . '/';
           $nome = $count . ".pdf";
           Storage::putFileAs($path, $file, $nome);
           $evento->fotoEvento = $path . $nome;
@@ -146,7 +148,7 @@ class EventoController extends Controller
           $evento->save();
         }
 
-        return redirect()->route('home');
+        return redirect()->route('coord.home');
     }
 
     /**

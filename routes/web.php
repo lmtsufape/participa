@@ -27,6 +27,14 @@ Route::get('/coordenador/home',function(){
 Route::get('/coordenador/evento/detalhes',function(){
     return view('coordenador.detalhesEvento');
 })->name('coord.detalhesEvento');
+Route::get('/coordenador/evento/detalhes',function(){
+    return view('coordenador.detalhesEvento');
+})->name('coord.detalhesEvento');
+
 
 Route::get('/perfil','UserController@perfil')->name('perfil');
 Route::post('/perfil','UserController@editarPerfil')->name('perfil');
+
+//criar evento
+Route::get('/evento/criar','EventoController@index')->name('evento.criar');
+Route::post('/evento/criar','EventoController@store')->name('evento.criar');

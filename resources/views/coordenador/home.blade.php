@@ -3,10 +3,10 @@
 @section('content')
 
 <div class="container">
-
-    <div class="row justify-content-center titulo">        
+    <div class="row titulo">        
         <h1>Eventos Atuais</h1>
     </div>
+    <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
 
     <div class="row justify-content-center">
 
