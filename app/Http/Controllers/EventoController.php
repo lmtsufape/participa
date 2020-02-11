@@ -169,9 +169,12 @@ class EventoController extends Controller
      * @param  \App\Evento  $evento
      * @return \Illuminate\Http\Response
      */
-    public function edit(Evento $evento)
+    public function edit($id)
     {
-        //
+        // dd($id);
+        $evento = Evento::find($id);
+        $endereco = Endereco::find($evento->enderecoId);
+        return view('evento.editarEvento',['evento'=>$evento,'endereco'=>$endereco]);
     }
 
     /**
@@ -181,9 +184,37 @@ class EventoController extends Controller
      * @param  \App\Evento  $evento
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Evento $evento)
+    public function update(Request $request, $id)
     {
-        //
+        $evento = Evento::find($id);
+        $endereco = Endereco::find($evento->enderecoId);
+
+        $evento->nome                 = $request->nome;
+        $evento->numeroParticipantes  = $request->numeroParticipantes;
+        $evento->tipo                 = $request->tipo;
+        $evento->dataInicio           = $request->dataInicio;
+        $evento->dataFim              = $request->dataFim;
+        $evento->inicioSubmissao      = $request->inicioSubmissao;
+        $evento->fimSubmissao         = $request->fimSubmissao;
+        $evento->inicioRevisao        = $request->inicioRevisao;
+        $evento->fimRevisao           = $request->fimRevisao;
+        $evento->inicioResultado      = $request->inicioResultado;
+        $evento->fimResultado         = $request->fimResultado;
+        $evento->possuiTaxa           = $request->possuiTaxa;
+        $evento->valorTaxa            = $request->valorTaxa;
+        $evento->enderecoId           = $endereco->id;
+        $evento->save();
+
+        $endereco->rua                = $request->rua;
+        $endereco->numero             = $request->numero;
+        $endereco->bairro             = $request->bairro;
+        $endereco->cidade             = $request->cidade;
+        $endereco->uf                 = $request->uf;
+        $endereco->cep                = $request->cep;
+        $endereco->save();
+
+        $eventos = Evento::all();
+        return view('coordenador.home',['eventos'=>$eventos]);
     }
 
     /**
