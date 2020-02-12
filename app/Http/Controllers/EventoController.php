@@ -256,7 +256,7 @@ class EventoController extends Controller
         return view('coordenador.detalhesEvento', [
                                                     'evento'    => $evento,
                                                     'areas'     => $areas,
-                                                    'revisores' => $revisores
+                                                    'revisores' => $revisores,
                                                     'users'     => $users,
                                                   ]);
     }
