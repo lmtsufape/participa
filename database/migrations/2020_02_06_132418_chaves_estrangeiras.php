@@ -108,6 +108,20 @@ class ChavesEstrangeiras extends Migration
       Schema::table('users', function (Blueprint $table) {
           $table->foreign('enderecoId')->references('id')->on('enderecos');
       });
+
+      //------------------------------------------------------------------------
+
+      Schema::table('revisors', function (Blueprint $table) {
+          $table->foreign('revisorId')->references('id')->on('users');
+      });
+      Schema::table('revisors', function (Blueprint $table) {
+          $table->foreign('eventoId')->references('id')->on('eventos');
+      });
+      Schema::table('revisors', function (Blueprint $table) {
+          $table->foreign('areaId')->references('id')->on('areas');
+      });
+
+      //------------------------------------------------------------------------
     }
 
 
