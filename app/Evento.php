@@ -33,4 +33,6 @@ class Evento extends Model
   public function coordenador(){
       return $this->belongsTo('App\User', 'coordenadorId');
   }
+
+
 }

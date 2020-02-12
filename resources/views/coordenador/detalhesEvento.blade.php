@@ -112,14 +112,17 @@
                             <th>E-mail</th>
                         </th>
                     </thead>
-                    <tbody>
-                        <th>
-                            <td>asdhaiosd</td>
-                            <td>asdasd</td>
-                            <td>asdasd</td>
-                            <td>asdasd</td>
-                        </th>
-                    </tbody>
+                    @foreach ($users as $user)
+                        <tbody>
+                                
+                            <th>
+                                <td>{{$user->name}}</td>
+                                <td>{{$user->especProfissional}}</td>
+                                <td>{{$user->celular}}</td>
+                                <td>{{$user->email}}</td>
+                            </th>
+                        </tbody>
+                    @endforeach
                 </table>
             </div>
         </div>

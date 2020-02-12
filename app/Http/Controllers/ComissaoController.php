@@ -41,7 +41,8 @@ class ComissaoController extends Controller
             ]);
             
         $user = User::where('email',$request->input('emailMembroComissao'))->first();
-            
+        
+        // dd($user->id);
         $comissaoEventos = new ComissaoEvento();
         
         $comissaoEventos->eventosId = $request->input('eventoId');
