@@ -27,18 +27,21 @@ Route::get('/coordenador/evento/detalhes', 'EventoController@detalhes')->name('c
 Route::get('/perfil','UserController@perfil')->name('perfil');
 Route::post('/perfil','UserController@editarPerfil')->name('perfil');
 
-//criar evento
-Route::get('/evento/criar','EventoController@create')->name('evento.criar');
-Route::post('/evento/criar','EventoController@store')->name('evento.criar');
-// excluir evento
-Route::delete('/evento/excluir/{id}','EventoController@destroy')->name('evento.deletar');
-// editar evento
 Route::get('/evento/editar/{id}','EventoController@edit')->name('evento.editar');
 Route::post('/evento/editar/{id}','EventoController@update')->name('evento.editar');
 
 // Cadastrar Comissão
 Route::post('/evento/cadastrarComissao','ComissaoController@store')->name('cadastrar.comissao');
 
+
+//Evento
+Route::post(    '/evento/criar',            'EventoController@store'            )->name('evento.criar');
+Route::get(     '/evento/criar',            'EventoController@create'           )->name('evento.criar');
+Route::delete(  '/evento/excluir/{id}',     'EventoController@destroy'          )->name('evento.deletar');
+Route::get(     '/evento/editar/{id}',      'EventoController@edit'             )->name('evento.editar');
+Route::post(    '/evento/editar/{id}',      'EventoController@update'           )->name('evento.editar');
 //Area
-Route::post('/area/criar', 'AreaController@store')->name('area.store');
+Route::post(    '/area/criar',              'AreaController@store'              )->name('area.store');
+//Revisores
+Route::post(    '/revisor/criar',           'RevisorController@store'           )->name('revisor.store');
 

@@ -7,12 +7,10 @@
             <li><a id="informacoes" onclick="habilitarPagina('informacoes')">
                 <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5></a>
             </li>
-
             <li><a id="trabalhos" onclick="habilitarPagina('trabalhos')">
                 <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Trabalhos</h5></a>
-            </li>
-            
-            <li><a id="areas" onclick="showArea();">
+            </li>            
+            <li><a id="areas" onclick="habilitarPagina('areas');">
                 <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""> <h5> Áreas Tématicas</h5></a>
             </li>
             <li><a id="revisores"onclick="habilitarPagina('revisores')">
@@ -49,9 +47,6 @@
     </div>
     <div id="divTrabalhos" class="trabalhos">
         <h1>Trabalhos</h1>
-    </div>
-    <div id="divRevisores" class="revisores">
-        <h1>Revisores</h1>
     </div>
     <div id="divComissao" class="comissao">
         <div class="row">
@@ -142,8 +137,8 @@
         <h1>Atividades</h1>
     </div>
 </div>
-
-<div class="container" id="area" style="display: none">
+<!-- Área -->
+<div class="areas" id="divAreas" style="display: none">
     <div class="row titulo">
         <h1>Áreas Cadastradas</h1>
     </div>
@@ -168,7 +163,7 @@
       </table>
     </div>
     <div class="row titulo">
-        <h1>Cadastradar Nova</h1>
+        <h1>Cadastrar Nova</h1>
     </div>
     <form method="POST" action="{{route('area.store')}}">
       @csrf
@@ -194,19 +189,85 @@
           </div>
       </div>
     </form>
+</div>
+<!-- Revisores -->
+<div class="revisores" id="divRevisores" style="display: none">
+    <div class="row titulo">
+        <h1>Revisores</h1>
+    </div>
+    <div class="row">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Área</th>
+            <th scope="col">Em Andamento</th>
+            <th scope="col">Finalizados</th>
+            <th scope="col">Ultimo Prazo</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($revisores as $revisor)
+            <tr>
+              <td>{{$revisor->user->nome}}</td>
+              <td>{{$revisor->area->nome}}</td>
+              <td>{{$revisor->trabalhosCorrigidos}}</td>
+              <td>{{$revisor->correcoesEmAndamento}}</td>
+              <td>{{$revisor->prazo}}</td>
+            </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+    <div class="row titulo">
+        <h1>Cadastrar Novo</h1>
+    </div>
+    <form method="POST" action="{{route('revisor.store')}}">
+      @csrf
+      <input type="hidden" name="eventoId" value="{{$evento->id}}">
+      <div class="row justify-content-center">
+          <div class="col-sm-6">
+              <label for="emailRevisor" class="col-form-label">{{ __('Email do Revisor') }}</label>
+              <input id="emailRevisor" type="text" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{ old('emailRevisor') }}" required autocomplete="emailRevisor" autofocus>
+
+              @error('emailRevisor')
+              <span class="invalid-feedback" role="alert">
+                  <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+          </div>
+          <div class="col-sm-6">
+              <label for="areaRevisor" class="col-form-label">{{ __('Área') }}</label>
+              <select class="form-control @error('areaRevisor') is-invalid @enderror" id="areaRevisor" name="areaRevisor">
+                  <option value="" disabled selected hidden>-- Área --</option>
+                  @foreach($areas as $area)
+                    <option value="{{$area->id}}">{{$area->nome}}</option>
+                  @endforeach
+              </select>
+
+              @error('areaRevisor')
+              <span class="invalid-feedback" role="alert">
+                  <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+          </div>
+      </div>
+      <div class="row justify-content-center">
+
+          <div class="col-md-6">
+              <button type="submit" class="btn btn-primary" style="width:100%">
+                  {{ __('Finalizar') }}
+              </button>
+          </div>
+      </div>
+    </form>
 
 
 </div>
 
-
-
 @endsection
 @section('javascript')
-  <script type="text/javascript" >
-    function showArea(){
-      document.getElementById('area').style.display = "block";
-    }
-    
+  <script type="text/javascript" >    
     function habilitarPagina(id){
         informacoes = document.getElementById('divInformacoes');
         trabalhos = document.getElementById('divTrabalhos');
@@ -215,6 +276,7 @@
         candidatos = document.getElementById('divCandidatos');
         colocacao = document.getElementById('divColocacao');
         atividades = document.getElementById('divAtividades');
+        areas = document.getElementById('divAreas');        
         // habilita divInformacoes
         if(id == 'informacoes'){
             // console.log('informacoes');
@@ -225,6 +287,7 @@
             candidatos.style.display = "none";
             colocacao.style.display = "none";
             atividades.style.display = "none";
+            areas.style.display = "none";
             
             
         }
@@ -237,7 +300,7 @@
             candidatos.style.display = "none";
             colocacao.style.display = "none";
             atividades.style.display = "none";
-            
+            areas.style.display = "none";
         }
         if(id == 'revisores'){
             // console.log('revisores');
@@ -248,6 +311,7 @@
             candidatos.style.display = "none";
             colocacao.style.display = "none";
             atividades.style.display = "none";
+            areas.style.display = "none";
         }
         if(id == 'comissao'){
             // console.log('comissao');
@@ -258,6 +322,7 @@
             candidatos.style.display = "none";
             colocacao.style.display = "none";
             atividades.style.display = "none";
+            areas.style.display = "none";
         }
         if(id == 'candidatos'){
             // console.log('candidatos');
@@ -268,6 +333,7 @@
             candidatos.style.display = "block";
             colocacao.style.display = "none";
             atividades.style.display = "none";
+            areas.style.display = "none";
         }
         if(id == 'colocacao'){
             // console.log('colocacao');
@@ -278,6 +344,7 @@
             candidatos.style.display = "none";
             colocacao.style.display = "block";
             atividades.style.display = "none";
+            areas.style.display = "none";
         }
         if(id == 'atividades'){
             // console.log('atividades');
@@ -288,6 +355,7 @@
             candidatos.style.display = "none";
             colocacao.style.display = "none";
             atividades.style.display = "block";
+            areas.style.display = "none";
         }
         
     }

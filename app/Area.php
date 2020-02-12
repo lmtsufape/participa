@@ -30,4 +30,8 @@ class Area extends Model
   public function evento(){
       return $this->belongsTo('App\Evento', 'eventoId');
   }
+
+  public function revisor(){
+      return $this->hasMany('App\User', 'eventoId');
+  }
 }
