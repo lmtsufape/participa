@@ -9,7 +9,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Endereco;
-
+use App\ComissaoEvento;
+use App\User;
 class EventoController extends Controller
 {
     public function index()
@@ -238,11 +239,22 @@ class EventoController extends Controller
 
     public function detalhes(Request $request){
         $evento = Evento::find($request->eventoId);
+        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
+        // dd($ComissaoEventos);
+        $ids = [];
+        foreach($ComissaoEvento as $ce){
+          array_push($ids,$ce->userId);
+        }
+        $users = User::find($ids);
+        // dd($users);
+
         $this->authorize('isCoordenador', $evento);
+
         $areas = Area::where('eventoId', $evento->id)->get();
         return view('coordenador.detalhesEvento', [
                                                     'evento' => $evento,
                                                     'areas'  => $areas,
+                                                    'users'=>$users,
                                                   ]);
     }
 }
