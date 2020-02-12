@@ -111,9 +111,18 @@ body{
 .main_content{
     width: 100% - 200px;
     margin-left: 200px;
+    padding: 20px;
     /* background-color: rgba(0, 0, 0, 0.19); */
 }
 
+/* Visualização dos conteúdos dos detalhes do evento */
+#divInformacoes{display: block;}
+#divTrabalhos{display: none;}
+#divRevisores{display: none;}
+#divComissao{display: none;}
+#divCandidatos{display: none;}
+#divColocacao{display: none;}
+#divAtividades{display: none;}
 @media screen and (max-width: 576px){
     .wrapper .sidebar h2{
         display: none;

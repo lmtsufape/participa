@@ -27,9 +27,11 @@ Route::get('/coordenador/evento/detalhes', 'EventoController@detalhes')->name('c
 Route::get('/perfil','UserController@perfil')->name('perfil');
 Route::post('/perfil','UserController@editarPerfil')->name('perfil');
 
-//criar evento
-// excluir evento
-// editar evento
+Route::get('/evento/editar/{id}','EventoController@edit')->name('evento.editar');
+Route::post('/evento/editar/{id}','EventoController@update')->name('evento.editar');
+
+// Cadastrar Comissão
+Route::post('/evento/cadastrarComissao','ComissaoController@store')->name('cadastrar.comissao');
 
 
 //Evento
@@ -42,3 +44,4 @@ Route::post(    '/evento/editar/{id}',      'EventoController@update'           
 Route::post(    '/area/criar',              'AreaController@store'              )->name('area.store');
 //Revisores
 Route::post(    '/revisor/criar',           'RevisorController@store'           )->name('revisor.store');
+
