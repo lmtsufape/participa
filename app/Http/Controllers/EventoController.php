@@ -238,6 +238,6 @@ class EventoController extends Controller
     public function detalhes(Request $request){
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenador', $evento);
-        return view('coordenador.detalhesEvento');
+        return view('coordenador.detalhesEvento',['evento' => $evento]);
     }
 }

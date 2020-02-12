@@ -34,6 +34,7 @@
 @section('content')
 
 <div class="main_content">
+    {{-- {{ $evento->id ?? '' }} --}}
     <div id="divInformacoes" class="informacoes">
         <div class="row">
             <div class="col-sm-12">
@@ -76,6 +77,7 @@
 
                         {{-- Nome do Categoria --}}
                         <div class="form-group">
+                            <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
                             {{-- Div para validação --}}
                             <label for="emailMembroComissao" class="control-label">E-mail do novo membro</label>
                             <div class="input-group">

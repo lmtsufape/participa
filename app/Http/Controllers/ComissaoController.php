@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\ComissaoEvento;
 
 class ComissaoController extends Controller
 {
@@ -37,9 +38,15 @@ class ComissaoController extends Controller
     {
         $validationData = $this->validate($request,[
             'emailMembroComissao'=>'required|string|email',
-        ]);
-        $user = User::where('email',$request->input('emailMembroComissao'))->get();
-        // dd($user);
+            ]);
+            
+        $user = User::where('email',$request->input('emailMembroComissao'))->first();
+            
+        $comissaoEventos = new ComissaoEvento();
+        
+        $comissaoEventos->eventosId = $request->input('eventoId');
+        $comissaoEventos->userId = $user->id;
+        $comissaoEventos->save();
 
         return view('coordenador.detalhesEvento')->with('tela','comissao');
     }
