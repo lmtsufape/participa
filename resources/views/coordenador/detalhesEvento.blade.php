@@ -9,7 +9,7 @@
             </li>
             <li><a id="trabalhos" onclick="habilitarPagina('trabalhos')">
                 <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Trabalhos</h5></a>
-            </li>            
+            </li>
             <li><a id="areas" onclick="habilitarPagina('areas');">
                 <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""> <h5> Áreas Tématicas</h5></a>
             </li>
@@ -72,7 +72,7 @@
                 </div>
                 <form action="{{route('cadastrar.comissao')}}" method="POST">
                 <div class="modal-body">
-                    
+
                         @csrf
 
                         {{-- Nome do Categoria --}}
@@ -81,7 +81,7 @@
                             {{-- Div para validação --}}
                             <label for="emailMembroComissao" class="control-label">E-mail do novo membro</label>
                             <div class="input-group">
-                                <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail">                            
+                                <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail">
                                 @error('emailMembroComissao')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -114,7 +114,7 @@
                     </thead>
                     @foreach ($users as $user)
                         <tbody>
-                                
+
                             <th>
                                 <td>{{$user->name}}</td>
                                 <td>{{$user->especProfissional}}</td>
@@ -138,7 +138,7 @@
     </div>
 </div>
 <!-- Área -->
-<div class="areas" id="divAreas" style="display: none">
+<div class="container" id="divAreas" style="display: none">
     <div class="row titulo">
         <h1>Áreas Cadastradas</h1>
     </div>
@@ -191,7 +191,7 @@
     </form>
 </div>
 <!-- Revisores -->
-<div class="revisores" id="divRevisores" style="display: none">
+<div class="container" id="divRevisores" style="display: none">
     <div class="row titulo">
         <h1>Revisores</h1>
     </div>
@@ -267,7 +267,7 @@
 
 @endsection
 @section('javascript')
-  <script type="text/javascript" >    
+  <script type="text/javascript" >
     function habilitarPagina(id){
         informacoes = document.getElementById('divInformacoes');
         trabalhos = document.getElementById('divTrabalhos');
@@ -276,7 +276,7 @@
         candidatos = document.getElementById('divCandidatos');
         colocacao = document.getElementById('divColocacao');
         atividades = document.getElementById('divAtividades');
-        areas = document.getElementById('divAreas');        
+        areas = document.getElementById('divAreas');
         // habilita divInformacoes
         if(id == 'informacoes'){
             // console.log('informacoes');
@@ -288,8 +288,8 @@
             colocacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "none";
-            
-            
+
+
         }
         if(id == 'trabalhos'){
             // console.log('trabalhos');
@@ -357,10 +357,20 @@
             atividades.style.display = "block";
             areas.style.display = "none";
         }
-        
+        if(id == 'areas'){
+            // console.log('atividades');
+            informacoes.style.display = "none";
+            trabalhos.style.display = "none";
+            revisores.style.display = "none";
+            comissao.style.display = "none";
+            candidatos.style.display = "none";
+            colocacao.style.display = "none";
+            atividades.style.display = "none";
+            areas.style.display = "block";
+        }
+
     }
 
 </script>
 
 @endsection
-
