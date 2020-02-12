@@ -35,3 +35,9 @@ Route::delete('/evento/excluir/{id}','EventoController@destroy')->name('evento.d
 // editar evento
 Route::get('/evento/editar/{id}','EventoController@edit')->name('evento.editar');
 Route::post('/evento/editar/{id}','EventoController@update')->name('evento.editar');
+
+
+
+
+//Area
+Route::post('/area/criar', 'AreaController@store')->name('area.store');

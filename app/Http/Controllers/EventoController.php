@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Evento;
+use App\Area;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -238,6 +239,10 @@ class EventoController extends Controller
     public function detalhes(Request $request){
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenador', $evento);
-        return view('coordenador.detalhesEvento');
+        $areas = Area::where('eventoId', $evento->id)->get();
+        return view('coordenador.detalhesEvento', [
+                                                    'evento' => $evento,
+                                                    'areas'  => $areas,
+                                                  ]);
     }
 }

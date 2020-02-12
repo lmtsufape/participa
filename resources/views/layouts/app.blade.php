@@ -15,7 +15,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-    
+
     <script src="{{ asset('js/jquery-3.4.1.min.js')}}"></script>
 
     <!-- Styles -->
@@ -87,13 +87,13 @@
         @yield('content')
         {{-- </main> --}}
 
-        @hasSection ('javascript')
-            @yield('javascript')
-        @else
-        @endif
-    
-    </div>
 
-    
+    </div>
+    @hasSection ('javascript')
+    @yield('javascript')
+    @else
+    @endif
+
+
 </body>
 </html>
