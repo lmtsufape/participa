@@ -18,7 +18,7 @@ class CreateAreasTable extends Migration
             $table->timestamps();
             $table->string('nome');
 
-            $table->integer('modalidadeId');
+            $table->integer('modalidadeId')->nullable();
             $table->integer('eventoId');
         });
     }

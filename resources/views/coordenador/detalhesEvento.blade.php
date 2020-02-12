@@ -2,13 +2,18 @@
 @section('sidebar')
 <div class="wrapper">
     <div class="sidebar">
-        <h2>Nome do Evento</h2>
+        <h2>{{{$evento->nome}}}</h2>
         <ul>
             <li><a id="informacoes" onclick="habilitarPagina('informacoes')">
                 <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5></a>
             </li>
+
             <li><a id="trabalhos" onclick="habilitarPagina('trabalhos')">
                 <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Trabalhos</h5></a>
+            </li>
+            
+            <li><a id="areas" onclick="showArea();">
+                <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""> <h5> Áreas Tématicas</h5></a>
             </li>
             <li><a id="revisores"onclick="habilitarPagina('revisores')">
                 <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Revisores</h5></a>
@@ -28,7 +33,7 @@
         </ul>
     </div>
 
-    
+
 </div>
 @endsection
 @section('content')
@@ -137,11 +142,70 @@
         <h1>Atividades</h1>
     </div>
 </div>
+
+<div class="container" id="area" style="display: none">
+    <div class="row titulo">
+        <h1>Áreas Cadastradas</h1>
+    </div>
+    <div class="row">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Remover</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($areas as $area)
+            <tr>
+              <th scope="row">1</th>
+              <td>{{$area->nome}}</td>
+              <td>remover</td>
+            </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+    <div class="row titulo">
+        <h1>Cadastradar Nova</h1>
+    </div>
+    <form method="POST" action="{{route('area.store')}}">
+      @csrf
+      <input type="hidden" name="eventoId" value="{{$evento->id}}">
+      <div class="row justify-content-center">
+          <div class="col-sm-6">
+              <label for="nome" class="col-form-label">{{ __('Nome da Área') }}</label>
+              <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
+
+              @error('nome')
+              <span class="invalid-feedback" role="alert">
+                  <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+          </div>
+      </div>
+      <div class="row justify-content-center">
+
+          <div class="col-md-6">
+              <button type="submit" class="btn btn-primary" style="width:100%">
+                  {{ __('Finalizar') }}
+              </button>
+          </div>
+      </div>
+    </form>
+
+
+</div>
+
+
+
 @endsection
 @section('javascript')
-
-<script type="text/javascript">
-
+  <script type="text/javascript" >
+    function showArea(){
+      document.getElementById('area').style.display = "block";
+    }
     
     function habilitarPagina(id){
         informacoes = document.getElementById('divInformacoes');
@@ -229,4 +293,6 @@
     }
 
 </script>
+
 @endsection
+

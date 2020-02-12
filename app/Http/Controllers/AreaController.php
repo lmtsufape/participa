@@ -35,7 +35,16 @@ class AreaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+          'nome'  =>  ['required', 'string'],
+        ]);
+
+        Area::create([
+          'nome'      => $request->nome,
+          'eventoId'  => $request->eventoId,
+        ]);
+
+        return redirect()->route('home');
     }
 
     /**
