@@ -50,54 +50,70 @@
     </div>
     <div id="divComissao" class="comissao">
         <div class="row">
-            <div class="col-sm-10">
+            <div class="col-sm-12">
                 <h1>Comissão</h1>
             </div>
-            <div class="col-sm-2">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalComissao">
-                    Adicionar Membro
-                  </button>
-            </div>
+            
         </div>
-
-        <!-- Modal -->
-        <div class="modal fade" id="modalComissao" tabindex="-1" role="dialog" aria-labelledby="modalComissao" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Novo Membro da Comissão</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
+        <div class="row">
+            <div class="col-sm-12">
                 <form action="{{route('cadastrar.comissao')}}" method="POST">
-                <div class="modal-body">
-
-                        @csrf
-
+                    @csrf
+                    <div class="form-group">
+                        <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
                         {{-- Nome do Categoria --}}
-                        <div class="form-group">
-                            <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
-                            {{-- Div para validação --}}
+                        <div class="col-sm-4">
                             <label for="emailMembroComissao" class="control-label">E-mail do novo membro</label>
-                            <div class="input-group">
-                                <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail">
-                                @error('emailMembroComissao')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
+                            <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail">
+                            @error('emailMembroComissao')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
-
-                        <div class="modal-footer">
-                            <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                            <button type="submit" class="btn btn-primary">Cadastrar</button>
+                        
+                        {{-- Nome do especProfissional --}}
+                        <div class="col-sm-4">                            
+                            <label for="especProfissional" class="control-label">Experiência Profissional</label>
+                            <input type="text" name="especProfissional" class="form-control @error('especProfissional') is-invalid @enderror" name="especProfissional" value="{{ old('especProfissional') }}" id="especProfissional" placeholder="Esperiência Profissional">
+                            @error('especProfissional')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
+                        
+                    <div class="col-sm-12">
+
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    </div>
+                        
+                    
                 </form>
             </div>
-            </div>
+        </div>
+        
+        <div class="row">
+            <form id="formCoordComissao" action="{{route('cadastrar.coordComissao')}}" method="POST">
+                @csrf
+                <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
+
+                <div class="form-group">
+                    <label for="coodComissaoId">Coordenador Comissão</label>
+                    <select class="form-control" name="coordComissaoId" id="coodComissaoId">
+                        @foreach ($users as $user)
+                            @if($evento->coordComissaoId == $user->id)
+                                <option value="{{$user->id}}" selected>{{$user->name}}</option>
+                            @else
+                                <option value="{{$user->id}}">{{$user->name}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Definir Coordenador</button>
+            </form>
         </div>
 
         {{-- tabela membros comissão --}}
@@ -112,17 +128,17 @@
                             <th>E-mail</th>
                         </th>
                     </thead>
-                    @foreach ($users as $user)
-                        <tbody>
+                        @foreach ($users as $user)
+                            <tbody>
 
-                            <th>
-                                <td>{{$user->name}}</td>
-                                <td>{{$user->especProfissional}}</td>
-                                <td>{{$user->celular}}</td>
-                                <td>{{$user->email}}</td>
-                            </th>
-                        </tbody>
-                    @endforeach
+                                <th>
+                                    <td>{{$user->name}}</td>
+                                    <td>{{$user->especProfissional}}</td>
+                                    <td>{{$user->celular}}</td>
+                                    <td>{{$user->email}}</td>
+                                </th>
+                            </tbody>
+                        @endforeach
                 </table>
             </div>
         </div>
@@ -268,6 +284,13 @@
 @endsection
 @section('javascript')
   <script type="text/javascript" >
+
+    function cadastrarCoodComissao(){
+        
+            document.getElementById("formCoordComissao").submit();
+            console.log('foi')
+    }
+
     function habilitarPagina(id){
         informacoes = document.getElementById('divInformacoes');
         trabalhos = document.getElementById('divTrabalhos');

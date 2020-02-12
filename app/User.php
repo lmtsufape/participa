@@ -74,5 +74,5 @@ class User extends Authenticatable implements MustVerifyEmail
     public function evento(){
         return $this->hasMany('App\Evento', 'coordenadorId');
     }
-
+    
 }

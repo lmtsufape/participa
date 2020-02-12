@@ -16,6 +16,7 @@ class CreateComissaoEventosTable extends Migration
         Schema::create('comissao_eventos', function (Blueprint $table) {
             $table->bigIncrements('id');
 
+            $table->string('especProfissional');
             $table->unsignedBigInteger('eventosId');
             $table->foreign('eventosId')->references('id')->on('eventos');
 

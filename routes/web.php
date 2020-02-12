@@ -32,6 +32,7 @@ Route::post('/evento/editar/{id}','EventoController@update')->name('evento.edita
 
 // Cadastrar Comissão
 Route::post('/evento/cadastrarComissao','ComissaoController@store')->name('cadastrar.comissao');
+Route::post('/evento/cadastrarCoordComissao','ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
 
 
 //Evento
