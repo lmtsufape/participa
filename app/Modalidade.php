@@ -15,11 +15,7 @@ class Modalidade extends Model
       'nome',
   ];
 
-  public function area(){
-      return $this->hasOne('App\Area', 'modalidadeId');
-  }
-
   public function trabalho(){
-      return $this->hasMany('App\Trabalho', 'trabalhoId');
+      return $this->hasMany('App\Trabalho', 'modalidadeId');
   }
 }

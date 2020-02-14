@@ -12,7 +12,7 @@ class Atribuicao extends Model
    * @var array
    */
   protected $fillable = [
-      'confirmacao', 'revisorId', 'trabalhoId',
+      'confirmacao', 'parecer','revisorId', 'trabalhoId',
   ];
 
   public function user(){

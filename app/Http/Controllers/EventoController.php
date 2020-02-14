@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 use App\Evento;
 use App\Area;
 use App\Revisor;
+use App\Modalidade;
+use App\ComissaoEvento;
+use App\User;
+use App\Trabalho;
+use App\AreaModalidade;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Endereco;
-use App\ComissaoEvento;
-use App\User;
+
 class EventoController extends Controller
 {
     public function index()
@@ -240,6 +244,8 @@ class EventoController extends Controller
 
     public function detalhes(Request $request){
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+
         $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
         // dd($ComissaoEventos);
         $ids = [];
@@ -247,17 +253,22 @@ class EventoController extends Controller
           array_push($ids,$ce->userId);
         }
         $users = User::find($ids);
-        // dd($users);
-
-        $this->authorize('isCoordenador', $evento);
 
         $areas = Area::where('eventoId', $evento->id)->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::all();
+        $areaModalidades = AreaModalidade::whereIn('id', $areasId)->get();
+        $trabalhos = Trabalho::where('autorId', Auth::user()->id)->whereIn('areaId', $areasId)->get();
+
         return view('coordenador.detalhesEvento', [
-                                                    'evento'    => $evento,
-                                                    'areas'     => $areas,
-                                                    'revisores' => $revisores,
-                                                    'users'     => $users,
+                                                    'evento'          => $evento,
+                                                    'areas'           => $areas,
+                                                    'revisores'       => $revisores,
+                                                    'users'           => $users,
+                                                    'modalidades'     => $modalidades,
+                                                    'areaModalidades' => $areaModalidades,
+                                                    'trabalhos'       => $trabalhos,
                                                   ]);
     }
 }
