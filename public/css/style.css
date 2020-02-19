@@ -49,12 +49,18 @@ body{
 }
 .titulo{
     margin:5% 0 2% 0;
-    /* border-bottom: 1px solid #ccc; */
+    border-bottom: 2px solid #ccc;
 }
 .titulo h1{
     font-size: 35px;
 }
-
+.subtitulo{
+    font-size:25px
+}
+.botao-form{
+    width:100%; 
+    padding: 20px 0 20px 0;
+}
 /* SIDEBAR */
 
 
