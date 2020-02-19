@@ -12,11 +12,11 @@ class Area extends Model
    * @var array
    */
   protected $fillable = [
-      'nome', 'modalidadeId', 'eventoId',
+      'nome', 'eventoId',
   ];
 
   public function modalidade(){
-      return $this->belongsTo('App\Modalidade', 'modalidadeId');
+      return $this->hasMany('App\Modalidade', 'areaId');
   }
 
   public function trabalho(){

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAtribuicaosTable extends Migration
+class CreateAreaModalidadesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateAtribuicaosTable extends Migration
      */
     public function up()
     {
-        Schema::create('atribuicaos', function (Blueprint $table) {
+        Schema::create('area_modalidades', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->boolean('confirmacao');
-            $table->string('parecer');
 
-            $table->integer('revisorId');
-            $table->integer('trabalhoId');
+            $table->integer('areaId');
+            $table->integer('modalidadeId');
         });
     }
 
@@ -31,6 +29,6 @@ class CreateAtribuicaosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('atribuicaos');
+        Schema::dropIfExists('area_modalidades');
     }
 }

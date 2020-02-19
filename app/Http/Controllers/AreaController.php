@@ -44,7 +44,7 @@ class AreaController extends Controller
           'eventoId'  => $request->eventoId,
         ]);
 
-        return redirect()->route('home');
+        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
     /**
