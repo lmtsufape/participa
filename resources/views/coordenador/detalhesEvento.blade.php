@@ -516,7 +516,7 @@
             document.getElementById("formCoordComissao").submit();
             console.log('foi')
     }
-  
+
     // var newOptions = {
     //                   "Option 1": "value1",
     //                   "Option 2": "value2",
@@ -534,6 +534,7 @@
     // $("#testeId").change(function(){
     //   alert("The text has been changed.");
     // });
+
 
     function habilitarPagina(id){
         informacoes = document.getElementById('divInformacoes');
