@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Modalidade;
+use App\AreaModalidade;
 use Illuminate\Http\Request;
 
-class ModalidadeController extends Controller
+class AreaModalidadeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,12 +35,15 @@ class ModalidadeController extends Controller
      */
     public function store(Request $request)
     {
+      
       $validatedData = $request->validate([
-        'nomeModalidade' => ['required', 'string',],
+        'modalidadeId' => ['required', 'integer',],
+        'areaId' => ['required', 'integer',],
       ]);
 
-      $modalidade = Modalidade::create([
-        'nome'              => $request->nomeModalidade,
+      $modalidade = AreaModalidade::create([
+        'areaId'              => $request->areaId,
+        'modalidadeId'              => $request->modalidadeId,
       ]);
 
       return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
@@ -49,10 +52,10 @@ class ModalidadeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Modalidade  $modalidade
+     * @param  \App\AreaModalidade  $areaModalidade
      * @return \Illuminate\Http\Response
      */
-    public function show(Modalidade $modalidade)
+    public function show(AreaModalidade $areaModalidade)
     {
         //
     }
@@ -60,10 +63,10 @@ class ModalidadeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Modalidade  $modalidade
+     * @param  \App\AreaModalidade  $areaModalidade
      * @return \Illuminate\Http\Response
      */
-    public function edit(Modalidade $modalidade)
+    public function edit(AreaModalidade $areaModalidade)
     {
         //
     }
@@ -72,10 +75,10 @@ class ModalidadeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Modalidade  $modalidade
+     * @param  \App\AreaModalidade  $areaModalidade
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Modalidade $modalidade)
+    public function update(Request $request, AreaModalidade $areaModalidade)
     {
         //
     }
@@ -83,10 +86,10 @@ class ModalidadeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Modalidade  $modalidade
+     * @param  \App\AreaModalidade  $areaModalidade
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Modalidade $modalidade)
+    public function destroy(AreaModalidade $areaModalidade)
     {
         //
     }
