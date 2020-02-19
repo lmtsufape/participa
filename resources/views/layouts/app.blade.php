@@ -65,7 +65,13 @@
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        <img src="{{asset('img/icons/sign-out-alt-solid.svg')}}" alt="">
+                                        {{ __('Sair') }}
+                                    </a>
+
+                                    <a class="dropdown-item" href="{{ route('perfil') }}">
+                                        <img src="{{asset('img/icons/perfil.svg')}}" alt="">
+                                        {{ __('Perfil') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
