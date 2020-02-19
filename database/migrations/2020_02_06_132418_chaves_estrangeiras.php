@@ -130,7 +130,9 @@ class ChavesEstrangeiras extends Migration
       Schema::table('revisors', function (Blueprint $table) {
           $table->foreign('areaId')->references('id')->on('areas');
       });
-
+      Schema::table('eventos',function (Blueprint $table){
+        $table->foreign('coordComissaoId')->references('id')->on('users');
+      });
       //------------------------------------------------------------------------
     }
 

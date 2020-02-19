@@ -102,8 +102,6 @@ class RegisterController extends Controller
         $user->enderecoId = $end->id;
         $user->save();
         
-
-        return view('index');
-        
+        return $user;
     }
 }

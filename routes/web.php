@@ -30,6 +30,7 @@ Route::post('/perfil','UserController@editarPerfil')->name('perfil');
 
 // Cadastrar Comissão
 Route::post('/evento/cadastrarComissao','ComissaoController@store')->name('cadastrar.comissao');
+Route::post('/evento/cadastrarCoordComissao','ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
 
 
 //Evento
