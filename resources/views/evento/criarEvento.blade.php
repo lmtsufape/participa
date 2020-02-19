@@ -3,11 +3,16 @@
 @section('content')
 <div class="container">
     <div class="row titulo">
-        <h1>{Novo Evento}</h1>
+        <h1>Novo Evento</h1>
     </div>
 
     <form action="{{route('evento.criar')}}" method="POST">
     @csrf
+        <div class="row subtitulo">   
+            <div class="col-sm-12">
+                <p>Informações Gerais</p>
+            </div>     
+        </div>
         {{-- nome | Participantes | Tipo--}}
         <div class="row justify-content-center">
             <div class="col-sm-6">
@@ -132,12 +137,16 @@
             </div>
         </div>{{-- end inicioRevisao | fimRevisao | inicioResultado | fimResultado--}}
 
+        
+        
         {{-- possuiTaxa | valorTaxa --}}
         <div class="row justify-content-center">
             <div class="col-sm-6">
-                <div class="form-check">
+                <div class="form-check" style="margin-top:25px">
                     <input name="possuiTaxa" type="checkbox" class="form-check-input" id="possuiTaxa" value="true">
-                    <label class="form-check-label" for="possuiTaxa">Possui taxa de Inscrição</label>
+                    <label class="form-check-label" for="possuiTaxa">
+                        <h4>Possui taxa de Inscrição</h4>
+                    </label>
                 </div>
                 @error('possuiTaxa')
                 <span class="invalid-feedback" role="alert">
@@ -172,7 +181,11 @@
                     </div>
             </div>
         </div>
-
+        <div class="row subtitulo">   
+            <div class="col-sm-12">
+                <p>Endereço</p>
+            </div>     
+        </div>
         {{-- Rua | Número | Bairro --}}
         <div class="row justify-content-center">
             <div class="col-sm-6">
@@ -271,13 +284,13 @@
             </div>
         </div>
 
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 
-            <div class="col-md-6">
-                <a class="btn btn-secondary" href="{{route('coord.home')}}" style="width:100%">Cancelar</a>
+            <div class="col-md-6" style="padding-left:0">
+                <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}" style="width:100%">Cancelar</a>
             </div>
-            <div class="col-md-6">
-                <button type="submit" class="btn btn-primary" style="width:100%">
+            <div class="col-md-6" style="padding-right:0">
+                <button type="submit" class="btn btn-primary botao-form" style="width:100%">
                     {{ __('Criar Evento') }}
                 </button>
             </div>

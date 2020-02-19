@@ -141,25 +141,8 @@
             </div>
         </div>{{-- end inicioRevisao | fimRevisao | inicioResultado | fimResultado--}}
         
-        {{-- Foto Evento --}}
-        <div class="row justify-content-center">
-            <div class="col-sm-12">
-                <div class="form-group" style="margin-top:20px">
-                    <label for="fotoEvento">Foto do Evento</label>
-                    <input type="file" class="form-control-file @error('isCoordenador') is-invalid @enderror" name="isCoordenador" value="{{ old('isCoordenador') }}" id="fotoEvento">
-                    @error('fotoEvento')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                    </div>
-            </div>
-        </div>
-        <div class="row subtitulo">   
-            <div class="col-sm-12">
-                <p>Taxa de Inscrição</p>
-            </div>     
-        </div>
+        
+        
         {{-- possuiTaxa | valorTaxa --}}
         <div class="row justify-content-center">
             <div class="col-sm-6">
@@ -181,6 +164,21 @@
                 @enderror
             </div>
         </div>{{-- possuiTaxa | valorTaxa --}}
+
+        {{-- Foto Evento --}}
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="fotoEvento">Foto do Evento</label>
+                    <input type="file" class="form-control-file @error('isCoordenador') is-invalid @enderror" name="isCoordenador" value="{{ old('isCoordenador') }}" id="fotoEvento">
+                    @error('fotoEvento')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                    </div>
+            </div>
+        </div>
         
         <div class="row subtitulo">   
             <div class="col-sm-12">
@@ -287,10 +285,10 @@
         </div>
 
         <div class="row justify-content-center" style="margin: 20px 0 20px 0">
-            <div class="col-md-6">
+            <div class="col-md-6" style="padding-left:0">
                 <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}">Cancelar</a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" style="padding-ridht:0">
                 <button type="submit" class="btn btn-primary botao-form">
                     {{ __('Criar Evento') }}
                 </button>
