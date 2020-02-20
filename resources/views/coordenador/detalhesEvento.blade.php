@@ -36,7 +36,7 @@
             </a>
             <a id="colocacao" onclick="habilitarPagina('colocacao')">
                 <li>
-                    <img src="{{asset('img/icons/trophy-solid.svg')}}" alt=""><h5>Colocação</h5>
+                    <img src="{{asset('img/icons/trophy-solid.svg')}}" alt=""><h5>Classificação</h5>
                 </li>
             </a>
             <a id="atividades" onclick="habilitarPagina('atividades')">
@@ -479,8 +479,8 @@
         </div>
         
     </div>
-    <div id="divColocacao" class="colocacao">
-        <h1>Colocação</h1>
+    <div id="divClassificacao" class="classificacao">
+        <h1>Classificação</h1>
     </div>
     <div id="divAtividades" class="atividades">
         <h1>Atividades</h1>
@@ -700,7 +700,7 @@
         revisores = document.getElementById('divRevisores');
         comissao = document.getElementById('divComissao')
         modalidades = document.getElementById('divModalidades');
-        colocacao = document.getElementById('divColocacao');
+        classificacao = document.getElementById('divClassificacao');
         atividades = document.getElementById('divAtividades');
         areas = document.getElementById('divAreas');
         // habilita divInformacoes
@@ -711,7 +711,7 @@
             revisores.style.display = "none";
             comissao.style.display = "none";
             modalidades.style.display = "none";
-            colocacao.style.display = "none";
+            classificacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "none";
 
@@ -724,7 +724,7 @@
             revisores.style.display = "none";
             comissao.style.display = "none";
             modalidades.style.display = "none";
-            colocacao.style.display = "none";
+            classificacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "none";
         }
@@ -735,7 +735,7 @@
             revisores.style.display = "block";
             comissao.style.display = "none";
             modalidades.style.display = "none";
-            colocacao.style.display = "none";
+            classificacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "none";
         }
@@ -746,7 +746,7 @@
             revisores.style.display = "none";
             comissao.style.display = "block";
             modalidades.style.display = "none";
-            colocacao.style.display = "none";
+            classificacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "none";
         }
@@ -757,7 +757,7 @@
             revisores.style.display = "none";
             comissao.style.display = "none";
             modalidades.style.display = "block";
-            colocacao.style.display = "none";
+            classificacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "none";
         }
@@ -768,7 +768,7 @@
             revisores.style.display = "none";
             comissao.style.display = "none";
             modalidades.style.display = "none";
-            colocacao.style.display = "block";
+            classificacao.style.display = "block";
             atividades.style.display = "none";
             areas.style.display = "none";
         }
@@ -779,7 +779,7 @@
             revisores.style.display = "none";
             comissao.style.display = "none";
             modalidades.style.display = "none";
-            colocacao.style.display = "none";
+            classificacao.style.display = "none";
             atividades.style.display = "block";
             areas.style.display = "none";
         }
@@ -790,7 +790,7 @@
             revisores.style.display = "none";
             comissao.style.display = "none";
             modalidades.style.display = "none";
-            colocacao.style.display = "none";
+            classificacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "block";
         }

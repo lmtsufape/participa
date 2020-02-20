@@ -163,7 +163,7 @@ body{
 #divRevisores{display: none;}
 #divComissao{display: none;}
 #divModalidades{display: none;}
-#divColocacao{display: none;}
+#divClassificacao{display: none;}
 #divAtividades{display: none;}
 @media screen and (max-width: 576px){
     .wrapper .sidebar{
