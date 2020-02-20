@@ -51,8 +51,8 @@
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    {{-- <a class="nav-link" href="{{ route('register') }}">{{ __('Cadastro') }}</a> --}}
-                                    <a class="nav-link" data-toggle="modal" data-target="#modalCadastro">{{ __('Cadastro') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Cadastro') }}</a>
+                                    {{-- <a class="nav-link" data-toggle="modal" data-target="#modalCadastro">{{ __('Cadastro') }}</a> --}}
                                 </li>
                             @endif
                         @else
