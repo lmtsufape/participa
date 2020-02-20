@@ -4,30 +4,46 @@
     <div class="sidebar">
         <h2>{{{$evento->nome}}}</h2>
         <ul>
-            <li><a id="informacoes" onclick="habilitarPagina('informacoes')">
-                <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5></a>
-            </li>
-            <li><a id="trabalhos" onclick="habilitarPagina('trabalhos')">
-                <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Trabalhos</h5></a>
-            </li>
-            <li><a id="areas" onclick="habilitarPagina('areas');">
-                <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""> <h5> Áreas Tématicas</h5></a>
-            </li>
-            <li><a id="revisores"onclick="habilitarPagina('revisores')">
-                <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Revisores</h5></a>
-            </li>
-            <li><a id="comissao" onclick="habilitarPagina('comissao')">
-                <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão</h5></a>
-            </li>
-            <li><a id="candidatos" onclick="habilitarPagina('candidatos')">
-                <img src="{{asset('img/icons/user-solid.svg')}}" alt=""><h5>Candidatos</h5></a>
-            </li>
-            <li><a id="colocacao" onclick="habilitarPagina('colocacao')">
-                <img src="{{asset('img/icons/trophy-solid.svg')}}" alt=""><h5>Colocação</h5></a>
-            </li>
-            <li><a id="atividades" onclick="habilitarPagina('atividades')">
-                <img src="{{asset('img/icons/calendar-alt-solid.svg')}}" alt=""><h5>Atividades</h5></a>
-            </li>
+            <a id="informacoes" onclick="habilitarPagina('informacoes')">
+                <li>
+                    <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
+                </li>
+            </a>
+            <a id="trabalhos" onclick="habilitarPagina('trabalhos')">
+                <li>
+                    <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Trabalhos</h5>
+                </li>
+            </a>
+            <a id="areas" onclick="habilitarPagina('areas');">
+                <li>
+                    <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""> <h5> Áreas Tématicas</h5>
+                </li>
+            </a>
+            <a id="revisores"onclick="habilitarPagina('revisores')">
+                <li>
+                    <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Revisores</h5>
+                </li>
+            </a>
+            <a id="comissao" onclick="habilitarPagina('comissao')">
+                <li>
+                    <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão</h5>
+                </li>
+            </a>
+            <a id="candidatos" onclick="habilitarPagina('modalidades')">
+                <li>
+                    <img src="{{asset('img/icons/user-solid.svg')}}" alt=""><h5>Modalidades</h5>
+                </li>
+            </a>
+            <a id="colocacao" onclick="habilitarPagina('colocacao')">
+                <li>
+                    <img src="{{asset('img/icons/trophy-solid.svg')}}" alt=""><h5>Colocação</h5>
+                </li>
+            </a>
+            <a id="atividades" onclick="habilitarPagina('atividades')">
+                <li>
+                    <img src="{{asset('img/icons/calendar-alt-solid.svg')}}" alt=""><h5>Atividades</h5>
+                </li>
+            </a>
         </ul>
     </div>
 
@@ -38,19 +54,20 @@
 
 <div class="main_content">
     {{-- {{ $evento->id ?? '' }} --}}
+    {{-- Informações --}}
     <div id="divInformacoes" class="informacoes">
         <div class="row">
             <div class="col-sm-12">
-                <h1>Informações</h1>
+                <h1 class="titulo-detalhes">Informações</h1>
             </div>
         </div>
     </div>
+    {{-- Comissão --}}
     <div id="divComissao" class="comissao">
         <div class="row">
             <div class="col-sm-12">
                 <h1>Comissão</h1>
             </div>
-            
         </div>
         <div class="row">
             <div class="col-sm-12">
@@ -139,9 +156,266 @@
                 </table>
             </div>
         </div>
+    </div>{{-- End Comissão --}}
+    <!-- Trabalhos -->
+    <div id="divTrabalhos" class="container" style="display: none">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 class="titulo-detalhes">Trabalhos</h1>
+            </div>
+        </div>
+
+        <div class="row subtitulo-detalhes">
+            <div class="col-sm-12">
+                <p>Cadastrar Novo</p>
+            </div>
+        </div>
+        <form method="POST" action="{{route('trabalho.store')}}">
+          @csrf
+          <input type="hidden" name="eventoId" value="{{$evento->id}}">
+          <div class="row justify-content-center">
+              {{-- Nome Trabalho  --}}
+            <div class="col-sm-4">
+                  <label for="nomeTrabalho" class="col-form-label">{{ __('Nome do Trabalho') }}</label>
+                  <input id="nomeTrabalho" type="text" class="form-control @error('nomeTrabalho') is-invalid @enderror" name="nomeTrabalho" value="{{ old('nomeTrabalho') }}" required autocomplete="nomeTrabalho" autofocus>
+      
+                  @error('nomeTrabalho')
+                  <span class="invalid-feedback" role="alert">
+                      <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+              </div>
+              <div class="col-sm-4">
+                  <label for="emailCoautor" class="col-form-label">{{ __('Email dos coautores(separado por virgula)') }}</label>
+                  <input id="emailCoautor" type="text" class="form-control @error('emailCoautor') is-invalid @enderror" name="emailCoautor" value="{{ old('emailCoautor') }}" required autocomplete="emailCoautor" autofocus>
+      
+                  @error('emailCoautor')
+                  <span class="invalid-feedback" role="alert">
+                      <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+      
+                  @error('emailNaoEncontrado')
+                  {{$message}}
+                  @enderror
+      
+              </div>
+              <div class="col-sm-4">
+                  <label for="areaModalidadeId" class="col-form-label">{{ __('Área - Modalidade') }}</label>
+                  <select class="form-control @error('areaModalidadeId') is-invalid @enderror" id="areaModalidadeId" name="areaModalidadeId">
+                      <option value="" disabled selected hidden>-- Área - Modalidade --</option>
+                      @foreach($areaModalidades as $areaModalidade)
+                        <option value="{{$areaModalidade->id}}">{{$areaModalidade->area->nome}} - {{$areaModalidade->modalidade->nome}}</option>
+                      @endforeach
+                  </select>
+      
+                  @error('areaModalidadeId')
+                  <span class="invalid-feedback" role="alert">
+                      <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+              </div>
+      
+          </div>
+          <div class="row justify-content-center">
+      
+              <div class="col-md-6">
+                  <button type="submit" class="btn btn-primary" style="width:100%">
+                      {{ __('Finalizar') }}
+                  </button>
+              </div>
+          </div>
+        </form>
+
+    {{-- Tabela Trabalhos --}}
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Titulo</th>
+                    <th scope="col">Área</th>
+                    <th scope="col">Modalidade</th>
+                    <th scope="col">Autor</th>
+                    <th scope="col">Coautores</th>
+                    <th scope="col">Atribuido para</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($trabalhos as $trabalho)
+                    <tr>
+                      <td>{{$trabalho->titulo}}</td>
+                      <td>{{$trabalho->area->nome}}</td>
+                      <td>{{$trabalho->modalidade->nome}}</td>
+                      <td>{{$trabalho->autor->nome}}</td>
+                      <td>@foreach($trabalho->coautor as $coautor)
+                            {{$coautor->user->name}},
+                          @endforeach
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+        </div>
+      
     </div>
-    <div id="divCandidatos" class="candidatos">
-        <h1>Candidatos</h1>
+
+    
+  {{-- Modalidade --}}
+    
+  
+    <div class="row titulo">
+        <h1>---------Modalidades no seu evento---------</h1>
+    </div>
+    <div class="row">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Modalidade</th>
+            <th scope="col">Área</th>
+          </tr>
+        </thead>
+        <tbody>
+            @foreach($areaModalidades as $areaModalidade)
+              <tr>
+                <td>{{$areaModalidade->modalidade->nome}}</td>
+                <td>{{$areaModalidade->area->nome}}</td>
+              </tr>
+            @endforeach
+  
+  
+        </tbody>
+      </table>
+    </div>
+    <div class="row titulo">
+        <h1>Cadastrar Novo</h1>
+    </div>
+    <form method="POST" action="{{route('areaModalidade.store')}}">
+      @csrf
+      <input type="hidden" name="eventoId" value="{{$evento->id}}">
+      <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <label for="modalidadeId" class="col-form-label">{{ __('Modalidade') }}</label>
+            <select class="form-control @error('modalidadeId') is-invalid @enderror" id="modalidadeId" name="modalidadeId">
+                <option value="" disabled selected hidden> Modalidade </option>
+                @foreach($modalidades as $modalidade)
+                  <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
+                @endforeach
+            </select>
+  
+            @error('modalidadeId')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
+          <div class="col-sm-6">
+              <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
+              <select class="form-control @error('areaId') is-invalid @enderror" id="areaId" name="areaId">
+                  <option value="" disabled selected hidden> Área </option>
+                  @foreach($areas as $area)
+                    <option value="{{$area->id}}">{{$area->nome}}</option>
+                  @endforeach
+              </select>
+  
+              @error('areaId')
+              <span class="invalid-feedback" role="alert">
+                  <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+          </div>
+      </div>
+      <div class="row justify-content-center">
+  
+          <div class="col-md-6">
+              <button type="submit" class="btn btn-primary" style="width:100%">
+                  {{ __('Finalizar') }}
+              </button>
+          </div>
+      </div>
+    </form>
+  </div><!-- End Trabalhos -->
+    <div id="divModalidades" class="modalidades">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 class="titulo-detalhes">Modalidades</h1>
+            </div>            
+        </div>
+        {{-- row card --}}
+        <div class="row justify-content-center">
+            <div class="col-sm-8">
+                <div class="card card-detalhes">
+                    <div class="card-header">
+                        Cadastrar Nova Modalidade
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{route('modalidade.store')}}">
+                            @csrf
+                            <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="nomeModalidade" class="col-form-label">{{ __('Nome') }}</label>
+
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-sm-12">
+                                    <input id="nomeModalidade" type="text" class="form-control @error('nomeModalidade') is-invalid @enderror" name="nomeModalidade" value="{{ old('nomeModalidade') }}" required autocomplete="nomeModalidade" autofocus>
+                        
+                                    @error('nomeModalidade')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                
+                            </div>{{-- end row--}}
+                            
+                                                            
+                          </form>
+                    </div>{{-- End card-body --}}
+                    <div class="card-footer">
+                        <div class="row justify-content-right">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary" style="margin-left:0">Finalizar</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>{{-- end row card --}}
+        
+        <div class="row justify-content-center">
+            <div class="col-sm-8">
+                <div class="card card-detalhes">
+                    <div class="card-header">Modalidades</div>
+                    <div class="card-body">
+                        <table class="table table-hover table-responsive-lg">
+                            <thead>
+                            <tr>
+                                <th scope="col">Nome</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($modalidades as $modalidade)
+                                <tr>
+                                    <td>{{$modalidade->nome}}</td>
+                                </tr>
+                                @endforeach
+                    
+                    
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+          
+        </div>
+        
     </div>
     <div id="divColocacao" class="colocacao">
         <h1>Colocação</h1>
@@ -149,7 +423,7 @@
     <div id="divAtividades" class="atividades">
         <h1>Atividades</h1>
     </div>
-</div>
+
 <!-- Área -->
 <div id="divAreas" class="container" style="display: none">
     <div class="row titulo">
@@ -203,11 +477,16 @@
       </div>
     </form>
 </div>
+
 <!-- Revisores -->
 <div id="divRevisores" class="container" style="display: none">
-    <div class="row titulo">
-        <h1>Revisores</h1>
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Revisores</h1>
+        </div>
     </div>
+    
     <div class="row">
       <table class="table">
         <thead>
@@ -277,236 +556,8 @@
 
 
 </div>
-<!-- Trabalhos -->
-<div id="divTrabalhos" class="container" style="display: none">
-  <div class="row titulo">
-      <h1>Trabalhos</h1>
-  </div>
-  <div class="row">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Titulo</th>
-          <th scope="col">Área</th>
-          <th scope="col">Modalidade</th>
-          <th scope="col">Autor</th>
-          <th scope="col">Coautores</th>
-          <th scope="col">Atribuido para</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach($trabalhos as $trabalho)
-          <tr>
-            <td>{{$trabalho->titulo}}</td>
-            <td>{{$trabalho->area->nome}}</td>
-            <td>{{$trabalho->modalidade->nome}}</td>
-            <td>{{$trabalho->autor->nome}}</td>
-            <td>@foreach($trabalho->coautor as $coautor)
-                  {{$coautor->user->name}},
-                @endforeach
-            </td>
-          </tr>
-        @endforeach
-      </tbody>
-    </table>
-  </div>
-  <div class="row titulo">
-      <h1>Cadastrar Novo</h1>
-  </div>
-  <form method="POST" action="{{route('trabalho.store')}}">
-    @csrf
-    <input type="hidden" name="eventoId" value="{{$evento->id}}">
-    <div class="row justify-content-center">
-        <div class="col-sm-6">
-            <label for="nomeTrabalho" class="col-form-label">{{ __('Nome') }}</label>
-            <input id="nomeTrabalho" type="text" class="form-control @error('nomeTrabalho') is-invalid @enderror" name="nomeTrabalho" value="{{ old('nomeTrabalho') }}" required autocomplete="nomeTrabalho" autofocus>
-
-            @error('nomeTrabalho')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div>
-        <div class="col-sm-6">
-            <label for="emailCoautor" class="col-form-label">{{ __('Email dos coautores(separado por virgula)') }}</label>
-            <input id="emailCoautor" type="text" class="form-control @error('emailCoautor') is-invalid @enderror" name="emailCoautor" value="{{ old('emailCoautor') }}" required autocomplete="emailCoautor" autofocus>
-
-            @error('emailCoautor')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-
-            @error('emailNaoEncontrado')
-            {{$message}}
-            @enderror
-
-        </div>
-        <div class="col-sm-6">
-            <label for="areaModalidadeId" class="col-form-label">{{ __('Área - Modalidade') }}</label>
-            <select class="form-control @error('areaModalidadeId') is-invalid @enderror" id="areaModalidadeId" name="areaModalidadeId">
-                <option value="" disabled selected hidden>-- Área - Modalidade --</option>
-                @foreach($areaModalidades as $areaModalidade)
-                  <option value="{{$areaModalidade->id}}">{{$areaModalidade->area->nome}} - {{$areaModalidade->modalidade->nome}}</option>
-                @endforeach
-            </select>
-
-            @error('areaModalidadeId')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div>
-
-    </div>
-    <div class="row justify-content-center">
-
-        <div class="col-md-6">
-            <button type="submit" class="btn btn-primary" style="width:100%">
-                {{ __('Finalizar') }}
-            </button>
-        </div>
-    </div>
-  </form>
-
-  <div class="row titulo">
-      <h1>---------Modalidade---------</h1>
-  </div>
-  <div class="row">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Nome</th>
-        </tr>
-      </thead>
-      <tbody>
-          @foreach($modalidades as $modalidade)
-            <tr>
-              <td>{{$modalidade->nome}}</td>
-            </tr>
-          @endforeach
-
-
-      </tbody>
-    </table>
-  </div>
-  <div class="row titulo">
-      <h1>Cadastrar Novo</h1>
-  </div>
-  <form method="POST" action="{{route('modalidade.store')}}">
-    @csrf
-    <input type="hidden" name="eventoId" value="{{$evento->id}}">
-    <div class="row justify-content-center">
-        <div class="col-sm-6">
-            <label for="nomeModalidade" class="col-form-label">{{ __('Nome') }}</label>
-            <input id="nomeModalidade" type="text" class="form-control @error('nomeModalidade') is-invalid @enderror" name="nomeModalidade" value="{{ old('nomeModalidade') }}" required autocomplete="nomeModalidade" autofocus>
-
-            @error('nomeModalidade')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div>
-        <!-- <div class="col-sm-6">
-            <label for="areaModalidade" class="col-form-label">{{ __('Área') }}</label>
-            <select class="form-control @error('areaModalidade') is-invalid @enderror" id="areaModalidade" name="areaModalidade">
-                <option value="" disabled selected hidden> Área </option>
-                @foreach($areas as $area)
-                  <option value="{{$area->id}}">{{$area->nome}}</option>
-                @endforeach
-            </select>
-
-            @error('areaModalidade')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div> -->
-    </div>
-    <div class="row justify-content-center">
-
-        <div class="col-md-6">
-            <button type="submit" class="btn btn-primary" style="width:100%">
-                {{ __('Finalizar') }}
-            </button>
-        </div>
-    </div>
-  </form>
-
-  <div class="row titulo">
-      <h1>---------Modalidades no seu evento---------</h1>
-  </div>
-  <div class="row">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Modalidade</th>
-          <th scope="col">Área</th>
-        </tr>
-      </thead>
-      <tbody>
-          @foreach($areaModalidades as $areaModalidade)
-            <tr>
-              <td>{{$areaModalidade->modalidade->nome}}</td>
-              <td>{{$areaModalidade->area->nome}}</td>
-            </tr>
-          @endforeach
-
-
-      </tbody>
-    </table>
-  </div>
-  <div class="row titulo">
-      <h1>Cadastrar Novo</h1>
-  </div>
-  <form method="POST" action="{{route('areaModalidade.store')}}">
-    @csrf
-    <input type="hidden" name="eventoId" value="{{$evento->id}}">
-    <div class="row justify-content-center">
-      <div class="col-sm-6">
-          <label for="modalidadeId" class="col-form-label">{{ __('Modalidade') }}</label>
-          <select class="form-control @error('modalidadeId') is-invalid @enderror" id="modalidadeId" name="modalidadeId">
-              <option value="" disabled selected hidden> Modalidade </option>
-              @foreach($modalidades as $modalidade)
-                <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
-              @endforeach
-          </select>
-
-          @error('modalidadeId')
-          <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-          </span>
-          @enderror
-      </div>
-        <div class="col-sm-6">
-            <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
-            <select class="form-control @error('areaId') is-invalid @enderror" id="areaId" name="areaId">
-                <option value="" disabled selected hidden> Área </option>
-                @foreach($areas as $area)
-                  <option value="{{$area->id}}">{{$area->nome}}</option>
-                @endforeach
-            </select>
-
-            @error('areaId')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div>
-    </div>
-    <div class="row justify-content-center">
-
-        <div class="col-md-6">
-            <button type="submit" class="btn btn-primary" style="width:100%">
-                {{ __('Finalizar') }}
-            </button>
-        </div>
-    </div>
-  </form>
-
-
-
 </div>
+
 @endsection
 @section('javascript')
   <script type="text/javascript" >
@@ -540,7 +591,7 @@
         trabalhos = document.getElementById('divTrabalhos');
         revisores = document.getElementById('divRevisores');
         comissao = document.getElementById('divComissao')
-        candidatos = document.getElementById('divCandidatos');
+        modalidades = document.getElementById('divModalidades');
         colocacao = document.getElementById('divColocacao');
         atividades = document.getElementById('divAtividades');
         areas = document.getElementById('divAreas');
@@ -551,7 +602,7 @@
             trabalhos.style.display = "none";
             revisores.style.display = "none";
             comissao.style.display = "none";
-            candidatos.style.display = "none";
+            modalidades.style.display = "none";
             colocacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "none";
@@ -564,7 +615,7 @@
             trabalhos.style.display = "block";
             revisores.style.display = "none";
             comissao.style.display = "none";
-            candidatos.style.display = "none";
+            modalidades.style.display = "none";
             colocacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "none";
@@ -575,7 +626,7 @@
             trabalhos.style.display = "none";
             revisores.style.display = "block";
             comissao.style.display = "none";
-            candidatos.style.display = "none";
+            modalidades.style.display = "none";
             colocacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "none";
@@ -586,18 +637,18 @@
             trabalhos.style.display = "none";
             revisores.style.display = "none";
             comissao.style.display = "block";
-            candidatos.style.display = "none";
+            modalidades.style.display = "none";
             colocacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "none";
         }
-        if(id == 'candidatos'){
-            // console.log('candidatos');
+        if(id == 'modalidades'){
+            // console.log('modalidades');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
             revisores.style.display = "none";
             comissao.style.display = "none";
-            candidatos.style.display = "block";
+            modalidades.style.display = "block";
             colocacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "none";
@@ -608,7 +659,7 @@
             trabalhos.style.display = "none";
             revisores.style.display = "none";
             comissao.style.display = "none";
-            candidatos.style.display = "none";
+            modalidades.style.display = "none";
             colocacao.style.display = "block";
             atividades.style.display = "none";
             areas.style.display = "none";
@@ -619,7 +670,7 @@
             trabalhos.style.display = "none";
             revisores.style.display = "none";
             comissao.style.display = "none";
-            candidatos.style.display = "none";
+            modalidades.style.display = "none";
             colocacao.style.display = "none";
             atividades.style.display = "block";
             areas.style.display = "none";
@@ -630,7 +681,7 @@
             trabalhos.style.display = "none";
             revisores.style.display = "none";
             comissao.style.display = "none";
-            candidatos.style.display = "none";
+            modalidades.style.display = "none";
             colocacao.style.display = "none";
             atividades.style.display = "none";
             areas.style.display = "block";

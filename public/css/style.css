@@ -52,7 +52,7 @@ body{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .titulo{
-    margin:5% 0 2% 0;
+    margin:7% 0 2% 0;
     border-bottom: 2px solid #ccc;
 }
 .titulo h1{
@@ -68,11 +68,18 @@ body{
 
 
 /* SIDEBAR */
-
+.navbar{
+    top:0;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+}
 
 .wrapper{
     display: flex;
     position: relative;
+    top: 0;
+    /* z-index: -10; */
 }
 .wrapper .sidebar{
     padding: 30px 0;
@@ -84,10 +91,13 @@ body{
     transition: 0.2s;
 }
 .wrapper .sidebar h2{
+    font-size: 20px;
     color: #fff;
-    padding:15px;
+    margin-top: 50px;
+    padding: 0 15px 20px 15px;
+    border-bottom: 2px solid #114048ff;
     /* text-align: center; */
-    margin-bottom: 30px;
+    /* margin-bottom: 10px; */
     transition: 0.2s;
 }
 .wrapper .sidebar ul{
@@ -99,32 +109,52 @@ body{
 
 }
 
-.wrapper .sidebar ul li a{
+.wrapper .sidebar ul a li {
     color: #fff;
     display: block;
     text-decoration: none;
 }
 .wrapper .sidebar ul li:hover{
+    cursor:pointer;
     background-color: #114048ff;
     transition: 0.2s;
 }
-.wrapper .sidebar ul li a img{
-    width: 22px;
+.wrapper .sidebar ul a li  img{
+    width: 17px;
     margin-right: 15px;
     transition: 0.2s;
 }
-.wrapper .sidebar ul li a h5{
+.wrapper .sidebar ul a li h5{
     /* float: right; */
+    font-size: 17px;
     display: inline;
     transition: 0.2s;
 }
 
 /* Detalhes do Evento */
 .main_content{
+    
+    /* height: 100vh; */
     width: 100% - 200px;
+    margin-top: 50px;
     margin-left: 200px;
     padding: 20px;
     /* background-color: rgba(0, 0, 0, 0.19); */
+}
+.titulo-detalhes{
+    
+    border-bottom: 2px solid #ccc;
+}
+.subtitulo-detalhes{
+    font-size: 25px;
+}
+.card-footer button{
+    float: right;
+}
+
+.card-header{
+    background-color:#114048ff;
+    color: white;
 }
 
 /* Visualização dos conteúdos dos detalhes do evento */
@@ -132,16 +162,23 @@ body{
 #divTrabalhos{display: none;}
 #divRevisores{display: none;}
 #divComissao{display: none;}
-#divCandidatos{display: none;}
+#divModalidades{display: none;}
 #divColocacao{display: none;}
 #divAtividades{display: none;}
 @media screen and (max-width: 576px){
+    .wrapper .sidebar{
+        margin-top: 30px;
+    }
     .wrapper .sidebar h2{
         display: none;
         transition: 0.2s;
     }
-    .wrapper .sidebar ul li a h5{
+    .wrapper .sidebar ul a li h5{
         display: none;
+        transition: 0.2s;
+    }
+    .wrapper .sidebar ul a li  img{
+        width: 20px;
         transition: 0.2s;
     }
     .wrapper .sidebar{
