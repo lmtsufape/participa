@@ -517,7 +517,6 @@
             console.log('foi')
     }
 
-  <script>
     // var newOptions = {
     //                   "Option 1": "value1",
     //                   "Option 2": "value2",
