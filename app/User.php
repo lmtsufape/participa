@@ -76,7 +76,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Evento', 'coordenadorId');
     }
     
+
     public function sendPasswordResetNotification($token){
         $this->notify(new recuperacaoSenha($token));
     }
+
 }
