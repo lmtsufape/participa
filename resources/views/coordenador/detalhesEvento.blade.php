@@ -268,72 +268,12 @@
         <h1>---------Modalidades no seu evento---------</h1>
     </div>
     <div class="row">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Modalidade</th>
-            <th scope="col">Área</th>
-          </tr>
-        </thead>
-        <tbody>
-            @foreach($areaModalidades as $areaModalidade)
-              <tr>
-                <td>{{$areaModalidade->modalidade->nome}}</td>
-                <td>{{$areaModalidade->area->nome}}</td>
-              </tr>
-            @endforeach
-  
-  
-        </tbody>
-      </table>
+      
     </div>
     <div class="row titulo">
         <h1>Cadastrar Novo</h1>
     </div>
-    <form method="POST" action="{{route('areaModalidade.store')}}">
-      @csrf
-      <input type="hidden" name="eventoId" value="{{$evento->id}}">
-      <div class="row justify-content-center">
-        <div class="col-sm-6">
-            <label for="modalidadeId" class="col-form-label">{{ __('Modalidade') }}</label>
-            <select class="form-control @error('modalidadeId') is-invalid @enderror" id="modalidadeId" name="modalidadeId">
-                <option value="" disabled selected hidden> Modalidade </option>
-                @foreach($modalidades as $modalidade)
-                  <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
-                @endforeach
-            </select>
-  
-            @error('modalidadeId')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div>
-          <div class="col-sm-6">
-              <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
-              <select class="form-control @error('areaId') is-invalid @enderror" id="areaId" name="areaId">
-                  <option value="" disabled selected hidden> Área </option>
-                  @foreach($areas as $area)
-                    <option value="{{$area->id}}">{{$area->nome}}</option>
-                  @endforeach
-              </select>
-  
-              @error('areaId')
-              <span class="invalid-feedback" role="alert">
-                  <strong>{{ $message }}</strong>
-              </span>
-              @enderror
-          </div>
-      </div>
-      <div class="row justify-content-center">
-  
-          <div class="col-md-6">
-              <button type="submit" class="btn btn-primary" style="width:100%">
-                  {{ __('Finalizar') }}
-              </button>
-          </div>
-      </div>
-    </form>
+    
   </div><!-- End Trabalhos -->
     <div id="divModalidades" class="modalidades">
         <div class="row">
@@ -343,14 +283,14 @@
         </div>
         {{-- row card --}}
         <div class="row justify-content-center">
-            <div class="col-sm-8">
-                <div class="card card-detalhes">
-                    <div class="card-header">
-                        Cadastrar Nova Modalidade
-                    </div>
+            <div class="col-sm-6">
+                <div class="card">
                     <div class="card-body">
-                        <form method="POST" action="{{route('modalidade.store')}}">
-                            @csrf
+                      <h5 class="card-title">Nova Modalidade</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova modalidade para o seu evento</h6>
+                      <form method="POST" action="{{route('modalidade.store')}}">
+                        @csrf
+                        <p class="card-text">
                             <input type="hidden" name="eventoId" value="{{$evento->id}}">
                             <div class="row">
                                 <div class="col-sm-12">
@@ -370,28 +310,87 @@
                                 </div>
                                 
                             </div>{{-- end row--}}
-                            
                                                             
-                          </form>
-                    </div>{{-- End card-body --}}
-                    <div class="card-footer">
-                        <div class="row justify-content-right">
-                            <div class="col-sm-12">
-                                <button type="submit" class="btn btn-primary" style="margin-left:0">Finalizar</button>
-
+                        </p>
+                        <div class="row justify-content-center">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary" style="width:100%">
+                                    {{ __('Finalizar') }}
+                                </button>
                             </div>
                         </div>
+                        </form>
                     </div>
-                </div>
+                  </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Áreas por Modalidade</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">Vincule as Áreas de acordo com cada modalidade</h6>
+                      <form method="POST" action="{{route('areaModalidade.store')}}">
+                        @csrf
+                        <p class="card-text">
+                            <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                            <div class="row justify-content-center">
+                              <div class="col-sm-6">
+                                  <label for="modalidadeId" class="col-form-label">{{ __('Modalidade') }}</label>
+                                  <select class="form-control @error('modalidadeId') is-invalid @enderror" id="modalidadeId" name="modalidadeId">
+                                      <option value="" disabled selected hidden> Modalidade </option>
+                                      @foreach($modalidades as $modalidade)
+                                        <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
+                                      @endforeach
+                                  </select>
+                        
+                                  @error('modalidadeId')
+                                  <span class="invalid-feedback" role="alert">
+                                      <strong>{{ $message }}</strong>
+                                  </span>
+                                  @enderror
+                              </div>
+                                <div class="col-sm-6">
+                                    <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
+                                    <select class="form-control @error('areaId') is-invalid @enderror" id="areaId" name="areaId">
+                                        <option value="" disabled selected hidden> Área </option>
+                                        @foreach($areas as $area)
+                                          <option value="{{$area->id}}">{{$area->nome}}</option>
+                                        @endforeach
+                                    </select>
+                        
+                                    @error('areaId')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </p>
+                        
+                        <div class="row justify-content-center">
+                    
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary" style="width:100%">
+                                    {{ __('Finalizar') }}
+                                </button>
+                            </div>
+                        </div>
+                      </form>
+                      
+                    </div>
+                  </div>{{-- End card--}}
             </div>
         </div>{{-- end row card --}}
         
+
         <div class="row justify-content-center">
-            <div class="col-sm-8">
-                <div class="card card-detalhes">
-                    <div class="card-header">Modalidades</div>
+            {{-- table modalidades --}}
+            <div class="col-sm-6">
+                <div class="card">
                     <div class="card-body">
-                        <table class="table table-hover table-responsive-lg">
+                      <h5 class="card-title">Modalidades</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">Modalidades cadastradas no seu evento</h6>
+                      <p class="card-text">
+                        <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
                             <tr>
                                 <th scope="col">Nome</th>
@@ -407,9 +406,42 @@
                     
                             </tbody>
                         </table>
+                      </p>
                     </div>
-                </div>
-            </div>
+                  </div>
+                
+            </div>{{-- end table--}}
+
+            {{-- table modalidades Área--}}
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Áreas por Modalidade</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">Áreas correspondentes à cada modalidade do seu evento</h6>
+                      <p class="card-text">
+                        <table class="table table-hover table-responsive-lg table-sm">
+                            <thead>
+                              <tr>
+                                <th scope="col">Modalidade</th>
+                                <th scope="col">Área</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($areaModalidades as $areaModalidade)
+                                  <tr>
+                                    <td>{{$areaModalidade->modalidade->nome}}</td>
+                                    <td>{{$areaModalidade->area->nome}}</td>
+                                  </tr>
+                                @endforeach
+                      
+                      
+                            </tbody>
+                          </table>
+                      </p>
+                    </div>
+                  </div>
+                
+            </div>{{-- end table área--}}
         </div>
         
         <div class="row">
@@ -426,8 +458,49 @@
 
 <!-- Área -->
 <div id="divAreas" class="container" style="display: none">
-    <div class="row titulo">
-        <h1>Áreas Cadastradas</h1>
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Áreas</h1>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Nova Área</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova área para o seu evento</h6>
+                  <form method="POST" action="{{route('area.store')}}">
+                      @csrf
+                    <p class="card-text">
+                            <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                            <div class="row justify-content-center">
+                                <div class="col-sm-12">
+                                    <label for="nome" class="col-form-label">{{ __('Nome da Área') }}</label>
+                                    <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
+                    
+                                    @error('nome')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </p>
+                        <div class="row justify-content-center">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary" style="width:100%">
+                                    {{ __('Finalizar') }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                  
+                </div>
+              </div>{{-- End card--}}
+            
+        </div>
+        
     </div>
     <div class="row">
       <table class="table">
@@ -452,30 +525,7 @@
     <div class="row titulo">
         <h1>Cadastrar Nova</h1>
     </div>
-    <form method="POST" action="{{route('area.store')}}">
-      @csrf
-      <input type="hidden" name="eventoId" value="{{$evento->id}}">
-      <div class="row justify-content-center">
-          <div class="col-sm-6">
-              <label for="nome" class="col-form-label">{{ __('Nome da Área') }}</label>
-              <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
-
-              @error('nome')
-              <span class="invalid-feedback" role="alert">
-                  <strong>{{ $message }}</strong>
-              </span>
-              @enderror
-          </div>
-      </div>
-      <div class="row justify-content-center">
-
-          <div class="col-md-6">
-              <button type="submit" class="btn btn-primary" style="width:100%">
-                  {{ __('Finalizar') }}
-              </button>
-          </div>
-      </div>
-    </form>
+    
 </div>
 
 <!-- Revisores -->
