@@ -66,103 +66,144 @@
     <div id="divComissao" class="comissao">
         <div class="row">
             <div class="col-sm-12">
-                <h1>Comissão</h1>
+                <h1 class="titulo-detalhes">Comissão</h1>
+            </div>            
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Novo Membro</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">Cadastre um membro para sua Comissão</h6>
+                      <form action="{{route('cadastrar.comissao')}}" method="POST">
+                        @csrf
+                        <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
+                        <p class="card-text">
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6">
+                                    <label for="emailMembroComissao" class="control-label">E-mail do novo membro</label>
+                                    <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail">
+                                    @error('emailMembroComissao')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="especProfissional" class="control-label">Experiência Profissional</label>
+                                    <input type="text" name="especProfissional" class="form-control @error('especProfissional') is-invalid @enderror" name="especProfissional" value="{{ old('especProfissional') }}" id="especProfissional" placeholder="Esperiência Profissional">
+                                    @error('especProfissional')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>                            
+                        </div>
+                        </p>
+                        <div class="row justify-content-center">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary" style="width:100%">
+                                    {{ __('Finalizar') }}
+                                </button>
+                            </div>
+                        </div>
+                        
+                        </form>
+                    </div>
+                  </div>{{-- end card--}}
+            </div>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Coordenador da Comissão</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Selecione um coordenador para comissão do seu evento</h6>
+                        <form id="formCoordComissao" action="{{route('cadastrar.coordComissao')}}" method="POST">
+                            @csrf
+                            <p class="card-text">
+                                    <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
+                    
+                                    <div class="form-group">
+                                        <label for="coodComissaoId">Coordenador Comissão</label>
+                                        <select class="form-control" name="coordComissaoId" id="coodComissaoId">
+                                            @foreach ($users as $user)
+                                                @if($evento->coordComissaoId == $user->id)
+                                                    <option value="{{$user->id}}" selected>{{$user->name}}</option>
+                                                @else
+                                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </p>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary" style="width:100%">
+                                            {{ __('Definir Coordenador') }}
+                                        </button>
+                                        
+                                    </div>
+                                </div>
+                            </form>
+                      
+                    </div>
+                  </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <form action="{{route('cadastrar.comissao')}}" method="POST">
-                    @csrf
-                    <div class="form-group">
-                        <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
-                        {{-- Nome do Categoria --}}
-                        <div class="col-sm-4">
-                            <label for="emailMembroComissao" class="control-label">E-mail do novo membro</label>
-                            <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail">
-                            @error('emailMembroComissao')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                        
-                        {{-- Nome do especProfissional --}}
-                        <div class="col-sm-4">                            
-                            <label for="especProfissional" class="control-label">Experiência Profissional</label>
-                            <input type="text" name="especProfissional" class="form-control @error('especProfissional') is-invalid @enderror" name="especProfissional" value="{{ old('especProfissional') }}" id="especProfissional" placeholder="Esperiência Profissional">
-                            @error('especProfissional')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
+                <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Coordenadores</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">Coordenadores do seu evento cadastrados</h6>
+                      <p class="card-text">
+                        <table class="table table-hover table-responsive-lg table-sm">
+                            <thead>
+                                <th>
+                                    <th>Nome</th>
+                                    <th>Especialidade</th>
+                                    <th>Celular</th>
+                                    <th>E-mail</th>
+                                </th>
+                            </thead>
+                                @foreach ($users as $user)
+                                    <tbody>
+        
+                                        <th>
+                                            <td>{{$user->name}}</td>
+                                            <td>{{$user->especProfissional}}</td>
+                                            <td>{{$user->celular}}</td>
+                                            <td>{{$user->email}}</td>
+                                        </th>
+                                    </tbody>
+                                @endforeach
+                        </table>
+                      </p>
                     </div>
-                        
-                    <div class="col-sm-12">
-
-                        <button type="submit" class="btn btn-primary">Cadastrar</button>
-                    </div>
-                        
-                    
-                </form>
+                  </div>
             </div>
         </div>
         
         <div class="row">
-            <form id="formCoordComissao" action="{{route('cadastrar.coordComissao')}}" method="POST">
-                @csrf
-                <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
-
-                <div class="form-group">
-                    <label for="coodComissaoId">Coordenador Comissão</label>
-                    <select class="form-control" name="coordComissaoId" id="coodComissaoId">
-                        @foreach ($users as $user)
-                            @if($evento->coordComissaoId == $user->id)
-                                <option value="{{$user->id}}" selected>{{$user->name}}</option>
-                            @else
-                                <option value="{{$user->id}}">{{$user->name}}</option>
-                            @endif
-                        @endforeach
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Definir Coordenador</button>
-            </form>
+            
         </div>
 
         {{-- tabela membros comissão --}}
         <div class="row">
             <div class="col-sm-12">
                 <table class="table table-responsive-lg table-hover">
-                    <thead>
-                        <th>
-                            <th>Nome</th>
-                            <th>Especialidade</th>
-                            <th>Celular</th>
-                            <th>E-mail</th>
-                        </th>
-                    </thead>
-                        @foreach ($users as $user)
-                            <tbody>
-
-                                <th>
-                                    <td>{{$user->name}}</td>
-                                    <td>{{$user->especProfissional}}</td>
-                                    <td>{{$user->celular}}</td>
-                                    <td>{{$user->email}}</td>
-                                </th>
-                            </tbody>
-                        @endforeach
+                    
                 </table>
             </div>
         </div>
     </div>{{-- End Comissão --}}
     <!-- Trabalhos -->
     <div id="divTrabalhos" class="container" style="display: none">
+        
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Trabalhos</h1>
-            </div>
+            </div>            
         </div>
 
         <div class="row subtitulo-detalhes">
@@ -263,16 +304,6 @@
     
   {{-- Modalidade --}}
     
-  
-    <div class="row titulo">
-        <h1>---------Modalidades no seu evento---------</h1>
-    </div>
-    <div class="row">
-      
-    </div>
-    <div class="row titulo">
-        <h1>Cadastrar Novo</h1>
-    </div>
     
   </div><!-- End Trabalhos -->
     <div id="divModalidades" class="modalidades">
