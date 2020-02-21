@@ -4,7 +4,9 @@ color secondary: #196572ff
 color dark: #071b1eff
 
 */
-
+.content{
+    margin-top: 50px;
+}
 body{
     margin: 0;
     padding: 0;
