@@ -7,6 +7,36 @@ color dark: #071b1eff
 .content{
     margin-top: 50px;
 }
+.icon-card{
+    width:15px;
+    margin-right: 15px;
+}
+#options{
+    /* padding: 5px; */
+    text-align: center;
+    height: 22px;
+    width: 10px;
+    /* background-color: blue; */
+    background-image: url('/img/icons/ellipsis-v-solid.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    /* background-size: cover; */
+    transition: 0.2s;
+}
+#options::after{
+    display:none;
+}
+#options:hover{
+    background-image: url('/img/icons/ellipsis-v-solid-hover.svg');
+    transition: 0.2s;
+}
+.dropdown-options{
+    float:right; 
+    margin-right:-10px;
+}
+.dropdown-item:hover{
+    background-color: #ccc;
+}
 body{
     margin: 0;
     padding: 0;
