@@ -12,7 +12,7 @@ color dark: #071b1eff
     margin-right: 15px;
 }
 #options{
-    /* padding: 5px; */
+    /* padding: 5px;     */
     text-align: center;
     height: 22px;
     width: 10px;
@@ -32,10 +32,16 @@ color dark: #071b1eff
 }
 .dropdown-options{
     float:right; 
-    margin-right:-10px;
+    margin-right:-5px;
 }
 .dropdown-item:hover{
     background-color: #ccc;
+}
+.visualizarEvento{
+    color:#196572ff;
+}
+.visualizarEvento:hover{
+    color:#196572ff;
 }
 body{
     margin: 0;
@@ -187,6 +193,42 @@ body{
 .card-header{
     background-color:#114048ff;
     color: white;
+}
+
+/* EVENTO */
+.banner-evento{
+    width: 100vw;
+    height: 40vh;
+    border-image-slice: fill;
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    float: left;
+    padding: 0;
+    background-color:#071b1eff ;
+    
+}
+.banner-evento img{
+    filter: blur(20px);
+    -webkit-filter: blur(20px);
+    width: 100%;
+}
+.front-image-evento{
+    margin-top: 20px;
+    z-index: 15;
+    /* position: relative; */
+    top: 0;
+    float:left;
+    border-radius: 10px;
+    
+    width: 500px;
+    transition: 0.5s;
+    
+}
+.front-image-evento:hover{
+    width: 550px;
+    transition: 0.5s;
 }
 
 /* Visualização dos conteúdos dos detalhes do evento */

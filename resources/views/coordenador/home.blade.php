@@ -71,25 +71,9 @@
                         <strong>Fim:</strong> {{$evento->dataFim}}<br>
                         <strong>Número de Vagas:</strong> {{$evento->numeroParticipantes}}
                     </p>
-
-                    
-                      <div class="row justify-content-center">
-                          <div class="col-sm-4">
-                              <div class="row justify-content-center">
-                                  
-                              </div>
-                          </div>
-                          <div class="col-sm-4">
-                              <div class="row justify-content-center">
-                                  
-
-                              </div>
-                          </div>
-                          <div class="col-sm-4" style="padding:0">
-                              
-                          </div>
-                      </div>
-                    
+                    <p>
+                        <a href="{{  route('evento.visualizar',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
+                    </p>
                     
                 </div>
                 
