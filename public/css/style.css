@@ -110,7 +110,8 @@ body{
     top:0;
     position: fixed;
     width: 100%;
-    z-index: 1;
+    z-index: 100;
+
 }
 
 .wrapper{
@@ -215,20 +216,21 @@ body{
     width: 100%;
 }
 .front-image-evento{
-    margin-top: 20px;
+    margin-top: 25px;
+    margin-left: 25px;
+    width: 40%;
     z-index: 15;
     /* position: relative; */
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2);
     top: 0;
     float:left;
     border-radius: 10px;
     
-    width: 500px;
-    transition: 0.5s;
+    /* width: 500px; */
     
 }
-.front-image-evento:hover{
-    width: 550px;
-    transition: 0.5s;
+.margin{
+    margin-bottom:20px;
 }
 
 /* Visualização dos conteúdos dos detalhes do evento */
@@ -262,5 +264,13 @@ body{
     }
     .main_content{
         margin-left: 60px;
+    }
+    .banner-evento{
+        height: 27vh;
+    }
+    .front-image-evento{
+        margin: 35px 20px 35px 20px;
+        width: 90%;
+        
     }
 }
