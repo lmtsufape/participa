@@ -30,27 +30,31 @@
         </div>
     </div>
     <div class="row margin">
-        <div class="col-sm-12">
+        <div class="col-sm-12 calendar-evento">
             <h4>Realização do Evento</h4>
+            <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
             {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}
         </div>
     </div>
     <div class="row margin">
-        <div class="col-sm-12">
+        <div class="col-sm-12 calendar-evento">
             <h4>Submissão de Trabalhos</h4>
+            <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
             {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}
         </div>
     </div>
     <div class="row margin">
-        <div class="col-sm-12">
+        <div class="col-sm-12 calendar-evento">
             <h4>Revisão de Trabalhos</h4>
+            <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
             {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}
         </div>
     </div>
 
     <div class="row margin">
-        <div class="col-sm-12">
+        <div class="col-sm-12 endereco-evento">
             <h4>Endereço</h4>
+            <img class="" src="{{asset('img/icons/map-marker-alt-solid.svg')}}" alt="">
             {{$evento->endereco->rua}}, {{$evento->endereco->numero}} - {{$evento->endereco->cidade}} / {{$evento->endereco->uf}}.
         </div>
     </div>

@@ -232,6 +232,12 @@ body{
 .margin{
     margin-bottom:20px;
 }
+.calendar-evento img{
+    width: 20px;
+}
+.endereco-evento img{
+    width: 20px;
+}
 
 /* Visualização dos conteúdos dos detalhes do evento */
 #divInformacoes{display: block;}
