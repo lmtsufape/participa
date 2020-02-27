@@ -232,12 +232,13 @@ body{
 .margin{
     margin-bottom:20px;
 }
-.calendar-evento img{
+.info-evento img{
     width: 20px;
 }
-.endereco-evento img{
-    width: 20px;
+.info-evento p{
+    font-size: 15px;
 }
+
 
 /* Visualização dos conteúdos dos detalhes do evento */
 #divInformacoes{display: block;}
