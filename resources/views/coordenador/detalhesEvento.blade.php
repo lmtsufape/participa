@@ -198,11 +198,19 @@
     </div>{{-- End Comissão --}}
     <!-- Trabalhos -->
     <div id="divTrabalhos" class="container" style="display: none">
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 class="titulo-detalhes">Trabalhos</h1>
+            </div>            
+        </div>
 
+        
+    
     {{-- Tabela Trabalhos --}}
     <div class="row">
         <div class="col-sm-12">
-            <table class="table">
+            <table class="table table-hover table-responsive-lg table-sm">
                 <thead>
                   <tr>
                     <th scope="col">Titulo</th>
@@ -229,7 +237,7 @@
                 </tbody>
               </table>
         </div>
-    </div>
+      
     </div>
 
     
