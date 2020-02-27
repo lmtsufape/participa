@@ -198,74 +198,6 @@
     </div>{{-- End Comissão --}}
     <!-- Trabalhos -->
     <div id="divTrabalhos" class="container" style="display: none">
-        
-        <div class="row">
-            <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Trabalhos</h1>
-            </div>            
-        </div>
-
-        <div class="row subtitulo-detalhes">
-            <div class="col-sm-12">
-                <p>Cadastrar Novo</p>
-            </div>
-        </div>
-        <form method="POST" action="{{route('trabalho.store')}}">
-          @csrf
-          <input type="hidden" name="eventoId" value="{{$evento->id}}">
-          <div class="row justify-content-center">
-              {{-- Nome Trabalho  --}}
-            <div class="col-sm-4">
-                  <label for="nomeTrabalho" class="col-form-label">{{ __('Nome do Trabalho') }}</label>
-                  <input id="nomeTrabalho" type="text" class="form-control @error('nomeTrabalho') is-invalid @enderror" name="nomeTrabalho" value="{{ old('nomeTrabalho') }}" required autocomplete="nomeTrabalho" autofocus>
-      
-                  @error('nomeTrabalho')
-                  <span class="invalid-feedback" role="alert">
-                      <strong>{{ $message }}</strong>
-                  </span>
-                  @enderror
-              </div>
-              <div class="col-sm-4">
-                  <label for="emailCoautor" class="col-form-label">{{ __('Email dos coautores(separado por virgula)') }}</label>
-                  <input id="emailCoautor" type="text" class="form-control @error('emailCoautor') is-invalid @enderror" name="emailCoautor" value="{{ old('emailCoautor') }}" required autocomplete="emailCoautor" autofocus>
-      
-                  @error('emailCoautor')
-                  <span class="invalid-feedback" role="alert">
-                      <strong>{{ $message }}</strong>
-                  </span>
-                  @enderror
-      
-                  @error('emailNaoEncontrado')
-                  {{$message}}
-                  @enderror
-      
-              </div>
-              <div class="col-sm-4">
-                  <label for="areaModalidadeId" class="col-form-label">{{ __('Área - Modalidade') }}</label>
-                  <select class="form-control @error('areaModalidadeId') is-invalid @enderror" id="areaModalidadeId" name="areaModalidadeId">
-                      <option value="" disabled selected hidden>-- Área - Modalidade --</option>
-                      @foreach($areaModalidades as $areaModalidade)
-                        <option value="{{$areaModalidade->id}}">{{$areaModalidade->area->nome}} - {{$areaModalidade->modalidade->nome}}</option>
-                      @endforeach
-                  </select>
-      
-                  @error('areaModalidadeId')
-                  <span class="invalid-feedback" role="alert">
-                      <strong>{{ $message }}</strong>
-                  </span>
-                  @enderror
-              </div>
-      
-          </div>
-          <div class="row justify-content-center">
-      
-              <div class="col-md-6">
-                  <button type="submit" class="btn btn-primary" style="width:100%">
-                      {{ __('Finalizar') }}
-                  </button>
-              </div>
-          </div>
-        </form>
 
     {{-- Tabela Trabalhos --}}
     <div class="row">
@@ -297,7 +229,7 @@
                 </tbody>
               </table>
         </div>
-      
+    </div>
     </div>
 
     

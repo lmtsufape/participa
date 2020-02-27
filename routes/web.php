@@ -49,4 +49,5 @@ Route::post(  '/revisor/criar',         'RevisorController@store'               
 //AreaModalidade
 Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'        )->name('areaModalidade.store');
 //Trabalho
+Route::get(   '/trabalho/submeter/{id}',     'TrabalhoController@index'              )->name('trabalho.index');
 Route::post(  '/trabalho/criar',        'TrabalhoController@store'              )->name('trabalho.store');

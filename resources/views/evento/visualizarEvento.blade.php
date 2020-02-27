@@ -68,9 +68,9 @@
     </div>
     
     <div class="row justify-content-center" style="margin: 20px 0 20px 0">
-
+        
         <div class="col-md-6" style="padding-left:0">
-            <a class="btn btn-secondary botao-form" href="#" style="width:100%">Submeter Trabalho</a>
+            <a class="btn btn-secondary botao-form" href="{{route('trabalho.index',['id'=>$evento->id])}}" style="width:100%">Submeter Trabalho</a>
         </div>
         <div class="col-md-6" style="padding-right:0">
             <a class="btn btn-primary botao-form" href="#" style="width:100%">Fazer Inscrição</a>
