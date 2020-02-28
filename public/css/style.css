@@ -173,9 +173,23 @@ body{
 #dropdownAreas{
     display: none;
 }
-#arrowArea{
-    width: 10px;
+#dropdownAreas h5{
+    font-size: 12px;
 }
+
+#dropdownRevisores{
+    display: none;
+}
+#dropdownRevisores h5{
+    font-size: 12px;
+}
+#dropdownComissao{
+    display: none;
+}
+#dropdownComissao h5{
+    font-size: 12px;
+}
+
 /* Detalhes do Evento */
 .main_content{
     
@@ -256,6 +270,9 @@ body{
 #divAtividades{display: none;}
 #divCadastrarAreas{display: none;}
 #divListarAreas{display: none;}
+#divCadastrarComissao{display: none;}
+#divDefinirCoordComissao{display: none;}
+#divListarComissao{display: none;}
 @media screen and (max-width: 576px){
     .wrapper .sidebar{
         margin-top: 30px;
