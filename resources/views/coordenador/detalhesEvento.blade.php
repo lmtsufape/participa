@@ -15,10 +15,23 @@
                     <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Trabalhos</h5>
                 </li>
             </a>
-            <a id="areas" onclick="habilitarPagina('areas');">
+            <a id="areas">
                 <li>
-                    <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""> <h5> Áreas Tématicas</h5>
+                    <img id="arrowArea" src="{{asset('img/icons/arrow-up-solid.svg')}}" alt=""><h5> Áreas</h5>
                 </li>
+                <div id="dropdownAreas" style="background-color: gray">
+                    <a id="cadastrarAreas" onclick="habilitarPagina('cadastrarAreas')">
+                        <li>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Cadastrar Áreas</h5>
+                        </li>
+                    </a>
+                    <a id="listarAreas" onclick="habilitarPagina('listarAreas')">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Áreas</h5>
+                        </li>
+                    </a>
+                </div>
+                
             </a>
             <a id="revisores"onclick="habilitarPagina('revisores')">
                 <li>
@@ -428,10 +441,10 @@
     </div>
 
 <!-- Área -->
-<div id="divAreas" class="container" style="display: none">
+<div id="divCadastrarAreas" class="container" style="display: none">
     <div class="row">
         <div class="col-sm-12">
-            <h1 class="titulo-detalhes">Áreas</h1>
+            <h1 class="titulo-detalhes">Cadastrar Áreas</h1>
         </div>
     </div>
 
@@ -471,7 +484,17 @@
               </div>{{-- End card--}}
         </div>        
     </div>
+</div>
+
+<div id="divListarAreas" class="container" style="display: none">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Listar Áreas</h1>
+        </div>
+    </div>
+
     <div class="row justify-content-center">
+        
         <div class="col-sm-8">
             <div class="card">
                 <div class="card-body">
@@ -502,7 +525,6 @@
         </div>
     </div>    
 </div>
-
 <!-- Revisores -->
 <div id="divRevisores" class="container" style="display: none">
     
@@ -611,6 +633,23 @@
 @section('javascript')
   <script type="text/javascript" >
 
+  $(function(){
+    statusArea = 'hide';
+    $('#areas').click(function(){
+        console.log("Areas")
+        if(statusArea == 'hide'){
+            $('#dropdownAreas').show(200);
+            statusArea = 'show';
+            return
+        }
+        if(statusArea == 'show'){
+            $('#dropdownAreas').hide(200);
+            statusArea = 'hide';
+            return
+        }
+    });
+  });
+  
     function cadastrarCoodComissao(){
         
             document.getElementById("formCoordComissao").submit();
@@ -643,7 +682,8 @@
         modalidades = document.getElementById('divModalidades');
         classificacao = document.getElementById('divClassificacao');
         atividades = document.getElementById('divAtividades');
-        areas = document.getElementById('divAreas');
+        cadastrarAreas = document.getElementById('divCadastrarAreas');
+        listarAreas = document.getElementById('divListarAreas');
         // habilita divInformacoes
         if(id == 'informacoes'){
             // console.log('informacoes');
@@ -654,7 +694,8 @@
             modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
-            areas.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
 
 
         }
@@ -667,7 +708,8 @@
             modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
-            areas.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
         }
         if(id == 'revisores'){
             // console.log('revisores');
@@ -678,7 +720,8 @@
             modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
-            areas.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
         }
         if(id == 'comissao'){
             // console.log('comissao');
@@ -689,7 +732,8 @@
             modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
-            areas.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
         }
         if(id == 'modalidades'){
             // console.log('modalidades');
@@ -700,7 +744,8 @@
             modalidades.style.display = "block";
             classificacao.style.display = "none";
             atividades.style.display = "none";
-            areas.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
         }
         if(id == 'colocacao'){
             // console.log('colocacao');
@@ -711,7 +756,8 @@
             modalidades.style.display = "none";
             classificacao.style.display = "block";
             atividades.style.display = "none";
-            areas.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
         }
         if(id == 'atividades'){
             // console.log('atividades');
@@ -722,9 +768,10 @@
             modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "block";
-            areas.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
         }
-        if(id == 'areas'){
+        if(id == 'cadastrarAreas'){
             // console.log('atividades');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
@@ -733,10 +780,25 @@
             modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
-            areas.style.display = "block";
+            cadastrarAreas.style.display = "block";
+            listarAreas.style.display = "none";
+        }
+        if(id == 'listarAreas'){
+            // console.log('atividades');
+            informacoes.style.display = "none";
+            trabalhos.style.display = "none";
+            revisores.style.display = "none";
+            comissao.style.display = "none";
+            modalidades.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "block";
         }
 
     }
+
+
 
   </script>
 
