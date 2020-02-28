@@ -27,8 +27,8 @@ class CreateEventosTable extends Migration
             $table->date('fimRevisao');
             $table->date('inicioResultado');
             $table->date('fimResultado');
-            $table->boolean('possuiTaxa');
-            $table->double('valorTaxa');
+            // $table->boolean('possuiTaxa');
+            // $table->double('valorTaxa');
             $table->string('fotoEvento')->nullable();
 
             $table->integer('coordComissaoId')->nullable();

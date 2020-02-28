@@ -5,7 +5,7 @@
     <div class="row titulo">        
         <h1>{{$evento->nome}}</h1>
     </div>
-
+    
     <form action="{{route('evento.editar',$evento->id)}}" method="POST">
     @csrf
         <div class="row subtitulo">   
@@ -140,30 +140,6 @@
                 @enderror
             </div>
         </div>{{-- end inicioRevisao | fimRevisao | inicioResultado | fimResultado--}}
-        
-        
-        
-        {{-- possuiTaxa | valorTaxa --}}
-        <div class="row justify-content-center">
-            <div class="col-sm-6">
-                <div class="form-check" style="margin-top:25px">
-                    <input name="possuiTaxa" type="checkbox" class="form-check-input" id="possuiTaxa" value="true">
-                    <label class="form-check-label" for="possuiTaxa">
-                        <h4>Possui taxa de Inscrição</h4>
-                    </label>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <label for="valorTaxa" class="col-form-label">{{ __('Valor da Taxa') }}</label>
-                <input value="{{$evento->valorTaxa}}" id="valorTaxa" type="number" class="form-control @error('valorTaxa') is-invalid @enderror" name="valorTaxa" value="{{ old('valorTaxa') }}" required autocomplete="valorTaxa" autofocus>
-                
-                @error('valorTaxa')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-        </div>{{-- possuiTaxa | valorTaxa --}}
 
         {{-- Foto Evento --}}
         <div class="row justify-content-center">
@@ -286,11 +262,11 @@
 
         <div class="row justify-content-center" style="margin: 20px 0 20px 0">
             <div class="col-md-6" style="padding-left:0">
-                <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}">Cancelar</a>
+                <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}">Voltar</a>
             </div>
             <div class="col-md-6" style="padding-ridht:0">
                 <button type="submit" class="btn btn-primary botao-form">
-                    {{ __('Criar Evento') }}
+                    {{ __('Salvar Evento') }}
                 </button>
             </div>
         </div>

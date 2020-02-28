@@ -75,7 +75,7 @@ class EventoController extends Controller
             'fimRevisao'          => ['required', 'date'],
             'inicioResultado'     => ['required', 'date'],
             'fimResultado'        => ['required', 'date'],
-            'valorTaxa'           => ['required', 'integer'],
+            // 'valorTaxa'           => ['required', 'integer'],
             'fotoEvento'          => ['file'],
           ]);
         }
@@ -94,7 +94,7 @@ class EventoController extends Controller
           'fimRevisao'          => ['required', 'date', 'after:' . $request->inicioRevisao],
           'inicioResultado'     => ['required', 'date', 'after:' . $yesterday],
           'fimResultado'        => ['required', 'date', 'after:' . $request->inicioResultado],
-          'valorTaxa'           => ['required', 'integer'],
+          // 'valorTaxa'           => ['required', 'integer'],
           'fotoEvento'          => ['file'],
         ]);
 
@@ -130,8 +130,8 @@ class EventoController extends Controller
           'fimRevisao'          => $request->fimRevisao,
           'inicioResultado'     => $request->inicioResultado,
           'fimResultado'        => $request->fimResultado,
-          'possuiTaxa'          => $request->possuiTaxa,
-          'valorTaxa'           => $request->valorTaxa,
+          // 'possuiTaxa'          => $request->possuiTaxa,
+          // 'valorTaxa'           => $request->valorTaxa,
           'enderecoId'          => $endereco->id,
           'coordenadorId'       => Auth::user()->id,
         ]);
@@ -210,8 +210,8 @@ class EventoController extends Controller
         $evento->fimRevisao           = $request->fimRevisao;
         $evento->inicioResultado      = $request->inicioResultado;
         $evento->fimResultado         = $request->fimResultado;
-        $evento->possuiTaxa           = $request->possuiTaxa;
-        $evento->valorTaxa            = $request->valorTaxa;
+        // $evento->possuiTaxa           = $request->possuiTaxa;
+        // $evento->valorTaxa            = $request->valorTaxa;
         $evento->enderecoId           = $endereco->id;
         $evento->save();
 

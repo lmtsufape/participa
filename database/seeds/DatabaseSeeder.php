@@ -44,8 +44,8 @@ class DatabaseSeeder extends Seeder
           'fimRevisao'=>'2020-02-15',
           'inicioResultado'=>'2020-02-15',
           'fimResultado'=>'2020-02-15',
-          'possuiTaxa'=>true,
-          'valorTaxa'=>10,
+          // 'possuiTaxa'=>true,
+          // 'valorTaxa'=>10,
           'enderecoId'=>1,
           'coordenadorId'=>1,
         ]);

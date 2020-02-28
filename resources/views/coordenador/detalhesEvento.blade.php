@@ -9,6 +9,7 @@
                     <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
                 </li>
             </a>
+            
             <a id="trabalhos" onclick="habilitarPagina('trabalhos')">
                 <li>
                     <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Trabalhos</h5>
