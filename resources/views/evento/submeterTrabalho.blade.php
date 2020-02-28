@@ -4,7 +4,7 @@
 <div class="container content">
 
     <div class="row justify-content-center">
-        <div class="col-sm-6">
+        <div class="col-sm-8">
             <div class="card" style="margin-top:50px">
                 <div class="card-body">
                   <h5 class="card-title">Enviar Trabalho</h5>
@@ -48,6 +48,21 @@
 
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
+                                <label for="resumo" class="col-form-label">{{ __('Resumo do Trabalho') }}</label>
+                                <textarea id="resumo" class="form-control @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}" required autocomplete="resumo" autofocusrows="5"></textarea>
+                    
+                                @error('resumo')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                    
+                    
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
                                 <label for="areaModalidadeId" class="col-form-label">{{ __('Área - Modalidade') }}</label>
                                 <select class="form-control @error('areaModalidadeId') is-invalid @enderror" id="areaModalidadeId" name="areaModalidadeId">
                                     <option value="" disabled selected hidden>-- Área - Modalidade --</option>
@@ -69,8 +84,10 @@
                         
                     </p>
                     <div class="row justify-content-center">
-                
-                        <div class="col-md-12">
+                        <div class="col-md-6">
+                            <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" class="btn btn-secondary" style="width:100%">Cancelar</a>
+                        </div>
+                        <div class="col-md-6">
                             <button type="submit" class="btn btn-primary" style="width:100%">
                                 {{ __('Finalizar') }}
                             </button>
