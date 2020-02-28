@@ -46,6 +46,7 @@ class EventoController extends Controller
      */
     public function store(Request $request)
     {
+      
         $mytime = Carbon::now('America/Recife');
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
@@ -65,7 +66,8 @@ class EventoController extends Controller
         ){
           $validatedData = $request->validate([
             'nome'                => ['required', 'string'],
-            'numeroParticipantes' => ['required', 'integer', 'gt:0'],
+            // 'numeroParticipantes' => ['required', 'integer', 'gt:0'],
+            'descricao'           => ['required', 'string'],
             'tipo'                => ['required', 'string'],
             'dataInicio'          => ['required', 'date','after:'. $yesterday],
             'dataFim'             => ['required', 'date'],
@@ -84,7 +86,8 @@ class EventoController extends Controller
 
         $validatedData = $request->validate([
           'nome'                => ['required', 'string'],
-          'numeroParticipantes' => ['required', 'integer', 'gt:0'],
+          // 'numeroParticipantes' => ['required', 'integer', 'gt:0'],
+          'descricao'           => ['required', 'string'],
           'tipo'                => ['required', 'string'],
           'dataInicio'          => ['required', 'date', 'after:' . $yesterday],
           'dataFim'             => ['required', 'date', 'after:' . $request->dataInicio],
@@ -120,7 +123,8 @@ class EventoController extends Controller
 
         $evento = Evento::create([
           'nome'                => $request->nome,
-          'numeroParticipantes' => $request->numeroParticipantes,
+          // 'numeroParticipantes' => $request->numeroParticipantes,
+          'descricao'           => $request->descricao,
           'tipo'                => $request->tipo,
           'dataInicio'          => $request->dataInicio,
           'dataFim'             => $request->dataFim,
@@ -200,7 +204,8 @@ class EventoController extends Controller
         $endereco = Endereco::find($evento->enderecoId);
 
         $evento->nome                 = $request->nome;
-        $evento->numeroParticipantes  = $request->numeroParticipantes;
+        // $evento->numeroParticipantes  = $request->numeroParticipantes;
+        $evento->descricao            = $request->descricao;
         $evento->tipo                 = $request->tipo;
         $evento->dataInicio           = $request->dataInicio;
         $evento->dataFim              = $request->dataFim;

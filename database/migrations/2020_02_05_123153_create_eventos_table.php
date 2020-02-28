@@ -17,7 +17,8 @@ class CreateEventosTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('nome');
-            $table->integer('numeroParticipantes');
+            // $table->integer('numeroParticipantes');
+            $table->string('descricao')->nullable();
             $table->string('tipo');
             $table->date('dataInicio');
             $table->date('dataFim');

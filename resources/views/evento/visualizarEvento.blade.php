@@ -26,7 +26,7 @@
     </div>
     <div class="row margin">
         <div class="col-sm-12">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus enim non erat fermentum rhoncus. Suspendisse tempor tristique commodo. Fusce sed gravida felis. Aliquam est ante, ullamcorper non semper quis, mattis id nisl. Nam et justo nec urna lacinia suscipit ac vel diam. Donec semper lectus urna, non ornare eros faucibus vitae. Aenean eu porttitor dui. Vestibulum et porta lectus. In a lobortis lacus, et fringilla mi. Sed tincidunt sapien ex. Ut cursus massa pretium enim egestas lobortis. Duis molestie sem a dolor sagittis dictum. Etiam facilisis auctor lobortis.</p>
+            <p>{{$evento->descricao}}</p>
         </div>
     </div>
     <div class="row margin">

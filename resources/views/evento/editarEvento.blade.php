@@ -15,7 +15,7 @@
         </div>
         {{-- nome | Participantes | Tipo--}}
         <div class="row justify-content-center">  
-            <div class="col-sm-6">{{--Nome do evento--}}
+            <div class="col-sm-9">{{--Nome do evento--}}
                 <label for="nome" class="col-form-label">{{ __('Nome do Evento') }}</label>
                 <input value="{{$evento->nome}}" id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
                 
@@ -26,7 +26,7 @@
                 @enderror
             </div>{{--End Nome do evento--}}
             {{--Número de Participantes--}}
-            <div class="col-sm-3">
+            {{-- <div class="col-sm-3">
                 <label for="numeroParticipantes" class="col-form-label">{{ __('N° de Participantes') }}</label>
                 <input value="{{$evento->numeroParticipantes}}" id="numeroParticipantes" type="number" class="form-control @error('numeroParticipantes') is-invalid @enderror" name="numeroParticipantes" value="{{ old('numeroParticipantes') }}" required autocomplete="numeroParticipantes" autofocus>
                 
@@ -35,7 +35,7 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-            </div>{{--END Número de Participantes--}}
+            </div> --}}
             {{-- Tipo do evento --}}
             <div class="col-sm-3">
                 <label for="tipo" class="col-form-label">{{ __('Tipo do Evento') }}</label>
@@ -155,7 +155,21 @@
                     </div>
             </div>
         </div>
-        
+        {{-- Descricao Evento --}}
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Descrição do Evento</label>
+                    <textarea value="{{$evento->descricao}}" class="form-control @error('descricao') is-invalid @enderror" value="{{ old('descricao') }}" id="descricao" name="descricao" rows="3"></textarea>
+                    @error('descricao')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                  </div>
+            </div>
+        </div>
+
         <div class="row subtitulo">   
             <div class="col-sm-12">
                 <p>Endereço</p>
