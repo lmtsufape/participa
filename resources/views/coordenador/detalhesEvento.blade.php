@@ -17,7 +17,7 @@
             </a>
             <a id="areas">
                 <li>
-                    <img id="arrowArea" src="{{asset('img/icons/area.svg')}}" alt=""><h5> Áreas</h5>
+                    <img src="{{asset('img/icons/area.svg')}}" alt=""><h5> Áreas</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownAreas" style="background-color: gray">
                     <a id="cadastrarAreas" onclick="habilitarPagina('cadastrarAreas')">
@@ -35,7 +35,7 @@
             </a>
             <a id="revisores">
                 <li>
-                    <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Revisores</h5>
+                    <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Revisores</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownRevisores" style="background-color: gray">
                     <a id="cadastrarRevisores" onclick="habilitarPagina('cadastrarRevisores')">
@@ -52,7 +52,7 @@
             </a>
             <a id="comissao" onclick="habilitarPagina('comissao')">
                 <li>
-                    <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão</h5>
+                    <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownComissao" style="background-color: gray">
                     <a id="cadastrarComissao" onclick="habilitarPagina('cadastrarComissao')">
@@ -74,7 +74,7 @@
             </a>
             <a id="modalidades">
                 <li>
-                    <img src="{{asset('img/icons/sitemap-solid.svg')}}" alt=""><h5>Modalidades</h5>
+                    <img src="{{asset('img/icons/sitemap-solid.svg')}}" alt=""><h5>Modalidades</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownModalidades" style="background-color: gray">
                     <a id="cadastrarModalidade" onclick="habilitarPagina('cadastrarModalidade')">

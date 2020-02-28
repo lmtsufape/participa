@@ -166,7 +166,7 @@ body{
 }
 .wrapper .sidebar ul a li h5{
     /* float: right; */
-    font-size: 17px;
+    font-size: 14px;
     display: inline;
     transition: 0.2s;
 }
@@ -195,6 +195,12 @@ body{
 }
 #dropdownModalidades h5{
     font-size: 11px;
+}
+
+.arrow{
+    float:right;
+    margin-top: -5px;
+    height: 20px;
 }
 
 /* Detalhes do Evento */
