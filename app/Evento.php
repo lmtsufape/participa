@@ -12,7 +12,7 @@ class Evento extends Model
    * @var array
    */
   protected $fillable = [
-      'nome', 'numeroParticipantes', 'tipo', 'dataInicio', 'dataFim',
+      'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim',
       'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao',
       'inicioResultado', 'fimResultado', 'possuiTaxa', 'valorTaxa', 'fotoEvento',
       'enderecoId', 'coordenadorId',
