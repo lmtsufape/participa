@@ -72,10 +72,22 @@
                     </a>
                 </div>
             </a>
-            <a id="candidatos" onclick="habilitarPagina('modalidades')">
+            <a id="modalidades">
                 <li>
-                    <img src="{{asset('img/icons/user-solid.svg')}}" alt=""><h5>Modalidades</h5>
+                    <img src="{{asset('img/icons/sitemap-solid.svg')}}" alt=""><h5>Modalidades</h5>
                 </li>
+                <div id="dropdownModalidades" style="background-color: gray">
+                    <a id="cadastrarModalidade" onclick="habilitarPagina('cadastrarModalidade')">
+                        <li>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Cadastrar Modalidade</h5>
+                        </li>
+                    </a>
+                    <a id="listarModalidade" onclick="habilitarPagina('listarModalidade')">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Modalidades</h5>
+                        </li>
+                    </a>
+                </div>
             </a>
             <a id="colocacao" onclick="habilitarPagina('colocacao')">
                 <li>
@@ -299,187 +311,186 @@
               </table>
         </div>
       
+    </div>  
+</div><!-- End Trabalhos -->
+
+    
+{{-- Modalidade --}}
+<div id="divCadastrarModalidades" class="modalidades">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Cadastrar Modalidade</h1>
+        </div>            
     </div>
+    {{-- row card --}}
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Nova Modalidade</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova modalidade para o seu evento</h6>
+                    <form method="POST" action="{{route('modalidade.store')}}">
+                    @csrf
+                    <p class="card-text">
+                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="nomeModalidade" class="col-form-label">{{ __('Nome') }}</label>
 
-    
-  {{-- Modalidade --}}
-    
-    
-  </div><!-- End Trabalhos -->
-    <div id="divModalidades" class="modalidades">
-        <div class="row">
-            <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Modalidades</h1>
-            </div>            
-        </div>
-        {{-- row card --}}
-        <div class="row justify-content-center">
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Nova Modalidade</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova modalidade para o seu evento</h6>
-                      <form method="POST" action="{{route('modalidade.store')}}">
-                        @csrf
-                        <p class="card-text">
-                            <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <label for="nomeModalidade" class="col-form-label">{{ __('Nome') }}</label>
-
-                                </div>
-                            </div>
-                            <div class="row justify-content-center">
-                                <div class="col-sm-12">
-                                    <input id="nomeModalidade" type="text" class="form-control @error('nomeModalidade') is-invalid @enderror" name="nomeModalidade" value="{{ old('nomeModalidade') }}" required autocomplete="nomeModalidade" autofocus>
-                        
-                                    @error('nomeModalidade')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                
-                            </div>{{-- end row--}}
-                                                            
-                        </p>
-                        <div class="row justify-content-center">
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary" style="width:100%">
-                                    {{ __('Finalizar') }}
-                                </button>
                             </div>
                         </div>
-                        </form>
-                    </div>
-                  </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Áreas por Modalidade</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">Vincule as Áreas de acordo com cada modalidade</h6>
-                      <form method="POST" action="{{route('areaModalidade.store')}}">
-                        @csrf
-                        <p class="card-text">
-                            <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                            <div class="row justify-content-center">
-                              <div class="col-sm-6">
-                                  <label for="modalidadeId" class="col-form-label">{{ __('Modalidade') }}</label>
-                                  <select class="form-control @error('modalidadeId') is-invalid @enderror" id="modalidadeId" name="modalidadeId">
-                                      <option value="" disabled selected hidden> Modalidade </option>
-                                      @foreach($modalidades as $modalidade)
-                                        <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
-                                      @endforeach
-                                  </select>
-                        
-                                  @error('modalidadeId')
-                                  <span class="invalid-feedback" role="alert">
-                                      <strong>{{ $message }}</strong>
-                                  </span>
-                                  @enderror
-                              </div>
-                                <div class="col-sm-6">
-                                    <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
-                                    <select class="form-control @error('areaId') is-invalid @enderror" id="areaId" name="areaId">
-                                        <option value="" disabled selected hidden> Área </option>
-                                        @foreach($areas as $area)
-                                          <option value="{{$area->id}}">{{$area->nome}}</option>
-                                        @endforeach
-                                    </select>
-                        
-                                    @error('areaId')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </p>
-                        
                         <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <input id="nomeModalidade" type="text" class="form-control @error('nomeModalidade') is-invalid @enderror" name="nomeModalidade" value="{{ old('nomeModalidade') }}" required autocomplete="nomeModalidade" autofocus>
                     
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary" style="width:100%">
-                                    {{ __('Finalizar') }}
-                                </button>
+                                @error('nomeModalidade')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            
+                        </div>{{-- end row--}}
+                                                        
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Áreas por Modalidade</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Vincule as Áreas de acordo com cada modalidade</h6>
+                    <form method="POST" action="{{route('areaModalidade.store')}}">
+                    @csrf
+                    <p class="card-text">
+                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-6">
+                                <label for="modalidadeId" class="col-form-label">{{ __('Modalidade') }}</label>
+                                <select class="form-control @error('modalidadeId') is-invalid @enderror" id="modalidadeId" name="modalidadeId">
+                                    <option value="" disabled selected hidden> Modalidade </option>
+                                    @foreach($modalidades as $modalidade)
+                                    <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
+                                    @endforeach
+                                </select>
+                    
+                                @error('modalidadeId')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
+                                <select class="form-control @error('areaId') is-invalid @enderror" id="areaId" name="areaId">
+                                    <option value="" disabled selected hidden> Área </option>
+                                    @foreach($areas as $area)
+                                        <option value="{{$area->id}}">{{$area->nome}}</option>
+                                    @endforeach
+                                </select>
+                    
+                                @error('areaId')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                         </div>
-                      </form>
-                      
+                    </p>
+                    
+                    <div class="row justify-content-center">
+                
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
                     </div>
-                  </div>{{-- End card--}}
-            </div>
-        </div>{{-- end row card --}}
-        
+                    </form>
+                    
+                </div>
+            </div>{{-- End card--}}
+        </div>
+    </div>{{-- end row card --}}    
+</div>
+<div id="divListarModalidades" class="modalidades">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Listar Modalidades</h1>
+        </div>            
+    </div>  
 
-        <div class="row justify-content-center">
-            {{-- table modalidades --}}
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Modalidades</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">Modalidades cadastradas no seu evento</h6>
-                      <p class="card-text">
-                        <table class="table table-hover table-responsive-lg table-sm">
-                            <thead>
+    <div class="row justify-content-center">
+        {{-- table modalidades --}}
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Modalidades</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Modalidades cadastradas no seu evento</h6>
+                  <p class="card-text">
+                    <table class="table table-hover table-responsive-lg table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Nome</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($modalidades as $modalidade)
                             <tr>
-                                <th scope="col">Nome</th>
+                                <td>{{$modalidade->nome}}</td>
                             </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($modalidades as $modalidade)
-                                <tr>
-                                    <td>{{$modalidade->nome}}</td>
-                                </tr>
-                                @endforeach
-                    
-                    
-                            </tbody>
-                        </table>
-                      </p>
-                    </div>
-                  </div>
+                            @endforeach
                 
-            </div>{{-- end table--}}
+                
+                        </tbody>
+                    </table>
+                  </p>
+                </div>
+              </div>
+            
+        </div>{{-- end table--}}
 
-            {{-- table modalidades Área--}}
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Áreas por Modalidade</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">Áreas correspondentes à cada modalidade do seu evento</h6>
-                      <p class="card-text">
-                        <table class="table table-hover table-responsive-lg table-sm">
-                            <thead>
+        {{-- table modalidades Área--}}
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Áreas por Modalidade</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Áreas correspondentes à cada modalidade do seu evento</h6>
+                  <p class="card-text">
+                    <table class="table table-hover table-responsive-lg table-sm">
+                        <thead>
+                          <tr>
+                            <th scope="col">Modalidade</th>
+                            <th scope="col">Área</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($areaModalidades as $areaModalidade)
                               <tr>
-                                <th scope="col">Modalidade</th>
-                                <th scope="col">Área</th>
+                                <td>{{$areaModalidade->modalidade->nome}}</td>
+                                <td>{{$areaModalidade->area->nome}}</td>
                               </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($areaModalidades as $areaModalidade)
-                                  <tr>
-                                    <td>{{$areaModalidade->modalidade->nome}}</td>
-                                    <td>{{$areaModalidade->area->nome}}</td>
-                                  </tr>
-                                @endforeach
-                      
-                      
-                            </tbody>
-                          </table>
-                      </p>
-                    </div>
-                  </div>
-                
-            </div>{{-- end table área--}}
-        </div>
-        
-        <div class="row">
-          
-        </div>
-        
-    </div>
+                            @endforeach
+                  
+                  
+                        </tbody>
+                      </table>
+                  </p>
+                </div>
+              </div>
+            
+        </div>{{-- end table área--}}
+    </div>    
+</div>
     <div id="divClassificacao" class="classificacao">
         <h1>Classificação</h1>
     </div>
@@ -699,6 +710,9 @@
     $('#comissao').click(function(){
             $('#dropdownComissao').slideToggle(200);
     });
+    $('#modalidades').click(function(){
+            $('#dropdownModalidades').slideToggle(200);
+    });
   });
   
     function cadastrarCoodComissao(){
@@ -728,7 +742,6 @@
     function habilitarPagina(id){
         informacoes = document.getElementById('divInformacoes');
         trabalhos = document.getElementById('divTrabalhos');
-        modalidades = document.getElementById('divModalidades');
         classificacao = document.getElementById('divClassificacao');
         atividades = document.getElementById('divAtividades');
         cadastrarAreas = document.getElementById('divCadastrarAreas');
@@ -740,13 +753,14 @@
         definirCoordComissao = document.getElementById('divDefinirCoordComissao');
         listarComissao = document.getElementById('divListarComissao');
         
+        cadastrarModalidade = document.getElementById('divCadastrarModalidades');
+        listarModalidade = document.getElementById('divListarModalidades');
         
         // habilita divInformacoes
         if(id == 'informacoes'){
             // console.log('informacoes');
             informacoes.style.display = "block";
             trabalhos.style.display = "none";
-            modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -756,12 +770,13 @@
             cadastrarComissao.style.display = "none";
             definirCoordComissao.style.display = "none";
             listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
         }
         if(id == 'trabalhos'){
             // console.log('trabalhos');
             informacoes.style.display = "none";
             trabalhos.style.display = "block";
-            modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -771,13 +786,14 @@
             cadastrarComissao.style.display = "none";
             definirCoordComissao.style.display = "none";
             listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
         }
 
         if(id == 'modalidades'){
             // console.log('modalidades');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
-            modalidades.style.display = "block";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -787,13 +803,14 @@
             cadastrarComissao.style.display = "none";
             definirCoordComissao.style.display = "none";
             listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
 
         }
         if(id == 'colocacao'){
             // console.log('colocacao');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
-            modalidades.style.display = "none";
             classificacao.style.display = "block";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -803,13 +820,14 @@
             cadastrarComissao.style.display = "none";
             definirCoordComissao.style.display = "none";
             listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
 
         }
         if(id == 'atividades'){
             // console.log('atividades');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
-            modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "block";
             cadastrarAreas.style.display = "none";
@@ -819,13 +837,14 @@
             cadastrarComissao.style.display = "none";
             definirCoordComissao.style.display = "none";
             listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
 
         }
         if(id == 'cadastrarAreas'){
             // console.log('atividades');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
-            modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "block";
@@ -835,13 +854,14 @@
             cadastrarComissao.style.display = "none";
             definirCoordComissao.style.display = "none";
             listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
 
         }
         if(id == 'listarAreas'){
             // console.log('atividades');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
-            modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -851,6 +871,8 @@
             cadastrarComissao.style.display = "none";
             definirCoordComissao.style.display = "none";
             listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
 
         }
 
@@ -858,7 +880,6 @@
             // console.log('atividades');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
-            modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -868,6 +889,8 @@
             cadastrarComissao.style.display = "none";
             definirCoordComissao.style.display = "none";
             listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
 
 
         }
@@ -875,7 +898,6 @@
             // console.log('atividades');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
-            modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -885,6 +907,8 @@
             cadastrarComissao.style.display = "none";
             definirCoordComissao.style.display = "none";
             listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
 
 
         }
@@ -892,7 +916,6 @@
             // console.log('atividades');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
-            modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -902,6 +925,8 @@
             cadastrarComissao.style.display = "block";
             definirCoordComissao.style.display = "none";
             listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
 
 
         }
@@ -909,7 +934,6 @@
             // console.log('atividades');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
-            modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -919,6 +943,8 @@
             cadastrarComissao.style.display = "none";
             definirCoordComissao.style.display = "block";
             listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
 
 
         }
@@ -926,7 +952,6 @@
             // console.log('atividades');
             informacoes.style.display = "none";
             trabalhos.style.display = "none";
-            modalidades.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -936,8 +961,40 @@
             cadastrarComissao.style.display = "none";
             definirCoordComissao.style.display = "none";
             listarComissao.style.display = "block";
-
-
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
+        }
+        if(id == 'cadastrarModalidade'){
+            // console.log('atividades');
+            informacoes.style.display = "none";
+            trabalhos.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
+            cadastrarRevisores.style.display = "none";
+            listarRevisores.style.display = "none";
+            cadastrarComissao.style.display = "none";
+            definirCoordComissao.style.display = "none";
+            listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "block";
+            listarModalidade.style.display = "none";
+        }
+        if(id == 'listarModalidade'){
+            // console.log('atividades');
+            informacoes.style.display = "none";
+            trabalhos.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
+            cadastrarRevisores.style.display = "none";
+            listarRevisores.style.display = "none";
+            cadastrarComissao.style.display = "none";
+            definirCoordComissao.style.display = "none";
+            listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "block";
         }
 
     }

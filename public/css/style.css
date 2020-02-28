@@ -175,20 +175,26 @@ body{
     display: none;
 }
 #dropdownAreas h5{
-    font-size: 12px;
+    font-size: 11px;
 }
 
 #dropdownRevisores{
     display: none;
 }
 #dropdownRevisores h5{
-    font-size: 12px;
+    font-size: 11px;
 }
 #dropdownComissao{
     display: none;
 }
 #dropdownComissao h5{
-    font-size: 12px;
+    font-size: 11px;
+}
+#dropdownModalidades{
+    display: none;
+}
+#dropdownModalidades h5{
+    font-size: 11px;
 }
 
 /* Detalhes do Evento */
@@ -274,6 +280,8 @@ body{
 #divCadastrarComissao{display: none;}
 #divDefinirCoordComissao{display: none;}
 #divListarComissao{display: none;}
+#divCadastrarModalidades{display: none;}
+#divListarModalidades{display: none;}
 @media screen and (max-width: 576px){
     .wrapper .sidebar{
         margin-top: 30px;
