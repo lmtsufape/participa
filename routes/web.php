@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'EventoController@index')->name('home');
 
 // rotas de teste
 Route::get('/coordenador/home','EventoController@index')->name('coord.home');
