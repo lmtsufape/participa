@@ -17,7 +17,7 @@
                           <div class="col-sm-12">
                                 <label for="nomeTrabalho" class="col-form-label">{{ __('Título do Trabalho') }}</label>
                                 <input id="nomeTrabalho" type="text" class="form-control @error('nomeTrabalho') is-invalid @enderror" name="nomeTrabalho" value="{{ old('nomeTrabalho') }}" required autocomplete="nomeTrabalho" autofocus>
-                    
+
                                 @error('nomeTrabalho')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -25,24 +25,30 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="row" style="margin-top:20px">
+                          <div class="col-sm-12">
+                            <label for="">E-mail do Coautor</label>
+                            <div id="coautores">
+
+                            </div>
+                            <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">Adicionar Coautor</a>
+                          </div>
+                        </div>
+
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
-                                <label for="emailCoautor" class="col-form-label">{{ __('E-mail dos coautores') }}
-                                <img src="{{asset('img/icons/question-circle-solid.svg')}}" style="width:17px" data-toggle="tooltip" data-placement="top" title="O e-mail dos coautores deve ser separado por vírgula."> 
-                                </label>
-                                <input id="emailCoautor" type="text" class="form-control @error('emailCoautor') is-invalid @enderror" name="emailCoautor" value="{{ old('emailCoautor') }}" required autocomplete="emailCoautor" autofocus>
-                                <small id="emailHelp" class="form-text text-muted">O e-mail dos coautores deve ser separado por vírgula.</small>
-                    
+                                <!-- <label for="emailCoautor" class="col-form-label">{{ __('E-mail dos coautores') }} -->
+                                <!-- <input id="emailCoautor" type="text" class="form-control @error('emailCoautor') is-invalid @enderror" name="emailCoautor" value="{{ old('emailCoautor') }}" required autocomplete="emailCoautor" autofocus>
                                 @error('emailCoautor')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
-                    
+
                                 @error('emailNaoEncontrado')
                                 {{$message}}
-                                @enderror
-                    
+                                @enderror -->
+
                             </div>
                         </div>
 
@@ -50,14 +56,14 @@
                             <div class="col-sm-12">
                                 <label for="resumo" class="col-form-label">{{ __('Resumo do Trabalho') }}</label>
                                 <textarea id="resumo" class="form-control @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}" required autocomplete="resumo" autofocusrows="5"></textarea>
-                    
+
                                 @error('resumo')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
-                    
-                    
+
+
                             </div>
                         </div>
 
@@ -70,7 +76,7 @@
                                       <option value="{{$areaModalidade->id}}">{{$areaModalidade->area->nome}} - {{$areaModalidade->modalidade->nome}}</option>
                                     @endforeach
                                 </select>
-                    
+
                                 @error('areaModalidadeId')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -78,10 +84,10 @@
                                 @enderror
                             </div>
                         </div>
-                            
-                            
-                    
-                        
+
+
+
+
                     </p>
                     <div class="row justify-content-center">
                         <div class="col-md-6">
@@ -98,6 +104,22 @@
               </div>
         </div>
     </div>
-    
+
 </div>
+@endsection
+
+@section('javascript')
+<script type="text/javascript">
+  $(function(){
+    $('#addCoautor').click(function(){
+      console.log('Add Coautor');
+      linha = montarLinhaInput();
+      $('#coautores').append(linha);
+    });
+  });
+
+  function montarLinhaInput(){
+    return "<input"+" type="+'email'+" class="+'form-control emailCoautor'+" name="+'emailCoautor'+" placeholder="+"E-mail do Coautor"+" required>";
+  }
+</script>
 @endsection
