@@ -116,6 +116,112 @@
                 <h1 class="titulo-detalhes">Informações</h1>
             </div>
         </div>
+
+        <!-- Row trabalhos -->
+        <div class="row justify-content-center">
+          <div class="col-sm-8">
+
+
+            <div class="row justify-content-center">
+              <div class="col-sm-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Trabalhos Enviados</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Trabalhos</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Trabalhos Avaliados</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Trabalhos</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Trabalhos Pendentes</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Trabalhos</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Áreas e Modalidades -->
+            <div class="row justify-content-center">
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Número de Áreas</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Áreas</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Número de Modalidades</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Modalidades</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!-- Revisores e Comissão -->
+            <div class="row justify-content-center">
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Número de Revisores</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Revisores</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Número de Integrantes na Comissão</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Integrantes</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+        </div><!-- end Row trabalhos -->
+
     </div>
     {{-- Comissão --}}
     <div id="divCadastrarComissao" class="comissao">
@@ -270,7 +376,7 @@
     </div>{{-- End Listar Comissão --}}
 
     <!-- Trabalhos -->
-    <div id="divTrabalhos" class="container" style="display: none">
+    <div id="divTrabalhos" style="display: none">
 
         <div class="row">
             <div class="col-sm-12">
