@@ -3,14 +3,19 @@
 @section('content')
 <div class="container">
     <div class="row titulo">
-        <h1>{Novo Evento}</h1>
+        <h1>Novo Evento</h1>
     </div>
 
     <form action="{{route('evento.criar')}}" method="POST">
     @csrf
+        <div class="row subtitulo">   
+            <div class="col-sm-12">
+                <p>Informações Gerais</p>
+            </div>     
+        </div>
         {{-- nome | Participantes | Tipo--}}
         <div class="row justify-content-center">
-            <div class="col-sm-6">
+            <div class="col-sm-9">
                 <label for="nome" class="col-form-label">{{ __('Nome do Evento') }}</label>
                 <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
 
@@ -21,7 +26,7 @@
                 @enderror
             </div>
 
-            <div class="col-sm-3">
+            {{-- <div class="col-sm-3">
                 <label for="numeroParticipantes" class="col-form-label">{{ __('N° de Participantes') }}</label>
                 <input id="numeroParticipantes" type="number" class="form-control @error('numeroParticipantes') is-invalid @enderror" name="numeroParticipantes" value="{{ old('numeroParticipantes') }}" required autocomplete="numeroParticipantes" autofocus>
 
@@ -30,7 +35,7 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-            </div>
+            </div> --}}
 
             <div class="col-sm-3">
                 <label for="tipo" class="col-form-label">{{ __('Tipo do Evento') }}</label>
@@ -132,32 +137,8 @@
             </div>
         </div>{{-- end inicioRevisao | fimRevisao | inicioResultado | fimResultado--}}
 
-        {{-- possuiTaxa | valorTaxa --}}
-        <div class="row justify-content-center">
-            <div class="col-sm-6">
-                <div class="form-check">
-                    <input name="possuiTaxa" type="checkbox" class="form-check-input" id="possuiTaxa" value="true">
-                    <label class="form-check-label" for="possuiTaxa">Possui taxa de Inscrição</label>
-                </div>
-                @error('possuiTaxa')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-            <div class="col-sm-6">
-                <label for="valorTaxa" class="col-form-label">{{ __('Valor da Taxa') }}</label>
-                <input id="valorTaxa" type="number" class="form-control @error('valorTaxa') is-invalid @enderror" name="valorTaxa" value="{{ old('valorTaxa') }}" required autocomplete="valorTaxa" autofocus>
 
-                @error('valorTaxa')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-        </div>{{-- possuiTaxa | valorTaxa --}}
-
-        {{-- isCoordenador | Foto Evento --}}
+        {{-- Foto Evento --}}
         <div class="row justify-content-center">
 
             <div class="col-sm-12">
@@ -173,6 +154,26 @@
             </div>
         </div>
 
+        {{-- Descricao Evento --}}
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Descrição do Evento</label>
+                    <textarea class="form-control @error('descricao') is-invalid @enderror" value="{{ old('descricao') }}" required autocomplete="descricao" autofocus id="descricao" name="descricao" rows="3"></textarea>
+                    @error('descricao')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                  </div>
+            </div>
+        </div>
+
+        <div class="row subtitulo">   
+            <div class="col-sm-12">
+                <p>Endereço</p>
+            </div>     
+        </div>
         {{-- Rua | Número | Bairro --}}
         <div class="row justify-content-center">
             <div class="col-sm-6">
@@ -271,13 +272,13 @@
             </div>
         </div>
 
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 
-            <div class="col-md-6">
-                <a class="btn btn-secondary" href="{{route('coord.home')}}" style="width:100%">Cancelar</a>
+            <div class="col-md-6" style="padding-left:0">
+                <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}" style="width:100%">Cancelar</a>
             </div>
-            <div class="col-md-6">
-                <button type="submit" class="btn btn-primary" style="width:100%">
+            <div class="col-md-6" style="padding-right:0">
+                <button type="submit" class="btn btn-primary botao-form" style="width:100%">
                     {{ __('Criar Evento') }}
                 </button>
             </div>

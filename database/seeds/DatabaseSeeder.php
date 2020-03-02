@@ -34,7 +34,8 @@ class DatabaseSeeder extends Seeder
 
         DB::table('eventos')->insert([
           'nome'=>'Evento para Testes',
-          'numeroParticipantes'=>60,
+          // 'numeroParticipantes'=>60,
+          'descricao'=>'Eventos Para teste do Sistema',
           'tipo'=>'teste',
           'dataInicio'=>'2020-02-15',
           'dataFim'=>'2020-02-15',
@@ -44,8 +45,8 @@ class DatabaseSeeder extends Seeder
           'fimRevisao'=>'2020-02-15',
           'inicioResultado'=>'2020-02-15',
           'fimResultado'=>'2020-02-15',
-          'possuiTaxa'=>true,
-          'valorTaxa'=>10,
+          // 'possuiTaxa'=>true,
+          // 'valorTaxa'=>10,
           'enderecoId'=>1,
           'coordenadorId'=>1,
         ]);

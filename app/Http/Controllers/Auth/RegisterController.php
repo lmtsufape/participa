@@ -98,7 +98,7 @@ class RegisterController extends Controller
         $user->cpf = $data['cpf'];
         $user->celular = $data['celular'];
         $user->instituicao = $data['instituicao'];
-        $user->especProfissional = $data['especProfissional'];
+        
         $user->enderecoId = $end->id;
         $user->save();
         

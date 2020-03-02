@@ -17,7 +17,8 @@ class CreateEventosTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('nome');
-            $table->integer('numeroParticipantes');
+            // $table->integer('numeroParticipantes');
+            $table->string('descricao')->nullable();
             $table->string('tipo');
             $table->date('dataInicio');
             $table->date('dataFim');
@@ -27,8 +28,8 @@ class CreateEventosTable extends Migration
             $table->date('fimRevisao');
             $table->date('inicioResultado');
             $table->date('fimResultado');
-            $table->boolean('possuiTaxa');
-            $table->double('valorTaxa');
+            // $table->boolean('possuiTaxa');
+            // $table->double('valorTaxa');
             $table->string('fotoEvento')->nullable();
 
             $table->integer('coordComissaoId')->nullable();

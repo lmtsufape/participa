@@ -28,7 +28,7 @@
         {{-- Navbar --}}
         <nav class="navbar navbar-expand-md navbar-dark  shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/home') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -46,8 +46,8 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                {{-- <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a> --}}
-                                <a class="nav-link" data-toggle="modal" data-target="#modalLogin">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                {{-- <a class="nav-link" data-toggle="modal" data-target="#modalLogin">{{ __('Login') }}</a> --}}
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
@@ -62,11 +62,20 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    {{-- Link Perfil --}}
+                                    <a class="dropdown-item" href="{{ route('perfil') }}">
+                                        <img src="{{asset('img/icons/perfil.svg')}}" alt="">
+                                        {{ __('Minha Conta') }}
+                                    </a>
+
+                                    {{-- Link Logout --}}
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        <img src="{{asset('img/icons/sign-out-alt-solid.svg')}}" alt="">
+                                        {{ __('Sair') }}
                                     </a>
+
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf

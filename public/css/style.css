@@ -4,10 +4,49 @@ color secondary: #196572ff
 color dark: #071b1eff
 
 */
-
+.content{
+    margin-top: 50px;
+}
+.icon-card{
+    width:15px;
+    margin-right: 15px;
+}
+#options{
+    /* padding: 5px;     */
+    text-align: center;
+    height: 22px;
+    width: 10px;
+    /* background-color: blue; */
+    background-image: url('/img/icons/ellipsis-v-solid.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    /* background-size: cover; */
+    transition: 0.2s;
+}
+#options::after{
+    display:none;
+}
+#options:hover{
+    background-image: url('/img/icons/ellipsis-v-solid-hover.svg');
+    transition: 0.2s;
+}
+.dropdown-options{
+    float:right; 
+    margin-right:-5px;
+}
+.dropdown-item:hover{
+    background-color: #ccc;
+}
+.visualizarEvento{
+    color:#196572ff;
+}
+.visualizarEvento:hover{
+    color:#196572ff;
+}
 body{
     margin: 0;
     padding: 0;
+    background-color: white;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -15,7 +54,10 @@ body{
     background-color: #114048ff;
     color: white;
 }
-
+.navbar img{
+    width:20px;
+    margin-right: 10px;
+}
 .btn-primary{
     background-color: #114048ff;
     border-color: #114048ff;
@@ -48,19 +90,35 @@ body{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .titulo{
-    margin:5% 0 2% 0;
-    /* border-bottom: 1px solid #ccc; */
+    margin:7% 0 2% 0;
+    border-bottom: 2px solid #ccc;
 }
 .titulo h1{
     font-size: 35px;
 }
+.subtitulo{
+    font-size:25px
+}
+.botao-form{
+    width:100%; 
+    padding: 20px 0 20px 0;
+}
+
 
 /* SIDEBAR */
+.navbar{
+    top:0;
+    position: fixed;
+    width: 100%;
+    z-index: 100;
 
+}
 
 .wrapper{
     display: flex;
     position: relative;
+    top: 0;
+    /* z-index: -10; */
 }
 .wrapper .sidebar{
     padding: 30px 0;
@@ -70,12 +128,16 @@ body{
     background-color: #071b1eff;
     color: #fff;
     transition: 0.2s;
+    overflow-y:scroll;
 }
 .wrapper .sidebar h2{
+    font-size: 20px;
     color: #fff;
-    padding:15px;
+    margin-top: 50px;
+    padding: 0 15px 20px 15px;
+    border-bottom: 2px solid #114048ff;
     /* text-align: center; */
-    margin-bottom: 30px;
+    /* margin-bottom: 10px; */
     transition: 0.2s;
 }
 .wrapper .sidebar ul{
@@ -87,49 +149,159 @@ body{
 
 }
 
-.wrapper .sidebar ul li a{
+.wrapper .sidebar ul a li {
     color: #fff;
     display: block;
     text-decoration: none;
 }
 .wrapper .sidebar ul li:hover{
+    cursor:pointer;
     background-color: #114048ff;
     transition: 0.2s;
 }
-.wrapper .sidebar ul li a img{
-    width: 22px;
+.wrapper .sidebar ul a li  img{
+    width: 17px;
     margin-right: 15px;
     transition: 0.2s;
 }
-.wrapper .sidebar ul li a h5{
+.wrapper .sidebar ul a li h5{
     /* float: right; */
+    font-size: 14px;
     display: inline;
     transition: 0.2s;
 }
 
+#dropdownAreas{
+    display: none;
+}
+#dropdownAreas h5{
+    font-size: 11px;
+}
+
+#dropdownRevisores{
+    display: none;
+}
+#dropdownRevisores h5{
+    font-size: 11px;
+}
+#dropdownComissao{
+    display: none;
+}
+#dropdownComissao h5{
+    font-size: 11px;
+}
+#dropdownModalidades{
+    display: none;
+}
+#dropdownModalidades h5{
+    font-size: 11px;
+}
+
+.arrow{
+    float:right;
+    margin-top: -5px;
+    height: 20px;
+}
+
 /* Detalhes do Evento */
 .main_content{
+    
+    /* height: 100vh; */
     width: 100% - 200px;
+    margin-top: 50px;
     margin-left: 200px;
     padding: 20px;
     /* background-color: rgba(0, 0, 0, 0.19); */
 }
+.titulo-detalhes{
+    
+    border-bottom: 2px solid #ccc;
+}
+.subtitulo-detalhes{
+    font-size: 25px;
+}
+.card-footer button{
+    float: right;
+}
+
+.card-header{
+    background-color:#114048ff;
+    color: white;
+}
+
+/* EVENTO */
+.banner-evento{
+    width: 100vw;
+    height: 40vh;
+    border-image-slice: fill;
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    float: left;
+    padding: 0;
+    background-color:#071b1eff ;
+    
+}
+.banner-evento img{
+    filter: blur(20px);
+    -webkit-filter: blur(20px);
+    width: 100%;
+}
+.front-image-evento{
+    margin-top: 25px;
+    margin-left: 25px;
+    width: 40%;
+    z-index: 15;
+    /* position: relative; */
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2);
+    top: 0;
+    float:left;
+    border-radius: 10px;
+    
+    /* width: 500px; */
+    
+}
+.margin{
+    margin-bottom:20px;
+}
+.info-evento img{
+    width: 20px;
+}
+.info-evento p{
+    font-size: 15px;
+}
+
 
 /* Visualização dos conteúdos dos detalhes do evento */
 #divInformacoes{display: block;}
 #divTrabalhos{display: none;}
 #divRevisores{display: none;}
 #divComissao{display: none;}
-#divCandidatos{display: none;}
-#divColocacao{display: none;}
+#divModalidades{display: none;}
+#divClassificacao{display: none;}
 #divAtividades{display: none;}
+#divCadastrarAreas{display: none;}
+#divListarAreas{display: none;}
+#divCadastrarComissao{display: none;}
+#divDefinirCoordComissao{display: none;}
+#divListarComissao{display: none;}
+#divCadastrarModalidades{display: none;}
+#divListarModalidades{display: none;}
 @media screen and (max-width: 576px){
+    .wrapper .sidebar{
+        margin-top: 30px;
+    }
     .wrapper .sidebar h2{
         display: none;
         transition: 0.2s;
     }
-    .wrapper .sidebar ul li a h5{
+    .wrapper .sidebar ul a li h5{
         display: none;
+        transition: 0.2s;
+    }
+    .wrapper .sidebar ul a li  img{
+        width: 20px;
         transition: 0.2s;
     }
     .wrapper .sidebar{
@@ -139,5 +311,13 @@ body{
     }
     .main_content{
         margin-left: 60px;
+    }
+    .banner-evento{
+        height: 27vh;
+    }
+    .front-image-evento{
+        margin: 35px 20px 35px 20px;
+        width: 90%;
+        
     }
 }

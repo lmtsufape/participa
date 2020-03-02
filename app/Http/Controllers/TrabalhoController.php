@@ -7,6 +7,9 @@ use App\Coautor;
 use App\Evento;
 use App\User;
 use App\AreaModalidade;
+use App\Area;
+use App\Revisor;
+use App\Modalidade;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Http\Request;
@@ -18,9 +21,24 @@ class TrabalhoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        //
+        $evento = Evento::find($id);
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::all();
+        $areaModalidades = AreaModalidade::whereIn('id', $areasId)->get();
+        $trabalhos = Trabalho::where('autorId', Auth::user()->id)->whereIn('areaId', $areasId)->get();
+        // dd($evento);
+        return view('evento.submeterTrabalho',[
+                                              'evento'          => $evento,
+                                              'areas'           => $areas,
+                                              'revisores'       => $revisores,
+                                              'modalidades'     => $modalidades,
+                                              'areaModalidades' => $areaModalidades,
+                                              'trabalhos'       => $trabalhos,
+                                            ]);
     }
 
     /**

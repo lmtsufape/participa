@@ -5,12 +5,17 @@
     <div class="row titulo">        
         <h1>{{$evento->nome}}</h1>
     </div>
-
+    
     <form action="{{route('evento.editar',$evento->id)}}" method="POST">
     @csrf
+        <div class="row subtitulo">   
+            <div class="col-sm-12">
+                <p>Informações Gerais</p>
+            </div>     
+        </div>
         {{-- nome | Participantes | Tipo--}}
-        <div class="row justify-content-center">
-            <div class="col-sm-6">
+        <div class="row justify-content-center">  
+            <div class="col-sm-9">{{--Nome do evento--}}
                 <label for="nome" class="col-form-label">{{ __('Nome do Evento') }}</label>
                 <input value="{{$evento->nome}}" id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
                 
@@ -19,9 +24,9 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-            </div>
-
-            <div class="col-sm-3">
+            </div>{{--End Nome do evento--}}
+            {{--Número de Participantes--}}
+            {{-- <div class="col-sm-3">
                 <label for="numeroParticipantes" class="col-form-label">{{ __('N° de Participantes') }}</label>
                 <input value="{{$evento->numeroParticipantes}}" id="numeroParticipantes" type="number" class="form-control @error('numeroParticipantes') is-invalid @enderror" name="numeroParticipantes" value="{{ old('numeroParticipantes') }}" required autocomplete="numeroParticipantes" autofocus>
                 
@@ -30,8 +35,8 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-            </div>
-
+            </div> --}}
+            {{-- Tipo do evento --}}
             <div class="col-sm-3">
                 <label for="tipo" class="col-form-label">{{ __('Tipo do Evento') }}</label>
                 <input value="{{$evento->tipo}}" id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" value="{{ old('tipo') }}" required autocomplete="tipo" autofocus>
@@ -41,11 +46,12 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-            </div>
+            </div>{{-- Tipo do evento --}}
         </div>{{-- end nome | Participantes | Tipo--}}
 
         {{-- dataInicio | dataFim | inicioSubmissao | fimSubmissao --}}
         <div class="row justify-content-center">
+            {{-- Início do Evento --}}
             <div class="col-sm-3">
                 <label for="dataInicio" class="col-form-label">{{ __('Início do Evento') }}</label>
                 <input value="{{$evento->dataInicio}}" id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror" name="dataInicio" value="{{ old('dataInicio') }}" required autocomplete="dataInicio" autofocus>
@@ -55,7 +61,8 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-            </div>
+            </div>{{--End Início do Evento --}}
+            {{-- Fim do Evento --}}
             <div class="col-sm-3">
                 <label for="dataFim" class="col-form-label">{{ __('Fim do Evento') }}</label>
                 <input value="{{$evento->dataFim}}" id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror" name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim" autofocus>
@@ -65,7 +72,8 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-            </div>
+            </div>{{-- end Fim do Evento --}}
+            {{-- Início da Submissão --}}
             <div class="col-sm-3">
                 <label for="inicioSubmissao" class="col-form-label">{{ __('Início da Submissão') }}</label>
                 <input value="{{$evento->inicioSubmissao}}" id="inicioSubmissao" type="date" class="form-control @error('inicioSubmissao') is-invalid @enderror" name="inicioSubmissao" value="{{ old('inicioSubmissao') }}" required autocomplete="inicioSubmissao" autofocus>
@@ -75,7 +83,8 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-            </div>
+            </div>{{-- end Início da Submissão --}}
+            {{-- Fim da submissão --}}
             <div class="col-sm-3">
                 <label for="fimSubmissao" class="col-form-label">{{ __('Fim da Submissão') }}</label>
                 <input value="{{$evento->fimSubmissao}}" id="fimSubmissao" type="date" class="form-control @error('fimSubmissao') is-invalid @enderror" name="fimSubmissao" value="{{ old('fimSubmissao') }}" required autocomplete="fimSubmissao" autofocus>
@@ -85,7 +94,7 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-            </div>
+            </div>{{-- end Fim da submissão --}}
         </div>{{-- end dataInicio | dataFim | inicioSubmissao | fimSubmissao --}}
         
         {{-- inicioRevisao | fimRevisao | inicioResultado | fimResultado--}}
@@ -132,29 +141,8 @@
             </div>
         </div>{{-- end inicioRevisao | fimRevisao | inicioResultado | fimResultado--}}
 
-        {{-- possuiTaxa | valorTaxa --}}
+        {{-- Foto Evento --}}
         <div class="row justify-content-center">
-            <div class="col-sm-6">
-                <div class="form-check">
-                    <input name="possuiTaxa" type="checkbox" class="form-check-input" id="possuiTaxa" value="true">
-                    <label class="form-check-label" for="possuiTaxa">Possui taxa de Inscrição</label>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <label for="valorTaxa" class="col-form-label">{{ __('Valor da Taxa') }}</label>
-                <input value="{{$evento->valorTaxa}}" id="valorTaxa" type="number" class="form-control @error('valorTaxa') is-invalid @enderror" name="valorTaxa" value="{{ old('valorTaxa') }}" required autocomplete="valorTaxa" autofocus>
-                
-                @error('valorTaxa')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-        </div>{{-- possuiTaxa | valorTaxa --}}
-        
-        {{-- isCoordenador | Foto Evento --}}
-        <div class="row justify-content-center">
-            
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="fotoEvento">Foto do Evento</label>
@@ -166,6 +154,26 @@
                     @enderror
                     </div>
             </div>
+        </div>
+        {{-- Descricao Evento --}}
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Descrição do Evento</label>
+                    <textarea value="{{$evento->descricao}}" class="form-control @error('descricao') is-invalid @enderror" value="{{ old('descricao') }}" id="descricao" name="descricao" rows="3"></textarea>
+                    @error('descricao')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                  </div>
+            </div>
+        </div>
+
+        <div class="row subtitulo">   
+            <div class="col-sm-12">
+                <p>Endereço</p>
+            </div>     
         </div>
 
         {{-- Rua | Número | Bairro --}}
@@ -266,14 +274,13 @@
             </div>
         </div>
 
-        <div class="row justify-content-center">
-
-            <div class="col-md-6">
-                <a class="btn btn-secondary" href="{{route('coord.home')}}" style="width:100%">Cancelar</a>
+        <div class="row justify-content-center" style="margin: 20px 0 20px 0">
+            <div class="col-md-6" style="padding-left:0">
+                <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}">Voltar</a>
             </div>
-            <div class="col-md-6">
-                <button type="submit" class="btn btn-primary" style="width:100%">
-                    {{ __('Criar Evento') }}
+            <div class="col-md-6" style="padding-ridht:0">
+                <button type="submit" class="btn btn-primary botao-form">
+                    {{ __('Salvar Evento') }}
                 </button>
             </div>
         </div>

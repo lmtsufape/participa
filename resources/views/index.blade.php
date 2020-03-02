@@ -17,8 +17,8 @@
     <div class="col-sm-4">
       <img src="{{asset('img/pc.png')}}" alt="">
     </div>
-    <a class="btn btn-outline-light btn-lg"  id="modulo1" href="#" 
-    style="margin-bottom:10px;" role="button" data-toggle="modal" data-target="#modalLogin">Criar Evento</a>
+    {{-- <a class="btn btn-outline-light btn-lg"  id="modulo1" href="#" 
+    style="margin-bottom:10px;" role="button" data-toggle="modal" data-target="#modalLogin">Criar Evento</a> --}}
   </div>
 
   

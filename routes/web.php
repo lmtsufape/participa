@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'EventoController@index')->name('home');
 
 // rotas de teste
 Route::get('/coordenador/home','EventoController@index')->name('coord.home');
@@ -36,6 +36,7 @@ Route::post('/evento/cadastrarCoordComissao','ComissaoController@coordenadorComi
 //Evento
 Route::get(   '/evento/criar',          'EventoController@create'               )->name('evento.criar');
 Route::post(  '/evento/criar',          'EventoController@store'                )->name('evento.criar');
+Route::get(   '/evento/visualizar/{id}',     'EventoController@show'               )->name('evento.visualizar');
 Route::delete('/evento/excluir/{id}',   'EventoController@destroy'              )->name('evento.deletar');
 Route::get(   '/evento/editar/{id}',    'EventoController@edit'                 )->name('evento.editar');
 Route::post(  '/evento/editar/{id}',    'EventoController@update'               )->name('evento.editar');
@@ -48,4 +49,5 @@ Route::post(  '/revisor/criar',         'RevisorController@store'               
 //AreaModalidade
 Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'        )->name('areaModalidade.store');
 //Trabalho
+Route::get(   '/trabalho/submeter/{id}',     'TrabalhoController@index'              )->name('trabalho.index');
 Route::post(  '/trabalho/criar',        'TrabalhoController@store'              )->name('trabalho.store');
