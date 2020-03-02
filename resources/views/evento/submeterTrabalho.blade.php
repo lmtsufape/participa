@@ -69,11 +69,11 @@
 
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
-                                <label for="areaModalidadeId" class="col-form-label">{{ __('Área - Modalidade') }}</label>
+                                <label for="areaModalidadeId" class="col-form-label">{{ __('Área') }}</label>
                                 <select class="form-control @error('areaModalidadeId') is-invalid @enderror" id="areaModalidadeId" name="areaModalidadeId">
-                                    <option value="" disabled selected hidden>-- Área - Modalidade --</option>
+                                    <option value="" disabled selected hidden>-- Área --</option>
                                     @foreach($areaModalidades as $areaModalidade)
-                                      <option value="{{$areaModalidade->id}}">{{$areaModalidade->area->nome}} - {{$areaModalidade->modalidade->nome}}</option>
+                                      <option value="{{$areaModalidade->id}}">{{$areaModalidade->area->nome}}</option>
                                     @endforeach
                                 </select>
 
@@ -112,14 +112,18 @@
 <script type="text/javascript">
   $(function(){
     $('#addCoautor').click(function(){
-      console.log('Add Coautor');
       linha = montarLinhaInput();
       $('#coautores').append(linha);
     });
   });
 
   function montarLinhaInput(){
-    return "<input"+" type="+'email'+" class="+'form-control emailCoautor'+" name="+'emailCoautor'+" placeholder="+"E-mail do Coautor"+" required>";
+    // let numCoautores = console.log($("#coautores").children().length + 1);
+    return  "<div class="+"row"+">"+
+                "<div class="+"col-sm-12"+">"+
+                    "<input"+" type="+'email'+" class="+'form-control emailCoautor'+" name="+'emailCoautor'+" placeholder="+"E-mail do Coautor"+" required>"+
+                "</div>"+
+            "</div>";
   }
 </script>
 @endsection

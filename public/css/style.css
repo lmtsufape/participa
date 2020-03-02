@@ -106,7 +106,12 @@ body{
     width:100%;
     padding: 20px 0 20px 0;
 }
-
+.botao-form-left{
+  padding-left:0;
+}
+.botao-form-right{
+  padding-right:0;
+}
 
 /* SIDEBAR */
 .navbar{
@@ -235,7 +240,7 @@ body{
 /* EVENTO */
 .banner-evento{
     width: 100vw;
-    height: 40vh;
+    height: 35vh;
     border-image-slice: fill;
     z-index: 0;
     position: absolute;
@@ -321,6 +326,12 @@ body{
     .front-image-evento{
         margin: 35px 20px 35px 20px;
         width: 90%;
-
+    }
+    .botao-form-left{
+      padding:0;
+      margin-bottom: 20px;
+    }
+    .botao-form-right{
+      padding:0;
     }
 }
