@@ -678,7 +678,9 @@
                             <tr>
                               <th scope="row">1</th>
                               <td>{{$area->nome}}</td>
-                              <td>remover</td>
+                              <td>
+                                <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
+                              </td>
                             </tr>
                           @endforeach
                         </tbody>
