@@ -1,4 +1,4 @@
-/* 
+/*
 color primary: #114048ff
 color secondary: #196572ff
 color dark: #071b1eff
@@ -73,4 +73,40 @@ body{
     box-shadow: 10px 10px #114048ff;
     margin-top: -10px;
     transition: 0.5s;
+}
+.footer{
+  background-color:black;
+  padding:100px;
+  color: white;
+}
+.footer .social{
+  width: 30px;
+  margin-right: 20px;
+  transition: 0.5s;
+}
+.footer .social:hover{
+  width: 35px;
+  transition: 0.5s;
+}
+.footer .sobre a{
+  margin-bottom: 10px;
+  color: white;
+}
+.footer a{
+  color:white;
+}
+
+.footer .coluna h3{
+  margin-bottom:20px;
+}
+.footer .social-network{
+  margin-top:20px;
+}
+@media screen and (max-width: 576px) {
+  .footer .coluna{
+    margin-bottom:30px;
+  }
+  .footer .social{
+    width:20px;
+  }
 }
