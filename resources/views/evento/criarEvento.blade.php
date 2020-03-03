@@ -8,15 +8,15 @@
 
     <form action="{{route('evento.criar')}}" method="POST">
     @csrf
-        <div class="row subtitulo">   
+        <div class="row subtitulo">
             <div class="col-sm-12">
                 <p>Informações Gerais</p>
-            </div>     
+            </div>
         </div>
         {{-- nome | Participantes | Tipo--}}
         <div class="row justify-content-center">
             <div class="col-sm-9">
-                <label for="nome" class="col-form-label">{{ __('Nome do Evento') }}</label>
+                <label for="nome" class="col-form-label">{{ __('Nome') }}</label>
                 <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
 
                 @error('nome')
@@ -38,8 +38,22 @@
             </div> --}}
 
             <div class="col-sm-3">
-                <label for="tipo" class="col-form-label">{{ __('Tipo do Evento') }}</label>
-                <input id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" value="{{ old('tipo') }}" required autocomplete="tipo" autofocus>
+                <label for="tipo" class="col-form-label">{{ __('Tipo') }}</label>
+                <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" value="{{ old('tipo') }}" required>
+                  <option value="Congresso">Congresso</option>
+                  <option value="Encontro">Encontro</option>
+                  <option value="Seminário">Seminário</option>
+                  <option value="Mesa-redonda">Mesa-redonda</option>
+                  <option value="Simpósio">Simpósio</option>
+                  <option value="Painel">Painel</option>
+                  <option value="Fórum">Fórum</option>
+                  <option value="Conferência">Conferência</option>
+                  <option value="Jornada">Jornada</option>
+                  <option value="Cursos">Cursos</option>
+                  <option value="Colóquio">Colóquio</option>
+                  <option value="Semana">Semana</option>
+                  <option value="Workshop">Workshop</option>
+                </select>
 
                 @error('tipo')
                 <span class="invalid-feedback" role="alert">
@@ -49,29 +63,70 @@
             </div>
         </div>{{-- end nome | Participantes | Tipo--}}
 
+        {{-- Descricao Evento --}}
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Descrição</label>
+                    <textarea class="form-control @error('descricao') is-invalid @enderror" value="{{ old('descricao') }}" required autocomplete="descricao" autofocus id="descricao" name="descricao" rows="3"></textarea>
+                    @error('descricao')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                  </div>
+            </div>
+        </div>
+        <!-- Inicio e fim do evento -->
+        <div class="row justify-content-center">
+          <div class="col-sm-6">
+              <label for="dataInicio" class="col-form-label">{{ __('Início') }}</label>
+              <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror" name="dataInicio" value="{{ old('dataInicio') }}" required autocomplete="dataInicio" autofocus>
+
+              @error('dataInicio')
+              <span class="invalid-feedback" role="alert">
+                  <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+          </div>
+          <div class="col-sm-6">
+              <label for="dataFim" class="col-form-label">{{ __('Fim') }}</label>
+              <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror" name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim" autofocus>
+
+              @error('dataFim')
+              <span class="invalid-feedback" role="alert">
+                  <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+          </div>
+        </div><!-- end Inicio e fim do evento -->
+
+        {{-- Foto Evento --}}
+        <div class="row justify-content-center" style="margin-top:10px">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="fotoEvento">Logo</label>
+                    <input type="file" class="form-control-file @error('isCoordenador') is-invalid @enderror" name="isCoordenador" value="{{ old('isCoordenador') }}" id="fotoEvento">
+                    @error('fotoEvento')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                    </div>
+            </div>
+        </div>
+
+
+        <div class="row subtitulo">
+            <div class="col-sm-12">
+                <p>Trabalhos</p>
+            </div>
+        </div>
+
         {{-- dataInicio | dataFim | inicioSubmissao | fimSubmissao --}}
         <div class="row justify-content-center">
-            <div class="col-sm-3">
-                <label for="dataInicio" class="col-form-label">{{ __('Início do Evento') }}</label>
-                <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror" name="dataInicio" value="{{ old('dataInicio') }}" required autocomplete="dataInicio" autofocus>
 
-                @error('dataInicio')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-            <div class="col-sm-3">
-                <label for="dataFim" class="col-form-label">{{ __('Fim do Evento') }}</label>
-                <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror" name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim" autofocus>
-
-                @error('dataFim')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
                 <label for="inicioSubmissao" class="col-form-label">{{ __('Início da Submissão') }}</label>
                 <input id="inicioSubmissao" type="date" class="form-control @error('inicioSubmissao') is-invalid @enderror" name="inicioSubmissao" value="{{ old('inicioSubmissao') }}" required autocomplete="inicioSubmissao" autofocus>
 
@@ -81,7 +136,7 @@
                 </span>
                 @enderror
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
                 <label for="fimSubmissao" class="col-form-label">{{ __('Fim da Submissão') }}</label>
                 <input id="fimSubmissao" type="date" class="form-control @error('fimSubmissao') is-invalid @enderror" name="fimSubmissao" value="{{ old('fimSubmissao') }}" required autocomplete="fimSubmissao" autofocus>
 
@@ -93,29 +148,33 @@
             </div>
         </div>{{-- end dataInicio | dataFim | inicioSubmissao | fimSubmissao --}}
 
+        <div class="row justify-content-center">
+          <div class="col-sm-6">
+              <label for="inicioRevisao" class="col-form-label">{{ __('Início da Revisão') }}</label>
+              <input id="inicioRevisao" type="date" class="form-control @error('inicioRevisao') is-invalid @enderror" name="inicioRevisao" value="{{ old('inicioRevisao') }}" required autocomplete="inicioRevisao" autofocus>
+
+              @error('inicioRevisao')
+              <span class="invalid-feedback" role="alert">
+                  <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+          </div>
+          <div class="col-sm-6">
+              <label for="fimRevisao" class="col-form-label">{{ __('Fim da Revisão') }}</label>
+              <input id="fimRevisao" type="date" class="form-control @error('fimRevisao') is-invalid @enderror" name="fimRevisao" value="{{ old('fimRevisao') }}" required autocomplete="fimRevisao" autofocus>
+
+              @error('fimRevisao')
+              <span class="invalid-feedback" role="alert">
+                  <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+          </div>
+        </div>
+
         {{-- inicioRevisao | fimRevisao | inicioResultado | fimResultado--}}
         <div class="row justify-content-center">
-            <div class="col-sm-3">
-                <label for="inicioRevisao" class="col-form-label">{{ __('Início da Revisão') }}</label>
-                <input id="inicioRevisao" type="date" class="form-control @error('inicioRevisao') is-invalid @enderror" name="inicioRevisao" value="{{ old('inicioRevisao') }}" required autocomplete="inicioRevisao" autofocus>
 
-                @error('inicioRevisao')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-            <div class="col-sm-3">
-                <label for="fimRevisao" class="col-form-label">{{ __('Fim da Revisão') }}</label>
-                <input id="fimRevisao" type="date" class="form-control @error('fimRevisao') is-invalid @enderror" name="fimRevisao" value="{{ old('fimRevisao') }}" required autocomplete="fimRevisao" autofocus>
-
-                @error('fimRevisao')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
                 <label for="inicioResultado" class="col-form-label">{{ __('Início do Resultado') }}</label>
                 <input id="inicioResultado" type="date" class="form-control @error('inicioResultado') is-invalid @enderror" name="inicioResultado" value="{{ old('inicioResultado') }}" required autocomplete="inicioResultado" autofocus>
 
@@ -125,7 +184,7 @@
                 </span>
                 @enderror
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
                 <label for="fimResultado" class="col-form-label">{{ __('Fim do Resultado') }}</label>
                 <input id="fimResultado" type="date" class="form-control @error('fimResultado') is-invalid @enderror" name="fimResultado" value="{{ old('fimResultado') }}" required autocomplete="fimResultado" autofocus>
 
@@ -137,42 +196,10 @@
             </div>
         </div>{{-- end inicioRevisao | fimRevisao | inicioResultado | fimResultado--}}
 
-
-        {{-- Foto Evento --}}
-        <div class="row justify-content-center">
-
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="fotoEvento">Foto do Evento</label>
-                    <input type="file" class="form-control-file @error('isCoordenador') is-invalid @enderror" name="isCoordenador" value="{{ old('isCoordenador') }}" id="fotoEvento">
-                    @error('fotoEvento')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                    </div>
-            </div>
-        </div>
-
-        {{-- Descricao Evento --}}
-        <div class="row justify-content-center">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Descrição do Evento</label>
-                    <textarea class="form-control @error('descricao') is-invalid @enderror" value="{{ old('descricao') }}" required autocomplete="descricao" autofocus id="descricao" name="descricao" rows="3"></textarea>
-                    @error('descricao')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                  </div>
-            </div>
-        </div>
-
-        <div class="row subtitulo">   
+        <div class="row subtitulo" style="margin-top:20px">
             <div class="col-sm-12">
                 <p>Endereço</p>
-            </div>     
+            </div>
         </div>
         {{-- Rua | Número | Bairro --}}
         <div class="row justify-content-center">

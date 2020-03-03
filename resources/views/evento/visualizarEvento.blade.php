@@ -7,7 +7,7 @@
             <img src="{{asset('img/colorscheme.png')}}" alt="">
         </div>
         <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt="">
-        
+
     </div>
 </div>
 <div class="container" style="margin-top:20px">
@@ -66,13 +66,13 @@
             </p>
         </div>
     </div>
-    
+
     <div class="row justify-content-center" style="margin: 20px 0 20px 0">
-        
-        <div class="col-md-6" style="padding-left:0">
+
+        <div class="col-md-6 botao-form-left" style="">
             <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}" style="width:100%">Voltar</a>
         </div>
-        <div class="col-md-6" style="padding-right:0">
+        <div class="col-md-6 botao-form-right" style="">
             <a class="btn btn-primary botao-form" href="{{route('trabalho.index',['id'=>$evento->id])}}" style="width:100%">Submeter Trabalho</a>
         </div>
     </div>
@@ -83,6 +83,6 @@
 
 @section('javascript')
 <script>
-    
+
 </script>
 @endsection

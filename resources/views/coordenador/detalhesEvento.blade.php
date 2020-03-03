@@ -9,7 +9,7 @@
                     <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
                 </li>
             </a>
-            
+
             <a id="trabalhos" onclick="habilitarPagina('trabalhos')">
                 <li>
                     <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Trabalhos</h5>
@@ -31,7 +31,7 @@
                         </li>
                     </a>
                 </div>
-                
+
             </a>
             <a id="revisores">
                 <li>
@@ -116,6 +116,112 @@
                 <h1 class="titulo-detalhes">Informações</h1>
             </div>
         </div>
+
+        <!-- Row trabalhos -->
+        <div class="row justify-content-center">
+          <div class="col-sm-8">
+
+
+            <div class="row justify-content-center">
+              <div class="col-sm-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Trabalhos Enviados</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Trabalhos</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Trabalhos Avaliados</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Trabalhos</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Trabalhos Pendentes</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Trabalhos</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Áreas e Modalidades -->
+            <div class="row justify-content-center">
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Número de Áreas</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Áreas</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Número de Modalidades</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Modalidades</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!-- Revisores e Comissão -->
+            <div class="row justify-content-center">
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Número de Revisores</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Revisores</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Número de Integrantes na Comissão</h5>
+                    <p class="card-text">
+                      <h1> - </h1>
+                      <h6>Integrantes</h6>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+        </div><!-- end Row trabalhos -->
+
     </div>
     {{-- Comissão --}}
     <div id="divCadastrarComissao" class="comissao">
@@ -125,7 +231,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-sm-8">
+            <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
                       <h5 class="card-title">Novo Membro</h5>
@@ -152,7 +258,7 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                </div>                            
+                                </div>
                         </div>
                         </p>
                         <div class="row justify-content-center">
@@ -162,12 +268,12 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         </form>
                     </div>
                   </div>{{-- end card--}}
             </div>
-            
+
         </div>
 
     </div>{{-- End cadastrar Comissão --}}
@@ -188,7 +294,7 @@
                             @csrf
                             <p class="card-text">
                                     <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
-                    
+
                                     <div class="form-group">
                                         <label for="coodComissaoId">Coordenador Comissão</label>
                                         <select class="form-control" name="coordComissaoId" id="coodComissaoId">
@@ -207,11 +313,11 @@
                                         <button type="submit" class="btn btn-primary" style="width:100%">
                                             {{ __('Definir Coordenador') }}
                                         </button>
-                                        
+
                                     </div>
                                 </div>
                             </form>
-                      
+
                     </div>
                   </div>
             </div>
@@ -242,7 +348,7 @@
                             </thead>
                                 @foreach ($users as $user)
                                     <tbody>
-        
+
                                         <th>
                                             <td>{{$user->name}}</td>
                                             <td>{{$user->especProfissional}}</td>
@@ -257,29 +363,29 @@
                   </div>
             </div>
         </div>
-        
+
 
         {{-- tabela membros comissão --}}
         <div class="row">
             <div class="col-sm-12">
                 <table class="table table-responsive-lg table-hover">
-                    
+
                 </table>
             </div>
         </div>
     </div>{{-- End Listar Comissão --}}
 
     <!-- Trabalhos -->
-    <div id="divTrabalhos" class="container" style="display: none">
-        
+    <div id="divTrabalhos" style="display: none">
+
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Trabalhos</h1>
-            </div>            
+            </div>
         </div>
 
-        
-    
+
+
     {{-- Tabela Trabalhos --}}
     <div class="row">
         <div class="col-sm-12">
@@ -310,17 +416,17 @@
                 </tbody>
               </table>
         </div>
-      
-    </div>  
+
+    </div>
 </div><!-- End Trabalhos -->
 
-    
+
 {{-- Modalidade --}}
 <div id="divCadastrarModalidades" class="modalidades">
     <div class="row">
         <div class="col-sm-12">
             <h1 class="titulo-detalhes">Cadastrar Modalidade</h1>
-        </div>            
+        </div>
     </div>
     {{-- row card --}}
     <div class="row justify-content-center">
@@ -342,16 +448,16 @@
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
                                 <input id="nomeModalidade" type="text" class="form-control @error('nomeModalidade') is-invalid @enderror" name="nomeModalidade" value="{{ old('nomeModalidade') }}" required autocomplete="nomeModalidade" autofocus>
-                    
+
                                 @error('nomeModalidade')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                             </div>
-                            
+
                         </div>{{-- end row--}}
-                                                        
+
                     </p>
                     <div class="row justify-content-center">
                         <div class="col-md-12">
@@ -382,7 +488,7 @@
                                     <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
                                     @endforeach
                                 </select>
-                    
+
                                 @error('modalidadeId')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -397,7 +503,7 @@
                                         <option value="{{$area->id}}">{{$area->nome}}</option>
                                     @endforeach
                                 </select>
-                    
+
                                 @error('areaId')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -406,9 +512,9 @@
                             </div>
                         </div>
                     </p>
-                    
+
                     <div class="row justify-content-center">
-                
+
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-primary" style="width:100%">
                                 {{ __('Finalizar') }}
@@ -416,18 +522,18 @@
                         </div>
                     </div>
                     </form>
-                    
+
                 </div>
             </div>{{-- End card--}}
         </div>
-    </div>{{-- end row card --}}    
+    </div>{{-- end row card --}}
 </div>
 <div id="divListarModalidades" class="modalidades">
     <div class="row">
         <div class="col-sm-12">
             <h1 class="titulo-detalhes">Listar Modalidades</h1>
-        </div>            
-    </div>  
+        </div>
+    </div>
 
     <div class="row justify-content-center">
         {{-- table modalidades --}}
@@ -449,14 +555,14 @@
                                 <td>{{$modalidade->nome}}</td>
                             </tr>
                             @endforeach
-                
-                
+
+
                         </tbody>
                     </table>
                   </p>
                 </div>
               </div>
-            
+
         </div>{{-- end table--}}
 
         {{-- table modalidades Área--}}
@@ -480,16 +586,16 @@
                                 <td>{{$areaModalidade->area->nome}}</td>
                               </tr>
                             @endforeach
-                  
-                  
+
+
                         </tbody>
                       </table>
                   </p>
                 </div>
               </div>
-            
+
         </div>{{-- end table área--}}
-    </div>    
+    </div>
 </div>
     <div id="divClassificacao" class="classificacao">
         <h1>Classificação</h1>
@@ -499,7 +605,7 @@
     </div>
 
 <!-- Área -->
-<div id="divCadastrarAreas" class="container" style="display: none">
+<div id="divCadastrarAreas" style="display: none">
     <div class="row">
         <div class="col-sm-12">
             <h1 class="titulo-detalhes">Cadastrar Áreas</h1>
@@ -507,7 +613,7 @@
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-sm-8">
+        <div class="col-sm-5">
             <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Nova Área</h5>
@@ -520,7 +626,7 @@
                                 <div class="col-sm-12">
                                     <label for="nome" class="col-form-label">{{ __('Nome da Área') }}</label>
                                     <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
-                    
+
                                     @error('nome')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -537,14 +643,14 @@
                             </div>
                         </div>
                     </form>
-                  
+
                 </div>
               </div>{{-- End card--}}
-        </div>        
+        </div>
     </div>
 </div>
 
-<div id="divListarAreas" class="container" style="display: none">
+<div id="divListarAreas" style="display: none">
     <div class="row">
         <div class="col-sm-12">
             <h1 class="titulo-detalhes">Listar Áreas</h1>
@@ -552,7 +658,7 @@
     </div>
 
     <div class="row justify-content-center">
-        
+
         <div class="col-sm-8">
             <div class="card">
                 <div class="card-body">
@@ -572,7 +678,9 @@
                             <tr>
                               <th scope="row">1</th>
                               <td>{{$area->nome}}</td>
-                              <td>remover</td>
+                              <td>
+                                <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
+                              </td>
                             </tr>
                           @endforeach
                         </tbody>
@@ -581,19 +689,19 @@
                 </div>
               </div>
         </div>
-    </div>    
+    </div>
 </div>
 <!-- Revisores -->
-<div id="divCadastrarRevisores" class="container" style="display: none">
-    
+<div id="divCadastrarRevisores" style="display: none">
+
     <div class="row">
         <div class="col-sm-12">
             <h1 class="titulo-detalhes">Cadastrar Revisores</h1>
-        </div>            
+        </div>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-sm-8">
+        <div class="col-sm-6">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Revisores</h5>
@@ -606,7 +714,7 @@
                                 <div class="col-sm-6">
                                     <label for="emailRevisor" class="col-form-label">{{ __('Email do Revisor') }}</label>
                                     <input id="emailRevisor" type="text" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{ old('emailRevisor') }}" required autocomplete="emailRevisor" autofocus>
-                    
+
                                     @error('emailRevisor')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -621,7 +729,7 @@
                                         <option value="{{$area->id}}">{{$area->nome}}</option>
                                         @endforeach
                                     </select>
-                    
+
                                     @error('areaRevisor')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -629,7 +737,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            
+
                         </p>
                         <div class="row justify-content-center">
                             <div class="col-md-12">
@@ -639,26 +747,26 @@
                             </div>
                         </div>
                     </form>
-                  
+
                 </div>
             </div>
         </div>
     </div>
-    
-    
+
+
 
 
 </div>
-<div id="divListarRevisores" class="container" style="display: none">
-    
+<div id="divListarRevisores" style="display: none">
+
     <div class="row">
         <div class="col-sm-12">
             <h1 class="titulo-detalhes">Listar Revisores</h1>
-        </div>            
+        </div>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-sm-8">
+        <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Revisores</h5>
@@ -687,7 +795,7 @@
                         </tbody>
                       </table>
                   </p>
-                  
+
                 </div>
               </div>
         </div>
@@ -714,9 +822,9 @@
             $('#dropdownModalidades').slideToggle(200);
     });
   });
-  
+
     function cadastrarCoodComissao(){
-        
+
             document.getElementById("formCoordComissao").submit();
             console.log('foi')
     }
@@ -752,10 +860,10 @@
         cadastrarComissao = document.getElementById('divCadastrarComissao');
         definirCoordComissao = document.getElementById('divDefinirCoordComissao');
         listarComissao = document.getElementById('divListarComissao');
-        
+
         cadastrarModalidade = document.getElementById('divCadastrarModalidades');
         listarModalidade = document.getElementById('divListarModalidades');
-        
+
         // habilita divInformacoes
         if(id == 'informacoes'){
             // console.log('informacoes');
