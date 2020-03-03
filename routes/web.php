@@ -45,7 +45,7 @@ Route::group(['middleware' => ['isTemp']], function(){
   //Evento
   Route::get(   '/evento/criar',          'EventoController@create'               )->name('evento.criar');
   Route::post(  '/evento/criar',          'EventoController@store'                )->name('evento.criar');
-  Route::get(   '/evento/visualizar/{id}',     'EventoController@show'               )->name('evento.visualizar');
+  Route::get(   '/evento/visualizar/{id}','EventoController@show'                 )->name('evento.visualizar');
   Route::delete('/evento/excluir/{id}',   'EventoController@destroy'              )->name('evento.deletar');
   Route::get(   '/evento/editar/{id}',    'EventoController@edit'                 )->name('evento.editar');
   Route::post(  '/evento/editar/{id}',    'EventoController@update'               )->name('evento.editar');
@@ -58,7 +58,7 @@ Route::group(['middleware' => ['isTemp']], function(){
   //AreaModalidade
   Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'        )->name('areaModalidade.store');
   //Trabalho
-  Route::get(   '/trabalho/submeter/{id}',     'TrabalhoController@index'              )->name('trabalho.index');
+  Route::get(   '/trabalho/submeter/{id}','TrabalhoController@index'              )->name('trabalho.index');
   Route::post(  '/trabalho/criar',        'TrabalhoController@store'              )->name('trabalho.store');
 
 });
