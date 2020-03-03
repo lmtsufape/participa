@@ -89,7 +89,7 @@
                     </a>
                 </div>
             </a>
-            <a id="colocacao" onclick="habilitarPagina('colocacao')">
+            <!-- <a id="colocacao" onclick="habilitarPagina('colocacao')">
                 <li>
                     <img src="{{asset('img/icons/trophy-solid.svg')}}" alt=""><h5>Classificação</h5>
                 </li>
@@ -98,7 +98,7 @@
                 <li>
                     <img src="{{asset('img/icons/calendar-alt-solid.svg')}}" alt=""><h5>Atividades</h5>
                 </li>
-            </a>
+            </a> -->
         </ul>
     </div>
 
@@ -231,7 +231,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-sm-6">
+            <div class="col-sm-5">
                 <div class="card">
                     <div class="card-body">
                       <h5 class="card-title">Novo Membro</h5>
@@ -277,7 +277,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-sm-6">
+            <div class="col-sm-5">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Coordenador da Comissão</h5>

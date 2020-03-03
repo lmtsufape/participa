@@ -66,6 +66,23 @@
             </p>
         </div>
     </div>
+    @if($hasFile == true)
+      <div class="row margin">
+          <div class="col-sm-12 info-evento">
+              <h4>Meu Trabalho</h4>
+              <p>
+                  <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" alt="">
+                  <a href="#" style="font-size: 20px; color: #114048ff;" >
+                    @if($hasFile == true)
+                      Baixar Trabalho
+                    @else
+                      Nova Versão
+                    @endif
+                  </a>
+              </p>
+          </div>
+      </div>
+    @endif
 
     <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 

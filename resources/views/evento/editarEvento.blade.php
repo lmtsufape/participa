@@ -205,6 +205,16 @@
 
         {{-- Rua | Número | Bairro --}}
         <div class="row justify-content-center">
+            <div class="col-sm-4">
+                <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
+                <input value="{{$endereco->cep}}" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" value="{{ old('cep') }}" required autocomplete="cep" autofocus>
+
+                @error('cep')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
             <div class="col-sm-6">
                 <label for="rua" class="col-form-label">{{ __('Rua') }}</label>
                 <input value="{{$endereco->rua}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" value="{{ old('rua') }}" required autocomplete="rua" autofocus>
@@ -225,6 +235,11 @@
                 </span>
                 @enderror
             </div>
+
+
+        </div>{{--end Rua | Número | Bairro --}}
+
+        <div class="row justify-content-center">
             <div class="col-sm-4">
                 <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
                 <input value="{{$endereco->bairro}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" value="{{ old('bairro') }}" required autocomplete="bairro" autofocus>
@@ -235,10 +250,6 @@
                 </span>
                 @enderror
             </div>
-
-        </div>{{--end Rua | Número | Bairro --}}
-
-        <div class="row justify-content-center">
             <div class="col-sm-4">
                 <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
                 <input value="{{$endereco->cidade}}" id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" value="{{ old('cidade') }}" required autocomplete="cidade" autofocus>
@@ -289,16 +300,7 @@
                 </span>
                 @enderror
             </div>
-            <div class="col-sm-4">
-                <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
-                <input value="{{$endereco->cep}}" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" value="{{ old('cep') }}" required autocomplete="cep" autofocus>
 
-                @error('cep')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
         </div>
 
         <div class="row justify-content-center" style="margin: 20px 0 20px 0">

@@ -35,22 +35,7 @@
                           </div>
                         </div>
 
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <!-- <label for="emailCoautor" class="col-form-label">{{ __('E-mail dos coautores') }} -->
-                                <!-- <input id="emailCoautor" type="text" class="form-control @error('emailCoautor') is-invalid @enderror" name="emailCoautor" value="{{ old('emailCoautor') }}" required autocomplete="emailCoautor" autofocus>
-                                @error('emailCoautor')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
 
-                                @error('emailNaoEncontrado')
-                                {{$message}}
-                                @enderror -->
-
-                            </div>
-                        </div>
 
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
@@ -67,17 +52,35 @@
                             </div>
                         </div>
 
+                        <!-- Areas -->
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
-                                <label for="areaModalidadeId" class="col-form-label">{{ __('Área') }}</label>
-                                <select class="form-control @error('areaModalidadeId') is-invalid @enderror" id="areaModalidadeId" name="areaModalidadeId">
+                                <label for="area" class="col-form-label">{{ __('Área') }}</label>
+                                <select class="form-control @error('area') is-invalid @enderror" id="area" name="area">
                                     <option value="" disabled selected hidden>-- Área --</option>
-                                    @foreach($areaModalidades as $areaModalidade)
-                                      <option value="{{$areaModalidade->id}}">{{$areaModalidade->area->nome}}</option>
+                                    @foreach($areasEnomes as $area)
+                                      <option value="{{$area->id}}">{{$area->nome}}</option>
                                     @endforeach
                                 </select>
 
-                                @error('areaModalidadeId')
+                                @error('area')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Modalidades -->
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <label for="areaModalidadeId" class="col-form-label">{{ __('Modalidade') }}</label>
+                                <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidade">
+
+
+                                </select>
+
+                                @error('modalidade')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -95,7 +98,7 @@
                         </div>
                         <div class="col-md-6">
                             <button type="submit" class="btn btn-primary" style="width:100%">
-                                {{ __('Finalizar') }}
+                                {{ __('Enviar') }}
                             </button>
                         </div>
                     </div>
@@ -110,13 +113,32 @@
 
 @section('javascript')
 <script type="text/javascript">
+
+  var modalidades = JSON.parse('<?php echo json_encode($modalidadesIDeNome) ?>');
   $(function(){
+    // Coautores
     $('#addCoautor').click(function(){
       linha = montarLinhaInput();
       $('#coautores').append(linha);
     });
+
+    // Exibir modalidade de acordo com a área
+    $("#area").change(function(){
+      console.log($(this).val());
+      addModalidade($(this).val());
+    });
   });
 
+  function addModalidade(areaId){
+    console.log(modalidades)
+    $("#modalidade").empty();
+    for(let i = 0; i < modalidades.length; i++){
+      if(modalidades[i].areaId == areaId){
+        console.log(modalidades[i]);
+        $("#modalidade").append("<option value="+modalidades[i].modalidadeID+">"+modalidades[i].modalidadeNome+"</option>")
+      }
+    }
+  }
   function montarLinhaInput(){
     // let numCoautores = console.log($("#coautores").children().length + 1);
     return  "<div class="+"row"+">"+
