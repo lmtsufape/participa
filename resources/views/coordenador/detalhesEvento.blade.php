@@ -89,7 +89,7 @@
                     </a>
                 </div>
             </a>
-            <a id="colocacao" onclick="habilitarPagina('colocacao')">
+            <!-- <a id="colocacao" onclick="habilitarPagina('colocacao')">
                 <li>
                     <img src="{{asset('img/icons/trophy-solid.svg')}}" alt=""><h5>Classificação</h5>
                 </li>
@@ -98,7 +98,7 @@
                 <li>
                     <img src="{{asset('img/icons/calendar-alt-solid.svg')}}" alt=""><h5>Atividades</h5>
                 </li>
-            </a>
+            </a> -->
         </ul>
     </div>
 
@@ -231,7 +231,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-sm-6">
+            <div class="col-sm-5">
                 <div class="card">
                     <div class="card-body">
                       <h5 class="card-title">Novo Membro</h5>
@@ -241,7 +241,7 @@
                         <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
                         <p class="card-text">
                             <div class="row justify-content-center">
-                                <div class="col-sm-6">
+                                <div class="col-sm-12">
                                     <label for="emailMembroComissao" class="control-label">E-mail do novo membro</label>
                                     <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail">
                                     @error('emailMembroComissao')
@@ -250,15 +250,7 @@
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="col-sm-6">
-                                    <label for="especProfissional" class="control-label">Experiência Profissional</label>
-                                    <input type="text" name="especProfissional" class="form-control @error('especProfissional') is-invalid @enderror" name="especProfissional" value="{{ old('especProfissional') }}" id="especProfissional" placeholder="Esperiência Profissional">
-                                    @error('especProfissional')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
+
                         </div>
                         </p>
                         <div class="row justify-content-center">
@@ -285,7 +277,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-sm-6">
+            <div class="col-sm-5">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Coordenador da Comissão</h5>
