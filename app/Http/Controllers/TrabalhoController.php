@@ -13,6 +13,9 @@ use App\Modalidade;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Http\Request;
+use App\Mail\EmailParaUsuarioNaoCadastrado;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class TrabalhoController extends Controller
 {
@@ -78,15 +81,22 @@ class TrabalhoController extends Controller
       foreach ($coautores as $key) {
         $userCoautor = User::where('email', $key)->first();
         if($userCoautor == null){
-          $existemUsuariosCadastrados = false;
+          $passwordTemporario = Str::random(8);
+          Mail::to($key)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario));
+          $usuario = User::create([
+            'email' => $request->emailRevisor,
+            'password' => bcrypt($passwordTemporario),
+            'usuarioTemp' => true,
+          ]);
         }
+
       }
-      if($existemUsuariosCadastrados == false){
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId])
-                         ->withInput(['nomeTrabalho' => $request->nomeTrabalho,
-                                      'emailCoautor' => $request->emailCoautor])
-                         ->withErrors(['emailNaoEncontrado' => 'E-mail(s) de coautores incorretos ou não cadastrados.']);
-      }
+      // if($existemUsuariosCadastrados == false){
+      //   return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId])
+      //                    ->withInput(['nomeTrabalho' => $request->nomeTrabalho,
+      //                                 'emailCoautor' => $request->emailCoautor])
+      //                    ->withErrors(['emailNaoEncontrado' => 'E-mail(s) de coautores incorretos ou não cadastrados.']);
+      // }
 
       $trabalho = Trabalho::create([
         'titulo' => $request->nomeTrabalho,

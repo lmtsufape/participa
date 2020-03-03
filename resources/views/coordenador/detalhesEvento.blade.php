@@ -241,7 +241,7 @@
                         <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
                         <p class="card-text">
                             <div class="row justify-content-center">
-                                <div class="col-sm-6">
+                                <div class="col-sm-12">
                                     <label for="emailMembroComissao" class="control-label">E-mail do novo membro</label>
                                     <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail">
                                     @error('emailMembroComissao')
@@ -250,15 +250,7 @@
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="col-sm-6">
-                                    <label for="especProfissional" class="control-label">Experiência Profissional</label>
-                                    <input type="text" name="especProfissional" class="form-control @error('especProfissional') is-invalid @enderror" name="especProfissional" value="{{ old('especProfissional') }}" id="especProfissional" placeholder="Esperiência Profissional">
-                                    @error('especProfissional')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
+
                         </div>
                         </p>
                         <div class="row justify-content-center">
@@ -300,9 +292,9 @@
                                         <select class="form-control" name="coordComissaoId" id="coodComissaoId">
                                             @foreach ($users as $user)
                                                 @if($evento->coordComissaoId == $user->id)
-                                                    <option value="{{$user->id}}" selected>{{$user->name}}</option>
+                                                    <option value="{{$user->id}}" selected>{{$user->email}}</option>
                                                 @else
-                                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                                    <option value="{{$user->id}}">{{$user->email}}</option>
                                                 @endif
                                             @endforeach
                                         </select>

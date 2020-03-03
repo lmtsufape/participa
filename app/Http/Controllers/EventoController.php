@@ -46,7 +46,7 @@ class EventoController extends Controller
      */
     public function store(Request $request)
     {
-      
+
         $mytime = Carbon::now('America/Recife');
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();

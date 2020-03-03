@@ -33,7 +33,7 @@ class UserController extends Controller
             'cep' => 'required|integer',
         ]);
 
-        
+
         // User
         $user = User::find($request->id);
         $user->name = $request->input('name');
@@ -41,8 +41,9 @@ class UserController extends Controller
         $user->celular = $request->input('celular');
         $user->instituicao = $request->input('instituicao');
         $user->especProfissional = $request->input('especProfissional');
+        $user->usuarioTemp = null;
         $user->save();
-        
+
         // endereço
         $end = Endereco::find($user->enderecoId);
         $end->rua = $request->input('rua');
@@ -51,12 +52,12 @@ class UserController extends Controller
         $end->cidade = $request->input('cidade');
         $end->uf = $request->input('uf');
         $end->cep = $request->input('cep');
-        
+
         $end->save();
-        // dd([$user,$end]);        
+        // dd([$user,$end]);
         return view('home');
 
-        
+
 
         // return view('index');
     }
