@@ -46,7 +46,7 @@ class EventoController extends Controller
      */
     public function store(Request $request)
     {
-      
+
         $mytime = Carbon::now('America/Recife');
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
@@ -173,8 +173,15 @@ class EventoController extends Controller
     public function show($id)
     {
         $evento = Evento::find($id);
-        // dd($evento);
-        return view('evento.visualizarEvento',["evento"=>$evento]);
+        $hasFile = Trabalho::where('autorId', Auth::user()->id)->first();
+        if(isset($hasFile)){
+          // dd(true);
+          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => true]);
+        }
+        else{
+          // dd(false);
+          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false]);
+        }
     }
 
     /**
