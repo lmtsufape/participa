@@ -98,7 +98,7 @@
                         </div>
                         <div class="col-md-6">
                             <button type="submit" class="btn btn-primary" style="width:100%">
-                                {{ __('Finalizar') }}
+                                {{ __('Enviar') }}
                             </button>
                         </div>
                     </div>
