@@ -375,8 +375,16 @@
                 <h1 class="titulo-detalhes">Trabalhos</h1>
             </div>
         </div>
-
-
+        <form method="GET" action="{{route('distribuicao')}}">
+        <input type="hidden" name="eventoId" value="{{$evento->id}}">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary" style="width:100%">
+                    {{ __('Finalizar') }}
+                </button>
+            </div>
+        </div>
+        </form>
 
     {{-- Tabela Trabalhos --}}
     <div class="row">
@@ -402,6 +410,11 @@
                       </td>
                       <td>
                         <a href="#"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
+                      </td>
+                      <td>
+                        @foreach($trabalho->atribuicao as $atribuicao)
+                            {{$atribuicao->revisor->user->email}}
+                        @endforeach
                       </td>
                     </tr>
                   @endforeach

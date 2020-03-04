@@ -9,9 +9,26 @@
                 <div class="card-body">
                   <h5 class="card-title">Enviar Trabalho</h5>
                   <p class="card-text">
-                    <form method="POST" action="{{route('trabalho.store')}}">
+                    <form method="POST" action="{{route('trabalho.store')}}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
+
+                        <div class="row justify-content-center">
+                          {{-- Arquivo  --}}
+                          <div class="col-sm-12" style="margin-top: 20px;">
+                            <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo') }}</label>
+
+                            <div class="custom-file">
+                              <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                            </div>
+                            @error('arquivo')
+                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                              <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                          </div>
+                        </div>
+
                         <div class="row justify-content-center">
                             {{-- Nome Trabalho  --}}
                           <div class="col-sm-12">
@@ -56,14 +73,14 @@
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
                                 <label for="area" class="col-form-label">{{ __('Área') }}</label>
-                                <select class="form-control @error('area') is-invalid @enderror" id="area" name="area">
+                                <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId">
                                     <option value="" disabled selected hidden>-- Área --</option>
                                     @foreach($areasEnomes as $area)
                                       <option value="{{$area->id}}">{{$area->nome}}</option>
                                     @endforeach
                                 </select>
 
-                                @error('area')
+                                @error('areaId')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -75,12 +92,11 @@
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
                                 <label for="areaModalidadeId" class="col-form-label">{{ __('Modalidade') }}</label>
-                                <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidade">
-
-
+                                <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidadeId">
+                                  <option value="" disabled selected hidden>-- Modalidade --</option>
                                 </select>
 
-                                @error('modalidade')
+                                @error('modalidadeId')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -135,7 +151,7 @@
     for(let i = 0; i < modalidades.length; i++){
       if(modalidades[i].areaId == areaId){
         console.log(modalidades[i]);
-        $("#modalidade").append("<option value="+modalidades[i].modalidadeID+">"+modalidades[i].modalidadeNome+"</option>")
+        $("#modalidade").append("<option value="+modalidades[i].modalidadeId+">"+modalidades[i].modalidadeNome+"</option>")
       }
     }
   }

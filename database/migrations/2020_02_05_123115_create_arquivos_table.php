@@ -17,9 +17,9 @@ class CreateArquivosTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('nome');
-            $table->integer('versao');
-            $table->boolean('versaoFinal');
-            $table->date('data');
+            $table->integer('versao')->nullable();
+            $table->boolean('versaoFinal')->nullable();
+            $table->date('data')->nullable();
 
             $table->integer('trabalhoId');
         });

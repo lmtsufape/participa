@@ -43,24 +43,26 @@ Route::group(['middleware' => ['isTemp']], function(){
 
 
   //Evento
-  Route::get(   '/evento/criar',          'EventoController@create'               )->name('evento.criar');
-  Route::post(  '/evento/criar',          'EventoController@store'                )->name('evento.criar');
-  Route::get(   '/evento/visualizar/{id}','EventoController@show'                 )->name('evento.visualizar');
-  Route::delete('/evento/excluir/{id}',   'EventoController@destroy'              )->name('evento.deletar');
-  Route::get(   '/evento/editar/{id}',    'EventoController@edit'                 )->name('evento.editar');
-  Route::post(  '/evento/editar/{id}',    'EventoController@update'               )->name('evento.editar');
+  Route::get(   '/evento/criar',          'EventoController@create'                    )->name('evento.criar');
+  Route::post(  '/evento/criar',          'EventoController@store'                     )->name('evento.criar');
+  Route::get(   '/evento/visualizar/{id}','EventoController@show'                      )->name('evento.visualizar');
+  Route::delete('/evento/excluir/{id}',   'EventoController@destroy'                   )->name('evento.deletar');
+  Route::get(   '/evento/editar/{id}',    'EventoController@edit'                      )->name('evento.editar');
+  Route::post(  '/evento/editar/{id}',    'EventoController@update'                    )->name('evento.editar');
   //Modalidade
-  Route::post(  '/modalidade/criar',      'ModalidadeController@store'            )->name('modalidade.store');
+  Route::post(  '/modalidade/criar',      'ModalidadeController@store'                 )->name('modalidade.store');
   //Area
-  Route::post(  '/area/criar',            'AreaController@store'                  )->name('area.store');
+  Route::post(  '/area/criar',            'AreaController@store'                       )->name('area.store');
   //Revisores
-  Route::post(  '/revisor/criar',         'RevisorController@store'               )->name('revisor.store');
+  Route::post(  '/revisor/criar',         'RevisorController@store'                    )->name('revisor.store');
   //AreaModalidade
-  Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'        )->name('areaModalidade.store');
+  Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
   //Trabalho
-  Route::get(   '/trabalho/submeter/{id}','TrabalhoController@index'              )->name('trabalho.index');
-  Route::post(  '/trabalho/criar',        'TrabalhoController@store'              )->name('trabalho.store');
+  Route::get(   '/trabalho/submeter/{id}','TrabalhoController@index'                   )->name('trabalho.index');
+  Route::post(  '/trabalho/criar',        'TrabalhoController@store'                   )->name('trabalho.store');
+  //Atribuição
+  Route::get(   '/atribuir',              'AtribuicaoController@distribuicaoAutomatica')->name('distribuicao');
   // rota downloadArquivo
-  Route::get('/downloadArquivo',          'HomeController@downloadArquivo'        )->name('download');
+  Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
 
 });
