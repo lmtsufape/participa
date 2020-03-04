@@ -375,8 +375,16 @@
                 <h1 class="titulo-detalhes">Trabalhos</h1>
             </div>
         </div>
-
-
+        <form method="GET" action="{{route('distribuicao')}}">
+        <input type="hidden" name="eventoId" value="{{$evento->id}}">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary" style="width:100%">
+                    {{ __('Finalizar') }}
+                </button>
+            </div>
+        </div>
+        </form>
 
     {{-- Tabela Trabalhos --}}
     <div class="row">
@@ -398,10 +406,15 @@
                       <td>{{$trabalho->titulo}}</td>
                       <td>{{$trabalho->area->nome}}</td>
                       <td>{{$trabalho->modalidade->nome}}</td>
-                      <td>{{$trabalho->autor->nome}}</td>
+                      <td>{{$trabalho->autor->name}}</td>
                       <td>@foreach($trabalho->coautor as $coautor)
                             {{$coautor->user->name}},
                           @endforeach
+                      </td>
+                      <td>
+                        @foreach($trabalho->atribuicao as $atribuicao)
+                            {{$atribuicao->revisor->user->email}}
+                        @endforeach
                       </td>
                     </tr>
                   @endforeach

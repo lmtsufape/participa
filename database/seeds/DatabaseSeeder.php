@@ -22,10 +22,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([  //
-          'name' => 'teste',
+          'name' => 'coord',
           'email' => 'teste@teste',
           'password' => bcrypt('12345678'),
-          'cpf' => 4,
+          'cpf' => 123132131,
           'instituicao'     => 'd',
           'celular'    => 2,
           'especProfissional' => 'e',
@@ -50,5 +50,69 @@ class DatabaseSeeder extends Seeder
           'enderecoId'=>1,
           'coordenadorId'=>1,
         ]);
+
+        DB::table('areas')->insert([
+          'nome'      => 'area 1',
+          'eventoId'  => 1,
+        ]);
+
+        DB::table('areas')->insert([
+          'nome'      => 'area 2',
+          'eventoId'  => 1,
+        ]);
+
+        DB::table('areas')->insert([
+          'nome'      => 'area 3',
+          'eventoId'  => 1,
+        ]);
+
+        DB::table('modalidades')->insert([
+          'nome'      => 'mod 1',
+        ]);
+
+        for($i = 0; $i < 40; $i++){
+          DB::table('users')->insert([  //
+            'name' => 'teste',
+            'email' => 'teste@teste'.$i,
+            'password' => bcrypt('12345678'),
+            'cpf' => ''.$i,
+            'instituicao'     => 'd',
+            'celular'    => 2,
+            'especProfissional' => 'e',
+            'enderecoId' => 1,
+          ]);
+
+          if($i < 20){
+            DB::table('trabalhos')->insert([
+              'titulo' => 'trabalho' . $i,
+              'autores' => '-',
+              'data'  => '2020-02-15',
+              'modalidadeId'  => 1,
+              'areaId'  => 1,
+              'autorId' => $i+2,
+            ]);
+          }
+          if($i >= 20 && $i < 30){
+            DB::table('trabalhos')->insert([
+              'titulo' => 'trabalho' . $i,
+              'autores' => '-',
+              'data'  => '2020-02-15',
+              'modalidadeId'  => 1,
+              'areaId'  => 2,
+              'autorId' => $i+2,
+            ]);
+          }
+          if($i >= 30){
+            DB::table('trabalhos')->insert([
+              'titulo' => 'trabalho' . $i,
+              'autores' => '-',
+              'data'  => '2020-02-15',
+              'modalidadeId'  => 1,
+              'areaId'  => 3,
+              'autorId' => $i+2,
+            ]);
+          }
+
+        }
     }
 }

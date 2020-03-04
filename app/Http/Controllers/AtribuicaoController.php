@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Atribuicao;
 use Illuminate\Http\Request;
+use App\Evento;
+use App\Revisor;
+use App\User;
+use App\Trabalho;
+use App\Area;
 
 class AtribuicaoController extends Controller
 {
@@ -35,7 +40,20 @@ class AtribuicaoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+          'revisorId'      => ['required', 'integer',],
+          'trabalhoId'     => ['required', 'integer'],
+        ]);
+
+        $atribuicao = Atribuicao::create([
+          'confirmacao' => false,
+          'parecer'     => 'processando',
+          'revisorId'   => $request->revisorId,
+          'trabalhoId'  => $request->trabalhoId,
+        ]);
+
+        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+
     }
 
     /**
@@ -81,5 +99,40 @@ class AtribuicaoController extends Controller
     public function destroy(Atribuicao $atribuicao)
     {
         //
+    }
+
+    public function distribuicaoAutomatica(Request $request){
+      $validatedData = $request->validate([
+        'eventoId' => ['required', 'integer'],
+      ]);
+
+      $evento = Evento::find($request->eventoId);
+      $areas = Area::where('eventoId', $evento->id)->get();
+      $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+      $revisores = Revisor::where('eventoId', $evento->id)->get();
+      $trabalhos = Trabalho::whereIn('areaId', $areasId)->get();
+
+      foreach ($areas as $area) {
+        $trabalhosArea = Trabalho::where('areaId', $area->id)->get();
+        $revisoresArea = Revisor::where('areaId', $area->id)->get();
+        $numRevisores = count($revisoresArea);
+        $i = 0;
+        foreach ($trabalhosArea as $trabalho) {
+          $atribuicao = Atribuicao::create([
+            'confirmacao' => false,
+            'parecer'     => 'processando',
+            'revisorId'   => $revisoresArea[$i]->id,
+            'trabalhoId'  => $trabalho->id,
+          ]);
+          $i++;
+          if($i == $numRevisores){
+            $i = 0;
+          }
+        }
+      }
+
+      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+
+
     }
 }

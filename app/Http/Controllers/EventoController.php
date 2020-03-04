@@ -273,7 +273,8 @@ class EventoController extends Controller
         $revisores = Revisor::where('eventoId', $evento->id)->get();
         $modalidades = Modalidade::all();
         $areaModalidades = AreaModalidade::whereIn('id', $areasId)->get();
-        $trabalhos = Trabalho::where('autorId', Auth::user()->id)->whereIn('areaId', $areasId)->get();
+        // $trabalhos = Trabalho::where('autorId', Auth::user()->id)->whereIn('areaId', $areasId)->get();
+        $trabalhos = Trabalho::whereIn('areaId', $areasId)->get();
 
         return view('coordenador.detalhesEvento', [
                                                     'evento'          => $evento,

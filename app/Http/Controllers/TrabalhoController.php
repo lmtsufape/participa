@@ -10,6 +10,7 @@ use App\AreaModalidade;
 use App\Area;
 use App\Revisor;
 use App\Modalidade;
+use App\Arquivo;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Http\Request;
@@ -75,8 +76,10 @@ class TrabalhoController extends Controller
     {
       $validatedData = $request->validate([
         'nomeTrabalho'      => ['required', 'string',],
-        'areaModalidadeId'  => ['required', 'integer'],
+        'areaId'            => ['required', 'integer'],
+        'modalidadeId'      => ['required', 'integer'],
         'eventoId'          => ['required', 'integer'],
+        'resumo'            => ['required', 'string'],
         'emailCoautor'      => ['string'],
         'arquivo'           => ['required', 'file', 'mimes:pdf'],
       ]);
@@ -87,21 +90,22 @@ class TrabalhoController extends Controller
 
       $autor = Auth::user();
       $evento = Evento::find($request->eventoId);
-      $areaModalidade = AreaModalidade::find($request->areaModalidadeId);
+      $areaModalidade = AreaModalidade::where('areaId', $request->areaId)->where('modalidadeId', $request->modalidadeId)->first();
       $coautores = explode(', ', $request->emailCoautor);
-      $existemUsuariosCadastrados = true;
-      foreach ($coautores as $key) {
-        $userCoautor = User::where('email', $key)->first();
-        if($userCoautor == null){
-          $passwordTemporario = Str::random(8);
-          Mail::to($key)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario));
-          $usuario = User::create([
-            'email' => $request->emailRevisor,
-            'password' => bcrypt($passwordTemporario),
-            'usuarioTemp' => true,
-          ]);
+      // $existemUsuariosCadastrados = true;
+      if($request->emailCoautor != null){
+        foreach ($coautores as $key) {
+          $userCoautor = User::where('email', $key)->first();
+          if($userCoautor == null){
+            $passwordTemporario = Str::random(8);
+            Mail::to($key)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario));
+            $usuario = User::create([
+              'email' => $request->emailRevisor,
+              'password' => bcrypt($passwordTemporario),
+              'usuarioTemp' => true,
+            ]);
+          }
         }
-
       }
       // if($existemUsuariosCadastrados == false){
       //   return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId])
@@ -115,17 +119,19 @@ class TrabalhoController extends Controller
         'autores' => '-',
         'data'  => $mytime,
         'modalidadeId'  => $areaModalidade->modalidade->id,
-        'areaId'  => $areaModalidade->modalidade->id,
+        'areaId'  => $areaModalidade->area->id,
         'autorId' => $autor->id,
       ]);
 
-      foreach ($coautores as $key) {
-        $userCoautor = User::where('email', $key)->first();
-        Coautor::create([
-          'ordem' => '-',
-          'autorId' => $userCoautor->id,
-          'trabalhoId'  => $trabalho->id,
-        ]);
+      if($request->emailCoautor != null){
+        foreach ($coautores as $key) {
+          $userCoautor = User::where('email', $key)->first();
+          Coautor::create([
+            'ordem' => '-',
+            'autorId' => $userCoautor->id,
+            'trabalhoId'  => $trabalho->id,
+          ]);
+        }
       }
 
       $file = $request->arquivo;
