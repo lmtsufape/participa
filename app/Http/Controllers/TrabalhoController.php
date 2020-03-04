@@ -13,6 +13,7 @@ use App\Modalidade;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -77,6 +78,7 @@ class TrabalhoController extends Controller
         'areaModalidadeId'  => ['required', 'integer'],
         'eventoId'          => ['required', 'integer'],
         'emailCoautor'      => ['string'],
+        'arquivo'           => ['required', 'file', 'mimes:pdf'],
       ]);
 
       $mytime = Carbon::now('America/Recife');
@@ -126,6 +128,16 @@ class TrabalhoController extends Controller
         ]);
       }
 
+      $file = $request->arquivo;
+      $path = $areaModalidade->id . '/';
+      $nome = "1.pdf";
+      Storage::putFileAs($path, $file, $nome);
+
+      $arquivo = Arquivo::create([
+        'nome'  => $path . $nome,
+        'trabalhoId'  => $trabalho->id,
+      ]);
+
       return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
@@ -173,4 +185,35 @@ class TrabalhoController extends Controller
     {
         //
     }
+
+
+        public function novaVersao(Request $request){
+          $validatedData = $request->validate([
+            'arquivo' => ['required', 'file', 'mimes:pdf'],
+            'eventoId' => ['required', 'integer'],
+            'trabalhoId' => ['required', 'integer'],
+          ]);
+
+          $trabalho = Trabalho::find($request->trabalhoId);
+          $arquivos = $trabalho->arquivo;
+          $count = 1;
+          foreach ($arquivos as $key) {
+            $count++;
+          }
+
+          $file = $request->arquivo;
+          $path = $trabalho->id . '/';
+          $nome = $count . ".pdf";
+          Storage::putFileAs($path, $file, $nome);
+
+          $arquivo = Arquivo::create([
+            'nome'  => $path . $nome,
+            'trabalhoId'  => $ppc->id,
+
+          ]);
+
+          return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+
+        }
+
 }

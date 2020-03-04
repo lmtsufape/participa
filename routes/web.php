@@ -60,5 +60,7 @@ Route::group(['middleware' => ['isTemp']], function(){
   //Trabalho
   Route::get(   '/trabalho/submeter/{id}','TrabalhoController@index'              )->name('trabalho.index');
   Route::post(  '/trabalho/criar',        'TrabalhoController@store'              )->name('trabalho.store');
+  // rota downloadArquivo
+  Route::get('/downloadArquivo',          'HomeController@downloadArquivo'        )->name('download');
 
 });
