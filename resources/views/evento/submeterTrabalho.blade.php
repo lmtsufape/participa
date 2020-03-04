@@ -143,7 +143,7 @@
     // let numCoautores = console.log($("#coautores").children().length + 1);
     return  "<div class="+"row"+">"+
                 "<div class="+"col-sm-12"+">"+
-                    "<input"+" type="+'email'+" class="+'form-control emailCoautor'+" name="+'emailCoautor'+" placeholder="+"E-mail do Coautor"+" required>"+
+                    "<input"+" type="+'email'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'emailCoautor'+" placeholder="+"E-mail do Coautor"+" required>"+
                 "</div>"+
             "</div>";
   }
