@@ -409,7 +409,7 @@
                         <a href="#"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                       </td>
                       <td>
-                        <a href="#"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
+                        <a href="#" data-toggle="modal" data-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
                       </td>
                       <td>
                         @foreach($trabalho->atribuicao as $atribuicao)
@@ -858,18 +858,14 @@
                   <tr>
                     <th scope="col">Título</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Ação</th>
+
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>Título do trabalho</td>
                     <td>Status do trabalho</td>
-                    <td>
-                      <a href="#" data-toggle="modal" data-target="#modalRevisor">
-                        <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
-                      </a>
-                    </td>
+
                   </tr>
                 </tbody>
               </table>
@@ -883,6 +879,95 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Trabalho -->
+<div class="modal fade" id="modalTrabalho" tabindex="-1" role="dialog" aria-labelledby="modalTrabalho" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Trabalho</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row justify-content-center">
+          <div class="col-sm-12">
+            <h5>Título</h5>
+            <p>Título do trabalho</p>
+          </div>
+
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-sm-12">
+            <h5>Resumo</h5>
+            <p>Resumo do trabalho</p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center" style="margin-top:20px">
+          <div class="col-sm-12">
+            <h5>Revisores</h5>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-sm-12">
+            <form class="" action="index.html" method="post">
+
+              <div class="revisoresTrabalho" style="padding-left:20px">
+
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <input type="checkbox" class="form-check-input">
+                    Nome do Revisor
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <input type="checkbox" class="form-check-input">
+                    Nome do Revisor
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <input type="checkbox" class="form-check-input">
+                    Nome do Revisor
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:20px">
+          <div class="col-sm-4">
+            <div class="form-group">
+              <select class="form-control" id="selectRevisorTrabalho">
+                <option value="" disabled selected hidden> Novo Revisor </option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <a href="#" class="btn btn-primary" id="addRevisorTrabalho">Adicionar Revisor</a>
+          </div>
+
+        </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-primary">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 @endsection
