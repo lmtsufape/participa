@@ -24,7 +24,7 @@ class UserController extends Controller
             'cpf' => 'required',
             'celular' => 'required|integer',
             'instituicao' => 'required|string| max:255',
-            'especProfissional' => 'nullable|string',
+            // 'especProfissional' => 'nullable|string',
             'rua' => 'required|string|max:255',
             'numero' => 'required|integer',
             'bairro' => 'required|string|max:255',
@@ -33,16 +33,26 @@ class UserController extends Controller
             'cep' => 'required|integer',
         ]);
 
-        
+        if(Auth()->user()->usuarioTemp == true){
+          // endereço
+          $end = new Endereco();
+          $end->rua = $data['rua'];
+          $end->numero = $data['numero'];
+          $end->bairro = $data['bairro'];
+          $end->cidade = $data['cidade'];
+          $end->uf = $data['uf'];
+          $end->cep = $data['cep'];
+        }
         // User
         $user = User::find($request->id);
         $user->name = $request->input('name');
         $user->cpf = $request->input('cpf');
         $user->celular = $request->input('celular');
         $user->instituicao = $request->input('instituicao');
-        $user->especProfissional = $request->input('especProfissional');
+        // $user->especProfissional = $request->input('especProfissional');
+        $user->usuarioTemp = null;
         $user->save();
-        
+
         // endereço
         $end = Endereco::find($user->enderecoId);
         $end->rua = $request->input('rua');
@@ -51,12 +61,12 @@ class UserController extends Controller
         $end->cidade = $request->input('cidade');
         $end->uf = $request->input('uf');
         $end->cep = $request->input('cep');
-        
+
         $end->save();
-        // dd([$user,$end]);        
+        // dd([$user,$end]);
         return view('home');
 
-        
+
 
         // return view('index');
     }

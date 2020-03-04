@@ -13,6 +13,10 @@ use App\Modalidade;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Mail\EmailParaUsuarioNaoCadastrado;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class TrabalhoController extends Controller
 {
@@ -74,6 +78,7 @@ class TrabalhoController extends Controller
         'areaModalidadeId'  => ['required', 'integer'],
         'eventoId'          => ['required', 'integer'],
         'emailCoautor'      => ['string'],
+        'arquivo'           => ['required', 'file', 'mimes:pdf'],
       ]);
 
       $mytime = Carbon::now('America/Recife');
@@ -88,15 +93,22 @@ class TrabalhoController extends Controller
       foreach ($coautores as $key) {
         $userCoautor = User::where('email', $key)->first();
         if($userCoautor == null){
-          $existemUsuariosCadastrados = false;
+          $passwordTemporario = Str::random(8);
+          Mail::to($key)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario));
+          $usuario = User::create([
+            'email' => $request->emailRevisor,
+            'password' => bcrypt($passwordTemporario),
+            'usuarioTemp' => true,
+          ]);
         }
+
       }
-      if($existemUsuariosCadastrados == false){
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId])
-                         ->withInput(['nomeTrabalho' => $request->nomeTrabalho,
-                                      'emailCoautor' => $request->emailCoautor])
-                         ->withErrors(['emailNaoEncontrado' => 'E-mail(s) de coautores incorretos ou não cadastrados.']);
-      }
+      // if($existemUsuariosCadastrados == false){
+      //   return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId])
+      //                    ->withInput(['nomeTrabalho' => $request->nomeTrabalho,
+      //                                 'emailCoautor' => $request->emailCoautor])
+      //                    ->withErrors(['emailNaoEncontrado' => 'E-mail(s) de coautores incorretos ou não cadastrados.']);
+      // }
 
       $trabalho = Trabalho::create([
         'titulo' => $request->nomeTrabalho,
@@ -115,6 +127,16 @@ class TrabalhoController extends Controller
           'trabalhoId'  => $trabalho->id,
         ]);
       }
+
+      $file = $request->arquivo;
+      $path = $areaModalidade->id . '/';
+      $nome = "1.pdf";
+      Storage::putFileAs($path, $file, $nome);
+
+      $arquivo = Arquivo::create([
+        'nome'  => $path . $nome,
+        'trabalhoId'  => $trabalho->id,
+      ]);
 
       return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
@@ -163,4 +185,35 @@ class TrabalhoController extends Controller
     {
         //
     }
+
+
+        public function novaVersao(Request $request){
+          $validatedData = $request->validate([
+            'arquivo' => ['required', 'file', 'mimes:pdf'],
+            'eventoId' => ['required', 'integer'],
+            'trabalhoId' => ['required', 'integer'],
+          ]);
+
+          $trabalho = Trabalho::find($request->trabalhoId);
+          $arquivos = $trabalho->arquivo;
+          $count = 1;
+          foreach ($arquivos as $key) {
+            $count++;
+          }
+
+          $file = $request->arquivo;
+          $path = $trabalho->id . '/';
+          $nome = $count . ".pdf";
+          Storage::putFileAs($path, $file, $nome);
+
+          $arquivo = Arquivo::create([
+            'nome'  => $path . $nome,
+            'trabalhoId'  => $ppc->id,
+
+          ]);
+
+          return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+
+        }
+
 }

@@ -8,6 +8,9 @@ use App\ComissaoEvento;
 use App\Evento;
 use App\Area;
 use App\Revisor;
+use App\Mail\EmailParaUsuarioNaoCadastrado;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class ComissaoController extends Controller
 {
@@ -41,17 +44,27 @@ class ComissaoController extends Controller
     {
         $validationData = $this->validate($request,[
             'emailMembroComissao'=>'required|string|email',
-            'especProfissional'=>'required|string',
+            // 'especProfissional'=>'required|string',
             ]);
-            
+
         $user = User::where('email',$request->input('emailMembroComissao'))->first();
-        
+        $evento = Evento::find($request->eventoId);
+        if($user == null){
+          $passwordTemporario = Str::random(8);
+          Mail::to($request->emailMembroComissao)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Comissao', $evento->nome, $passwordTemporario));
+          $user = User::create([
+            'email' => $request->emailMembroComissao,
+            'password' => bcrypt($passwordTemporario),
+            'usuarioTemp' => true,
+          ]);
+        }
+
         // dd($user->id);
         $comissaoEventos = new ComissaoEvento();
-        
+
         $comissaoEventos->eventosId = $request->input('eventoId');
         $comissaoEventos->userId = $user->id;
-        $comissaoEventos->especProfissional = $request->input('especProfissional');
+        // $comissaoEventos->especProfissional = $request->input('especProfissional');
         $comissaoEventos->save();
 
 
@@ -65,18 +78,13 @@ class ComissaoController extends Controller
           array_push($ids,$ce->userId);
         }
         $users = User::find($ids);
-        return view('coordenador.detalhesEvento', [
-                                                        'evento'    => $evento,
-                                                        'areas'     => $areas,
-                                                        'revisores' => $revisores,
-                                                        'users'     => $users,
-                                                    ]);
+        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
-   
+
     public function coordenadorComissao(Request $request){
 
-        
+
 
         $evento = Evento::find($request->input('eventoId'));
         $evento->coordComissaoId = $request->input('coordComissaoId');

@@ -6,6 +6,9 @@ use App\Revisor;
 use App\User;
 use App\Evento;
 use Illuminate\Http\Request;
+use App\Mail\EmailParaUsuarioNaoCadastrado;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class RevisorController extends Controller
 {
@@ -43,8 +46,16 @@ class RevisorController extends Controller
         ]);
 
         $usuario = User::where('email', $request->emailRevisor)->first();
+        $evento = Evento::find($request->eventoId);
+
         if($usuario == null){
-          dd('criar novo ');
+          $passwordTemporario = Str::random(8);
+          Mail::to($request->emailRevisor)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Revisor', $evento->nome, $passwordTemporario));
+          $usuario = User::create([
+            'email' => $request->emailRevisor,
+            'password' => bcrypt($passwordTemporario),
+            'usuarioTemp' => true,
+          ]);
         }
         $revisor = Revisor::create([
           'trabalhosCorrigidos'   => 0,

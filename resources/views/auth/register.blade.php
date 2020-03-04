@@ -6,17 +6,17 @@
         <h1>Cadastro</h1>
     </div>
 
-    <div class="row subtitulo">   
+    <div class="row subtitulo">
         <div class="col-sm-12">
             <p>Informações Pessoais</p>
-        </div>     
+        </div>
     </div>
 
     <form method="POST" action="{{ route('register') }}">
         @csrf
         {{-- Nome | CPF --}}
         <div class="form-group row">
-                            
+
             <div class="col-md-8">
                 <label for="name" class="col-form-label">{{ __('Name') }}</label>
                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
@@ -65,7 +65,7 @@
 
         {{-- Email | Senha | Confirmar Senha --}}
         <div class="form-group row">
-                        
+
             <div class="col-md-4">
                 <label for="email" class="col-form-label">{{ __('E-Mail Address') }}</label>
                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
@@ -95,15 +95,15 @@
         </div>
 
 
-        <div class="row subtitulo">   
+        <div class="row subtitulo">
             <div class="col-sm-12">
                 <p>Endereço</p>
-            </div>     
+            </div>
         </div>
 
         {{-- Rua | Número | Bairro --}}
         <div class="form-group row">
-                            
+
             <div class="col-md-6">
                 <label for="rua" class="col-form-label">{{ __('Rua') }}</label>
                 <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" required autocomplete="new-password">
@@ -141,7 +141,7 @@
           </div>
 
           <div class="form-group row">
-                            
+
             <div class="col-md-4">
                 <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
                 <input id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" required autocomplete="cidade">
@@ -196,8 +196,7 @@
 
             <div class="col-md-4">
                 <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
-                <input id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" required autocomplete="cep">
-
+                <input onblur="pesquisacep(this.value);" id="cep" type="text" required autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="CEP" size="10" maxlength="9" >
                 @error('cep')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -220,4 +219,76 @@
     </form>
 
 </div>
+@endsection
+
+@section('javascript')
+  <script type="text/javascript" >
+
+    function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+
+    function pesquisacep(valor) {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    };
+  </script>
 @endsection

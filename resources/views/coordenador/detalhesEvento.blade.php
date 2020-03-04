@@ -292,9 +292,9 @@
                                         <select class="form-control" name="coordComissaoId" id="coodComissaoId">
                                             @foreach ($users as $user)
                                                 @if($evento->coordComissaoId == $user->id)
-                                                    <option value="{{$user->id}}" selected>{{$user->name}}</option>
+                                                    <option value="{{$user->id}}" selected>{{$user->email}}</option>
                                                 @else
-                                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                                    <option value="{{$user->id}}">{{$user->email}}</option>
                                                 @endif
                                             @endforeach
                                         </select>
