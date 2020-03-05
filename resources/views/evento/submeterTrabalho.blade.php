@@ -158,11 +158,11 @@
     return  "<div class="+"row"+">"+
                 "<div class="+"col-sm-6"+">"+
                     "<label>Nome Completo</label>"+
-                    "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'emailCoautor'+" placeholder="+"Nome"+" required>"+
+                    "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'nomeCoautor[]'+" placeholder="+"Nome"+" required>"+
                 "</div>"+
                 "<div class="+"col-sm-6"+">"+
                     "<label>E-mail</label>"+
-                    "<input"+" type="+'email'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'emailCoautor'+" placeholder="+"E-mail"+" required>"+
+                    "<input"+" type="+'email'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'emailCoautor[]'+" placeholder="+"E-mail"+" required>"+
                 "</div>"+
             "</div>";
   }

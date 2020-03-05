@@ -80,7 +80,8 @@ class TrabalhoController extends Controller
         'modalidadeId'      => ['required', 'integer'],
         'eventoId'          => ['required', 'integer'],
         'resumo'            => ['required', 'string'],
-        'emailCoautor'      => ['string'],
+        'nomeCoautor.*'     => ['string'],
+        'emailCoautor.*'    => ['string'],
         'arquivo'           => ['required', 'file', 'mimes:pdf'],
       ]);
 
@@ -91,20 +92,22 @@ class TrabalhoController extends Controller
       $autor = Auth::user();
       $evento = Evento::find($request->eventoId);
       $areaModalidade = AreaModalidade::where('areaId', $request->areaId)->where('modalidadeId', $request->modalidadeId)->first();
-      $coautores = explode(', ', $request->emailCoautor);
       // $existemUsuariosCadastrados = true;
       if($request->emailCoautor != null){
-        foreach ($coautores as $key) {
+        $i = 0;
+        foreach ($request->emailCoautor as $key) {
           $userCoautor = User::where('email', $key)->first();
           if($userCoautor == null){
             $passwordTemporario = Str::random(8);
             Mail::to($key)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario));
             $usuario = User::create([
-              'email' => $request->emailRevisor,
+              'email' => $key,
               'password' => bcrypt($passwordTemporario),
               'usuarioTemp' => true,
+              'name' => $request->nomeCoautor[$i],
             ]);
           }
+          $i++;
         }
       }
       // if($existemUsuariosCadastrados == false){
@@ -124,7 +127,7 @@ class TrabalhoController extends Controller
       ]);
 
       if($request->emailCoautor != null){
-        foreach ($coautores as $key) {
+        foreach ($request->emailCoautor as $key) {
           $userCoautor = User::where('email', $key)->first();
           Coautor::create([
             'ordem' => '-',
@@ -145,7 +148,7 @@ class TrabalhoController extends Controller
         'versaoFinal' => true,
       ]);
 
-      return redirect()->route('evento.visualizar',['id'=>$evento->id]);
+      return redirect()->route('evento.visualizar',['id'=>$request->eventoId]);
     }
 
     /**

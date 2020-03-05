@@ -179,6 +179,7 @@ class EventoController extends Controller
           if($hasFile->count() != 0){
             return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => true, "trabalho" => $trabalho]);
           }
+          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false, "trabalho" => null]);
         }
         else{
           // dd(false);

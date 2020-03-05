@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
           'celular'    => 2,
           'especProfissional' => 'e',
           'enderecoId' => 1,
+          'email_verified_at' => '2020-02-15',
         ]);
 
         DB::table('eventos')->insert([
@@ -123,6 +124,7 @@ class DatabaseSeeder extends Seeder
           'instituicao'     => 'd',
           'celular'    => 2,
           'especProfissional' => 'e',
+          'email_verified_at' => '2020-02-15',
           'enderecoId' => 1,
         ]);
     }
