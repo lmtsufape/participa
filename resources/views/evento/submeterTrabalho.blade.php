@@ -14,22 +14,6 @@
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
 
                         <div class="row justify-content-center">
-                          {{-- Arquivo  --}}
-                          <div class="col-sm-12" style="margin-top: 20px;">
-                            <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo') }}</label>
-
-                            <div class="custom-file">
-                              <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
-                            </div>
-                            @error('arquivo')
-                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                              <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                          </div>
-                        </div>
-
-                        <div class="row justify-content-center">
                             {{-- Nome Trabalho  --}}
                           <div class="col-sm-12">
                                 <label for="nomeTrabalho" class="col-form-label">{{ __('Título do Trabalho') }}</label>
@@ -44,7 +28,6 @@
                         </div>
                         <div class="row" style="margin-top:20px">
                           <div class="col-sm-12">
-                            <label for="">E-mail do Coautor</label>
                             <div id="coautores">
 
                             </div>
@@ -103,7 +86,22 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="row justify-content-center">
+                          {{-- Arquivo  --}}
+                          <div class="col-sm-12" style="margin-top: 20px;">
+                            <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo') }}</label>
 
+                            <div class="custom-file">
+                              <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                            </div>
+                            <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
+                            @error('arquivo')
+                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                              <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                          </div>
+                        </div>
 
 
 
@@ -156,10 +154,15 @@
     }
   }
   function montarLinhaInput(){
-    // let numCoautores = console.log($("#coautores").children().length + 1);
+
     return  "<div class="+"row"+">"+
-                "<div class="+"col-sm-12"+">"+
-                    "<input"+" type="+'email'+" class="+'form-control emailCoautor'+" name="+'emailCoautor'+" placeholder="+"E-mail do Coautor"+" required>"+
+                "<div class="+"col-sm-6"+">"+
+                    "<label>Nome Completo</label>"+
+                    "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'emailCoautor'+" placeholder="+"Nome"+" required>"+
+                "</div>"+
+                "<div class="+"col-sm-6"+">"+
+                    "<label>E-mail</label>"+
+                    "<input"+" type="+'email'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'emailCoautor'+" placeholder="+"E-mail"+" required>"+
                 "</div>"+
             "</div>";
   }
