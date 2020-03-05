@@ -91,6 +91,7 @@ class DatabaseSeeder extends Seeder
               'modalidadeId'  => 1,
               'areaId'  => 1,
               'autorId' => $i+2,
+              'eventoId' => 1,
             ]);
           }
           if($i >= 20 && $i < 30){
@@ -100,6 +101,7 @@ class DatabaseSeeder extends Seeder
               'data'  => '2020-02-15',
               'modalidadeId'  => 1,
               'areaId'  => 2,
+              'eventoId' => 1,
               'autorId' => $i+2,
             ]);
           }
@@ -110,6 +112,7 @@ class DatabaseSeeder extends Seeder
               'data'  => '2020-02-15',
               'modalidadeId'  => 1,
               'areaId'  => 3,
+              'eventoId' => 1,
               'autorId' => $i+2,
             ]);
           }

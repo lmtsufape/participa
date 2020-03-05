@@ -155,13 +155,17 @@
             <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}" style="width:100%">Voltar</a>
         </div>
         @if($hasFile)
-        <div class="col-md-6 botao-form-right" style="">
-          <a class="btn btn-primary botao-form" href="#" data-toggle="modal" data-target="#modalTrabalho" style="width:100%">Submeter Nova Versão</a>
-        </div>
+          @if(!$coautor)
+            <div class="col-md-6 botao-form-right" style="">
+              <a class="btn btn-primary botao-form" href="#" data-toggle="modal" data-target="#modalTrabalho" style="width:100%">Submeter Nova Versão</a>
+            </div>
+          @endif
         @else
-        <div class="col-md-6 botao-form-right" style="">
-          <a class="btn btn-primary botao-form" href="{{route('trabalho.index',['id'=>$evento->id])}}" style="width:100%">Submeter Trabalho</a>
-        </div>
+          @if(!$coautor)
+            <div class="col-md-6 botao-form-right" style="">
+              <a class="btn btn-primary botao-form" href="{{route('trabalho.index',['id'=>$evento->id])}}" style="width:100%">Submeter Trabalho</a>
+            </div>
+          @endif
         @endif
     </div>
 </div>

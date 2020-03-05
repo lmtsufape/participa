@@ -12,7 +12,7 @@ class Trabalho extends Model
    * @var array
    */
   protected $fillable = [
-      'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId',
+      'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId',
   ];
 
   public function recurso(){
@@ -45,5 +45,9 @@ class Trabalho extends Model
 
   public function atribuicao(){
       return $this->hasMany('App\Atribuicao', 'trabalhoId');
+  }
+
+  public function evento(){
+      return $this->belongsTo('App\Evento', 'eventoId');
   }
 }

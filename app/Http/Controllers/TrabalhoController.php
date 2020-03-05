@@ -79,7 +79,7 @@ class TrabalhoController extends Controller
         'areaId'            => ['required', 'integer'],
         'modalidadeId'      => ['required', 'integer'],
         'eventoId'          => ['required', 'integer'],
-        'resumo'            => ['required', 'string'],
+        'resumo'            => ['string'],
         'nomeCoautor.*'     => ['string'],
         'emailCoautor.*'    => ['string'],
         'arquivo'           => ['required', 'file', 'mimes:pdf'],
@@ -124,6 +124,7 @@ class TrabalhoController extends Controller
         'modalidadeId'  => $areaModalidade->modalidade->id,
         'areaId'  => $areaModalidade->area->id,
         'autorId' => $autor->id,
+        'eventoId'  => $evento->id,
       ]);
 
       if($request->emailCoautor != null){
@@ -224,7 +225,7 @@ class TrabalhoController extends Controller
         'versaoFinal' => true,
       ]);
 
-      return redirect()->route('evento.visualizar',['id'=>$evento->id]);
+      return redirect()->route('evento.visualizar',['id'=>$request->eventoId]);
 
 
     }

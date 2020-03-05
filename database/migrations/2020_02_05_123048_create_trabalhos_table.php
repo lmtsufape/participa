@@ -23,6 +23,7 @@ class CreateTrabalhosTable extends Migration
             $table->integer('modalidadeId');
             $table->integer('areaId');
             $table->integer('autorId');
+            $table->integer('eventoId');
         });
     }
 

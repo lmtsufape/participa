@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Evento;
 use App\Area;
+use App\Evento;
+use App\Coautor;
 use App\Revisor;
 use App\Modalidade;
 use App\ComissaoEvento;
@@ -177,13 +178,24 @@ class EventoController extends Controller
         if(isset($trabalho)){
           $hasFile = $trabalho->arquivo;
           if($hasFile->count() != 0){
-            return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => true, "trabalho" => $trabalho]);
+            return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => true, "trabalho" => $trabalho, "coautor" => false]);
           }
-          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false, "trabalho" => null]);
+          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false, "trabalho" => null, "coautor" => false]);
         }
         else{
+          $trabalhosId = Trabalho::where('eventoId', $evento->id)->select('id')->get();
+          $coautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->first();
+          if(isset($coautor)){
+            $trabalho = Trabalho::find($coautor->trabalhoId);
+            $hasFile = $trabalho->arquivo;
+            if($hasFile->count() != 0){
+              return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => true, "trabalho" => $trabalho, "coautor" => true]);
+            }
+            return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false, "trabalho" => null, "coautor" => true]);
+          }
+
           // dd(false);
-          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false, "trabalho" => null]);
+          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false, "trabalho" => null, "coautor" => false]);
         }
     }
 
