@@ -78,7 +78,7 @@ class EventoController extends Controller
             'inicioResultado'     => ['required', 'date'],
             'fimResultado'        => ['required', 'date'],
             // 'valorTaxa'           => ['required', 'integer'],
-            'fotoEvento'          => ['file'],
+            'fotoEvento'          => ['file', 'mimes:png'],
           ]);
         }
 
@@ -98,7 +98,7 @@ class EventoController extends Controller
           'inicioResultado'     => ['required', 'date', 'after:' . $yesterday],
           'fimResultado'        => ['required', 'date', 'after:' . $request->inicioResultado],
           // 'valorTaxa'           => ['required', 'integer'],
-          'fotoEvento'          => ['file'],
+          'fotoEvento'          => ['file', 'mimes:png'],
         ]);
 
         // validar endereco
@@ -144,8 +144,8 @@ class EventoController extends Controller
 
         if($request->fotoEvento != null){
           $file = $request->fotoEvento;
-          $path =  '/' . $ppc->id . '/';
-          $nome = $count . ".pdf";
+          $path = 'public/eventos/' . $evento->id;
+          $nome = 'logo.png';
           Storage::putFileAs($path, $file, $nome);
           $evento->fotoEvento = $path . $nome;
           $evento->save();
@@ -173,14 +173,16 @@ class EventoController extends Controller
     public function show($id)
     {
         $evento = Evento::find($id);
-        $hasFile = Trabalho::where('autorId', Auth::user()->id)->first();
-        if(isset($hasFile)){
-          // dd(true);
-          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => true]);
+        $trabalho = Trabalho::where('autorId', Auth::user()->id)->first();
+        if(isset($trabalho)){
+          $hasFile = $trabalho->arquivo;
+          if($hasFile->count() != 0){
+            return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => true, "trabalho" => $trabalho]);
+          }
         }
         else{
           // dd(false);
-          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false]);
+          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false, "trabalho" => null]);
         }
     }
 

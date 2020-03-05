@@ -114,5 +114,16 @@ class DatabaseSeeder extends Seeder
           }
 
         }
+
+        DB::table('users')->insert([  //
+          'name' => 'eu',
+          'email' => 'asd@asd',
+          'password' => bcrypt('12345678'),
+          'cpf' => 123132131,
+          'instituicao'     => 'd',
+          'celular'    => 2,
+          'especProfissional' => 'e',
+          'enderecoId' => 1,
+        ]);
     }
 }

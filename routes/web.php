@@ -25,7 +25,7 @@ Route::get('/perfil','UserController@perfil')->name('perfil');
 
 
 
-Route::group(['middleware' => ['isTemp']], function(){
+Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 
   Route::get('/home', 'EventoController@index')->name('home');
 
@@ -38,10 +38,8 @@ Route::group(['middleware' => ['isTemp']], function(){
 
 
   // Cadastrar Comissão
-  Route::post('/evento/cadastrarComissao','ComissaoController@store')->name('cadastrar.comissao');
+  Route::post('/evento/cadastrarComissao','ComissaoController@store'                   )->name('cadastrar.comissao');
   Route::post('/evento/cadastrarCoordComissao','ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
-
-
   //Evento
   Route::get(   '/evento/criar',          'EventoController@create'                    )->name('evento.criar');
   Route::post(  '/evento/criar',          'EventoController@store'                     )->name('evento.criar');
@@ -59,6 +57,7 @@ Route::group(['middleware' => ['isTemp']], function(){
   Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
   //Trabalho
   Route::get(   '/trabalho/submeter/{id}','TrabalhoController@index'                   )->name('trabalho.index');
+  Route::post(  '/trabalho/novaVersao',   'TrabalhoController@novaVersao'              )->name('trabalho.novaVersao');
   Route::post(  '/trabalho/criar',        'TrabalhoController@store'                   )->name('trabalho.store');
   //Atribuição
   Route::get(   '/atribuir',              'AtribuicaoController@distribuicaoAutomatica')->name('distribuicao');

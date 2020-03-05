@@ -6,7 +6,7 @@
         <h1>Novo Evento</h1>
     </div>
 
-    <form action="{{route('evento.criar')}}" method="POST">
+    <form action="{{route('evento.criar')}}" method="POST" enctype="multipart/form-data">
     @csrf
         <div class="row subtitulo">
             <div class="col-sm-12">
@@ -106,7 +106,7 @@
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="fotoEvento">Logo</label>
-                    <input type="file" class="form-control-file @error('isCoordenador') is-invalid @enderror" name="isCoordenador" value="{{ old('isCoordenador') }}" id="fotoEvento">
+                    <input type="file" class="form-control-file @error('fotoEvento') is-invalid @enderror" name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
                     @error('fotoEvento')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

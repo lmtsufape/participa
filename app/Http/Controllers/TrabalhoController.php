@@ -142,9 +142,10 @@ class TrabalhoController extends Controller
       $arquivo = Arquivo::create([
         'nome'  => $path . $nome,
         'trabalhoId'  => $trabalho->id,
+        'versaoFinal' => true,
       ]);
 
-      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      return redirect()->route('evento.visualizar',['id'=>$evento->id]);
     }
 
     /**
@@ -193,33 +194,36 @@ class TrabalhoController extends Controller
     }
 
 
-        public function novaVersao(Request $request){
-          $validatedData = $request->validate([
-            'arquivo' => ['required', 'file', 'mimes:pdf'],
-            'eventoId' => ['required', 'integer'],
-            'trabalhoId' => ['required', 'integer'],
-          ]);
+    public function novaVersao(Request $request){
+      $validatedData = $request->validate([
+        'arquivo' => ['required', 'file', 'mimes:pdf'],
+        'eventoId' => ['required', 'integer'],
+        'trabalhoId' => ['required', 'integer'],
+      ]);
 
-          $trabalho = Trabalho::find($request->trabalhoId);
-          $arquivos = $trabalho->arquivo;
-          $count = 1;
-          foreach ($arquivos as $key) {
-            $count++;
-          }
+      $trabalho = Trabalho::find($request->trabalhoId);
+      $arquivos = $trabalho->arquivo;
+      $count = 1;
+      foreach ($arquivos as $key) {
+        $key->versaoFinal = false;
+        $key->save();
+        $count++;
+      }
 
-          $file = $request->arquivo;
-          $path = $trabalho->id . '/';
-          $nome = $count . ".pdf";
-          Storage::putFileAs($path, $file, $nome);
+      $file = $request->arquivo;
+      $path = $trabalho->id . '/';
+      $nome = $count . ".pdf";
+      Storage::putFileAs($path, $file, $nome);
 
-          $arquivo = Arquivo::create([
-            'nome'  => $path . $nome,
-            'trabalhoId'  => $ppc->id,
+      $arquivo = Arquivo::create([
+        'nome'  => $path . $nome,
+        'trabalhoId'  => $trabalho->id,
+        'versaoFinal' => true,
+      ]);
 
-          ]);
+      return redirect()->route('evento.visualizar',['id'=>$evento->id]);
 
-          return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
 
-        }
+    }
 
 }
