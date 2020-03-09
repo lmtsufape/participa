@@ -370,21 +370,21 @@
     <!-- Trabalhos -->
     <div id="divTrabalhos" style="display: none">
 
-        <div class="row">
-            <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Trabalhos</h1>
+        <div class="row titulo-detalhes">
+            <div class="col-sm-10">
+                <h1 class="">Trabalhos</h1>
             </div>
+            <form method="GET" action="{{route('distribuicao')}}">
+              <input type="hidden" name="eventoId" value="{{$evento->id}}">
+              <div class="row justify-content-center">
+                <div class="col-md-12">
+                  <button type="submit" class="btn btn-primary" style="width:100%">
+                    {{ __('Distribuir Trabalhos') }}
+                  </button>
+                </div>
+              </div>
+            </form>
         </div>
-        <form method="GET" action="{{route('distribuicao')}}">
-        <input type="hidden" name="eventoId" value="{{$evento->id}}">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <button type="submit" class="btn btn-primary" style="width:100%">
-                    {{ __('Finalizar') }}
-                </button>
-            </div>
-        </div>
-        </form>
 
     {{-- Tabela Trabalhos --}}
     <div class="row">
