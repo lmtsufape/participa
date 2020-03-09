@@ -18,7 +18,7 @@
         <div class="form-group row">
 
             <div class="col-md-8">
-                <label for="name" class="col-form-label">{{ __('Name') }}</label>
+                <label for="name" class="col-form-label">{{ __('Nome') }}</label>
                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
 
                 @error('name')
@@ -67,7 +67,7 @@
         <div class="form-group row">
 
             <div class="col-md-4">
-                <label for="email" class="col-form-label">{{ __('E-Mail Address') }}</label>
+                <label for="email" class="col-form-label">{{ __('E-Mail') }}</label>
                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
 
                 @error('email')
@@ -78,7 +78,7 @@
             </div>
 
             <div class="col-md-4">
-                <label for="password" class="col-form-label">{{ __('Password') }}</label>
+                <label for="password" class="col-form-label">{{ __('Senha') }}</label>
                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
 
                 @error('password')
@@ -89,7 +89,7 @@
             </div>
 
             <div class="col-md-4">
-                <label for="password-confirm" class="col-form-label">{{ __('Confirm Password') }}</label>
+                <label for="password-confirm" class="col-form-label">{{ __('Confirme a Senha') }}</label>
                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
             </div>
         </div>
@@ -103,10 +103,22 @@
 
         {{-- Rua | Número | Bairro --}}
         <div class="form-group row">
+          <div class="col-md-2">
+              <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
+              <input value="{{old('cep')}}" onblur="pesquisacep(this.value);" id="cep" type="text" required autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="CEP" size="10" maxlength="9" >
+              @error('cep')
+                  <span class="invalid-feedback" role="alert">
+                      <strong>{{ $message }}</strong>
+                  </span>
+              @enderror
+          </div>
+        </div>
+        <div class="form-group row">
+
 
             <div class="col-md-6">
                 <label for="rua" class="col-form-label">{{ __('Rua') }}</label>
-                <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" required autocomplete="new-password">
+                <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" required autocomplete="new-password">
 
                 @error('rua')
                     <span class="invalid-feedback" role="alert">
@@ -117,7 +129,7 @@
 
             <div class="col-md-2">
                 <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero">
+                <input value="{{old('numero')}}" id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero">
 
                 @error('numero')
                     <span class="invalid-feedback" role="alert">
@@ -128,7 +140,7 @@
 
             <div class="col-md-4">
                 <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
-                <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" required autocomplete="bairro">
+                <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" required autocomplete="bairro">
 
                 @error('bairro')
                     <span class="invalid-feedback" role="alert">
@@ -142,9 +154,9 @@
 
           <div class="form-group row">
 
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
-                <input id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" required autocomplete="cidade">
+                <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" required autocomplete="cidade">
 
                 @error('cidade')
                     <span class="invalid-feedback" role="alert">
@@ -153,7 +165,7 @@
                 @enderror
             </div>
 
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <label for="uf" class="col-form-label">{{ __('UF') }}</label>
                 {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
                 <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
@@ -191,16 +203,6 @@
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
-                @enderror
-            </div>
-
-            <div class="col-md-4">
-                <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
-                <input onblur="pesquisacep(this.value);" id="cep" type="text" required autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="CEP" size="10" maxlength="9" >
-                @error('cep')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
                 @enderror
             </div>
           </div>
