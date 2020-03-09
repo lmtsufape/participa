@@ -259,7 +259,7 @@ body{
 .front-image-evento{
     margin-top: 25px;
     margin-left: 25px;
-    width: 40%;
+    height: 400px;
     z-index: 15;
     /* position: relative; */
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2);
