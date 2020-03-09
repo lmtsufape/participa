@@ -127,6 +127,7 @@
                 <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Trabalhos</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Informações referente aos trabalhos enviados</h6>
                     <p class="card-text">
                       <div class="row justify-content-center">
                         <div class="col-sm-12">
@@ -160,6 +161,7 @@
                 <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Organização</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Informações referentes ao número de participantes na organização do evento</h6>
                     <p class="card-text">
                       <div class="row justify-content-center">
                         <div class="col-sm-12">
