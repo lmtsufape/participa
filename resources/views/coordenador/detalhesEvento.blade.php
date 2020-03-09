@@ -123,92 +123,67 @@
 
 
             <div class="row justify-content-center">
-              <div class="col-sm-4">
+              <div class="col-sm-12">
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Trabalhos Enviados</h5>
+                    <h5 class="card-title">Trabalhos</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Informações referente aos trabalhos enviados</h6>
                     <p class="card-text">
-                      <h1> - </h1>
-                      <h6>Trabalhos</h6>
-                    </p>
-                  </div>
-                </div>
-              </div>
+                      <div class="row justify-content-center">
+                        <div class="col-sm-12">
+                          <table class="table table-responsive-lg table-hover">
+                            <thead>
+                              <tr>
+                                <th>Enviados</th>
+                                <th>Avaliados</th>
+                                <th>Pendentes</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td> - </td>
+                                <td> - </td>
+                                <td> - </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-              <div class="col-sm-4">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Trabalhos Avaliados</h5>
-                    <p class="card-text">
-                      <h1> - </h1>
-                      <h6>Trabalhos</h6>
-                    </p>
-                  </div>
-                </div>
-              </div>
+                        </div>
 
-              <div class="col-sm-4">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Trabalhos Pendentes</h5>
-                    <p class="card-text">
-                      <h1> - </h1>
-                      <h6>Trabalhos</h6>
+                      </div>
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-
-
-            <!-- Áreas e Modalidades -->
             <div class="row justify-content-center">
-              <div class="col-sm-6">
+              <div class="col-sm-12">
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Número de Áreas</h5>
+                    <h5 class="card-title">Organização</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Informações referentes ao número de participantes na organização do evento</h6>
                     <p class="card-text">
-                      <h1> - </h1>
-                      <h6>Áreas</h6>
-                    </p>
-                  </div>
-                </div>
-              </div>
+                      <div class="row justify-content-center">
+                        <div class="col-sm-12">
+                          <table class="table table-responsive-lg table-hover">
+                            <thead>
+                              <tr>
+                                <th>Número de Revisores</th>
+                                <th>Número de Integrantes na Comissão</th>
 
-              <div class="col-sm-6">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Número de Modalidades</h5>
-                    <p class="card-text">
-                      <h1> - </h1>
-                      <h6>Modalidades</h6>
-                    </p>
-                  </div>
-                </div>
-              </div>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td> - </td>
+                                <td> - </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-            </div>
-            <!-- Revisores e Comissão -->
-            <div class="row justify-content-center">
-              <div class="col-sm-6">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Número de Revisores</h5>
-                    <p class="card-text">
-                      <h1> - </h1>
-                      <h6>Revisores</h6>
-                    </p>
-                  </div>
-                </div>
-              </div>
+                        </div>
 
-              <div class="col-sm-6">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Número de Integrantes na Comissão</h5>
-                    <p class="card-text">
-                      <h1> - </h1>
-                      <h6>Integrantes</h6>
+                      </div>
                     </p>
                   </div>
                 </div>
@@ -370,21 +345,21 @@
     <!-- Trabalhos -->
     <div id="divTrabalhos" style="display: none">
 
-        <div class="row">
-            <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Trabalhos</h1>
+        <div class="row titulo-detalhes">
+            <div class="col-sm-10">
+                <h1 class="">Trabalhos</h1>
             </div>
+            <form method="GET" action="{{route('distribuicao')}}">
+              <input type="hidden" name="eventoId" value="{{$evento->id}}">
+              <div class="row justify-content-center">
+                <div class="col-md-12">
+                  <button type="submit" class="btn btn-primary" style="width:100%">
+                    {{ __('Distribuir Trabalhos') }}
+                  </button>
+                </div>
+              </div>
+            </form>
         </div>
-        <form method="GET" action="{{route('distribuicao')}}">
-        <input type="hidden" name="eventoId" value="{{$evento->id}}">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <button type="submit" class="btn btn-primary" style="width:100%">
-                    {{ __('Finalizar') }}
-                </button>
-            </div>
-        </div>
-        </form>
 
     {{-- Tabela Trabalhos --}}
     <div class="row">

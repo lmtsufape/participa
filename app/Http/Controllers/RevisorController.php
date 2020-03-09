@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class RevisorController extends Controller
 {
@@ -17,9 +18,9 @@ class RevisorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function indexListarTrabalhos()
     {
-        //
+        return view('revisor.listarTrabalhos');
     }
 
     /**

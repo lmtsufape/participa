@@ -5,13 +5,13 @@
 <div class="content">
    <div class="row justify-content-center curved" style="margin-bottom:-5px">
     <div class=" col-sm-8 text">
-      <h1>Nome do Sistema</h1>
+      <h1>Logo do Sistema</h1>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Quisque sit amet rutrum arcu, et rutrum arcu. Nam vitae suscipit leo.
-        Donec vestibulum laoreet lacinia. Aenean ultricies est odio, non venenatis lorem mattis a.
-        Maecenas aliquet neque felis, a malesuada nisi blandit lobortis.
-        Suspendisse a ultrices libero, eleifend dignissim neque.
+        O "sistema de gestão de eventos científicos" é uma plataforma web desenvolvida como software livre pela
+        Universidade Federal do Agreste de Pernambuco que busca contribuir com instituições acadêmicas públicas
+        ou privadas que necessitem de uma ferramenta para viabilizar a gestão de todo o conjunto de atividades
+        ligadas a um evento científico, sejam elas inscrições para participação ou de trabalhos,
+        avaliação de trabalhos, certificação, entre outros.
       </p>
     </div>
     <div class="col-sm-4">
@@ -38,17 +38,19 @@
       <div class="info-modulo">
         <div class="info-modulo-head">
           <img src="{{asset('img/iphone.png')}}" alt="">
-          <h1>Módulo 1</h1>
+          <h1>Inscrições</h1>
 
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ccc" fill-opacity="1" d="M0,224L120,213.3C240,203,480,181,720,160C960,139,1200,117,1320,106.7L1440,96L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
         <div class="info-modulo-body">
 
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Proin nec volutpat urna, et interdum turpis. Ut aliquam quis
-            tortor sit amet scelerisque. Etiam vehicula nulla a odio
-            imperdiet dictum. In id pretium nisi. In sed nisi sit amet
-            dolor suscipit mollis eu ut sapien. Nam id velit at libero varius cursus. </p>
+          <p>Permite a inscrição de pessoas físicas,
+            jurídicas, grupos e outras modalidades nos eventos criados de
+            modo gratuito, pago ou ainda com cupons de desconto ou de gratuidade.
+            Viabiliza o pagamento por meio de boleto bancário, cartão de débito
+            ou de crédito por meio de parcerias com outras ferramentas e também
+            possui uma interface administrativa para a gestão destas inscrições
+            e valores recebidos destas inscrições.</p>
           </div>
       </div>
     </div>
@@ -57,17 +59,17 @@
       <div class="info-modulo">
         <div class="info-modulo-head">
           <img src="{{asset('img/iphone.png')}}" alt="">
-          <h1>Módulo 2</h1>
+          <h1>Trabalhos</h1>
 
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ccc" fill-opacity="1" d="M0,224L120,213.3C240,203,480,181,720,160C960,139,1200,117,1320,106.7L1440,96L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
         <div class="info-modulo-body">
 
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Proin nec volutpat urna, et interdum turpis. Ut aliquam quis
-            tortor sit amet scelerisque. Etiam vehicula nulla a odio
-            imperdiet dictum. In id pretium nisi. In sed nisi sit amet
-            dolor suscipit mollis eu ut sapien. Nam id velit at libero varius cursus. </p>
+          <p>Propicia a gestão do fluxo dos
+            trabalhos acadêmicos de diversas naturezas (resumo,
+            trabalho completo, etc) dentro de um evento, isto é,
+             a inscrição, distribuição, avaliação, classificação,
+              organização para apresentação, entre outras.</p>
           </div>
       </div>
     </div>
@@ -75,17 +77,19 @@
       <div class="info-modulo">
         <div class="info-modulo-head">
           <img src="{{asset('img/iphone.png')}}" alt="">
-          <h1>Módulo 3</h1>
+          <h1>Certificados</h1>
 
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ccc" fill-opacity="1" d="M0,224L120,213.3C240,203,480,181,720,160C960,139,1200,117,1320,106.7L1440,96L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
         <div class="info-modulo-body">
 
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Proin nec volutpat urna, et interdum turpis. Ut aliquam quis
-            tortor sit amet scelerisque. Etiam vehicula nulla a odio
-            imperdiet dictum. In id pretium nisi. In sed nisi sit amet
-            dolor suscipit mollis eu ut sapien. Nam id velit at libero varius cursus. </p>
+          <p>Viabiliza a emissão de
+            todo os certificados necessários de modo rápido e
+             em tempo real. Contempla a emissão de certificados
+             para participantes, comissão organizadora, científica,
+             palestrantes, e outras naturezas de envolvimento no evento.
+              Também permite a customização inteligente de modelos de
+              certificados, logos, assinaturas, etc.</p>
           </div>
         </div>
       </div>
@@ -95,19 +99,19 @@
 
         <div class="row justify-content-center">
           <div class="col-sm-3 coluna">
-            <div class="row">
+            <div class="row justify-content-center">
               <small>Desenvolvidor Por</small>
             </div>
-            <div class="row">
+            <div class="row justify-content-center">
               <a href="http://www.lmts.uag.ufrpe.br/br" name="lmts">
                 <img src="{{asset('img/lmts.png')}}" style="margin:20px 0 20px 0">
               </a>
             </div>
-            <div class="row">
+            <div class="row justify-content-center" style="text-align:center">
               Laboratório Multidisciplinar de<br>
               Tecnologias Sociais
             </div>
-            <div class="row" style="margin-top:20px">
+            <div class="row justify-content-center" style="margin-top:20px; text-align:center">
               <small>
                 Avenida Bom Pastor, s/n.º<br>
                 Bairro Boa Vista - CEP:<br>
@@ -117,25 +121,25 @@
 
           </div>
           <div class="col-sm-3 coluna">
-            <div class="row">
+            <div class="row justify-content-center">
               <h3>LMTS</h3>
             </div>
-            <div class="row sobre">
+            <div class="row sobre justify-content-center">
               <a href="http://www.lmts.uag.ufrpe.br/br/content/apresenta%C3%A7%C3%A3o">Quem Somos</a>
             </div>
-            <div class="row sobre">
+            <div class="row sobre justify-content-center">
               <a href="http://www.lmts.uag.ufrpe.br/br/content/equipe">Equipe</a>
             </div>
-            <div class="row sobre">
+            <div class="row sobre justify-content-center">
               <a href="http://www.lmts.uag.ufrpe.br/br/noticias">Notícias</a>
             </div>
-            <div class="row sobre">
+            <div class="row sobre justify-content-center">
               <a href="http://www.lmts.uag.ufrpe.br/br/content/projetos">Projetos</a>
             </div>
-            <div class="row social-network">
+            <div class="row social-network justify-content-center">
               <h6>Siga-nos nas Redes Sociais</h6>
             </div>
-            <div class="row">
+            <div class="row justify-content-center">
               <div class="social">
                 <a href="https://www.facebook.com/LMTSUFAPE/">
                   <img src="{{asset('img/icons/facebook-square-brands.svg')}}" alt="">
@@ -159,16 +163,27 @@
             </div>
           </div>
           <div class="col-sm-3 coluna">
-            <div class="row">
+            <div class="row justify-content-center">
               <h3>CONTATO</h3>
             </div>
-            <div class="row">
+            <div class="row justify-content-center">
               <a href="mailto:lmts@ufrpe.br">lmts@ufrpe.br</a>
             </div>
           </div>
-          <div class="col-sm-3 coluna">
-            <div class="row">
+          <div class="col-sm-3 coluna ">
+            <div class="row justify-content-center">
               <h3>PARCEIROS</h3>
+
+            </div>
+            <div class="row justify-content-center">
+
+              <a href="">
+                <img style="width:100px" src="{{asset('img/logoUfape.svg')}}" alt="">
+              </a>
+            </div>
+            <div class="row justify-content-center">
+              Universidade Federal Rural<br>
+              do Agreste de Pernambuco
             </div>
           </div>
         </div>
