@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('instituicao')->nullable();
             $table->integer('celular')->nullable();
-            $table->integer('cpf')->nullable();
+            $table->string('cpf')->nullable();
             $table->string('especProfissional')->nullable();
             $table->boolean('usuarioTemp')->nullable();
             $table->rememberToken();

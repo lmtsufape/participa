@@ -50,14 +50,14 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        
+
 
 
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'cpf' => ['required'],
+            'cpf' => ['required', 'cpf'],
             'celular' => ['required','integer'],
             'instituicao' => ['required','string','max:255'],
             // 'especProfissional' => [],
@@ -78,7 +78,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        
+
         // endereço
         $end = new Endereco();
         $end->rua = $data['rua'];
@@ -98,10 +98,10 @@ class RegisterController extends Controller
         $user->cpf = $data['cpf'];
         $user->celular = $data['celular'];
         $user->instituicao = $data['instituicao'];
-        
+
         $user->enderecoId = $end->id;
         $user->save();
-        
+
         return $user;
     }
 }
