@@ -10,6 +10,7 @@ use App\AreaModalidade;
 use App\Area;
 use App\Revisor;
 use App\Modalidade;
+use App\Atribuicao;
 use App\Arquivo;
 use Carbon\Carbon;
 use Auth;
@@ -119,8 +120,6 @@ class TrabalhoController extends Controller
 
       $trabalho = Trabalho::create([
         'titulo' => $request->nomeTrabalho,
-        'autores' => '-',
-        'data'  => $mytime,
         'modalidadeId'  => $areaModalidade->modalidade->id,
         'areaId'  => $areaModalidade->area->id,
         'autorId' => $autor->id,
@@ -226,8 +225,29 @@ class TrabalhoController extends Controller
       ]);
 
       return redirect()->route('evento.visualizar',['id'=>$request->eventoId]);
+    }
+
+    public function detalhesAjax(Request $request){
+      $validatedData = $request->validate([
+        'trabalhoId' => ['required', 'integer']
+      ]);
+
+      $trabalho = Trabalho::find($request->trabalhoId);
+      $revisores = Atribuicao::where('trabalhoId', $request->trabalhoId)->get();
+      $revisoresAux = [];
+      foreach ($revisores as $key) {
+        array_push($revisoresAux, [
+          'id' => $key->revisor->id,
+          'nome'  => $key->revisor->name
+        ]);
+      }
 
 
+      return response()->json([
+                               'titulo' => $trabalho->titulo,
+                               'resumo'  => $trabalho->resumo,
+                               'revisores' => $revisoresAux
+                              ], 200);
     }
 
 }

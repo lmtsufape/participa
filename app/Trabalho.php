@@ -12,7 +12,7 @@ class Trabalho extends Model
    * @var array
    */
   protected $fillable = [
-      'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId',
+      'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo'
   ];
 
   public function recurso(){

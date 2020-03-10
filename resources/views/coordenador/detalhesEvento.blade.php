@@ -141,9 +141,9 @@
                             </thead>
                             <tbody>
                               <tr>
-                                <td> - </td>
-                                <td> - </td>
-                                <td> - </td>
+                                <td> {{$trabalhosEnviados}} </td>
+                                <td> {{$trabalhosAvaliados}} </td>
+                                <td> {{$trabalhosPendentes}} </td>
                               </tr>
                             </tbody>
                           </table>
@@ -175,8 +175,8 @@
                             </thead>
                             <tbody>
                               <tr>
-                                <td> - </td>
-                                <td> - </td>
+                                <td> {{$numeroRevisores}} </td>
+                                <td> {{$numeroComissao}} </td>
                               </tr>
                             </tbody>
                           </table>
@@ -353,7 +353,7 @@
               <input type="hidden" name="eventoId" value="{{$evento->id}}">
               <div class="row justify-content-center">
                 <div class="col-md-12">
-                  <button type="submit" class="btn btn-primary" style="width:100%">
+                  <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
                     {{ __('Distribuir Trabalhos') }}
                   </button>
                 </div>
@@ -367,7 +367,7 @@
             <table class="table table-hover table-responsive-lg table-sm">
                 <thead>
                   <tr>
-                    <th scope="col">Titulo</th>
+                    <th scope="col">ID</th>
                     <th scope="col">Área</th>
                     <th scope="col">Revisores</th>
                     <th scope="col">Baixar</th>
@@ -375,14 +375,19 @@
                   </tr>
                 </thead>
                 <tbody>
+                  @php $i = 0; @endphp
                   @foreach($trabalhos as $trabalho)
+
                     <tr>
-                      <td>{{$trabalho->titulo}}</td>
+                      <td>{{$trabalho->id}}</td>
                       <td>{{$trabalho->area->nome}}</td>
-                      <td>Nome dos revisores</td>
                       <td>
-                        <img class="" src="{{asset('img/icons/file-download-solid-black.svg')}}" alt="">
-                        @php $arquivo = ""; @endphp
+                        @foreach($trabalho->atribuicao as $atribuicao)
+                            {{$atribuicao->revisor->user->email}}, 
+                        @endforeach
+                      </td>
+                      <td>
+                        @php $arquivo = ""; $i++; @endphp
                         @foreach($trabalho->arquivo as $key)
                           @php
                             if($key->versaoFinal == true){
@@ -390,18 +395,15 @@
                             }
                           @endphp
                         @endforeach
-                        <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                            Baixar Trabalho
-                        </a>
+                        <img onclick="document.getElementById('formDownload{{$i}}').submit();" class="" src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px" alt="">
+                        <form method="GET" action="{{ route('download') }}" target="_new" id="formDownload{{$i}}">
+                          <input type="hidden" name="file" value="{{$arquivo}}">
+                        </form>
                       </td>
                       <td>
-                        <a href="#" data-toggle="modal" data-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
+                        <a class="botaoAjax" href="#" data-toggle="modal" onclick="trabalhoId({{$trabalho->id}})" data-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
                       </td>
-                      <td>
-                        @foreach($trabalho->atribuicao as $atribuicao)
-                            {{$atribuicao->revisor->user->email}}
-                        @endforeach
-                      </td>
+
                     </tr>
                   @endforeach
                 </tbody>
@@ -770,18 +772,16 @@
                             <th scope="col">Área</th>
                             <th scope="col">Em Andamento</th>
                             <th scope="col">Finalizados</th>
-                            <th scope="col">Ultimo Prazo</th>
                             <th scope="col">Visualizar</th>
                           </tr>
                         </thead>
                         <tbody>
                           @foreach($revisores as $revisor)
                             <tr>
-                              <td>{{$revisor->user->nome}}</td>
+                              <td>{{$revisor->user->email}}</td>
                               <td>{{$revisor->area->nome}}</td>
-                              <td>{{$revisor->trabalhosCorrigidos}}</td>
                               <td>{{$revisor->correcoesEmAndamento}}</td>
-                              <td>{{$revisor->prazo}}</td>
+                              <td>{{$revisor->trabalhosCorrigidos}}</td>
                               <td>
                                 <a href="#" data-toggle="modal" data-target="#modalRevisor">
                                   <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
@@ -880,14 +880,14 @@
         <div class="row justify-content-center">
           <div class="col-sm-12">
             <h5>Título</h5>
-            <p>Título do trabalho</p>
+            <p id="tituloTrabalhoAjax"></p>
           </div>
 
         </div>
         <div class="row justify-content-center">
           <div class="col-sm-12">
             <h5>Resumo</h5>
-            <p>Resumo do trabalho</p>
+            <p id="resumoTrabalhoAjax"></p>
           </div>
         </div>
 
@@ -954,11 +954,77 @@
   </div>
 </div>
 
+
+<!-- Modal Trabalho -->
+<div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Trabalho</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="GET" action="{{ route('distribuicaoAutomaticaPorArea') }}" id="formDistribuicaoPorArea">
+        <div class="modal-body">
+          <input type="hidden" name="eventoId" value="{{$evento->id}}">
+          <div class="row">
+            <div class="col-sm-6">
+                <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
+                <select class="form-control @error('areaId') is-invalid @enderror" id="areaId" name="areaId">
+                    <option value="" disabled selected hidden> Área </option>
+                    @foreach($areas as $area)
+                        <option value="{{$area->id}}">{{$area->nome}}</option>
+                    @endforeach
+                </select>
+
+                @error('areaId')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+          </div>
+          <div class="row">
+              <div class="col-sm-12">
+                  <label for="numeroDeRevisoresPorTrabalho" class="col-form-label">{{ __('Numero de revisores por trabalho') }}</label>
+              </div>
+          </div>
+          <div class="row justify-content-center">
+              <div class="col-sm-12">
+                  <input type="text" class="form-control @error('numeroDeRevisoresPorTrabalho') is-invalid @enderror" name="numeroDeRevisoresPorTrabalho" value="{{ old('numeroDeRevisoresPorTrabalho') }}" required autocomplete="numeroDeRevisoresPorTrabalho" autofocus>
+
+                  @error('numeroDeRevisoresPorTrabalho')
+                  <span class="invalid-feedback" role="alert">
+                      <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+              </div>
+
+          </div>{{-- end row--}}
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        <button onclick="document.getElementById('formDistribuicaoPorArea').submit();" type="button" class="btn btn-primary">Salvar</button>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+
+</div>
+<input type="hidden" name="trabalhoIdAjax" value="1" id="trabalhoIdAjax">
 
 @endsection
 @section('javascript')
   <script type="text/javascript" >
+
+  function trabalhoId(x){
+    document.getElementById('trabalhoIdAjax').value = x;
+  }
 
   $(function(){
     $('#areas').click(function(){
@@ -974,6 +1040,33 @@
     $('#modalidades').click(function(){
             $('#dropdownModalidades').slideToggle(200);
     });
+    $('.botaoAjax').click(function(e){
+               e.preventDefault();
+               $.ajaxSetup({
+                  headers: {
+                      // 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                      'Content-Type': 'application/json',
+                      'X-Requested-With': 'XMLHttpRequest'
+                  }
+              });
+               jQuery.ajax({
+                  url: "{{ route('detalhesTrabalho') }}",
+                  method: 'get',
+                  data: {
+                     // name: jQuery('#name').val(),
+                     // type: jQuery('#type').val(),
+                     // price: jQuery('#price').val()
+                     trabalhoId: $('#trabalhoIdAjax').val()
+                  },
+                  success: function(result){
+                    // result = JSON.parse(result[0]);
+                    // console.log(result.titulo);
+                    $('#tituloTrabalhoAjax').html(result.titulo);
+                    $('#resumoTrabalhoAjax').html(result.resumo);
+                     // jQuery('.alert').show();
+                     // jQuery('.alert').html(result.success);
+                  }});
+               });
   });
 
     function cadastrarCoodComissao(){

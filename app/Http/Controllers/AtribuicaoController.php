@@ -102,6 +102,8 @@ class AtribuicaoController extends Controller
     }
 
     public function distribuicaoAutomatica(Request $request){
+      $this->authorize('isCoordenador', $evento);
+
       $validatedData = $request->validate([
         'eventoId' => ['required', 'integer'],
       ]);
@@ -132,7 +134,45 @@ class AtribuicaoController extends Controller
       }
 
       return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+    }
+
+    public function distribuicaoPorArea(Request $request){
+      $validatedData = $request->validate([
+        'eventoId'                     => ['required', 'integer'],
+        'areaId'                       => ['required', 'integer'],
+        'numeroDeRevisoresPorTrabalho' => ['required', 'integer']
+      ]);
+
+      $evento = Evento::find($request->eventoId);
+      $this->authorize('isCoordenador', $evento);
 
 
+      $evento = Evento::find($request->eventoId);
+      $area = Area::find($request->areaId);
+      $revisores = Revisor::where('areaId', $area->id)->get();
+      $trabalhos = Trabalho::where('areaId', $area->id)->get();
+      $trabalhosArea = Trabalho::where('areaId', $area->id)->get();
+      $revisoresArea = Revisor::where('areaId', $area->id)->get();
+      $numRevisores = count($revisores);
+      $i = 0;
+      foreach ($trabalhosArea as $trabalho) {
+        for($j = 0; $j < $request->numeroDeRevisoresPorTrabalho; $j++){
+          $atribuicao = Atribuicao::create([
+            'confirmacao' => false,
+            'parecer'     => 'processando',
+            'revisorId'   => $revisoresArea[$i]->id,
+            'trabalhoId'  => $trabalho->id,
+          ]);
+          $aux = Revisor::find($revisoresArea[$i]->id);
+          $aux->correcoesEmAndamento = $aux->correcoesEmAndamento + 1;
+          $aux->save();
+          $i++;
+          if($i == $numRevisores){
+            $i = 0;
+          }
+        }
+      }
+
+      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 }
