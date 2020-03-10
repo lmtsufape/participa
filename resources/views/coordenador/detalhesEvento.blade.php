@@ -381,7 +381,18 @@
                       <td>{{$trabalho->area->nome}}</td>
                       <td>Nome dos revisores</td>
                       <td>
-                        <a href="#"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
+                        <img class="" src="{{asset('img/icons/file-download-solid-black.svg')}}" alt="">
+                        @php $arquivo = ""; @endphp
+                        @foreach($trabalho->arquivo as $key)
+                          @php
+                            if($key->versaoFinal == true){
+                              $arquivo = $key->nome;
+                            }
+                          @endphp
+                        @endforeach
+                        <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                            Baixar Trabalho
+                        </a>
                       </td>
                       <td>
                         <a href="#" data-toggle="modal" data-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
