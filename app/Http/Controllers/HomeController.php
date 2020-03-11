@@ -25,7 +25,7 @@ class HomeController extends Controller
     {
         return view('home');
     }
-    
+
     public function downloadArquivo(Request $request){
       return response()->download(storage_path('app/'.$request->file));
   	}

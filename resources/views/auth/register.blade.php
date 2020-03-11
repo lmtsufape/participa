@@ -18,7 +18,7 @@
         <div class="form-group row">
 
             <div class="col-md-8">
-                <label for="name" class="col-form-label">{{ __('Nome') }}</label>
+                <label for="name" class="col-form-label">{{ __('Nome Completo') }}</label>
                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
 
                 @error('name')
@@ -53,7 +53,7 @@
             </div>
             <div class="col-md-4">
                 <label for="celular" class="col-form-label">{{ __('Celular') }}</label>
-                <input id="celular" type="number" class="form-control @error('celular') is-invalid @enderror" name="celular" value="{{ old('celular') }}" required autocomplete="celular" autofocus>
+                <input id="celular" type="text" class="form-control @error('celular') is-invalid @enderror" name="celular" value="{{ old('celular') }}" required autocomplete="celular" autofocus>
 
                 @error('celular')
                     <span class="invalid-feedback" role="alert">
@@ -129,7 +129,7 @@
 
             <div class="col-md-2">
                 <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                <input value="{{old('numero')}}" id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero">
+                <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero">
 
                 @error('numero')
                     <span class="invalid-feedback" role="alert">

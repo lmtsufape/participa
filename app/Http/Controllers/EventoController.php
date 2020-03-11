@@ -6,6 +6,7 @@ use App\Area;
 use App\Evento;
 use App\Coautor;
 use App\Revisor;
+use App\Atribuicao;
 use App\Modalidade;
 use App\ComissaoEvento;
 use App\User;
@@ -285,20 +286,33 @@ class EventoController extends Controller
 
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
         $revisores = Revisor::where('eventoId', $evento->id)->get();
         $modalidades = Modalidade::all();
         $areaModalidades = AreaModalidade::whereIn('id', $areasId)->get();
-        // $trabalhos = Trabalho::where('autorId', Auth::user()->id)->whereIn('areaId', $areasId)->get();
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->get();
+        $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
+        $trabalhosPendentes = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', 'processando')->count();
+        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+
+        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
+        // $atribuicoesProcessando
+        // dd($trabalhosEnviados);
 
         return view('coordenador.detalhesEvento', [
-                                                    'evento'          => $evento,
-                                                    'areas'           => $areas,
-                                                    'revisores'       => $revisores,
-                                                    'users'           => $users,
-                                                    'modalidades'     => $modalidades,
-                                                    'areaModalidades' => $areaModalidades,
-                                                    'trabalhos'       => $trabalhos,
+                                                    'evento'                  => $evento,
+                                                    'areas'                   => $areas,
+                                                    'revisores'               => $revisores,
+                                                    'users'                   => $users,
+                                                    'modalidades'             => $modalidades,
+                                                    'areaModalidades'         => $areaModalidades,
+                                                    'trabalhos'               => $trabalhos,
+                                                    'trabalhosEnviados'       => $trabalhosEnviados,
+                                                    'trabalhosAvaliados'      => $trabalhosAvaliados,
+                                                    'trabalhosPendentes'      => $trabalhosPendentes,
+                                                    'numeroRevisores'         => $numeroRevisores,
+                                                    'numeroComissao'          => $numeroComissao
                                                   ]);
     }
 }

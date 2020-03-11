@@ -22,11 +22,11 @@ class UserController extends Controller
         $validator = $request->validate([
             'name' => 'required|string|max:255',
             'cpf' => 'required',
-            'celular' => 'required|integer',
+            'celular' => 'required|string',
             'instituicao' => 'required|string| max:255',
             // 'especProfissional' => 'nullable|string',
             'rua' => 'required|string|max:255',
-            'numero' => 'required|integer',
+            'numero' => 'required|string',
             'bairro' => 'required|string|max:255',
             'cidade' => 'required|string|max:255',
             'uf' => 'required|string',
