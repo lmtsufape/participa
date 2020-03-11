@@ -4,7 +4,7 @@
 
 
 <div class="modal fade" id="modalTrabalho" tabindex="-1" role="dialog" aria-labelledby="modalTrabalho" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalCenterTitle">Submeter nova versão</h5>
@@ -128,11 +128,37 @@
         </div>
     </div>
     @if($hasFile == true)
+    <div class="row margin">
+        <div class="col-sm-12">
+            <h1>
+                Meus Trabalhos
+            </h1>
+        </div>
+    </div>
       <div class="row margin">
           <div class="col-sm-12 info-evento">
-              <h4>Meu Trabalho</h4>
-              <p>
-                  <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" alt="">
+              <h4>Como Autor</h4>
+          </div>
+      </div>
+
+      <!-- Tabela de trabalhos -->
+      @if(!$coautor)
+
+      <div class="row justify-content-center">
+        <div class="col-sm-12">
+
+          <table class="table table-responsive-lg table-hover">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th style="text-align:center">Baixar</th>
+                <th style="text-align:center">Nova Versão</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Título do Trabalho</td>
+                <td style="text-align:center">
                   @php $arquivo = ""; @endphp
                   @foreach($trabalho->arquivo as $key)
                     @php
@@ -142,31 +168,63 @@
                     @endphp
                   @endforeach
                   <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                      Baixar Trabalho
+                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                   </a>
-              </p>
-          </div>
+                </td>
+                <td style="text-align:center">
+                  <a href="#" data-toggle="modal" data-target="#modalTrabalho" style="color:#114048ff">
+                    <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+      @endif
+
     @endif
+
+
+    <div class="row margin">
+        <div class="col-sm-12 info-evento">
+            <h4>Como Coautor</h4>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-sm-12">
+
+        <table class="table table-responsive-lg table-hover">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th  style="text-align:center">Baixar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Título do Trabalho</td>
+              <td  style="text-align:center">
+                <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                    <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
     <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 
         <div class="col-md-6 botao-form-left" style="">
             <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}" style="width:100%">Voltar</a>
         </div>
-        @if($hasFile)
-          @if(!$coautor)
-            <div class="col-md-6 botao-form-right" style="">
-              <a class="btn btn-primary botao-form" href="#" data-toggle="modal" data-target="#modalTrabalho" style="width:100%">Submeter Nova Versão</a>
-            </div>
-          @endif
-        @else
-          @if(!$coautor)
-            <div class="col-md-6 botao-form-right" style="">
-              <a class="btn btn-primary botao-form" href="{{route('trabalho.index',['id'=>$evento->id])}}" style="width:100%">Submeter Trabalho</a>
-            </div>
-          @endif
-        @endif
+
+          <div class="col-md-6 botao-form-right" style="">
+            <a class="btn btn-primary botao-form" href="{{route('trabalho.index',['id'=>$evento->id])}}" style="width:100%">Submeter Trabalho</a>
+          </div>
     </div>
 </div>
 
