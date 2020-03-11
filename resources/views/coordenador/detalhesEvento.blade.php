@@ -10,10 +10,22 @@
                 </li>
             </a>
 
-            <a id="trabalhos" onclick="habilitarPagina('trabalhos')">
+            <a id="trabalhos">
                 <li>
-                    <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Trabalhos</h5>
+                    <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Trabalhos</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
+                <div id="dropdownTrabalhos" style="background-color: gray">
+                    <a id="submissoesTrabalhos" onclick="habilitarPagina('submissoesTrabalhos')">
+                        <li>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Definir Submissões</h5>
+                        </li>
+                    </a>
+                    <a id="listarTrabalhos" onclick="habilitarPagina('listarTrabalhos')">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5>
+                        </li>
+                    </a>
+                </div>
             </a>
             <a id="areas">
                 <li>
@@ -134,16 +146,16 @@
                           <table class="table table-responsive-lg table-hover">
                             <thead>
                               <tr>
-                                <th>Enviados</th>
-                                <th>Avaliados</th>
-                                <th>Pendentes</th>
+                                <th style="text-align:center">Enviados</th>
+                                <th style="text-align:center">Avaliados</th>
+                                <th style="text-align:center">Pendentes</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr>
-                                <td> {{$trabalhosEnviados}} </td>
-                                <td> {{$trabalhosAvaliados}} </td>
-                                <td> {{$trabalhosPendentes}} </td>
+                                <td style="text-align:center"> {{$trabalhosEnviados}} </td>
+                                <td style="text-align:center"> {{$trabalhosAvaliados}} </td>
+                                <td style="text-align:center"> {{$trabalhosPendentes}} </td>
                               </tr>
                             </tbody>
                           </table>
@@ -168,15 +180,15 @@
                           <table class="table table-responsive-lg table-hover">
                             <thead>
                               <tr>
-                                <th>Número de Revisores</th>
-                                <th>Número de Integrantes na Comissão</th>
+                                <th style="text-align:center">Número de Revisores</th>
+                                <th style="text-align:center">Número de Integrantes na Comissão</th>
 
                               </tr>
                             </thead>
                             <tbody>
                               <tr>
-                                <td> {{$numeroRevisores}} </td>
-                                <td> {{$numeroComissao}} </td>
+                                <td style="text-align:center"> {{$numeroRevisores}} </td>
+                                <td style="text-align:center"> {{$numeroComissao}} </td>
                               </tr>
                             </tbody>
                           </table>
@@ -343,7 +355,7 @@
     </div>{{-- End Listar Comissão --}}
 
     <!-- Trabalhos -->
-    <div id="divTrabalhos" style="display: none">
+    <div id="divListarTrabalhos" style="display: none">
 
         <div class="row titulo-detalhes">
             <div class="col-sm-10">
@@ -363,56 +375,120 @@
 
     {{-- Tabela Trabalhos --}}
     <div class="row">
-        <div class="col-sm-12">
-            <table class="table table-hover table-responsive-lg table-sm">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Área</th>
-                    <th scope="col">Revisores</th>
-                    <th scope="col">Baixar</th>
-                    <th scope="col">Visualizar</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @php $i = 0; @endphp
-                  @foreach($trabalhos as $trabalho)
+      <div class="col-sm-12">
+        <table class="table table-hover table-responsive-lg table-sm">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Área</th>
+              <th scope="col">Revisores</th>
+              <th scope="col" style="text-align:center">Baixar</th>
+              <th scope="col" style="text-align:center">Visualizar</th>
+            </tr>
+          </thead>
+          <tbody>
+            @php $i = 0; @endphp
+            @foreach($trabalhos as $trabalho)
 
-                    <tr>
-                      <td>{{$trabalho->id}}</td>
-                      <td>{{$trabalho->area->nome}}</td>
-                      <td>
-                        @foreach($trabalho->atribuicao as $atribuicao)
-                            {{$atribuicao->revisor->user->email}},
-                        @endforeach
-                      </td>
-                      <td>
-                        @php $arquivo = ""; $i++; @endphp
-                        @foreach($trabalho->arquivo as $key)
-                          @php
-                            if($key->versaoFinal == true){
-                              $arquivo = $key->nome;
-                            }
-                          @endphp
-                        @endforeach
-                        <img onclick="document.getElementById('formDownload{{$i}}').submit();" class="" src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px" alt="">
-                        <form method="GET" action="{{ route('download') }}" target="_new" id="formDownload{{$i}}">
-                          <input type="hidden" name="file" value="{{$arquivo}}">
-                        </form>
-                      </td>
-                      <td>
-                        <a class="botaoAjax" href="#" data-toggle="modal" onclick="trabalhoId({{$trabalho->id}})" data-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
-                      </td>
+            <tr>
+              <td>{{$trabalho->id}}</td>
+              <td>{{$trabalho->area->nome}}</td>
+              <td>
+                @foreach($trabalho->atribuicao as $atribuicao)
+                {{$atribuicao->revisor->user->email}},
+                @endforeach
+              </td>
+              <td style="text-align:center">
+                @php $arquivo = ""; $i++; @endphp
+                @foreach($trabalho->arquivo as $key)
+                @php
+                if($key->versaoFinal == true){
+                  $arquivo = $key->nome;
+                }
+                @endphp
+                @endforeach
+                <img onclick="document.getElementById('formDownload{{$i}}').submit();" class="" src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px" alt="">
+                <form method="GET" action="{{ route('download') }}" target="_new" id="formDownload{{$i}}">
+                  <input type="hidden" name="file" value="{{$arquivo}}">
+                </form>
+              </td>
+              <td style="text-align:center">
+                <a class="botaoAjax" href="#" data-toggle="modal" onclick="trabalhoId({{$trabalho->id}})" data-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
+              </td>
 
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
-        </div>
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
 
     </div>
-</div><!-- End Trabalhos -->
 
+</div><!-- End Trabalhos -->
+<!-- Definir Submissões -->
+<div id="divDefinirSubmissoes" style="display: none">
+
+    <div class="row titulo-detalhes">
+        <div class="col-sm-10">
+            <h1 class="">Definir Submissões</h1>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Definir Submissões do Trabalho</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Informe o número de trabalhos que cada autor poderá enviar e o número de trabalhos em que um usuário poderá ser um coautor</h6>
+                    <form method="POST" action="{{route('modalidade.store')}}">
+                    @csrf
+                    <p class="card-text">
+                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
+
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <label for="trabalhosPorAutor" class="col-form-label">{{ __('Número de trabalhos por Autor') }}</label>
+                                <input id="trabalhosPorAutor" type="text" class="form-control @error('trabalhosPorAutor') is-invalid @enderror" name="trabalhosPorAutor" value="{{ old('trabalhosPorAutor') }}" required autocomplete="trabalhosPorAutor" autofocus>
+
+                                @error('trabalhosPorAutor')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                        </div>{{-- end row--}}
+
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <label for="numCoautor" class="col-form-label">{{ __('Número de trabalhos como Coautor') }}</label>
+                                <input id="numCoautor" type="text" class="form-control @error('numCoautor') is-invalid @enderror" name="numCoautor" value="{{ old('numCoautor') }}" required autocomplete="numCoautor" autofocus>
+
+                                @error('numCoautor')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                        </div>{{-- end row--}}
+
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                </div>
+        </div>
+    </div>
+
+
+</div><!-- Definir Submissões -->
 
 {{-- Modalidade --}}
 <div id="divCadastrarModalidades" class="modalidades">
@@ -663,7 +739,7 @@
                           <tr>
                             <th scope="col">#</th>
                             <th scope="col">Nome</th>
-                            <th scope="col">Remover</th>
+                            <th scope="col" style="text-align:center">Remover</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -671,7 +747,7 @@
                             <tr>
                               <th scope="row">1</th>
                               <td>{{$area->nome}}</td>
-                              <td>
+                              <td style="text-align:center">
                                 <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
                               </td>
                             </tr>
@@ -938,7 +1014,7 @@
 
 <!-- Modal Trabalho -->
 <div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalCenterTitle">Trabalho</h5>
@@ -950,7 +1026,7 @@
         <div class="modal-body">
           <input type="hidden" name="eventoId" value="{{$evento->id}}">
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
                 <select class="form-control @error('areaId') is-invalid @enderror" id="areaId" name="areaId">
                     <option value="" disabled selected hidden> Área </option>
@@ -987,7 +1063,7 @@
       </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        <button onclick="document.getElementById('formDistribuicaoPorArea').submit();" type="button" class="btn btn-primary">Salvar</button>
+        <button onclick="document.getElementById('formDistribuicaoPorArea').submit();" type="button" class="btn btn-primary">Distribuir</button>
       </div>
     </div>
   </div>
@@ -1020,6 +1096,9 @@
     });
     $('#modalidades').click(function(){
             $('#dropdownModalidades').slideToggle(200);
+    });
+    $('#trabalhos').click(function(){
+            $('#dropdownTrabalhos').slideToggle(200);
     });
     $('.botaoAjax').click(function(e){
                e.preventDefault();
@@ -1096,7 +1175,10 @@
 
     function habilitarPagina(id){
         informacoes = document.getElementById('divInformacoes');
-        trabalhos = document.getElementById('divTrabalhos');
+
+        listarTrabalhos = document.getElementById('divListarTrabalhos');
+        submissoesTrabalhos = document.getElementById('divDefinirSubmissoes');
+
         classificacao = document.getElementById('divClassificacao');
         atividades = document.getElementById('divAtividades');
         cadastrarAreas = document.getElementById('divCadastrarAreas');
@@ -1113,9 +1195,10 @@
 
         // habilita divInformacoes
         if(id == 'informacoes'){
-            // console.log('informacoes');
+            console.log('informacoes');
             informacoes.style.display = "block";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1128,10 +1211,11 @@
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
         }
-        if(id == 'trabalhos'){
-            // console.log('trabalhos');
+        if(id == 'listarTrabalhos'){
+            console.log('listarTrabalhos');
             informacoes.style.display = "none";
-            trabalhos.style.display = "block";
+            listarTrabalhos.style.display = "block";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1146,9 +1230,10 @@
         }
 
         if(id == 'modalidades'){
-            // console.log('modalidades');
+            console.log('modalidades');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1163,9 +1248,10 @@
 
         }
         if(id == 'colocacao'){
-            // console.log('colocacao');
+            console.log('colocacao');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "block";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1180,9 +1266,10 @@
 
         }
         if(id == 'atividades'){
-            // console.log('atividades');
+            console.log('atividades');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "block";
             cadastrarAreas.style.display = "none";
@@ -1197,9 +1284,10 @@
 
         }
         if(id == 'cadastrarAreas'){
-            // console.log('atividades');
+            console.log('cadastrarAreas');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "block";
@@ -1214,9 +1302,10 @@
 
         }
         if(id == 'listarAreas'){
-            // console.log('atividades');
+            console.log('listarAreas');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1232,9 +1321,10 @@
         }
 
         if(id == 'cadastrarRevisores'){
-            // console.log('atividades');
+            console.log('cadastrarRevisores');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1250,9 +1340,10 @@
 
         }
         if(id == 'listarRevisores'){
-            // console.log('atividades');
+            console.log('listarRevisores');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1268,9 +1359,10 @@
 
         }
         if(id == 'cadastrarComissao'){
-            // console.log('atividades');
+            console.log('cadastrarComissao');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1286,9 +1378,10 @@
 
         }
         if(id == 'definirCoordComissao'){
-            // console.log('atividades');
+            console.log('definirCoordComissao');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1304,9 +1397,10 @@
 
         }
         if(id == 'listarComissao'){
-            // console.log('atividades');
+            console.log('listarComissao');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1320,9 +1414,10 @@
             listarModalidade.style.display = "none";
         }
         if(id == 'cadastrarModalidade'){
-            // console.log('atividades');
+            console.log('cadastrarModalidade');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1336,9 +1431,10 @@
             listarModalidade.style.display = "none";
         }
         if(id == 'listarModalidade'){
-            // console.log('atividades');
+            console.log('listarModalidade');
             informacoes.style.display = "none";
-            trabalhos.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
             classificacao.style.display = "none";
             atividades.style.display = "none";
             cadastrarAreas.style.display = "none";
@@ -1350,6 +1446,22 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "block";
+        }
+        if(id == 'submissoesTrabalhos'){
+          informacoes.style.display = "none";
+          listarTrabalhos.style.display = "none";
+          submissoesTrabalhos.style.display = "block";
+          classificacao.style.display = "none";
+          atividades.style.display = "none";
+          cadastrarAreas.style.display = "none";
+          listarAreas.style.display = "none";
+          cadastrarRevisores.style.display = "none";
+          listarRevisores.style.display = "none";
+          cadastrarComissao.style.display = "none";
+          definirCoordComissao.style.display = "none";
+          listarComissao.style.display = "none";
+          cadastrarModalidade.style.display = "none";
+          listarModalidade.style.display = "none";
         }
 
     }
