@@ -383,7 +383,7 @@
                       <td>{{$trabalho->area->nome}}</td>
                       <td>
                         @foreach($trabalho->atribuicao as $atribuicao)
-                            {{$atribuicao->revisor->user->email}}, 
+                            {{$atribuicao->revisor->user->email}},
                         @endforeach
                       </td>
                       <td>
@@ -900,27 +900,9 @@
           <div class="col-sm-12">
             <form class="" action="index.html" method="post">
 
-              <div class="revisoresTrabalho" style="padding-left:20px">
+              <div id="revisoresAjax" class="revisoresTrabalho" style="padding-left:20px">
+                <div id="cblist">
 
-                <div class="row justify-content-center">
-                  <div class="col-sm-12">
-                    <input type="checkbox" class="form-check-input">
-                    Nome do Revisor
-                  </div>
-                </div>
-
-                <div class="row justify-content-center">
-                  <div class="col-sm-12">
-                    <input type="checkbox" class="form-check-input">
-                    Nome do Revisor
-                  </div>
-                </div>
-
-                <div class="row justify-content-center">
-                  <div class="col-sm-12">
-                    <input type="checkbox" class="form-check-input">
-                    Nome do Revisor
-                  </div>
                 </div>
               </div>
             </form>
@@ -932,11 +914,10 @@
             <div class="form-group">
               <select class="form-control" id="selectRevisorTrabalho">
                 <option value="" disabled selected hidden> Novo Revisor </option>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+                @foreach($revisores as $revisor)
+                  <option value="{{$revisor->user->id}}">{{$revisor->user->name}}</option>
+                @endforeach
+
               </select>
             </div>
           </div>
@@ -1063,11 +1044,31 @@
                     // console.log(result.titulo);
                     $('#tituloTrabalhoAjax').html(result.titulo);
                     $('#resumoTrabalhoAjax').html(result.resumo);
+                    // console.log(result.revisores);
+                    var container = $('#cblist');
+                    container.empty();
+                    result.revisores.forEach(addCheckbox);
                      // jQuery('.alert').show();
                      // jQuery('.alert').html(result.success);
                   }});
                });
-  });
+    });
+
+
+    function myFunction(item, index) {
+      // document.getElementById("demo").innerHTML += index + ":" + item + "<br>";
+      console.log(index);
+      console.log(item.id);
+    }
+
+    function addCheckbox(item) {
+       var container = $('#cblist');
+       var inputs = container.find('input');
+       var id = inputs.length+1;
+
+       $('<input />', { type: 'checkbox', id: 'cb'+id, value: item.id }).appendTo(container);
+       $('<label />', { 'for': 'cb'+id, text: item.nome }).appendTo(container);
+    }
 
     function cadastrarCoodComissao(){
 

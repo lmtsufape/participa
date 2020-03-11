@@ -237,8 +237,8 @@ class TrabalhoController extends Controller
       $revisoresAux = [];
       foreach ($revisores as $key) {
         array_push($revisoresAux, [
-          'id' => $key->revisor->id,
-          'nome'  => $key->revisor->name
+          'id' => $key->revisor->user->id,
+          'nome'  => $key->revisor->user->name
         ]);
       }
 
