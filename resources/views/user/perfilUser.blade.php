@@ -19,7 +19,7 @@
         <div class="row justify-content-center">
             <input hidden name="id" value="{{$user->id}}">
             <div class="col-md-8">
-                <label for="name" class="col-form-label">{{ __('Name') }}</label>
+                <label for="name" class="col-form-label">{{ __('Nome Completo') }}</label>
                 <input value="{{$user->name}}" id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
 
                 @error('name')
@@ -56,7 +56,7 @@
 
             <div class="col-md-4">
                 <label for="celular" class="col-form-label">{{ __('Celular') }}</label>
-                <input value="{{$user->celular}}" id="celular" type="number" class="form-control @error('celular') is-invalid @enderror" name="celular" value="{{ old('celular') }}" required autocomplete="celular" autofocus>
+                <input value="{{$user->celular}}" id="celular" type="text" class="form-control @error('celular') is-invalid @enderror" name="celular" value="{{ old('celular') }}" required autocomplete="celular" autofocus>
 
                 @error('celular')
                     <span class="invalid-feedback" role="alert">
@@ -98,7 +98,7 @@
 
             <div class="col-md-4">
               <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-              <input value="{{$end->numero}}" id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero">
+              <input value="{{$end->numero}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero">
 
               @error('numero')
                   <span class="invalid-feedback" role="alert">
