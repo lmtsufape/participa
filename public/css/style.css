@@ -205,6 +205,12 @@ body{
 #dropdownModalidades h5{
     font-size: 11px;
 }
+#dropdownTrabalhos{
+    display: none;
+}
+#dropdownTrabalhos h5{
+    font-size: 11px;
+}
 
 .arrow{
     float:right;
@@ -284,7 +290,7 @@ body{
 
 /* Visualização dos conteúdos dos detalhes do evento */
 #divInformacoes{display: block;}
-#divTrabalhos{display: none;}
+/* #divTrabalhos{display: none;} */
 #divRevisores{display: none;}
 #divComissao{display: none;}
 #divModalidades{display: none;}
@@ -297,6 +303,8 @@ body{
 #divListarComissao{display: none;}
 #divCadastrarModalidades{display: none;}
 #divListarModalidades{display: none;}
+#divListarTrabalhos{display: none;}
+#divDefinirSubmissoes{display: none;}
 @media screen and (max-width: 576px){
     .wrapper .sidebar{
         margin-top: 30px;
