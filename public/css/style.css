@@ -15,6 +15,9 @@ color dark: #071b1eff
   margin-bottom:10px;
 }
 
+/* table tr{
+  text-align:center;
+} */
 #options{
     /* padding: 5px;     */
     text-align: center;
