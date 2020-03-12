@@ -212,7 +212,7 @@ class TrabalhoController extends Controller
 
       $trabalho = Trabalho::find($request->trabalhoId);
 
-      if(Auth::user->id != $trabalho->autorId){
+      if(Auth::user()->id != $trabalho->autorId){
         return redirect()->route('home');
       }
 
