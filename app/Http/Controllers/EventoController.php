@@ -175,29 +175,33 @@ class EventoController extends Controller
     public function show($id)
     {
         $evento = Evento::find($id);
-        $trabalho = Trabalho::where('autorId', Auth::user()->id)->first();
-        if(isset($trabalho)){
-          $hasFile = $trabalho->arquivo;
-          if($hasFile->count() != 0){
-            return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => true, "trabalho" => $trabalho, "coautor" => false]);
-          }
-          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false, "trabalho" => null, "coautor" => false]);
+        $hasTrabalho = false;
+        $hasTrabalhoCoautor = false;
+        $hasFile = false;
+        $trabalhos = Trabalho::where('autorId', Auth::user()->id)->get();
+        $trabalhosCount = Trabalho::where('autorId', Auth::user()->id)->count();
+        $trabalhosId = Trabalho::where('eventoId', $evento->id)->select('id')->get();
+        $trabalhosIdCoautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->select('trabalhoId')->get();
+        $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
+        $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
+        if($trabalhosCount != 0){
+          $hasTrabalho = true;
+          $hasFile = true;
         }
-        else{
-          $trabalhosId = Trabalho::where('eventoId', $evento->id)->select('id')->get();
-          $coautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->first();
-          if(isset($coautor)){
-            $trabalho = Trabalho::find($coautor->trabalhoId);
-            $hasFile = $trabalho->arquivo;
-            if($hasFile->count() != 0){
-              return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => true, "trabalho" => $trabalho, "coautor" => true]);
-            }
-            return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false, "trabalho" => null, "coautor" => true]);
-          }
+        if($coautorCount != 0){
+          $hasTrabalhoCoautor = true;
+          $hasFile = true;
+        }
 
-          // dd(false);
-          return view('evento.visualizarEvento',["evento"=>$evento,"hasFile" => false, "trabalho" => null, "coautor" => false]);
-        }
+        // dd(false);
+        return view('evento.visualizarEvento', [
+                                                'evento'              => $evento,
+                                                'trabalhos'           => $trabalhos,
+                                                'trabalhosCoautor'    => $trabalhosCoautor,
+                                                'hasTrabalho'         => $hasTrabalho,
+                                                'hasTrabalhoCoautor'  => $hasTrabalhoCoautor,
+                                                'hasFile'             => $hasFile
+                                               ]);
     }
 
     /**

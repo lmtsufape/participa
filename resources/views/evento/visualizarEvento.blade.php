@@ -19,7 +19,7 @@
         <div class="row justify-content-center">
           <div class="col-sm-12">
               @if($hasFile)
-                <input type="hidden" name="trabalhoId" value="{{$trabalho->id}}">
+                <input type="hidden" name="trabalhoId" value="" id="trabalhoNovaVersaoId">
               @endif
               <input type="hidden" name="eventoId" value="{{$evento->id}}">
 
@@ -128,93 +128,105 @@
         </div>
     </div>
     @if($hasFile == true)
-    <div class="row margin">
-        <div class="col-sm-12">
-            <h1>
-                Meus Trabalhos
-            </h1>
-        </div>
-    </div>
       <div class="row margin">
-          <div class="col-sm-12 info-evento">
-              <h4>Como Autor</h4>
+          <div class="col-sm-12">
+              <h1>
+                  Meus Trabalhos
+              </h1>
           </div>
       </div>
-
-      <!-- Tabela de trabalhos -->
-      @if(!$coautor)
-
-      <div class="row justify-content-center">
-        <div class="col-sm-12">
-
-          <table class="table table-responsive-lg table-hover">
-            <thead>
-              <tr>
-                <th>Título</th>
-                <th style="text-align:center">Baixar</th>
-                <th style="text-align:center">Nova Versão</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Título do Trabalho</td>
-                <td style="text-align:center">
-                  @php $arquivo = ""; @endphp
-                  @foreach($trabalho->arquivo as $key)
-                    @php
-                      if($key->versaoFinal == true){
-                        $arquivo = $key->nome;
-                      }
-                    @endphp
-                  @endforeach
-                  <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                  </a>
-                </td>
-                <td style="text-align:center">
-                  <a href="#" data-toggle="modal" data-target="#modalTrabalho" style="color:#114048ff">
-                    <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      @if($hasTrabalho)
+        <div class="row margin">
+            <div class="col-sm-12 info-evento">
+                <h4>Como Autor</h4>
+            </div>
         </div>
-      </div>
+
+        <!-- Tabela de trabalhos -->
+
+        <div class="row justify-content-center">
+          <div class="col-sm-12">
+
+            <table class="table table-responsive-lg table-hover">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th style="text-align:center">Baixar</th>
+                  <th style="text-align:center">Nova Versão</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($trabalhos as $trabalho)
+                  <tr>
+                    <td>{{$trabalho->titulo}}</td>
+                    <td style="text-align:center">
+                      @php $arquivo = ""; @endphp
+                      @foreach($trabalho->arquivo as $key)
+                        @php
+                          if($key->versaoFinal == true){
+                            $arquivo = $key->nome;
+                          }
+                        @endphp
+                      @endforeach
+                      <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                          <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                      </a>
+                    </td>
+                    <td style="text-align:center">
+                      <a href="#" onclick="changeTrabalho({{$trabalho->id}})" data-toggle="modal" data-target="#modalTrabalho" style="color:#114048ff">
+                        <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
+                      </a>
+                    </td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        </div>
       @endif
 
-    @endif
-
-
-    <div class="row margin">
-        <div class="col-sm-12 info-evento">
-            <h4>Como Coautor</h4>
+      @if($hasTrabalhoCoautor)
+        <div class="row margin">
+            <div class="col-sm-12 info-evento">
+                <h4>Como Coautor</h4>
+            </div>
         </div>
-    </div>
 
-    <div class="row justify-content-center">
-      <div class="col-sm-12">
+        <div class="row justify-content-center">
+          <div class="col-sm-12">
 
-        <table class="table table-responsive-lg table-hover">
-          <thead>
-            <tr>
-              <th>Título</th>
-              <th  style="text-align:center">Baixar</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Título do Trabalho</td>
-              <td  style="text-align:center">
-                <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                    <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+            <table class="table table-responsive-lg table-hover">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th  style="text-align:center">Baixar</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($trabalhosCoautor as $trabalho)
+                  <tr>
+                    <td>{{$trabalho->titulo}}</td>
+                    <td style="text-align:center">
+                      @php $arquivo = ""; @endphp
+                      @foreach($trabalho->arquivo as $key)
+                        @php
+                          if($key->versaoFinal == true){
+                            $arquivo = $key->nome;
+                          }
+                        @endphp
+                      @endforeach
+                      <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                          <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                      </a>
+                    </td>                    
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        </div>
+      @endif
+    @endif
 
     <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 
@@ -233,6 +245,8 @@
 
 @section('javascript')
 <script>
-
+  function changeTrabalho(x){
+    document.getElementById('trabalhoNovaVersaoId').value = x;
+  }
 </script>
 @endsection

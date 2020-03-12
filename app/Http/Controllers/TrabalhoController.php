@@ -125,17 +125,6 @@ class TrabalhoController extends Controller
         }
       }
 
-      if($request->emailCoautor != null){
-        foreach ($request->emailCoautor as $key) {
-          $userCoautor = User::where('email', $key)->first();
-          Coautor::create([
-            'ordem' => '-',
-            'autorId' => $userCoautor->id,
-            'trabalhoId'  => $trabalho->id,
-          ]);
-        }
-      }
-
       $trabalho = Trabalho::create([
         'titulo' => $request->nomeTrabalho,
         'modalidadeId'  => $areaModalidade->modalidade->id,
@@ -156,7 +145,7 @@ class TrabalhoController extends Controller
       }
 
       $file = $request->arquivo;
-      $path = $areaModalidade->id . '/';
+      $path = 'trabalhos/' . $request->eventoId . '/' . $trabalho->id .'/';
       $nome = "1.pdf";
       Storage::putFileAs($path, $file, $nome);
 
@@ -222,6 +211,11 @@ class TrabalhoController extends Controller
       ]);
 
       $trabalho = Trabalho::find($request->trabalhoId);
+
+      if(Auth::user->id != $trabalho->autorId){
+        return redirect()->route('home');
+      }
+
       $arquivos = $trabalho->arquivo;
       $count = 1;
       foreach ($arquivos as $key) {
@@ -231,7 +225,7 @@ class TrabalhoController extends Controller
       }
 
       $file = $request->arquivo;
-      $path = $trabalho->id . '/';
+      $path = 'trabalhos/' . $request->eventoId . '/' . $trabalho->id .'/';
       $nome = $count . ".pdf";
       Storage::putFileAs($path, $file, $nome);
 
