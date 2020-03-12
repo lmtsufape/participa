@@ -846,9 +846,9 @@
                           <tr>
                             <th scope="col">Nome</th>
                             <th scope="col">Área</th>
-                            <th scope="col">Em Andamento</th>
-                            <th scope="col">Finalizados</th>
-                            <th scope="col">Visualizar</th>
+                            <th scope="col" style="text-align:center">Em Andamento</th>
+                            <th scope="col" style="text-align:center">Finalizados</th>
+                            <th scope="col" style="text-align:center">Visualizar</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -856,9 +856,9 @@
                             <tr>
                               <td>{{$revisor->user->email}}</td>
                               <td>{{$revisor->area->nome}}</td>
-                              <td>{{$revisor->correcoesEmAndamento}}</td>
-                              <td>{{$revisor->trabalhosCorrigidos}}</td>
-                              <td>
+                              <td style="text-align:center">{{$revisor->correcoesEmAndamento}}</td>
+                              <td style="text-align:center">{{$revisor->trabalhosCorrigidos}}</td>
+                              <td style="text-align:center">
                                 <a href="#" data-toggle="modal" data-target="#modalRevisor">
                                   <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                                 </a>
@@ -944,7 +944,7 @@
 
 <!-- Modal Trabalho -->
 <div class="modal fade" id="modalTrabalho" tabindex="-1" role="dialog" aria-labelledby="modalTrabalho" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalCenterTitle">Trabalho</h5>
@@ -985,8 +985,13 @@
           </div>
         </div>
 
-        <div class="row" style="margin-top:20px">
-          <div class="col-sm-4">
+        <div class="row">
+          <div class="col-sm-12">
+            <h5>Adicionar Revisor</h5>
+          </div>
+        </div>
+        <div class="row" >
+          <div class="col-sm-9">
             <div class="form-group">
               <select class="form-control" id="selectRevisorTrabalho">
                 <option value="" disabled selected hidden> Novo Revisor </option>
@@ -997,7 +1002,7 @@
               </select>
             </div>
           </div>
-          <div class="col-sm-2">
+          <div class="col-sm-3">
             <a href="#" class="btn btn-primary" id="addRevisorTrabalho">Adicionar Revisor</a>
           </div>
 
@@ -1145,8 +1150,15 @@
        var inputs = container.find('input');
        var id = inputs.length+1;
 
-       $('<input />', { type: 'checkbox', id: 'cb'+id, value: item.id }).appendTo(container);
-       $('<label />', { 'for': 'cb'+id, text: item.nome }).appendTo(container);
+       var linha = "<div class="+"row"+">"+
+                    "<div class="+"col-sm-12"+">"+
+                    "<input type="+"checkbox"+" id="+"cb"+id+" value="+item.id+">"+
+                    "<label for="+"cb"+id+" style="+"margin-left:10px"+">"+item.nome+"</label>"+
+                    "</div>"+
+                    "</div>";
+      $('#cblist').append(linha);
+       // $('<input />', { type: 'checkbox', id: 'cb'+id, value: item.id }).appendTo(container);
+       // $('<label />', { 'for': 'cb'+id, text: item.nome }).appendTo(container);
     }
 
     function cadastrarCoodComissao(){
