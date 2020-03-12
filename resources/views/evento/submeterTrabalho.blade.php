@@ -141,6 +141,13 @@
       console.log($(this).val());
       addModalidade($(this).val());
     });
+
+
+  });
+  // Remover Coautor
+  $(document).on('click','.delete',function(){
+    $(this).closest('.row').remove();
+          return false;
   });
 
   function addModalidade(areaId){
@@ -160,9 +167,14 @@
                     "<label>Nome Completo</label>"+
                     "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'nomeCoautor[]'+" placeholder="+"Nome"+" required>"+
                 "</div>"+
-                "<div class="+"col-sm-6"+">"+
+                "<div class="+"col-sm-5"+">"+
                     "<label>E-mail</label>"+
                     "<input"+" type="+'email'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'emailCoautor[]'+" placeholder="+"E-mail"+" required>"+
+                "</div>"+
+                "<div class="+"col-sm-1"+">"+
+                    "<a href="+"#"+" class="+"delete"+">"+
+                      "<img src="+"/img/icons/user-times-solid.svg"+" style="+"width:25px;margin-top:35px"+">"+
+                    "</a>"+
                 "</div>"+
             "</div>";
   }
