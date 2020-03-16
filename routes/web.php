@@ -20,13 +20,13 @@ Auth::routes(['verify' => true]);
 
 
 
-Route::get('/perfil','UserController@perfil')->name('perfil');
 
 
 
 
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
-
+  Route::get('/perfil','UserController@perfil')->name('perfil');
+  
   Route::get('/home', 'EventoController@index')->name('home');
 
   // rotas de teste
