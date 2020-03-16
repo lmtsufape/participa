@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Endereco;
+use App\Trabalho;
+use App\Coautor;
 
 class UserController extends Controller
 {
@@ -69,5 +71,13 @@ class UserController extends Controller
 
 
         // return view('index');
+    }
+
+    public function meusTrabalhos(){
+
+        $trabalhos = Trabalho::where('autorId', Auth::user()->id)->get();
+        return view('user.meusTrabalhos',[
+                                            'trabalhos'           => $trabalhos,
+                                        ]);
     }
 }

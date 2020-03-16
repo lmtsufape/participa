@@ -36,6 +36,8 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 
   Route::post('/perfil','UserController@editarPerfil')->name('perfil');
 
+  // Visualizar trabalhos do usuário
+  Route::get('/user/trabalhos', 'UserController@meusTrabalhos')->name('user.meusTrabalhos');
 
   // Cadastrar Comissão
   Route::post('/evento/cadastrarComissao','ComissaoController@store'                   )->name('cadastrar.comissao');
