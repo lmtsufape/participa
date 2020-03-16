@@ -177,7 +177,7 @@
             </div>
             <div class="row justify-content-center">
 
-              <a href="">
+              <a href="http://ww3.uag.ufrpe.br/">
                 <img style="width:100px" src="{{asset('img/logoUfape.svg')}}" alt="">
               </a>
             </div>
