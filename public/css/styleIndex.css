@@ -45,7 +45,7 @@ body{
 .info-modulo{
     text-align: center;
     /* height: 500px; */
-    margin-bottom: 5%;
+    margin-bottom: 50px;
     /* width: 450px; */
     /* border: 1px solid #ccc; */
     transition: 0.5s;
@@ -65,20 +65,25 @@ body{
 .info-modulo p{
     margin: 5% 5% 5% 5%;
     text-align: justify;
-    font-size: 17px;
+    font-size: 15px;
 }
 .info-modulo img{
     margin:10% 0 5% 0;
     /* width: 100px; */
-    height: 100px;
+    height: 70px;
 }
 .info-modulo:hover{
     box-shadow: 10px 10px #114048ff;
     margin-top: -10px;
     transition: 0.5s;
 }
+.info-modulo-body{
+  height: 260px;
+  overflow-y: auto;
+}
 .footer{
   background-color:black;
+  /* height: 90vh; */
   padding:100px;
   color: white;
 }
@@ -118,8 +123,8 @@ body{
       /* margin-bottom: 5%; */
   }
   .info-modulo-body{
-      height: 360px;
-
+      height: 260px;
+      overflow-y: auto;
 
   }
 }

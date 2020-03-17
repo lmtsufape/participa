@@ -68,6 +68,12 @@
                                         {{ __('Minha Conta') }}
                                     </a>
 
+                                    {{-- Link Trabalhos --}}
+                                    <a class="dropdown-item" href="{{ route('user.meusTrabalhos') }}">
+                                        <img src="{{asset('img/icons/file-alt-regular-black.svg')}}" alt="">
+                                        {{ __('Trabalhos Submetidos') }}
+                                    </a>
+
                                     {{-- Link Logout --}}
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();

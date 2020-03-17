@@ -265,33 +265,33 @@
                 {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
                 <select value="{{$endereco->uf}}" class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                     <option value="" disabled selected hidden>-- UF --</option>
-                    <option value="AC">Acre</option>
-                    <option value="AL">Alagoas</option>
-                    <option value="AP">Amapá</option>
-                    <option value="AM">Amazonas</option>
-                    <option value="BA">Bahia</option>
-                    <option value="CE">Ceará</option>
-                    <option value="DF">Distrito Federal</option>
-                    <option value="ES">Espírito Santo</option>
-                    <option value="GO">Goiás</option>
-                    <option value="MA">Maranhão</option>
-                    <option value="MT">Mato Grosso</option>
-                    <option value="MS">Mato Grosso do Sul</option>
-                    <option value="MG">Minas Gerais</option>
-                    <option value="PA">Pará</option>
-                    <option value="PB">Paraíba</option>
-                    <option value="PR">Paraná</option>
-                    <option value="PE">Pernambuco</option>
-                    <option value="PI">Piauí</option>
-                    <option value="RJ">Rio de Janeiro</option>
-                    <option value="RN">Rio Grande do Norte</option>
-                    <option value="RS">Rio Grande do Sul</option>
-                    <option value="RO">Rondônia</option>
-                    <option value="RR">Roraima</option>
-                    <option value="SC">Santa Catarina</option>
-                    <option value="SP">São Paulo</option>
-                    <option value="SE">Sergipe</option>
-                    <option value="TO">Tocantins</option>
+                    <option @if($endereco->uf == 'AC') selected @endif value="AC">Acre</option>
+                    <option @if($endereco->uf == 'AL') selected @endif value="AL">Alagoas</option>
+                    <option @if($endereco->uf == 'AP') selected @endif value="AP">Amapá</option>
+                    <option @if($endereco->uf == 'AM') selected @endif value="AM">Amazonas</option>
+                    <option @if($endereco->uf == 'BA') selected @endif value="BA">Bahia</option>
+                    <option @if($endereco->uf == 'CE') selected @endif value="CE">Ceará</option>
+                    <option @if($endereco->uf == 'DF') selected @endif value="DF">Distrito Federal</option>
+                    <option @if($endereco->uf == 'ES') selected @endif value="ES">Espírito Santo</option>
+                    <option @if($endereco->uf == 'GO') selected @endif value="GO">Goiás</option>
+                    <option @if($endereco->uf == 'MA') selected @endif value="MA">Maranhão</option>
+                    <option @if($endereco->uf == 'MT') selected @endif value="MT">Mato Grosso</option>
+                    <option @if($endereco->uf == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
+                    <option @if($endereco->uf == 'MG') selected @endif value="MG">Minas Gerais</option>
+                    <option @if($endereco->uf == 'PA') selected @endif value="PA">Pará</option>
+                    <option @if($endereco->uf == 'PB') selected @endif value="PB">Paraíba</option>
+                    <option @if($endereco->uf == 'PR') selected @endif value="PR">Paraná</option>
+                    <option @if($endereco->uf == 'PE') selected @endif value="PE">Pernambuco</option>
+                    <option @if($endereco->uf == 'PI') selected @endif value="PI">Piauí</option>
+                    <option @if($endereco->uf == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
+                    <option @if($endereco->uf == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
+                    <option @if($endereco->uf == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
+                    <option @if($endereco->uf == 'RO') selected @endif value="RO">Rondônia</option>
+                    <option @if($endereco->uf == 'RR') selected @endif value="RR">Roraima</option>
+                    <option @if($endereco->uf == 'SC') selected @endif value="SC">Santa Catarina</option>
+                    <option @if($endereco->uf == 'SP') selected @endif value="SP">São Paulo</option>
+                    <option @if($endereco->uf == 'SE') selected @endif value="SE">Sergipe</option>
+                    <option @if($endereco->uf == 'TO') selected @endif value="TO">Tocantins</option>
                 </select>
 
                 @error('uf')
