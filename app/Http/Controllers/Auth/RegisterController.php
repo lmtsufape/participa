@@ -62,11 +62,11 @@ class RegisterController extends Controller
             'instituicao' => ['required','string','max:255'],
             // 'especProfissional' => [],
             'rua' => ['required','string','max:255'],
-            'numero' => ['required','string'],
+            'numero' => ['nullable','string'],
             'bairro' => ['required','string','max:255'],
             'cidade' => ['required','string','max:255'],
             'uf' => ['required','string'],
-            'cep' => ['required','integer'],
+            'cep' => ['required','string'],
         ]);
     }
 

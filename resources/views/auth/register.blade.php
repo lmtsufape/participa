@@ -129,7 +129,7 @@
 
             <div class="col-md-2">
                 <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero">
+                <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero">
 
                 @error('numero')
                     <span class="invalid-feedback" role="alert">
@@ -170,33 +170,33 @@
                 {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
                 <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                     <option value="" disabled selected hidden>-- UF --</option>
-                    <option value="AC">Acre</option>
-                    <option value="AL">Alagoas</option>
-                    <option value="AP">Amapá</option>
-                    <option value="AM">Amazonas</option>
-                    <option value="BA">Bahia</option>
-                    <option value="CE">Ceará</option>
-                    <option value="DF">Distrito Federal</option>
-                    <option value="ES">Espírito Santo</option>
-                    <option value="GO">Goiás</option>
-                    <option value="MA">Maranhão</option>
-                    <option value="MT">Mato Grosso</option>
-                    <option value="MS">Mato Grosso do Sul</option>
-                    <option value="MG">Minas Gerais</option>
-                    <option value="PA">Pará</option>
-                    <option value="PB">Paraíba</option>
-                    <option value="PR">Paraná</option>
-                    <option value="PE">Pernambuco</option>
-                    <option value="PI">Piauí</option>
-                    <option value="RJ">Rio de Janeiro</option>
-                    <option value="RN">Rio Grande do Norte</option>
-                    <option value="RS">Rio Grande do Sul</option>
-                    <option value="RO">Rondônia</option>
-                    <option value="RR">Roraima</option>
-                    <option value="SC">Santa Catarina</option>
-                    <option value="SP">São Paulo</option>
-                    <option value="SE">Sergipe</option>
-                    <option value="TO">Tocantins</option>
+                    <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
+                    <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
+                    <option @if(old('uf') == 'AP') selected @endif value="AP">Amapá</option>
+                    <option @if(old('uf') == 'AM') selected @endif value="AM">Amazonas</option>
+                    <option @if(old('uf') == 'BA') selected @endif value="BA">Bahia</option>
+                    <option @if(old('uf') == 'CE') selected @endif value="CE">Ceará</option>
+                    <option @if(old('uf') == 'DF') selected @endif value="DF">Distrito Federal</option>
+                    <option @if(old('uf') == 'ES') selected @endif value="ES">Espírito Santo</option>
+                    <option @if(old('uf') == 'GO') selected @endif value="GO">Goiás</option>
+                    <option @if(old('uf') == 'MA') selected @endif value="MA">Maranhão</option>
+                    <option @if(old('uf') == 'MT') selected @endif value="MT">Mato Grosso</option>
+                    <option @if(old('uf') == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
+                    <option @if(old('uf') == 'MG') selected @endif value="MG">Minas Gerais</option>
+                    <option @if(old('uf') == 'PA') selected @endif value="PA">Pará</option>
+                    <option @if(old('uf') == 'PB') selected @endif value="PB">Paraíba</option>
+                    <option @if(old('uf') == 'PR') selected @endif value="PR">Paraná</option>
+                    <option @if(old('uf') == 'PE') selected @endif value="PE">Pernambuco</option>
+                    <option @if(old('uf') == 'PI') selected @endif value="PI">Piauí</option>
+                    <option @if(old('uf') == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
+                    <option @if(old('uf') == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
+                    <option @if(old('uf') == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
+                    <option @if(old('uf') == 'RO') selected @endif value="RO">Rondônia</option>
+                    <option @if(old('uf') == 'RR') selected @endif value="RR">Roraima</option>
+                    <option @if(old('uf') == 'SC') selected @endif value="SC">Santa Catarina</option>
+                    <option @if(old('uf') == 'SP') selected @endif value="SP">São Paulo</option>
+                    <option @if(old('uf') == 'SE') selected @endif value="SE">Sergipe</option>
+                    <option @if(old('uf') == 'TO') selected @endif value="TO">Tocantins</option>
                 </select>
 
                 @error('uf')
@@ -225,7 +225,20 @@
 
 @section('javascript')
   <script type="text/javascript" >
+    $(document).ready(function($){
+      $('#cep').mask('00000-000');
+      $('#cpf').mask('000.000.000-00');
+      var SPMaskBehavior = function (val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+      },
+      spOptions = {
+        onKeyPress: function(val, e, field, options) {
+          field.mask(SPMaskBehavior.apply({}, arguments), options);
+        }
+      };
+      $('#celular').mask(SPMaskBehavior, spOptions);
 
+    });
     function limpa_formulário_cep() {
             //Limpa valores do formulário de cep.
             document.getElementById('rua').value=("");

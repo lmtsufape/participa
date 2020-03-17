@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <script src="{{ asset('js/jquery-3.4.1.min.js')}}"></script>
-
+    <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>    
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">

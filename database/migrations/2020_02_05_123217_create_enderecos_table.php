@@ -17,11 +17,11 @@ class CreateEnderecosTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('rua');
-            $table->string('numero');
+            $table->string('numero')->nullable();
             $table->string('bairro');
             $table->string('cidade');
             $table->string('uf');
-            $table->integer('cep');
+            $table->string('cep');
         });
     }
 
