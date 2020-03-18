@@ -10,12 +10,14 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+use App\Evento;
 Route::get('/', function () {
     if(Auth::check()){
       return redirect()->route('home');
     }
-    return view('index');
+
+    $eventos = Evento::all();
+    return view('index',['eventos'=>$eventos]);
 });
 
 Auth::routes(['verify' => true]);
