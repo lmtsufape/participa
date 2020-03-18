@@ -38,7 +38,7 @@
     <div class="col-sm-4">
       <div class="info-modulo">
         <div class="info-modulo-head">
-          <img src="{{asset('img/iphone.png')}}" alt="">
+          <img src="{{asset('img/icons/inscricao.svg')}}" alt="">
           <h1>Inscrições</h1>
 
         </div>
@@ -59,7 +59,7 @@
     <div class="col-sm-4">
       <div class="info-modulo">
         <div class="info-modulo-head">
-          <img src="{{asset('img/iphone.png')}}" alt="">
+          <img src="{{asset('img/icons/documento.svg')}}" alt="">
           <h1>Trabalhos</h1>
 
         </div>
@@ -77,7 +77,7 @@
     <div class="col-sm-4">
       <div class="info-modulo">
         <div class="info-modulo-head">
-          <img src="{{asset('img/iphone.png')}}" alt="">
+          <img src="{{asset('img/icons/certificado.svg')}}" alt="">
           <h1>Certificados</h1>
 
         </div>
