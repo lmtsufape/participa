@@ -101,8 +101,8 @@
     <div class="container-fluid" style="width:95%; margin-bottom:50px">
 
       <div class="col-sm-12">
-        <div class="row titulo">
-          <h1>Eventos Disponíveis</h1>
+        <div class="row titulo" style="margin-top:0">
+          <h1>Eventos em curso</h1>
         </div>
       </div>
 
