@@ -15,7 +15,7 @@ class UserController extends Controller
     //
     function perfil(){
         $user = User::find(Auth::user()->id);
-        $end = Endereco::find($user->id);
+        $end = $user->endereco;
         return view('user.perfilUser',['user'=>$user,'end'=>$end]);
     }
     function editarPerfil(Request $request){

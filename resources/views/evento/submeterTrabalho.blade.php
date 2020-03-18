@@ -26,21 +26,30 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <div class="row justify-content-center">
+                            {{-- Nome Trabalho  --}}
+                          <div class="col-sm-12">
+                                <label for="nomeTrabalho" class="col-form-label">{{ __('Autor') }}</label>
+                                <input class="form-control" type="text" disabled value="{{Auth::user()->name}}">
+                            </div>
+                        </div>
+
                         <div class="row" style="margin-top:20px">
                           <div class="col-sm-12">
                             <div id="coautores">
 
                             </div>
-                            <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">Adicionar Coautor</a>
+                            <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">Coautor +</a>
                           </div>
                         </div>
 
 
 
-                        <div class="row justify-content-center">
+                        <!-- <div class="row justify-content-center">
                             <div class="col-sm-12">
                                 <label for="resumo" class="col-form-label">{{ __('Resumo do Trabalho') }}</label>
-                                <textarea id="resumo" class="form-control @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}" required autocomplete="resumo" autofocusrows="5"></textarea>
+                                <textarea id="resumo" class="form-control @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
 
                                 @error('resumo')
                                 <span class="invalid-feedback" role="alert">
@@ -50,7 +59,7 @@
 
 
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Areas -->
                         <div class="row justify-content-center">
@@ -64,8 +73,8 @@
                                 </select>
 
                                 @error('areaId')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
+                                <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                  <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                             </div>
@@ -80,8 +89,8 @@
                                 </select>
 
                                 @error('modalidadeId')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
+                                <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                  <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                             </div>

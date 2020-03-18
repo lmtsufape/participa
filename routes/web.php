@@ -12,6 +12,9 @@
 */
 
 Route::get('/', function () {
+    if(Auth::check()){
+      return redirect()->route('home');
+    }
     return view('index');
 });
 
@@ -26,7 +29,7 @@ Auth::routes(['verify' => true]);
 
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::get('/perfil','UserController@perfil')->name('perfil');
-  
+
   Route::get('/home', 'EventoController@index')->name('home');
 
   // rotas de teste

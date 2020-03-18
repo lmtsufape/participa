@@ -132,5 +132,18 @@ class DatabaseSeeder extends Seeder
           'email_verified_at' => '2020-02-15',
           'enderecoId' => 1,
         ]);
+
+        DB::table('area_modalidades')->insert([
+          'areaId'       => 1,
+          'modalidadeId' => 1,
+        ]);
+        DB::table('area_modalidades')->insert([
+          'areaId'       => 2,
+          'modalidadeId' => 1,
+        ]);
+        DB::table('area_modalidades')->insert([
+          'areaId'       => 3,
+          'modalidadeId' => 1,
+        ]);
     }
 }

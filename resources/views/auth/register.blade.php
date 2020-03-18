@@ -42,7 +42,7 @@
         {{-- Instituição de Ensino e Celular --}}
         <div class="form-group row">
             <div class="col-md-8">
-                <label for="instituicao" class="col-form-label">{{ __('Instituição de Ensino') }}</label>
+                <label for="instituicao" class="col-form-label">{{ __('Instituição de Vínculo') }}</label>
                 <input id="instituicao" type="text" class="form-control @error('instituicao') is-invalid @enderror" name="instituicao" value="{{ old('instituicao') }}" required autocomplete="instituicao" autofocus>
 
                 @error('instituicao')

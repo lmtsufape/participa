@@ -79,7 +79,7 @@ class TrabalhoController extends Controller
         'areaId'            => ['required', 'integer'],
         'modalidadeId'      => ['required', 'integer'],
         'eventoId'          => ['required', 'integer'],
-        'resumo'            => ['string'],
+        'resumo'            => ['nullable','string'],
         'nomeCoautor.*'     => ['string'],
         'emailCoautor.*'    => ['string'],
         'arquivo'           => ['required', 'file', 'mimes:pdf', 'max:2000000'],

@@ -319,4 +319,35 @@ class EventoController extends Controller
                                                     'numeroComissao'          => $numeroComissao
                                                   ]);
     }
+
+    public function numTrabalhos(Request $request){
+      $evento = Evento::find($request->eventoId);
+      $this->authorize('isCoordenador', $evento);
+      $validatedData = $request->validate([
+        'eventoId'                => ['required', 'integer'],
+        'trabalhosPorAutor'       => ['required', 'integer'],
+        'numCoautor'              => ['required', 'integer']
+      ]);
+
+      $evento->numMaxTrabalhos = $request->trabalhosPorAutor;
+      $evento->numMaxCoautores = $request->numCoautor;
+      $evento->save();
+
+      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+    }
+
+    public function hasResumo(Request $request){
+      $evento = Evento::find($request->eventoId);
+      $this->authorize('isCoordenador', $evento);
+      $validatedData = $request->validate([
+        'eventoId'                => ['required', 'integer'],
+        'hasResumo'               => ['required', 'boolean']
+      ]);
+
+      $evento->hasResumo = $request->hasResumo;
+      $evento->save();
+
+      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+
+    }
 }
