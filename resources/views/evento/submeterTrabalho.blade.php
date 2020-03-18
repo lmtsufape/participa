@@ -16,7 +16,7 @@
                         <div class="row justify-content-center">
                             {{-- Nome Trabalho  --}}
                           <div class="col-sm-12">
-                                <label for="nomeTrabalho" class="col-form-label">{{ __('Título do Trabalho') }}</label>
+                                <label for="nomeTrabalho" class="col-form-label">{{ __('Título:') }}</label>
                                 <input id="nomeTrabalho" type="text" class="form-control @error('nomeTrabalho') is-invalid @enderror" name="nomeTrabalho" value="{{ old('nomeTrabalho') }}" required autocomplete="nomeTrabalho" autofocus>
 
                                 @error('nomeTrabalho')
@@ -30,7 +30,7 @@
                         <div class="row justify-content-center">
                             {{-- Nome Trabalho  --}}
                           <div class="col-sm-12">
-                                <label for="nomeTrabalho" class="col-form-label">{{ __('Autor') }}</label>
+                                <label for="nomeTrabalho" class="col-form-label">{{ __('Autor:') }}</label>
                                 <input class="form-control" type="text" disabled value="{{Auth::user()->name}}">
                             </div>
                         </div>
@@ -48,7 +48,7 @@
 
                         <!-- <div class="row justify-content-center">
                             <div class="col-sm-12">
-                                <label for="resumo" class="col-form-label">{{ __('Resumo do Trabalho') }}</label>
+                                <label for="resumo" class="col-form-label">{{ __('Resumo:') }}</label>
                                 <textarea id="resumo" class="form-control @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
 
                                 @error('resumo')
@@ -64,7 +64,7 @@
                         <!-- Areas -->
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
-                                <label for="area" class="col-form-label">{{ __('Área') }}</label>
+                                <label for="area" class="col-form-label">{{ __('Área:') }}</label>
                                 <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId">
                                     <option value="" disabled selected hidden>-- Área --</option>
                                     @foreach($areasEnomes as $area)
@@ -83,7 +83,7 @@
                         <!-- Modalidades -->
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
-                                <label for="areaModalidadeId" class="col-form-label">{{ __('Modalidade') }}</label>
+                                <label for="areaModalidadeId" class="col-form-label">{{ __('Modalidade:') }}</label>
                                 <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidadeId">
                                   <option value="" disabled selected hidden>-- Modalidade --</option>
                                 </select>
@@ -98,7 +98,7 @@
                         <div class="row justify-content-center">
                           {{-- Arquivo  --}}
                           <div class="col-sm-12" style="margin-top: 20px;">
-                            <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo') }}</label>
+                            <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo:') }}</label>
 
                             <div class="custom-file">
                               <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">

@@ -89,7 +89,7 @@ body{
 }
 .footer .social{
   width: 30px;
-  margin-right: 20px;
+  margin: 10px;
   transition: 0.5s;
 }
 .footer .social:hover{
