@@ -34,7 +34,7 @@
   </div>
 
 
-  <div class="row justify-content-center" style="padding:0 5% 0 5%">
+  <div class="row justify-content-center modulos" style="padding:0 5% 0 5%">
     <div class="col-sm-4">
       <div class="info-modulo">
         <div class="info-modulo-head">
