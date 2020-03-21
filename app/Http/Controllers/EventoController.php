@@ -147,7 +147,7 @@ class EventoController extends Controller
         if($request->fotoEvento != null){
           $file = $request->fotoEvento;
           $path = 'public/eventos/' . $evento->id;
-          $nome = 'logo.png';
+          $nome = '/logo.png';
           Storage::putFileAs($path, $file, $nome);
           $evento->fotoEvento = $path . $nome;
           $evento->save();
@@ -336,18 +336,41 @@ class EventoController extends Controller
       return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
-    public function hasResumo(Request $request){
+    public function setResumo(Request $request){
       $evento = Evento::find($request->eventoId);
       $this->authorize('isCoordenador', $evento);
       $validatedData = $request->validate([
         'eventoId'                => ['required', 'integer'],
-        'hasResumo'               => ['required', 'boolean']
+        'hasResumo'               => ['required', 'string']
+      ]);
+      if($request->hasResumo == 'true'){
+        $evento->hasResumo = true;
+      }
+      else{
+        $evento->hasResumo = false;
+      }
+
+      $evento->save();
+      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+    }
+
+    public function setFotoEvento(Request $request){
+      $evento = Evento::find($request->eventoId);
+      $this->authorize('isCoordenador', $evento);
+      // dd($request);
+      $validatedData = $request->validate([
+        'eventoId'                => ['required', 'integer'],
+        'fotoEvento'              => ['required', 'file', 'mimes:png']
       ]);
 
-      $evento->hasResumo = $request->hasResumo;
+      $file = $request->fotoEvento;
+      $path = 'public/eventos/' . $evento->id;
+      $nome = '/logo.png';
+      Storage::putFileAs($path, $file, $nome);
+      $evento->fotoEvento = $path . $nome;
       $evento->save();
-
       return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
-
     }
+
+
 }

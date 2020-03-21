@@ -486,8 +486,80 @@
                 </div>
         </div>
     </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Resumo</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Informe se os trabalhos enviados possuem resumos.</h6>
+                    <form method="POST" action="{{route('evento.setResumo')}}">
+                    @csrf
+                    <p class="card-text">
+                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                        <input type="hidden" name="hasResumo" value="false" id="hasResumo">
 
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <input id="hasResumoCheck" type="checkbox" onclick="document.getElementById('hasResumo').value = 'true'"  autocomplete="hasResumo" autofocus>
+                                <label for="hasResumoCheck" >{{ __('Possui') }}</label>
 
+                                @error('hasResumo')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                        </div>{{-- end row--}}
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Logo Evento</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Modifique a foto do evento aqui.</h6>
+                    <form method="POST" action="{{route('evento.setFotoEvento')}}" enctype="multipart/form-data">
+                    @csrf
+                    <p class="card-text">
+                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
+
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                              <label for="fotoEvento">Logo</label>
+                              <input type="file" class="form-control-file @error('fotoEvento') is-invalid @enderror" name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
+                              @error('fotoEvento')
+                                  <span class="invalid-feedback" role="alert">
+                                      <strong>{{ $message }}</strong>
+                                  </span>
+                              @enderror
+                            </div>
+
+                        </div>{{-- end row--}}
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                </div>
+        </div>
+    </div>
 </div><!-- Definir Submissões -->
 
 {{-- Modalidade --}}
@@ -745,7 +817,7 @@
                         <tbody>
                           @foreach($areas as $area)
                             <tr>
-                              <th scope="row">1</th>
+                              <th scope="row">{{$area->id}}</th>
                               <td>{{$area->nome}}</td>
                               <td style="text-align:center">
                                 <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">

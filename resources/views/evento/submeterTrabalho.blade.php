@@ -12,6 +12,11 @@
                     <form method="POST" action="{{route('trabalho.store')}}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                        <div>
+                          @error('numeroMax')
+                            @include('componentes.mensagens')
+                          @enderror
+                        </div>
 
                         <div class="row justify-content-center">
                             {{-- Nome Trabalho  --}}
@@ -45,22 +50,22 @@
                         </div>
 
 
+                        @if($evento->hasResumo)
+                          <div class="row justify-content-center">
+                              <div class="col-sm-12">
+                                  <label for="resumo" class="col-form-label">{{ __('Resumo:') }}</label>
+                                  <textarea id="resumo" class="form-control @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
 
-                        <!-- <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <label for="resumo" class="col-form-label">{{ __('Resumo:') }}</label>
-                                <textarea id="resumo" class="form-control @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
-
-                                @error('resumo')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+                                  @error('resumo')
+                                  <span class="invalid-feedback" role="alert">
+                                      <strong>{{ $message }}</strong>
+                                  </span>
+                                  @enderror
 
 
-                            </div>
-                        </div> -->
-
+                              </div>
+                          </div>
+                        @endif
                         <!-- Areas -->
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
