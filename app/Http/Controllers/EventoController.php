@@ -193,6 +193,7 @@ class EventoController extends Controller
           $hasFile = true;
         }
 
+        $mytime = Carbon::now('America/Recife');
         // dd(false);
         return view('evento.visualizarEvento', [
                                                 'evento'              => $evento,
@@ -200,7 +201,8 @@ class EventoController extends Controller
                                                 'trabalhosCoautor'    => $trabalhosCoautor,
                                                 'hasTrabalho'         => $hasTrabalho,
                                                 'hasTrabalhoCoautor'  => $hasTrabalhoCoautor,
-                                                'hasFile'             => $hasFile
+                                                'hasFile'             => $hasFile,
+                                                'mytime'              => $mytime
                                                ]);
     }
 

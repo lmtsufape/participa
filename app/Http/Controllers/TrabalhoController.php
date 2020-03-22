@@ -74,6 +74,14 @@ class TrabalhoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+      $mytime = Carbon::now('America/Recife');
+      $mytime = $mytime->toDateString();
+      $evento = Evento::find($request->eventoId);
+      if($evento->inicioSubmissao > $mytime){
+        if($mytime >= $evento->fimSubmissao){
+            return redirect()->route('home');
+        }
+      }
       $validatedData = $request->validate([
         'nomeTrabalho'      => ['required', 'string',],
         'areaId'            => ['required', 'integer'],
@@ -85,11 +93,8 @@ class TrabalhoController extends Controller
         'arquivo'           => ['required', 'file', 'mimes:pdf', 'max:2000000'],
       ]);
 
-      $mytime = Carbon::now('America/Recife');
-      $mytime = $mytime->toDateString();
 
       $autor = Auth::user();
-      $evento = Evento::find($request->eventoId);
       $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->count();
       $areaModalidade = AreaModalidade::where('areaId', $request->areaId)->where('modalidadeId', $request->modalidadeId)->first();
 
@@ -204,6 +209,14 @@ class TrabalhoController extends Controller
     }
 
     public function novaVersao(Request $request){
+      $mytime = Carbon::now('America/Recife');
+      $mytime = $mytime->toDateString();
+      $evento = Evento::find($request->eventoId);
+      if($evento->inicioSubmissao > $mytime){
+        if($mytime >= $evento->fimSubmissao){
+            return redirect()->route('home');
+        }
+      }
       $validatedData = $request->validate([
         'arquivo' => ['required', 'file', 'mimes:pdf'],
         'eventoId' => ['required', 'integer'],

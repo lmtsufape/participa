@@ -173,9 +173,13 @@
                       </a>
                     </td>
                     <td style="text-align:center">
-                      <a href="#" onclick="changeTrabalho({{$trabalho->id}})" data-toggle="modal" data-target="#modalTrabalho" style="color:#114048ff">
-                        <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
-                      </a>
+                      @if($evento->inicioSubmissao <= $mytime)
+                        @if($mytime < $evento->fimSubmissao)
+                          <a href="#" onclick="changeTrabalho({{$trabalho->id}})" data-toggle="modal" data-target="#modalTrabalho" style="color:#114048ff">
+                            <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
+                          </a>
+                        @endif
+                      @endif
                     </td>
                   </tr>
                 @endforeach
@@ -218,7 +222,7 @@
                       <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
                           <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                       </a>
-                    </td>                    
+                    </td>
                   </tr>
                 @endforeach
               </tbody>
@@ -234,9 +238,14 @@
             <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}" style="width:100%">Voltar</a>
         </div>
 
-          <div class="col-md-6 botao-form-right" style="">
-            <a class="btn btn-primary botao-form" href="{{route('trabalho.index',['id'=>$evento->id])}}" style="width:100%">Submeter Trabalho</a>
-          </div>
+        @if($evento->inicioSubmissao <= $mytime)
+          @if($mytime < $evento->fimSubmissao)
+            <div class="col-md-6 botao-form-right" style="">
+              <a class="btn btn-primary botao-form" href="{{route('trabalho.index',['id'=>$evento->id])}}" style="width:100%">Submeter Trabalho</a>
+            </div>
+          @endif
+        @endif
+
     </div>
 </div>
 

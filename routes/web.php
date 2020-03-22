@@ -20,6 +20,15 @@ Route::get('/', function () {
     return view('index',['eventos'=>$eventos]);
 });
 
+Route::get('/#', function () {
+    if(Auth::check()){
+      return redirect()->route('home');
+    }
+
+    $eventos = Evento::all();
+    return view('index',['eventos'=>$eventos]);
+})->name('cancelarCadastro');
+
 Auth::routes(['verify' => true]);
 
 
