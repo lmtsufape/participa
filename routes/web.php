@@ -29,14 +29,9 @@ Route::get('/#', function () {
     return view('index',['eventos'=>$eventos]);
 })->name('cancelarCadastro');
 
+  Route::get('/evento/visualizar/naologado/{id}','EventoController@showNaoLogado')->name('evento.visualizarNaoLogado');
+
 Auth::routes(['verify' => true]);
-
-
-
-
-
-
-
 
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::get('/perfil','UserController@perfil')->name('perfil');

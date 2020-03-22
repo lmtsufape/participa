@@ -72,6 +72,14 @@
     </div>
 </div>
 <div class="container" style="margin-top:20px">
+    @if(!Auth::check())
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong> A submissão de um trabalho é possível apenas quando cadastrado no sistema. </strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    @endif
     <div class="row margin">
         <div class="col-sm-12">
             <h1>
@@ -235,7 +243,7 @@
     <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 
         <div class="col-md-6 botao-form-left" style="">
-            <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}" style="width:100%">Voltar</a>
+            <a class="btn btn-secondary botao-form" href="{{route('cancelarCadastro')}}" style="width:100%">Voltar</a>
         </div>
 
         @if($evento->inicioSubmissao <= $mytime)

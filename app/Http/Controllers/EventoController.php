@@ -206,6 +206,28 @@ class EventoController extends Controller
                                                ]);
     }
 
+    public function showNaoLogado($id)
+    {
+        $evento = Evento::find($id);
+        $hasTrabalho = false;
+        $hasTrabalhoCoautor = false;
+        $hasFile = false;
+        $trabalhos = null;
+        $trabalhosCoautor = null;
+
+        $mytime = Carbon::now('America/Recife');
+        // dd(false);
+        return view('evento.visualizarEvento', [
+                                                'evento'              => $evento,
+                                                'trabalhos'           => $trabalhos,
+                                                'trabalhosCoautor'    => $trabalhosCoautor,
+                                                'hasTrabalho'         => $hasTrabalho,
+                                                'hasTrabalhoCoautor'  => $hasTrabalhoCoautor,
+                                                'hasFile'             => $hasFile,
+                                                'mytime'              => $mytime
+                                               ]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

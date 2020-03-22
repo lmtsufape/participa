@@ -19,7 +19,7 @@
     <div class="col-sm-4">
       <img src="{{asset('img/pc.png')}}" alt="">
     </div>
-    
+
   </div>
 
 
@@ -170,7 +170,7 @@
                         </div>
                     </p>
                     <p>
-                        <a href="{{  route('evento.visualizar',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
+                        <a href="{{  route('evento.visualizarNaoLogado',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
                     </p>
                 </div>
 
@@ -210,7 +210,7 @@
               55292-270 - Garanhuns - PE
             </small>
           </div>
-  
+
         </div>
         <div class="col-sm-3 coluna">
           <div class="row justify-content-center">
@@ -265,10 +265,10 @@
         <div class="col-sm-3 coluna ">
           <div class="row justify-content-center">
             <h3>APOIO</h3>
-  
+
           </div>
           <div class="row justify-content-center">
-  
+
             <a href="http://ww3.uag.ufrpe.br/">
               <img style="width:77px" src="{{asset('img/logoUfape.svg')}}" alt="">
             </a>
@@ -279,7 +279,7 @@
           </div>
         </div>
       </div>
-  </div>  
+  </div>
   </div>
 
 
