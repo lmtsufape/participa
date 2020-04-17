@@ -361,6 +361,7 @@
             <div class="col-sm-10">
                 <h1 class="">Trabalhos</h1>
             </div>
+
             <form method="GET" action="{{route('distribuicao')}}">
               <input type="hidden" name="eventoId" value="{{$evento->id}}">
               <div class="row justify-content-center">
@@ -371,6 +372,7 @@
                 </div>
               </div>
             </form>
+
         </div>
 
     {{-- Tabela Trabalhos --}}
@@ -1105,7 +1107,7 @@
           <div class="row">
             <div class="col-sm-12">
                 <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
-                <select class="form-control @error('areaId') is-invalid @enderror" id="areaId" name="areaId">
+                <select class="form-control @error('areaId') is-invalid @enderror" id="areaIdformDistribuicaoPorArea" name="areaId">
                     <option value="" disabled selected hidden> Área </option>
                     @foreach($areas as $area)
                         <option value="{{$area->id}}">{{$area->nome}}</option>
@@ -1121,12 +1123,12 @@
           </div>
           <div class="row">
               <div class="col-sm-12">
-                  <label for="numeroDeRevisoresPorTrabalho" class="col-form-label">{{ __('Numero de revisores por trabalho') }}</label>
+                  <label for="numeroDeRevisoresPorTrabalho" class="col-form-label">{{ __('Número de revisores por trabalho') }}</label>
               </div>
           </div>
           <div class="row justify-content-center">
               <div class="col-sm-12">
-                  <input type="text" class="form-control @error('numeroDeRevisoresPorTrabalho') is-invalid @enderror" name="numeroDeRevisoresPorTrabalho" value="{{ old('numeroDeRevisoresPorTrabalho') }}" required autocomplete="numeroDeRevisoresPorTrabalho" autofocus>
+                  <input id="numeroDeRevisoresPorTrabalhoInput" type="number" min="1" class="form-control @error('numeroDeRevisoresPorTrabalho') is-invalid @enderror" name="numeroDeRevisoresPorTrabalho" value="{{ old('numeroDeRevisoresPorTrabalho') }}" required autocomplete="numeroDeRevisoresPorTrabalho" autofocus>
 
                   @error('numeroDeRevisoresPorTrabalho')
                   <span class="invalid-feedback" role="alert">
@@ -1140,7 +1142,7 @@
       </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        <button onclick="document.getElementById('formDistribuicaoPorArea').submit();" type="button" class="btn btn-primary">Distribuir</button>
+        <button id="numeroDeRevisoresPorTrabalhoButton" disabled onclick="document.getElementById('formDistribuicaoPorArea').submit();" type="button" class="btn btn-primary">Distribuir</button>
       </div>
     </div>
   </div>
@@ -1164,7 +1166,6 @@
     $('#areas').click(function(){
         $('#dropdownAreas').slideToggle(200);
     });
-
     $('#revisores').click(function(){
             $('#dropdownRevisores').slideToggle(200);
     });
@@ -1178,37 +1179,82 @@
             $('#dropdownTrabalhos').slideToggle(200);
     });
     $('.botaoAjax').click(function(e){
-               e.preventDefault();
-               $.ajaxSetup({
-                  headers: {
-                      // 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                      'Content-Type': 'application/json',
-                      'X-Requested-With': 'XMLHttpRequest'
-                  }
-              });
-               jQuery.ajax({
-                  url: "{{ route('detalhesTrabalho') }}",
-                  method: 'get',
-                  data: {
-                     // name: jQuery('#name').val(),
-                     // type: jQuery('#type').val(),
-                     // price: jQuery('#price').val()
-                     trabalhoId: $('#trabalhoIdAjax').val()
-                  },
-                  success: function(result){
-                    // result = JSON.parse(result[0]);
-                    // console.log(result.titulo);
-                    $('#tituloTrabalhoAjax').html(result.titulo);
-                    $('#resumoTrabalhoAjax').html(result.resumo);
-                    // console.log(result.revisores);
-                    var container = $('#cblist');
-                    container.empty();
-                    result.revisores.forEach(addCheckbox);
-                     // jQuery('.alert').show();
-                     // jQuery('.alert').html(result.success);
-                  }});
-               });
+       e.preventDefault();
+       $.ajaxSetup({
+          headers: {
+              // 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+          }
+      });
+       jQuery.ajax({
+          url: "{{ route('detalhesTrabalho') }}",
+          method: 'get',
+          data: {
+             // name: jQuery('#name').val(),
+             // type: jQuery('#type').val(),
+             // price: jQuery('#price').val()
+             trabalhoId: $('#trabalhoIdAjax').val()
+          },
+          success: function(result){
+            // result = JSON.parse(result[0]);
+            // console.log(result.titulo);
+            $('#tituloTrabalhoAjax').html(result.titulo);
+            $('#resumoTrabalhoAjax').html(result.resumo);
+            // console.log(result.revisores);
+            var container = $('#cblist');
+            container.empty();
+            result.revisores.forEach(addCheckbox);
+             // jQuery('.alert').show();
+             // jQuery('.alert').html(result.success);
+          }});
+       });
+    $('#areaIdformDistribuicaoPorArea').change(function () {
+      $.ajaxSetup({
+         headers: {
+             // 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+             'Content-Type': 'application/json',
+             'X-Requested-With': 'XMLHttpRequest'
+         }
+      });
+      jQuery.ajax({
+         url: "{{ route('numeroDeRevisoresAjax') }}",
+         method: 'get',
+         data: {
+            // name: jQuery('#name').val(),
+            // type: jQuery('#type').val(),
+            // price: jQuery('#price').val()
+            areaId: $('#areaIdformDistribuicaoPorArea').val()
+         },
+         success: function(result){
+           if(result == 0){
+             $('#numeroDeRevisoresPorTrabalhoButton').prop('disabled', true);
+             alert("Não existem revisores nessa área.");
+           }
+           else{
+             if($('#numeroDeRevisoresPorTrabalhoInput').val() < 1){
+               $('#numeroDeRevisoresPorTrabalhoButton').prop('disabled', true);
+             }
+             else{
+               $('#numeroDeRevisoresPorTrabalhoButton').prop('disabled', false);
+             }
+           }
+           // $('#tituloTrabalhoAjax').html(result.titulo);
+           // $('#resumoTrabalhoAjax').html(result.resumo);
+           // $("h1, h2, p").toggleClass("blue");
+         }});
     });
+    $('#numeroDeRevisoresPorTrabalhoInput').on("input", function (){
+      if($('#numeroDeRevisoresPorTrabalhoInput').val() < 1){
+        $('#numeroDeRevisoresPorTrabalhoButton').prop('disabled', true);
+      }
+      else{
+        $('#numeroDeRevisoresPorTrabalhoButton').prop('disabled', false);
+      }
+    });
+  });
+
+
 
 
     function myFunction(item, index) {

@@ -139,7 +139,7 @@ class AtribuicaoController extends Controller
     public function distribuicaoPorArea(Request $request){
       $validatedData = $request->validate([
         'eventoId'                     => ['required', 'integer'],
-        'areaId'                       => ['required', 'integer'],
+        'areaId'                       => ['required', 'integer', 'min:1'],
         'numeroDeRevisoresPorTrabalho' => ['required', 'integer']
       ]);
 
@@ -157,6 +157,16 @@ class AtribuicaoController extends Controller
       $i = 0;
       foreach ($trabalhosArea as $trabalho) {
         for($j = 0; $j < $request->numeroDeRevisoresPorTrabalho; $j++){
+          //checar se ja existe atribuicao para esse revisor se sim entao vai pro proximo
+          $atribuicao = Atribuicao::where('revisorId', $revisoresArea[$i]->id)->where('trabalhoId', $trabalho->id)->first();
+          if($atribuicao != null){
+            $i++;
+            if($i == $numRevisores){
+              $i = 0;
+            }
+            continue;
+          }
+          // atribui para um revisor
           $atribuicao = Atribuicao::create([
             'confirmacao' => false,
             'parecer'     => 'processando',

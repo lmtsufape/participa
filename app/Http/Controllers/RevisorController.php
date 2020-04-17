@@ -115,4 +115,14 @@ class RevisorController extends Controller
     {
         //
     }
+
+    public function numeroDeRevisoresAjax(Request $request){
+      $validatedData = $request->validate([
+        'areaId' => ['required', 'string'],
+      ]);
+
+      $numeroRevisores = Revisor::where('areaId', $request->areaId)->count();
+
+      return response()->json($numeroRevisores, 200);
+    }
 }

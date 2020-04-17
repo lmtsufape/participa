@@ -18,3 +18,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/detalhesTrabalho','TrabalhoController@detalhesAjax')->name('detalhesTrabalho');
+Route::get('/numeroRevisoresPorArea','RevisorController@numeroDeRevisoresAjax')->name('numeroDeRevisoresAjax');
