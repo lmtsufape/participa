@@ -16,6 +16,7 @@ class CreateAtribuicaosTable extends Migration
         Schema::create('atribuicaos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
+            $table->softDeletes();
             $table->boolean('confirmacao');
             $table->string('parecer');
 

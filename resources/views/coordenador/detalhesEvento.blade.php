@@ -1043,48 +1043,53 @@
 
         <div class="row justify-content-center" style="margin-top:20px">
           <div class="col-sm-12">
-            <h5>Revisores</h5>
+            <h5>Remover Revisor</h5>
           </div>
         </div>
+        <form action="{{ route('atribuicao.delete') }}" method="post">
+          @csrf
+          <input type="hidden" name="eventoId" value="{{$evento->id}}">
+          <input type="hidden" name="trabalhoId" value="" id="removerRevisorTrabalhoId">
         <div class="row justify-content-center">
-          <div class="col-sm-12">
-            <form class="" action="index.html" method="post">
-
+          <div class="col-sm-9">
               <div id="revisoresAjax" class="revisoresTrabalho" style="padding-left:20px">
                 <div id="cblist">
 
                 </div>
               </div>
-            </form>
+          </div>
+          <div class="col-sm-3">
+            <button type="submit" class="btn btn-primary" id="removerRevisorTrabalho">Remover Revisor</button>
           </div>
         </div>
-
+      </form>
         <div class="row">
           <div class="col-sm-12">
             <h5>Adicionar Revisor</h5>
           </div>
         </div>
-        <div class="row" >
-          <div class="col-sm-9">
-            <div class="form-group">
-              <select class="form-control" id="selectRevisorTrabalho">
-                <option value="" disabled selected hidden> Novo Revisor </option>
-                @foreach($revisores as $revisor)
-                  <option value="{{$revisor->user->id}}">{{$revisor->user->name}}</option>
-                @endforeach
+        <form action="{{ route('distribuicaoManual') }}" method="post">
+          @csrf
+          <input type="hidden" name="trabalhoId" value="" id="distribuicaoManualTrabalhoId">
+          <input type="hidden" name="eventoId" value="{{$evento->id}}">
+          <div class="row" >
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select name="revisorId" class="form-control" id="selectRevisorTrabalho">
 
-              </select>
+
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="col-sm-3">
-            <a href="#" class="btn btn-primary" id="addRevisorTrabalho">Adicionar Revisor</a>
-          </div>
-
+            <div class="col-sm-3">
+              <button type="submit" class="btn btn-primary" id="addRevisorTrabalho">Adicionar Revisor</button>
+            </div>
+        </form>
         </div>
         </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        <button type="button" class="btn btn-primary">Salvar</button>
+
+
       </div>
     </div>
   </div>
@@ -1201,12 +1206,17 @@
             // console.log(result.titulo);
             $('#tituloTrabalhoAjax').html(result.titulo);
             $('#resumoTrabalhoAjax').html(result.resumo);
+            $('#distribuicaoManualTrabalhoId').val($('#trabalhoIdAjax').val());
+            $('#removerRevisorTrabalhoId').val($('#trabalhoIdAjax').val());
             // console.log(result.revisores);
             var container = $('#cblist');
             container.empty();
             result.revisores.forEach(addCheckbox);
-             // jQuery('.alert').show();
-             // jQuery('.alert').html(result.success);
+            var container = $('#selectRevisorTrabalho');
+            container.empty();
+            addDisabledOptionToSelect();
+            result.revisoresDisponiveis.forEach(addOptionToSelect);
+
           }});
        });
     $('#areaIdformDistribuicaoPorArea').change(function () {
@@ -1270,19 +1280,31 @@
 
        var linha = "<div class="+"row"+">"+
                     "<div class="+"col-sm-12"+">"+
-                    "<input type="+"checkbox"+" id="+"cb"+id+" value="+item.id+">"+
-                    "<label for="+"cb"+id+" style="+"margin-left:10px"+">"+item.nome+"</label>"+
+                    "<input type="+"checkbox"+" id="+"cb"+id+" name="+"revisores[]"+" value="+item.id+">"+
+                    "<label for="+"cb"+id+" style="+"margin-left:10px"+">"+item.nomeOuEmail+"</label>"+
                     "</div>"+
                     "</div>";
-      $('#cblist').append(linha);
-       // $('<input />', { type: 'checkbox', id: 'cb'+id, value: item.id }).appendTo(container);
-       // $('<label />', { 'for': 'cb'+id, text: item.nome }).appendTo(container);
+       $('#cblist').append(linha);
+    }
+    function addOptionToSelect(item) {
+       var container = $('#selectRevisorTrabalho');
+       var inputs = container.find('option');
+       var id = inputs.length+1;
+
+       var linha = "<option value="+item.id+">"+item.nomeOuEmail+"</option>";
+       $('#selectRevisorTrabalho').append(linha);
+    }
+    function addDisabledOptionToSelect() {
+       var container = $('#selectRevisorTrabalho');
+       var inputs = container.find('option');
+
+       var linha = "<option value='' disabled selected hidden> Novo Revisor </option>";
+       $('#selectRevisorTrabalho').append(linha);
     }
 
     function cadastrarCoodComissao(){
 
             document.getElementById("formCoordComissao").submit();
-            console.log('foi')
     }
 
     // var newOptions = {

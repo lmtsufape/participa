@@ -136,6 +136,7 @@ class TrabalhoController extends Controller
         'areaId'  => $areaModalidade->area->id,
         'autorId' => $autor->id,
         'eventoId'  => $evento->id,
+        'avaliado' => 'nao'
       ]);
 
       if($request->emailCoautor != null){
@@ -260,17 +261,50 @@ class TrabalhoController extends Controller
       $revisores = Atribuicao::where('trabalhoId', $request->trabalhoId)->get();
       $revisoresAux = [];
       foreach ($revisores as $key) {
-        array_push($revisoresAux, [
-          'id' => $key->revisor->user->id,
-          'nome'  => $key->revisor->user->name
-        ]);
+        if($key->revisor->user->name != null){
+          array_push($revisoresAux, [
+            'id' => $key->revisor->id,
+            'nomeOuEmail'  => $key->revisor->user->name
+          ]);
+        }
+        else{
+          array_push($revisoresAux, [
+            'id' => $key->revisor->id,
+            'nomeOuEmail'  => $key->revisor->user->email
+          ]);
+        }
       }
-
-
+      $revisoresDisponeis = Revisor::where('eventoId', $trabalho->eventoId)->where('areaId', $trabalho->areaId)->get();
+      $revisoresAux1 = [];
+      foreach ($revisoresDisponeis as $key) {
+        //verificar se ja é um revisor deste trabalhos
+        $revisorNaoExiste = true;
+        foreach ($revisoresAux as $key1) {
+          if($key->id == $key1['id']){
+            $revisorNaoExiste = false;
+          }
+        }
+        //
+        if($revisorNaoExiste){
+          if($key->user->name != null){
+            array_push($revisoresAux1, [
+              'id' => $key->id,
+              'nomeOuEmail'  => $key->user->name
+            ]);
+          }
+          else{
+            array_push($revisoresAux1, [
+              'id' => $key->id,
+              'nomeOuEmail'  => $key->user->email
+            ]);
+          }
+        }
+      }
       return response()->json([
                                'titulo' => $trabalho->titulo,
                                'resumo'  => $trabalho->resumo,
-                               'revisores' => $revisoresAux
+                               'revisores' => $revisoresAux,
+                               'revisoresDisponiveis' => $revisoresAux1
                               ], 200);
     }
 

@@ -318,9 +318,9 @@ class EventoController extends Controller
         $revisores = Revisor::where('eventoId', $evento->id)->get();
         $modalidades = Modalidade::all();
         $areaModalidades = AreaModalidade::whereIn('id', $areasId)->get();
-        $trabalhos = Trabalho::whereIn('areaId', $areasId)->get();
+        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
-        $trabalhosPendentes = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', 'processando')->count();
+        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
         $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
 
         $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();

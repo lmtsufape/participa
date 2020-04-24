@@ -131,6 +131,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
               'areaId'  => 1,
               'autorId' => $i+2,
               'eventoId' => 1,
+              'avaliado' => 'nao'
             ]);
           }
           if($i >= 20 && $i < 30){
@@ -142,6 +143,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
               'areaId'  => 2,
               'eventoId' => 1,
               'autorId' => $i+2,
+              'avaliado' => 'nao'
             ]);
           }
           if($i >= 30){
@@ -153,6 +155,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
               'areaId'  => 3,
               'eventoId' => 1,
               'autorId' => $i+2,
+              'avaliado' => 'nao'
             ]);
           }
 

@@ -20,6 +20,7 @@ class CreateTrabalhosTable extends Migration
             $table->string('autores')->nullable();
             $table->date('data')->nullable();
             $table->text('resumo')->nullable();
+            $table->text('avaliado')->nullable();
 
             $table->integer('modalidadeId');
             $table->integer('areaId');
