@@ -6,7 +6,7 @@
         <h1>{{$evento->nome}}</h1>
     </div>
 
-    <form action="{{route('evento.editar',$evento->id)}}" method="POST">
+    <form action="{{route('evento.update',$evento->id)}}" method="POST">
     @csrf
         <div class="row subtitulo">
             <div class="col-sm-12">

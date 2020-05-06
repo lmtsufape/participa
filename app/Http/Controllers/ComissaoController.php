@@ -99,12 +99,13 @@ class ComissaoController extends Controller
           array_push($ids,$ce->userId);
         }
         $users = User::find($ids);
-        return view('coordenador.detalhesEvento', [
-                                                        'evento'    => $evento,
-                                                        'areas'     => $areas,
-                                                        'revisores' => $revisores,
-                                                        'users'     => $users,
-                                                    ]);
+        // return view('coordenador.detalhesEvento', [
+        //                                                 'evento'    => $evento,
+        //                                                 'areas'     => $areas,
+        //                                                 'revisores' => $revisores,
+        //                                                 'users'     => $users,
+        //                                             ]);
+        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
     public function show($id)
