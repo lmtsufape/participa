@@ -442,7 +442,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Definir Submissões do Trabalho</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Informe o número de trabalhos que cada autor poderá enviar e o número de trabalhos em que um usuário poderá ser um coautor</h6>
-                    <form method="POST" action="{{route('modalidade.store')}}">
+                    <form method="POST" action="{{route('trabalho.numTrabalhos')}}">
                     @csrf
                     <p class="card-text">
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
@@ -844,7 +844,7 @@
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-sm-6">
+        <div class="col-sm-10">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Revisores</h5>
@@ -854,7 +854,17 @@
                         <p class="card-text">
                             <input type="hidden" name="eventoId" value="{{$evento->id}}">
                             <div class="row justify-content-center">
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
+                                    <label for="nomeRevisor" class="col-form-label">{{ __('Nome do Revisor') }}</label>
+                                    <input id="nomeRevisor" type="text" class="form-control @error('nomeRevisor') is-invalid @enderror" name="nomeRevisor" value="{{ old('nomeRevisor') }}" required autocomplete="nomeRevisor" autofocus>
+
+                                    @error('nomeRevisor')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-4">
                                     <label for="emailRevisor" class="col-form-label">{{ __('Email do Revisor') }}</label>
                                     <input id="emailRevisor" type="text" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{ old('emailRevisor') }}" required autocomplete="emailRevisor" autofocus>
 
@@ -864,7 +874,7 @@
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <label for="areaRevisor" class="col-form-label">{{ __('Área') }}</label>
                                     <select class="form-control @error('areaRevisor') is-invalid @enderror" id="areaRevisor" name="areaRevisor">
                                         <option value="" disabled selected hidden>-- Área --</option>
@@ -923,6 +933,7 @@
                             <th scope="col" style="text-align:center">Em Andamento</th>
                             <th scope="col" style="text-align:center">Finalizados</th>
                             <th scope="col" style="text-align:center">Visualizar</th>
+                            <th scope="col" style="text-align:center">Lembrar</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -937,10 +948,29 @@
                                   <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                                 </a>
                               </td>
+                              <td style="text-align:center">
+                                  <form action="{{route('revisor.email')}}" method="POST" >
+                                    @csrf
+                                      <input type="hidden" name="user" value= '@json($revisor->user)'>
+                                      <button class="btn btn-primary btn-sm" type="submit">
+                                          Enviar e-mail
+                                      </button>
+                                  </form>
+                              </td>
                             </tr>
                           @endforeach
                         </tbody>
                       </table>
+                      @if(count($revs) > 0 && isset($revs))
+                        <form action="{{route('revisor.emailTodos')}}" method="POST" >
+                            @csrf
+                              <input type="hidden" name="revisores" value='@json($revs)'>
+                              <button class="btn btn-primary btn-sm" type="submit">
+                                  Lembrar todos
+                              </button>
+                          </form>
+                      @endif
+                      
                   </p>
 
                 </div>
