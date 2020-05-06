@@ -2363,6 +2363,7 @@
         },
         {
             "name": "symfony/http-foundation",
+
             "version": "v4.4.8",
             "source": {
                 "type": "git",
