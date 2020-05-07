@@ -323,16 +323,30 @@
                                     <th>Especialidade</th>
                                     <th>Celular</th>
                                     <th>E-mail</th>
+                                    <th>Direção</th>
                                 </th>
                             </thead>
                                 @foreach ($users as $user)
                                     <tbody>
 
                                         <th>
+                                          @if (isset($user->name))
                                             <td>{{$user->name}}</td>
                                             <td>{{$user->especProfissional}}</td>
                                             <td>{{$user->celular}}</td>
                                             <td>{{$user->email}}</td>
+                                            @if ($evento->coordComissaoId == $user->id)
+                                              <td>Coordenador</td>
+                                            @endif
+                                          @else
+                                            <td>Usuário temporário - Sem nome</td>
+                                            <td>Usuário temporário - Sem Especialidade</td>
+                                            <td>Usuário temporário - Sem Celular</td>
+                                            <td>{{$user->email}}</td>
+                                            @if ($evento->coordComissaoId == $user->id)
+                                              <td>Coordenador</td>
+                                            @endif
+                                          @endif
                                         </th>
                                     </tbody>
                                 @endforeach
@@ -383,6 +397,7 @@
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Área</th>
+              <th scope="col">Modalidade</th>
               <th scope="col">Revisores</th>
               <th scope="col" style="text-align:center">Baixar</th>
               <th scope="col" style="text-align:center">Visualizar</th>
@@ -395,6 +410,7 @@
             <tr>
               <td>{{$trabalho->id}}</td>
               <td>{{$trabalho->area->nome}}</td>
+              <td>{{$trabalho->modalidade->nome}}</td>
               <td>
                 @foreach($trabalho->atribuicao as $atribuicao)
                 {{$atribuicao->revisor->user->email}},

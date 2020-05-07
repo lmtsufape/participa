@@ -57,6 +57,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::get(   '/evento/visualizar/{id}','EventoController@show'                      )->name('evento.visualizar');
   Route::delete('/evento/excluir/{id}',   'EventoController@destroy'                   )->name('evento.deletar');
   Route::get(   '/evento/editar/{id}',    'EventoController@edit'                      )->name('evento.editar');
+  Route::post(   '/evento/editar/{id}',    'EventoController@update'                      )->name('evento.update');
   Route::post(  '/evento/setResumo',      'EventoController@setResumo'                 )->name('evento.setResumo');
   Route::post(  '/evento/setFoto',        'EventoController@setFotoEvento'             )->name('evento.setFotoEvento');
   Route::post(  '/evento/numTrabalhos',    'EventoController@numTrabalhos'             )->name('trabalho.numTrabalhos');

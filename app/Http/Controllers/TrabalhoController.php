@@ -35,8 +35,8 @@ class TrabalhoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::all();
-        $areaModalidades = AreaModalidade::whereIn('id', $areasId)->get();
+        $modalidades = Modalidade::all();        
+        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();        
         $areasEnomes = Area::wherein('id', $areasId)->get();
         $modalidadesIDeNome = [];
         foreach ($areaModalidades as $key) {
