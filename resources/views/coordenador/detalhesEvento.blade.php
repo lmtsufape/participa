@@ -397,6 +397,7 @@
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Área</th>
+              <th scope="col">Modalidade</th>
               <th scope="col">Revisores</th>
               <th scope="col" style="text-align:center">Baixar</th>
               <th scope="col" style="text-align:center">Visualizar</th>
@@ -409,6 +410,7 @@
             <tr>
               <td>{{$trabalho->id}}</td>
               <td>{{$trabalho->area->nome}}</td>
+              <td>{{$trabalho->modalidade->nome}}</td>
               <td>
                 @foreach($trabalho->atribuicao as $atribuicao)
                 {{$atribuicao->revisor->user->email}},
