@@ -80,5 +80,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/removerAtribuicao',     'AtribuicaoController@deletePorRevisores'    )->name('atribuicao.delete');
   // rota downloadArquivo
   Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
+  // Area do participante
+  Route::get(   '/participante',       'EventoController@areaParticipante'             )->name('area.participante');
 
 });

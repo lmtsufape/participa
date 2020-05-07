@@ -68,10 +68,17 @@
                                         {{ __('Minha Conta') }}
                                     </a>
 
-                                    {{-- Link Trabalhos --}}
-                                    <a class="dropdown-item" href="{{ route('user.meusTrabalhos') }}">
+                                    {{-- Coordenador --}}
+                                    <a class="dropdown-item" href="{{ route('home') }}">
                                         <img src="{{asset('img/icons/file-alt-regular-black.svg')}}" alt="">
-                                        {{ __('Trabalhos Submetidos') }}
+                                        {{ __('Coordenador') }}
+                                    </a>
+
+                                    {{-- Link Trabalhos --}}
+                                    {{-- <a class="dropdown-item" href="{{ route('user.meusTrabalhos') }}"> --}}
+                                    <a class="dropdown-item" href="{{ route('area.participante') }}">
+                                        <img src="{{asset('img/icons/file-alt-regular-black.svg')}}" alt="">
+                                        {{ __('Participante') }}
                                     </a>
 
                                     {{-- Link Logout --}}

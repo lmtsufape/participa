@@ -24,7 +24,8 @@ class EventoController extends Controller
     {
         //
         $eventos = Evento::all();
-        // dd($eventos);
+        $eventos = Evento::where('coordenadorId', Auth::user()->id)->get();
+        
         return view('coordenador.home',['eventos'=>$eventos]);
 
     }
@@ -394,6 +395,14 @@ class EventoController extends Controller
       $evento->fotoEvento = $path . $nome;
       $evento->save();
       return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+    }
+
+    public function areaParticipante() {
+
+      $eventos = Evento::all();
+      
+      return view('user.areaParticipante',['eventos'=>$eventos]);
+
     }
 
 
