@@ -9,6 +9,8 @@ use App\Revisor;
 use App\User;
 use App\Trabalho;
 use App\Area;
+use App\Mail\EmailLembrete;
+use Illuminate\Support\Facades\Mail;
 
 class AtribuicaoController extends Controller
 {
@@ -215,6 +217,11 @@ class AtribuicaoController extends Controller
       $revisor = Revisor::find($request->revisorId);
       $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
       $revisor->save();
+
+      $subject = "Trabalho atribuido";
+      $informacoes = $trabalho->titulo;
+      Mail::to($revisor->user->email)
+            ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
 
       return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
