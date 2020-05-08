@@ -201,7 +201,7 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('perfil') }}">
+    <form method="POST" action="{{ route('perfil.userTemp') }}">
         @csrf
         <div class="row justify-content-center">
             <input hidden name="id" value="{{$user->id}}">
