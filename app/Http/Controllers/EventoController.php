@@ -24,9 +24,10 @@ class EventoController extends Controller
     {
         //
         $eventos = Evento::all();
+        $comissaoEvento = ComissaoEvento::all();
         $eventos = Evento::where('coordenadorId', Auth::user()->id)->get();
         
-        return view('coordenador.home',['eventos'=>$eventos]);
+        return view('coordenador.home',['eventos'=>$eventos, 'comissaoEvento'=>$comissaoEvento]);
 
     }
 
@@ -403,6 +404,33 @@ class EventoController extends Controller
       
       return view('user.areaParticipante',['eventos'=>$eventos]);
 
+    }
+
+    public function listComissao() {
+
+      $comissaoEvento = ComissaoEvento::where('userId', Auth::user()->id)->get();
+      $eventos = Evento::all();
+      $evnts = [];
+
+      foreach ($comissaoEvento as $comissao) {
+        foreach ($eventos as $evento) {
+          if($comissao->eventosId == $evento->id){
+            array_push($evnts,$evento);
+          }
+        }
+      }
+      
+      return view('user.comissoes',['eventos'=>$evnts]);
+
+    }
+
+    public function listComissaoTrabalhos(Request $request) {
+
+      $evento = Evento::find($request->eventoId);
+      $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+      $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
+      
+      return view('user.areaComissao', ['trabalhos' => $trabalhos]);
     }
 
 

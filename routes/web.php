@@ -83,6 +83,9 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   // rota downloadArquivo
   Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
   // Area do participante
-  Route::get(   '/participante',       'EventoController@areaParticipante'             )->name('area.participante');
+  Route::get(   '/participante',          'EventoController@areaParticipante'          )->name('area.participante');
+  // Area da comissao
+  Route::get(   '/comissoes',             'EventoController@listComissao'              )->name('comissoes');
+  Route::get(   '/area/comissao',         'EventoController@listComissaoTrabalhos'     )->name('area.comissao');
 
 });
