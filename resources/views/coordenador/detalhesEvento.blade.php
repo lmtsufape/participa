@@ -969,6 +969,7 @@
                             <th scope="col" style="text-align:center">Finalizados</th>
                             <th scope="col" style="text-align:center">Visualizar</th>
                             <th scope="col" style="text-align:center">Lembrar</th>
+                            <th scope="col" style="text-align:center">Remover</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -991,6 +992,15 @@
                                           Enviar e-mail
                                       </button>
                                   </form>
+                              </td>
+                              <td>
+                                <form method="POST" action="{{route('revisor.delete', ['eventoId' => $evento->id, 'userId' => $revisor->user->id])}}">
+                                  {{ csrf_field() }}
+                                  {{ method_field('DELETE') }}
+                                  <button type="submit" class="dropdown-item">
+                                    <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
+                                  </button>
+                                </form>
                               </td>
                             </tr>
                           @endforeach
