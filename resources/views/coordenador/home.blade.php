@@ -9,7 +9,7 @@
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-8">
-                    <h1>Meus Eventos</h1>
+                    <h1>Eventos</h1>
                 </div>
                 <div class="col-sm-2">
                     <a href="{{route('comissoes')}}" class="btn btn-primary">Comissões</a>

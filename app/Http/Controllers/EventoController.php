@@ -24,10 +24,10 @@ class EventoController extends Controller
     {
         //
         $eventos = Evento::all();
-        $comissaoEvento = ComissaoEvento::all();
-        $eventos = Evento::where('coordenadorId', Auth::user()->id)->get();
+        // $comissaoEvento = ComissaoEvento::all();
+        // $eventos = Evento::where('coordenadorId', Auth::user()->id)->get();
         
-        return view('coordenador.home',['eventos'=>$eventos, 'comissaoEvento'=>$comissaoEvento]);
+        return view('coordenador.home',['eventos'=>$eventos]);
 
     }
 

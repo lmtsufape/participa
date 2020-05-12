@@ -12,7 +12,7 @@
                     <h1>Comissões</h1>
                 </div>
                 <div class="col-sm-2">
-                    <a href="{{route('comissoes')}}" class="btn btn-primary">Meus Eventos</a>
+                    <a href="{{route('home')}}" class="btn btn-primary">Eventos</a>
                 </div>
             </div>
         </div>

@@ -55,7 +55,7 @@
                 <h1>Meus Trabalhos</h1>
               </div>
               <div class="col-sm-2">
-                <a href="{{route('area.participante')}}" class="btn btn-primary">Eventos</a>
+                <a href="{{route('home')}}" class="btn btn-primary">Eventos</a>
               </div>
             </div>
         </div>
