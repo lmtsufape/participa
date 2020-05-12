@@ -87,8 +87,11 @@ class AreaController extends Controller
      * @param  \App\Area  $area
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Area $area)
+    public function destroy($id)
     {
-        //
+        $area = Area::find($id);
+        $area->delete();
+
+        return redirect()->back();
     }
 }

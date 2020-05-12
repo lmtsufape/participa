@@ -856,8 +856,14 @@
                             <tr>
                               <th scope="row">{{$area->id}}</th>
                               <td>{{$area->nome}}</td>
-                              <td style="text-align:center">
-                                <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
+                              <td>
+                                <form method="POST" action="{{route('area.delete', $area->id)}}">
+                                  {{ csrf_field() }}
+                                  {{ method_field('DELETE') }}
+                                  <button type="submit" class="dropdown-item">
+                                    <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
+                                  </button>
+                                </form>
                               </td>
                             </tr>
                           @endforeach
