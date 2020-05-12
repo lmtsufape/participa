@@ -51,6 +51,8 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   // Cadastrar Comissão
   Route::post('/evento/cadastrarComissao','ComissaoController@store'                   )->name('cadastrar.comissao');
   Route::post('/evento/cadastrarCoordComissao','ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
+  // Deletar Comissão
+  Route::delete('/evento/apagar-comissao/','ComissaoController@destroy')->name('delete.comissao');
   //Evento
   Route::get(   '/evento/criar',          'EventoController@create'                    )->name('evento.criar');
   Route::post(  '/evento/criar',          'EventoController@store'                     )->name('evento.criar');
