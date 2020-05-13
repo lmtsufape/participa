@@ -35,7 +35,6 @@ Auth::routes(['verify' => true]);
 
 Route::get('/perfil','UserController@perfil')->name('perfil')->middleware(['auth', 'verified']);
 Route::post('/perfil','UserController@editarPerfil')->name('perfil')->middleware(['auth', 'verified']);
-Route::post('/perfil','UserController@editarPerfilTemp')->name('perfil.userTemp')->middleware(['auth', 'verified']);
 
 
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
