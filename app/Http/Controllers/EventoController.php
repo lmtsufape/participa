@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Area;
+use App\Atividade;
 use App\Evento;
 use App\Coautor;
 use App\Revisor;
@@ -303,8 +304,30 @@ class EventoController extends Controller
     public function destroy($id)
     {
         $evento = Evento::find($id);
-        // dd($id);
         $endereco = Endereco::find($evento->enderecoId);
+
+        $areas = Area::where('eventoId', $id);
+        $atividades = Atividade::where('eventoId', $id);
+        $comissao = ComissaoEvento::where('eventosId', $id);
+        $revisores = Revisor::where('eventoId', $id);
+        $trabalhos = Trabalho::where('eventoId', $id);
+        
+        if(isset($areas)){
+            $areas->delete();
+        }
+        if(isset($atividades)){
+            $atividades->delete();
+        }
+        if(isset($comissao)){
+            $comissao->delete();    
+        }
+        if(isset($revisores)){
+          $revisores->delete();    
+        }
+        if(isset($trabalhos)){
+          $trabalhos->delete();    
+        }
+
         $evento->delete();
         $endereco->delete();
 
