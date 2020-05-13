@@ -16,7 +16,11 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Endereco;
+use App\Mail\EventoCriado;
+use Illuminate\Support\Facades\Mail;
+
 
 class EventoController extends Controller
 {
@@ -164,6 +168,11 @@ class EventoController extends Controller
 
         $evento->coordenadorId = Auth::user()->id;
         $evento->save();
+
+        $user = Auth::user();
+        $subject = "Evento Criado";
+        Mail::to($user->email)
+            ->send(new EventoCriado($user, $subject));
 
         return redirect()->route('coord.home');
     }
@@ -319,7 +328,7 @@ class EventoController extends Controller
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
         $revisores = Revisor::where('eventoId', $evento->id)->get();
         $modalidades = Modalidade::all();
-        $areaModalidades = AreaModalidade::whereIn('id', $areasId)->get();
+        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();        
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
@@ -329,11 +338,13 @@ class EventoController extends Controller
         $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
         // $atribuicoesProcessando
         // dd($trabalhosEnviados);
+        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
 
         return view('coordenador.detalhesEvento', [
                                                     'evento'                  => $evento,
                                                     'areas'                   => $areas,
                                                     'revisores'               => $revisores,
+                                                    'revs'                    => $revs,
                                                     'users'                   => $users,
                                                     'modalidades'             => $modalidades,
                                                     'areaModalidades'         => $areaModalidades,

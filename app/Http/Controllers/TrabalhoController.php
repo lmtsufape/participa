@@ -18,7 +18,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Mail\SubmissaoTrabalho;
 
 class TrabalhoController extends Controller
 {
@@ -33,8 +35,8 @@ class TrabalhoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::all();
-        $areaModalidades = AreaModalidade::whereIn('id', $areasId)->get();
+        $modalidades = Modalidade::all();        
+        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();        
         $areasEnomes = Area::wherein('id', $areasId)->get();
         $modalidadesIDeNome = [];
         foreach ($areaModalidades as $key) {
@@ -97,7 +99,7 @@ class TrabalhoController extends Controller
       $autor = Auth::user();
       $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->count();
       $areaModalidade = AreaModalidade::where('areaId', $request->areaId)->where('modalidadeId', $request->modalidadeId)->first();
-
+      Log::debug('Numero de trabalhos' . $evento);
       if($trabalhosDoAutor >= $evento->numMaxTrabalhos){
         return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.']);
       }
@@ -160,6 +162,16 @@ class TrabalhoController extends Controller
         'trabalhoId'  => $trabalho->id,
         'versaoFinal' => true,
       ]);
+      $subject = "Submissão de Trabalho";
+      Mail::to($autor->email)
+            ->send(new SubmissaoTrabalho($autor, $subject));
+      if($request->emailCoautor != null){
+        foreach ($request->emailCoautor as $key) {
+          $userCoautor = User::where('email', $key)->first();
+          Mail::to($userCoautor->email)
+            ->send(new SubmissaoTrabalho($userCoautor, $subject));
+        }
+      }
 
       return redirect()->route('evento.visualizar',['id'=>$request->eventoId]);
     }

@@ -53,6 +53,8 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   // Cadastrar Comissão
   Route::post('/evento/cadastrarComissao','ComissaoController@store'                   )->name('cadastrar.comissao');
   Route::post('/evento/cadastrarCoordComissao','ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
+  // Deletar Comissão
+  Route::delete('/evento/apagar-comissao/','ComissaoController@destroy')->name('delete.comissao');
   //Evento
   Route::get(   '/evento/criar',          'EventoController@create'                    )->name('evento.criar');
   Route::post(  '/evento/criar',          'EventoController@store'                     )->name('evento.criar');
@@ -62,13 +64,20 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(   '/evento/editar/{id}',    'EventoController@update'                      )->name('evento.update');
   Route::post(  '/evento/setResumo',      'EventoController@setResumo'                 )->name('evento.setResumo');
   Route::post(  '/evento/setFoto',        'EventoController@setFotoEvento'             )->name('evento.setFotoEvento');
+  Route::post(  '/evento/numTrabalhos',    'EventoController@numTrabalhos'             )->name('trabalho.numTrabalhos');
   //Modalidade
   Route::post(  '/modalidade/criar',      'ModalidadeController@store'                 )->name('modalidade.store');
   //Area
   Route::post(  '/area/criar',            'AreaController@store'                       )->name('area.store');
+  //Deletar Area
+  Route::delete('/area/deletar/{id}',          'AreaController@destroy'                     )->name('area.delete');
   //Revisores
   Route::post(  '/revisor/criar',         'RevisorController@store'                    )->name('revisor.store');
   Route::get(   '/revisor/listarTrabalhos','RevisorController@indexListarTrabalhos'    )->name('revisor.listarTrabalhos');
+  Route::post(  '/revisor/email',         'RevisorController@enviarEmailRevisor'       )->name('revisor.email');
+  Route::post(  '/revisor/emailTodos',    'RevisorController@enviarEmailTodosRevisores')->name('revisor.emailTodos');
+  //Deletar Revisores
+  Route::delete(  '/revisor/apagar',      'RevisorController@destroy'                  )->name('revisor.delete');
   //AreaModalidade
   Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
   //Trabalho

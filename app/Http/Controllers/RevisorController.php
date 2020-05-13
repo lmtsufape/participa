@@ -7,10 +7,13 @@ use App\User;
 use App\Evento;
 use Illuminate\Http\Request;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
+use App\Mail\EmailLembrete;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
+ 
 class RevisorController extends Controller
 {
     /**
@@ -43,6 +46,7 @@ class RevisorController extends Controller
     {
         $validatedData = $request->validate([
           'emailRevisor' => ['required', 'string', 'email', 'max:255'],
+          'nomeRevisor' => ['required', 'string', 'max:255'],
           'areaRevisor'  => ['required', 'integer'],
         ]);
 
@@ -54,6 +58,7 @@ class RevisorController extends Controller
           Mail::to($request->emailRevisor)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Revisor', $evento->nome, $passwordTemporario));
           $usuario = User::create([
             'email' => $request->emailRevisor,
+            'name' => $request->nomeRevisor,
             'password' => bcrypt($passwordTemporario),
             'usuarioTemp' => true,
           ]);
@@ -111,9 +116,14 @@ class RevisorController extends Controller
      * @param  \App\Revisor  $revisor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Revisor $revisor)
+    public function destroy(Request $request)
     {
-        //
+        $revisor = Revisor::where('eventoId', $request->eventoId)
+        ->where('revisorId', $request->userId);
+        // dd($revisor);
+        $revisor->delete();
+
+        return redirect()->back();
     }
 
     public function numeroDeRevisoresAjax(Request $request){
@@ -124,5 +134,31 @@ class RevisorController extends Controller
       $numeroRevisores = Revisor::where('areaId', $request->areaId)->count();
 
       return response()->json($numeroRevisores, 200);
+    }
+
+    public function enviarEmailRevisor(Request $request){
+        $subject = "Lembrete Controller Um";
+
+        $user = json_decode($request->input('user'));
+        //Log::debug('Revisores ' . gettype($user));
+        //Log::debug('Revisores ' . $request->input('user'));
+
+        Mail::to($user->email)
+            ->send(new EmailLembrete($user, $subject));
+
+        return redirect()->back();
+    }
+    public function enviarEmailTodosRevisores(Request $request){
+        $subject = "Lembrete Controller Todos";
+        
+        $revisores = json_decode($request->input('revisores')) ;
+
+        foreach ($revisores as $revisor) {
+            $user = $revisor->user;
+            Mail::to($user->email)
+            ->send(new EmailLembrete($user, $subject));                
+        }
+
+        return redirect()->back();
     }
 }
