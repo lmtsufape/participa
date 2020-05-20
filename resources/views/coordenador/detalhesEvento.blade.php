@@ -324,6 +324,7 @@
                                     <th>Celular</th>
                                     <th>E-mail</th>
                                     <th>Direção</th>
+                                    <th>Remover</th>
                                 </th>
                             </thead>
                                 @foreach ($users as $user)
@@ -338,6 +339,15 @@
                                             @if ($evento->coordComissaoId == $user->id)
                                               <td>Coordenador</td>
                                             @endif
+                                            <td>
+                                              <form method="POST" action="{{route('delete.comissao', ['eventosId'=>$evento->id, 'userId'=>$user->id])}}">
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
+                                                <button type="submit" class="dropdown-item">
+                                                  <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
+                                                </button>
+                                              </form>
+                                            </td>
                                           @else
                                             <td>Usuário temporário - Sem nome</td>
                                             <td>Usuário temporário - Sem Especialidade</td>
@@ -346,6 +356,15 @@
                                             @if ($evento->coordComissaoId == $user->id)
                                               <td>Coordenador</td>
                                             @endif
+                                            <td>
+                                              <form method="POST" action="{{route('delete.comissao', ['eventosId'=>$evento->id, 'userId'=>$user->id])}}">
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
+                                                <button type="submit" class="dropdown-item">
+                                                  <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
+                                                </button>
+                                              </form>
+                                            </td>
                                           @endif
                                         </th>
                                     </tbody>
@@ -837,8 +856,14 @@
                             <tr>
                               <th scope="row">{{$area->id}}</th>
                               <td>{{$area->nome}}</td>
-                              <td style="text-align:center">
-                                <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
+                              <td>
+                                <form method="POST" action="{{route('area.delete', $area->id)}}">
+                                  {{ csrf_field() }}
+                                  {{ method_field('DELETE') }}
+                                  <button type="submit" class="dropdown-item">
+                                    <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
+                                  </button>
+                                </form>
                               </td>
                             </tr>
                           @endforeach
@@ -950,6 +975,7 @@
                             <th scope="col" style="text-align:center">Finalizados</th>
                             <th scope="col" style="text-align:center">Visualizar</th>
                             <th scope="col" style="text-align:center">Lembrar</th>
+                            <th scope="col" style="text-align:center">Remover</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -972,6 +998,15 @@
                                           Enviar e-mail
                                       </button>
                                   </form>
+                              </td>
+                              <td>
+                                <form method="POST" action="{{route('revisor.delete', ['eventoId' => $evento->id, 'userId' => $revisor->user->id])}}">
+                                  {{ csrf_field() }}
+                                  {{ method_field('DELETE') }}
+                                  <button type="submit" class="dropdown-item">
+                                    <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
+                                  </button>
+                                </form>
                               </td>
                             </tr>
                           @endforeach

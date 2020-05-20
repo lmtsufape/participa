@@ -57,6 +57,7 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
+
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
@@ -69,11 +70,22 @@
                                     </a>
 
                                     {{-- Link Trabalhos --}}
+                                    {{-- <a class="dropdown-item" href="{{ route('user.meusTrabalhos') }}"> --}}
                                     <a class="dropdown-item" href="{{ route('user.meusTrabalhos') }}">
                                         <img src="{{asset('img/icons/file-alt-regular-black.svg')}}" alt="">
-                                        {{ __('Trabalhos Submetidos') }}
+                                        {{ __('Participante') }}
                                     </a>
 
+                                    {{-- Comissão --}}
+                                    {{-- @foreach ($comissaoEvento as $comissao)
+                                        @if($comissaoEvento->userId == Auth()->user()->id)
+                                            <a class="dropdown-item" href="{{ route('area.comissao') }}">
+                                                <img src="{{asset('img/icons/file-alt-regular-black.svg')}}" alt="">
+                                                {{ __('Comissão') }}
+                                            </a>
+                                        @endif    
+                                    @endforeach --}}
+                                    
                                     {{-- Link Logout --}}
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
