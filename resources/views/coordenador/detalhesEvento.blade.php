@@ -101,6 +101,25 @@
                     </a>
                 </div>
             </a>
+            <a id="publicar">
+              <li>
+                <img src="{{ asset('img/icons/publish.svg') }}" alt=""><h5>Publicar</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+              </li>
+              <div id="dropdownPublicar" style="background-color: gray">
+                <a id="publicarEvento" onclick="habilitarEvento()">
+                  <form id="habilitarEventoForm" method="GET" action="{{route('evento.habilitar', ['id' => $evento->id])}}"></form>
+                    <li>
+                        <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Publicar Evento</h5>
+                    </li>
+                </a>
+                <a id="desabilitarEventoPublicado" onclick="desabilitarEvento()">
+                  <form id="desabilitarEventoForm" method="GET" action="{{route('evento.desabilitar', ['id' => $evento->id])}}"></form>
+                    <li>
+                        <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Desfazer publicação</h5>
+                    </li>
+                </a>
+            </div>
+            </a>
             <!-- <a id="colocacao" onclick="habilitarPagina('colocacao')">
                 <li>
                     <img src="{{asset('img/icons/trophy-solid.svg')}}" alt=""><h5>Classificação</h5>
@@ -120,6 +139,14 @@
 @section('content')
 
 <div class="main_content">
+  {{-- mensagem de confimação --}}
+  @if(session('mensagem'))
+    <div class="col-md-12" style="margin-top: 5px;">
+        <div class="alert alert-success">
+            <p>{{session('mensagem')}}</p>
+        </div>
+    </div>
+  @endif
     {{-- {{ $evento->id ?? '' }} --}}
     {{-- Informações --}}
     <div id="divInformacoes" class="informacoes">
@@ -324,7 +351,6 @@
                                     <th>Celular</th>
                                     <th>E-mail</th>
                                     <th>Direção</th>
-                                    <th>Remover</th>
                                 </th>
                             </thead>
                                 @foreach ($users as $user)
@@ -339,15 +365,6 @@
                                             @if ($evento->coordComissaoId == $user->id)
                                               <td>Coordenador</td>
                                             @endif
-                                            <td>
-                                              <form method="POST" action="{{route('delete.comissao', ['eventosId'=>$evento->id, 'userId'=>$user->id])}}">
-                                                {{ csrf_field() }}
-                                                {{ method_field('DELETE') }}
-                                                <button type="submit" class="dropdown-item">
-                                                  <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
-                                                </button>
-                                              </form>
-                                            </td>
                                           @else
                                             <td>Usuário temporário - Sem nome</td>
                                             <td>Usuário temporário - Sem Especialidade</td>
@@ -356,15 +373,6 @@
                                             @if ($evento->coordComissaoId == $user->id)
                                               <td>Coordenador</td>
                                             @endif
-                                            <td>
-                                              <form method="POST" action="{{route('delete.comissao', ['eventosId'=>$evento->id, 'userId'=>$user->id])}}">
-                                                {{ csrf_field() }}
-                                                {{ method_field('DELETE') }}
-                                                <button type="submit" class="dropdown-item">
-                                                  <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
-                                                </button>
-                                              </form>
-                                            </td>
                                           @endif
                                         </th>
                                     </tbody>
@@ -856,14 +864,8 @@
                             <tr>
                               <th scope="row">{{$area->id}}</th>
                               <td>{{$area->nome}}</td>
-                              <td>
-                                <form method="POST" action="{{route('area.delete', $area->id)}}">
-                                  {{ csrf_field() }}
-                                  {{ method_field('DELETE') }}
-                                  <button type="submit" class="dropdown-item">
-                                    <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
-                                  </button>
-                                </form>
+                              <td style="text-align:center">
+                                <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
                               </td>
                             </tr>
                           @endforeach
@@ -975,7 +977,6 @@
                             <th scope="col" style="text-align:center">Finalizados</th>
                             <th scope="col" style="text-align:center">Visualizar</th>
                             <th scope="col" style="text-align:center">Lembrar</th>
-                            <th scope="col" style="text-align:center">Remover</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -998,15 +999,6 @@
                                           Enviar e-mail
                                       </button>
                                   </form>
-                              </td>
-                              <td>
-                                <form method="POST" action="{{route('revisor.delete', ['eventoId' => $evento->id, 'userId' => $revisor->user->id])}}">
-                                  {{ csrf_field() }}
-                                  {{ method_field('DELETE') }}
-                                  <button type="submit" class="dropdown-item">
-                                    <img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:15px">
-                                  </button>
-                                </form>
                               </td>
                             </tr>
                           @endforeach
@@ -1244,6 +1236,16 @@
 @section('javascript')
   <script type="text/javascript" >
 
+  function habilitarEvento() {
+    var form = document.getElementById("habilitarEventoForm");
+    form.submit();
+  }
+
+  function desabilitarEvento() {
+    var form = document.getElementById("desabilitarEventoForm");
+    form.submit();
+  }
+
   function trabalhoId(x){
     document.getElementById('trabalhoIdAjax').value = x;
   }
@@ -1263,6 +1265,9 @@
     });
     $('#trabalhos').click(function(){
             $('#dropdownTrabalhos').slideToggle(200);
+    });
+    $('#publicar').click(function(){
+            $('#dropdownPublicar').slideToggle(200);
     });
     $('.botaoAjax').click(function(e){
        e.preventDefault();

@@ -214,6 +214,12 @@ body{
 #dropdownTrabalhos h5{
     font-size: 11px;
 }
+#dropdownPublicar{
+    display: none;
+}
+#dropdownPublicar h5{
+    font-size: 11px;
+}
 
 .arrow{
     float:right;

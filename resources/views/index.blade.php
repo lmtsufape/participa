@@ -108,6 +108,7 @@
 
       <div class="row">
         @foreach ($eventos as $evento)
+          @if($evento->publicado) 
             <div class="card" style="width: 18rem;">
                 @if(isset($evento->fotoEvento))
                   <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
@@ -175,6 +176,7 @@
                 </div>
 
             </div>
+          @endif
         @endforeach
       </div>
 

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Area;
-use App\Atividade;
 use App\Evento;
 use App\Coautor;
 use App\Revisor;
@@ -29,9 +28,7 @@ class EventoController extends Controller
     {
         //
         $eventos = Evento::all();
-        // $comissaoEvento = ComissaoEvento::all();
-        // $eventos = Evento::where('coordenadorId', Auth::user()->id)->get();
-        
+        // dd($eventos);
         return view('coordenador.home',['eventos'=>$eventos]);
 
     }
@@ -143,6 +140,7 @@ class EventoController extends Controller
           'fimRevisao'          => $request->fimRevisao,
           'inicioResultado'     => $request->inicioResultado,
           'fimResultado'        => $request->fimResultado,
+          'publicado'           => false,
           // 'possuiTaxa'          => $request->possuiTaxa,
           // 'valorTaxa'           => $request->valorTaxa,
           'enderecoId'          => $endereco->id,
@@ -304,30 +302,8 @@ class EventoController extends Controller
     public function destroy($id)
     {
         $evento = Evento::find($id);
+        // dd($id);
         $endereco = Endereco::find($evento->enderecoId);
-
-        $areas = Area::where('eventoId', $id);
-        $atividades = Atividade::where('eventoId', $id);
-        $comissao = ComissaoEvento::where('eventosId', $id);
-        $revisores = Revisor::where('eventoId', $id);
-        $trabalhos = Trabalho::where('eventoId', $id);
-        
-        if(isset($areas)){
-            $areas->delete();
-        }
-        if(isset($atividades)){
-            $atividades->delete();
-        }
-        if(isset($comissao)){
-            $comissao->delete();    
-        }
-        if(isset($revisores)){
-          $revisores->delete();    
-        }
-        if(isset($trabalhos)){
-          $trabalhos->delete();    
-        }
-
         $evento->delete();
         $endereco->delete();
 
@@ -432,40 +408,17 @@ class EventoController extends Controller
       return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
-    public function areaParticipante() {
-
-      $eventos = Evento::all();
-      
-      return view('user.areaParticipante',['eventos'=>$eventos]);
-
+    public function habilitar($id) {
+      $evento = Evento::find($id);
+      $evento->publicado = true;
+      $evento->update();
+      return redirect()->back()->with('mensagem', 'O evento foi exposto ao público.');
     }
 
-    public function listComissao() {
-
-      $comissaoEvento = ComissaoEvento::where('userId', Auth::user()->id)->get();
-      $eventos = Evento::all();
-      $evnts = [];
-
-      foreach ($comissaoEvento as $comissao) {
-        foreach ($eventos as $evento) {
-          if($comissao->eventosId == $evento->id){
-            array_push($evnts,$evento);
-          }
-        }
-      }
-      
-      return view('user.comissoes',['eventos'=>$evnts]);
-
+    public function desabilitar($id) {
+      $evento = Evento::find($id);
+      $evento->publicado = false;
+      $evento->update();
+      return redirect()->back()->with('mensagem', 'O evento foi ocultado ao público.');
     }
-
-    public function listComissaoTrabalhos(Request $request) {
-
-      $evento = Evento::find($request->eventoId);
-      $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
-      $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
-      
-      return view('user.areaComissao', ['trabalhos' => $trabalhos]);
-    }
-
-
 }

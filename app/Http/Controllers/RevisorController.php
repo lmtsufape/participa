@@ -116,14 +116,9 @@ class RevisorController extends Controller
      * @param  \App\Revisor  $revisor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Revisor $revisor)
     {
-        $revisor = Revisor::where('eventoId', $request->eventoId)
-        ->where('revisorId', $request->userId);
-        // dd($revisor);
-        $revisor->delete();
-
-        return redirect()->back();
+        //
     }
 
     public function numeroDeRevisoresAjax(Request $request){

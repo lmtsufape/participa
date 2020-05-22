@@ -19,7 +19,8 @@ class UserController extends Controller
         return view('user.perfilUser',['user'=>$user,'end'=>$end]);
     }
     function editarPerfil(Request $request){
-        
+        // dd($request->name);
+
         $validator = $request->validate([
             'name' => 'required|string|max:255',
             'cpf' => 'required',
@@ -35,61 +36,42 @@ class UserController extends Controller
         ]);
 
         if(Auth()->user()->usuarioTemp == true){
-            
-            // criar endereço
-            $end = new Endereco();
-            $end->rua = $request->input('rua');
-            $end->numero = $request->input('numero');
-            $end->bairro = $request->input('bairro');
-            $end->cidade = $request->input('cidade');
-            $end->uf = $request->input('uf');
-            $end->cep = $request->input('cep');
-
-            $end->save();
-
-            // Atualizar dados não preenchidos de User
-            $user = User::find($request->id);
-            $user->name = $request->input('name');
-            $user->cpf = $request->input('cpf');
-            $user->celular = $request->input('celular');
-            $user->instituicao = $request->input('instituicao');
-            // $user->especProfissional = $request->input('especProfissional');
-            $user->usuarioTemp = null;
-            $user->enderecoId = $end->id;
-            $user->save();
-
-            return redirect(route('home'));
-            
+          // endereço
+          $end = new Endereco();
+          $end->rua = $data['rua'];
+          $end->numero = $data['numero'];
+          $end->bairro = $data['bairro'];
+          $end->cidade = $data['cidade'];
+          $end->uf = $data['uf'];
+          $end->cep = $data['cep'];
         }
+        // User
+        $user = User::find($request->id);
+        $user->name = $request->input('name');
+        $user->cpf = $request->input('cpf');
+        $user->celular = $request->input('celular');
+        $user->instituicao = $request->input('instituicao');
+        // $user->especProfissional = $request->input('especProfissional');
+        $user->usuarioTemp = null;
+        $user->save();
 
-        else {
-            
-            // User
-            $user = User::find($request->id);
-            $user->name = $request->input('name');
-            $user->cpf = $request->input('cpf');
-            $user->celular = $request->input('celular');
-            $user->instituicao = $request->input('instituicao');
-            // $user->especProfissional = $request->input('especProfissional');
-            $user->usuarioTemp = null;
-            $user->save();
+        // endereço
+        $end = Endereco::find($user->enderecoId);
+        $end->rua = $request->input('rua');
+        $end->numero = $request->input('numero');
+        $end->bairro = $request->input('bairro');
+        $end->cidade = $request->input('cidade');
+        $end->uf = $request->input('uf');
+        $end->cep = $request->input('cep');
 
-            // endereço
-            $end = Endereco::find($user->enderecoId);
-            $end->rua = $request->input('rua');
-            $end->numero = $request->input('numero');
-            $end->bairro = $request->input('bairro');
-            $end->cidade = $request->input('cidade');
-            $end->uf = $request->input('uf');
-            $end->cep = $request->input('cep');
+        $end->save();
+        // dd([$user,$end]);
+        return view('home');
 
-            $end->save();
-            // dd([$user,$end]);
-            return redirect(route('home'));
 
-        }
+
+        // return view('index');
     }
-
 
     public function meusTrabalhos(){
 

@@ -11,8 +11,6 @@ use App\Revisor;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 
 class ComissaoController extends Controller
 {
@@ -144,14 +142,8 @@ class ComissaoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        $comissao = ComissaoEvento::
-        where('eventosId', $request->eventosId)
-        ->where('userId', $request->userId);
-        // dd($comissao);
-        $comissao->delete();
-
-        return redirect()->back();
+        //
     }
 }
