@@ -83,5 +83,9 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/removerAtribuicao',     'AtribuicaoController@deletePorRevisores'    )->name('atribuicao.delete');
   // rota downloadArquivo
   Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
+  // atualizar etiquetas do form
+  Route::post(  '/etiquetas/editar/{id}', 'FormEventoController@update'                )->name('etiquetas.update');
+  // Exibir ou ocultar modulos
+  Route::post(  '/modulos/{id}',          'FormEventoController@exibirModulo'          )->name('exibir.modulo');
 
 });

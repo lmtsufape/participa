@@ -12,6 +12,7 @@ use App\ComissaoEvento;
 use App\User;
 use App\Trabalho;
 use App\AreaModalidade;
+use App\FormEvento;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -171,7 +172,21 @@ class EventoController extends Controller
         $subject = "Evento Criado";
         Mail::to($user->email)
             ->send(new EventoCriado($user, $subject));
+        
+        // Passando dados default para a edição das etiquetas
+        // dos campos do card de eventos.
 
+        $FormEvento = FormEvento::create([
+          'etiquetatipoevento'             => 'Tipo:',
+          'etiquetadescricaoevento'        => 'Descrição:',
+          'etiquetadatas'                  => 'Realização:',
+          'etiquetaenderecoevento'         => 'Endereço:',
+          'etiquetamoduloinscricao'        => 'Inscrições:',
+          'etiquetamoduloprogramacao'      => 'Programação:',
+          'etiquetamoduloorganizacao'      => 'Organização:',
+          'eventoId'                       => $evento->id,
+        ]);
+        
         return redirect()->route('coord.home');
     }
 
@@ -203,6 +218,7 @@ class EventoController extends Controller
         }
 
         $mytime = Carbon::now('America/Recife');
+        $etiquetas = FormEvento::where('eventoId',$evento->id)->first();
         // dd(false);
         return view('evento.visualizarEvento', [
                                                 'evento'              => $evento,
@@ -211,7 +227,8 @@ class EventoController extends Controller
                                                 'hasTrabalho'         => $hasTrabalho,
                                                 'hasTrabalhoCoautor'  => $hasTrabalhoCoautor,
                                                 'hasFile'             => $hasFile,
-                                                'mytime'              => $mytime
+                                                'mytime'              => $mytime,
+                                                'etiquetas'           => $etiquetas
                                                ]);
     }
 
@@ -337,7 +354,8 @@ class EventoController extends Controller
         // $atribuicoesProcessando
         // dd($trabalhosEnviados);
         $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
-
+        $etiquetas = FormEvento::where('eventoId', $evento->id)->first();
+        
         return view('coordenador.detalhesEvento', [
                                                     'evento'                  => $evento,
                                                     'areas'                   => $areas,
@@ -351,7 +369,8 @@ class EventoController extends Controller
                                                     'trabalhosAvaliados'      => $trabalhosAvaliados,
                                                     'trabalhosPendentes'      => $trabalhosPendentes,
                                                     'numeroRevisores'         => $numeroRevisores,
-                                                    'numeroComissao'          => $numeroComissao
+                                                    'numeroComissao'          => $numeroComissao,
+                                                    'etiquetas'               => $etiquetas
                                                   ]);
     }
 

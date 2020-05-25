@@ -101,6 +101,24 @@
                     </a>
                 </div>
             </a>
+
+            <a id="eventos">
+              <li>
+                  <img src="{{asset('img/icons/sitemap-solid.svg')}}" alt=""><h5>Evento</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+              </li>
+              <div id="dropdownEvento" style="background-color: gray">
+                  <a id="editarEtiqueta" onclick="habilitarPagina('editarEtiqueta')">
+                      <li>
+                          <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Editar Etiquetas</h5>
+                      </li>
+                  </a>
+                  <a id="exibirOpcoes" onclick="habilitarPagina('exibirOpcoes')">
+                      <li>
+                          <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Exibir Opções</h5>
+                      </li>
+                  </a>
+              </div>
+            </a>
             <!-- <a id="colocacao" onclick="habilitarPagina('colocacao')">
                 <li>
                     <img src="{{asset('img/icons/trophy-solid.svg')}}" alt=""><h5>Classificação</h5>
@@ -995,6 +1013,338 @@
     </div>
 </div>
 
+{{-- Evento --}}
+<div id="divEditarEtiquetas" class="eventos" style="display: none">
+  <div class="row">
+      <div class="col-sm-12">
+          <h1 class="titulo-detalhes">Editar Etiquetas</h1>
+      </div>
+  </div>
+  {{-- row card - Edição de Etiquetas --}}
+  <div class="row justify-content-center">
+    <div class="col-sm-8">
+      <div class="card">
+          <div class="card-body">
+              <h5 class="card-title">Editar etiquetas</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Edite os campos padrão das etiquetas do evento!</h6>
+              <form method="POST" action="{{route('etiquetas.update', $evento->id)}}">
+              @csrf
+
+              <p class="card-text">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="etiquetatipoevento" class="col-form-label">{{$etiquetas->etiquetatipoevento}}</label>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <input id="etiquetatipoevento" type="text" class="form-control @error('etiquetatipoevento') is-invalid @enderror" name="etiquetatipoevento" value="{{ old('etiquetatipoevento') }}" autocomplete="etiquetatipoevento" placeholder="Ex: Tipo do Evento" autofocus>
+
+                        @error('etiquetatipoevento')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>{{-- end row--}}
+              </p>
+
+              <p class="card-text">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="etiquetadescricaoevento" class="col-form-label">{{$etiquetas->etiquetadescricaoevento}}</label>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <input id="etiquetadescricaoevento" type="text" class="form-control @error('etiquetadescricaoevento') is-invalid @enderror" name="etiquetadescricaoevento" value="{{ old('etiquetadescricaoevento') }}" autocomplete="etiquetadescricaoevento" placeholder="Ex: Descrição do Evento" autofocus>
+
+                        @error('etiquetadescricaoevento')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>{{-- end row--}}
+              </p>
+
+              <p class="card-text">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="etiquetadatas" class="col-form-label">{{$etiquetas->etiquetadatas}}</label>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <input id="etiquetadatas" type="text" class="form-control @error('etiquetadatas') is-invalid @enderror" name="etiquetadatas" value="{{ old('etiquetadatas') }}" autocomplete="etiquetadatas" placeholder="Ex: Data do Evento" autofocus>
+
+                        @error('etiquetadatas')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>{{-- end row--}}
+              </p>
+
+              <p class="card-text">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="etiquetaenderecoevento" class="col-form-label">{{$etiquetas->etiquetaenderecoevento}}</label>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <input id="etiquetaenderecoevento" type="text" class="form-control @error('etiquetaenderecoevento') is-invalid @enderror" name="etiquetaenderecoevento" value="{{ old('etiquetaenderecoevento') }}" autocomplete="etiquetaenderecoevento" placeholder="Ex: Localização" autofocus>
+
+                        @error('etiquetaenderecoevento')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>{{-- end row--}}
+              </p>
+
+              <p class="card-text">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="etiquetamoduloinscricao" class="col-form-label">{{$etiquetas->etiquetamoduloinscricao}}</label>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <input id="etiquetamoduloinscricao" type="text" class="form-control @error('etiquetamoduloinscricao') is-invalid @enderror" name="etiquetamoduloinscricao" value="{{ old('etiquetamoduloinscricao') }}" autocomplete="etiquetamoduloinscricao" placeholder="Ex: Inscreva-se aqui:" autofocus>
+
+                        @error('etiquetamoduloinscricao')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>{{-- end row--}}
+              </p>
+
+              <p class="card-text">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="etiquetamoduloprogramacao" class="col-form-label">{{$etiquetas->etiquetamoduloprogramacao}}</label>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <input id="etiquetamoduloprogramacao" type="text" class="form-control @error('etiquetamoduloprogramacao') is-invalid @enderror" name="etiquetamoduloprogramacao" value="{{ old('etiquetamoduloprogramacao') }}" autocomplete="etiquetamoduloprogramacao" placeholder="Ex: Atividades ou Nossa programação:" autofocus>
+
+                        @error('etiquetamoduloprogramacao')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>{{-- end row--}}
+              </p>
+
+              <p class="card-text">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="etiquetamoduloorganizacao" class="col-form-label">{{$etiquetas->etiquetamoduloorganizacao}}</label>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <input id="etiquetamoduloorganizacao" type="text" class="form-control @error('etiquetamoduloorganizacao') is-invalid @enderror" name="etiquetamoduloorganizacao" value="{{ old('etiquetamoduloorganizacao') }}" autocomplete="etiquetamoduloorganizacao" placeholder="Ex: Apoio ou Organizadores:" autofocus>
+
+                        @error('etiquetamoduloorganizacao')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>{{-- end row--}}
+              </p>
+
+              <div class="row justify-content-center">
+
+                  <div class="col-md-12">
+                      <button type="submit" class="btn btn-primary" style="width:100%">
+                          {{ __('Finalizar') }}
+                      </button>
+                  </div>
+              </div>
+              </form>
+
+          </div>
+      </div>{{-- End card--}}
+    </div>
+  </div>{{-- end row card --}}
+</div>
+
+{{-- Evento --}}
+<div id="divExibirOpcoes" class="eventos" style="display: none">
+  <div class="row">
+      <div class="col-sm-12">
+          <h1 class="titulo-detalhes">Exibir ou Ocultar Módulos</h1>
+      </div>
+  </div>
+  {{-- row card --}}
+  <div class="row justify-content-center">
+      <div class="col-sm-6">
+          <div class="card">
+              <div class="card-body">
+                  <h5 class="card-title">Módulos</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Escolha quais módulos serão exibidos</h6>
+                  <form method="POST" action="{{route('exibir.modulo', $evento->id)}}">
+                  @csrf
+                  
+                  <p class="card-text">
+                      <input type="hidden" name="modinscricao" value="false" id="modinscricao">
+                      <div class="row">
+                          <div class="col-sm-12">
+                              <label for="modinscricao" class="col-form-label">{{ __('Inscrições') }}</label>
+                          </div>
+                      </div>
+                      <div class="row justify-content-center">
+                          <div class="col-sm-12">
+                              <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" @if($etiquetas->modinscricao) checked @endif name="modinscricao" id="modinscricao">
+                                  <label class="form-check-label" for="modinscricao">
+                                    Habilitar
+                                  </label>
+                              </div>
+
+                              @error('modinscricao')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                          </div>
+                      </div>{{-- end row--}}
+                  </p>
+
+                  <p class="card-text">
+                    <input type="hidden" name="modprogramacao" value="false" id="modprogramacao">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="modprogramacao" class="col-form-label">{{ __('Programação') }}</label>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-sm-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" @if($etiquetas->modprogramacao) checked @endif name="modprogramacao" id="modprogramacao">
+                                <label class="form-check-label" for="modprogramacao">
+                                  Habilitar
+                                </label>
+                            </div>
+
+                            @error('modprogramacao')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+
+                    </div>{{-- end row--}}
+
+                  </p>
+
+                  <p class="card-text">
+                    <input type="hidden" name="modorganizacao" value="false" id="modorganizacao">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="modorganizacao" class="col-form-label">{{ __('Organização e Apoio') }}</label>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-sm-12">
+                            
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" @if($etiquetas->modorganizacao) checked @endif name="modorganizacao" id="modorganizacao">
+                                <label class="form-check-label" for="modorganizacao">
+                                  Habilitar
+                                </label>
+                            </div>
+
+                            @error('nomeModalidade')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+
+                    </div>{{-- end row--}}
+
+                  </p>
+                  <div class="row justify-content-center">
+                      <div class="col-md-12">
+                          <button type="submit" class="btn btn-primary" style="width:100%">
+                              {{ __('Finalizar') }}
+                          </button>
+                      </div>
+                  </div>
+                  </form>
+              </div>
+              </div>
+      </div>
+      {{-- <div class="col-sm-6">
+          <div class="card">
+              <div class="card-body">
+                  <h5 class="card-title">Áreas por Modalidade</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Vincule as Áreas de acordo com cada modalidade</h6>
+                  <form method="POST" action="{{route('areaModalidade.store')}}">
+                  @csrf
+                  <p class="card-text">
+                      <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                      <div class="row justify-content-center">
+                          <div class="col-sm-6">
+                              <label for="modalidadeId" class="col-form-label">{{ __('Modalidade') }}</label>
+                              <select class="form-control @error('modalidadeId') is-invalid @enderror" id="modalidadeId" name="modalidadeId">
+                                  <option value="" disabled selected hidden> Modalidade </option>
+                                  @foreach($modalidades as $modalidade)
+                                  <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
+                                  @endforeach
+                              </select>
+
+                              @error('modalidadeId')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                          </div>
+                          <div class="col-sm-6">
+                              <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
+                              <select class="form-control @error('areaId') is-invalid @enderror" id="areaId" name="areaId">
+                                  <option value="" disabled selected hidden> Área </option>
+                                  @foreach($areas as $area)
+                                      <option value="{{$area->id}}">{{$area->nome}}</option>
+                                  @endforeach
+                              </select>
+
+                              @error('areaId')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                          </div>
+                      </div>
+                  </p>
+
+                  <div class="row justify-content-center">
+
+                      <div class="col-md-12">
+                          <button type="submit" class="btn btn-primary" style="width:100%">
+                              {{ __('Finalizar') }}
+                          </button>
+                      </div>
+                  </div>
+                  </form>
+
+              </div>
+          </div>{{-- End card--}}
+      </div>
+  </div>{{-- end row card --}}
+</div>
+
 
 <!-- Modal Revisor -->
 <div class="modal fade" id="modalRevisor" tabindex="-1" role="dialog" aria-labelledby="modalRevisor" aria-hidden="true">
@@ -1226,6 +1576,9 @@
     $('#modalidades').click(function(){
             $('#dropdownModalidades').slideToggle(200);
     });
+    $('#eventos').click(function(){
+            $('#dropdownEvento').slideToggle(200);
+    });
     $('#trabalhos').click(function(){
             $('#dropdownTrabalhos').slideToggle(200);
     });
@@ -1390,6 +1743,9 @@
 
         cadastrarModalidade = document.getElementById('divCadastrarModalidades');
         listarModalidade = document.getElementById('divListarModalidades');
+
+        editarEtiqueta = document.getElementById('divEditarEtiquetas');
+        exibirOpcoes = document.getElementById('divExibirOpcoes');
 
         // habilita divInformacoes
         if(id == 'informacoes'){
@@ -1660,6 +2016,45 @@
           listarComissao.style.display = "none";
           cadastrarModalidade.style.display = "none";
           listarModalidade.style.display = "none";
+        }
+
+        if(id == 'editarEtiqueta'){
+            console.log('editarEtiqueta');
+            informacoes.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
+            cadastrarRevisores.style.display = "none";
+            listarRevisores.style.display = "none";
+            cadastrarComissao.style.display = "none";
+            definirCoordComissao.style.display = "none";
+            listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "block";
+            exibirOpcoes.style.display = "none";
+        }
+        if(id == 'exibirOpcoes'){
+            console.log('exibirOpcoes');
+            informacoes.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
+            cadastrarRevisores.style.display = "none";
+            listarRevisores.style.display = "none";
+            cadastrarComissao.style.display = "none";
+            definirCoordComissao.style.display = "none";
+            listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "block";
         }
 
     }
