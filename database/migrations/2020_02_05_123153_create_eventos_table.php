@@ -22,12 +22,7 @@ class CreateEventosTable extends Migration
             $table->string('tipo')->nullable();
             $table->date('dataInicio')->nullable();
             $table->date('dataFim')->nullable();
-            $table->date('inicioSubmissao')->nullable();
-            $table->date('fimSubmissao')->nullable();
-            $table->date('inicioRevisao')->nullable();
-            $table->date('fimRevisao')->nullable();
-            $table->date('inicioResultado')->nullable();
-            $table->date('fimResultado')->nullable();
+            
             $table->integer('numMaxTrabalhos')->nullable();
             $table->integer('numMaxCoautores')->nullable();
             // $table->boolean('possuiTaxa');

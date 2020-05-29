@@ -12,7 +12,7 @@ class Modalidade extends Model
    * @var array
    */
   protected $fillable = [
-      'nome',
+      'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao', 'inicioResultado',
   ];
 
   public function trabalho(){

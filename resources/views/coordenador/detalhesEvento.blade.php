@@ -636,6 +636,156 @@
                         </div>{{-- end row--}}
 
                     </p>
+
+                    {{-- Data: inicioSubmissao | fimSubmissao --}}
+                    <div class="row justify-content-center">
+
+                        <div class="col-sm-6">
+                            <label for="inicioSubmissao" class="col-form-label">{{ __('Início da Submissão') }}</label>
+                            <input id="inicioSubmissao" type="date" class="form-control @error('inicioSubmissao') is-invalid @enderror" name="inicioSubmissao" value="{{ old('inicioSubmissao') }}" autocomplete="inicioSubmissao" autofocus>
+
+                            @error('inicioSubmissao')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="fimSubmissao" class="col-form-label">{{ __('Fim da Submissão') }}</label>
+                            <input id="fimSubmissao" type="date" class="form-control @error('fimSubmissao') is-invalid @enderror" name="fimSubmissao" value="{{ old('fimSubmissao') }}" autocomplete="fimSubmissao" autofocus>
+
+                            @error('fimSubmissao')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                    {{-- end Data: inicioSubmissao | fimSubmissao --}}
+
+                    {{-- Data: inicioRevisao | fimRevisao --}}
+                    <div class="row justify-content-center">
+
+                        <div class="col-sm-6">
+                            <label for="inicioRevisao" class="col-form-label">{{ __('Início da Revisão') }}</label>
+                            <input id="inicioRevisao" type="date" class="form-control @error('inicioRevisao') is-invalid @enderror" name="inicioRevisao" value="{{ old('inicioRevisao') }}" autocomplete="inicioRevisao" autofocus>
+
+                            @error('inicioRevisao')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="fimRevisao" class="col-form-label">{{ __('Fim da Revisão') }}</label>
+                            <input id="fimRevisao" type="date" class="form-control @error('fimRevisao') is-invalid @enderror" name="fimRevisao" value="{{ old('fimRevisao') }}" autocomplete="fimRevisao" autofocus>
+
+                            @error('fimRevisao')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                    {{-- end Data: inicioRevisão | fimRevisao --}}
+
+                    {{-- Data: resultado --}}
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <label for="inicioResultado" class="col-form-label">{{ __('Início do Resultado') }}</label>
+                            <input id="inicioResultado" type="date" class="form-control @error('inicioResultado') is-invalid @enderror" name="inicioResultado" value="{{ old('inicioResultado') }}" autocomplete="inicioResultado" autofocus>
+
+                            @error('inicioResultado')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                    {{-- end Data: resultado --}}
+
+                    {{-- Inicio - Tipo de submissão --}}
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <label class="col-form-label">{{ __('Tipo de Submissão') }}</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="custom_field" id="id-custom_field-account-1-1" value="option1">
+                                <label class="form-check-label" for="texto">
+                                    Submissão por texto 
+                                </label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="custom_field" id="id-custom_field-account-1-2" value="option2">
+                                <label class="form-check-label" for="arquivo">
+                                    Submissão por arquivo 
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6" id="limite-caracteres" style="display: none">
+                            <label class="col-form-label">{{ __('Limitação de Caracteres') }}</label>
+                            <div class="form-group">
+                                <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                <div>
+                                  <input class="form-control" type="number" id="min_caracteres" name="min_caracteres">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-form-label">{{ __('Máximo') }}</label>
+                                <div>
+                                  <input class="form-control" type="number" id="max_caracteres" name="max_caracteres">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6" id="tipo-arquivo" style="display: none">
+                            <label class="col-form-label">{{ __('Tipos de arquivo aceito') }}</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="pdf">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .pdf
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="jpg">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .jpg
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="jpeg">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .jpeg
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="png">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .png
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="docx">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .docx
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="odt">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .odt
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
                     <div class="row justify-content-center">
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-primary" style="width:100%">
@@ -1558,6 +1708,18 @@
 @endsection
 @section('javascript')
   <script type="text/javascript" >
+
+    $(document).ready(function() {
+        $('input:radio[name="custom_field"]').on("change", function() {
+            if (this.checked && this.value == 'option1') {
+                $("#limite-caracteres").show();
+                $("#tipo-arquivo").hide();
+            } else {
+                $("#tipo-arquivo").show();
+                $("#limite-caracteres").hide();
+            }
+        });
+    });
 
   function trabalhoId(x){
     document.getElementById('trabalhoIdAjax').value = x;

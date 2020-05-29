@@ -63,12 +63,6 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'tipo'=>'teste',
           'dataInicio'=>'2020-07-01',
           'dataFim'=>'2020-07-03',
-          'inicioSubmissao'=>'2020-03-30',
-          'fimSubmissao'=>'2020-04-20',
-          'inicioRevisao'=>'2020-04-21',
-          'fimRevisao'=>'2020-05-21',
-          'inicioResultado'=>'2020-05-22',
-          'fimResultado'=>'2020-05-23',
           'numMaxTrabalhos' => 2,
           'numMaxCoautores' => 5,
           // 'possuiTaxa'=>true,
@@ -99,7 +93,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         }
 
         DB::table('modalidades')->insert([
-          'nome' => 'Resumo'
+          'nome' => 'Resumo',
         ]);
 
         for($i = 0; $i < sizeof($areasEventoZoo); $i++){

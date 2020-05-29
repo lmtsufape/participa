@@ -17,6 +17,11 @@ class CreateModalidadesTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('nome');
+            $table->date('inicioSubmissao')->nullable();
+            $table->date('fimSubmissao')->nullable();
+            $table->date('inicioRevisao')->nullable();
+            $table->date('fimRevisao')->nullable();
+            $table->date('inicioResultado')->nullable();
         });
     }
 

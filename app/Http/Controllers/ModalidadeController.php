@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Modalidade;
+use App\FormTipoSubm;
 use Illuminate\Http\Request;
 
 class ModalidadeController extends Controller
@@ -35,15 +37,53 @@ class ModalidadeController extends Controller
      */
     public function store(Request $request)
     {
-      $validatedData = $request->validate([
-        'nomeModalidade' => ['required', 'string',],
-      ]);
 
-      $modalidade = Modalidade::create([
-        'nome'              => $request->nomeModalidade,
-      ]);
+        $mytime = Carbon::now('America/Recife');
+        $yesterday = Carbon::yesterday('America/Recife');
+        $yesterday = $yesterday->toDateString();
+        
+        $validatedData = $request->validate([
+            'nomeModalidade'         => ['required', 'string'],
+            'custom_field'           => ['required', 'string'], //Dado para restrição de campos da submissão de arquivo!
+        ]);
+        
+        if($request->custom_field == "option1"){
+            $texto = true;
+            $arquivo = false;
+        }
+        else{
+            $arquivo = true;
+            $texto = false;
+        }
+        
+        $modalidade = Modalidade::create([
+            'nome'              => $request->nomeModalidade,
+            'inicioSubmissao'   => $request->inicioSubmissao,
+            'fimSubmissao'      => $request->fimSubmissao,
+            'inicioRevisao'     => $request->inicioRevisao,
+            'fimRevisao'        => $request->fimRevisao,
+            'inicioResultado'   => $request->inicioResultado
+        ]);
+        
+        $formtiposubmissao = FormTipoSubm::create([
+            'texto'             => $texto,
+            'arquivo'           => $arquivo,
+            'min_caracteres'    => $request->min_caracteres,
+            'max_caracteres'    => $request->max_caracteres,
+            'pdf'       => $request->pdf,
+            'jpg'       => $request->jpg,
+            'jpeg'      => $request->jpeg,
+            'png'       => $request->png,
+            'docx'      => $request->docx,
+            'odt'       => $request->odt,
+            'modalidadeId'      => $modalidade->id
+        ]);
 
-      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+        dd($formtiposubmissao);
+        $modalidade->save();
+        $formtiposubmissao->save();
+
+        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
     /**

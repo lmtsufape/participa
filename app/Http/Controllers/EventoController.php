@@ -63,13 +63,13 @@ class EventoController extends Controller
 
         if(
           $request->dataInicio == null      ||
-          $request->dataFim == null         ||
-          $request->inicioSubmissao == null ||
-          $request->fimSubmissao == null    ||
-          $request->inicioRevisao == null   ||
-          $request->fimRevisao == null      ||
-          $request->inicioResultado == null ||
-          $request->fimResultado == null
+          $request->dataFim == null
+          // $request->inicioSubmissao == null ||
+          // $request->fimSubmissao == null    ||
+          // $request->inicioRevisao == null   ||
+          // $request->fimRevisao == null      ||
+          // $request->inicioResultado == null ||
+          // $request->fimResultado == null
         ){
           $validatedData = $request->validate([
             'nome'                => ['required', 'string'],
@@ -78,12 +78,12 @@ class EventoController extends Controller
             'tipo'                => ['required', 'string'],
             'dataInicio'          => ['required', 'date','after:'. $yesterday],
             'dataFim'             => ['required', 'date'],
-            'inicioSubmissao'     => ['required', 'date'],
-            'fimSubmissao'        => ['required', 'date'],
-            'inicioRevisao'       => ['required', 'date'],
-            'fimRevisao'          => ['required', 'date'],
-            'inicioResultado'     => ['required', 'date'],
-            'fimResultado'        => ['required', 'date'],
+            // 'inicioSubmissao'     => ['required', 'date'],
+            // 'fimSubmissao'        => ['required', 'date'],
+            // 'inicioRevisao'       => ['required', 'date'],
+            // 'fimRevisao'          => ['required', 'date'],
+            // 'inicioResultado'     => ['required', 'date'],
+            // 'fimResultado'        => ['required', 'date'],
             // 'valorTaxa'           => ['required', 'integer'],
             'fotoEvento'          => ['file', 'mimes:png'],
           ]);
@@ -98,12 +98,12 @@ class EventoController extends Controller
           'tipo'                => ['required', 'string'],
           'dataInicio'          => ['required', 'date', 'after:' . $yesterday],
           'dataFim'             => ['required', 'date', 'after:' . $request->dataInicio],
-          'inicioSubmissao'     => ['required', 'date', 'after:' . $yesterday],
-          'fimSubmissao'        => ['required', 'date', 'after:' . $request->inicioSubmissao],
-          'inicioRevisao'       => ['required', 'date', 'after:' . $yesterday],
-          'fimRevisao'          => ['required', 'date', 'after:' . $request->inicioRevisao],
-          'inicioResultado'     => ['required', 'date', 'after:' . $yesterday],
-          'fimResultado'        => ['required', 'date', 'after:' . $request->inicioResultado],
+          // 'inicioSubmissao'     => ['required', 'date', 'after:' . $yesterday],
+          // 'fimSubmissao'        => ['required', 'date', 'after:' . $request->inicioSubmissao],
+          // 'inicioRevisao'       => ['required', 'date', 'after:' . $yesterday],
+          // 'fimRevisao'          => ['required', 'date', 'after:' . $request->inicioRevisao],
+          // 'inicioResultado'     => ['required', 'date', 'after:' . $yesterday],
+          // 'fimResultado'        => ['required', 'date', 'after:' . $request->inicioResultado],
           // 'valorTaxa'           => ['required', 'integer'],
           'fotoEvento'          => ['file', 'mimes:png'],
         ]);
@@ -135,12 +135,12 @@ class EventoController extends Controller
           'tipo'                => $request->tipo,
           'dataInicio'          => $request->dataInicio,
           'dataFim'             => $request->dataFim,
-          'inicioSubmissao'     => $request->inicioSubmissao,
-          'fimSubmissao'        => $request->fimSubmissao,
-          'inicioRevisao'       => $request->inicioRevisao,
-          'fimRevisao'          => $request->fimRevisao,
-          'inicioResultado'     => $request->inicioResultado,
-          'fimResultado'        => $request->fimResultado,
+          // 'inicioSubmissao'     => $request->inicioSubmissao,
+          // 'fimSubmissao'        => $request->fimSubmissao,
+          // 'inicioRevisao'       => $request->inicioRevisao,
+          // 'fimRevisao'          => $request->fimRevisao,
+          // 'inicioResultado'     => $request->inicioResultado,
+          // 'fimResultado'        => $request->fimResultado,
           // 'possuiTaxa'          => $request->possuiTaxa,
           // 'valorTaxa'           => $request->valorTaxa,
           'enderecoId'          => $endereco->id,

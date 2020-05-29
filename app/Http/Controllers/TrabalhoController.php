@@ -12,6 +12,7 @@ use App\Revisor;
 use App\Modalidade;
 use App\Atribuicao;
 use App\Arquivo;
+use App\FormTipoSubm;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Http\Request;
@@ -46,16 +47,29 @@ class TrabalhoController extends Controller
         }
 
         $trabalhos = Trabalho::where('autorId', Auth::user()->id)->whereIn('areaId', $areasId)->get();
+        $formtiposubmissao = FormTipoSubm::all();
+
+        // Forma de pegar o formulario correto de uma modalidade especifica
+        foreach($formtiposubmissao as $formtiposub) {
+          foreach($modalidades as $modalidade){
+            if($formtiposub->modalidadeId == $modalidade->id){
+              $form = $formtiposub;
+            }
+          }
+        }
+        
         // dd($evento);
         return view('evento.submeterTrabalho',[
-                                              'evento'          => $evento,
-                                              'areas'           => $areas,
-                                              'revisores'       => $revisores,
-                                              'modalidades'     => $modalidades,
-                                              'areaModalidades' => $areaModalidades,
-                                              'trabalhos'       => $trabalhos,
-                                              'areasEnomes'     => $areasEnomes,
+                                              'evento'                 => $evento,
+                                              'areas'                  => $areas,
+                                              'revisores'              => $revisores,
+                                              'modalidades'            => $modalidades,
+                                              'areaModalidades'        => $areaModalidades,
+                                              'trabalhos'              => $trabalhos,
+                                              'areasEnomes'            => $areasEnomes,
                                               'modalidadesIDeNome'     => $modalidadesIDeNome,
+                                              'modalidadesIDeNome'     => $modalidadesIDeNome,
+                                              'regrasubarq'            => $form,
                                             ]);
     }
 

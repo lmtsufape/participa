@@ -119,24 +119,6 @@
             </p>
         </div>
     </div>
-    <div class="row margin">
-        <div class="col-sm-12 info-evento">
-            <h4>Submissão de Trabalhos</h4>
-            <p>
-                <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}
-            </p>
-        </div>
-    </div>
-    <div class="row margin">
-        <div class="col-sm-12 info-evento">
-            <h4>Revisão de Trabalhos</h4>
-            <p>
-                <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}
-            </p>
-        </div>
-    </div>
 
     <div class="row margin">
         <div class="col-sm-12 info-evento">
