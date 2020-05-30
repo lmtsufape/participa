@@ -14,8 +14,8 @@ class FormTipoSubm extends Model
 
     
     protected $fillable = [
-        'texto', 'arquivo', 'min_caracteres',
-        'max_caracteres', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'modalidadeId',
+        'texto', 'arquivo', 'caracteres', 'mincaracteres',
+        'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'modalidadeId',
     ];
 
     public function modalidade(){

@@ -42,18 +42,28 @@ class ModalidadeController extends Controller
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
         
-        $validatedData = $request->validate([
-            'nomeModalidade'         => ['required', 'string'],
-            'custom_field'           => ['required', 'string'], //Dado para restrição de campos da submissão de arquivo!
-        ]);
-        
         if($request->custom_field == "option1"){
             $texto = true;
             $arquivo = false;
         }
-        else{
+        if ($request->custom_field == "option2") {
             $arquivo = true;
             $texto = false;
+        }
+        if ($request->limit == "limit-option1") {
+            $caracteres = true;
+            $palavras = false;
+        }
+        if ($request->limit == "limit-option2") {
+            $caracteres = false;
+            $palavras = true;
+        }
+
+        if(isset($request->maxcaracteres) && isset($request->mincaracteres) && $request->maxcaracteres <= $request->mincaracteres){
+            return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!']);
+        }
+        if(isset($request->maxpalavras) && isset($request->minpalavras) && $request->maxpalavras <= $request->minpalavras){
+            return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!']);
         }
         
         $modalidade = Modalidade::create([
@@ -68,18 +78,22 @@ class ModalidadeController extends Controller
         $formtiposubmissao = FormTipoSubm::create([
             'texto'             => $texto,
             'arquivo'           => $arquivo,
-            'min_caracteres'    => $request->min_caracteres,
-            'max_caracteres'    => $request->max_caracteres,
-            'pdf'       => $request->pdf,
-            'jpg'       => $request->jpg,
-            'jpeg'      => $request->jpeg,
-            'png'       => $request->png,
-            'docx'      => $request->docx,
-            'odt'       => $request->odt,
+            'caracteres'        => $caracteres,
+            'palavras'          => $palavras,
+            'mincaracteres'    => $request->mincaracteres,
+            'maxcaracteres'    => $request->maxcaracteres,
+            'minpalavras'      => $request->minpalavras,
+            'maxpalavras'      => $request->maxpalavras,
+            'pdf'               => $request->pdf,
+            'jpg'               => $request->jpg,
+            'jpeg'              => $request->jpeg,
+            'png'               => $request->png,
+            'docx'              => $request->docx,
+            'odt'               => $request->odt,
             'modalidadeId'      => $modalidade->id
         ]);
 
-        dd($formtiposubmissao);
+        
         $modalidade->save();
         $formtiposubmissao->save();
 

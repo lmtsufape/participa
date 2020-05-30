@@ -597,7 +597,16 @@
         </div>
     </div>
 </div><!-- Definir Submissões -->
-
+<div>
+    @error('comparacaocaracteres')
+      @include('componentes.mensagens')
+    @enderror
+</div>
+<div>
+    @error('comparacaopalavras')
+      @include('componentes.mensagens')
+    @enderror
+</div>
 {{-- Modalidade --}}
 <div id="divCadastrarModalidades" class="modalidades">
     <div class="row">
@@ -727,18 +736,54 @@
 
                     <div class="row">
                         <div class="col-sm-6" id="limite-caracteres" style="display: none">
-                            <label class="col-form-label">{{ __('Limitação de Caracteres') }}</label>
-                            <div class="form-group">
-                                <label class="col-form-label">{{ __('Mínimo') }}</label>
-                                <div>
-                                  <input class="form-control" type="number" id="min_caracteres" name="min_caracteres">
+                            <label class="col-form-label">{{ __('Restrições') }}</label>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1">
+                                <label class="form-check-label" for="texto">
+                                    Quantidade de caracteres 
+                                </label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-2" value="limit-option2">
+                                <label class="form-check-label" for="arquivo">
+                                    Quantidade de palavras 
+                                </label>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6" id="min-max-caracteres" style="display: none">
+                                    <div class="form-group">
+                                        <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                        <div>
+                                          <input class="form-control" type="number" id="min_caracteres" name="mincaracteres">
+                                        </div>
+                                    </div>
+        
+                                    <div class="form-group">
+                                        <label class="col-form-label">{{ __('Máximo') }}</label>
+                                        <div>
+                                          <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-form-label">{{ __('Máximo') }}</label>
-                                <div>
-                                  <input class="form-control" type="number" id="max_caracteres" name="max_caracteres">
+                            <div class="row">
+                                <div class="col-sm-6" id="min-max-palavras" style="display: none">
+                                    <div class="form-group">
+                                        <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                        <div>
+                                          <input class="form-control" type="number" id="min_palavras" name="minpalavras">
+                                        </div>
+                                    </div>
+        
+                                    <div class="form-group">
+                                        <label class="col-form-label">{{ __('Máximo') }}</label>
+                                        <div>
+                                          <input class="form-control" type="number" id="max_palavras" name="maxpalavras">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1717,6 +1762,18 @@
             } else {
                 $("#tipo-arquivo").show();
                 $("#limite-caracteres").hide();
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('input:radio[name="limit"]').on("change", function() {
+            if (this.checked && this.value == 'limit-option1') {
+                $("#min-max-caracteres").show();
+                $("#min-max-palavras").hide();
+            } else {
+                $("#min-max-palavras").show();
+                $("#min-max-caracteres").hide();
             }
         });
     });
