@@ -621,7 +621,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Nova Modalidade</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova modalidade para o seu evento</h6>
-                    <form method="POST" action="{{route('modalidade.store')}}">
+                    <form method="POST" action="{{route('modalidade.store')}}" enctype="multipart/form-data">
                     @csrf
                     <p class="card-text">
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
@@ -828,6 +828,22 @@
                                     .odt
                                 </label>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        {{-- Arquivo  --}}
+                        <div class="col-sm-12" style="margin-top: 20px;">
+                          <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar regras:') }}</label>
+
+                          <div class="custom-file">
+                            <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                          </div>
+                          <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
+                          @error('arquivo')
+                          <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                          @enderror
                         </div>
                     </div>
                     <br>

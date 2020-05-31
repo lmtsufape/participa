@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Modalidade;
 use App\FormTipoSubm;
+use App\RegraSubmis;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 
 class ModalidadeController extends Controller
@@ -66,6 +69,20 @@ class ModalidadeController extends Controller
             return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!']);
         }
         
+        $validatedData = $request->validate([
+            // 'nome'              => ['required', 'string'],
+            // 'inicioSubmissao'   => ['nullable', 'date'],
+            // 'fimSubmissao'      => ['nullable', 'date'],
+            // 'inicioRevisao'     => ['nullable', 'date'],
+            // 'fimRevisao'        => ['nullable', 'date'],
+            // 'inicioResultado'   => ['nullable', 'date'],
+            // 'mincaracteres'     => ['nullable', 'integer'],
+            // 'maxcaracteres'     => ['nullable', 'integer'],
+            // 'minpalavras'       => ['nullable', 'integer'],
+            // 'maxpalavras'       => ['nullable', 'integer'],
+            'arquivo'           => ['required', 'file', 'mimes:pdf', 'max:2000000'],
+        ]);
+        
         $modalidade = Modalidade::create([
             'nome'              => $request->nomeModalidade,
             'inicioSubmissao'   => $request->inicioSubmissao,
@@ -92,10 +109,21 @@ class ModalidadeController extends Controller
             'odt'               => $request->odt,
             'modalidadeId'      => $modalidade->id
         ]);
+        
+        $file = $request->arquivo;
+        $path = 'regras/' . $modalidade->id . '/';
+        $nome = "regra_submissao.pdf";
+        
+        Storage::putFileAs($path, $file, $nome);
 
+        $regrasubmissao = RegraSubmis::create([
+            'nome'  => $path . $nome,
+            'modalidadeId'  => $modalidade->id,
+        ]);
         
         $modalidade->save();
         $formtiposubmissao->save();
+        $regrasubmissao->save();
 
         return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
