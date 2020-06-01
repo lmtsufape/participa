@@ -80,6 +80,7 @@
         </button>
       </div>
     @endif
+    {{-- Adicionar aqui etiqueta de nome --}}
     <div class="row margin">
         <div class="col-sm-12">
             <h1>
@@ -119,6 +120,54 @@
             </p>
         </div>
     </div>
+
+    @if (empty($modalidades) == false)
+      <div class="row margin">
+        <div class="col-sm-12 info-evento">
+            <h4>Submissões</h4>
+            @foreach ($modalidades as $modalidade)
+            <h6>Modalidade: {{$modalidade->nome}}</h6>
+            @if (isset($modalidade->inicioSubmissao))
+              <p>
+                <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
+                Submissão: {{date('d/m/Y',strtotime($modalidade->inicioSubmissao))}} - {{date('d/m/Y',strtotime($modalidade->fimSubmissao))}}
+              </p>
+            @else
+              <strong><p>* Datas de submissão ainda não definidas!</p></strong>
+            @endif
+
+            @if (isset($modalidade->inicioRevisao))
+            <p>
+              <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
+              Revisão: {{date('d/m/Y',strtotime($modalidade->inicioRevisao))}} - {{date('d/m/Y',strtotime($modalidade->fimRevisao))}}
+            </p>
+            @else
+            <strong><p>* Datas de revisão ainda não definidas!</p></strong>
+            @endif
+
+            @if (isset($modalidade->inicioResultado))
+            <p>
+              <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
+              Resultado: {{date('d/m/Y',strtotime($modalidade->inicioResultado))}} - {{date('d/m/Y',strtotime($modalidade->fimResultado))}}
+            </p>
+            @else
+            <strong><p>* Datas de resultados ainda não definidas!</p></strong>
+            @endif
+
+            @if($modalidade->inicioSubmissao <= $mytime)
+              @if($mytime < $modalidade->fimSubmissao)
+                <div class="col-md-6 botao-form-left" style="">
+                  <a class="btn btn-secondary" href="{{route('trabalho.index',['id'=>$evento->id])}}">Submeter Trabalho</a>
+                </div>
+              @endif
+            @endif
+            <br>
+            @endforeach
+        </div>
+      </div>
+    @else
+    
+    @endif
 
     <div class="row margin">
         <div class="col-sm-12 info-evento">

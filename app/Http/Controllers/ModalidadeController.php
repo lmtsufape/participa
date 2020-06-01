@@ -52,6 +52,8 @@ class ModalidadeController extends Controller
         if ($request->custom_field == "option2") {
             $arquivo = true;
             $texto = false;
+            $caracteres = false;
+            $palavras = false;
         }
         if ($request->limit == "limit-option1") {
             $caracteres = true;
@@ -61,7 +63,7 @@ class ModalidadeController extends Controller
             $caracteres = false;
             $palavras = true;
         }
-
+        
         if(isset($request->maxcaracteres) && isset($request->mincaracteres) && $request->maxcaracteres <= $request->mincaracteres){
             return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!']);
         }
@@ -70,16 +72,16 @@ class ModalidadeController extends Controller
         }
         
         $validatedData = $request->validate([
-            // 'nome'              => ['required', 'string'],
-            // 'inicioSubmissao'   => ['nullable', 'date'],
-            // 'fimSubmissao'      => ['nullable', 'date'],
-            // 'inicioRevisao'     => ['nullable', 'date'],
-            // 'fimRevisao'        => ['nullable', 'date'],
-            // 'inicioResultado'   => ['nullable', 'date'],
-            // 'mincaracteres'     => ['nullable', 'integer'],
-            // 'maxcaracteres'     => ['nullable', 'integer'],
-            // 'minpalavras'       => ['nullable', 'integer'],
-            // 'maxpalavras'       => ['nullable', 'integer'],
+
+            'inicioSubmissao'   => ['nullable', 'date'],
+            'fimSubmissao'      => ['nullable', 'date'],
+            'inicioRevisao'     => ['nullable', 'date'],
+            'fimRevisao'        => ['nullable', 'date'],
+            'inicioResultado'   => ['nullable', 'date'],
+            'mincaracteres'     => ['nullable', 'integer'],
+            'maxcaracteres'     => ['nullable', 'integer'],
+            'minpalavras'       => ['nullable', 'integer'],
+            'maxpalavras'       => ['nullable', 'integer'],
             'arquivo'           => ['required', 'file', 'mimes:pdf', 'max:2000000'],
         ]);
         
@@ -89,7 +91,8 @@ class ModalidadeController extends Controller
             'fimSubmissao'      => $request->fimSubmissao,
             'inicioRevisao'     => $request->inicioRevisao,
             'fimRevisao'        => $request->fimRevisao,
-            'inicioResultado'   => $request->inicioResultado
+            'inicioResultado'   => $request->inicioResultado,
+            'eventoId'          => $request->eventoId,
         ]);
         
         $formtiposubmissao = FormTipoSubm::create([

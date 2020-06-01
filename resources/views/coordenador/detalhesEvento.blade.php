@@ -836,7 +836,7 @@
                           <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar regras:') }}</label>
 
                           <div class="custom-file">
-                            <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                            <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" required>
                           </div>
                           <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
                           @error('arquivo')

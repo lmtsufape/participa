@@ -208,6 +208,8 @@ class EventoController extends Controller
         $trabalhosIdCoautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->select('trabalhoId')->get();
         $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
         $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
+        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        
         if($trabalhosCount != 0){
           $hasTrabalho = true;
           $hasFile = true;
@@ -228,7 +230,8 @@ class EventoController extends Controller
                                                 'hasTrabalhoCoautor'  => $hasTrabalhoCoautor,
                                                 'hasFile'             => $hasFile,
                                                 'mytime'              => $mytime,
-                                                'etiquetas'           => $etiquetas
+                                                'etiquetas'           => $etiquetas,
+                                                'modalidades'         => $modalidades,
                                                ]);
     }
 

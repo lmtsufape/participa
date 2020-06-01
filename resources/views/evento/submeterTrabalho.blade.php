@@ -49,9 +49,23 @@
                           </div>
                         </div>
 
+                        @if($regrasubarq->texto == true)
+                          @if ($regrasubarq->caracteres == true)
+                            <div class="row justify-content-center">
+                              <div class="col-sm-12">
+                                  <label for="resumo" class="col-form-label">{{ __('Resumo:') }}</label>
+                                  <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" maxlength="{{$regrasubarq->maxcaracteres}}" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
+                                  <p class="text-muted"><small><span name="resumo">{{$regrasubarq->maxcaracteres}}</span></small> caracteres restantes</p>
+                                  @error('resumo')
+                                  <span class="invalid-feedback" role="alert">
+                                      <strong>{{ $message }}</strong>
+                                  </span>
+                                  @enderror
 
-                        @if($evento->hasResumo)
-                          <div class="row justify-content-center">
+                              </div>
+                            </div>                              
+                          @else
+                            <div class="row justify-content-center">
                               <div class="col-sm-12">
                                   <label for="resumo" class="col-form-label">{{ __('Resumo:') }}</label>
                                   <textarea id="resumo" class="form-control @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
@@ -62,9 +76,9 @@
                                   </span>
                                   @enderror
 
-
                               </div>
-                          </div>
+                            </div>
+                          @endif
                         @endif
                         <!-- Areas -->
                         <div class="row justify-content-center">
@@ -101,24 +115,29 @@
                             </div>
                         </div>
                         <div class="row justify-content-center">
-                          {{-- Arquivo  --}}
-                          <div class="col-sm-12" style="margin-top: 20px;">
-                            <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo:') }}</label>
+                          {{-- Arquivo --}}
+                          @if ($regrasubarq->arquivo == true)
+                            <div class="col-sm-12" style="margin-top: 20px;">
+                              <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo:') }}</label>
 
-                            <div class="custom-file">
-                              <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                              <div class="custom-file">
+                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                              </div>
+                              <small>Arquivos aceitos nos formatos 
+                                @if($regrasubarq->pdf == true)pdf - @endif
+                                @if($regrasubarq->jpg == true)jpg - @endif
+                                @if($regrasubarq->jpeg == true)jpeg - @endif
+                                @if($regrasubarq->png == true)png - @endif
+                                @if($regrasubarq->docx == true)docx - @endif
+                                @if($regrasubarq->odt == true)odt @endif.</small>
+                              @error('arquivo')
+                              <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
                             </div>
-                            <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
-                            @error('arquivo')
-                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                              <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                          </div>
+                          @endif
                         </div>
-
-
-
                     </p>
                     <div class="row justify-content-center">
                         <div class="col-md-6">
@@ -143,6 +162,20 @@
 <script type="text/javascript">
 
   var modalidades = JSON.parse('<?php echo json_encode($modalidadesIDeNome) ?>');
+
+  $(document).ready(function(){
+    $('.char-count').keyup(function() {
+        var maxLength = parseInt($(this).attr('maxlength')); 
+        var length = $(this).val().length;
+        console.log(length);
+        var newLength = maxLength-length;
+        console.log(newLength);
+        var name = $(this).attr('name');
+        console.log(name);
+        $('span[name="'+name+'"]').text(newLength);
+    });
+  });
+
   $(function(){
     // Coautores
     $('#addCoautor').click(function(){

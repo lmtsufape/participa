@@ -58,7 +58,7 @@ class TrabalhoController extends Controller
           }
         }
         
-        // dd($evento);
+        // dd($form);
         return view('evento.submeterTrabalho',[
                                               'evento'                 => $evento,
                                               'areas'                  => $areas,
