@@ -21,7 +21,7 @@
                         <div class="row justify-content-center">
                             {{-- Nome Trabalho  --}}
                           <div class="col-sm-12">
-                                <label for="nomeTrabalho" class="col-form-label">{{ __('Título:') }}</label>
+                                <label for="nomeTrabalho" class="col-form-label">{{ $formSubTraba->etiquetatitulotrabalho }}</label>
                                 <input id="nomeTrabalho" type="text" class="form-control @error('nomeTrabalho') is-invalid @enderror" name="nomeTrabalho" value="{{ old('nomeTrabalho') }}" required autocomplete="nomeTrabalho" autofocus>
 
                                 @error('nomeTrabalho')
@@ -35,7 +35,7 @@
                         <div class="row justify-content-center">
                             {{-- Nome Trabalho  --}}
                           <div class="col-sm-12">
-                                <label for="nomeTrabalho" class="col-form-label">{{ __('Autor:') }}</label>
+                                <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetaautortrabalho}}</label>
                                 <input class="form-control" type="text" disabled value="{{Auth::user()->name}}">
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                             <div id="coautores">
 
                             </div>
-                            <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">Coautor +</a>
+                            <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">{{$formSubTraba->etiquetacoautortrabalho}}</a>
                           </div>
                         </div>
 
@@ -53,9 +53,9 @@
                           @if ($regrasubarq->caracteres == true)
                             <div class="row justify-content-center">
                               <div class="col-sm-12">
-                                  <label for="resumo" class="col-form-label">{{ __('Resumo:') }}</label>
-                                  <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" maxlength="{{$regrasubarq->maxcaracteres}}" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
-                                  <p class="text-muted"><small><span name="resumo">{{$regrasubarq->maxcaracteres}}</span></small> caracteres restantes</p>
+                                  <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
+                                  <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" minlength="{{$regrasubarq->mincaracteres}}" maxlength="{{$regrasubarq->maxcaracteres}}" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
+                                  <p class="text-muted"><small><span name="resumo">0</span></small> - Min Caracteres: {{$regrasubarq->mincaracteres}} - Max Caracteres: {{$regrasubarq->maxcaracteres}}</p>
                                   @error('resumo')
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
@@ -67,9 +67,9 @@
                           @else
                             <div class="row justify-content-center">
                               <div class="col-sm-12">
-                                  <label for="resumo" class="col-form-label">{{ __('Resumo:') }}</label>
-                                  <textarea id="resumo" class="form-control @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
-
+                                  <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
+                                  <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
+                                  <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: {{$regrasubarq->minpalavras}} - Max Palavras: {{$regrasubarq->maxpalavras}}</p>
                                   @error('resumo')
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
@@ -83,14 +83,17 @@
                         <!-- Areas -->
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
-                                <label for="area" class="col-form-label">{{ __('Área:') }}</label>
+                                <label for="area" class="col-form-label">{{$formSubTraba->etiquetaareatrabalho}}</label>
                                 <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId">
                                     <option value="" disabled selected hidden>-- Área --</option>
-                                    @foreach($areasEnomes as $area)
+                                    {{-- @foreach($areasEnomes as $area)
+                                      <option value="{{$area->id}}">{{$area->nome}}</option>
+                                    @endforeach --}}
+                                    {{-- Apenas um teste abaixo --}}
+                                    @foreach($areasEspecificas as $area)
                                       <option value="{{$area->id}}">{{$area->nome}}</option>
                                     @endforeach
                                 </select>
-
                                 @error('areaId')
                                 <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                   <strong>{{ $message }}</strong>
@@ -100,7 +103,9 @@
                         </div>
 
                         <!-- Modalidades -->
-                        <div class="row justify-content-center">
+                        <input type="hidden" name="modalidadeId" value="{{$modalidadeEspecifica}}">
+                        {{-- MODALIDADE SERIA PASSADA COMO HIDDEN --}}
+                        {{-- <div class="row justify-content-center">
                             <div class="col-sm-12">
                                 <label for="areaModalidadeId" class="col-form-label">{{ __('Modalidade:') }}</label>
                                 <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidadeId">
@@ -113,12 +118,12 @@
                                 </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row justify-content-center">
                           {{-- Arquivo --}}
                           @if ($regrasubarq->arquivo == true)
                             <div class="col-sm-12" style="margin-top: 20px;">
-                              <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo:') }}</label>
+                              <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetaregrasub}}</label>
 
                               <div class="custom-file">
                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
@@ -167,14 +172,45 @@
     $('.char-count').keyup(function() {
         var maxLength = parseInt($(this).attr('maxlength')); 
         var length = $(this).val().length;
-        console.log(length);
-        var newLength = maxLength-length;
-        console.log(newLength);
+        // var newLength = maxLength-length;
+        
         var name = $(this).attr('name');
-        console.log(name);
-        $('span[name="'+name+'"]').text(newLength);
+        
+        $('span[name="'+name+'"]').text(length);
     });
   });
+
+  $(document).ready(function(){
+    $('.palavra').keyup(function() {
+        var maxLength = parseInt($(this).attr('maxlength')); 
+        var texto = $(this).val().length;
+        console.log(texto);
+        if ($(this).val()[length - 1] == " ") {
+          var cont = $(this).val().length;
+          // console.log("Contador:");
+          // console.log(cont);
+        }
+
+        // console.log("Texto:");
+        // console.log(texto);
+
+        var name = $(this).attr('name');
+        
+        $('span[name="'+name+'"]').text(length);
+    });
+  });
+
+  // function getLength() {
+  //       getWord = document.getElementById( 'palavra' ).value,
+  //       num = document.getElementById( 'numpalavra' );
+        
+  //       if ( getWord == '' ){
+  //         console.log("IF");
+  //         num.textContent = '0';
+  //       }
+  //       else if ( getWord.search( /\s[a-z0-9]+$/gi ) > -1 ) num.textContent = getWord.split( ' ' ).length;
+  //       else if ( getWord.search( /[^\s]$/ ) > -1 ) num.textContent = '1';
+  // }
 
   $(function(){
     // Coautores

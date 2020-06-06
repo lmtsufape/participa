@@ -13,6 +13,7 @@ use App\User;
 use App\Trabalho;
 use App\AreaModalidade;
 use App\FormEvento;
+use App\FormSubmTraba;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -177,13 +178,27 @@ class EventoController extends Controller
         // dos campos do card de eventos.
 
         $FormEvento = FormEvento::create([
-          'etiquetatipoevento'             => 'Tipo:',
-          'etiquetadescricaoevento'        => 'Descrição:',
-          'etiquetadatas'                  => 'Realização:',
-          'etiquetaenderecoevento'         => 'Endereço:',
-          'etiquetamoduloinscricao'        => 'Inscrições:',
-          'etiquetamoduloprogramacao'      => 'Programação:',
-          'etiquetamoduloorganizacao'      => 'Organização:',
+          'etiquetanomeevento'             => 'Nome',
+          'etiquetatipoevento'             => 'Tipo',
+          'etiquetadescricaoevento'        => 'Descrição',
+          'etiquetadatas'                  => 'Realização',
+          'etiquetaenderecoevento'         => 'Endereço',
+          'etiquetamoduloinscricao'        => 'Inscrições',
+          'etiquetamoduloprogramacao'      => 'Programação',
+          'etiquetamoduloorganizacao'      => 'Organização',
+          'eventoId'                       => $evento->id,
+        ]);
+
+        // Passando dados default para a edição das etiquetas
+        // dos campos da submissão de trabalhos.
+        $FormSubmTraba = FormSubmTraba::create([
+          'etiquetatitulotrabalho'         => 'Titulo',
+          'etiquetaautortrabalho'          => 'Autor',
+          'etiquetacoautortrabalho'        => 'Co-Autor',
+          'etiquetaresumotrabalho'         => 'Resumo',
+          'etiquetaareatrabalho'           => 'Área',
+          'etiquetaregrasub'               => 'Submissão de Regras',
+          'etiquetatemplatesub'            => 'Submissão de Template',
           'eventoId'                       => $evento->id,
         ]);
         
@@ -357,7 +372,8 @@ class EventoController extends Controller
         // $atribuicoesProcessando
         // dd($trabalhosEnviados);
         $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
-        $etiquetas = FormEvento::where('eventoId', $evento->id)->first();
+        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
+        $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
         
         return view('coordenador.detalhesEvento', [
                                                     'evento'                  => $evento,
@@ -373,7 +389,8 @@ class EventoController extends Controller
                                                     'trabalhosPendentes'      => $trabalhosPendentes,
                                                     'numeroRevisores'         => $numeroRevisores,
                                                     'numeroComissao'          => $numeroComissao,
-                                                    'etiquetas'               => $etiquetas
+                                                    'etiquetas'               => $etiquetas,
+                                                    'etiquetasSubTrab'        => $etiquetasSubTrab
                                                   ]);
     }
 

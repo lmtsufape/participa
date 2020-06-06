@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormEventoTable extends Migration
+class CreateFormEtiqueEventoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreateFormEventoTable extends Migration
      */
     public function up()
     {
+        // Formulário para edição de etiquetas do card de eventos.
         Schema::create('form_eventos', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('etiquetanomeevento')->nullable();
             $table->string('etiquetatipoevento')->nullable();
             $table->string('etiquetadescricaoevento')->nullable();
             $table->string('etiquetadatas')->nullable();

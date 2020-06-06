@@ -117,6 +117,11 @@
                           <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Exibir Opções</h5>
                       </li>
                   </a>
+                  <a id="editarEtiquetaSubTrabalhos" onclick="habilitarPagina('editarEtiquetaSubTrabalhos')">
+                    <li>
+                        <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Etiqueta Traba</h5>
+                    </li>
+                  </a>
               </div>
             </a>
             <!-- <a id="colocacao" onclick="habilitarPagina('colocacao')">
@@ -1243,6 +1248,25 @@
 
               <p class="card-text">
                 <div class="row">
+                    <div class="col-sm-10">
+                        <label for="etiquetanomeevento" class="col-form-label">{{$etiquetas->etiquetanomeevento}}</label>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <input id="etiquetanomeevento" type="text" class="form-control @error('etiquetanomeevento') is-invalid @enderror" name="etiquetanomeevento" value="{{ old('etiquetanomeevento') }}" autocomplete="etiquetanomeevento" placeholder="Ex: Nome" autofocus>
+
+                        @error('etiquetatipoevento')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>{{-- end row--}}
+              </p>
+
+              <p class="card-text">
+                <div class="row">
                     <div class="col-sm-12">
                         <label for="etiquetatipoevento" class="col-form-label">{{$etiquetas->etiquetatipoevento}}</label>
                     </div>
@@ -1389,6 +1413,205 @@
     </div>
   </div>{{-- end row card --}}
 </div>
+
+
+{{-- Submissão de Trabalhos - edição de etiquetas --}}
+<div id="divEditarEtiquetasSubTrabalho" class="eventos" style="display: none">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Editar Etiquetas</h1>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Modelo Atual</h5>
+                    <p class="card-text">
+                    <form method="POST">
+                    @csrf
+
+                    <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                    
+                    <div class="row justify-content-center">
+        
+                        <div class="col-sm-12">
+                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
+                            <input id="nomeTrabalho" type="text" class="form-control" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+        
+                        <div class="col-sm-12">
+                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
+                            <input class="form-control" type="text" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:20px">
+                        <div class="col-sm-12">
+                        <div id="coautores">
+                
+                        </div>
+                        <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px" disabled>{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</a>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-sm-12">
+                            <label for="resumo" class="col-form-label">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
+                            <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" disabled></textarea>
+                            <p class="text-muted"><small><span name="resumo">0</span></small></p>
+                            @error('resumo')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                
+                        </div>
+                    </div>   
+
+                    <!-- Areas -->
+                    <div class="row justify-content-center">
+                        <div class="col-sm-12">
+                            <label for="area" class="col-form-label">{{$etiquetasSubTrab->etiquetaareatrabalho}}:</label>
+                            <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId" disabled>
+                                <option value="" disabled selected hidden>-- Área --</option>
+                            </select>
+                            @error('areaId')
+                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        {{-- Arquivo --}}
+                        <div class="col-sm-12">
+                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaregrasub}}:</label>
+                
+                            <div class="custom-file">
+                            <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" disabled>
+                            </div>
+                            <small>Arquivos aceitos nos formatos a seguir</small>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Área para edição</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Edite aqui as etiquetas do form de submissão de trabalhos</h6>
+                    <form method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
+                    @csrf
+                    <p class="card-text">
+                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <label for="etiquetatitulotrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
+                                <input id="etiquetatitulotrabalho" type="text" class="form-control @error('etiquetatitulotrabalho') is-invalid @enderror" name="etiquetatitulotrabalho" value="{{ old('etiquetatitulotrabalho') }}" autocomplete="etiquetatitulotrabalho" placeholder="Ex: Título do trabalho" autofocus>
+
+                                @error('etiquetatitulotrabalho')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label for="etiquetaautortrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
+                                <input id="etiquetaautortrabalho" type="text" class="form-control @error('etiquetaautortrabalho') is-invalid @enderror" name="etiquetaautortrabalho" value="{{ old('etiquetaautortrabalho') }}" autocomplete="etiquetaautortrabalho" placeholder="Ex: Autor do Trabalho" autofocus>
+
+                                @error('etiquetaautortrabalho')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label for="etiquetacoautortrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</label>
+                                <input id="etiquetacoautortrabalho" type="text" class="form-control @error('etiquetacoautortrabalho') is-invalid @enderror" name="etiquetacoautortrabalho" value="{{ old('etiquetacoautortrabalho') }}" autocomplete="nome" placeholder="Ex: Outros Autores" autofocus>
+
+                                @error('etiquetacoautortrabalho')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label for="etiquetaresumotrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
+                                <input id="etiquetaresumotrabalho" type="text" class="form-control @error('etiquetaresumotrabalho') is-invalid @enderror" name="etiquetaresumotrabalho" value="{{ old('etiquetaresumotrabalho') }}" autocomplete="etiquetaresumotrabalho" placeholder="Ex: Texto - Pequeno Resumo" autofocus>
+
+                                @error('etiquetaresumotrabalho')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label for="etiquetaareatrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaareatrabalho}}:</label>
+                                <input id="etiquetaareatrabalho" type="text" class="form-control @error('etiquetaareatrabalho') is-invalid @enderror" name="etiquetaareatrabalho" value="{{ old('etiquetaareatrabalho') }}" autocomplete="etiquetaareatrabalho" placeholder="Ex: Seções" autofocus>
+
+                                @error('etiquetaareatrabalho')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label for="etiquetaregrasub" class="col-form-label">{{$etiquetasSubTrab->etiquetaregrasub}}:</label>
+                                <input id="etiquetaregrasub" type="text" class="form-control @error('etiquetaregrasub') is-invalid @enderror" name="etiquetaregrasub" value="{{ old('etiquetaregrasub') }}" autocomplete="etiquetaregrasub" placeholder="Ex: Upload Trabalho" autofocus>
+
+                                @error('etiquetaregrasub')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-sm-12">
+                                <label for="etiquetatemplatesub" class="col-form-label">{{$etiquetasSubTrab->etiquetatemplatesub}}:</label>
+                                <input id="etiquetatemplatesub" type="text" class="form-control @error('etiquetatemplatesub') is-invalid @enderror" name="etiquetatemplatesub" value="{{ old('etiquetatemplatesub') }}" autocomplete="etiquetatemplatesub" placeholder="Ex: Upload do Template" autofocus>
+
+                                @error('etiquetatemplatesub')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                    </p>
+
+                    <div class="row justify-content-center">
+
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
+                    </div>
+                    </form>
+
+                </div>
+            </div>{{-- End card--}}
+        </div>
+    </div>{{-- end row card --}}
+
+
+
+    
+</div>
+{{-- Template 2 - edição de etiquetas --}}
 
 {{-- Evento --}}
 <div id="divExibirOpcoes" class="eventos" style="display: none">
@@ -1979,7 +2202,8 @@
         cadastrarModalidade = document.getElementById('divCadastrarModalidades');
         listarModalidade = document.getElementById('divListarModalidades');
 
-        editarEtiqueta = document.getElementById('divEditarEtiquetas');
+        editarEtiqueta = document.getElementById('divEditarEtiquetas'); //Etiquetas do card de eventos
+        editarEtiquetaSubTrabalhos = document.getElementById('divEditarEtiquetasSubTrabalho');
         exibirOpcoes = document.getElementById('divExibirOpcoes');
 
         // habilita divInformacoes
@@ -1999,6 +2223,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
         }
         if(id == 'listarTrabalhos'){
             console.log('listarTrabalhos');
@@ -2016,6 +2243,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
         }
 
         if(id == 'modalidades'){
@@ -2034,6 +2264,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
 
         }
         if(id == 'colocacao'){
@@ -2052,6 +2285,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
 
         }
         if(id == 'atividades'){
@@ -2070,6 +2306,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
 
         }
         if(id == 'cadastrarAreas'){
@@ -2088,6 +2327,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
 
         }
         if(id == 'listarAreas'){
@@ -2106,6 +2348,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
 
         }
 
@@ -2125,7 +2370,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
 
         }
         if(id == 'listarRevisores'){
@@ -2144,7 +2391,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
 
         }
         if(id == 'cadastrarComissao'){
@@ -2163,7 +2412,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
 
         }
         if(id == 'definirCoordComissao'){
@@ -2182,8 +2433,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
-
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
         }
         if(id == 'listarComissao'){
             console.log('listarComissao');
@@ -2201,6 +2453,9 @@
             listarComissao.style.display = "block";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
         }
         if(id == 'cadastrarModalidade'){
             console.log('cadastrarModalidade');
@@ -2218,6 +2473,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "block";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
         }
         if(id == 'listarModalidade'){
             console.log('listarModalidade');
@@ -2235,6 +2493,9 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "block";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
         }
         if(id == 'submissoesTrabalhos'){
           informacoes.style.display = "none";
@@ -2251,6 +2512,9 @@
           listarComissao.style.display = "none";
           cadastrarModalidade.style.display = "none";
           listarModalidade.style.display = "none";
+          editarEtiqueta.style.display = "none";
+          exibirOpcoes.style.display = "none";
+          editarEtiquetaSubTrabalhos.style.display = "none";
         }
 
         if(id == 'editarEtiqueta'){
@@ -2271,6 +2535,7 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "block";
             exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
         }
         if(id == 'exibirOpcoes'){
             console.log('exibirOpcoes');
@@ -2290,6 +2555,28 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             exibirOpcoes.style.display = "block";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+        }
+
+        if(id == 'editarEtiquetaSubTrabalhos'){
+            console.log('exibirOpcoes');
+            informacoes.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
+            cadastrarRevisores.style.display = "none";
+            listarRevisores.style.display = "none";
+            cadastrarComissao.style.display = "none";
+            definirCoordComissao.style.display = "none";
+            listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            exibirOpcoes.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "block";
         }
 
     }

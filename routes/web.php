@@ -73,7 +73,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   //AreaModalidade
   Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
   //Trabalho
-  Route::get(   '/trabalho/submeter/{id}','TrabalhoController@index'                   )->name('trabalho.index');
+  Route::get(   '/trabalho/submeter/{id}/{idModalidade}','TrabalhoController@index'                   )->name('trabalho.index');
   Route::post(  '/trabalho/novaVersao',   'TrabalhoController@novaVersao'              )->name('trabalho.novaVersao');
   Route::post(  '/trabalho/criar',        'TrabalhoController@store'                   )->name('trabalho.store');
   //Atribuição
@@ -83,8 +83,10 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/removerAtribuicao',     'AtribuicaoController@deletePorRevisores'    )->name('atribuicao.delete');
   // rota downloadArquivo
   Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
-  // atualizar etiquetas do form
+  // atualizar etiquetas do form de eventos
   Route::post(  '/etiquetas/editar/{id}', 'FormEventoController@update'                )->name('etiquetas.update');
+  // atualizar etiquetas do form de submissão de trabalhos
+  Route::post(  '/etiquetas/submissao_trabalhos/editar/{id}', 'FormSubmTrabaController@update')->name('etiquetas_sub_trabalho.update');
   // Exibir ou ocultar modulos
   Route::post(  '/modulos/{id}',          'FormEventoController@exibirModulo'          )->name('exibir.modulo');
 

@@ -13,6 +13,7 @@ use App\Modalidade;
 use App\Atribuicao;
 use App\Arquivo;
 use App\FormTipoSubm;
+use App\FormSubmTraba;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class TrabalhoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index($id, $idModalidade)
     {
         $evento = Evento::find($id);
         $areas = Area::where('eventoId', $evento->id)->get();
@@ -47,18 +48,19 @@ class TrabalhoController extends Controller
         }
 
         $trabalhos = Trabalho::where('autorId', Auth::user()->id)->whereIn('areaId', $areasId)->get();
-        $formtiposubmissao = FormTipoSubm::all();
-
-        // Forma de pegar o formulario correto de uma modalidade especifica
-        foreach($formtiposubmissao as $formtiposub) {
-          foreach($modalidades as $modalidade){
-            if($formtiposub->modalidadeId == $modalidade->id){
-              $form = $formtiposub;
-            }
-          }
-        }
         
-        // dd($form);
+        // $formtiposubmissao é um vetor com os dados que serão ou
+        // não exibidos no formulario de submissão de trabalho. 
+        $formtiposubmissao = FormTipoSubm::where('modalidadeId', $idModalidade)->first();
+        
+        // Pegando apenas as areas que possuem relação com a modalidade selecionada
+        // ao clciar no botão "submeter trabalho".
+        $areaPorModalidade = AreaModalidade::where('modalidadeId', $idModalidade)->select('areaId')->get();
+        $areasEspecificas = Area::wherein('id', $areaPorModalidade)->get();
+
+        $formSubTraba = FormSubmTraba::where('eventoId', $evento->id)->first();
+
+        // dd($formtiposubmissao);
         return view('evento.submeterTrabalho',[
                                               'evento'                 => $evento,
                                               'areas'                  => $areas,
@@ -69,7 +71,10 @@ class TrabalhoController extends Controller
                                               'areasEnomes'            => $areasEnomes,
                                               'modalidadesIDeNome'     => $modalidadesIDeNome,
                                               'modalidadesIDeNome'     => $modalidadesIDeNome,
-                                              'regrasubarq'            => $form,
+                                              'regrasubarq'            => $formtiposubmissao,
+                                              'areasEspecificas'       => $areasEspecificas,
+                                              'modalidadeEspecifica'   => $idModalidade,
+                                              'formSubTraba'           => $formSubTraba
                                             ]);
     }
 
@@ -106,7 +111,7 @@ class TrabalhoController extends Controller
         'resumo'            => ['nullable','string'],
         'nomeCoautor.*'     => ['string'],
         'emailCoautor.*'    => ['string'],
-        'arquivo'           => ['required', 'file', 'mimes:pdf', 'max:2000000'],
+        'arquivo'           => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
       ]);
 
 
@@ -166,16 +171,21 @@ class TrabalhoController extends Controller
         }
       }
 
-      $file = $request->arquivo;
-      $path = 'trabalhos/' . $request->eventoId . '/' . $trabalho->id .'/';
-      $nome = "1.pdf";
-      Storage::putFileAs($path, $file, $nome);
+      if(isset($request->arquivo)){
+        
+        $file = $request->arquivo;
+        $path = 'trabalhos/' . $request->eventoId . '/' . $trabalho->id .'/';
+        $nome = "1.pdf";
+        Storage::putFileAs($path, $file, $nome);
 
-      $arquivo = Arquivo::create([
-        'nome'  => $path . $nome,
-        'trabalhoId'  => $trabalho->id,
-        'versaoFinal' => true,
-      ]);
+        $arquivo = Arquivo::create([
+          'nome'  => $path . $nome,
+          'trabalhoId'  => $trabalho->id,
+          'versaoFinal' => true,
+        ]);
+      }
+
+      
       $subject = "Submissão de Trabalho";
       Mail::to($autor->email)
             ->send(new SubmissaoTrabalho($autor, $subject));

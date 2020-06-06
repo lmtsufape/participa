@@ -148,7 +148,7 @@
             @if (isset($modalidade->inicioResultado))
             <p>
               <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-              Resultado: {{date('d/m/Y',strtotime($modalidade->inicioResultado))}} - {{date('d/m/Y',strtotime($modalidade->fimResultado))}}
+              Resultado: {{date('d/m/Y',strtotime($modalidade->inicioResultado))}}
             </p>
             @else
             <strong><p>* Datas de resultados ainda não definidas!</p></strong>
@@ -157,7 +157,7 @@
             @if($modalidade->inicioSubmissao <= $mytime)
               @if($mytime < $modalidade->fimSubmissao)
                 <div class="col-md-6 botao-form-left" style="">
-                  <a class="btn btn-secondary" href="{{route('trabalho.index',['id'=>$evento->id])}}">Submeter Trabalho</a>
+                  <a class="btn btn-secondary" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">Submeter Trabalho</a>
                 </div>
               @endif
             @endif
