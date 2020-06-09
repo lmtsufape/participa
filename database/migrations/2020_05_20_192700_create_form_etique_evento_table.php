@@ -20,6 +20,7 @@ class CreateFormEtiqueEventoTable extends Migration
             $table->string('etiquetatipoevento')->nullable();
             $table->string('etiquetadescricaoevento')->nullable();
             $table->string('etiquetadatas')->nullable();
+            $table->string('etiquetasubmissoes')->nullable();
             $table->string('etiquetaenderecoevento')->nullable();
             $table->string('etiquetamoduloinscricao')->nullable();
             $table->string('etiquetamoduloprogramacao')->nullable();
@@ -28,6 +29,7 @@ class CreateFormEtiqueEventoTable extends Migration
             $table->boolean('modinscricao')->nullable();
             $table->boolean('modprogramacao')->nullable();
             $table->boolean('modorganizacao')->nullable();
+            $table->boolean('modsubmissao')->nullable();
 
             $table->bigInteger("eventoId")->nullable();
             $table->foreign("eventoId")->references("id")->on("eventos");

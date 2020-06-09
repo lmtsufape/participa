@@ -7,7 +7,11 @@
         <div class="col-sm-8">
             <div class="card" style="margin-top:50px">
                 <div class="card-body">
-                  <h5 class="card-title">Enviar Trabalho</h5>
+                  <h2 class="card-title">{{$evento->nome}}</h2>
+                  <h4 class="card-title">{{$nomeModalidade}}</h4>
+                  <div class="titulo-detalhes"></div>
+                  <br>
+                  <h4 class="card-title">Enviar Trabalho</h4>
                   <p class="card-text">
                     <form method="POST" action="{{route('trabalho.store')}}" enctype="multipart/form-data">
                         @csrf
@@ -120,10 +124,102 @@
                             </div>
                         </div> --}}
                         <div class="row justify-content-center">
-                          {{-- Arquivo --}}
-                          @if ($regrasubarq->arquivo == true)
+                          {{-- Submeter trabalho --}}
+                          {{-- *Obs: As condições abaixo servem para manter o layout do botão para upload
+                            e dos botões para baixar a regra e o template. --}}
+                          @if ($regrasubarq->arquivo == true && isset($regras) && isset($templates))
+                            <div class="col-sm-6" style="margin-top: 20px;">
+                              <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
+
+                              <div class="custom-file">
+                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                              </div>
+                              <small>Arquivos aceitos nos formatos 
+                                @if($regrasubarq->pdf == true)pdf - @endif
+                                @if($regrasubarq->jpg == true)jpg - @endif
+                                @if($regrasubarq->jpeg == true)jpeg - @endif
+                                @if($regrasubarq->png == true)png - @endif
+                                @if($regrasubarq->docx == true)docx - @endif
+                                @if($regrasubarq->odt == true)odt @endif.</small>
+                              @error('arquivo')
+                              <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                            </div>
+
+                            <div class="col-sm-3" style="margin-top: 20px;">
+                              <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetabaixarregra}}:</label>
+                              <a href="{{route('download.regra', ['file' => $regras->nome])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                                <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                              </a>
+                            </div>
+                            
+                            <div class="col-sm-3" style="margin-top: 20px;">
+                              <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetabaixartemplate}}:</label>
+                              <a href="{{route('download.template', ['file' => $templates->nome])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                                <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                              </a>
+                            </div>
+
+                          @elseif ($regrasubarq->arquivo == true && isset($regras) && $templates == null)
+                            <div class="col-sm-6" style="margin-top: 20px;">
+                              <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
+
+                              <div class="custom-file">
+                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                              </div>
+                              <small>Arquivos aceitos nos formatos 
+                                @if($regrasubarq->pdf == true)pdf - @endif
+                                @if($regrasubarq->jpg == true)jpg - @endif
+                                @if($regrasubarq->jpeg == true)jpeg - @endif
+                                @if($regrasubarq->png == true)png - @endif
+                                @if($regrasubarq->docx == true)docx - @endif
+                                @if($regrasubarq->odt == true)odt @endif.</small>
+                              @error('arquivo')
+                              <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                            </div>
+
+                            <div class="col-sm-6" style="margin-top: 20px;">
+                              <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetabaixarregra}}:</label>
+                              <a href="{{route('download.regra', ['file' => $regras->nome])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                                <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                              </a>
+                            </div>
+                          @elseif ($regrasubarq->arquivo == true && isset($templates) && $regras == null)
+                            <div class="col-sm-6" style="margin-top: 20px;">
+                              <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}:</label>
+
+                              <div class="custom-file">
+                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                              </div>
+                              <small>Arquivos aceitos nos formatos 
+                                @if($regrasubarq->pdf == true)pdf - @endif
+                                @if($regrasubarq->jpg == true)jpg - @endif
+                                @if($regrasubarq->jpeg == true)jpeg - @endif
+                                @if($regrasubarq->png == true)png - @endif
+                                @if($regrasubarq->docx == true)docx - @endif
+                                @if($regrasubarq->odt == true)odt @endif.</small>
+                              @error('arquivo')
+                              <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                            </div>
+                            
+                            <div class="col-sm-6" style="margin-top: 20px;">
+                              <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetabaixartemplate}}:</label>
+                              <a href="{{route('download.template', ['file' => $templates->nome])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                                <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                              </a>
+                            </div>
+                          @else
+
                             <div class="col-sm-12" style="margin-top: 20px;">
-                              <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetaregrasub}}</label>
+                              <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
 
                               <div class="custom-file">
                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">

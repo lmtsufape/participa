@@ -9,6 +9,17 @@ class FormSubmTrabaController extends Controller
 {
     public function update(Request $request, $id){
 
+        $validatedData = $request->validate([
+            'etiquetatitulotrabalho'    => ['nullable', 'string'],
+            'etiquetaautortrabalho'     => ['nullable', 'string'],
+            'etiquetacoautortrabalho'   => ['nullable', 'string'],
+            'etiquetaresumotrabalho'    => ['nullable', 'string'],
+            'etiquetaareatrabalho'      => ['nullable', 'string'],
+            'etiquetauploadtrabalho'    => ['nullable', 'string'],
+            'etiquetabaixarregra'       => ['nullable', 'string'],
+            'etiquetabaixartemplate'    => ['nullable', 'string'],
+        ]);
+
         $formevento = FormSubmTraba::where('eventoId',$id)->first();
 
         if(isset($request->etiquetatitulotrabalho)){
@@ -26,11 +37,14 @@ class FormSubmTrabaController extends Controller
         if(isset($request->etiquetaareatrabalho)){
             $formevento->etiquetaareatrabalho                = $request->etiquetaareatrabalho;
         }
-        if(isset($request->etiquetaregrasub)){
-            $formevento->etiquetaregrasub                    = $request->etiquetaregrasub;
+        if(isset($request->etiquetauploadtrabalho)){
+            $formevento->etiquetauploadtrabalho              = $request->etiquetauploadtrabalho;
         }
-        if(isset($request->etiquetatemplatesub)){
-            $formevento->etiquetatemplatesub                 = $request->etiquetatemplatesub;
+        if(isset($request->etiquetabaixarregra)){
+            $formevento->etiquetabaixarregra                 = $request->etiquetabaixarregra;
+        }
+        if(isset($request->etiquetabaixartemplate)){
+            $formevento->etiquetabaixartemplate              = $request->etiquetabaixartemplate;
         }
         
         $formevento->save();

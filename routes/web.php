@@ -83,11 +83,15 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/removerAtribuicao',     'AtribuicaoController@deletePorRevisores'    )->name('atribuicao.delete');
   // rota downloadArquivo
   Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
+  // rota download arquivo de regras para submissão de trabalho
+  Route::get(   '/downloadArquivoRegras',       'RegraSubmisController@downloadArquivo')->name('download.regra');
+  // rota download arquivo de templates para submissão de trabalho
+  Route::get(   '/downloadArquivoTemplates',    'TemplateSubmisController@downloadArquivo'       )->name('download.template');
   // atualizar etiquetas do form de eventos
   Route::post(  '/etiquetas/editar/{id}', 'FormEventoController@update'                )->name('etiquetas.update');
   // atualizar etiquetas do form de submissão de trabalhos
   Route::post(  '/etiquetas/submissao_trabalhos/editar/{id}', 'FormSubmTrabaController@update')->name('etiquetas_sub_trabalho.update');
-  // Exibir ou ocultar modulos
+  // Exibir ou ocultar modulos do card de eventos
   Route::post(  '/modulos/{id}',          'FormEventoController@exibirModulo'          )->name('exibir.modulo');
 
 });

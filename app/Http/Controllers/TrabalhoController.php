@@ -14,6 +14,8 @@ use App\Atribuicao;
 use App\Arquivo;
 use App\FormTipoSubm;
 use App\FormSubmTraba;
+use App\RegraSubmis;
+use App\TemplateSubmis;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Http\Request;
@@ -34,12 +36,12 @@ class TrabalhoController extends Controller
     public function index($id, $idModalidade)
     {
         $evento = Evento::find($id);
-        $areas = Area::where('eventoId', $evento->id)->get();
+        // $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::all();        
+        // $revisores = Revisor::where('eventoId', $evento->id)->get();
+        // $modalidades = Modalidade::all();        
         $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();        
-        $areasEnomes = Area::wherein('id', $areasId)->get();
+        // $areasEnomes = Area::wherein('id', $areasId)->get();
         $modalidadesIDeNome = [];
         foreach ($areaModalidades as $key) {
           array_push($modalidadesIDeNome,['areaId' => $key->area->id,
@@ -47,7 +49,7 @@ class TrabalhoController extends Controller
                                           'modalidadeNome' => $key->modalidade->nome]);
         }
 
-        $trabalhos = Trabalho::where('autorId', Auth::user()->id)->whereIn('areaId', $areasId)->get();
+        // $trabalhos = Trabalho::where('autorId', Auth::user()->id)->whereIn('areaId', $areasId)->get();
         
         // $formtiposubmissao é um vetor com os dados que serão ou
         // não exibidos no formulario de submissão de trabalho. 
@@ -60,21 +62,27 @@ class TrabalhoController extends Controller
 
         $formSubTraba = FormSubmTraba::where('eventoId', $evento->id)->first();
 
-        // dd($formtiposubmissao);
+        $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
+        $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
+
+        $nomeModalidade = Modalidade::find($idModalidade);
+        
         return view('evento.submeterTrabalho',[
                                               'evento'                 => $evento,
-                                              'areas'                  => $areas,
-                                              'revisores'              => $revisores,
-                                              'modalidades'            => $modalidades,
-                                              'areaModalidades'        => $areaModalidades,
-                                              'trabalhos'              => $trabalhos,
-                                              'areasEnomes'            => $areasEnomes,
-                                              'modalidadesIDeNome'     => $modalidadesIDeNome,
+                                              // 'areas'                  => $areas,
+                                              // 'revisores'              => $revisores,
+                                              // 'modalidades'            => $modalidades,
+                                              // 'areaModalidades'        => $areaModalidades,
+                                              // 'trabalhos'              => $trabalhos,
+                                              // 'areasEnomes'            => $areasEnomes,
                                               'modalidadesIDeNome'     => $modalidadesIDeNome,
                                               'regrasubarq'            => $formtiposubmissao,
                                               'areasEspecificas'       => $areasEspecificas,
                                               'modalidadeEspecifica'   => $idModalidade,
-                                              'formSubTraba'           => $formSubTraba
+                                              'formSubTraba'           => $formSubTraba,
+                                              'regras'                 => $regra,
+                                              'templates'              => $template,
+                                              'nomeModalidade'         => $nomeModalidade->nome,
                                             ]);
     }
 

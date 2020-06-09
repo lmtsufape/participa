@@ -9,8 +9,24 @@ class FormEventoController extends Controller
 {
     public function update(Request $request, $id){
 
-        $formevento = FormEvento::where('eventoId',$id)->first();
+        $validatedData = $request->validate([
 
+            'etiquetanomeevento'        => ['nullable', 'string'],
+            'etiquetatipoevento'        => ['nullable', 'string'],
+            'etiquetadescricaoevento'   => ['nullable', 'string'],
+            'etiquetadatas'             => ['nullable', 'string'],
+            'etiquetasubmissoes'        => ['nullable', 'string'],
+            'etiquetaenderecoevento'    => ['nullable', 'string'],
+            'etiquetamoduloinscricao'   => ['nullable', 'string'],
+            'etiquetamoduloprogramacao' => ['nullable', 'string'],
+            'etiquetamoduloorganizacao' => ['nullable', 'string'],
+        ]);
+
+        $formevento = FormEvento::where('eventoId',$id)->first();
+        
+        if(isset($request->etiquetanomeevento)){
+            $formevento->etiquetanomeevento              = $request->etiquetanomeevento;
+        }
         if(isset($request->etiquetatipoevento)){
             $formevento->etiquetatipoevento              = $request->etiquetatipoevento;
         }
@@ -19,6 +35,9 @@ class FormEventoController extends Controller
         }
         if(isset($request->etiquetadatas)){
             $formevento->etiquetadatas                   = $request->etiquetadatas;
+        }
+        if(isset($request->etiquetasubmissoes)){
+            $formevento->etiquetasubmissoes              = $request->etiquetasubmissoes;
         }
         if(isset($request->etiquetaenderecoevento)){
             $formevento->etiquetaenderecoevento          = $request->etiquetaenderecoevento;
@@ -50,6 +69,9 @@ class FormEventoController extends Controller
         }
         if(isset($request->modorganizacao)){
             $formevento->modorganizacao       = $request->modorganizacao;
+        }
+        if(isset($request->modsubmissao)){
+            $formevento->modsubmissao       = $request->modsubmissao;
         }
 
         $formevento->save();

@@ -121,10 +121,10 @@
         </div>
     </div>
 
-    @if (empty($modalidades) == false)
+    @if ($etiquetas->modsubmissao == true)
       <div class="row margin">
         <div class="col-sm-12 info-evento">
-            <h4>Submissões</h4>
+            <h4>{{$etiquetas->etiquetasubmissoes}}</h4>
             @foreach ($modalidades as $modalidade)
             <h6>Modalidade: {{$modalidade->nome}}</h6>
             @if (isset($modalidade->inicioSubmissao))
@@ -132,8 +132,6 @@
                 <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
                 Submissão: {{date('d/m/Y',strtotime($modalidade->inicioSubmissao))}} - {{date('d/m/Y',strtotime($modalidade->fimSubmissao))}}
               </p>
-            @else
-              <strong><p>* Datas de submissão ainda não definidas!</p></strong>
             @endif
 
             @if (isset($modalidade->inicioRevisao))
@@ -141,8 +139,6 @@
               <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
               Revisão: {{date('d/m/Y',strtotime($modalidade->inicioRevisao))}} - {{date('d/m/Y',strtotime($modalidade->fimRevisao))}}
             </p>
-            @else
-            <strong><p>* Datas de revisão ainda não definidas!</p></strong>
             @endif
 
             @if (isset($modalidade->inicioResultado))
@@ -150,8 +146,6 @@
               <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
               Resultado: {{date('d/m/Y',strtotime($modalidade->inicioResultado))}}
             </p>
-            @else
-            <strong><p>* Datas de resultados ainda não definidas!</p></strong>
             @endif
 
             @if($modalidade->inicioSubmissao <= $mytime)
@@ -215,7 +209,7 @@
       </div>    
     @endif
     
-    @if($hasFile == true)
+    {{-- @if($hasFile == true)
       <div class="row margin">
           <div class="col-sm-12">
               <h1>
@@ -318,7 +312,7 @@
           </div>
         </div>
       @endif
-    @endif
+    @endif --}}
 
     <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 

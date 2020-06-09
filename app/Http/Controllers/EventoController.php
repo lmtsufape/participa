@@ -182,6 +182,7 @@ class EventoController extends Controller
           'etiquetatipoevento'             => 'Tipo',
           'etiquetadescricaoevento'        => 'Descrição',
           'etiquetadatas'                  => 'Realização',
+          'etiquetasubmissoes'             => 'Submissões',
           'etiquetaenderecoevento'         => 'Endereço',
           'etiquetamoduloinscricao'        => 'Inscrições',
           'etiquetamoduloprogramacao'      => 'Programação',
@@ -197,8 +198,9 @@ class EventoController extends Controller
           'etiquetacoautortrabalho'        => 'Co-Autor',
           'etiquetaresumotrabalho'         => 'Resumo',
           'etiquetaareatrabalho'           => 'Área',
-          'etiquetaregrasub'               => 'Submissão de Regras',
-          'etiquetatemplatesub'            => 'Submissão de Template',
+          'etiquetauploadtrabalho'         => 'Upload de Trabalho',
+          'etiquetabaixarregra'            => 'Regras',
+          'etiquetabaixartemplate'         => 'Template',
           'eventoId'                       => $evento->id,
         ]);
         

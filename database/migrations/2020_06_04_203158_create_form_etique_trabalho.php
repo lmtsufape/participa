@@ -21,8 +21,9 @@ class CreateFormEtiqueTrabalho extends Migration
             $table->string('etiquetacoautortrabalho')->nullable();
             $table->string('etiquetaresumotrabalho')->nullable();
             $table->string('etiquetaareatrabalho')->nullable();
-            $table->string('etiquetaregrasub')->nullable();
-            $table->string('etiquetatemplatesub')->nullable();
+            $table->string('etiquetauploadtrabalho')->nullable();
+            $table->string('etiquetabaixarregra')->nullable();
+            $table->string('etiquetabaixartemplate')->nullable();
             $table->string('campoextra1')->nullable();
             $table->string('campoextra2')->nullable();
             $table->string('campoextra3')->nullable();
