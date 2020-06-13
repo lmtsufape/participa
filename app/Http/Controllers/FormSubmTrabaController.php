@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\FormSubmTraba;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class FormSubmTrabaController extends Controller
 {
@@ -18,6 +21,11 @@ class FormSubmTrabaController extends Controller
             'etiquetauploadtrabalho'    => ['nullable', 'string'],
             'etiquetabaixarregra'       => ['nullable', 'string'],
             'etiquetabaixartemplate'    => ['nullable', 'string'],
+            'etiquetacampoextra1'       => ['nullable', 'string'],
+            'etiquetacampoextra2'       => ['nullable', 'string'],
+            'etiquetacampoextra3'       => ['nullable', 'string'],
+            'etiquetacampoextra4'       => ['nullable', 'string'],
+            'etiquetacampoextra5'       => ['nullable', 'string'],
         ]);
 
         $formevento = FormSubmTraba::where('eventoId',$id)->first();
@@ -45,6 +53,40 @@ class FormSubmTrabaController extends Controller
         }
         if(isset($request->etiquetabaixartemplate)){
             $formevento->etiquetabaixartemplate              = $request->etiquetabaixartemplate;
+        }
+        if(isset($request->etiquetacampoextra1)){
+            $formevento->etiquetacampoextra1                 = $request->etiquetacampoextra1;
+        }
+        if(isset($request->etiquetacampoextra2)){
+            $formevento->etiquetacampoextra2                 = $request->etiquetacampoextra2;
+        }
+        if(isset($request->etiquetacampoextra3)){
+            $formevento->etiquetacampoextra3                 = $request->etiquetacampoextra3;
+        }
+        if(isset($request->etiquetacampoextra4)){
+            $formevento->etiquetacampoextra4                 = $request->etiquetacampoextra4;
+        }
+        if(isset($request->etiquetacampoextra5)){
+            $formevento->etiquetacampoextra5                 = $request->etiquetacampoextra5;
+        }
+
+        // Checkboxes para exibição ou não de campos extras
+        // na tela de submissão de trabalhos
+
+        if(isset($request->checkcampoextra1)){
+            $formevento->checkcampoextra1       = $request->checkcampoextra1;
+        }
+        if(isset($request->checkcampoextra2)){
+            $formevento->checkcampoextra2       = $request->checkcampoextra2;
+        }
+        if(isset($request->checkcampoextra3)){
+            $formevento->checkcampoextra3       = $request->checkcampoextra3;
+        }
+        if(isset($request->checkcampoextra4)){
+            $formevento->checkcampoextra4       = $request->checkcampoextra4;
+        }
+        if(isset($request->checkcampoextra5)){
+            $formevento->checkcampoextra5       = $request->checkcampoextra5;
         }
         
         $formevento->save();

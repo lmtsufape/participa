@@ -54,7 +54,7 @@ class TrabalhoController extends Controller
         // $formtiposubmissao é um vetor com os dados que serão ou
         // não exibidos no formulario de submissão de trabalho. 
         $formtiposubmissao = FormTipoSubm::where('modalidadeId', $idModalidade)->first();
-        
+        // dd($formtiposubmissao);
         // Pegando apenas as areas que possuem relação com a modalidade selecionada
         // ao clciar no botão "submeter trabalho".
         $areaPorModalidade = AreaModalidade::where('modalidadeId', $idModalidade)->select('areaId')->get();
@@ -120,6 +120,11 @@ class TrabalhoController extends Controller
         'nomeCoautor.*'     => ['string'],
         'emailCoautor.*'    => ['string'],
         'arquivo'           => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
+        'campoextra1'       => ['nullable', 'string'],
+        'campoextra2'       => ['nullable', 'string'],
+        'campoextra3'       => ['nullable', 'string'],
+        'campoextra4'       => ['nullable', 'string'],
+        'campoextra5'       => ['nullable', 'string'],
       ]);
 
 
@@ -158,14 +163,19 @@ class TrabalhoController extends Controller
           $i++;
         }
       }
-
+      
       $trabalho = Trabalho::create([
         'titulo' => $request->nomeTrabalho,
         'modalidadeId'  => $areaModalidade->modalidade->id,
         'areaId'  => $areaModalidade->area->id,
         'autorId' => $autor->id,
         'eventoId'  => $evento->id,
-        'avaliado' => 'nao'
+        'avaliado' => 'nao',
+        'campoextra1' => $request->campoextra1,
+        'campoextra2' => $request->campoextra2,
+        'campoextra3' => $request->campoextra3,
+        'campoextra4' => $request->campoextra4,
+        'campoextra5' => $request->campoextra5,
       ]);
 
       if($request->emailCoautor != null){

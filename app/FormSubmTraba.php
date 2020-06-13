@@ -15,9 +15,9 @@ class FormSubmTraba extends Model
     
     protected $fillable = [
         'etiquetatitulotrabalho', 'etiquetaautortrabalho', 'etiquetacoautortrabalho', 'etiquetaresumotrabalho',
-        'etiquetaareatrabalho', 'etiquetauploadtrabalho', 'etiquetabaixarregra', 'etiquetabaixartemplate', 'campoextra1', 'campoextra2', 'campoextra3', 'campoextra4', 'campoextra5', 'campoextra6', 'campoextra7',
-        'campoextra8', 'campoextra9', 'campoextra10', 'campoextr11', 'campoextra12', 'campoextra13',
-        'eventoId',
+        'etiquetaareatrabalho', 'etiquetauploadtrabalho', 'etiquetabaixarregra', 'etiquetabaixartemplate', 'etiquetacampoextra1',
+        'etiquetacampoextra2', 'etiquetacampoextra3', 'etiquetacampoextra4', 'etiquetacampoextra5', 'checkcampoextra1', 
+        'checkcampoextra2', 'checkcampoextra3', 'checkcampoextra4', 'checkcampoextra5', 'eventoId',
     ];
 
     public function evento(){

@@ -24,19 +24,20 @@ class CreateFormEtiqueTrabalho extends Migration
             $table->string('etiquetauploadtrabalho')->nullable();
             $table->string('etiquetabaixarregra')->nullable();
             $table->string('etiquetabaixartemplate')->nullable();
-            $table->string('campoextra1')->nullable();
-            $table->string('campoextra2')->nullable();
-            $table->string('campoextra3')->nullable();
-            $table->string('campoextra4')->nullable();
-            $table->string('campoextra5')->nullable();
-            $table->string('campoextra6')->nullable();
-            $table->string('campoextra7')->nullable();
-            $table->string('campoextra8')->nullable();
-            $table->string('campoextra9')->nullable();
-            $table->string('campoextra10')->nullable();
-            $table->string('campoextra11')->nullable();
-            $table->string('campoextra12')->nullable();
-            $table->string('campoextra13')->nullable();
+            
+            // Etiquetas de campos extras
+            $table->string('etiquetacampoextra1')->nullable();
+            $table->string('etiquetacampoextra2')->nullable();
+            $table->string('etiquetacampoextra3')->nullable();
+            $table->string('etiquetacampoextra4')->nullable();
+            $table->string('etiquetacampoextra5')->nullable();
+            
+            // Checkboxes para exibição ou não dos campos extras 
+            $table->boolean('checkcampoextra1')->nullable();
+            $table->boolean('checkcampoextra2')->nullable();
+            $table->boolean('checkcampoextra3')->nullable();
+            $table->boolean('checkcampoextra4')->nullable();
+            $table->boolean('checkcampoextra5')->nullable();
 
             $table->bigInteger("eventoId")->nullable();
             $table->foreign("eventoId")->references("id")->on("eventos");

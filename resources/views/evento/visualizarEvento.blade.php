@@ -80,7 +80,12 @@
         </button>
       </div>
     @endif
-    {{-- Adicionar aqui etiqueta de nome --}}
+
+    <div class="row margin">
+        <div class="col-sm-12">
+            <h4>{{$etiquetas->etiquetanomeevento}}:</h4>
+        </div>
+    </div>
     <div class="row margin">
         <div class="col-sm-12">
             <h1>
@@ -91,7 +96,7 @@
 
     <div class="row margin">
         <div class="col-sm-12">
-            <h4>{{$etiquetas->etiquetadescricaoevento}}</h4>
+            <h4>{{$etiquetas->etiquetadescricaoevento}}:</h4>
         </div>
     </div>
     <div class="row margin">
@@ -102,7 +107,7 @@
 
     <div class="row margin">
       <div class="col-sm-12">
-          <h4>{{$etiquetas->etiquetatipoevento}}</h4>
+          <h4>{{$etiquetas->etiquetatipoevento}}:</h4>
       </div>
     </div>
     <div class="row margin">
@@ -113,7 +118,7 @@
 
     <div class="row margin">
         <div class="col-sm-12 info-evento">
-            <h4>{{$etiquetas->etiquetadatas}}</h4>
+            <h4>{{$etiquetas->etiquetadatas}}:</h4>
             <p>
                 <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
                 {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}
@@ -124,7 +129,7 @@
     @if ($etiquetas->modsubmissao == true)
       <div class="row margin">
         <div class="col-sm-12 info-evento">
-            <h4>{{$etiquetas->etiquetasubmissoes}}</h4>
+            <h4>{{$etiquetas->etiquetasubmissoes}}:</h4>
             @foreach ($modalidades as $modalidade)
             <h6>Modalidade: {{$modalidade->nome}}</h6>
             @if (isset($modalidade->inicioSubmissao))
@@ -165,7 +170,7 @@
 
     <div class="row margin">
         <div class="col-sm-12 info-evento">
-            <h4>{{$etiquetas->etiquetaenderecoevento}}</h4>
+            <h4>{{$etiquetas->etiquetaenderecoevento}}:</h4>
             <p>
                 <img class="" src="{{asset('img/icons/map-marker-alt-solid.svg')}}" alt="">
                 {{$evento->endereco->rua}}, {{$evento->endereco->numero}} - {{$evento->endereco->cidade}} / {{$evento->endereco->uf}}.
@@ -177,7 +182,7 @@
     @if ($etiquetas->modinscricao == true)
       <div class="row margin">
         <div class="col-sm-12 info-evento">
-            <h4>{{$etiquetas->etiquetamoduloinscricao}}</h4>
+            <h4>{{$etiquetas->etiquetamoduloinscricao}}:</h4>
             <p>
                 LOCAL DA INSCRIÇÃO!!!
             </p>
@@ -189,7 +194,7 @@
     @if ($etiquetas->modprogramacao == true)
       <div class="row margin">
         <div class="col-sm-12 info-evento">
-            <h4>{{$etiquetas->etiquetamoduloprogramacao}}</h4>
+            <h4>{{$etiquetas->etiquetamoduloprogramacao}}:</h4>
             <p>
                 LOCAL DA PROGRAMAÇÃO
             </p>
@@ -201,7 +206,7 @@
     @if ($etiquetas->modorganizacao == true)
       <div class="row margin">
         <div class="col-sm-12 info-evento">
-            <h4>{{$etiquetas->etiquetamoduloorganizacao}}</h4>
+            <h4>{{$etiquetas->etiquetamoduloorganizacao}}:</h4>
             <p>
                 LOCAL DA ORGANIZAÇÃO
             </p>

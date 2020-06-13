@@ -91,7 +91,9 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/etiquetas/editar/{id}', 'FormEventoController@update'                )->name('etiquetas.update');
   // atualizar etiquetas do form de submissão de trabalhos
   Route::post(  '/etiquetas/submissao_trabalhos/editar/{id}', 'FormSubmTrabaController@update')->name('etiquetas_sub_trabalho.update');
+  // Inserir novos campos para o form de submissão de trabalhos
+  Route::post(  '/adicionarnovocampo/{id}', 'FormSubmTrabaController@store'            )->name('novocampo.store');
   // Exibir ou ocultar modulos do card de eventos
-  Route::post(  '/modulos/{id}',          'FormEventoController@exibirModulo'          )->name('exibir.modulo');
+  Route::post(  '/modulos/{id}', 'FormEventoController@exibirModulo'                   )->name('exibir.modulo');
 
 });

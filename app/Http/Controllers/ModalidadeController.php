@@ -53,7 +53,6 @@ class ModalidadeController extends Controller
             'inicioRevisao'     => ['nullable', 'date'],
             'fimRevisao'        => ['nullable', 'date'],
             'inicioResultado'   => ['nullable', 'date'],
-            'custom_field'      => ['required', 'string'],
             'mincaracteres'     => ['nullable', 'integer'],
             'maxcaracteres'     => ['nullable', 'integer'],
             'minpalavras'       => ['nullable', 'integer'],
@@ -61,24 +60,20 @@ class ModalidadeController extends Controller
             'arquivoRegras'     => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
             'arquivoTemplates'  => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
         ]);
-
-        if($request->custom_field == "option1"){
-            $texto = true;
-            $arquivo = false;
+        
+        if ($request->texto == true && $request->arquivo == false || $request->texto == true && $request->arquivo == true) {
+            if ($request->limit == "limit-option1") {
+                $caracteres = true;
+                $palavras = false;
+            }
+            if ($request->limit == "limit-option2") {
+                $caracteres = false;
+                $palavras = true;
+            }
         }
-        if ($request->custom_field == "option2") {
-            $arquivo = true;
-            $texto = false;
+        else {
             $caracteres = false;
             $palavras = false;
-        }
-        if ($request->limit == "limit-option1") {
-            $caracteres = true;
-            $palavras = false;
-        }
-        if ($request->limit == "limit-option2") {
-            $caracteres = false;
-            $palavras = true;
         }
         
         if(isset($request->maxcaracteres) && isset($request->mincaracteres) && $request->maxcaracteres <= $request->mincaracteres){
@@ -99,8 +94,8 @@ class ModalidadeController extends Controller
         ]);
         
         $formtiposubmissao = FormTipoSubm::create([
-            'texto'             => $texto,
-            'arquivo'           => $arquivo,
+            'texto'             => $request->texto,
+            'arquivo'           => $request->arquivo,
             'caracteres'        => $caracteres,
             'palavras'          => $palavras,
             'mincaracteres'    => $request->mincaracteres,

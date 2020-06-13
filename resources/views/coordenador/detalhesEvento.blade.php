@@ -109,12 +109,12 @@
               <div id="dropdownEvento" style="background-color: gray">
                   <a id="editarEtiqueta" onclick="habilitarPagina('editarEtiqueta')">
                       <li>
-                          <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Editar Etiquetas</h5>
+                          <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Etiquetas Eventos</h5>
                       </li>
                   </a>
                   <a id="editarEtiquetaSubTrabalhos" onclick="habilitarPagina('editarEtiquetaSubTrabalhos')">
                     <li>
-                        <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Etiqueta Traba</h5>
+                        <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Etiquetas Trabalho</h5>
                     </li>
                   </a>
               </div>
@@ -720,7 +720,7 @@
                         <div class="col-sm-6">
                             <label class="col-form-label">*{{ __('Tipo de Submissão') }}</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="custom_field" id="id-custom_field-account-1-1" value="option1">
+                                <input class="form-check-input incluiresumo" type="checkbox" name="texto" id="id-custom_field-account-1-1">
                                 <label class="form-check-label" for="texto">
                                     Submissão por texto 
                                 </label>
@@ -731,7 +731,7 @@
                                 @enderror
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="custom_field" id="id-custom_field-account-1-2" value="option2">
+                                <input class="form-check-input incluirarquivo" type="checkbox" name="arquivo" id="id-custom_field-account-1-2">
                                 <label class="form-check-label" for="arquivo">
                                     Submissão por arquivo 
                                 </label>
@@ -801,8 +801,11 @@
 
                     <div class="row">
                         <div class="col-sm-6" id="tipo-arquivo" style="display: none">
+
+                            <div class="titulo-detalhes" style="margin-top: 10px"></div>
                             <label class="col-form-label">{{ __('Tipos de arquivo aceito') }}</label>
-                            <div class="form-check">
+
+                            <div class="form-check" style="margin-top: 10px">
                                 <input class="form-check-input" type="checkbox" id="defaultCheck1" name="pdf">
                                 <label class="form-check-label" for="defaultCheck1">
                                     .pdf
@@ -1258,240 +1261,166 @@
     {{-- row card - Edição de Etiquetas --}}
 
     <div class="row justify-content-center">
-        <div class="col-sm-6">
+        <div class="col-sm-10">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Modelo Atual - Card de Eventos</h5>
                     <p class="card-text">
-                    <form method="POST">
-                    @csrf
+                    <form method="POST" action="{{route('etiquetas.update', $evento->id)}}">
+                        @csrf
 
-                    <div class="row justify-content-center">
-        
-                        <div class="col-sm-12">
-                            <h4>{{$etiquetas->etiquetanomeevento}}</h4>
+                        <div class="row justify-content-left">
+                            
+                            <div class="col-sm-2">
+                                <h4>{{$etiquetas->etiquetanomeevento}}:</h4>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="etiquetanomeevento" name="etiquetanomeevento" placeholder="Editar Etiqueta">
+                            </div>
+
                         </div>
-                        <div class="col-sm-12">
-                            <p>{{$evento->nome}}</p>
+                        <div class="row justify-content-left">
+                            <div class="col-sm-12">
+                                <p>{{$evento->nome}}</p>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="row justify-content-left">
+            
+                            <div class="col-sm-2">
+                                <h4>{{$etiquetas->etiquetadescricaoevento}}:</h4>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="etiquetadescricaoevento" name="etiquetadescricaoevento" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <p>{{$evento->descricao}}</p>
+                            </div>
                         </div>
 
-                    </div>
-                    
-                    <div class="row justify-content-center">
-        
-                        <div class="col-sm-12">
-                            <h4>{{$etiquetas->etiquetadescricaoevento}}</h4>
+                        <div class="row justify-content-left">
+                            <div class="col-sm-2">
+                                <h4>{{$etiquetas->etiquetatipoevento}}:</h4>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="etiquetatipoevento" name="etiquetatipoevento" placeholder="Editar Etiqueta">
+                            </div>
                         </div>
-                        <div class="col-sm-12">
-                            <p>{{$evento->descricao}}</p>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <p>{{$evento->tipo}}</p>
+                            </div>
+                        </div>
+                        <div class="row justify-content-left">
+                            <div class="col-sm-2 info-evento">
+                                <h4>{{$etiquetas->etiquetadatas}}:</h4>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="etiquetadatas" name="etiquetadatas" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+                        <div class="row justify-content-left">
+                            <div class="col-sm-12">
+                                <p>
+                                    <img class="" alt="">
+                                    Data: --/--/-- * --/--/--
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row justify-content-left">
+                            <div class="col-sm-2 info-evento">
+                                <h4>{{$etiquetas->etiquetasubmissoes}}:</h4>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="etiquetasubmissoes" name="etiquetasubmissoes" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <h6>Modalidade: Nome da modalidade aqui</h6>
+                                <p>
+                                    <img class="" alt="">
+                                    Submissão datas: --/--/-- * --/--/--
+                                </p>
+                                <p>
+                                    <img class="" alt="">
+                                    Revisão datas: --/--/-- * --/--/--
+                                </p>
+                                {{-- <p>
+                                    <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
+                                    Resultado data: --/--/--
+                                </p> --}}
+                                <p>
+                                    <img class="" alt="">
+                                    Resultado data: --/--/--
+                                </p>
+                            </div>
                         </div>
 
-                    </div>
-
-                    <div class="row justify-content-center">
-        
-                        <div class="col-sm-12">
-                            <h4>{{$etiquetas->etiquetatipoevento}}</h4>
+                        <!-- Areas -->
+                        <div class="row justify-content-left">
+                            <div class="col-sm-2 info-evento">
+                                <h4>{{$etiquetas->etiquetaenderecoevento}}:</h4>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="etiquetaenderecoevento" name="etiquetaenderecoevento" placeholder="Editar Etiqueta">
+                            </div>
                         </div>
-                        <div class="col-sm-12">
-                            <p>{{$evento->tipo}}</p>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12"  style="margin-top: 10px">
+                                Local do evento aqui: {{$evento->endereco->rua}}, {{$evento->endereco->numero}} - {{$evento->endereco->cidade}} / {{$evento->endereco->uf}}.
+                            </div>
                         </div>
 
-                    </div>
-
-                    <div class="row justify-content-center">
-                        <div class="col-sm-12 info-evento">
-                            <h4>{{$etiquetas->etiquetadatas}}</h4>
-                            <p>
-                                <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                                {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}
-                            </p>
+                        <div class="row justify-content-left" style="margin-top: 10px">
+                            <div class="col-sm-2 info-evento">
+                                <h4>{{$etiquetas->etiquetamoduloinscricao}}:</h4>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="etiquetamoduloinscricao" name="etiquetamoduloinscricao" placeholder="Editar Etiqueta">
+                            </div>
                         </div>
-                    </div>
+                        <p style="margin-top: 10px">
+                            Informações sobre inscrições
+                        </p>
 
-                    <div class="row justify-content-center">
-                        <div class="col-sm-12 info-evento">
-                            <h4>{{$etiquetas->etiquetasubmissoes}}</h4>
-                            <h6>Modalidade: Nome da modalidade aqui</h6>
-                            <p>
-                                <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                                Submissão datas: --/--/-- * --/--/--
-                            </p>
-                            <p>
-                                <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                                Revisão datas: --/--/-- * --/--/--
-                            </p>
-                            <p>
-                                <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                                Resultado data: --/--/--
-                            </p>
+                        <div class="row justify-content-left">
+                            <div class="col-sm-2 info-evento">
+                                <h4>{{$etiquetas->etiquetamoduloprogramacao}}:</h4>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="etiquetamoduloprogramacao" name="etiquetamoduloprogramacao" placeholder="Editar Etiqueta">
+                            </div>
                         </div>
-                    </div>   
+                        <p style="margin-top: 10px">
+                            Informações sobre programação
+                        </p>
 
-                    <!-- Areas -->
-                    <div class="row justify-content-center">
-                        <div class="col-sm-12 info-evento">
-                            <h4>{{$etiquetas->etiquetaenderecoevento}}</h4>
-                            <p>
-                                <img class="" src="{{asset('img/icons/map-marker-alt-solid.svg')}}" alt="">
-                                {{$evento->endereco->rua}}, {{$evento->endereco->numero}} - {{$evento->endereco->cidade}} / {{$evento->endereco->uf}}.
-                            </p>
+                        <div class="row justify-content-left">
+                            <div class="col-sm-2 info-evento">
+                                <h4>{{$etiquetas->etiquetamoduloorganizacao}}:</h4>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="etiquetamoduloorganizacao" name="etiquetamoduloorganizacao" placeholder="Editar Etiqueta">
+                            </div>
                         </div>
-                    </div>
+                        <p>
+                            Informações sobre a organização
+                        </p>
+                        <div class="row justify-content-center">
 
-                    <div class="row justify-content-center">
-                        <div class="col-sm-12 info-evento">
-                            <h4>{{$etiquetas->etiquetamoduloinscricao}}</h4>
-                            <p>
-                                Informações sobre inscrições
-                            </p>
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary" style="width:100%">
+                                    {{ __('Finalizar') }}
+                                </button>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="row justify-content-center">
-                        <div class="col-sm-12 info-evento">
-                            <h4>{{$etiquetas->etiquetamoduloprogramacao}}</h4>
-                            <p>
-                                Informações sobre programação
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="row justify-content-center">
-                        <div class="col-sm-12 info-evento">
-                            <h4>{{$etiquetas->etiquetamoduloorganizacao}}</h4>
-                            <p>
-                                Informações sobre a organização
-                            </p>
-                        </div>
-                    </div>
                     </form>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Área para edição</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Edite aqui as etiquetas do Card de Eventos</h6>
-                    <form method="POST" action="{{route('etiquetas.update', $evento->id)}}">
-                    @csrf
-                    <p class="card-text">
-                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <label for="etiquetanomeevento" class="col-form-label">{{$etiquetas->etiquetanomeevento}}</label>
-                                <input id="etiquetanomeevento" type="text" class="form-control @error('etiquetanomeevento') is-invalid @enderror" name="etiquetanomeevento" value="{{ old('etiquetanomeevento') }}" autocomplete="etiquetanomeevento" placeholder="Ex: Nome" autofocus>
-
-                                @error('etiquetanomeevento')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetadescricaoevento" class="col-form-label">{{$etiquetas->etiquetadescricaoevento}}</label>
-                                <input id="etiquetadescricaoevento" type="text" class="form-control @error('etiquetadescricaoevento') is-invalid @enderror" name="etiquetadescricaoevento" value="{{ old('etiquetadescricaoevento') }}" autocomplete="etiquetadescricaoevento" placeholder="Ex: Descrição do Evento" autofocus>
-
-                                @error('etiquetadescricaoevento')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetatipoevento" class="col-form-label">{{$etiquetas->etiquetatipoevento}}</label>
-                                <input id="etiquetatipoevento" type="text" class="form-control @error('etiquetatipoevento') is-invalid @enderror" name="etiquetatipoevento" value="{{ old('etiquetatipoevento') }}" autocomplete="etiquetatipoevento" placeholder="Ex: Tipo do Evento" autofocus>
-
-                                @error('etiquetatipoevento')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetadatas" class="col-form-label">{{$etiquetas->etiquetadatas}}</label>
-                                <input id="etiquetadatas" type="text" class="form-control @error('etiquetadatas') is-invalid @enderror" name="etiquetadatas" value="{{ old('etiquetadatas') }}" autocomplete="etiquetadatas" placeholder="Ex: Data do Evento" autofocus>
-
-                                @error('etiquetadatas')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            
-                            <div class="col-sm-12">
-                                <label for="etiquetasubmissoes" class="col-form-label">{{$etiquetas->etiquetasubmissoes}}</label>
-                                <input id="etiquetasubmissoes" type="text" class="form-control @error('etiquetasubmissoes') is-invalid @enderror" name="etiquetasubmissoes" value="{{ old('etiquetasubmissoes') }}" autocomplete="etiquetasubmissoes" placeholder="Ex: Submeter" autofocus>
-
-                                @error('etiquetasubmissoes')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetaenderecoevento" class="col-form-label">{{$etiquetas->etiquetaenderecoevento}}</label>
-                                <input id="etiquetaenderecoevento" type="text" class="form-control @error('etiquetaenderecoevento') is-invalid @enderror" name="etiquetaenderecoevento" value="{{ old('etiquetaenderecoevento') }}" autocomplete="etiquetaenderecoevento" placeholder="Ex: Localização" autofocus>
-
-                                @error('etiquetaenderecoevento')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetamoduloinscricao" class="col-form-label">{{$etiquetas->etiquetamoduloinscricao}}</label>
-                                <input id="etiquetamoduloinscricao" type="text" class="form-control @error('etiquetamoduloinscricao') is-invalid @enderror" name="etiquetamoduloinscricao" value="{{ old('etiquetamoduloinscricao') }}" autocomplete="etiquetamoduloinscricao" placeholder="Ex: Inscreva-se aqui:" autofocus>
-
-                                @error('etiquetamoduloinscricao')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetamoduloprogramacao" class="col-form-label">{{$etiquetas->etiquetamoduloprogramacao}}</label>
-                                <input id="etiquetamoduloprogramacao" type="text" class="form-control @error('etiquetamoduloprogramacao') is-invalid @enderror" name="etiquetamoduloprogramacao" value="{{ old('etiquetamoduloprogramacao') }}" autocomplete="etiquetamoduloprogramacao" placeholder="Ex: Atividades ou Nossa programação:" autofocus>
-
-                                @error('etiquetamoduloprogramacao')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetamoduloorganizacao" class="col-form-label">{{$etiquetas->etiquetamoduloorganizacao}}</label>
-                                <input id="etiquetamoduloorganizacao" type="text" class="form-control @error('etiquetamoduloorganizacao') is-invalid @enderror" name="etiquetamoduloorganizacao" value="{{ old('etiquetamoduloorganizacao') }}" autocomplete="etiquetamoduloorganizacao" placeholder="Ex: Apoio ou Organizadores:" autofocus>
-
-                                @error('etiquetamoduloorganizacao')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                    </p>
-
-                    <div class="row justify-content-center">
-
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary" style="width:100%">
-                                {{ __('Finalizar') }}
-                            </button>
-                        </div>
-                    </div>
-                    </form>
-
-                </div>
-            </div>{{-- End card--}}
         </div>
     </div>{{-- end row card --}}
 
@@ -1638,197 +1567,184 @@
     </div>
     
     <div class="row justify-content-center">
-        <div class="col-sm-6">
+        <div class="col-sm-10">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Modelo Atual - Form de Submissão de Trabalhos</h5>
                     <p class="card-text">
-                    <form method="POST">
+                    <form method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
                     @csrf
                     
-                    <div class="row justify-content-center">
-        
-                        <div class="col-sm-12">
+                    <div class="row justify-content-left">
+                        <div class="col-sm-3">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
-                            <input id="nomeTrabalho" type="text" class="form-control" disabled>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="inputEmail3" name="etiquetatitulotrabalho" placeholder="Editar Etiqueta">
                         </div>
                     </div>
+                    <input id="nomeTrabalho" type="text" class="form-control" style="margin-top: 10px" disabled><br/>
 
-                    <div class="row justify-content-center">
-        
-                        <div class="col-sm-12">
+                    <div class="row justify-content-left">
+                        <div class="col-sm-3">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
-                            <input class="form-control" type="text" disabled>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" style="margin-top: 10px" id="inputEmail3" name="etiquetaautortrabalho" placeholder="Editar Etiqueta">
                         </div>
                     </div>
+                    <input class="form-control" type="text" style="margin-top: 10px" disabled><br/>
 
-                    <div class="row" style="margin-top:20px">
-                        <div class="col-sm-12">
-                        <div id="coautores">
-                
-                        </div>
+                    <div class="row">
+                        <div class="col-sm-3">
                         <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px" disabled>{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</a>
                         </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="inputEmail3" name="etiquetacoautortrabalho" placeholder="Editar Etiqueta">
+                        </div>
                     </div>
+                    <br/>
 
-                    <div class="row justify-content-center">
-                        <div class="col-sm-12">
+                    <div class="row justify-content-left">
+                        <div class="col-sm-3">
                             <label for="resumo" class="col-form-label">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
-                            <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" disabled></textarea>
-                            <p class="text-muted"><small><span name="resumo">0</span></small></p>
-                            @error('resumo')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="inputEmail3" name="etiquetaresumotrabalho" placeholder="Editar Etiqueta">
                         </div>
                     </div>   
+                    <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" style="margin-top: 10px" disabled></textarea>
+                    <p class="text-muted"><small><span name="resumo">0</span></small></p>
 
                     <!-- Areas -->
-                    <div class="row justify-content-center">
-                        <div class="col-sm-12">
+                    <div class="row justify-content-left">
+                        <div class="col-3">
                             <label for="area" class="col-form-label">{{$etiquetasSubTrab->etiquetaareatrabalho}}:</label>
-                            <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId" disabled>
-                                <option value="" disabled selected hidden>-- Área --</option>
-                            </select>
-                            @error('areaId')
-                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="inputEmail3" name="etiquetaareatrabalho" placeholder="Editar Etiqueta">
                         </div>
                     </div>
-
-                    <div class="row justify-content-center">
+                    <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId" style="margin-top: 10px" disabled>
+                        <option value="" disabled selected hidden>-- Área --</option>
+                    </select>
+                    <br/>
+                    <div class="row justify-content-left">
                         {{-- Arquivo --}}
-                        <div class="col-sm-6">
+                        <div class="col-sm-3">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetauploadtrabalho}}:</label>
-                
-                            <div class="custom-file">
-                            <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" disabled>
-                            </div>
-                            <small>Arquivos aceitos nos formatos a seguir</small>
                         </div>
-
-                        <div class="col-sm-3" style="margin-top: 20px;">
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="inputEmail3" name="etiquetauploadtrabalho" placeholder="Editar Etiqueta">
+                        </div>
+                    </div>
+                    <div class="custom-file" style="margin-top: 10px">
+                        <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" disabled>
+                        </div>
+                        <small>Arquivos aceitos nos formatos a seguir</small>
+                    <br>
+                    <div class="row justify-content-left" style="margin-top: 10px">
+                        <div class="col-sm-3">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetabaixarregra}}</label>
                             <a target="_new" style="font-size: 20px; color: #114048ff;" >
                               <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                             </a>
                         </div>
-                          
-                        <div class="col-sm-3" style="margin-top: 20px;">
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="inputEmail3" name="etiquetabaixarregra" placeholder="Editar Etiqueta">
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-left" style="margin-top: 10px">
+                        <div class="col-sm-3">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetabaixartemplate}}</label>
                             <a target="_new" style="font-size: 20px; color: #114048ff;" >
                                 <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                             </a>
                         </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="inputEmail3" name="etiquetabaixartemplate" placeholder="Editar Etiqueta">
+                        </div>
                     </div>
-                    </form>
-                </div>
-                </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Área para edição</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Edite aqui as etiquetas do form de submissão de trabalhos</h6>
-                    <form method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
-                    @csrf
-                    <p class="card-text">
-                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <label for="etiquetatitulotrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
-                                <input id="etiquetatitulotrabalho" type="text" class="form-control @error('etiquetatitulotrabalho') is-invalid @enderror" name="etiquetatitulotrabalho" value="{{ old('etiquetatitulotrabalho') }}" autocomplete="etiquetatitulotrabalho" placeholder="Ex: Título do trabalho" autofocus>
-
-                                @error('etiquetatitulotrabalho')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetaautortrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
-                                <input id="etiquetaautortrabalho" type="text" class="form-control @error('etiquetaautortrabalho') is-invalid @enderror" name="etiquetaautortrabalho" value="{{ old('etiquetaautortrabalho') }}" autocomplete="etiquetaautortrabalho" placeholder="Ex: Autor do Trabalho" autofocus>
-
-                                @error('etiquetaautortrabalho')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetacoautortrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</label>
-                                <input id="etiquetacoautortrabalho" type="text" class="form-control @error('etiquetacoautortrabalho') is-invalid @enderror" name="etiquetacoautortrabalho" value="{{ old('etiquetacoautortrabalho') }}" autocomplete="nome" placeholder="Ex: Outros Autores" autofocus>
-
-                                @error('etiquetacoautortrabalho')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetaresumotrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
-                                <input id="etiquetaresumotrabalho" type="text" class="form-control @error('etiquetaresumotrabalho') is-invalid @enderror" name="etiquetaresumotrabalho" value="{{ old('etiquetaresumotrabalho') }}" autocomplete="etiquetaresumotrabalho" placeholder="Ex: Texto - Pequeno Resumo" autofocus>
-
-                                @error('etiquetaresumotrabalho')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetaareatrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaareatrabalho}}:</label>
-                                <input id="etiquetaareatrabalho" type="text" class="form-control @error('etiquetaareatrabalho') is-invalid @enderror" name="etiquetaareatrabalho" value="{{ old('etiquetaareatrabalho') }}" autocomplete="etiquetaareatrabalho" placeholder="Ex: Seções" autofocus>
-
-                                @error('etiquetaareatrabalho')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetauploadtrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetauploadtrabalho}}:</label>
-                                <input id="etiquetauploadtrabalho" type="text" class="form-control @error('etiquetauploadtrabalho') is-invalid @enderror" name="etiquetauploadtrabalho" value="{{ old('etiquetauploadtrabalho') }}" autocomplete="etiquetauploadtrabalho" placeholder="Ex: Upload Trabalho" autofocus>
-
-                                @error('etiquetauploadtrabalho')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetabaixarregra" class="col-form-label">{{$etiquetasSubTrab->etiquetabaixarregra}}:</label>
-                                <input id="etiquetabaixarregra" type="text" class="form-control @error('etiquetabaixarregra') is-invalid @enderror" name="etiquetabaixarregra" value="{{ old('etiquetabaixarregra') }}" autocomplete="etiquetabaixarregra" placeholder="Ex: Upload Trabalho" autofocus>
-
-                                @error('etiquetabaixarregra')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label for="etiquetabaixartemplate" class="col-form-label">{{$etiquetasSubTrab->etiquetabaixartemplate}}:</label>
-                                <input id="etiquetabaixartemplate" type="text" class="form-control @error('etiquetabaixartemplate') is-invalid @enderror" name="etiquetabaixartemplate" value="{{ old('etiquetabaixartemplate') }}" autocomplete="etiquetabaixartemplate" placeholder="Ex: Upload Trabalho" autofocus>
-
-                                @error('etiquetabaixartemplate')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+                    <br>
+                    <div class="titulo-detalhes"></div>
+                    <br>
+                    <h4 class="card-title">Campos Adicionais:</h4>
+                    <div class="form-group row">
+                        <input type="hidden" name="checkcampoextra1" value="false" id="checkcampoextra1">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">{{$etiquetasSubTrab->etiquetacampoextra1}}:</label>
+                        <div class="col-sm-5">
+                          <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra1" placeholder="Editar Etiqueta">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra1) checked @endif name="checkcampoextra1">
+                              <label class="form-check-label" for="gridCheck">
+                                Exibir
+                              </label>
                             </div>
                         </div>
-                    </p>
-
+                    </div>
+                    <div class="form-group row">
+                        <input type="hidden" name="checkcampoextra2" value="false" id="checkcampoextra2">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">{{$etiquetasSubTrab->etiquetacampoextra2}}:</label>
+                        <div class="col-sm-5">
+                          <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra2" placeholder="Editar Etiqueta">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra2) checked @endif name="checkcampoextra2">
+                              <label class="form-check-label" for="gridCheck">
+                                Exibir
+                              </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <input type="hidden" name="checkcampoextra3" value="false" id="checkcampoextra3">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">{{$etiquetasSubTrab->etiquetacampoextra3}}:</label>
+                        <div class="col-sm-5">
+                          <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra3" placeholder="Editar Etiqueta">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra3) checked @endif name="checkcampoextra3">
+                              <label class="form-check-label" for="gridCheck">
+                                Exibir
+                              </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <input type="hidden" name="checkcampoextra4" value="false" id="checkcampoextra4">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">{{$etiquetasSubTrab->etiquetacampoextra4}}:</label>
+                        <div class="col-sm-5">
+                          <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra4" placeholder="Editar Etiqueta">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra4) checked @endif name="checkcampoextra4">
+                              <label class="form-check-label" for="gridCheck">
+                                Exibir
+                              </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <input type="hidden" name="checkcampoextra5" value="false" id="checkcampoextra5">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">{{$etiquetasSubTrab->etiquetacampoextra5}}:</label>
+                        <div class="col-sm-5">
+                          <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra5" placeholder="Editar Etiqueta">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra5) checked @endif name="checkcampoextra5">
+                              <label class="form-check-label" for="gridCheck">
+                                Exibir
+                              </label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row justify-content-center">
 
                         <div class="col-md-12">
@@ -1838,9 +1754,8 @@
                         </div>
                     </div>
                     </form>
-
                 </div>
-            </div>{{-- End card--}}
+            </div>
         </div>
     </div>{{-- end row card --}}
 
@@ -2066,17 +1981,47 @@
 @section('javascript')
   <script type="text/javascript" >
 
+    // $(document).ready(function() {
+    //     $('input:checkbox[class="form-check-input incluiresumo"]').on("change", function() {
+    //         if (this.checked) {
+    //             $("#limite-caracteres-temp").show();
+    //         } else {
+    //             $("#limite-caracteres-temp").hide();
+    //         }
+    //     });
+    // });
+
     $(document).ready(function() {
-        $('input:radio[name="custom_field"]').on("change", function() {
-            if (this.checked && this.value == 'option1') {
+        $('input:checkbox[class="form-check-input incluiresumo"]').on("change", function() {
+            if (this.checked) {
                 $("#limite-caracteres").show();
-                $("#tipo-arquivo").hide();
             } else {
-                $("#tipo-arquivo").show();
                 $("#limite-caracteres").hide();
             }
         });
     });
+
+    $(document).ready(function() {
+        $('input:checkbox[class="form-check-input incluirarquivo"]').on("change", function() {
+            if (this.checked) {
+                $("#tipo-arquivo").show();
+            } else {
+                $("#tipo-arquivo").hide();
+            }
+        });
+    });
+
+    // $(document).ready(function() {
+    //     $('input:radio[name="custom_field"]').on("change", function() {
+    //         if (this.checked && this.value == 'option1') {
+    //             $("#limite-caracteres").show();
+    //             $("#tipo-arquivo").hide();
+    //         } else {
+    //             $("#tipo-arquivo").show();
+    //             $("#limite-caracteres").hide();
+    //         }
+    //     });
+    // });
 
     $(document).ready(function() {
         $('input:radio[name="limit"]').on("change", function() {

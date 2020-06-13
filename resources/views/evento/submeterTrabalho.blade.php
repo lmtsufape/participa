@@ -216,7 +216,7 @@
                                 <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                               </a>
                             </div>
-                          @else
+                          @elseif ($regrasubarq->arquivo == true && $templates == null && $regras == null)
 
                             <div class="col-sm-12" style="margin-top: 20px;">
                               <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
@@ -250,6 +250,98 @@
                             </button>
                         </div>
                     </div>
+                    @if ($formSubTraba->checkcampoextra1 == true || $formSubTraba->checkcampoextra2 == true || $formSubTraba->checkcampoextra3 == true || $formSubTraba->checkcampoextra4 == true || $formSubTraba->checkcampoextra5 == true)
+
+                    <br>
+                    <div class="titulo-detalhes"></div>
+                    <br>
+                    <h4 class="card-title">Campos Adicionais:</h4>
+
+                    @if ($formSubTraba->checkcampoextra1 == true)
+
+                    <div class="row justify-content-center">
+                      {{-- Nome Trabalho  --}}
+                    <div class="col-sm-12">
+                          <label for="campoextra1" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
+                          <input id="campoextra1" type="text" class="form-control @error('campoextra1') is-invalid @enderror" name="campoextra1" value="{{ old('campoextra1') }}" required autocomplete="campoextra1" autofocus>
+
+                          @error('campoextra1')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                          @enderror
+                      </div>
+                    </div>
+                    @endif
+
+                    @if ($formSubTraba->checkcampoextra2 == true)
+
+                    <div class="row justify-content-center">
+                      {{-- Nome Trabalho  --}}
+                    <div class="col-sm-12">
+                          <label for="campoextra2" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
+                          <input id="campoextra2" type="text" class="form-control @error('campoextra2') is-invalid @enderror" name="campoextra2" value="{{ old('campoextra2') }}" required autocomplete="campoextra2" autofocus>
+
+                          @error('campoextra2')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                          @enderror
+                      </div>
+                    </div>
+                    @endif
+
+                    @if ($formSubTraba->checkcampoextra3 == true)
+                    <div class="row justify-content-center">
+                      {{-- Nome Trabalho  --}}
+                    <div class="col-sm-12">
+                          <label for="campoextra3" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
+                          <input id="campoextra3" type="text" class="form-control @error('campoextra3') is-invalid @enderror" name="campoextra3" value="{{ old('campoextra3') }}" required autocomplete="campoextra3" autofocus>
+
+                          @error('campoextra3')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                          @enderror
+                      </div>
+                    </div>
+                    @endif
+
+                    @if ($formSubTraba->checkcampoextra4 == true)
+                    <div class="row justify-content-center">
+                      {{-- Nome Trabalho  --}}
+                    <div class="col-sm-12">
+                          <label for="campoextra4" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}:</label>
+                          <input id="campoextra4" type="text" class="form-control @error('campoextra4') is-invalid @enderror" name="campoextra4" value="{{ old('campoextra4') }}" required autocomplete="campoextra4" autofocus>
+
+                          @error('campoextra4')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                          @enderror
+                      </div>
+                    </div>
+                    @endif
+
+                    @if ($formSubTraba->checkcampoextra5 == true)
+                    <div class="row justify-content-center">
+                      {{-- Nome Trabalho  --}}
+                    <div class="col-sm-12">
+                          <label for="campoextra5" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
+                          <input id="campoextra5" type="text" class="form-control @error('campoextra5') is-invalid @enderror" name="campoextra5" value="{{ old('campoextra5') }}" required autocomplete="campoextra5" autofocus>
+
+                          @error('campoextra5')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                          @enderror
+                      </div>
+                    </div>
+                    @endif
+                    
+                    
+                    @endif
+                    
                     </form>
                 </div>
               </div>

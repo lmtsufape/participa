@@ -201,6 +201,11 @@ class EventoController extends Controller
           'etiquetauploadtrabalho'         => 'Upload de Trabalho',
           'etiquetabaixarregra'            => 'Regras',
           'etiquetabaixartemplate'         => 'Template',
+          'etiquetacampoextra1'            => 'Campo Extra',
+          'etiquetacampoextra2'            => 'Campo Extra',
+          'etiquetacampoextra3'            => 'Campo Extra',
+          'etiquetacampoextra4'            => 'Campo Extra',
+          'etiquetacampoextra5'            => 'Campo Extra',
           'eventoId'                       => $evento->id,
         ]);
         
@@ -306,12 +311,12 @@ class EventoController extends Controller
         $evento->tipo                 = $request->tipo;
         $evento->dataInicio           = $request->dataInicio;
         $evento->dataFim              = $request->dataFim;
-        $evento->inicioSubmissao      = $request->inicioSubmissao;
-        $evento->fimSubmissao         = $request->fimSubmissao;
-        $evento->inicioRevisao        = $request->inicioRevisao;
-        $evento->fimRevisao           = $request->fimRevisao;
-        $evento->inicioResultado      = $request->inicioResultado;
-        $evento->fimResultado         = $request->fimResultado;
+        // $evento->inicioSubmissao      = $request->inicioSubmissao;
+        // $evento->fimSubmissao         = $request->fimSubmissao;
+        // $evento->inicioRevisao        = $request->inicioRevisao;
+        // $evento->fimRevisao           = $request->fimRevisao;
+        // $evento->inicioResultado      = $request->inicioResultado;
+        // $evento->fimResultado         = $request->fimResultado;
         // $evento->possuiTaxa           = $request->possuiTaxa;
         // $evento->valorTaxa            = $request->valorTaxa;
         $evento->enderecoId           = $endereco->id;
