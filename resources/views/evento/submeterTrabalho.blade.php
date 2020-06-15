@@ -13,9 +13,14 @@
                   <br>
                   <h4 class="card-title">Enviar Trabalho</h4>
                   <p class="card-text">
-                    <form method="POST" action="{{route('trabalho.store')}}" enctype="multipart/form-data">
+                    <form method="POST" action="{{route('trabalho.store', $modalidadeEspecifica)}}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                        <div>
+                          @error('tipoExtensao')
+                            @include('componentes.mensagens')
+                          @enderror
+                        </div>
                         <div>
                           @error('numeroMax')
                             @include('componentes.mensagens')

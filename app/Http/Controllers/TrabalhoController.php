@@ -54,7 +54,7 @@ class TrabalhoController extends Controller
         // $formtiposubmissao é um vetor com os dados que serão ou
         // não exibidos no formulario de submissão de trabalho. 
         $formtiposubmissao = FormTipoSubm::where('modalidadeId', $idModalidade)->first();
-        // dd($formtiposubmissao);
+
         // Pegando apenas as areas que possuem relação com a modalidade selecionada
         // ao clciar no botão "submeter trabalho".
         $areaPorModalidade = AreaModalidade::where('modalidadeId', $idModalidade)->select('areaId')->get();
@@ -102,7 +102,11 @@ class TrabalhoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request){
+    public function store(Request $request, $modalidadeId){
+      
+      //Obtendo apenas os tipos de extensões selecionadas
+      $tiposExtensao = FormTipoSubm::where('modalidadeId', $modalidadeId)->first();
+      
       $mytime = Carbon::now('America/Recife');
       $mytime = $mytime->toDateString();
       $evento = Evento::find($request->eventoId);
@@ -111,6 +115,7 @@ class TrabalhoController extends Controller
             return redirect()->route('home');
         }
       }
+
       $validatedData = $request->validate([
         'nomeTrabalho'      => ['required', 'string',],
         'areaId'            => ['required', 'integer'],
@@ -119,13 +124,43 @@ class TrabalhoController extends Controller
         'resumo'            => ['nullable','string'],
         'nomeCoautor.*'     => ['string'],
         'emailCoautor.*'    => ['string'],
-        'arquivo'           => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
+        'arquivo'           => ['nullable', 'file', 'max:2000000'],
         'campoextra1'       => ['nullable', 'string'],
         'campoextra2'       => ['nullable', 'string'],
         'campoextra3'       => ['nullable', 'string'],
         'campoextra4'       => ['nullable', 'string'],
         'campoextra5'       => ['nullable', 'string'],
       ]);
+      
+      if($tiposExtensao->arquivo == true){
+        
+        $tiposcadastrados = [];
+        if($tiposExtensao->pdf == true){
+          array_push($tiposcadastrados, "pdf");
+        }
+        if($tiposExtensao->jpg == true){
+          array_push($tiposcadastrados, "jpg");
+        }
+        if($tiposExtensao->jpeg == true){
+          array_push($tiposcadastrados, "jpeg");
+        }
+        if($tiposExtensao->png == true){
+          array_push($tiposcadastrados, "png");
+        }
+        if($tiposExtensao->docx == true){
+          array_push($tiposcadastrados, "docx");
+        }
+        if($tiposExtensao->odt == true){
+          array_push($tiposcadastrados, "odt");
+        }
+      }
+
+
+      $extensao = $request->arquivo->getClientOriginalExtension();
+      if(!in_array($extensao, $tiposcadastrados)){
+        return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
+        Verifique no fim do formulário, quas os tipos permitidos.']);
+      }
 
 
       $autor = Auth::user();

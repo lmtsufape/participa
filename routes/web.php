@@ -75,7 +75,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   //Trabalho
   Route::get(   '/trabalho/submeter/{id}/{idModalidade}','TrabalhoController@index'                   )->name('trabalho.index');
   Route::post(  '/trabalho/novaVersao',   'TrabalhoController@novaVersao'              )->name('trabalho.novaVersao');
-  Route::post(  '/trabalho/criar',        'TrabalhoController@store'                   )->name('trabalho.store');
+  Route::post(  '/trabalho/criar/{id}}',        'TrabalhoController@store'                   )->name('trabalho.store');
   //Atribuição
   Route::get(   '/atribuir',              'AtribuicaoController@distribuicaoAutomatica')->name('distribuicao');
   Route::get(   '/atribuirPorArea',       'AtribuicaoController@distribuicaoPorArea'   )->name('distribuicaoAutomaticaPorArea');
