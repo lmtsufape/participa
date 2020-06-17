@@ -720,7 +720,7 @@
                         <div class="col-sm-6">
                             <label class="col-form-label">*{{ __('Tipo de Submissão') }}</label>
                             <div class="form-check">
-                                <input class="form-check-input incluiresumo" type="checkbox" name="texto" id="id-custom_field-account-1-1">
+                                <input class="form-check-input incluiresumo" type="radio" name="custom_field" id="id-custom_field-account-1-1" value="option1">
                                 <label class="form-check-label" for="texto">
                                     Submissão por texto 
                                 </label>
@@ -731,7 +731,7 @@
                                 @enderror
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input incluirarquivo" type="checkbox" name="arquivo" id="id-custom_field-account-1-2">
+                                <input class="form-check-input incluirarquivo" type="radio" name="custom_field" id="id-custom_field-account-1-2" value="option2">
                                 <label class="form-check-label" for="arquivo">
                                     Submissão por arquivo 
                                 </label>
@@ -970,7 +970,7 @@
                             <tr>
                                 <td>{{$modalidade->nome}}</td>
                                 <td style="text-align:center">
-                                    <a class="botaoAjax" href="#" data-toggle="modal" onclick="trabalhoId({{$trabalho->id}})" data-target="#modalEditarModalidade"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                    <a class="botaoAjax" href="#" data-toggle="modal" onclick="modalidadeId({{$modalidade->id}})" data-target="#modalEditarModalidade"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
                                 </td>
                             </tr>
                             @endforeach
@@ -1934,20 +1934,21 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-body">
-                            <form method="POST" action="{{route('modalidade.store')}}" enctype="multipart/form-data">
+                            <form method="POST" action="{{route('modalidade.update')}}" enctype="multipart/form-data">
                             @csrf
                             <p class="card-text">
+                                <input type="hidden" name="modalidadeEditId" id="modalidadeEditId" value="">
                                 <input type="hidden" name="eventoId" value="{{$evento->id}}">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label for="nomeModalidade" class="col-form-label">*{{ __('Nome') }}</label>
+                                        <label for="nomeModalidadeEdit" class="col-form-label">*{{ __('Nome') }}</label>
                                     </div>
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="col-sm-12">
-                                        <input id="nomeModalidade" type="text" class="form-control @error('nomeModalidade') is-invalid @enderror" name="nomeModalidade" value="{{$modalidade->nome}}" required autocomplete="nomeModalidade" autofocus>
+                                        <input id="nomeModalidadeEdit" type="text" class="form-control @error('nomeModalidadeEdit') is-invalid @enderror" name="nomeModalidadeEdit" value="" required autocomplete="nomeModalidadeEdit" autofocus>
             
-                                        @error('nomeModalidade')
+                                        @error('nomeModalidadeEdit')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -1962,20 +1963,20 @@
                             <div class="row justify-content-center">
             
                                 <div class="col-sm-6">
-                                    <label for="inicioSubmissao" class="col-form-label">{{ __('Início da Submissão') }}</label>
-                                    <input id="inicioSubmissao" type="date" class="form-control @error('inicioSubmissao') is-invalid @enderror" name="inicioSubmissao" value="{{ old('inicioSubmissao') }}" autocomplete="inicioSubmissao" autofocus>
+                                    <label for="inicioSubmissaoEdit" class="col-form-label">{{ __('Início da Submissão') }}</label>
+                                    <input id="inicioSubmissaoEdit" type="date" class="form-control @error('inicioSubmissaoEdit') is-invalid @enderror" name="inicioSubmissaoEdit" value="{{ old('inicioSubmissaoEdit') }}" autocomplete="inicioSubmissaoEdit" autofocus>
             
-                                    @error('inicioSubmissao')
+                                    @error('inicioSubmissaoEdit')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
                                 </div>
                                 <div class="col-sm-6">
-                                    <label for="fimSubmissao" class="col-form-label">{{ __('Fim da Submissão') }}</label>
-                                    <input id="fimSubmissao" type="date" class="form-control @error('fimSubmissao') is-invalid @enderror" name="fimSubmissao" value="{{ old('fimSubmissao') }}" autocomplete="fimSubmissao" autofocus>
+                                    <label for="fimSubmissaoEdit" class="col-form-label">{{ __('Fim da Submissão') }}</label>
+                                    <input id="fimSubmissaoEdit" type="date" class="form-control @error('fimSubmissaoEdit') is-invalid @enderror" name="fimSubmissaoEdit" value="{{ old('fimSubmissaoEdit') }}" autocomplete="fimSubmissaoEdit" autofocus>
             
-                                    @error('fimSubmissao')
+                                    @error('fimSubmissaoEdit')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -1988,20 +1989,20 @@
                             <div class="row justify-content-center">
             
                                 <div class="col-sm-6">
-                                    <label for="inicioRevisao" class="col-form-label">{{ __('Início da Revisão') }}</label>
-                                    <input id="inicioRevisao" type="date" class="form-control @error('inicioRevisao') is-invalid @enderror" name="inicioRevisao" value="{{ old('inicioRevisao') }}" autocomplete="inicioRevisao" autofocus>
+                                    <label for="inicioRevisaoEdit" class="col-form-label">{{ __('Início da Revisão') }}</label>
+                                    <input id="inicioRevisaoEdit" type="date" class="form-control @error('inicioRevisaoEdit') is-invalid @enderror" name="inicioRevisaoEdit" value="{{ old('inicioRevisaoEdit') }}" autocomplete="inicioRevisaoEdit" autofocus>
             
-                                    @error('inicioRevisao')
+                                    @error('inicioRevisaoEdit')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
                                 </div>
                                 <div class="col-sm-6">
-                                    <label for="fimRevisao" class="col-form-label">{{ __('Fim da Revisão') }}</label>
-                                    <input id="fimRevisao" type="date" class="form-control @error('fimRevisao') is-invalid @enderror" name="fimRevisao" value="{{ old('fimRevisao') }}" autocomplete="fimRevisao" autofocus>
+                                    <label for="fimRevisaoEdit" class="col-form-label">{{ __('Fim da Revisão') }}</label>
+                                    <input id="fimRevisaoEdit" type="date" class="form-control @error('fimRevisaoEdit') is-invalid @enderror" name="fimRevisaoEdit" value="{{ old('fimRevisaoEdit') }}" autocomplete="fimRevisaoEdit" autofocus>
             
-                                    @error('fimRevisao')
+                                    @error('fimRevisaoEdit')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -2014,10 +2015,10 @@
                             <div class="row">
             
                                 <div class="col-sm-6">
-                                    <label for="inicioResultado" class="col-form-label">{{ __('Início do Resultado') }}</label>
-                                    <input id="inicioResultado" type="date" class="form-control @error('inicioResultado') is-invalid @enderror" name="inicioResultado" value="{{ old('inicioResultado') }}" autocomplete="inicioResultado" autofocus>
+                                    <label for="inicioResultadoEdit" class="col-form-label">{{ __('Início do Resultado') }}</label>
+                                    <input id="inicioResultadoEdit" type="date" class="form-control @error('inicioResultadoEdit') is-invalid @enderror" name="inicioResultadoEdit" value="{{ old('inicioResultadoEdit') }}" autocomplete="inicioResultadoEdit" autofocus>
             
-                                    @error('inicioResultado')
+                                    @error('inicioResultadoEdit')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -2032,22 +2033,22 @@
                                 <div class="col-sm-6">
                                     <label class="col-form-label">*{{ __('Tipo de Submissão') }}</label>
                                     <div class="form-check">
-                                        <input class="form-check-input incluiresumo" type="checkbox" name="texto" id="id-custom_field-account-1-1">
-                                        <label class="form-check-label" for="texto">
+                                        <input class="form-check-input incluiresumoEdit" type="checkbox" name="textoEdit" id="textoEdit">
+                                        <label class="form-check-label" for="textoEdit">
                                             Submissão por texto 
                                         </label>
-                                        @error('custom_field')
+                                        @error('textoEdit')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                         @enderror
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input incluirarquivo" type="checkbox" name="arquivo" id="id-custom_field-account-1-2">
-                                        <label class="form-check-label" for="arquivo">
+                                        <input class="form-check-input incluirarquivoEdit" type="checkbox" name="arquivoEdit" id="arquivoEdit">
+                                        <label class="form-check-label" for="arquivoEdit">
                                             Submissão por arquivo 
                                         </label>
-                                        @error('custom_field')
+                                        @error('arquivoEdit')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -2057,53 +2058,53 @@
                             </div>
             
                             <div class="row">
-                                <div class="col-sm-6" id="limite-caracteres" style="display: none">
+                                <div class="col-sm-6" id="limite-caracteresEdit" style="display: none">
                                     <label class="col-form-label">{{ __('Restrições') }}</label>
             
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1">
+                                        <input class="form-check-input" type="radio" name="limitEdit" id="id-limit-custom_field-account-1-1" value="limit-option1">
                                         <label class="form-check-label" for="texto">
                                             Quantidade de caracteres 
                                         </label>
                                         </div>
                                         <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-2" value="limit-option2">
+                                        <input class="form-check-input" type="radio" name="limitEdit" id="id-limit-custom_field-account-1-2" value="limit-option2">
                                         <label class="form-check-label" for="arquivo">
                                             Quantidade de palavras 
                                         </label>
                                     </div>
             
                                     <div class="row">
-                                        <div class="col-sm-6" id="min-max-caracteres" style="display: none">
+                                        <div class="col-sm-6" id="min-max-caracteresEdit" style="display: none">
                                             <div class="form-group">
                                                 <label class="col-form-label">{{ __('Mínimo') }}</label>
                                                 <div>
-                                                  <input class="form-control" type="number" id="min_caracteres" name="mincaracteres">
+                                                  <input class="form-control" type="number" id="mincaracteresEdit" name="mincaracteresEdit">
                                                 </div>
                                             </div>
                 
                                             <div class="form-group">
                                                 <label class="col-form-label">{{ __('Máximo') }}</label>
                                                 <div>
-                                                  <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres">
+                                                  <input class="form-control" type="number" id="maxcaracteresEdit" name="maxcaracteresEdit">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
             
                                     <div class="row">
-                                        <div class="col-sm-6" id="min-max-palavras" style="display: none">
+                                        <div class="col-sm-6" id="min-max-palavrasEdit" style="display: none">
                                             <div class="form-group">
                                                 <label class="col-form-label">{{ __('Mínimo') }}</label>
                                                 <div>
-                                                  <input class="form-control" type="number" id="min_palavras" name="minpalavras">
+                                                  <input class="form-control" type="number" id="minpalavrasEdit" name="minpalavrasEdit">
                                                 </div>
                                             </div>
                 
                                             <div class="form-group">
                                                 <label class="col-form-label">{{ __('Máximo') }}</label>
                                                 <div>
-                                                  <input class="form-control" type="number" id="max_palavras" name="maxpalavras">
+                                                  <input class="form-control" type="number" id="maxpalavrasEdit" name="maxpalavrasEdit">
                                                 </div>
                                             </div>
                                         </div>
@@ -2112,44 +2113,44 @@
                             </div>
             
                             <div class="row">
-                                <div class="col-sm-6" id="tipo-arquivo" style="display: none">
+                                <div class="col-sm-6" id="tipo-arquivoEdit" style="display: none">
             
                                     <div class="titulo-detalhes" style="margin-top: 10px"></div>
                                     <label class="col-form-label">{{ __('Tipos de arquivo aceito') }}</label>
             
                                     <div class="form-check" style="margin-top: 10px">
-                                        <input class="form-check-input" type="checkbox" id="defaultCheck1" name="pdf">
-                                        <label class="form-check-label" for="defaultCheck1">
+                                        <input class="form-check-input" type="checkbox" id="pdfEdit" name="pdfEdit">
+                                        <label class="form-check-label" for="pdfEdit">
                                             .pdf
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="defaultCheck1" name="jpg">
-                                        <label class="form-check-label" for="defaultCheck1">
+                                        <input class="form-check-input" type="checkbox" id="jpgEdit" name="jpgEdit">
+                                        <label class="form-check-label" for="jpgEdit">
                                             .jpg
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="defaultCheck1" name="jpeg">
-                                        <label class="form-check-label" for="defaultCheck1">
+                                        <input class="form-check-input" type="checkbox" id="jpegEdit" name="jpegEdit">
+                                        <label class="form-check-label" for="jpegEdit">
                                             .jpeg
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="defaultCheck1" name="png">
-                                        <label class="form-check-label" for="defaultCheck1">
+                                        <input class="form-check-input" type="checkbox" id="pngEdit" name="pngEdit">
+                                        <label class="form-check-label" for="pngEdit">
                                             .png
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="defaultCheck1" name="docx">
-                                        <label class="form-check-label" for="defaultCheck1">
+                                        <input class="form-check-input" type="checkbox" id="docxEdit" name="docxEdit">
+                                        <label class="form-check-label" for="docxEdit">
                                             .docx
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="defaultCheck1" name="odt">
-                                        <label class="form-check-label" for="defaultCheck1">
+                                        <input class="form-check-input" type="checkbox" id="odtEdit" name="odtEdit">
+                                        <label class="form-check-label" for="odtEdit">
                                             .odt
                                         </label>
                                     </div>
@@ -2161,7 +2162,7 @@
                                   <label for="arquivoRegras" class="col-form-label">{{ __('Enviar regras:') }}</label>
             
                                   <div class="custom-file">
-                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegras">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegrasEdit">
                                   </div>
                                   <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
                                   @error('arquivoRegras')
@@ -2175,7 +2176,7 @@
                                     <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar template:') }}</label>
             
                                     <div class="custom-file">
-                                      <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates">
+                                      <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplatesEdit">
                                     </div>
                                     <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
                                     @error('arquivoTemplates')
@@ -2202,10 +2203,10 @@
             
             </div>
         </div>
-        <div class="modal-footer">
+        {{-- <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
+        </div> --}}
       </div>
     </div>
 </div>
@@ -2274,6 +2275,7 @@
 
 </div>
 <input type="hidden" name="trabalhoIdAjax" value="1" id="trabalhoIdAjax">
+<input type="hidden" name="modalidadeIdAjax" value="1" id="modalidadeIdAjax">
 
 @endsection
 @section('javascript')
@@ -2288,38 +2290,63 @@
     //         }
     //     });
     // });
-
-    $(document).ready(function() {
-        $('input:checkbox[class="form-check-input incluiresumo"]').on("change", function() {
-            if (this.checked) {
-                $("#limite-caracteres").show();
-            } else {
-                $("#limite-caracteres").hide();
-            }
-        });
-    });
-
-    $(document).ready(function() {
-        $('input:checkbox[class="form-check-input incluirarquivo"]').on("change", function() {
-            if (this.checked) {
-                $("#tipo-arquivo").show();
-            } else {
-                $("#tipo-arquivo").hide();
-            }
-        });
-    });
-
+    
+    // Exibir ou ocultar opções de Texto na criação de modalidade
     // $(document).ready(function() {
-    //     $('input:radio[name="custom_field"]').on("change", function() {
-    //         if (this.checked && this.value == 'option1') {
+    //     $('input:checkbox[class="form-check-input incluiresumo"]').on("change", function() {
+    //         if (this.checked) {
     //             $("#limite-caracteres").show();
-    //             $("#tipo-arquivo").hide();
     //         } else {
-    //             $("#tipo-arquivo").show();
     //             $("#limite-caracteres").hide();
     //         }
     //     });
     // });
+
+    // Exibir ou ocultar opções de Texto na edição de modalidade
+    $(document).ready(function() {
+        $('input:checkbox[class="form-check-input incluiresumoEdit"]').on("change", function() {
+            if (this.checked) {
+                $("#limite-caracteresEdit").show();
+            } else {
+                $("#limite-caracteresEdit").hide();
+            }
+        });
+    });
+
+    // Exibir ou ocultar opções de Arquivo na criação de modalidade
+    // $(document).ready(function() {
+    //     $('input:checkbox[class="form-check-input incluirarquivo"]').on("change", function() {
+    //         if (this.checked) {
+    //             $("#tipo-arquivo").show();
+    //         } else {
+    //             $("#tipo-arquivo").hide();
+    //         }
+    //     });
+    // });
+
+    // Exibir ou ocultar opções de Arquivo na edição de modalidade
+    $(document).ready(function() {
+        $('input:checkbox[class="form-check-input incluirarquivoEdit"]').on("change", function() {
+            if (this.checked) {
+                $("#tipo-arquivoEdit").show();
+            } else {
+                $("#tipo-arquivoEdit").hide();
+            }
+        });
+    });
+
+    // Exibir ou ocultar opções de texto ou arquivo, em cadastro de modalidade
+    $(document).ready(function() {
+        $('input:radio[name="custom_field"]').on("change", function() {
+            if (this.checked && this.value == 'option1') {
+                $("#limite-caracteres").show();
+                $("#tipo-arquivo").hide();
+            } else {
+                $("#tipo-arquivo").show();
+                $("#limite-caracteres").hide();
+            }
+        });
+    });
 
     $(document).ready(function() {
         $('input:radio[name="limit"]').on("change", function() {
@@ -2333,8 +2360,25 @@
         });
     });
 
+    $(document).ready(function() {
+        $('input:radio[name="limitEdit"]').on("change", function() {
+            if (this.checked && this.value == 'limit-option1') {
+                $("#min-max-caracteresEdit").show();
+                $("#min-max-palavrasEdit").hide();
+            } else {
+                $("#min-max-palavrasEdit").show();
+                $("#min-max-caracteresEdit").hide();
+            }
+        });
+    });
+
   function trabalhoId(x){
     document.getElementById('trabalhoIdAjax').value = x;
+  }
+
+  function modalidadeId(x){
+    console.log("CDCDCDCDCD");
+    document.getElementById('modalidadeIdAjax').value = x;
   }
 
   $(function(){
@@ -2375,6 +2419,7 @@
              trabalhoId: $('#trabalhoIdAjax').val()
           },
           success: function(result){
+            console.log(result);
             // result = JSON.parse(result[0]);
             // console.log(result.titulo);
             $('#tituloTrabalhoAjax').html(result.titulo);
@@ -2391,7 +2436,60 @@
             result.revisoresDisponiveis.forEach(addOptionToSelect);
 
           }});
+          jQuery.ajax({
+          url: "{{ route('findModalidade') }}",
+          method: 'get',
+          data: {
+             modalidadeId: $('#modalidadeIdAjax').val()
+          },
+          success: function(result){
+            console.log(result);
+            // document.getElementById('nomeModalidadeEdit').value = result.nome;
+            $('#modalidadeEditId').val(result.id);
+            $('#nomeModalidadeEdit').val(result.nome);
+            $('#inicioSubmissaoEdit').val(result.inicioSubmissao);
+            $('#fimSubmissaoEdit').val(result.fimSubmissao);
+            $('#inicioRevisaoEdit').val(result.inicioRevisao);
+            $('#fimRevisaoEdit').val(result.fimRevisao);
+            if(result.texto == true){
+
+                $('#textoEdit').prop('checked', true);
+            }
+            if(result.arquivo == true){
+
+                $('#arquivoEdit').prop('checked', true);
+            }            
+            $('#maxcaracteresEdit').val(result.maxcaracteres);
+            $('#mincaracteresEdit').val(result.mincaracteres);
+            $('#maxpalavrasEdit').val(result.maxpalavras);
+            $('#minpalavrasEdit').val(result.minpalavras);
+            if(result.pdf == true){
+
+                $('#pdfEdit').prop('checked', true);
+            }
+            if(result.jpg == true){
+
+                $('#jpgEdit').prop('checked', true);
+            }
+            if(result.jpeg == true){
+
+                $('#jpegEdit').prop('checked', true);
+            }
+            if(result.png == true){
+
+                $('#pngEdit').prop('checked', true);
+            }
+            if(result.docx == true){
+
+                $('#docxEdit').prop('checked', true);
+            }
+            if(result.odt == true){
+
+                $('#odtEdit').prop('checked', true);
+            }
+          }});
        });
+
     $('#areaIdformDistribuicaoPorArea').change(function () {
       $.ajaxSetup({
          headers: {

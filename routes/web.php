@@ -95,5 +95,8 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/adicionarnovocampo/{id}', 'FormSubmTrabaController@store'            )->name('novocampo.store');
   // Exibir ou ocultar modulos do card de eventos
   Route::post(  '/modulos/{id}', 'FormEventoController@exibirModulo'                   )->name('exibir.modulo');
-
+  // Ajax para encontrar modalidade especifica e enviar para o modal de edição
+  Route::get(   '/encontrarModalidade',   'ModalidadeController@find'                  )->name('findModalidade');
+  // Ajax para encontrar modalidade especifica e enviar para o modal de edição
+  Route::post(   '/atualizarModalidade',   'ModalidadeController@update'                )->name('modalidade.update');
 });

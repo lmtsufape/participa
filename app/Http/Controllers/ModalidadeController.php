@@ -23,6 +23,13 @@ class ModalidadeController extends Controller
         //
     }
 
+    public function find(Request $request)
+    {
+        $modalidadeEdit = Modalidade::find($request->modalidadeId);
+        return $modalidadeEdit;
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -45,7 +52,7 @@ class ModalidadeController extends Controller
         $mytime = Carbon::now('America/Recife');
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
-
+        $palavras = false;
         $validatedData = $request->validate([
 
             'inicioSubmissao'   => ['nullable', 'date'],
@@ -60,20 +67,20 @@ class ModalidadeController extends Controller
             'arquivoRegras'     => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
             'arquivoTemplates'  => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
         ]);
-        
-        if ($request->texto == true && $request->arquivo == false || $request->texto == true && $request->arquivo == true) {
+
+        if($request->custom_field == "option1") {
+
             if ($request->limit == "limit-option1") {
                 $caracteres = true;
-                $palavras = false;
+                $texto == true;
             }
-            if ($request->limit == "limit-option2") {
-                $caracteres = false;
+            else {
                 $palavras = true;
+                $texto == true;
             }
         }
         else {
-            $caracteres = false;
-            $palavras = false;
+            $arquivo == true;
         }
         
         if(isset($request->maxcaracteres) && isset($request->mincaracteres) && $request->maxcaracteres <= $request->mincaracteres){
@@ -90,25 +97,21 @@ class ModalidadeController extends Controller
             'inicioRevisao'     => $request->inicioRevisao,
             'fimRevisao'        => $request->fimRevisao,
             'inicioResultado'   => $request->inicioResultado,
-            'eventoId'          => $request->eventoId,
-        ]);
-        
-        $formtiposubmissao = FormTipoSubm::create([
-            'texto'             => $request->texto,
-            'arquivo'           => $request->arquivo,
+            'texto'             => $texto,
+            'arquivo'           => $arquivo,
             'caracteres'        => $caracteres,
             'palavras'          => $palavras,
-            'mincaracteres'    => $request->mincaracteres,
-            'maxcaracteres'    => $request->maxcaracteres,
-            'minpalavras'      => $request->minpalavras,
-            'maxpalavras'      => $request->maxpalavras,
+            'mincaracteres'     => $request->mincaracteres,
+            'maxcaracteres'     => $request->maxcaracteres,
+            'minpalavras'       => $request->minpalavras,
+            'maxpalavras'       => $request->maxpalavras,
             'pdf'               => $request->pdf,
             'jpg'               => $request->jpg,
             'jpeg'              => $request->jpeg,
             'png'               => $request->png,
             'docx'              => $request->docx,
             'odt'               => $request->odt,
-            'modalidadeId'      => $modalidade->id
+            'eventoId'          => $request->eventoId,
         ]);
         
         if(isset($request->arquivoRegras)){
@@ -144,7 +147,6 @@ class ModalidadeController extends Controller
         }
         
         $modalidade->save();
-        $formtiposubmissao->save();
 
         return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
@@ -178,9 +180,69 @@ class ModalidadeController extends Controller
      * @param  \App\Modalidade  $modalidade
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Modalidade $modalidade)
+    public function update(Request $request)
     {
-        //
+        $modalidadeEdit = Modalidade::find($request->modalidadeEditId);
+
+        $validatedData = $request->validate([
+
+            'nomeModalidadeEdit'         => ['nullable', 'string'],
+            'inicioSubmissaoEdit'        => ['nullable', 'date'],
+            'fimSubmissaoEdit'           => ['nullable', 'date'],
+            'inicioRevisaoEdit'          => ['nullable', 'date'],
+            'fimRevisaoEdit'             => ['nullable', 'date'],
+            'inicioResultadoEdit'        => ['nullable', 'date'],
+            'mincaracteresEdit'          => ['nullable', 'integer'],
+            'maxcaracteresEdit'          => ['nullable', 'integer'],
+            'minpalavrasEdit'            => ['nullable', 'integer'],
+            'maxpalavrasEdit'            => ['nullable', 'integer'],
+            'arquivoRegrasEdit'          => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
+            'arquivoTemplatesEdit'       => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
+
+        ]);
+
+        if ($request->textoEdit == true && $request->arquivoEdit == false || $request->textoEdit == true && $request->arquivoEdit == true) {
+            if ($request->limitEdit == "limit-option1") {
+                $caracteres = true;
+                $palavras = false;
+            }
+            if ($request->limit == "limit-option2") {
+                $caracteres = false;
+                $palavras = true;
+            }
+        }
+        else {
+            $caracteres = false;
+            $palavras = false;
+        }
+
+        if(isset($request->maxcaracteresEdit) && isset($request->mincaracteresEdit) && $request->maxcaracteresEdit <= $request->mincaracteresEdit){
+            return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!']);
+        }
+        if(isset($request->maxpalavrasEdit) && isset($request->minpalavrasEdit) && $request->maxpalavrasEdit <= $request->minpalavrasEdit){
+            return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!']);
+        }
+
+        $modalidadeEdit->nome                = $request->nomeModalidadeEdit;
+        $modalidadeEdit->inicioSubmissao     = $request->inicioSubmissaoEdit;
+        $modalidadeEdit->fimSubmissao        = $request->fimSubmissaoEdit;
+        $modalidadeEdit->inicioRevisao       = $request->inicioRevisaoEdit;
+        $modalidadeEdit->fimRevisao          = $request->fimRevisaoEdit;
+        $modalidadeEdit->inicioResultado     = $request->inicioResultadoEdit;
+        $modalidadeEdit->mincaracteres       = $request->mincaracteresEdit;
+        $modalidadeEdit->maxcaracteres       = $request->maxcaracteresEdit;
+        $modalidadeEdit->minpalavras         = $request->minpalavrasEdit;
+        $modalidadeEdit->maxpalavras         = $request->maxpalavrasEdit;
+        $modalidadeEdit->pdf                 = $request->pdfEdit;
+        $modalidadeEdit->jpg                 = $request->jpgEdit;
+        $modalidadeEdit->jpeg                = $request->jpegEdit;
+        $modalidadeEdit->png                 = $request->pngEdit;
+        $modalidadeEdit->docx                = $request->docxEdit;
+        $modalidadeEdit->odt                 = $request->odtEdit;
+        
+        $modalidadeEdit->save();
+
+        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
     /**

@@ -8,12 +8,12 @@
             <div class="card" style="margin-top:50px">
                 <div class="card-body">
                   <h2 class="card-title">{{$evento->nome}}</h2>
-                  <h4 class="card-title">{{$nomeModalidade}}</h4>
+                  <h4 class="card-title">{{$modalidade->nome}}</h4>
                   <div class="titulo-detalhes"></div>
                   <br>
                   <h4 class="card-title">Enviar Trabalho</h4>
                   <p class="card-text">
-                    <form method="POST" action="{{route('trabalho.store', $modalidadeEspecifica)}}" enctype="multipart/form-data">
+                    <form method="POST" action="{{route('trabalho.store', $modalidade->id)}}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
                         <div>
@@ -58,13 +58,13 @@
                           </div>
                         </div>
 
-                        @if($regrasubarq->texto == true)
-                          @if ($regrasubarq->caracteres == true)
+                        @if($modalidade->texto == true)
+                          @if ($modalidade->caracteres == true)
                             <div class="row justify-content-center">
                               <div class="col-sm-12">
                                   <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                                  <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" minlength="{{$regrasubarq->mincaracteres}}" maxlength="{{$regrasubarq->maxcaracteres}}" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
-                                  <p class="text-muted"><small><span name="resumo">0</span></small> - Min Caracteres: {{$regrasubarq->mincaracteres}} - Max Caracteres: {{$regrasubarq->maxcaracteres}}</p>
+                                  <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" minlength="{{$modalidade->mincaracteres}}" maxlength="{{$modalidade->maxcaracteres}}" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
+                                  <p class="text-muted"><small><span name="resumo">0</span></small> - Min Caracteres: {{$modalidade->mincaracteres}} - Max Caracteres: {{$modalidade->maxcaracteres}}</p>
                                   @error('resumo')
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
@@ -78,7 +78,7 @@
                               <div class="col-sm-12">
                                   <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
                                   <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
-                                  <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: {{$regrasubarq->minpalavras}} - Max Palavras: {{$regrasubarq->maxpalavras}}</p>
+                                  <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: {{$modalidade->minpalavras}} - Max Palavras: {{$modalidade->maxpalavras}}</p>
                                   @error('resumo')
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
@@ -112,7 +112,7 @@
                         </div>
 
                         <!-- Modalidades -->
-                        <input type="hidden" name="modalidadeId" value="{{$modalidadeEspecifica}}">
+                        <input type="hidden" name="modalidadeId" value="{{$modalidade->id}}">
                         {{-- MODALIDADE SERIA PASSADA COMO HIDDEN --}}
                         {{-- <div class="row justify-content-center">
                             <div class="col-sm-12">
@@ -132,7 +132,7 @@
                           {{-- Submeter trabalho --}}
                           {{-- *Obs: As condições abaixo servem para manter o layout do botão para upload
                             e dos botões para baixar a regra e o template. --}}
-                          @if ($regrasubarq->arquivo == true && isset($regras) && isset($templates))
+                          @if ($modalidade->arquivo == true && isset($regras) && isset($templates))
                             <div class="col-sm-6" style="margin-top: 20px;">
                               <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
 
@@ -140,12 +140,12 @@
                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
                               </div>
                               <small>Arquivos aceitos nos formatos 
-                                @if($regrasubarq->pdf == true)pdf - @endif
-                                @if($regrasubarq->jpg == true)jpg - @endif
-                                @if($regrasubarq->jpeg == true)jpeg - @endif
-                                @if($regrasubarq->png == true)png - @endif
-                                @if($regrasubarq->docx == true)docx - @endif
-                                @if($regrasubarq->odt == true)odt @endif.</small>
+                                @if($modalidade->pdf == true)pdf - @endif
+                                @if($modalidade->jpg == true)jpg - @endif
+                                @if($modalidade->jpeg == true)jpeg - @endif
+                                @if($modalidade->png == true)png - @endif
+                                @if($modalidade->docx == true)docx - @endif
+                                @if($modalidade->odt == true)odt @endif.</small>
                               @error('arquivo')
                               <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                 <strong>{{ $message }}</strong>
@@ -167,7 +167,7 @@
                               </a>
                             </div>
 
-                          @elseif ($regrasubarq->arquivo == true && isset($regras) && $templates == null)
+                          @elseif ($modalidade->arquivo == true && isset($regras) && $templates == null)
                             <div class="col-sm-6" style="margin-top: 20px;">
                               <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
 
@@ -175,12 +175,12 @@
                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
                               </div>
                               <small>Arquivos aceitos nos formatos 
-                                @if($regrasubarq->pdf == true)pdf - @endif
-                                @if($regrasubarq->jpg == true)jpg - @endif
-                                @if($regrasubarq->jpeg == true)jpeg - @endif
-                                @if($regrasubarq->png == true)png - @endif
-                                @if($regrasubarq->docx == true)docx - @endif
-                                @if($regrasubarq->odt == true)odt @endif.</small>
+                                @if($modalidade->pdf == true)pdf - @endif
+                                @if($modalidade->jpg == true)jpg - @endif
+                                @if($modalidade->jpeg == true)jpeg - @endif
+                                @if($modalidade->png == true)png - @endif
+                                @if($modalidade->docx == true)docx - @endif
+                                @if($modalidade->odt == true)odt @endif.</small>
                               @error('arquivo')
                               <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                 <strong>{{ $message }}</strong>
@@ -194,7 +194,7 @@
                                 <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                               </a>
                             </div>
-                          @elseif ($regrasubarq->arquivo == true && isset($templates) && $regras == null)
+                          @elseif ($modalidade->arquivo == true && isset($templates) && $regras == null)
                             <div class="col-sm-6" style="margin-top: 20px;">
                               <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}:</label>
 
@@ -202,12 +202,12 @@
                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
                               </div>
                               <small>Arquivos aceitos nos formatos 
-                                @if($regrasubarq->pdf == true)pdf - @endif
-                                @if($regrasubarq->jpg == true)jpg - @endif
-                                @if($regrasubarq->jpeg == true)jpeg - @endif
-                                @if($regrasubarq->png == true)png - @endif
-                                @if($regrasubarq->docx == true)docx - @endif
-                                @if($regrasubarq->odt == true)odt @endif.</small>
+                                @if($modalidade->pdf == true)pdf - @endif
+                                @if($modalidade->jpg == true)jpg - @endif
+                                @if($modalidade->jpeg == true)jpeg - @endif
+                                @if($modalidade->png == true)png - @endif
+                                @if($modalidade->docx == true)docx - @endif
+                                @if($modalidade->odt == true)odt @endif.</small>
                               @error('arquivo')
                               <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                 <strong>{{ $message }}</strong>
@@ -221,7 +221,7 @@
                                 <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                               </a>
                             </div>
-                          @elseif ($regrasubarq->arquivo == true && $templates == null && $regras == null)
+                          @elseif ($modalidade->arquivo == true && $templates == null && $regras == null)
 
                             <div class="col-sm-12" style="margin-top: 20px;">
                               <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
@@ -230,12 +230,12 @@
                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
                               </div>
                               <small>Arquivos aceitos nos formatos 
-                                @if($regrasubarq->pdf == true)pdf - @endif
-                                @if($regrasubarq->jpg == true)jpg - @endif
-                                @if($regrasubarq->jpeg == true)jpeg - @endif
-                                @if($regrasubarq->png == true)png - @endif
-                                @if($regrasubarq->docx == true)docx - @endif
-                                @if($regrasubarq->odt == true)odt @endif.</small>
+                                @if($modalidade->pdf == true)pdf - @endif
+                                @if($modalidade->jpg == true)jpg - @endif
+                                @if($modalidade->jpeg == true)jpeg - @endif
+                                @if($modalidade->png == true)png - @endif
+                                @if($modalidade->docx == true)docx - @endif
+                                @if($modalidade->odt == true)odt @endif.</small>
                               @error('arquivo')
                               <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                 <strong>{{ $message }}</strong>

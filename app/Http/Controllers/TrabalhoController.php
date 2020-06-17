@@ -53,7 +53,7 @@ class TrabalhoController extends Controller
         
         // $formtiposubmissao é um vetor com os dados que serão ou
         // não exibidos no formulario de submissão de trabalho. 
-        $formtiposubmissao = FormTipoSubm::where('modalidadeId', $idModalidade)->first();
+        // $formtiposubmissao = FormTipoSubm::where('modalidadeId', $idModalidade)->first();
 
         // Pegando apenas as areas que possuem relação com a modalidade selecionada
         // ao clciar no botão "submeter trabalho".
@@ -65,7 +65,7 @@ class TrabalhoController extends Controller
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
 
-        $nomeModalidade = Modalidade::find($idModalidade);
+        $modalidade = Modalidade::find($idModalidade);
         
         return view('evento.submeterTrabalho',[
                                               'evento'                 => $evento,
@@ -76,13 +76,13 @@ class TrabalhoController extends Controller
                                               // 'trabalhos'              => $trabalhos,
                                               // 'areasEnomes'            => $areasEnomes,
                                               'modalidadesIDeNome'     => $modalidadesIDeNome,
-                                              'regrasubarq'            => $formtiposubmissao,
+                                              // 'regrasubarq'            => $formtiposubmissao,
                                               'areasEspecificas'       => $areasEspecificas,
-                                              'modalidadeEspecifica'   => $idModalidade,
+                                              // 'modalidadeEspecifica'   => $idModalidade,
                                               'formSubTraba'           => $formSubTraba,
                                               'regras'                 => $regra,
                                               'templates'              => $template,
-                                              'nomeModalidade'         => $nomeModalidade->nome,
+                                              'modalidade'             => $modalidade,
                                             ]);
     }
 
@@ -105,7 +105,7 @@ class TrabalhoController extends Controller
     public function store(Request $request, $modalidadeId){
       
       //Obtendo apenas os tipos de extensões selecionadas
-      $tiposExtensao = FormTipoSubm::where('modalidadeId', $modalidadeId)->first();
+      $tiposExtensao = Modalidade::find($modalidadeId);
       
       $mytime = Carbon::now('America/Recife');
       $mytime = $mytime->toDateString();
@@ -133,7 +133,7 @@ class TrabalhoController extends Controller
       ]);
       
       if($tiposExtensao->arquivo == true){
-        
+
         $tiposcadastrados = [];
         if($tiposExtensao->pdf == true){
           array_push($tiposcadastrados, "pdf");
@@ -153,16 +153,14 @@ class TrabalhoController extends Controller
         if($tiposExtensao->odt == true){
           array_push($tiposcadastrados, "odt");
         }
+
+        $extensao = $request->arquivo->getClientOriginalExtension();
+        if(!in_array($extensao, $tiposcadastrados)){
+          return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
+          Verifique no fim do formulário, quais os tipos permitidos.']);
+        }
       }
-
-
-      $extensao = $request->arquivo->getClientOriginalExtension();
-      if(!in_array($extensao, $tiposcadastrados)){
-        return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
-        Verifique no fim do formulário, quas os tipos permitidos.']);
-      }
-
-
+      
       $autor = Auth::user();
       $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->count();
       $areaModalidade = AreaModalidade::where('areaId', $request->areaId)->where('modalidadeId', $request->modalidadeId)->first();
