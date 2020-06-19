@@ -8,7 +8,8 @@ use App\FormTipoSubm;
 use App\RegraSubmis;
 use App\TemplateSubmis;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\File;
+// use Illuminate\Http\File;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 
 class ModalidadeController extends Controller
@@ -68,26 +69,44 @@ class ModalidadeController extends Controller
             'arquivoTemplates'  => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
         ]);
 
-        if($request->custom_field == "option1") {
-
-            if ($request->limit == "limit-option1") {
-                $caracteres = true;
-                $texto == true;
-            }
-            else {
-                $palavras = true;
-                $texto == true;
-            }
-        }
-        else {
-            $arquivo == true;
-        }
-        
         if(isset($request->maxcaracteres) && isset($request->mincaracteres) && $request->maxcaracteres <= $request->mincaracteres){
             return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!']);
         }
         if(isset($request->maxpalavras) && isset($request->minpalavras) && $request->maxpalavras <= $request->minpalavras){
             return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!']);
+        }
+
+        // if($request->custom_field == "option1") {
+
+        //     if ($request->limit == "limit-option1") {
+        //         $caracteres = true;
+        //         $texto == true;
+        //     }
+        //     else {
+        //         $palavras = true;
+        //         $texto == true;
+        //     }
+        // }
+        // else {
+        //     $arquivo == true;
+        // }
+        if($request->custom_field == "option1"){
+            $texto = true;
+            $arquivo = false;
+        }
+        if ($request->custom_field == "option2") {
+            $arquivo = true;
+            $texto = false;
+            $caracteres = false;
+            $palavras = false;
+        }
+        if ($request->limit == "limit-option1") {
+            $caracteres = true;
+            $palavras = false;
+        }
+        if ($request->limit == "limit-option2") {
+            $caracteres = false;
+            $palavras = true;
         }
         
         $modalidade = Modalidade::create([
@@ -115,10 +134,9 @@ class ModalidadeController extends Controller
         ]);
         
         if(isset($request->arquivoRegras)){
-
             $fileRegras = $request->arquivoRegras;
             $pathRegras = 'regras/' . $modalidade->id . '/';
-            $nomeRegras = "regra_submissao.pdf";
+            $nomeRegras = $request->arquivoRegras->getClientOriginalName();
 
             Storage::putFileAs($pathRegras, $fileRegras, $nomeRegras);
 
@@ -134,7 +152,7 @@ class ModalidadeController extends Controller
             
             $fileTemplates = $request->arquivoTemplates;
             $pathTemplates = 'templates/' . $modalidade->id . '/';
-            $nomeTemplates = "templates_submissao.pdf";
+            $nomeTemplates = $request->arquivoTemplates->getClientOriginalName();
             
             Storage::putFileAs($pathTemplates, $fileTemplates, $nomeTemplates);
             
@@ -201,26 +219,64 @@ class ModalidadeController extends Controller
 
         ]);
 
-        if ($request->textoEdit == true && $request->arquivoEdit == false || $request->textoEdit == true && $request->arquivoEdit == true) {
-            if ($request->limitEdit == "limit-option1") {
-                $caracteres = true;
-                $palavras = false;
-            }
-            if ($request->limit == "limit-option2") {
-                $caracteres = false;
-                $palavras = true;
-            }
-        }
-        else {
-            $caracteres = false;
-            $palavras = false;
-        }
-
         if(isset($request->maxcaracteresEdit) && isset($request->mincaracteresEdit) && $request->maxcaracteresEdit <= $request->mincaracteresEdit){
             return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!']);
         }
         if(isset($request->maxpalavrasEdit) && isset($request->minpalavrasEdit) && $request->maxpalavrasEdit <= $request->minpalavrasEdit){
             return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!']);
+        }
+
+        // Condição para opção de texto escolhida
+        if($request->custom_fieldEdit == "option1Edit"){
+            
+            $texto = true;
+            $arquivo = false;
+
+            $modalidadeEdit->pdf  = false;
+            $modalidadeEdit->jpg  = false;
+            $modalidadeEdit->jpeg = false;
+            $modalidadeEdit->png  = false;
+            $modalidadeEdit->docx = false;
+            $modalidadeEdit->odt  = false;
+            
+            // Condição para opção de caracteres escolhida 
+            if ($request->limitEdit == "limit-option1Edit") {
+                $caracteres = true;
+                $palavras = false;
+                $modalidadeEdit->maxcaracteres       = $request->maxcaracteresEdit;
+                $modalidadeEdit->mincaracteres       = $request->mincaracteresEdit;
+                $modalidadeEdit->minpalavras         = null;
+                $modalidadeEdit->maxpalavras         = null;
+            }
+            // Condição para opção de palavras escolhida
+            if ($request->limitEdit == "limit-option2Edit") {
+                $caracteres = false;
+                $palavras = true;
+                $modalidadeEdit->maxcaracteres       = null;
+                $modalidadeEdit->mincaracteres       = null;
+                $modalidadeEdit->minpalavras         = $request->minpalavrasEdit;
+                $modalidadeEdit->maxpalavras         = $request->maxpalavrasEdit;
+            }
+        }
+
+        // Condição para opção de arquivo escolhida
+        if ($request->custom_fieldEdit == "option2Edit") {
+            $arquivo = true;
+            $texto = false;
+            $caracteres = false;
+            $palavras = false;
+
+            $modalidadeEdit->pdf  = $request->pdfEdit;
+            $modalidadeEdit->jpg  = $request->jpgEdit;
+            $modalidadeEdit->jpeg = $request->jpegEdit;
+            $modalidadeEdit->png  = $request->pngEdit;
+            $modalidadeEdit->docx = $request->docxEdit;
+            $modalidadeEdit->odt  = $request->odtEdit;
+
+            $modalidadeEdit->maxcaracteres = null;
+            $modalidadeEdit->mincaracteres = null;
+            $modalidadeEdit->minpalavras   = null;
+            $modalidadeEdit->maxpalavras   = null;
         }
 
         $modalidadeEdit->nome                = $request->nomeModalidadeEdit;
@@ -229,16 +285,45 @@ class ModalidadeController extends Controller
         $modalidadeEdit->inicioRevisao       = $request->inicioRevisaoEdit;
         $modalidadeEdit->fimRevisao          = $request->fimRevisaoEdit;
         $modalidadeEdit->inicioResultado     = $request->inicioResultadoEdit;
-        $modalidadeEdit->mincaracteres       = $request->mincaracteresEdit;
-        $modalidadeEdit->maxcaracteres       = $request->maxcaracteresEdit;
-        $modalidadeEdit->minpalavras         = $request->minpalavrasEdit;
-        $modalidadeEdit->maxpalavras         = $request->maxpalavrasEdit;
-        $modalidadeEdit->pdf                 = $request->pdfEdit;
-        $modalidadeEdit->jpg                 = $request->jpgEdit;
-        $modalidadeEdit->jpeg                = $request->jpegEdit;
-        $modalidadeEdit->png                 = $request->pngEdit;
-        $modalidadeEdit->docx                = $request->docxEdit;
-        $modalidadeEdit->odt                 = $request->odtEdit;
+        $modalidadeEdit->texto               = $texto;
+        $modalidadeEdit->arquivo             = $arquivo;
+        $modalidadeEdit->caracteres          = $caracteres;
+        $modalidadeEdit->palavras            = $palavras;
+
+
+        if(isset($request->arquivoRegrasEdit)){
+            
+            $regraEdit = RegraSubmis::where('modalidadeId', $modalidadeEdit->id)->first();
+            $path = $regraEdit->nome;
+            Storage::delete($path);
+
+            $fileRegras = $request->arquivoRegrasEdit;
+            $pathRegras = 'regras/' . $modalidadeEdit->id . '/';
+            $nomeRegras = $request->arquivoRegrasEdit->getClientOriginalName();
+            
+            Storage::putFileAs($pathRegras, $fileRegras, $nomeRegras);
+
+            $regraEdit->nome = $pathRegras . $nomeRegras;
+
+            $regraEdit->save();
+        }
+
+        if (isset($request->arquivoTemplatesEdit)) {
+
+            $templateEdit = TemplateSubmis::where('modalidadeId', $modalidadeEdit->id)->first();
+            $path = $templateEdit->nome;
+            Storage::delete($path);
+            
+            $fileTemplates = $request->arquivoTemplatesEdit;
+            $pathTemplates = 'templates/' . $modalidadeEdit->id . '/';
+            $nomeTemplates = $request->arquivoTemplatesEdit->getClientOriginalName();
+            
+            Storage::putFileAs($pathTemplates, $fileTemplates, $nomeTemplates);
+
+            $templateEdit->nome = $pathTemplates . $nomeTemplates;
+
+            $templateEdit->save();
+        }
         
         $modalidadeEdit->save();
 

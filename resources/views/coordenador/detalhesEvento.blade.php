@@ -2033,7 +2033,7 @@
                                 <div class="col-sm-6">
                                     <label class="col-form-label">*{{ __('Tipo de Submissão') }}</label>
                                     <div class="form-check">
-                                        <input class="form-check-input incluiresumoEdit" type="checkbox" name="textoEdit" id="textoEdit">
+                                        <input class="form-check-input incluiresumoEdit" type="radio" name="custom_fieldEdit" id="id-custom_field-accountEdit-1-1" value="option1Edit">
                                         <label class="form-check-label" for="textoEdit">
                                             Submissão por texto 
                                         </label>
@@ -2044,7 +2044,7 @@
                                         @enderror
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input incluirarquivoEdit" type="checkbox" name="arquivoEdit" id="arquivoEdit">
+                                        <input class="form-check-input incluirarquivoEdit" type="radio" name="custom_fieldEdit" id="id-custom_field-accountEdit-1-2" value="option2Edit">
                                         <label class="form-check-label" for="arquivoEdit">
                                             Submissão por arquivo 
                                         </label>
@@ -2062,13 +2062,13 @@
                                     <label class="col-form-label">{{ __('Restrições') }}</label>
             
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="limitEdit" id="id-limit-custom_field-account-1-1" value="limit-option1">
+                                        <input class="form-check-input" type="radio" name="limitEdit" id="id-limit-custom_field-accountEdit-1-1" value="limit-option1Edit">
                                         <label class="form-check-label" for="texto">
                                             Quantidade de caracteres 
                                         </label>
                                         </div>
                                         <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="limitEdit" id="id-limit-custom_field-account-1-2" value="limit-option2">
+                                        <input class="form-check-input" type="radio" name="limitEdit" id="id-limit-custom_field-accountEdit-1-2" value="limit-option2Edit">
                                         <label class="form-check-label" for="arquivo">
                                             Quantidade de palavras 
                                         </label>
@@ -2077,14 +2077,14 @@
                                     <div class="row">
                                         <div class="col-sm-6" id="min-max-caracteresEdit" style="display: none">
                                             <div class="form-group">
-                                                <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                                <label class="col-form-label">{{ __('MínimoC') }}</label>
                                                 <div>
                                                   <input class="form-control" type="number" id="mincaracteresEdit" name="mincaracteresEdit">
                                                 </div>
                                             </div>
                 
                                             <div class="form-group">
-                                                <label class="col-form-label">{{ __('Máximo') }}</label>
+                                                <label class="col-form-label">{{ __('MáximoC') }}</label>
                                                 <div>
                                                   <input class="form-control" type="number" id="maxcaracteresEdit" name="maxcaracteresEdit">
                                                 </div>
@@ -2095,14 +2095,14 @@
                                     <div class="row">
                                         <div class="col-sm-6" id="min-max-palavrasEdit" style="display: none">
                                             <div class="form-group">
-                                                <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                                <label class="col-form-label">{{ __('MínimoP') }}</label>
                                                 <div>
                                                   <input class="form-control" type="number" id="minpalavrasEdit" name="minpalavrasEdit">
                                                 </div>
                                             </div>
                 
                                             <div class="form-group">
-                                                <label class="col-form-label">{{ __('Máximo') }}</label>
+                                                <label class="col-form-label">{{ __('MáximoP') }}</label>
                                                 <div>
                                                   <input class="form-control" type="number" id="maxpalavrasEdit" name="maxpalavrasEdit">
                                                 </div>
@@ -2281,17 +2281,8 @@
 @section('javascript')
   <script type="text/javascript" >
 
-    // $(document).ready(function() {
-    //     $('input:checkbox[class="form-check-input incluiresumo"]').on("change", function() {
-    //         if (this.checked) {
-    //             $("#limite-caracteres-temp").show();
-    //         } else {
-    //             $("#limite-caracteres-temp").hide();
-    //         }
-    //     });
-    // });
     
-    // Exibir ou ocultar opções de Texto na criação de modalidade
+    // Exibir ou ocultar opções de Texto na criação de modalidade - com checkbox
     // $(document).ready(function() {
     //     $('input:checkbox[class="form-check-input incluiresumo"]').on("change", function() {
     //         if (this.checked) {
@@ -2302,39 +2293,6 @@
     //     });
     // });
 
-    // Exibir ou ocultar opções de Texto na edição de modalidade
-    $(document).ready(function() {
-        $('input:checkbox[class="form-check-input incluiresumoEdit"]').on("change", function() {
-            if (this.checked) {
-                $("#limite-caracteresEdit").show();
-            } else {
-                $("#limite-caracteresEdit").hide();
-            }
-        });
-    });
-
-    // Exibir ou ocultar opções de Arquivo na criação de modalidade
-    // $(document).ready(function() {
-    //     $('input:checkbox[class="form-check-input incluirarquivo"]').on("change", function() {
-    //         if (this.checked) {
-    //             $("#tipo-arquivo").show();
-    //         } else {
-    //             $("#tipo-arquivo").hide();
-    //         }
-    //     });
-    // });
-
-    // Exibir ou ocultar opções de Arquivo na edição de modalidade
-    $(document).ready(function() {
-        $('input:checkbox[class="form-check-input incluirarquivoEdit"]').on("change", function() {
-            if (this.checked) {
-                $("#tipo-arquivoEdit").show();
-            } else {
-                $("#tipo-arquivoEdit").hide();
-            }
-        });
-    });
-
     // Exibir ou ocultar opções de texto ou arquivo, em cadastro de modalidade
     $(document).ready(function() {
         $('input:radio[name="custom_field"]').on("change", function() {
@@ -2344,6 +2302,19 @@
             } else {
                 $("#tipo-arquivo").show();
                 $("#limite-caracteres").hide();
+            }
+        });
+    });
+
+    // Exibir ou ocultar opções de texto ou arquivo, em edição de modalidade
+    $(document).ready(function() {
+        $('input:radio[name="custom_fieldEdit"]').on("change", function() {
+            if (this.checked && this.value == 'option1Edit') {
+                $("#limite-caracteresEdit").show();
+                $("#tipo-arquivoEdit").hide();
+            } else {
+                $("#tipo-arquivoEdit").show();
+                $("#limite-caracteresEdit").hide();
             }
         });
     });
@@ -2362,7 +2333,7 @@
 
     $(document).ready(function() {
         $('input:radio[name="limitEdit"]').on("change", function() {
-            if (this.checked && this.value == 'limit-option1') {
+            if (this.checked && this.value == 'limit-option1Edit') {
                 $("#min-max-caracteresEdit").show();
                 $("#min-max-palavrasEdit").hide();
             } else {
@@ -2377,7 +2348,6 @@
   }
 
   function modalidadeId(x){
-    console.log("CDCDCDCDCD");
     document.getElementById('modalidadeIdAjax').value = x;
   }
 
@@ -2453,11 +2423,19 @@
             $('#fimRevisaoEdit').val(result.fimRevisao);
             if(result.texto == true){
 
-                $('#textoEdit').prop('checked', true);
+                $('#id-custom_field-accountEdit-1-1').prop('checked', true);
             }
             if(result.arquivo == true){
 
-                $('#arquivoEdit').prop('checked', true);
+                $('#id-custom_field-accountEdit-1-2').prop('checked', true);
+            }
+            if(result.caracteres == true){
+
+                $('#id-limit-custom_field-accountEdit-1-1').prop('checked', true);
+            }   
+            if(result.palavras == true){
+
+                $('#id-limit-custom_field-accountEdit-1-2').prop('checked', true);
             }            
             $('#maxcaracteresEdit').val(result.maxcaracteres);
             $('#mincaracteresEdit').val(result.mincaracteres);
