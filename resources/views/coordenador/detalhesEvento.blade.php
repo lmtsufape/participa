@@ -2421,6 +2421,7 @@
             $('#fimSubmissaoEdit').val(result.fimSubmissao);
             $('#inicioRevisaoEdit').val(result.inicioRevisao);
             $('#fimRevisaoEdit').val(result.fimRevisao);
+            $('#inicioResultadoEdit').val(result.inicioResultado);
             if(result.texto == true){
 
                 $('#id-custom_field-accountEdit-1-1').prop('checked', true);
