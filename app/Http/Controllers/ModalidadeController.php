@@ -69,6 +69,7 @@ class ModalidadeController extends Controller
             'arquivoTemplates'  => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
         ]);
 
+        // Verificar se o limite máximo de palavra ou caractere é menor que o limite mínimo
         if(isset($request->maxcaracteres) && isset($request->mincaracteres) && $request->maxcaracteres <= $request->mincaracteres){
             return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!']);
         }
@@ -76,38 +77,41 @@ class ModalidadeController extends Controller
             return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!']);
         }
 
-        // if($request->custom_field == "option1") {
-
-        //     if ($request->limit == "limit-option1") {
-        //         $caracteres = true;
-        //         $texto == true;
-        //     }
-        //     else {
-        //         $palavras = true;
-        //         $texto == true;
-        //     }
-        // }
-        // else {
-        //     $arquivo == true;
-        // }
         if($request->custom_field == "option1"){
+            // Verifica se um campo foi deixado em branco
+            if ($request->limit == null) {
+                return redirect()->back()->withErrors(['caracteresoupalavras' => 'O tipo texto foi selecionado, mas o tipo caractere ou palavra não foi marcado.']);
+            }
             $texto = true;
             $arquivo = false;
+            if ($request->limit == "limit-option1") {
+                // Verifica se um campo foi deixado em branco
+                if ($request->mincaracteres == null || $request->maxcaracteres == null){
+                    return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado']);
+                }
+                $caracteres = true;
+                $palavras = false;
+            }
+            if ($request->limit == "limit-option2") {
+                // Verifica se um campo foi deixado em branco
+                if ($request->minpalavras == null || $request->maxpalavras == null){
+                    return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado']);
+                }
+                $caracteres = false;
+                $palavras = true;
+            }
         }
         if ($request->custom_field == "option2") {
+            // Verifica se um campo foi deixado em branco
+            if ($request->pdf == null && $request->jpg == null && $request->jpeg == null && $request->png == null && $request->docx == null && $request->odt == null) {
+                return redirect()->back()->withErrors(['marcarextensao' => 'O campo arquivo foi selecionado, mas nenhuma extensão foi selecionada.']);
+            }
             $arquivo = true;
             $texto = false;
             $caracteres = false;
             $palavras = false;
         }
-        if ($request->limit == "limit-option1") {
-            $caracteres = true;
-            $palavras = false;
-        }
-        if ($request->limit == "limit-option2") {
-            $caracteres = false;
-            $palavras = true;
-        }
+
         
         $modalidade = Modalidade::create([
             'nome'              => $request->nomeModalidade,
@@ -132,36 +136,25 @@ class ModalidadeController extends Controller
             'odt'               => $request->odt,
             'eventoId'          => $request->eventoId,
         ]);
-        
+
         if(isset($request->arquivoRegras)){
             $fileRegras = $request->arquivoRegras;
-            $pathRegras = 'regras/' . $modalidade->id . '/';
+            $pathRegras = 'regras/' . $modalidade->nome . '/';
             $nomeRegras = $request->arquivoRegras->getClientOriginalName();
 
             Storage::putFileAs($pathRegras, $fileRegras, $nomeRegras);
 
-            $regrasubmissao = RegraSubmis::create([
-                'nome'  => $pathRegras . $nomeRegras,
-                'modalidadeId'  => $modalidade->id,
-            ]);
-
-            $regrasubmissao->save();
+            $modalidade->regra = $pathRegras . $nomeRegras;
         }
 
-        if ($request->arquivoTemplates) {
-            
+        if (isset($request->arquivoTemplates)) {
             $fileTemplates = $request->arquivoTemplates;
-            $pathTemplates = 'templates/' . $modalidade->id . '/';
+            $pathTemplates = 'templates/' . $modalidade->nome . '/';
             $nomeTemplates = $request->arquivoTemplates->getClientOriginalName();
             
             Storage::putFileAs($pathTemplates, $fileTemplates, $nomeTemplates);
-            
-            $templatesubmissao = TemplateSubmis::create([
-                'nome'  => $pathTemplates . $nomeTemplates,
-                'modalidadeId'  => $modalidade->id,
-            ]);
 
-            $templatesubmissao->save();
+            $modalidade->template = $pathTemplates . $nomeTemplates;
         }
         
         $modalidade->save();
@@ -241,6 +234,10 @@ class ModalidadeController extends Controller
             
             // Condição para opção de caracteres escolhida 
             if ($request->limitEdit == "limit-option1Edit") {
+                // Verifica se um campo foi deixado em branco
+                if ($request->mincaracteresEdit == null || $request->maxcaracteresEdit == null){
+                    return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado']);
+                }
                 $caracteres = true;
                 $palavras = false;
                 $modalidadeEdit->maxcaracteres       = $request->maxcaracteresEdit;
@@ -250,6 +247,10 @@ class ModalidadeController extends Controller
             }
             // Condição para opção de palavras escolhida
             if ($request->limitEdit == "limit-option2Edit") {
+                // Verifica se um campo foi deixado em branco
+                if ($request->minpalavrasEdit == null || $request->maxpalavrasEdit == null){
+                    return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado']);
+                }
                 $caracteres = false;
                 $palavras = true;
                 $modalidadeEdit->maxcaracteres       = null;
@@ -261,6 +262,9 @@ class ModalidadeController extends Controller
 
         // Condição para opção de arquivo escolhida
         if ($request->custom_fieldEdit == "option2Edit") {
+            if ($request->pdfEdit == null && $request->jpgEdit == null && $request->jpegEdit == null && $request->pngEdit == null && $request->docxEdit == null && $request->odtEdit == null) {
+                return redirect()->back()->withErrors(['marcarextensao' => 'O campo arquivo foi selecionado, mas nenhuma extensão foi selecionada.']);
+            }
             $arquivo = true;
             $texto = false;
             $caracteres = false;
@@ -293,36 +297,34 @@ class ModalidadeController extends Controller
 
         if(isset($request->arquivoRegrasEdit)){
             
-            $regraEdit = RegraSubmis::where('modalidadeId', $modalidadeEdit->id)->first();
-            $path = $regraEdit->nome;
+            $path = $modalidadeEdit->regra;
             Storage::delete($path);
 
             $fileRegras = $request->arquivoRegrasEdit;
-            $pathRegras = 'regras/' . $modalidadeEdit->id . '/';
+            $pathRegras = 'regras/' . $modalidadeEdit->nome . '/';
             $nomeRegras = $request->arquivoRegrasEdit->getClientOriginalName();
             
             Storage::putFileAs($pathRegras, $fileRegras, $nomeRegras);
 
-            $regraEdit->nome = $pathRegras . $nomeRegras;
+            $modalidadeEdit->regra = $pathRegras . $nomeRegras;
 
-            $regraEdit->save();
+            $modalidadeEdit->save();
         }
 
         if (isset($request->arquivoTemplatesEdit)) {
 
-            $templateEdit = TemplateSubmis::where('modalidadeId', $modalidadeEdit->id)->first();
-            $path = $templateEdit->nome;
+            $path = $modalidadeEdit->template;
             Storage::delete($path);
             
             $fileTemplates = $request->arquivoTemplatesEdit;
-            $pathTemplates = 'templates/' . $modalidadeEdit->id . '/';
+            $pathTemplates = 'templates/' . $modalidadeEdit->nome . '/';
             $nomeTemplates = $request->arquivoTemplatesEdit->getClientOriginalName();
             
             Storage::putFileAs($pathTemplates, $fileTemplates, $nomeTemplates);
 
-            $templateEdit->nome = $pathTemplates . $nomeTemplates;
+            $modalidadeEdit->template = $pathTemplates . $nomeTemplates;
 
-            $templateEdit->save();
+            $modalidadeEdit->save();
         }
         
         $modalidadeEdit->save();

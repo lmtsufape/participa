@@ -26,8 +26,13 @@ class FormSubmTrabaController extends Controller
             'etiquetacampoextra3'       => ['nullable', 'string'],
             'etiquetacampoextra4'       => ['nullable', 'string'],
             'etiquetacampoextra5'       => ['nullable', 'string'],
+            'select_campo1'             => ['nullable', 'string'],
+            'select_campo2'             => ['nullable', 'string'],
+            'select_campo3'             => ['nullable', 'string'],
+            'select_campo4'             => ['nullable', 'string'],
+            'select_campo5'             => ['nullable', 'string'],
         ]);
-
+        
         $formevento = FormSubmTraba::where('eventoId',$id)->first();
 
         if(isset($request->etiquetatitulotrabalho)){
@@ -69,6 +74,24 @@ class FormSubmTrabaController extends Controller
         if(isset($request->etiquetacampoextra5)){
             $formevento->etiquetacampoextra5                 = $request->etiquetacampoextra5;
         }
+
+        // Opções para tipo de campos extras
+        if(isset($request->select_campo1)){
+            $formevento->tipocampo1                       = $request->select_campo1;
+        }
+        if(isset($request->select_campo2)){
+            $formevento->tipocampo2                       = $request->select_campo2;
+        }
+        if(isset($request->select_campo3)){
+            $formevento->tipocampo3                       = $request->select_campo3;
+        }
+        if(isset($request->select_campo4)){
+            $formevento->tipocampo4                       = $request->select_campo4;
+        }
+        if(isset($request->select_campo5)){
+            $formevento->tipocampo5                       = $request->select_campo5;
+        }
+        
 
         // Checkboxes para exibição ou não de campos extras
         // na tela de submissão de trabalhos

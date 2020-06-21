@@ -607,6 +607,26 @@
       @include('componentes.mensagens')
     @enderror
 </div>
+<div>
+    @error('marcarextensao')
+      @include('componentes.mensagens')
+    @enderror
+</div>
+<div>
+    @error('caracteresoupalavras')
+      @include('componentes.mensagens')
+    @enderror
+</div>
+<div>
+    @error('semcaractere')
+      @include('componentes.mensagens')
+    @enderror
+</div>
+<div>
+    @error('sempalavra')
+      @include('componentes.mensagens')
+    @enderror
+</div>
 {{-- Modalidade --}}
 <div id="divCadastrarModalidades" class="modalidades">
     <div class="row">
@@ -720,7 +740,7 @@
                         <div class="col-sm-6">
                             <label class="col-form-label">*{{ __('Tipo de Submissão') }}</label>
                             <div class="form-check">
-                                <input class="form-check-input incluiresumo" type="radio" name="custom_field" id="id-custom_field-account-1-1" value="option1">
+                                <input class="form-check-input incluiresumo" type="radio" onClick="habilitacao()" name="custom_field" id="id-custom_field-account-1-1" value="option1" required>
                                 <label class="form-check-label" for="texto">
                                     Submissão por texto 
                                 </label>
@@ -731,7 +751,7 @@
                                 @enderror
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input incluirarquivo" type="radio" name="custom_field" id="id-custom_field-account-1-2" value="option2">
+                                <input class="form-check-input incluirarquivo" type="radio" name="custom_field" id="id-custom_field-account-1-2" value="option2" required>
                                 <label class="form-check-label" for="arquivo">
                                     Submissão por arquivo 
                                 </label>
@@ -859,7 +879,7 @@
                           @enderror
                         </div>
                         {{-- Arquivo de Templates --}}
-                        <div class="col-sm-12" style="margin-top: 20px;">
+                        <div class="col-sm-12" id="area-template" style="margin-top: 20px; display:block">
                             <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar template:') }}</label>
   
                             <div class="custom-file">
@@ -1275,10 +1295,11 @@
 
                         <div class="row justify-content-left">
                             
-                            <div class="col-sm-2">
+                            <div class="col-sm-auto">
                                 <h4>{{$etiquetas->etiquetanomeevento}}:</h4>
                             </div>
-                            <div class="col-sm-3">
+                            <button type="button" id="botao-editar-nome" class="btn btn-outline-dark">Editar</button>
+                            <div class="col-sm-3" id="etiqueta-nome-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetanomeevento" name="etiquetanomeevento" placeholder="Editar Etiqueta">
                             </div>
 
@@ -1292,10 +1313,11 @@
                         
                         <div class="row justify-content-left">
             
-                            <div class="col-sm-2">
+                            <div class="col-sm-auto">
                                 <h4>{{$etiquetas->etiquetadescricaoevento}}:</h4>
                             </div>
-                            <div class="col-sm-3">
+                            <button type="button" id="botao-editar-descricao" class="btn btn-outline-dark">Editar</button>
+                            <div class="col-sm-3" id="etiqueta-descricao-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetadescricaoevento" name="etiquetadescricaoevento" placeholder="Editar Etiqueta">
                             </div>
                         </div>
@@ -1306,10 +1328,11 @@
                         </div>
 
                         <div class="row justify-content-left">
-                            <div class="col-sm-2">
+                            <div class="col-sm-auto">
                                 <h4>{{$etiquetas->etiquetatipoevento}}:</h4>
                             </div>
-                            <div class="col-sm-3">
+                            <button type="button" id="botao-editar-tipo" class="btn btn-outline-dark">Editar</button>
+                            <div class="col-sm-3" id="etiqueta-tipo-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetatipoevento" name="etiquetatipoevento" placeholder="Editar Etiqueta">
                             </div>
                         </div>
@@ -1318,11 +1341,13 @@
                                 <p>{{$evento->tipo}}</p>
                             </div>
                         </div>
+                        
                         <div class="row justify-content-left">
-                            <div class="col-sm-2 info-evento">
+                            <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetadatas}}:</h4>
                             </div>
-                            <div class="col-sm-3">
+                            <button type="button" id="botao-editar-datas" class="btn btn-outline-dark">Editar</button>
+                            <div class="col-sm-3" id="etiqueta-data-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetadatas" name="etiquetadatas" placeholder="Editar Etiqueta">
                             </div>
                         </div>
@@ -1334,11 +1359,13 @@
                                 </p>
                             </div>
                         </div>
+                        
                         <div class="row justify-content-left">
-                            <div class="col-sm-2 info-evento">
+                            <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetasubmissoes}}:</h4>
                             </div>
-                            <div class="col-sm-3">
+                            <button type="button" id="botao-editar-submissoes" class="btn btn-outline-dark">Editar</button>
+                            <div class="col-sm-3" id="etiqueta-submissoes-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetasubmissoes" name="etiquetasubmissoes" placeholder="Editar Etiqueta">
                             </div>
                         </div>
@@ -1366,10 +1393,11 @@
 
                         <!-- Areas -->
                         <div class="row justify-content-left">
-                            <div class="col-sm-2 info-evento">
+                            <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetaenderecoevento}}:</h4>
                             </div>
-                            <div class="col-sm-3">
+                            <button type="button" id="botao-editar-endereco" class="btn btn-outline-dark">Editar</button>
+                            <div class="col-sm-3" id="etiqueta-endereco-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetaenderecoevento" name="etiquetaenderecoevento" placeholder="Editar Etiqueta">
                             </div>
                         </div>
@@ -1380,10 +1408,11 @@
                         </div>
 
                         <div class="row justify-content-left" style="margin-top: 10px">
-                            <div class="col-sm-2 info-evento">
+                            <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetamoduloinscricao}}:</h4>
                             </div>
-                            <div class="col-sm-3">
+                            <button type="button" id="botao-editar-modulo-inscricao" class="btn btn-outline-dark">Editar</button>
+                            <div class="col-sm-3" id="etiqueta-modulo-inscricao-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetamoduloinscricao" name="etiquetamoduloinscricao" placeholder="Editar Etiqueta">
                             </div>
                         </div>
@@ -1392,10 +1421,11 @@
                         </p>
 
                         <div class="row justify-content-left">
-                            <div class="col-sm-2 info-evento">
+                            <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetamoduloprogramacao}}:</h4>
                             </div>
-                            <div class="col-sm-3">
+                            <button type="button" id="botao-editar-modulo-programacao" class="btn btn-outline-dark">Editar</button>
+                            <div class="col-sm-3" id="etiqueta-modulo-programacao-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetamoduloprogramacao" name="etiquetamoduloprogramacao" placeholder="Editar Etiqueta">
                             </div>
                         </div>
@@ -1404,10 +1434,11 @@
                         </p>
 
                         <div class="row justify-content-left">
-                            <div class="col-sm-2 info-evento">
+                            <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetamoduloorganizacao}}:</h4>
                             </div>
-                            <div class="col-sm-3">
+                            <button type="button" id="botao-editar-modulo-organizacao" class="btn btn-outline-dark">Editar</button>
+                            <div class="col-sm-3" id="etiqueta-modulo-organizacao-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetamoduloorganizacao" name="etiquetamoduloorganizacao" placeholder="Editar Etiqueta">
                             </div>
                         </div>
@@ -1580,40 +1611,44 @@
                     @csrf
                     
                     <div class="row justify-content-left">
-                        <div class="col-sm-3">
+                        <div class="col-sm-auto">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
                         </div>
-                        <div class="col-sm-5">
+                        <button type="button" id="botao-editar-titulo" class="btn btn-outline-dark">Editar</button>
+                        <div class="col-sm-3" id="etiqueta-titulo-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetatitulotrabalho" placeholder="Editar Etiqueta">
                         </div>
                     </div>
                     <input id="nomeTrabalho" type="text" class="form-control" style="margin-top: 10px" disabled><br/>
 
                     <div class="row justify-content-left">
-                        <div class="col-sm-3">
+                        <div class="col-sm-auto">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
                         </div>
-                        <div class="col-sm-5">
+                        <button type="button" id="botao-editar-autor" class="btn btn-outline-dark">Editar</button>
+                        <div class="col-sm-3" id="etiqueta-autor-trabalho" style="display: none">
                             <input type="text" class="form-control" style="margin-top: 10px" id="inputEmail3" name="etiquetaautortrabalho" placeholder="Editar Etiqueta">
                         </div>
                     </div>
                     <input class="form-control" type="text" style="margin-top: 10px" disabled><br/>
 
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-auto">
                         <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px" disabled>{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</a>
                         </div>
-                        <div class="col-sm-5">
+                        <button type="button" id="botao-editar-coautor" class="btn btn-outline-dark">Editar</button>
+                        <div class="col-sm-3" id="etiqueta-coautor-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetacoautortrabalho" placeholder="Editar Etiqueta">
                         </div>
                     </div>
                     <br/>
 
                     <div class="row justify-content-left">
-                        <div class="col-sm-3">
+                        <div class="col-sm-auto">
                             <label for="resumo" class="col-form-label">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
                         </div>
-                        <div class="col-sm-5">
+                        <button type="button" id="botao-editar-resumo" class="btn btn-outline-dark">Editar</button>
+                        <div class="col-sm-3" id="etiqueta-resumo-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetaresumotrabalho" placeholder="Editar Etiqueta">
                         </div>
                     </div>   
@@ -1622,10 +1657,11 @@
 
                     <!-- Areas -->
                     <div class="row justify-content-left">
-                        <div class="col-3">
+                        <div class="col-auto">
                             <label for="area" class="col-form-label">{{$etiquetasSubTrab->etiquetaareatrabalho}}:</label>
                         </div>
-                        <div class="col-sm-5">
+                        <button type="button" id="botao-editar-area" class="btn btn-outline-dark">Editar</button>
+                        <div class="col-sm-3" id="etiqueta-area-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetaareatrabalho" placeholder="Editar Etiqueta">
                         </div>
                     </div>
@@ -1635,10 +1671,11 @@
                     <br/>
                     <div class="row justify-content-left">
                         {{-- Arquivo --}}
-                        <div class="col-sm-3">
+                        <div class="col-sm-auto">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetauploadtrabalho}}:</label>
                         </div>
-                        <div class="col-sm-5">
+                        <button type="button" id="botao-editar-upload" class="btn btn-outline-dark">Editar</button>
+                        <div class="col-sm-3" id="etiqueta-upload-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetauploadtrabalho" placeholder="Editar Etiqueta">
                         </div>
                     </div>
@@ -1648,25 +1685,27 @@
                         <small>Arquivos aceitos nos formatos a seguir</small>
                     <br>
                     <div class="row justify-content-left" style="margin-top: 10px">
-                        <div class="col-sm-3">
+                        <div class="col-sm-auto">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetabaixarregra}}</label>
                             <a target="_new" style="font-size: 20px; color: #114048ff;" >
                               <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                             </a>
                         </div>
-                        <div class="col-sm-5">
+                        <button type="button" id="botao-editar-regras" class="btn btn-outline-dark">Editar</button>
+                        <div class="col-sm-3" id="etiqueta-regras-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetabaixarregra" placeholder="Editar Etiqueta">
                         </div>
                     </div>
 
                     <div class="row justify-content-left" style="margin-top: 10px">
-                        <div class="col-sm-3">
+                        <div class="col-sm-auto">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetabaixartemplate}}</label>
                             <a target="_new" style="font-size: 20px; color: #114048ff;" >
                                 <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                             </a>
                         </div>
-                        <div class="col-sm-5">
+                        <button type="button" id="botao-editar-templates" class="btn btn-outline-dark">Editar</button>
+                        <div class="col-sm-3" id="etiqueta-templates-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetabaixartemplate" placeholder="Editar Etiqueta">
                         </div>
                     </div>
@@ -1676,11 +1715,32 @@
                     <h4 class="card-title">Campos Adicionais:</h4>
                     <div class="form-group row">
                         <input type="hidden" name="checkcampoextra1" value="false" id="checkcampoextra1">
-                        <label for="inputEmail3" class="col-sm-3 col-form-label">{{$etiquetasSubTrab->etiquetacampoextra1}}:</label>
-                        <div class="col-sm-5">
+                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra1}}:</label>
+                        <div class="col-sm-4">
                           <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra1" placeholder="Editar Etiqueta">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-sm-3">
+                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo1">
+                              @if ($etiquetasSubTrab->tipocampo1 == "textosimples")
+                                <option value="textosimples" selected>Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload">Upload</option>
+                              @elseif ($etiquetasSubTrab->tipocampo1 == "textogrande")
+                                <option value="textosimples">Texto Simples</option>
+                                <option value="textogrande" selected>Texto grande</option>
+                                <option value="upload">Upload</option>
+                              @elseif ($etiquetasSubTrab->tipocampo1 == "upload")
+                                <option value="textosimples">Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload" selected>Upload</option>
+                              @else
+                                <option value="textosimples" selected>Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload" selected>Upload</option>
+                              @endif
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-2">
                             <div class="form-check">
                               <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra1) checked @endif name="checkcampoextra1">
                               <label class="form-check-label" for="gridCheck">
@@ -1691,11 +1751,32 @@
                     </div>
                     <div class="form-group row">
                         <input type="hidden" name="checkcampoextra2" value="false" id="checkcampoextra2">
-                        <label for="inputEmail3" class="col-sm-3 col-form-label">{{$etiquetasSubTrab->etiquetacampoextra2}}:</label>
-                        <div class="col-sm-5">
+                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra2}}:</label>
+                        <div class="col-sm-4">
                           <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra2" placeholder="Editar Etiqueta">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-sm-3">
+                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo2">
+                                @if ($etiquetasSubTrab->tipocampo2 == "textosimples")
+                                <option value="textosimples" selected>Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload">Upload</option>
+                                @elseif ($etiquetasSubTrab->tipocampo2 == "textogrande")
+                                <option value="textosimples">Texto Simples</option>
+                                <option value="textogrande" selected>Texto grande</option>
+                                <option value="upload">Upload</option>
+                                @elseif ($etiquetasSubTrab->tipocampo2 == "upload")
+                                <option value="textosimples">Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload" selected>Upload</option>
+                                @else
+                                <option value="textosimples" selected>Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload" selected>Upload</option>
+                                @endif
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-2">
                             <div class="form-check">
                               <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra2) checked @endif name="checkcampoextra2">
                               <label class="form-check-label" for="gridCheck">
@@ -1706,11 +1787,32 @@
                     </div>
                     <div class="form-group row">
                         <input type="hidden" name="checkcampoextra3" value="false" id="checkcampoextra3">
-                        <label for="inputEmail3" class="col-sm-3 col-form-label">{{$etiquetasSubTrab->etiquetacampoextra3}}:</label>
-                        <div class="col-sm-5">
+                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra3}}:</label>
+                        <div class="col-sm-4">
                           <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra3" placeholder="Editar Etiqueta">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-sm-3">
+                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo3">
+                                @if ($etiquetasSubTrab->tipocampo3 == "textosimples")
+                                <option value="textosimples" selected>Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload">Upload</option>
+                                @elseif ($etiquetasSubTrab->tipocampo3 == "textogrande")
+                                <option value="textosimples">Texto Simples</option>
+                                <option value="textogrande" selected>Texto grande</option>
+                                <option value="upload">Upload</option>
+                                @elseif ($etiquetasSubTrab->tipocampo3 == "upload")
+                                <option value="textosimples">Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload" selected>Upload</option>
+                                @else
+                                <option value="textosimples" selected>Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload" selected>Upload</option>
+                                @endif
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-2">
                             <div class="form-check">
                               <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra3) checked @endif name="checkcampoextra3">
                               <label class="form-check-label" for="gridCheck">
@@ -1721,11 +1823,32 @@
                     </div>
                     <div class="form-group row">
                         <input type="hidden" name="checkcampoextra4" value="false" id="checkcampoextra4">
-                        <label for="inputEmail3" class="col-sm-3 col-form-label">{{$etiquetasSubTrab->etiquetacampoextra4}}:</label>
-                        <div class="col-sm-5">
+                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra4}}:</label>
+                        <div class="col-sm-4">
                           <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra4" placeholder="Editar Etiqueta">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-sm-3">
+                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo4">
+                                @if ($etiquetasSubTrab->tipocampo4 == "textosimples")
+                                <option value="textosimples" selected>Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload">Upload</option>
+                                @elseif ($etiquetasSubTrab->tipocampo4 == "textogrande")
+                                <option value="textosimples">Texto Simples</option>
+                                <option value="textogrande" selected>Texto grande</option>
+                                <option value="upload">Upload</option>
+                                @elseif ($etiquetasSubTrab->tipocampo4 == "upload")
+                                <option value="textosimples">Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload" selected>Upload</option>
+                                @else
+                                <option value="textosimples" selected>Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload" selected>Upload</option>
+                                @endif
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-2">
                             <div class="form-check">
                               <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra4) checked @endif name="checkcampoextra4">
                               <label class="form-check-label" for="gridCheck">
@@ -1736,11 +1859,32 @@
                     </div>
                     <div class="form-group row">
                         <input type="hidden" name="checkcampoextra5" value="false" id="checkcampoextra5">
-                        <label for="inputEmail3" class="col-sm-3 col-form-label">{{$etiquetasSubTrab->etiquetacampoextra5}}:</label>
-                        <div class="col-sm-5">
+                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra5}}:</label>
+                        <div class="col-sm-4">
                           <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra5" placeholder="Editar Etiqueta">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-sm-3">
+                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo5">
+                                @if ($etiquetasSubTrab->tipocampo5 == "textosimples")
+                                <option value="textosimples" selected>Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload">Upload</option>
+                                @elseif ($etiquetasSubTrab->tipocampo5 == "textogrande")
+                                <option value="textosimples">Texto Simples</option>
+                                <option value="textogrande" selected>Texto grande</option>
+                                <option value="upload">Upload</option>
+                                @elseif ($etiquetasSubTrab->tipocampo5 == "upload")
+                                <option value="textosimples">Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload" selected>Upload</option>
+                                @else
+                                <option value="textosimples" selected>Texto Simples</option>
+                                <option value="textogrande">Texto grande</option>
+                                <option value="upload" selected>Upload</option>
+                                @endif
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-2">
                             <div class="form-check">
                               <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra5) checked @endif name="checkcampoextra5">
                               <label class="form-check-label" for="gridCheck">
@@ -1934,6 +2078,11 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-body">
+                            <div>
+                                @error('marcarextensao')
+                                  @include('componentes.mensagens')
+                                @enderror
+                            </div>
                             <form method="POST" action="{{route('modalidade.update')}}" enctype="multipart/form-data">
                             @csrf
                             <p class="card-text">
@@ -2172,7 +2321,7 @@
                                   @enderror
                                 </div>
                                 {{-- Arquivo de Templates --}}
-                                <div class="col-sm-12" style="margin-top: 20px;">
+                                <div class="col-sm-12" id="area-templateEdit" style="margin-top: 20px; display:block">
                                     <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar template:') }}</label>
             
                                     <div class="custom-file">
@@ -2299,9 +2448,11 @@
             if (this.checked && this.value == 'option1') {
                 $("#limite-caracteres").show();
                 $("#tipo-arquivo").hide();
+                $("#area-template").hide();
             } else {
                 $("#tipo-arquivo").show();
                 $("#limite-caracteres").hide();
+                $("#area-template").show();
             }
         });
     });
@@ -2312,9 +2463,11 @@
             if (this.checked && this.value == 'option1Edit') {
                 $("#limite-caracteresEdit").show();
                 $("#tipo-arquivoEdit").hide();
+                $("#area-templateEdit").hide();
             } else {
                 $("#tipo-arquivoEdit").show();
                 $("#limite-caracteresEdit").hide();
+                $("#area-templateEdit").show();
             }
         });
     });
@@ -2342,6 +2495,112 @@
             }
         });
     });
+
+    // Exibir ou ocultar campos de edição de etiquetas de eventos
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-nome"]').on("click", function() {
+            $("#etiqueta-nome-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-descricao"]').on("click", function() {
+            $("#etiqueta-descricao-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-tipo"]').on("click", function() {
+            $("#etiqueta-tipo-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-datas"]').on("click", function() {
+            $("#etiqueta-data-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-submissoes"]').on("click", function() {
+            $("#etiqueta-submissoes-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-endereco"]').on("click", function() {
+            $("#etiqueta-endereco-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-modulo-inscricao"]').on("click", function() {
+            $("#etiqueta-modulo-inscricao-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-modulo-programacao"]').on("click", function() {
+            $("#etiqueta-modulo-programacao-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-modulo-organizacao"]').on("click", function() {
+            $("#etiqueta-modulo-organizacao-evento").toggle(500);
+        });
+    });
+    // Fim
+
+    // Exibir ou ocultar campos de edição de etiquetas de trabalhos
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-titulo"]').on("click", function() {
+            $("#etiqueta-titulo-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-autor"]').on("click", function() {
+            $("#etiqueta-autor-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-coautor"]').on("click", function() {
+            $("#etiqueta-coautor-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-resumo"]').on("click", function() {
+            $("#etiqueta-resumo-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-area"]').on("click", function() {
+            $("#etiqueta-area-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-upload"]').on("click", function() {
+            $("#etiqueta-upload-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-regras"]').on("click", function() {
+            $("#etiqueta-regras-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('button:button[id="botao-editar-templates"]').on("click", function() {
+            $("#etiqueta-templates-trabalho").toggle(500);
+        });
+    });
+    // Fim
 
   function trabalhoId(x){
     document.getElementById('trabalhoIdAjax').value = x;

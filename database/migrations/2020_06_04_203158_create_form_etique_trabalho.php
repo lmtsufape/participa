@@ -31,6 +31,13 @@ class CreateFormEtiqueTrabalho extends Migration
             $table->string('etiquetacampoextra3')->nullable();
             $table->string('etiquetacampoextra4')->nullable();
             $table->string('etiquetacampoextra5')->nullable();
+
+            // Etiquetas de campos extras
+            $table->string('tipocampo1')->nullable();
+            $table->string('tipocampo2')->nullable();
+            $table->string('tipocampo3')->nullable();
+            $table->string('tipocampo4')->nullable();
+            $table->string('tipocampo5')->nullable();
             
             // Checkboxes para exibição ou não dos campos extras 
             $table->boolean('checkcampoextra1')->nullable();

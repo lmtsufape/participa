@@ -131,35 +131,62 @@
         <div class="col-sm-12 info-evento">
             <h4>{{$etiquetas->etiquetasubmissoes}}:</h4>
             @foreach ($modalidades as $modalidade)
-            <h6>Modalidade: {{$modalidade->nome}}</h6>
-            @if (isset($modalidade->inicioSubmissao))
+              <h6>Modalidade: {{$modalidade->nome}}</h6>
+              @if (isset($modalidade->inicioSubmissao))
+                <p>
+                  <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
+                  Submissão: {{date('d/m/Y',strtotime($modalidade->inicioSubmissao))}} - {{date('d/m/Y',strtotime($modalidade->fimSubmissao))}}
+                </p>
+              @endif
+
+              @if (isset($modalidade->inicioRevisao))
               <p>
                 <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                Submissão: {{date('d/m/Y',strtotime($modalidade->inicioSubmissao))}} - {{date('d/m/Y',strtotime($modalidade->fimSubmissao))}}
+                Revisão: {{date('d/m/Y',strtotime($modalidade->inicioRevisao))}} - {{date('d/m/Y',strtotime($modalidade->fimRevisao))}}
               </p>
-            @endif
-
-            @if (isset($modalidade->inicioRevisao))
-            <p>
-              <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-              Revisão: {{date('d/m/Y',strtotime($modalidade->inicioRevisao))}} - {{date('d/m/Y',strtotime($modalidade->fimRevisao))}}
-            </p>
-            @endif
-
-            @if (isset($modalidade->inicioResultado))
-            <p>
-              <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-              Resultado: {{date('d/m/Y',strtotime($modalidade->inicioResultado))}}
-            </p>
-            @endif
-
-            @if($modalidade->inicioSubmissao <= $mytime)
-              @if($mytime < $modalidade->fimSubmissao)
-                <div class="col-md-6 botao-form-left" style="">
-                  <a class="btn btn-secondary" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">Submeter Trabalho</a>
-                </div>
               @endif
-            @endif
+
+              @if (isset($modalidade->inicioResultado))
+              <p>
+                <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
+                Resultado: {{date('d/m/Y',strtotime($modalidade->inicioResultado))}}
+              </p>
+              @endif
+
+              @if($modalidade->inicioSubmissao <= $mytime)
+                @if($mytime < $modalidade->fimSubmissao)
+                  @if ($modalidade->arquivo == true)
+                    @if(isset($modalidade->regra))
+                      <div style="margin-top: 20px; margin-bottom: 10px;">
+                        <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                          <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                        </a>
+                        <label for="nomeTrabalho" class="col-form-label">Regra</label>
+                      </div>
+                    @endif
+                    @if (isset($modalidade->template))
+                      <div style="margin-top: 20px; margin-bottom: 10px;">
+                        <a href="{{route('download.template', ['file' => $modalidade->template])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                          <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                        </a>
+                        <label for="nomeTrabalho" class="col-form-label">Template</label>
+                      </div>  
+                    @endif
+                  @elseif ($modalidade->texto == true)
+                    @if(isset($modalidade->regra))
+                      <div style="margin-top: 20px; margin-bottom: 10px;">
+                        <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                          <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                        </a>
+                        <label for="nomeTrabalho" class="col-form-label">Regras</label>
+                      </div>  
+                    @endif
+                  @endif
+                  <div class="col-md-6 botao-form-left" style="">
+                    <a class="btn btn-secondary" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">Submeter Trabalho</a>
+                  </div>
+                @endif
+              @endif
             <br>
             @endforeach
         </div>

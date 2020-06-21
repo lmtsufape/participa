@@ -41,6 +41,9 @@ class CreateModalidadesTable extends Migration
             $table->boolean('docx')->nullable();
             $table->boolean('odt')->nullable();
 
+            $table->string('regra')->nullable();
+            $table->string('template')->nullable();
+
         });
     }
 

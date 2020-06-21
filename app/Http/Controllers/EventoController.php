@@ -14,6 +14,8 @@ use App\Trabalho;
 use App\AreaModalidade;
 use App\FormEvento;
 use App\FormSubmTraba;
+use App\RegraSubmis;
+use App\TemplateSubmis;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -243,7 +245,9 @@ class EventoController extends Controller
 
         $mytime = Carbon::now('America/Recife');
         $etiquetas = FormEvento::where('eventoId',$evento->id)->first();
-        // dd(false);
+
+        $formSubTraba = FormSubmTraba::all();
+
         return view('evento.visualizarEvento', [
                                                 'evento'              => $evento,
                                                 'trabalhos'           => $trabalhos,
@@ -254,6 +258,7 @@ class EventoController extends Controller
                                                 'mytime'              => $mytime,
                                                 'etiquetas'           => $etiquetas,
                                                 'modalidades'         => $modalidades,
+                                                'formSubTraba'        => $formSubTraba,
                                                ]);
     }
 
