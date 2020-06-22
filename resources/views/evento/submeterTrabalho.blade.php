@@ -58,36 +58,34 @@
                           </div>
                         </div>
 
-                        @if($modalidade->texto == true)
-                          @if ($modalidade->caracteres == true || $modalidade->arquivo == false)
-                            <div class="row justify-content-center">
-                              <div class="col-sm-12">
-                                  <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                                  <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" minlength="{{$modalidade->mincaracteres}}" maxlength="{{$modalidade->maxcaracteres}}" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
-                                  <p class="text-muted"><small><span name="resumo">0</span></small> - Min Caracteres: {{$modalidade->mincaracteres}} - Max Caracteres: {{$modalidade->maxcaracteres}}</p>
-                                  @error('resumo')
-                                  <span class="invalid-feedback" role="alert">
-                                      <strong>{{ $message }}</strong>
-                                  </span>
-                                  @enderror
+                        @if ($modalidade->caracteres == true)
+                          <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
+                                <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" minlength="{{$modalidade->mincaracteres}}" maxlength="{{$modalidade->maxcaracteres}}" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
+                                <p class="text-muted"><small><span name="resumo">0</span></small> - Min Caracteres: {{$modalidade->mincaracteres}} - Max Caracteres: {{$modalidade->maxcaracteres}}</p>
+                                @error('resumo')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
 
-                              </div>
-                            </div>                              
-                          @elseif ($modalidade->caracteres == true || $modalidade->arquivo == true)
-                            <div class="row justify-content-center">
-                              <div class="col-sm-12">
-                                  <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                                  <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
-                                  <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: {{$modalidade->minpalavras}} - Max Palavras: {{$modalidade->maxpalavras}}</p>
-                                  @error('resumo')
-                                  <span class="invalid-feedback" role="alert">
-                                      <strong>{{ $message }}</strong>
-                                  </span>
-                                  @enderror
-
-                              </div>
                             </div>
-                          @endif
+                          </div>                              
+                        @elseif ($modalidade->palavras == true)
+                          <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
+                                <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
+                                <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: {{$modalidade->minpalavras}} - Max Palavras: {{$modalidade->maxpalavras}}</p>
+                                @error('resumo')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+
+                            </div>
+                          </div>
                         @endif
                         <!-- Areas -->
                         <div class="row justify-content-center">
@@ -137,7 +135,7 @@
                               <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
 
                               <div class="custom-file">
-                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" required>
                               </div>
                               <small>Arquivos aceitos nos formatos 
                                 @if($modalidade->pdf == true)pdf - @endif

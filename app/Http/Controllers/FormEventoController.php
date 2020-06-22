@@ -20,6 +20,8 @@ class FormEventoController extends Controller
             'etiquetamoduloinscricao'   => ['nullable', 'string'],
             'etiquetamoduloprogramacao' => ['nullable', 'string'],
             'etiquetamoduloorganizacao' => ['nullable', 'string'],
+            'etiquetabaixarregra'       => ['nullable', 'string'],
+            'etiquetabaixartemplate'    => ['nullable', 'string'],
         ]);
 
         $formevento = FormEvento::where('eventoId',$id)->first();
@@ -50,6 +52,12 @@ class FormEventoController extends Controller
         }
         if(isset($request->etiquetamoduloorganizacao)){
             $formevento->etiquetamoduloorganizacao       = $request->etiquetamoduloorganizacao;
+        }
+        if(isset($request->etiquetabaixarregra)){
+            $formevento->etiquetabaixarregra             = $request->etiquetabaixarregra;
+        }
+        if(isset($request->etiquetabaixartemplate)){
+            $formevento->etiquetabaixartemplate          = $request->etiquetabaixartemplate;
         }
         
         $formevento->save();

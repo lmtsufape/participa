@@ -25,6 +25,8 @@ class CreateFormEtiqueEventoTable extends Migration
             $table->string('etiquetamoduloinscricao')->nullable();
             $table->string('etiquetamoduloprogramacao')->nullable();
             $table->string('etiquetamoduloorganizacao')->nullable();
+            $table->string('etiquetabaixarregra')->nullable();
+            $table->string('etiquetabaixartemplate')->nullable();
 
             $table->boolean('modinscricao')->nullable();
             $table->boolean('modprogramacao')->nullable();

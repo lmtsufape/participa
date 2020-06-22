@@ -53,12 +53,12 @@ class FormSubmTrabaController extends Controller
         if(isset($request->etiquetauploadtrabalho)){
             $formevento->etiquetauploadtrabalho              = $request->etiquetauploadtrabalho;
         }
-        if(isset($request->etiquetabaixarregra)){
-            $formevento->etiquetabaixarregra                 = $request->etiquetabaixarregra;
-        }
-        if(isset($request->etiquetabaixartemplate)){
-            $formevento->etiquetabaixartemplate              = $request->etiquetabaixartemplate;
-        }
+        // if(isset($request->etiquetabaixarregra)){
+        //     $formevento->etiquetabaixarregra                 = $request->etiquetabaixarregra;
+        // }
+        // if(isset($request->etiquetabaixartemplate)){
+        //     $formevento->etiquetabaixartemplate              = $request->etiquetabaixartemplate;
+        // }
         if(isset($request->etiquetacampoextra1)){
             $formevento->etiquetacampoextra1                 = $request->etiquetacampoextra1;
         }

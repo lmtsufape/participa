@@ -522,44 +522,7 @@
                 </div>
         </div>
     </div>
-    <div class="row justify-content-center">
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Resumo</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Informe se os trabalhos enviados possuem resumos.</h6>
-                    <form method="POST" action="{{route('evento.setResumo')}}">
-                    @csrf
-                    <p class="card-text">
-                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                        <input type="hidden" name="hasResumo" value="false" id="hasResumo">
-
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <input id="hasResumoCheck" type="checkbox" onclick="document.getElementById('hasResumo').value = 'true'"  autocomplete="hasResumo" autofocus>
-                                <label for="hasResumoCheck" >{{ __('Possui') }}</label>
-
-                                @error('hasResumo')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                        </div>{{-- end row--}}
-                    </p>
-                    <div class="row justify-content-center">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary" style="width:100%">
-                                {{ __('Finalizar') }}
-                            </button>
-                        </div>
-                    </div>
-                    </form>
-                </div>
-                </div>
-        </div>
-    </div>
+    
     <div class="row justify-content-center">
         <div class="col-sm-6">
             <div class="card">
@@ -738,44 +701,16 @@
                     <div class="row">
 
                         <div class="col-sm-6">
-                            <label class="col-form-label">*{{ __('Tipo de Submissão') }}</label>
-                            <div class="form-check">
-                                <input class="form-check-input incluiresumo" type="radio" onClick="habilitacao()" name="custom_field" id="id-custom_field-account-1-1" value="option1" required>
-                                <label class="form-check-label" for="texto">
-                                    Submissão por texto 
-                                </label>
-                                @error('custom_field')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input incluirarquivo" type="radio" name="custom_field" id="id-custom_field-account-1-2" value="option2" required>
-                                <label class="form-check-label" for="arquivo">
-                                    Submissão por arquivo 
-                                </label>
-                                @error('custom_field')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-6" id="limite-caracteres" style="display: none">
-                            <label class="col-form-label">{{ __('Restrições') }}</label>
+                            <label class="col-form-label">{{ __('Restrições de resumo:') }}</label>
 
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1">
+                                <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1" required>
                                 <label class="form-check-label" for="texto">
                                     Quantidade de caracteres 
                                 </label>
                                 </div>
                                 <div class="form-check">
-                                <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-2" value="limit-option2">
+                                <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-2" value="limit-option2" required>
                                 <label class="form-check-label" for="arquivo">
                                     Quantidade de palavras 
                                 </label>
@@ -816,6 +751,18 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="form-check" style="margin-top: 10px">
+                                <input class="form-check-input incluirarquivo" type="checkbox" name="arquivo" id="id-custom_field-account-1-2">
+                                <label class="form-check-label" for="arquivo">
+                                    Incluir submissão por arquivo 
+                                </label>
+                                @error('arquivo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
@@ -823,7 +770,7 @@
                         <div class="col-sm-6" id="tipo-arquivo" style="display: none">
 
                             <div class="titulo-detalhes" style="margin-top: 10px"></div>
-                            <label class="col-form-label">{{ __('Tipos de arquivo aceito') }}</label>
+                            <label class="col-form-label">{{ __('Tipos de extensão aceitas') }}</label>
 
                             <div class="form-check" style="margin-top: 10px">
                                 <input class="form-check-input" type="checkbox" id="defaultCheck1" name="pdf">
@@ -879,7 +826,7 @@
                           @enderror
                         </div>
                         {{-- Arquivo de Templates --}}
-                        <div class="col-sm-12" id="area-template" style="margin-top: 20px; display:block">
+                        <div class="col-sm-12" id="area-template" style="margin-top: 20px; display:none">
                             <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar template:') }}</label>
   
                             <div class="custom-file">
@@ -1298,7 +1245,8 @@
                             <div class="col-sm-auto">
                                 <h4>{{$etiquetas->etiquetanomeevento}}:</h4>
                             </div>
-                            <button type="button" id="botao-editar-nome" class="btn btn-outline-dark">Editar</button>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-nome" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-nome" class="btn btn-outline-dark">Editar</button> --}}
                             <div class="col-sm-3" id="etiqueta-nome-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetanomeevento" name="etiquetanomeevento" placeholder="Editar Etiqueta">
                             </div>
@@ -1316,7 +1264,8 @@
                             <div class="col-sm-auto">
                                 <h4>{{$etiquetas->etiquetadescricaoevento}}:</h4>
                             </div>
-                            <button type="button" id="botao-editar-descricao" class="btn btn-outline-dark">Editar</button>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-descricao" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-descricao" class="btn btn-outline-dark">Editar</button> --}}
                             <div class="col-sm-3" id="etiqueta-descricao-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetadescricaoevento" name="etiquetadescricaoevento" placeholder="Editar Etiqueta">
                             </div>
@@ -1331,7 +1280,8 @@
                             <div class="col-sm-auto">
                                 <h4>{{$etiquetas->etiquetatipoevento}}:</h4>
                             </div>
-                            <button type="button" id="botao-editar-tipo" class="btn btn-outline-dark">Editar</button>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-tipo" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-tipo" class="btn btn-outline-dark">Editar</button> --}}
                             <div class="col-sm-3" id="etiqueta-tipo-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetatipoevento" name="etiquetatipoevento" placeholder="Editar Etiqueta">
                             </div>
@@ -1346,7 +1296,8 @@
                             <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetadatas}}:</h4>
                             </div>
-                            <button type="button" id="botao-editar-datas" class="btn btn-outline-dark">Editar</button>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-datas" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-datas" class="btn btn-outline-dark">Editar</button> --}}
                             <div class="col-sm-3" id="etiqueta-data-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetadatas" name="etiquetadatas" placeholder="Editar Etiqueta">
                             </div>
@@ -1364,7 +1315,8 @@
                             <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetasubmissoes}}:</h4>
                             </div>
-                            <button type="button" id="botao-editar-submissoes" class="btn btn-outline-dark">Editar</button>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-submissoes" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-submissoes" class="btn btn-outline-dark">Editar</button> --}}
                             <div class="col-sm-3" id="etiqueta-submissoes-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetasubmissoes" name="etiquetasubmissoes" placeholder="Editar Etiqueta">
                             </div>
@@ -1380,10 +1332,6 @@
                                     <img class="" alt="">
                                     Revisão datas: --/--/-- * --/--/--
                                 </p>
-                                {{-- <p>
-                                    <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                                    Resultado data: --/--/--
-                                </p> --}}
                                 <p>
                                     <img class="" alt="">
                                     Resultado data: --/--/--
@@ -1391,12 +1339,40 @@
                             </div>
                         </div>
 
-                        <!-- Areas -->
                         <div class="row justify-content-left">
+                            <div class="col-sm-auto">
+                                <a>
+                                    <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                </a>
+                                <label for="nomeTrabalho" class="col-form-label">{{$etiquetas->etiquetabaixarregra}}:</label>
+                                <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-etiqueta-regra" style="width:20px"></a>
+                                {{-- <button type="button" id="botao-editar-etiqueta-regra" class="btn btn-outline-dark">Editar</button> --}}
+                            </div>
+                            <div class="col-sm-auto" id="etiqueta-baixar-regra-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetabaixarregra" name="etiquetabaixarregra" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-left">
+                            <div class="col-sm-auto">
+                                <a>
+                                    <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                </a>
+                                <label for="nomeTrabalho" class="col-form-label">{{$etiquetas->etiquetabaixartemplate}}:</label>
+                                <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-etiqueta-template" style="width:20px"></a>
+                                {{-- <button type="button" id="botao-editar-etiqueta-template" class="btn btn-outline-dark">Editar</button> --}}
+                            </div>
+                            <div class="col-sm-auto" id="etiqueta-baixar-template-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetabaixartemplate" name="etiquetabaixartemplate" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-left" style="margin-top: 20px">
                             <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetaenderecoevento}}:</h4>
                             </div>
-                            <button type="button" id="botao-editar-endereco" class="btn btn-outline-dark">Editar</button>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-endereco" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-endereco" class="btn btn-outline-dark">Editar</button> --}}
                             <div class="col-sm-3" id="etiqueta-endereco-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetaenderecoevento" name="etiquetaenderecoevento" placeholder="Editar Etiqueta">
                             </div>
@@ -1411,7 +1387,8 @@
                             <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetamoduloinscricao}}:</h4>
                             </div>
-                            <button type="button" id="botao-editar-modulo-inscricao" class="btn btn-outline-dark">Editar</button>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-inscricao" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-modulo-inscricao" class="btn btn-outline-dark">Editar</button> --}}
                             <div class="col-sm-3" id="etiqueta-modulo-inscricao-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetamoduloinscricao" name="etiquetamoduloinscricao" placeholder="Editar Etiqueta">
                             </div>
@@ -1424,7 +1401,8 @@
                             <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetamoduloprogramacao}}:</h4>
                             </div>
-                            <button type="button" id="botao-editar-modulo-programacao" class="btn btn-outline-dark">Editar</button>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-programacao" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-modulo-programacao" class="btn btn-outline-dark">Editar</button> --}}
                             <div class="col-sm-3" id="etiqueta-modulo-programacao-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetamoduloprogramacao" name="etiquetamoduloprogramacao" placeholder="Editar Etiqueta">
                             </div>
@@ -1437,7 +1415,8 @@
                             <div class="col-sm-auto info-evento">
                                 <h4>{{$etiquetas->etiquetamoduloorganizacao}}:</h4>
                             </div>
-                            <button type="button" id="botao-editar-modulo-organizacao" class="btn btn-outline-dark">Editar</button>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-organizacao" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-modulo-organizacao" class="btn btn-outline-dark">Editar</button> --}}
                             <div class="col-sm-3" id="etiqueta-modulo-organizacao-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetamoduloorganizacao" name="etiquetamoduloorganizacao" placeholder="Editar Etiqueta">
                             </div>
@@ -1614,7 +1593,8 @@
                         <div class="col-sm-auto">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
                         </div>
-                        <button type="button" id="botao-editar-titulo" class="btn btn-outline-dark">Editar</button>
+                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-titulo" style="width:20px"></a>
+                        {{-- <button type="button" id="botao-editar-titulo" class="btn btn-outline-dark">Editar</button> --}}
                         <div class="col-sm-3" id="etiqueta-titulo-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetatitulotrabalho" placeholder="Editar Etiqueta">
                         </div>
@@ -1625,7 +1605,8 @@
                         <div class="col-sm-auto">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
                         </div>
-                        <button type="button" id="botao-editar-autor" class="btn btn-outline-dark">Editar</button>
+                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-autor" style="width:20px"></a>
+                        {{-- <button type="button" id="botao-editar-autor" class="btn btn-outline-dark">Editar</button> --}}
                         <div class="col-sm-3" id="etiqueta-autor-trabalho" style="display: none">
                             <input type="text" class="form-control" style="margin-top: 10px" id="inputEmail3" name="etiquetaautortrabalho" placeholder="Editar Etiqueta">
                         </div>
@@ -1636,7 +1617,8 @@
                         <div class="col-sm-auto">
                         <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px" disabled>{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</a>
                         </div>
-                        <button type="button" id="botao-editar-coautor" class="btn btn-outline-dark">Editar</button>
+                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-coautor" style="width:20px"></a>
+                        {{-- <button type="button" id="botao-editar-coautor" class="btn btn-outline-dark">Editar</button> --}}
                         <div class="col-sm-3" id="etiqueta-coautor-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetacoautortrabalho" placeholder="Editar Etiqueta">
                         </div>
@@ -1647,7 +1629,8 @@
                         <div class="col-sm-auto">
                             <label for="resumo" class="col-form-label">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
                         </div>
-                        <button type="button" id="botao-editar-resumo" class="btn btn-outline-dark">Editar</button>
+                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-resumo" style="width:20px"></a>
+                        {{-- <button type="button" id="botao-editar-resumo" class="btn btn-outline-dark">Editar</button> --}}
                         <div class="col-sm-3" id="etiqueta-resumo-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetaresumotrabalho" placeholder="Editar Etiqueta">
                         </div>
@@ -1660,7 +1643,8 @@
                         <div class="col-auto">
                             <label for="area" class="col-form-label">{{$etiquetasSubTrab->etiquetaareatrabalho}}:</label>
                         </div>
-                        <button type="button" id="botao-editar-area" class="btn btn-outline-dark">Editar</button>
+                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-area" style="width:20px"></a>
+                        {{-- <button type="button" id="botao-editar-area" class="btn btn-outline-dark">Editar</button> --}}
                         <div class="col-sm-3" id="etiqueta-area-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetaareatrabalho" placeholder="Editar Etiqueta">
                         </div>
@@ -1674,7 +1658,8 @@
                         <div class="col-sm-auto">
                             <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetauploadtrabalho}}:</label>
                         </div>
-                        <button type="button" id="botao-editar-upload" class="btn btn-outline-dark">Editar</button>
+                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-upload" style="width:20px"></a>
+                        {{-- <button type="button" id="botao-editar-upload" class="btn btn-outline-dark">Editar</button> --}}
                         <div class="col-sm-3" id="etiqueta-upload-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetauploadtrabalho" placeholder="Editar Etiqueta">
                         </div>
@@ -1684,31 +1669,7 @@
                         </div>
                         <small>Arquivos aceitos nos formatos a seguir</small>
                     <br>
-                    <div class="row justify-content-left" style="margin-top: 10px">
-                        <div class="col-sm-auto">
-                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetabaixarregra}}</label>
-                            <a target="_new" style="font-size: 20px; color: #114048ff;" >
-                              <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                            </a>
-                        </div>
-                        <button type="button" id="botao-editar-regras" class="btn btn-outline-dark">Editar</button>
-                        <div class="col-sm-3" id="etiqueta-regras-trabalho" style="display: none">
-                            <input type="text" class="form-control" id="inputEmail3" name="etiquetabaixarregra" placeholder="Editar Etiqueta">
-                        </div>
-                    </div>
 
-                    <div class="row justify-content-left" style="margin-top: 10px">
-                        <div class="col-sm-auto">
-                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetabaixartemplate}}</label>
-                            <a target="_new" style="font-size: 20px; color: #114048ff;" >
-                                <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                            </a>
-                        </div>
-                        <button type="button" id="botao-editar-templates" class="btn btn-outline-dark">Editar</button>
-                        <div class="col-sm-3" id="etiqueta-templates-trabalho" style="display: none">
-                            <input type="text" class="form-control" id="inputEmail3" name="etiquetabaixartemplate" placeholder="Editar Etiqueta">
-                        </div>
-                    </div>
                     <br>
                     <div class="titulo-detalhes"></div>
                     <br>
@@ -2180,35 +2141,7 @@
                             <div class="row">
             
                                 <div class="col-sm-6">
-                                    <label class="col-form-label">*{{ __('Tipo de Submissão') }}</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input incluiresumoEdit" type="radio" name="custom_fieldEdit" id="id-custom_field-accountEdit-1-1" value="option1Edit">
-                                        <label class="form-check-label" for="textoEdit">
-                                            Submissão por texto 
-                                        </label>
-                                        @error('textoEdit')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input incluirarquivoEdit" type="radio" name="custom_fieldEdit" id="id-custom_field-accountEdit-1-2" value="option2Edit">
-                                        <label class="form-check-label" for="arquivoEdit">
-                                            Submissão por arquivo 
-                                        </label>
-                                        @error('arquivoEdit')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-            
-                            <div class="row">
-                                <div class="col-sm-6" id="limite-caracteresEdit" style="display: none">
-                                    <label class="col-form-label">{{ __('Restrições') }}</label>
+                                    <label class="col-form-label">*{{ __('Restrições de resumo:') }}</label>
             
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="limitEdit" id="id-limit-custom_field-accountEdit-1-1" value="limit-option1Edit">
@@ -2258,6 +2191,17 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="form-check" style="margin-top: 10px">
+                                        <input class="form-check-input incluirarquivoEdit" type="checkbox" name="arquivoEdit" id="id-custom_field-accountEdit-1-2">
+                                        <label class="form-check-label" for="arquivoEdit">
+                                            Incluir submissão por arquivo 
+                                        </label>
+                                        @error('arquivoEdit')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
             
@@ -2265,7 +2209,7 @@
                                 <div class="col-sm-6" id="tipo-arquivoEdit" style="display: none">
             
                                     <div class="titulo-detalhes" style="margin-top: 10px"></div>
-                                    <label class="col-form-label">{{ __('Tipos de arquivo aceito') }}</label>
+                                    <label class="col-form-label">{{ __('Tipos de extensão aceitas') }}</label>
             
                                     <div class="form-check" style="margin-top: 10px">
                                         <input class="form-check-input" type="checkbox" id="pdfEdit" name="pdfEdit">
@@ -2321,7 +2265,7 @@
                                   @enderror
                                 </div>
                                 {{-- Arquivo de Templates --}}
-                                <div class="col-sm-12" id="area-templateEdit" style="margin-top: 20px; display:block">
+                                <div class="col-sm-12" id="area-templateEdit" style="margin-top: 20px; display:none">
                                     <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar template:') }}</label>
             
                                     <div class="custom-file">
@@ -2432,45 +2376,59 @@
 
     
     // Exibir ou ocultar opções de Texto na criação de modalidade - com checkbox
+    $(document).ready(function() {
+        $('input:checkbox[class="form-check-input incluirarquivo"]').on("change", function() {
+            if (this.checked) {
+                $("#area-template").show();
+                $("#tipo-arquivo").show();
+            } else {
+                $("#area-template").hide();
+                $("#tipo-arquivo").hide();
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('input:checkbox[class="form-check-input incluirarquivoEdit"]').on("change", function() {
+            if (this.checked) {
+                $("#area-templateEdit").show();
+                $("#tipo-arquivoEdit").show();
+            } else {
+                $("#area-templateEdit").hide();
+                $("#tipo-arquivoEdit").hide();
+            }
+        });
+    });
+
+    // Exibir ou ocultar opções de texto ou arquivo, em cadastro de modalidade
     // $(document).ready(function() {
-    //     $('input:checkbox[class="form-check-input incluiresumo"]').on("change", function() {
-    //         if (this.checked) {
+    //     $('input:radio[name="custom_field"]').on("change", function() {
+    //         if (this.checked && this.value == 'option1') {
     //             $("#limite-caracteres").show();
+    //             $("#tipo-arquivo").hide();
+    //             $("#area-template").hide();
     //         } else {
+    //             $("#tipo-arquivo").show();
     //             $("#limite-caracteres").hide();
+    //             $("#area-template").show();
     //         }
     //     });
     // });
 
-    // Exibir ou ocultar opções de texto ou arquivo, em cadastro de modalidade
-    $(document).ready(function() {
-        $('input:radio[name="custom_field"]').on("change", function() {
-            if (this.checked && this.value == 'option1') {
-                $("#limite-caracteres").show();
-                $("#tipo-arquivo").hide();
-                $("#area-template").hide();
-            } else {
-                $("#tipo-arquivo").show();
-                $("#limite-caracteres").hide();
-                $("#area-template").show();
-            }
-        });
-    });
-
     // Exibir ou ocultar opções de texto ou arquivo, em edição de modalidade
-    $(document).ready(function() {
-        $('input:radio[name="custom_fieldEdit"]').on("change", function() {
-            if (this.checked && this.value == 'option1Edit') {
-                $("#limite-caracteresEdit").show();
-                $("#tipo-arquivoEdit").hide();
-                $("#area-templateEdit").hide();
-            } else {
-                $("#tipo-arquivoEdit").show();
-                $("#limite-caracteresEdit").hide();
-                $("#area-templateEdit").show();
-            }
-        });
-    });
+    // $(document).ready(function() {
+    //     $('input:radio[name="custom_fieldEdit"]').on("change", function() {
+    //         if (this.checked && this.value == 'option1Edit') {
+    //             $("#limite-caracteresEdit").show();
+    //             $("#tipo-arquivoEdit").hide();
+    //             $("#area-templateEdit").hide();
+    //         } else {
+    //             $("#tipo-arquivoEdit").show();
+    //             $("#limite-caracteresEdit").hide();
+    //             $("#area-templateEdit").show();
+    //         }
+    //     });
+    // });
 
     $(document).ready(function() {
         $('input:radio[name="limit"]').on("change", function() {
@@ -2498,105 +2456,117 @@
 
     // Exibir ou ocultar campos de edição de etiquetas de eventos
     $(document).ready(function() {
-        $('button:button[id="botao-editar-nome"]').on("click", function() {
+        $('#botao-editar-nome').on("click", function() {
             $("#etiqueta-nome-evento").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-descricao"]').on("click", function() {
+        $('#botao-editar-descricao').on("click", function() {
             $("#etiqueta-descricao-evento").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-tipo"]').on("click", function() {
+        $('#botao-editar-tipo').on("click", function() {
             $("#etiqueta-tipo-evento").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-datas"]').on("click", function() {
+        $('#botao-editar-datas').on("click", function() {
             $("#etiqueta-data-evento").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-submissoes"]').on("click", function() {
+        $('#botao-editar-submissoes').on("click", function() {
             $("#etiqueta-submissoes-evento").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-endereco"]').on("click", function() {
+        $('#botao-editar-endereco').on("click", function() {
             $("#etiqueta-endereco-evento").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-modulo-inscricao"]').on("click", function() {
+        $('#botao-editar-modulo-inscricao').on("click", function() {
             $("#etiqueta-modulo-inscricao-evento").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-modulo-programacao"]').on("click", function() {
+        $('#botao-editar-modulo-programacao').on("click", function() {
             $("#etiqueta-modulo-programacao-evento").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-modulo-organizacao"]').on("click", function() {
+        $('#botao-editar-modulo-organizacao').on("click", function() {
             $("#etiqueta-modulo-organizacao-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-etiqueta-regra').on("click", function() {
+            $("#etiqueta-baixar-regra-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-etiqueta-template').on("click", function() {
+            $("#etiqueta-baixar-template-evento").toggle(500);
         });
     });
     // Fim
 
     // Exibir ou ocultar campos de edição de etiquetas de trabalhos
     $(document).ready(function() {
-        $('button:button[id="botao-editar-titulo"]').on("click", function() {
+        $('#botao-editar-titulo').on("click", function() {
             $("#etiqueta-titulo-trabalho").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-autor"]').on("click", function() {
+        $('#botao-editar-autor').on("click", function() {
             $("#etiqueta-autor-trabalho").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-coautor"]').on("click", function() {
+        $('#botao-editar-coautor').on("click", function() {
             $("#etiqueta-coautor-trabalho").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-resumo"]').on("click", function() {
+        $('#botao-editar-resumo').on("click", function() {
             $("#etiqueta-resumo-trabalho").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-area"]').on("click", function() {
+        $('#botao-editar-area').on("click", function() {
             $("#etiqueta-area-trabalho").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-upload"]').on("click", function() {
+        $('#botao-editar-upload').on("click", function() {
             $("#etiqueta-upload-trabalho").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-regras"]').on("click", function() {
+        $('#botao-editar-regras').on("click", function() {
             $("#etiqueta-regras-trabalho").toggle(500);
         });
     });
 
     $(document).ready(function() {
-        $('button:button[id="botao-editar-templates"]').on("click", function() {
+        $('#botao-editar-templates').on("click", function() {
             $("#etiqueta-templates-trabalho").toggle(500);
         });
     });

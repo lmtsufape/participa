@@ -16,7 +16,7 @@ class FormEvento extends Model
     
     protected $fillable = [
         'etiquetanomeevento', 'etiquetatipoevento', 'etiquetadescricaoevento', 'etiquetadatas',
-        'etiquetasubmissoes', 'etiquetaenderecoevento', 'etiquetamoduloinscricao', 'etiquetamoduloprogramacao', 'etiquetamoduloorganizacao',
+        'etiquetasubmissoes', 'etiquetabaixarregra', 'etiquetabaixartemplate', 'etiquetaenderecoevento', 'etiquetamoduloinscricao', 'etiquetamoduloprogramacao', 'etiquetamoduloorganizacao',
         'modinscricao', 'modprogramacao', 'modorganizacao', 'modsubmissao', 'eventoId',
     ];
 

@@ -53,7 +53,7 @@ class ModalidadeController extends Controller
         $mytime = Carbon::now('America/Recife');
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
-        $palavras = false;
+
         $validatedData = $request->validate([
 
             'inicioSubmissao'   => ['nullable', 'date'],
@@ -77,42 +77,35 @@ class ModalidadeController extends Controller
             return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!']);
         }
 
-        if($request->custom_field == "option1"){
-            // Verifica se um campo foi deixado em branco
-            if ($request->limit == null) {
-                return redirect()->back()->withErrors(['caracteresoupalavras' => 'O tipo texto foi selecionado, mas o tipo caractere ou palavra não foi marcado.']);
-            }
-            $texto = true;
-            $arquivo = false;
-            if ($request->limit == "limit-option1") {
-                // Verifica se um campo foi deixado em branco
-                if ($request->mincaracteres == null || $request->maxcaracteres == null){
-                    return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado']);
-                }
-                $caracteres = true;
-                $palavras = false;
-            }
-            if ($request->limit == "limit-option2") {
-                // Verifica se um campo foi deixado em branco
-                if ($request->minpalavras == null || $request->maxpalavras == null){
-                    return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado']);
-                }
-                $caracteres = false;
-                $palavras = true;
-            }
+        if ($request->limit == null) {
+            return redirect()->back()->withErrors(['caracteresoupalavras' => 'O tipo caracteres ou palavras não foi selecionado.']);
         }
-        if ($request->custom_field == "option2") {
+
+        if ($request->limit == "limit-option1") {
+            // Verifica se um campo foi deixado em branco
+            if ($request->mincaracteres == null || $request->maxcaracteres == null){
+                return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado']);
+            }
+            $caracteres = true;
+            $palavras = false;
+        }
+        if ($request->limit == "limit-option2") {
+            // Verifica se um campo foi deixado em branco
+            if ($request->minpalavras == null || $request->maxpalavras == null){
+                return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado']);
+            }
+            $caracteres = false;
+            $palavras = true;
+        }
+
+        if ($request->arquivo == true) {
             // Verifica se um campo foi deixado em branco
             if ($request->pdf == null && $request->jpg == null && $request->jpeg == null && $request->png == null && $request->docx == null && $request->odt == null) {
                 return redirect()->back()->withErrors(['marcarextensao' => 'O campo arquivo foi selecionado, mas nenhuma extensão foi selecionada.']);
             }
-            $arquivo = true;
-            $texto = false;
-            $caracteres = false;
-            $palavras = false;
         }
 
-        
+        // Campo TEXTO boolean removido? 
         $modalidade = Modalidade::create([
             'nome'              => $request->nomeModalidade,
             'inicioSubmissao'   => $request->inicioSubmissao,
@@ -120,8 +113,8 @@ class ModalidadeController extends Controller
             'inicioRevisao'     => $request->inicioRevisao,
             'fimRevisao'        => $request->fimRevisao,
             'inicioResultado'   => $request->inicioResultado,
-            'texto'             => $texto,
-            'arquivo'           => $arquivo,
+            // 'texto'             => $texto,
+            'arquivo'           => $request->arquivo,
             'caracteres'        => $caracteres,
             'palavras'          => $palavras,
             'mincaracteres'     => $request->mincaracteres,
@@ -219,56 +212,54 @@ class ModalidadeController extends Controller
             return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!']);
         }
 
-        // Condição para opção de texto escolhida
-        if($request->custom_fieldEdit == "option1Edit"){
-            
-            $texto = true;
-            $arquivo = false;
-
-            $modalidadeEdit->pdf  = false;
-            $modalidadeEdit->jpg  = false;
-            $modalidadeEdit->jpeg = false;
-            $modalidadeEdit->png  = false;
-            $modalidadeEdit->docx = false;
-            $modalidadeEdit->odt  = false;
-            
-            // Condição para opção de caracteres escolhida 
-            if ($request->limitEdit == "limit-option1Edit") {
-                // Verifica se um campo foi deixado em branco
-                if ($request->mincaracteresEdit == null || $request->maxcaracteresEdit == null){
-                    return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado']);
-                }
-                $caracteres = true;
-                $palavras = false;
-                $modalidadeEdit->maxcaracteres       = $request->maxcaracteresEdit;
-                $modalidadeEdit->mincaracteres       = $request->mincaracteresEdit;
-                $modalidadeEdit->minpalavras         = null;
-                $modalidadeEdit->maxpalavras         = null;
+        // Condição para opção de caracteres escolhida 
+        if ($request->limitEdit == "limit-option1Edit") {
+            // Verifica se um campo foi deixado em branco
+            if ($request->mincaracteresEdit == null || $request->maxcaracteresEdit == null){
+                return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado']);
             }
-            // Condição para opção de palavras escolhida
-            if ($request->limitEdit == "limit-option2Edit") {
-                // Verifica se um campo foi deixado em branco
-                if ($request->minpalavrasEdit == null || $request->maxpalavrasEdit == null){
-                    return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado']);
-                }
-                $caracteres = false;
-                $palavras = true;
-                $modalidadeEdit->maxcaracteres       = null;
-                $modalidadeEdit->mincaracteres       = null;
-                $modalidadeEdit->minpalavras         = $request->minpalavrasEdit;
-                $modalidadeEdit->maxpalavras         = $request->maxpalavrasEdit;
+            $caracteres = true;
+            $palavras = false;
+            $modalidadeEdit->maxcaracteres       = $request->maxcaracteresEdit;
+            $modalidadeEdit->mincaracteres       = $request->mincaracteresEdit;
+            $modalidadeEdit->minpalavras         = null;
+            $modalidadeEdit->maxpalavras         = null;
+        }
+        // Condição para opção de palavras escolhida
+        if ($request->limitEdit == "limit-option2Edit") {
+            // Verifica se um campo foi deixado em branco
+            if ($request->minpalavrasEdit == null || $request->maxpalavrasEdit == null){
+                return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado']);
             }
+            $caracteres = false;
+            $palavras = true;
+            $modalidadeEdit->maxcaracteres       = null;
+            $modalidadeEdit->mincaracteres       = null;
+            $modalidadeEdit->minpalavras         = $request->minpalavrasEdit;
+            $modalidadeEdit->maxpalavras         = $request->maxpalavrasEdit;
         }
 
+        // // Condição para opção de texto escolhida
+        // if($request->custom_fieldEdit == "option1Edit"){
+            
+        //     $texto = true;
+        //     $arquivo = false;
+
+        //     $modalidadeEdit->pdf  = false;
+        //     $modalidadeEdit->jpg  = false;
+        //     $modalidadeEdit->jpeg = false;
+        //     $modalidadeEdit->png  = false;
+        //     $modalidadeEdit->docx = false;
+        //     $modalidadeEdit->odt  = false;
+            
+            
+        // }
+
         // Condição para opção de arquivo escolhida
-        if ($request->custom_fieldEdit == "option2Edit") {
+        if ($request->arquivoEdit == true) {
             if ($request->pdfEdit == null && $request->jpgEdit == null && $request->jpegEdit == null && $request->pngEdit == null && $request->docxEdit == null && $request->odtEdit == null) {
                 return redirect()->back()->withErrors(['marcarextensao' => 'O campo arquivo foi selecionado, mas nenhuma extensão foi selecionada.']);
             }
-            $arquivo = true;
-            $texto = false;
-            $caracteres = false;
-            $palavras = false;
 
             $modalidadeEdit->pdf  = $request->pdfEdit;
             $modalidadeEdit->jpg  = $request->jpgEdit;
@@ -277,10 +268,14 @@ class ModalidadeController extends Controller
             $modalidadeEdit->docx = $request->docxEdit;
             $modalidadeEdit->odt  = $request->odtEdit;
 
-            $modalidadeEdit->maxcaracteres = null;
-            $modalidadeEdit->mincaracteres = null;
-            $modalidadeEdit->minpalavras   = null;
-            $modalidadeEdit->maxpalavras   = null;
+        }
+        else {
+            $modalidadeEdit->pdf  = false;
+            $modalidadeEdit->jpg  = false;
+            $modalidadeEdit->jpeg = false;
+            $modalidadeEdit->png  = false;
+            $modalidadeEdit->docx = false;
+            $modalidadeEdit->odt  = false;
         }
 
         $modalidadeEdit->nome                = $request->nomeModalidadeEdit;
@@ -289,8 +284,8 @@ class ModalidadeController extends Controller
         $modalidadeEdit->inicioRevisao       = $request->inicioRevisaoEdit;
         $modalidadeEdit->fimRevisao          = $request->fimRevisaoEdit;
         $modalidadeEdit->inicioResultado     = $request->inicioResultadoEdit;
-        $modalidadeEdit->texto               = $texto;
-        $modalidadeEdit->arquivo             = $arquivo;
+        // $modalidadeEdit->texto               = $texto;
+        $modalidadeEdit->arquivo             = $request->arquivoEdit;
         $modalidadeEdit->caracteres          = $caracteres;
         $modalidadeEdit->palavras            = $palavras;
 

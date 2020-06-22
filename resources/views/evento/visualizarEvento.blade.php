@@ -172,7 +172,7 @@
                         <label for="nomeTrabalho" class="col-form-label">Template</label>
                       </div>  
                     @endif
-                  @elseif ($modalidade->texto == true)
+                  @else
                     @if(isset($modalidade->regra))
                       <div style="margin-top: 20px; margin-bottom: 10px;">
                         <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
