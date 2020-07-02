@@ -597,6 +597,8 @@
             <h1 class="titulo-detalhes">Cadastrar Modalidade</h1>
         </div>
     </div>
+    <input id="input"/>
+    <p id="demo"></p>
     {{-- row card --}}
     <div class="row justify-content-center">
         <div class="col-sm-6">
@@ -1243,12 +1245,12 @@
                         <div class="row justify-content-left">
                             
                             <div class="col-sm-auto">
-                                <h4>{{$etiquetas->etiquetanomeevento}}:</h4>
+                                <h4 id="classeh4"></h4>
                             </div>
-                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-nome" style="width:20px"></a>
+                            {{-- <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-nome" style="width:20px"></a> --}}
                             {{-- <button type="button" id="botao-editar-nome" class="btn btn-outline-dark">Editar</button> --}}
-                            <div class="col-sm-3" id="etiqueta-nome-evento" style="display: none">
-                                <input type="text" class="form-control" id="etiquetanomeevento" name="etiquetanomeevento" placeholder="Editar Etiqueta">
+                            <div class="col-sm-3" id="etiqueta-nome-evento">
+                                <input type="text" class="form-control etiquetanomeevento" id="etiquetanomeevento" name="etiquetanomeevento" placeholder="Editar Etiqueta">
                             </div>
 
                         </div>
@@ -1588,32 +1590,47 @@
                     <p class="card-text">
                     <form method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
                     @csrf
+
+                    <div class="card" id="bisavo">
+                        <div class="card-body">
+                            <div class="row" id="1" value="1">
+                                <div class="col-sm-auto">
+                                    <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
+                                </div>
+                                <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-titulo" style="width:20px"></a>
+                                {{-- <button type="button" id="botao-editar-titulo" class="btn btn-outline-dark">Editar</button> --}}
+                                <div class="col-sm-3" id="etiqueta-titulo-trabalho" style="display: none">
+                                    <input type="text" class="form-control" id="inputEmail3" name="etiquetatitulotrabalho" placeholder="Editar Etiqueta">
+                                </div>
+                                <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesTitulo" style="width:20px; margin-left:10px"></a>
+                                <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisTitulo" style="width:20px"></a>
+                                <input id="nomeTrabalho" type="text" class="form-control" style="margin-top: 10px" disabled><br/>
+                            </div>
+                        </div>
+                    </div>
                     
-                    <div class="row justify-content-left">
-                        <div class="col-sm-auto">
-                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
-                        </div>
-                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-titulo" style="width:20px"></a>
-                        {{-- <button type="button" id="botao-editar-titulo" class="btn btn-outline-dark">Editar</button> --}}
-                        <div class="col-sm-3" id="etiqueta-titulo-trabalho" style="display: none">
-                            <input type="text" class="form-control" id="inputEmail3" name="etiquetatitulotrabalho" placeholder="Editar Etiqueta">
-                        </div>
-                    </div>
-                    <input id="nomeTrabalho" type="text" class="form-control" style="margin-top: 10px" disabled><br/>
-
-                    <div class="row justify-content-left">
-                        <div class="col-sm-auto">
-                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
-                        </div>
-                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-autor" style="width:20px"></a>
-                        {{-- <button type="button" id="botao-editar-autor" class="btn btn-outline-dark">Editar</button> --}}
-                        <div class="col-sm-3" id="etiqueta-autor-trabalho" style="display: none">
-                            <input type="text" class="form-control" style="margin-top: 10px" id="inputEmail3" name="etiquetaautortrabalho" placeholder="Editar Etiqueta">
+                    <div class="card" id="bisavo">
+                        <div class="card-body">
+                            <div class="row justify-content-left" id="2" style="margin-top: 10px">
+                                <div class="col-sm-auto">
+                                    <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
+                                </div>
+                                <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-autor" style="width:20px"></a>
+                                {{-- <button type="button" id="botao-editar-autor" class="btn btn-outline-dark">Editar</button> --}}
+                                <div class="col-sm-3" id="etiqueta-autor-trabalho" style="display: none">
+                                    <input type="text" class="form-control" style="margin-top: 10px" id="inputEmail3" name="etiquetaautortrabalho" placeholder="Editar Etiqueta">
+                                </div>
+                                <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                <input class="form-control" type="text" style="margin-top: 10px" disabled><br/>
+                            </div>
                         </div>
                     </div>
-                    <input class="form-control" type="text" style="margin-top: 10px" disabled><br/>
 
-                    <div class="row">
+                    
+
+
+                    <div class="row justify-content-left" id="3" style="margin-top: 10px">
                         <div class="col-sm-auto">
                         <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px" disabled>{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</a>
                         </div>
@@ -1623,7 +1640,7 @@
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetacoautortrabalho" placeholder="Editar Etiqueta">
                         </div>
                     </div>
-                    <br/>
+
 
                     <div class="row justify-content-left">
                         <div class="col-sm-auto">
@@ -1631,12 +1648,21 @@
                         </div>
                         <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-resumo" style="width:20px"></a>
                         {{-- <button type="button" id="botao-editar-resumo" class="btn btn-outline-dark">Editar</button> --}}
-                        <div class="col-sm-3" id="etiqueta-resumo-trabalho" style="display: none">
+                        <div class="col-sm-auto" id="etiqueta-resumo-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetaresumotrabalho" placeholder="Editar Etiqueta">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Selecionar posição</label>
+                                <select class="form-control" id="exampleFormControlSelect1" name="resumoposicao">
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                </select>
+                            </div>
                         </div>
+                        <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" style="margin-top: 10px" disabled></textarea>
+                        <p class="text-muted"><small><span name="resumo">0</span></small></p>
                     </div>   
-                    <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" style="margin-top: 10px" disabled></textarea>
-                    <p class="text-muted"><small><span name="resumo">0</span></small></p>
+
 
                     <!-- Areas -->
                     <div class="row justify-content-left">
@@ -1645,14 +1671,22 @@
                         </div>
                         <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-area" style="width:20px"></a>
                         {{-- <button type="button" id="botao-editar-area" class="btn btn-outline-dark">Editar</button> --}}
-                        <div class="col-sm-3" id="etiqueta-area-trabalho" style="display: none">
+                        <div class="col-sm-auto" id="etiqueta-area-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetaareatrabalho" placeholder="Editar Etiqueta">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Selecionar posição</label>
+                                <select class="form-control" id="exampleFormControlSelect1" name="areaposicao">
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                </select>
+                            </div>
                         </div>
+                        <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId" style="margin-top: 10px" disabled>
+                            <option value="" disabled selected hidden>-- Área --</option>
+                        </select>
                     </div>
-                    <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId" style="margin-top: 10px" disabled>
-                        <option value="" disabled selected hidden>-- Área --</option>
-                    </select>
-                    <br/>
+
                     <div class="row justify-content-left">
                         {{-- Arquivo --}}
                         <div class="col-sm-auto">
@@ -1660,8 +1694,16 @@
                         </div>
                         <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-upload" style="width:20px"></a>
                         {{-- <button type="button" id="botao-editar-upload" class="btn btn-outline-dark">Editar</button> --}}
-                        <div class="col-sm-3" id="etiqueta-upload-trabalho" style="display: none">
+                        <div class="col-sm-auto" id="etiqueta-upload-trabalho" style="display: none">
                             <input type="text" class="form-control" id="inputEmail3" name="etiquetauploadtrabalho" placeholder="Editar Etiqueta">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Selecionar posição</label>
+                                <select class="form-control" id="exampleFormControlSelect1" name="uploadposicao">
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="custom-file" style="margin-top: 10px">
@@ -2373,8 +2415,66 @@
 @endsection
 @section('javascript')
   <script type="text/javascript" >
+    var depoisTituloCont = 1;
+    $(document).ready(function(){
+        $('.move-down').click(function(){
+            if ($(this).next()) {
+                // console.log("NEXT");
+                var t = $(this);
+                t.parents("#bisavo").animate({top: '20px'}, 500, function(){
+                    t.parents("#bisavo").next().animate({top: '-20px'}, 500, function(){
+                        t.parents("#bisavo").css('top', '0px');
+                        t.parents("#bisavo").next().css('top', '0px');
+                        t.parents("#bisavo").insertAfter(t.parents("#bisavo").next());
+                    });
+                });
+                // $(this).parents("#bisavo").insertAfter($(this).parents("#bisavo").next());
+            }
+        });
+        $('.move-up').click(function(){
+            if ($(this).prev()) {
+                // console.log("PREV");
+                var t = $(this);
+                t.parents("#bisavo").animate({top: '-20px'}, 500, function(){
+                    t.parents("#bisavo").prev().animate({top: '20px'}, 500, function(){
+                        t.parents("#bisavo").css('top', '0px');
+                        t.parents("#bisavo").prev().css('top', '0px');
+                        t.parents("#bisavo").insertBefore(t.parents("#bisavo").prev());
+                    });
+                });
+                // $(this).parents("#bisavo").insertBefore($(this).parents("#bisavo").prev());
+            }
+        });
+        $("#depoisTitulo").click(function(){
+            // // var temp = $(this).closest('[id]');
+            // var atual = 1;
+            // // console.log("#"+atual);
+            // var proximo = atual + depoisTituloCont;
+            // // var atual = $("#1").attr("id");
+            // $("#"+atual).insertAfter("#"+proximo);
+            // depoisTituloCont++;
+            // // $("#"+atual).attr("id", toString(proximo));
+            // // $("#"+proximo).attr("id", atual);
+            // // $("#1").attr(attribute, value)
 
-    
+        });
+    });
+
+    $(document).ready(function(){
+        $("#antesTitulo").click(function(){
+            // var temp = $(this).closest('[id]');
+            var atual = 1;
+            // console.log("#"+atual);
+            var anterior = depoisTituloCont - atual;
+            // var atual = $("#1").attr("id");
+            $("#"+atual).insertBefore("#"+anterior);
+            depoisTituloCont++;
+            // $("#"+atual).attr("id", toString(proximo));
+            // $("#"+proximo).attr("id", atual);
+            // $("#1").attr(attribute, value)
+        });
+    });
+
     // Exibir ou ocultar opções de Texto na criação de modalidade - com checkbox
     $(document).ready(function() {
         $('input:checkbox[class="form-check-input incluirarquivo"]').on("change", function() {
@@ -2651,26 +2751,31 @@
             $('#inicioRevisaoEdit').val(result.inicioRevisao);
             $('#fimRevisaoEdit').val(result.fimRevisao);
             $('#inicioResultadoEdit').val(result.inicioResultado);
-            if(result.texto == true){
+            
 
-                $('#id-custom_field-accountEdit-1-1').prop('checked', true);
-            }
-            if(result.arquivo == true){
-
-                $('#id-custom_field-accountEdit-1-2').prop('checked', true);
-            }
             if(result.caracteres == true){
-
                 $('#id-limit-custom_field-accountEdit-1-1').prop('checked', true);
+                $("#min-max-caracteresEdit").show();
+                $("#min-max-palavrasEdit").hide();
             }   
             if(result.palavras == true){
-
                 $('#id-limit-custom_field-accountEdit-1-2').prop('checked', true);
+                $("#min-max-caracteresEdit").hide();
+                $("#min-max-palavrasEdit").show();
             }            
             $('#maxcaracteresEdit').val(result.maxcaracteres);
             $('#mincaracteresEdit').val(result.mincaracteres);
             $('#maxpalavrasEdit').val(result.maxpalavras);
             $('#minpalavrasEdit').val(result.minpalavras);
+
+
+            if(result.arquivo == true){
+
+                $('#id-custom_field-accountEdit-1-2').prop('checked', true);
+                $("#area-templateEdit").show();
+                $("#tipo-arquivoEdit").show();
+            }
+
             if(result.pdf == true){
 
                 $('#pdfEdit').prop('checked', true);

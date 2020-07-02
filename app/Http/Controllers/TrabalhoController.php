@@ -61,6 +61,7 @@ class TrabalhoController extends Controller
         $areasEspecificas = Area::wherein('id', $areaPorModalidade)->get();
 
         $formSubTraba = FormSubmTraba::where('eventoId', $evento->id)->first();
+        dd($formSubTraba);
 
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();

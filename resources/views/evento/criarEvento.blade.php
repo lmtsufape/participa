@@ -13,6 +13,15 @@
                 <p>Informações Gerais</p>
             </div>
         </div>
+        <input type="text" id="input" />
+        <div id="div"></div>
+        <script>
+            var input = document.querySelector('#input');
+            var div = document.querySelector('#div');
+            input.addEventListener('keyup', function () {
+                div.innerHTML = input.value;
+            });
+        </script>
         {{-- nome | Participantes | Tipo--}}
         <div class="row justify-content-center">
             <div class="col-sm-9">

@@ -11,7 +11,7 @@ use Illuminate\Database\Schema\Blueprint;
 class FormSubmTrabaController extends Controller
 {
     public function update(Request $request, $id){
-
+        dd($request);
         $validatedData = $request->validate([
             'etiquetatitulotrabalho'    => ['nullable', 'string'],
             'etiquetaautortrabalho'     => ['nullable', 'string'],
@@ -53,12 +53,21 @@ class FormSubmTrabaController extends Controller
         if(isset($request->etiquetauploadtrabalho)){
             $formevento->etiquetauploadtrabalho              = $request->etiquetauploadtrabalho;
         }
-        // if(isset($request->etiquetabaixarregra)){
-        //     $formevento->etiquetabaixarregra                 = $request->etiquetabaixarregra;
-        // }
-        // if(isset($request->etiquetabaixartemplate)){
-        //     $formevento->etiquetabaixartemplate              = $request->etiquetabaixartemplate;
-        // }
+
+        if(isset($request->resumoposicao)){
+            $formevento->resumoposicao                       = $request->resumoposicao;
+        }
+
+        if(isset($request->areaposicao)){
+            $formevento->areaposicao                         = $request->areaposicao;
+        }
+
+        if(isset($request->uploadposicao)){
+            $formevento->uploadposicao                       = $request->uploadposicao;
+        }
+
+
+
         if(isset($request->etiquetacampoextra1)){
             $formevento->etiquetacampoextra1                 = $request->etiquetacampoextra1;
         }

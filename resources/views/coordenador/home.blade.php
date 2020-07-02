@@ -91,7 +91,20 @@
             </div>
         @endforeach
     </div>
+    {{-- <input type="text" value="some tex" id="input">
+    <p id="p"></p> --}}
 
 </div>
 
 @endsection
+
+{{-- @section('javascript')
+  <script type="text/javascript" >
+  $( "#input" )
+  .keyup(function() {
+    var value = $( this ).val();
+    $( "#p" ).text( value );
+  })
+  .keyup();
+  </script>
+@endsection --}}
