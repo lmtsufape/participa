@@ -11,7 +11,15 @@ use Illuminate\Database\Schema\Blueprint;
 class FormSubmTrabaController extends Controller
 {
     public function update(Request $request, $id){
-        dd($request);
+
+        $ordem = $request->all();
+        $array = [];
+        foreach ($ordem as $key => $value) { 
+            array_push($array, $key);
+            // echo  $key." => ".$value."<br/>";
+        }
+        $ordemString = implode(",",$array); //String com a ordem dos campos
+
         $validatedData = $request->validate([
             'etiquetatitulotrabalho'    => ['nullable', 'string'],
             'etiquetaautortrabalho'     => ['nullable', 'string'],
@@ -54,20 +62,6 @@ class FormSubmTrabaController extends Controller
             $formevento->etiquetauploadtrabalho              = $request->etiquetauploadtrabalho;
         }
 
-        if(isset($request->resumoposicao)){
-            $formevento->resumoposicao                       = $request->resumoposicao;
-        }
-
-        if(isset($request->areaposicao)){
-            $formevento->areaposicao                         = $request->areaposicao;
-        }
-
-        if(isset($request->uploadposicao)){
-            $formevento->uploadposicao                       = $request->uploadposicao;
-        }
-
-
-
         if(isset($request->etiquetacampoextra1)){
             $formevento->etiquetacampoextra1                 = $request->etiquetacampoextra1;
         }
@@ -86,19 +80,19 @@ class FormSubmTrabaController extends Controller
 
         // Opções para tipo de campos extras
         if(isset($request->select_campo1)){
-            $formevento->tipocampo1                       = $request->select_campo1;
+            $formevento->tipocampoextra1                       = $request->select_campo1;
         }
         if(isset($request->select_campo2)){
-            $formevento->tipocampo2                       = $request->select_campo2;
+            $formevento->tipocampoextra2                       = $request->select_campo2;
         }
         if(isset($request->select_campo3)){
-            $formevento->tipocampo3                       = $request->select_campo3;
+            $formevento->tipocampoextra3                       = $request->select_campo3;
         }
         if(isset($request->select_campo4)){
-            $formevento->tipocampo4                       = $request->select_campo4;
+            $formevento->tipocampoextra4                       = $request->select_campo4;
         }
         if(isset($request->select_campo5)){
-            $formevento->tipocampo5                       = $request->select_campo5;
+            $formevento->tipocampoextra5                       = $request->select_campo5;
         }
         
 
@@ -120,10 +114,12 @@ class FormSubmTrabaController extends Controller
         if(isset($request->checkcampoextra5)){
             $formevento->checkcampoextra5       = $request->checkcampoextra5;
         }
+
+        $formevento->ordemCampos                = $ordemString;
         
         $formevento->save();
-
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $id]);
+        
+        return redirect()->route('coord.detalhesEvento', ['eventoId' => $id, 'ordem' => $ordem]);
     }
 
 }

@@ -61,13 +61,12 @@ class TrabalhoController extends Controller
         $areasEspecificas = Area::wherein('id', $areaPorModalidade)->get();
 
         $formSubTraba = FormSubmTraba::where('eventoId', $evento->id)->first();
-        dd($formSubTraba);
 
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
 
         $modalidade = Modalidade::find($idModalidade);
-        
+        // dd($formSubTraba);
         return view('evento.submeterTrabalho',[
                                               'evento'                 => $evento,
                                               // 'areas'                  => $areas,
@@ -126,11 +125,11 @@ class TrabalhoController extends Controller
         'nomeCoautor.*'     => ['string'],
         'emailCoautor.*'    => ['string'],
         'arquivo'           => ['nullable', 'file', 'max:2000000'],
-        'campoextra1'       => ['nullable', 'string'],
-        'campoextra2'       => ['nullable', 'string'],
-        'campoextra3'       => ['nullable', 'string'],
-        'campoextra4'       => ['nullable', 'string'],
-        'campoextra5'       => ['nullable', 'string'],
+        'campoextra1'       => ['nullable'],
+        'campoextra2'       => ['nullable'],
+        'campoextra3'       => ['nullable'],
+        'campoextra4'       => ['nullable'],
+        'campoextra5'       => ['nullable'],
       ]);
       
       if($tiposExtensao->arquivo == true){
@@ -158,7 +157,7 @@ class TrabalhoController extends Controller
         $extensao = $request->arquivo->getClientOriginalExtension();
         if(!in_array($extensao, $tiposcadastrados)){
           return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
-          Verifique no fim do formulário, quais os tipos permitidos.']);
+          Verifique no formulário, quais os tipos permitidos.']);
         }
       }
       
@@ -205,12 +204,14 @@ class TrabalhoController extends Controller
         'autorId' => $autor->id,
         'eventoId'  => $evento->id,
         'avaliado' => 'nao',
-        'campoextra1' => $request->campoextra1,
-        'campoextra2' => $request->campoextra2,
-        'campoextra3' => $request->campoextra3,
-        'campoextra4' => $request->campoextra4,
-        'campoextra5' => $request->campoextra5,
+        // TRATAR ESSES CAMPOS 'campoextra1' => $request->campoextra1,
+        // 'campoextra2' => $request->campoextra2,
+        // 'campoextra3' => $request->campoextra3,
+        // 'campoextra4' => $request->campoextra4,
+        // 'campoextra5' => $request->campoextra5,
       ]);
+
+      
 
       if($request->emailCoautor != null){
         foreach ($request->emailCoautor as $key) {

@@ -1590,312 +1590,352 @@
                     <p class="card-text">
                     <form method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
                     @csrf
-
-                    <div class="card" id="bisavo">
-                        <div class="card-body">
-                            <div class="row" id="1" value="1">
-                                <div class="col-sm-auto">
-                                    <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
+                    <?php
+                        $ordemCampos = explode(",", $etiquetasSubTrab->ordemCampos);
+                    ?>
+                    @foreach ($ordemCampos as $indice)
+                        @if ($indice == "etiquetatitulotrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="row" id="1" value="1">
+                                        <div class="col-sm-auto">
+                                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-titulo" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-titulo" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-3" id="etiqueta-titulo-trabalho" style="display: none">
+                                            <input type="text" class="form-control" id="inputEmail3" name="etiquetatitulotrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesTitulo" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisTitulo" style="width:20px"></a>
+                                        <input id="nomeTrabalho" type="text" class="form-control" style="margin-top: 10px" disabled><br/>
+                                    </div>
                                 </div>
-                                <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-titulo" style="width:20px"></a>
-                                {{-- <button type="button" id="botao-editar-titulo" class="btn btn-outline-dark">Editar</button> --}}
-                                <div class="col-sm-3" id="etiqueta-titulo-trabalho" style="display: none">
-                                    <input type="text" class="form-control" id="inputEmail3" name="etiquetatitulotrabalho" placeholder="Editar Etiqueta">
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetaautortrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="row justify-content-left" id="2" style="margin-top: 10px">
+                                        <div class="col-sm-auto">
+                                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-autor" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-autor" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-3" id="etiqueta-autor-trabalho" style="display: none">
+                                            <input type="text" class="form-control" style="margin-top: 10px" id="inputEmail3" name="etiquetaautortrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                        <input class="form-control" type="text" style="margin-top: 10px" disabled><br/>
+                                    </div>
                                 </div>
-                                <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesTitulo" style="width:20px; margin-left:10px"></a>
-                                <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisTitulo" style="width:20px"></a>
-                                <input id="nomeTrabalho" type="text" class="form-control" style="margin-top: 10px" disabled><br/>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card" id="bisavo">
-                        <div class="card-body">
-                            <div class="row justify-content-left" id="2" style="margin-top: 10px">
-                                <div class="col-sm-auto">
-                                    <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
+                        @endif
+                        @if ($indice == "etiquetacoautortrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="row justify-content-left" id="3" style="margin-top: 10px">
+                                        <div class="col-sm-auto">
+                                        <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px" disabled>{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</a>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-coautor" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-coautor" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-3" id="etiqueta-coautor-trabalho" style="display: none">
+                                            <input type="text" class="form-control" id="inputEmail3" name="etiquetacoautortrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
                                 </div>
-                                <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-autor" style="width:20px"></a>
-                                {{-- <button type="button" id="botao-editar-autor" class="btn btn-outline-dark">Editar</button> --}}
-                                <div class="col-sm-3" id="etiqueta-autor-trabalho" style="display: none">
-                                    <input type="text" class="form-control" style="margin-top: 10px" id="inputEmail3" name="etiquetaautortrabalho" placeholder="Editar Etiqueta">
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetaresumotrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="row justify-content-left">
+                                        <div class="col-sm-auto">
+                                            <label for="resumo" class="col-form-label">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-resumo" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-resumo" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-auto" id="etiqueta-resumo-trabalho" style="display: none">
+                                            <input type="text" class="form-control" id="inputEmail3" name="etiquetaresumotrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                        <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" style="margin-top: 10px" disabled></textarea>
+                                        <p class="text-muted"><small><span name="resumo">0</span></small></p>
+                                    </div>
                                 </div>
-                                <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
-                                <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
-                                <input class="form-control" type="text" style="margin-top: 10px" disabled><br/>
                             </div>
-                        </div>
-                    </div>
-
-                    
-
-
-                    <div class="row justify-content-left" id="3" style="margin-top: 10px">
-                        <div class="col-sm-auto">
-                        <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px" disabled>{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</a>
-                        </div>
-                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-coautor" style="width:20px"></a>
-                        {{-- <button type="button" id="botao-editar-coautor" class="btn btn-outline-dark">Editar</button> --}}
-                        <div class="col-sm-3" id="etiqueta-coautor-trabalho" style="display: none">
-                            <input type="text" class="form-control" id="inputEmail3" name="etiquetacoautortrabalho" placeholder="Editar Etiqueta">
-                        </div>
-                    </div>
-
-
-                    <div class="row justify-content-left">
-                        <div class="col-sm-auto">
-                            <label for="resumo" class="col-form-label">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
-                        </div>
-                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-resumo" style="width:20px"></a>
-                        {{-- <button type="button" id="botao-editar-resumo" class="btn btn-outline-dark">Editar</button> --}}
-                        <div class="col-sm-auto" id="etiqueta-resumo-trabalho" style="display: none">
-                            <input type="text" class="form-control" id="inputEmail3" name="etiquetaresumotrabalho" placeholder="Editar Etiqueta">
-                            <div class="form-group">
-                                <label for="exampleFormControlSelect1">Selecionar posição</label>
-                                <select class="form-control" id="exampleFormControlSelect1" name="resumoposicao">
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                </select>
+                        @endif
+                        @if ($indice == "etiquetaareatrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <!-- Areas -->
+                                    <div class="row justify-content-left">
+                                        <div class="col-auto">
+                                            <label for="area" class="col-form-label">{{$etiquetasSubTrab->etiquetaareatrabalho}}:</label>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-area" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-area" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-auto" id="etiqueta-area-trabalho" style="display: none">
+                                            <input type="text" class="form-control" id="inputEmail3" name="etiquetaareatrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                        <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId" style="margin-top: 10px" disabled>
+                                            <option value="" disabled selected hidden>-- Área --</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" style="margin-top: 10px" disabled></textarea>
-                        <p class="text-muted"><small><span name="resumo">0</span></small></p>
-                    </div>   
+                        @endif
+                        @if ($indice == "etiquetauploadtrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="row justify-content-left">
+                                        {{-- Arquivo --}}
+                                        <div class="col-sm-auto">
+                                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetauploadtrabalho}}:</label>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-upload" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-upload" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-auto" id="etiqueta-upload-trabalho" style="display: none">
+                                            <input type="text" class="form-control" id="inputEmail3" name="etiquetauploadtrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                    <div class="custom-file" style="margin-top: 10px">
+                                        <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetacampoextra1")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <input type="hidden" name="checkcampoextra1" value="false" id="checkcampoextra1">
+                                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra1}}:</label>
+                                        <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra1" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo1">
+                                            @if ($etiquetasSubTrab->tipocampoextra1 == "textosimples")
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                            @elseif ($etiquetasSubTrab->tipocampoextra1 == "textogrande")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande" selected>Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                            @elseif ($etiquetasSubTrab->tipocampoextra1 == "upload")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                            @else
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                            @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra1) checked @endif name="checkcampoextra1">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exibir
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetacampoextra2")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <input type="hidden" name="checkcampoextra2" value="false" id="checkcampoextra2">
+                                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra2}}:</label>
+                                        <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra2" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo2">
+                                                @if ($etiquetasSubTrab->tipocampoextra2 == "textosimples")
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra2 == "textogrande")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande" selected>Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra2 == "upload")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @else
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra2) checked @endif name="checkcampoextra2">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exibir
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetacampoextra3")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <input type="hidden" name="checkcampoextra3" value="false" id="checkcampoextra3">
+                                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra3}}:</label>
+                                        <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra3" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo3">
+                                                @if ($etiquetasSubTrab->tipocampoextra3 == "textosimples")
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra3 == "textogrande")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande" selected>Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra3 == "upload")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @else
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra3) checked @endif name="checkcampoextra3">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exibir
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetacampoextra4")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <input type="hidden" name="checkcampoextra4" value="false" id="checkcampoextra4">
+                                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra4}}:</label>
+                                        <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra4" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo4">
+                                                @if ($etiquetasSubTrab->tipocampoextra4 == "textosimples")
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra4 == "textogrande")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande" selected>Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra4 == "upload")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @else
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra4) checked @endif name="checkcampoextra4">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exibir
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetacampoextra5")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <input type="hidden" name="checkcampoextra5" value="false" id="checkcampoextra5">
+                                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra5}}:</label>
+                                        <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra5" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo5">
+                                                @if ($etiquetasSubTrab->tipocampoextra5 == "textosimples")
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra5 == "textogrande")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande" selected>Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra5 == "upload")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @else
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra5) checked @endif name="checkcampoextra5">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exibir
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
 
-
-                    <!-- Areas -->
-                    <div class="row justify-content-left">
-                        <div class="col-auto">
-                            <label for="area" class="col-form-label">{{$etiquetasSubTrab->etiquetaareatrabalho}}:</label>
-                        </div>
-                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-area" style="width:20px"></a>
-                        {{-- <button type="button" id="botao-editar-area" class="btn btn-outline-dark">Editar</button> --}}
-                        <div class="col-sm-auto" id="etiqueta-area-trabalho" style="display: none">
-                            <input type="text" class="form-control" id="inputEmail3" name="etiquetaareatrabalho" placeholder="Editar Etiqueta">
-                            <div class="form-group">
-                                <label for="exampleFormControlSelect1">Selecionar posição</label>
-                                <select class="form-control" id="exampleFormControlSelect1" name="areaposicao">
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                </select>
-                            </div>
-                        </div>
-                        <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId" style="margin-top: 10px" disabled>
-                            <option value="" disabled selected hidden>-- Área --</option>
-                        </select>
-                    </div>
-
-                    <div class="row justify-content-left">
-                        {{-- Arquivo --}}
-                        <div class="col-sm-auto">
-                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetauploadtrabalho}}:</label>
-                        </div>
-                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-upload" style="width:20px"></a>
-                        {{-- <button type="button" id="botao-editar-upload" class="btn btn-outline-dark">Editar</button> --}}
-                        <div class="col-sm-auto" id="etiqueta-upload-trabalho" style="display: none">
-                            <input type="text" class="form-control" id="inputEmail3" name="etiquetauploadtrabalho" placeholder="Editar Etiqueta">
-                            <div class="form-group">
-                                <label for="exampleFormControlSelect1">Selecionar posição</label>
-                                <select class="form-control" id="exampleFormControlSelect1" name="uploadposicao">
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="custom-file" style="margin-top: 10px">
-                        <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" disabled>
-                        </div>
-                        <small>Arquivos aceitos nos formatos a seguir</small>
-                    <br>
-
-                    <br>
-                    <div class="titulo-detalhes"></div>
-                    <br>
-                    <h4 class="card-title">Campos Adicionais:</h4>
-                    <div class="form-group row">
-                        <input type="hidden" name="checkcampoextra1" value="false" id="checkcampoextra1">
-                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra1}}:</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra1" placeholder="Editar Etiqueta">
-                        </div>
-                        <div class="form-group col-sm-3">
-                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo1">
-                              @if ($etiquetasSubTrab->tipocampo1 == "textosimples")
-                                <option value="textosimples" selected>Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload">Upload</option>
-                              @elseif ($etiquetasSubTrab->tipocampo1 == "textogrande")
-                                <option value="textosimples">Texto Simples</option>
-                                <option value="textogrande" selected>Texto grande</option>
-                                <option value="upload">Upload</option>
-                              @elseif ($etiquetasSubTrab->tipocampo1 == "upload")
-                                <option value="textosimples">Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload" selected>Upload</option>
-                              @else
-                                <option value="textosimples" selected>Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload" selected>Upload</option>
-                              @endif
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-2">
-                            <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra1) checked @endif name="checkcampoextra1">
-                              <label class="form-check-label" for="gridCheck">
-                                Exibir
-                              </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <input type="hidden" name="checkcampoextra2" value="false" id="checkcampoextra2">
-                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra2}}:</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra2" placeholder="Editar Etiqueta">
-                        </div>
-                        <div class="form-group col-sm-3">
-                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo2">
-                                @if ($etiquetasSubTrab->tipocampo2 == "textosimples")
-                                <option value="textosimples" selected>Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload">Upload</option>
-                                @elseif ($etiquetasSubTrab->tipocampo2 == "textogrande")
-                                <option value="textosimples">Texto Simples</option>
-                                <option value="textogrande" selected>Texto grande</option>
-                                <option value="upload">Upload</option>
-                                @elseif ($etiquetasSubTrab->tipocampo2 == "upload")
-                                <option value="textosimples">Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload" selected>Upload</option>
-                                @else
-                                <option value="textosimples" selected>Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload" selected>Upload</option>
-                                @endif
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-2">
-                            <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra2) checked @endif name="checkcampoextra2">
-                              <label class="form-check-label" for="gridCheck">
-                                Exibir
-                              </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <input type="hidden" name="checkcampoextra3" value="false" id="checkcampoextra3">
-                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra3}}:</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra3" placeholder="Editar Etiqueta">
-                        </div>
-                        <div class="form-group col-sm-3">
-                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo3">
-                                @if ($etiquetasSubTrab->tipocampo3 == "textosimples")
-                                <option value="textosimples" selected>Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload">Upload</option>
-                                @elseif ($etiquetasSubTrab->tipocampo3 == "textogrande")
-                                <option value="textosimples">Texto Simples</option>
-                                <option value="textogrande" selected>Texto grande</option>
-                                <option value="upload">Upload</option>
-                                @elseif ($etiquetasSubTrab->tipocampo3 == "upload")
-                                <option value="textosimples">Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload" selected>Upload</option>
-                                @else
-                                <option value="textosimples" selected>Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload" selected>Upload</option>
-                                @endif
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-2">
-                            <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra3) checked @endif name="checkcampoextra3">
-                              <label class="form-check-label" for="gridCheck">
-                                Exibir
-                              </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <input type="hidden" name="checkcampoextra4" value="false" id="checkcampoextra4">
-                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra4}}:</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra4" placeholder="Editar Etiqueta">
-                        </div>
-                        <div class="form-group col-sm-3">
-                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo4">
-                                @if ($etiquetasSubTrab->tipocampo4 == "textosimples")
-                                <option value="textosimples" selected>Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload">Upload</option>
-                                @elseif ($etiquetasSubTrab->tipocampo4 == "textogrande")
-                                <option value="textosimples">Texto Simples</option>
-                                <option value="textogrande" selected>Texto grande</option>
-                                <option value="upload">Upload</option>
-                                @elseif ($etiquetasSubTrab->tipocampo4 == "upload")
-                                <option value="textosimples">Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload" selected>Upload</option>
-                                @else
-                                <option value="textosimples" selected>Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload" selected>Upload</option>
-                                @endif
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-2">
-                            <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra4) checked @endif name="checkcampoextra4">
-                              <label class="form-check-label" for="gridCheck">
-                                Exibir
-                              </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <input type="hidden" name="checkcampoextra5" value="false" id="checkcampoextra5">
-                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra5}}:</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra5" placeholder="Editar Etiqueta">
-                        </div>
-                        <div class="form-group col-sm-3">
-                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo5">
-                                @if ($etiquetasSubTrab->tipocampo5 == "textosimples")
-                                <option value="textosimples" selected>Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload">Upload</option>
-                                @elseif ($etiquetasSubTrab->tipocampo5 == "textogrande")
-                                <option value="textosimples">Texto Simples</option>
-                                <option value="textogrande" selected>Texto grande</option>
-                                <option value="upload">Upload</option>
-                                @elseif ($etiquetasSubTrab->tipocampo5 == "upload")
-                                <option value="textosimples">Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload" selected>Upload</option>
-                                @else
-                                <option value="textosimples" selected>Texto Simples</option>
-                                <option value="textogrande">Texto grande</option>
-                                <option value="upload" selected>Upload</option>
-                                @endif
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-2">
-                            <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra5) checked @endif name="checkcampoextra5">
-                              <label class="form-check-label" for="gridCheck">
-                                Exibir
-                              </label>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row justify-content-center">
 
                         <div class="col-md-12">
@@ -2415,11 +2455,11 @@
 @endsection
 @section('javascript')
   <script type="text/javascript" >
-    var depoisTituloCont = 1;
+    
     $(document).ready(function(){
         $('.move-down').click(function(){
             if ($(this).next()) {
-                // console.log("NEXT");
+                console.log($(this).next());
                 var t = $(this);
                 t.parents("#bisavo").animate({top: '20px'}, 500, function(){
                     t.parents("#bisavo").next().animate({top: '-20px'}, 500, function(){
@@ -2433,7 +2473,7 @@
         });
         $('.move-up').click(function(){
             if ($(this).prev()) {
-                // console.log("PREV");
+                console.log($(this).prev());
                 var t = $(this);
                 t.parents("#bisavo").animate({top: '-20px'}, 500, function(){
                     t.parents("#bisavo").prev().animate({top: '20px'}, 500, function(){
@@ -2444,34 +2484,6 @@
                 });
                 // $(this).parents("#bisavo").insertBefore($(this).parents("#bisavo").prev());
             }
-        });
-        $("#depoisTitulo").click(function(){
-            // // var temp = $(this).closest('[id]');
-            // var atual = 1;
-            // // console.log("#"+atual);
-            // var proximo = atual + depoisTituloCont;
-            // // var atual = $("#1").attr("id");
-            // $("#"+atual).insertAfter("#"+proximo);
-            // depoisTituloCont++;
-            // // $("#"+atual).attr("id", toString(proximo));
-            // // $("#"+proximo).attr("id", atual);
-            // // $("#1").attr(attribute, value)
-
-        });
-    });
-
-    $(document).ready(function(){
-        $("#antesTitulo").click(function(){
-            // var temp = $(this).closest('[id]');
-            var atual = 1;
-            // console.log("#"+atual);
-            var anterior = depoisTituloCont - atual;
-            // var atual = $("#1").attr("id");
-            $("#"+atual).insertBefore("#"+anterior);
-            depoisTituloCont++;
-            // $("#"+atual).attr("id", toString(proximo));
-            // $("#"+proximo).attr("id", atual);
-            // $("#1").attr(attribute, value)
         });
     });
 

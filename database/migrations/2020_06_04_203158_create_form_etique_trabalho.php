@@ -22,8 +22,6 @@ class CreateFormEtiqueTrabalho extends Migration
             $table->string('etiquetaresumotrabalho')->nullable();
             $table->string('etiquetaareatrabalho')->nullable();
             $table->string('etiquetauploadtrabalho')->nullable();
-
-            $table->integer('indicedecampos')->nullable();
             
             // Etiquetas de campos extras
             $table->string('etiquetacampoextra1')->nullable();
@@ -45,6 +43,8 @@ class CreateFormEtiqueTrabalho extends Migration
             $table->boolean('checkcampoextra3')->nullable();
             $table->boolean('checkcampoextra4')->nullable();
             $table->boolean('checkcampoextra5')->nullable();
+
+            $table->text('ordemCampos')->nullable();
 
             $table->bigInteger("eventoId")->nullable();
             $table->foreign("eventoId")->references("id")->on("eventos");

@@ -16,6 +16,7 @@
                     <form method="POST" action="{{route('trabalho.store', $modalidade->id)}}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                        <input type="hidden" name="modalidadeId" value="{{$modalidade->id}}">
                         <div>
                           @error('tipoExtensao')
                             @include('componentes.mensagens')
@@ -26,383 +27,370 @@
                             @include('componentes.mensagens')
                           @enderror
                         </div>
+                        <?php
+                          $ordemCampos = explode(",", $formSubTraba->ordemCampos);
+                        ?>
+                        @foreach ($ordemCampos as $indice)
+                          @if ($indice == "etiquetatitulotrabalho")
+                            <div class="row justify-content-center">
+                              {{-- Nome Trabalho  --}}
+                              <div class="col-sm-12">
+                                  <label for="nomeTrabalho" class="col-form-label">{{ $formSubTraba->etiquetatitulotrabalho }}</label>
+                                  <input id="nomeTrabalho" type="text" class="form-control @error('nomeTrabalho') is-invalid @enderror" name="nomeTrabalho" value="{{ old('nomeTrabalho') }}" required autocomplete="nomeTrabalho" autofocus>
 
-                        <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                          <div class="col-sm-12">
-                                <label for="nomeTrabalho" class="col-form-label">{{ $formSubTraba->etiquetatitulotrabalho }}</label>
-                                <input id="nomeTrabalho" type="text" class="form-control @error('nomeTrabalho') is-invalid @enderror" name="nomeTrabalho" value="{{ old('nomeTrabalho') }}" required autocomplete="nomeTrabalho" autofocus>
-
-                                @error('nomeTrabalho')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                          <div class="col-sm-12">
-                                <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetaautortrabalho}}</label>
-                                <input class="form-control" type="text" disabled value="{{Auth::user()->name}}">
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-top:20px">
-                          <div class="col-sm-12">
-                            <div id="coautores">
-
-                            </div>
-                            <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">{{$formSubTraba->etiquetacoautortrabalho}}</a>
-                          </div>
-                        </div>
-
-                        @if ($modalidade->caracteres == true)
-                          <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                                <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" minlength="{{$modalidade->mincaracteres}}" maxlength="{{$modalidade->maxcaracteres}}" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
-                                <p class="text-muted"><small><span name="resumo">0</span></small> - Min Caracteres: {{$modalidade->mincaracteres}} - Max Caracteres: {{$modalidade->maxcaracteres}}</p>
-                                @error('resumo')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-
-                            </div>
-                          </div>                              
-                        @elseif ($modalidade->palavras == true)
-                          <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                                <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
-                                <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: {{$modalidade->minpalavras}} - Max Palavras: {{$modalidade->maxpalavras}}</p>
-                                @error('resumo')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-
-                            </div>
-                          </div>
-                        @endif
-                        <!-- Areas -->
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <label for="area" class="col-form-label">{{$formSubTraba->etiquetaareatrabalho}}</label>
-                                <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId">
-                                    <option value="" disabled selected hidden>-- Área --</option>
-                                    {{-- @foreach($areasEnomes as $area)
-                                      <option value="{{$area->id}}">{{$area->nome}}</option>
-                                    @endforeach --}}
-                                    {{-- Apenas um teste abaixo --}}
-                                    @foreach($areasEspecificas as $area)
-                                      <option value="{{$area->id}}">{{$area->nome}}</option>
-                                    @endforeach
-                                </select>
-                                @error('areaId')
-                                <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                                  <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Modalidades -->
-                        <input type="hidden" name="modalidadeId" value="{{$modalidade->id}}">
-                        {{-- MODALIDADE SERIA PASSADA COMO HIDDEN --}}
-                        {{-- <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <label for="areaModalidadeId" class="col-form-label">{{ __('Modalidade:') }}</label>
-                                <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidadeId">
-                                  <option value="" disabled selected hidden>-- Modalidade --</option>
-                                </select>
-
-                                @error('modalidadeId')
-                                <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                                  <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div> --}}
-                        <div class="row justify-content-center">
-                          {{-- Submeter trabalho --}}
-                          {{-- *Obs: As condições abaixo servem para manter o layout do botão para upload
-                            e dos botões para baixar a regra e o template. --}}
-                          @if ($modalidade->arquivo == true)
-                            <div class="col-sm-12" style="margin-top: 20px;">
-                              <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
-
-                              <div class="custom-file">
-                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" required>
-                              </div>
-                              <small>Arquivos aceitos nos formatos 
-                                @if($modalidade->pdf == true)pdf - @endif
-                                @if($modalidade->jpg == true)jpg - @endif
-                                @if($modalidade->jpeg == true)jpeg - @endif
-                                @if($modalidade->png == true)png - @endif
-                                @if($modalidade->docx == true)docx - @endif
-                                @if($modalidade->odt == true)odt @endif.</small>
-                              @error('arquivo')
-                              <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                                <strong>{{ $message }}</strong>
-                              </span>
-                              @enderror
-                            </div>
-                          @endif
-                        </div>
-                    </p>
-                    @if ($formSubTraba->checkcampoextra1 == true || $formSubTraba->checkcampoextra2 == true || $formSubTraba->checkcampoextra3 == true || $formSubTraba->checkcampoextra4 == true || $formSubTraba->checkcampoextra5 == true)
-
-                      <br>
-
-                      @if ($formSubTraba->checkcampoextra1 == true)
-
-                        @if ($formSubTraba->tipocampo1 == "textosimples")
-                            
-                          {{-- Texto Simples --}}
-                          <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                            <div class="col-sm-12">
-                                  <label for="campoextra1" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
-                                  <input id="campoextra1" type="text" class="form-control @error('campoextra1') is-invalid @enderror" name="campoextra1" value="{{ old('campoextra1') }}" required autocomplete="campoextra1" autofocus>
-
-                                  @error('campoextra1')
+                                  @error('nomeTrabalho')
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
                                   </span>
                                   @enderror
+                              </div>
                             </div>
-                          </div>
-
-                        @elseif ($formSubTraba->tipocampo1 == "textogrande")
-                          {{-- Texto Grande --}}
-                          <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                          <div class="col-sm-12">
-                                <label for="campoextra1" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
-                                <textarea id="campoextra1" type="text" class="form-control @error('campoextra1') is-invalid @enderror" name="campoextra1" value="{{ old('campoextra1') }}" required autocomplete="campoextra1" autofocus>
-
-                                @error('campoextra1')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+                          @endif
+                          @if ($indice == "etiquetaautortrabalho")
+                            <div class="row justify-content-center">
+                              {{-- Autor  --}}
+                              <div class="col-sm-12">
+                                  <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetaautortrabalho}}</label>
+                                  <input class="form-control" type="text" disabled value="{{Auth::user()->name}}">
+                              </div>
                             </div>
-                          </div>
-
-                        @elseif ($formSubTraba->tipocampo1 == "upload")
-
-                          {{-- Arquivo de Regras  --}}
-                          <div class="col-sm-12" style="margin-top: 20px;">
-                            <label for="campoextra1" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
-      
-                            <div class="custom-file">
-                              <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra1">
-                            </div>
-                            <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
-                            @error('campoextra1')
-                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                              <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                          </div>
-                        @endif
-                      @endif
-
-                      @if ($formSubTraba->checkcampoextra2 == true)
-
-                        @if ($formSubTraba->tipocampo2 == "textosimples")
-                          <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                          <div class="col-sm-12">
-                                <label for="campoextra2" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
-                                <input id="campoextra2" type="text" class="form-control @error('campoextra2') is-invalid @enderror" name="campoextra2" value="{{ old('campoextra2') }}" required autocomplete="campoextra2" autofocus>
+                          @endif
+                          @if ($indice == "etiquetacoautortrabalho")
+                            <div class="row" style="margin-top:20px">
+                              <div class="col-sm-12">
+                                <div id="coautores">
     
-                                @error('campoextra2')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+                                </div>
+                                <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">{{$formSubTraba->etiquetacoautortrabalho}}</a>
+                              </div>
                             </div>
-                          </div>
-                        @elseif ($formSubTraba->tipocampo2 == "textogrande")
-                          <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                          <div class="col-sm-12">
-                                <label for="campoextra2" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
-                                <textarea id="campoextra2" type="text" class="form-control @error('campoextra2') is-invalid @enderror" name="campoextra2" value="{{ old('campoextra2') }}" required autocomplete="campoextra2" autofocus>
+                          @endif
+                          @if ($indice == "etiquetaresumotrabalho")
+                            @if ($modalidade->caracteres == true)
+                              <div class="row justify-content-center">
+                                <div class="col-sm-12">
+                                    <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
+                                    <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" minlength="{{$modalidade->mincaracteres}}" maxlength="{{$modalidade->maxcaracteres}}" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
+                                    <p class="text-muted"><small><span name="resumo">0</span></small> - Min Caracteres: {{$modalidade->mincaracteres}} - Max Caracteres: {{$modalidade->maxcaracteres}}</p>
+                                    @error('resumo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+
+                                </div>
+                              </div>                              
+                            @elseif ($modalidade->palavras == true)
+                              <div class="row justify-content-center">
+                                <div class="col-sm-12">
+                                    <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
+                                    <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
+                                    <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: {{$modalidade->minpalavras}} - Max Palavras: {{$modalidade->maxpalavras}}</p>
+                                    @error('resumo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+
+                                </div>
+                              </div>
+                            @endif
+                          @endif
+                          @if ($indice == "etiquetaareatrabalho")
+                            <!-- Areas -->
+                            <div class="row justify-content-center">
+                                <div class="col-sm-12">
+                                    <label for="area" class="col-form-label">{{$formSubTraba->etiquetaareatrabalho}}</label>
+                                    <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId">
+                                        <option value="" disabled selected hidden>-- Área --</option>
+                                        {{-- @foreach($areasEnomes as $area)
+                                          <option value="{{$area->id}}">{{$area->nome}}</option>
+                                        @endforeach --}}
+                                        {{-- Apenas um teste abaixo --}}
+                                        @foreach($areasEspecificas as $area)
+                                          <option value="{{$area->id}}">{{$area->nome}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('areaId')
+                                    <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                      <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                          @endif
+                          @if ($indice == "etiquetauploadtrabalho")
+                            <div class="row justify-content-center">
+                              {{-- Submeter trabalho --}}
+
+                              @if ($modalidade->arquivo == true)
+                                <div class="col-sm-12" style="margin-top: 20px;">
+                                  <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
     
-                                @error('campoextra2')
-                                <span class="invalid-feedback" role="alert">
+                                  <div class="custom-file">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" required>
+                                  </div>
+                                  <small>Arquivos aceitos nos formatos 
+                                    @if($modalidade->pdf == true)pdf - @endif
+                                    @if($modalidade->jpg == true)jpg - @endif
+                                    @if($modalidade->jpeg == true)jpeg - @endif
+                                    @if($modalidade->png == true)png - @endif
+                                    @if($modalidade->docx == true)docx - @endif
+                                    @if($modalidade->odt == true)odt @endif.</small>
+                                  @error('arquivo')
+                                  <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                     <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+                                  </span>
+                                  @enderror
+                                </div>
+                              @endif
                             </div>
-                          </div>
-                        @elseif ($formSubTraba->tipocampo2 == "upload")
-                          {{-- Arquivo de Regras  --}}
-                          <div class="col-sm-12" style="margin-top: 20px;">
-                            <label for="campoextra2" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
+                          @endif
+                          @if ($indice == "etiquetacampoextra1")
+                            @if ($formSubTraba->checkcampoextra1 == true)
+                              @if ($formSubTraba->tipocampoextra1 == "textosimples")  
+                                {{-- Texto Simples --}}
+                                <div class="row justify-content-center">
+                                  {{-- Nome Trabalho  --}}
+                                  <div class="col-sm-12">
+                                        <label for="campoextra1" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
+                                        <input id="campoextra1" type="text" class="form-control @error('campoextra1') is-invalid @enderror" name="campoextra1" value="{{ old('campoextra1') }}" required autocomplete="campoextra1" autofocus>
       
-                            <div class="custom-file">
-                              <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra2">
-                            </div>
-                            <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
-                            @error('campoextra2')
-                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                              <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                          </div>
-                        @endif
-                      @endif
-
-                      @if ($formSubTraba->checkcampoextra3 == true)
-
-                        @if ($formSubTraba->tipocampo3 == "textosimples")
-                          <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                          <div class="col-sm-12">
-                                <label for="campoextra3" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
-                                <input id="campoextra3" type="text" class="form-control @error('campoextra3') is-invalid @enderror" name="campoextra3" value="{{ old('campoextra3') }}" required autocomplete="campoextra3" autofocus>
-
-                                @error('campoextra3')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                          </div>
-                        @elseif ($formSubTraba->tipocampo3 == "textogrande")
-                          <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                          <div class="col-sm-12">
-                                <label for="campoextra3" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
-                                <textarea id="campoextra3" type="text" class="form-control @error('campoextra3') is-invalid @enderror" name="campoextra3" value="{{ old('campoextra3') }}" required autocomplete="campoextra3" autofocus>
-
-                                @error('campoextra2')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                          </div>
-                        @elseif ($formSubTraba->tipocampo3 == "upload")
-                          {{-- Arquivo de Regras  --}}
-                          <div class="col-sm-12" style="margin-top: 20px;">
-                            <label for="campoextra3" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
+                                        @error('campoextra1')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                  </div>
+                                </div>
+                              @elseif ($formSubTraba->tipocampoextra1 == "textogrande")
+                                {{-- Texto Grande --}}
+                                <div class="row justify-content-center">
+                                  {{-- Nome Trabalho  --}}
+                                <div class="col-sm-12">
+                                      <label for="campoextra1" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
+                                      <textarea id="campoextra1" type="text" class="form-control @error('campoextra1') is-invalid @enderror" name="campoextra1" value="{{ old('campoextra1') }}" required autocomplete="campoextra1" autofocus></textarea>
       
-                            <div class="custom-file">
-                              <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra3">
-                            </div>
-                            <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
-                            @error('campoextra3')
-                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                              <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                          </div>
-                        @endif
-                      @endif
-
-                      @if ($formSubTraba->checkcampoextra4 == true)
-
-                        @if ($formSubTraba->tipocampo4 == "textosimples")
-                          <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                          <div class="col-sm-12">
-                                <label for="campoextra4" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}:</label>
-                                <input id="campoextra4" type="text" class="form-control @error('campoextra4') is-invalid @enderror" name="campoextra4" value="{{ old('campoextra4') }}" required autocomplete="campoextra4" autofocus>
-
-                                @error('campoextra4')
-                                <span class="invalid-feedback" role="alert">
+                                      @error('campoextra1')
+                                      <span class="invalid-feedback" role="alert">
+                                          <strong>{{ $message }}</strong>
+                                      </span>
+                                      @enderror
+                                  </div>
+                                </div>
+                              @elseif ($formSubTraba->tipocampoextra1 == "upload")
+                                {{-- Arquivo de Regras  --}}
+                                <div class="col-sm-12" style="margin-top: 20px;">
+                                  <label for="campoextra1" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
+            
+                                  <div class="custom-file">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra1">
+                                  </div>
+                                  <small>Algum texto aqui?</small>
+                                  @error('campoextra1')
+                                  <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                     <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                          </div>
-                        @elseif ($formSubTraba->tipocampo4 == "textogrande")
-                          <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                          <div class="col-sm-12">
-                                <label for="campoextra4" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}:</label>
-                                <textarea id="campoextra4" type="text" class="form-control @error('campoextra4') is-invalid @enderror" name="campoextra4" value="{{ old('campoextra4') }}" required autocomplete="campoextra4" autofocus>
-
-                                @error('campoextra4')
-                                <span class="invalid-feedback" role="alert">
+                                  </span>
+                                  @enderror
+                                </div>
+                              @endif
+                            @endif
+                          @endif
+                          @if ($indice == "etiquetacampoextra2")
+                            @if ($formSubTraba->checkcampoextra2 == true)
+                              @if ($formSubTraba->tipocampoextra2 == "textosimples")
+                                <div class="row justify-content-center">
+                                  {{-- Nome Trabalho  --}}
+                                <div class="col-sm-12">
+                                      <label for="campoextra2" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
+                                      <input id="campoextra2" type="text" class="form-control @error('campoextra2') is-invalid @enderror" name="campoextra2" value="{{ old('campoextra2') }}" required autocomplete="campoextra2" autofocus>
+          
+                                      @error('campoextra2')
+                                      <span class="invalid-feedback" role="alert">
+                                          <strong>{{ $message }}</strong>
+                                      </span>
+                                      @enderror
+                                  </div>
+                                </div>
+                              @elseif ($formSubTraba->tipocampoextra2 == "textogrande")
+                                <div class="row justify-content-center">
+                                  {{-- Nome Trabalho  --}}
+                                <div class="col-sm-12">
+                                      <label for="campoextra2" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
+                                      <textarea id="campoextra2" type="text" class="form-control @error('campoextra2') is-invalid @enderror" name="campoextra2" value="{{ old('campoextra2') }}" required autocomplete="campoextra2" autofocus></textarea>
+          
+                                      @error('campoextra2')
+                                      <span class="invalid-feedback" role="alert">
+                                          <strong>{{ $message }}</strong>
+                                      </span>
+                                      @enderror
+                                  </div>
+                                </div>
+                              @elseif ($formSubTraba->tipocampoextra2 == "upload")
+                                {{-- Arquivo de Regras  --}}
+                                <div class="col-sm-12" style="margin-top: 20px;">
+                                  <label for="campoextra2" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
+            
+                                  <div class="custom-file">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra2">
+                                  </div>
+                                  <small>Algum texto aqui?</small>
+                                  @error('campoextra2')
+                                  <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                     <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                          </div>
-                        @elseif ($formSubTraba->tipocampo4 == "upload")
-                          {{-- Arquivo de Regras  --}}
-                          <div class="col-sm-12" style="margin-top: 20px;">
-                            <label for="campoextra4" class="col-form-label">{{ __('Submeter Arquivo:') }}</label>
+                                  </span>
+                                  @enderror
+                                </div>
+                              @endif
+                            @endif
+                          @endif
+                          @if ($indice == "etiquetacampoextra3")
+                            @if ($formSubTraba->checkcampoextra3 == true)
+                              @if ($formSubTraba->tipocampoextra3 == "textosimples")
+                                <div class="row justify-content-center">
+                                  {{-- Nome Trabalho  --}}
+                                <div class="col-sm-12">
+                                      <label for="campoextra3" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
+                                      <input id="campoextra3" type="text" class="form-control @error('campoextra3') is-invalid @enderror" name="campoextra3" value="{{ old('campoextra3') }}" required autocomplete="campoextra3" autofocus>
       
-                            <div class="custom-file">
-                              <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra4">
-                            </div>
-                            <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
-                            @error('campoextra4')
-                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                              <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                          </div>
-                        @endif
-                      @endif
-
-                      @if ($formSubTraba->checkcampoextra5 == true)
-
-                        @if ($formSubTraba->tipocampo5 == "textosimples")
-                          <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                          <div class="col-sm-12">
-                                <label for="campoextra5" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
-                                <input id="campoextra5" type="text" class="form-control @error('campoextra5') is-invalid @enderror" name="campoextra5" value="{{ old('campoextra5') }}" required autocomplete="campoextra5" autofocus>
-
-                                @error('campoextra5')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                          </div>
-                        @elseif ($formSubTraba->tipocampo5 == "textogrande")
-                          <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
-                          <div class="col-sm-12">
-                                <label for="campoextra5" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
-                                <textarea id="campoextra5" type="text" class="form-control @error('campoextra5') is-invalid @enderror" name="campoextra5" value="{{ old('campoextra5') }}" required autocomplete="campoextra5" autofocus>
-
-                                @error('campoextra5')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                          </div>
-                        @elseif ($formSubTraba->tipocampo5 == "upload")
-                          {{-- Arquivo de Regras  --}}
-                          <div class="col-sm-12" style="margin-top: 20px;">
-                            <label for="campoextra5" class="col-form-label">{{ __('Submeter Arquivo:') }}</label>
+                                      @error('campoextra3')
+                                      <span class="invalid-feedback" role="alert">
+                                          <strong>{{ $message }}</strong>
+                                      </span>
+                                      @enderror
+                                  </div>
+                                </div>
+                              @elseif ($formSubTraba->tipocampoextra3 == "textogrande")
+                                <div class="row justify-content-center">
+                                  {{-- Nome Trabalho  --}}
+                                <div class="col-sm-12">
+                                      <label for="campoextra3" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
+                                      <textarea id="campoextra3" type="text" class="form-control @error('campoextra3') is-invalid @enderror" name="campoextra3" value="{{ old('campoextra3') }}" required autocomplete="campoextra3" autofocus></textarea>
       
-                            <div class="custom-file">
-                              <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra5">
-                            </div>
-                            <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
-                            @error('campoextra5')
-                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                              <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                          </div>
-                        @endif
-                      @endif
-                    @endif
+                                      @error('campoextra3')
+                                      <span class="invalid-feedback" role="alert">
+                                          <strong>{{ $message }}</strong>
+                                      </span>
+                                      @enderror
+                                  </div>
+                                </div>
+                              @elseif ($formSubTraba->tipocampoextra3 == "upload")
+                                {{-- Arquivo de Regras  --}}
+                                <div class="col-sm-12" style="margin-top: 20px;">
+                                  <label for="campoextra3" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
+            
+                                  <div class="custom-file">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra3">
+                                  </div>
+                                  <small>Algum texto aqui?</small>
+                                  @error('campoextra3')
+                                  <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                    <strong>{{ $message }}</strong>
+                                  </span>
+                                  @enderror
+                                </div>
+                              @endif
+                            @endif
+                          @endif
+                          @if ($indice == "etiquetacampoextra4")
+                            @if ($formSubTraba->checkcampoextra4 == true)
+                              @if ($formSubTraba->tipocampoextra4 == "textosimples")
+                                <div class="row justify-content-center">
+                                  {{-- Nome Trabalho  --}}
+                                <div class="col-sm-12">
+                                      <label for="campoextra4" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}:</label>
+                                      <input id="campoextra4" type="text" class="form-control @error('campoextra4') is-invalid @enderror" name="campoextra4" value="{{ old('campoextra4') }}" required autocomplete="campoextra4" autofocus>
+      
+                                      @error('campoextra4')
+                                      <span class="invalid-feedback" role="alert">
+                                          <strong>{{ $message }}</strong>
+                                      </span>
+                                      @enderror
+                                  </div>
+                                </div>
+                              @elseif ($formSubTraba->tipocampoextra4 == "textogrande")
+                                <div class="row justify-content-center">
+                                  {{-- Nome Trabalho  --}}
+                                <div class="col-sm-12">
+                                      <label for="campoextra4" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}:</label>
+                                      <textarea id="campoextra4" type="text" class="form-control @error('campoextra4') is-invalid @enderror" name="campoextra4" value="{{ old('campoextra4') }}" required autocomplete="campoextra4" autofocus></textarea>
+      
+                                      @error('campoextra4')
+                                      <span class="invalid-feedback" role="alert">
+                                          <strong>{{ $message }}</strong>
+                                      </span>
+                                      @enderror
+                                  </div>
+                                </div>
+                              @elseif ($formSubTraba->tipocampoextra4 == "upload")
+                                {{-- Arquivo de Regras  --}}
+                                <div class="col-sm-12" style="margin-top: 20px;">
+                                  <label for="campoextra4" class="col-form-label">{{ __('Submeter Arquivo:') }}</label>
+            
+                                  <div class="custom-file">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra4">
+                                  </div>
+                                  <small>Algum texto aqui?</small>
+                                  @error('campoextra4')
+                                  <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                    <strong>{{ $message }}</strong>
+                                  </span>
+                                  @enderror
+                                </div>
+                              @endif
+                            @endif
+                          @endif
+                          @if ($indice == "etiquetacampoextra5")
+                            @if ($formSubTraba->checkcampoextra5 == true)
+                              @if ($formSubTraba->tipocampoextra5 == "textosimples")
+                                <div class="row justify-content-center">
+                                  {{-- Nome Trabalho  --}}
+                                <div class="col-sm-12">
+                                      <label for="campoextra5" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
+                                      <input id="campoextra5" type="text" class="form-control @error('campoextra5') is-invalid @enderror" name="campoextra5" value="{{ old('campoextra5') }}" required autocomplete="campoextra5" autofocus>
+      
+                                      @error('campoextra5')
+                                      <span class="invalid-feedback" role="alert">
+                                          <strong>{{ $message }}</strong>
+                                      </span>
+                                      @enderror
+                                  </div>
+                                </div>
+                              @elseif ($formSubTraba->tipocampoextra5 == "textogrande")
+                                <div class="row justify-content-center">
+                                  {{-- Nome Trabalho  --}}
+                                <div class="col-sm-12">
+                                      <label for="campoextra5" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
+                                      <textarea id="campoextra5" type="text" class="form-control @error('campoextra5') is-invalid @enderror" name="campoextra5" value="{{ old('campoextra5') }}" required autocomplete="campoextra5" autofocus></textarea>
+      
+                                      @error('campoextra5')
+                                      <span class="invalid-feedback" role="alert">
+                                          <strong>{{ $message }}</strong>
+                                      </span>
+                                      @enderror
+                                  </div>
+                                </div>
+                              @elseif ($formSubTraba->tipocampoextra5 == "upload")
+                                {{-- Arquivo de Regras  --}}
+                                <div class="col-sm-12" style="margin-top: 20px;">
+                                  <label for="campoextra5" class="col-form-label">{{ __('Submeter Arquivo:') }}</label>
+            
+                                  <div class="custom-file">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra5">
+                                  </div>
+                                  <small>Algum texto aqui?</small>
+                                  @error('campoextra5')
+                                  <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                    <strong>{{ $message }}</strong>
+                                  </span>
+                                  @enderror
+                                </div>
+                              @endif
+                            @endif
+                          @endif
+                        @endforeach
+                  </p>
+
                     <div class="row justify-content-center">
                         <div class="col-md-6">
                             <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" class="btn btn-secondary" style="width:100%">Cancelar</a>
