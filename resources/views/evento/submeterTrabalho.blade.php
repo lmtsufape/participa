@@ -325,7 +325,7 @@
                               @elseif ($formSubTraba->tipocampoextra4 == "upload")
                                 {{-- Arquivo de Regras  --}}
                                 <div class="col-sm-12" style="margin-top: 20px;">
-                                  <label for="campoextra4" class="col-form-label">{{ __('Submeter Arquivo:') }}</label>
+                                  <label for="campoextra4" class="col-form-label">{{$formSubTraba->etiquetacampoextra4}}:</label>
             
                                   <div class="custom-file">
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra4">
@@ -373,7 +373,7 @@
                               @elseif ($formSubTraba->tipocampoextra5 == "upload")
                                 {{-- Arquivo de Regras  --}}
                                 <div class="col-sm-12" style="margin-top: 20px;">
-                                  <label for="campoextra5" class="col-form-label">{{ __('Submeter Arquivo:') }}</label>
+                                  <label for="campoextra5" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
             
                                   <div class="custom-file">
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra5">

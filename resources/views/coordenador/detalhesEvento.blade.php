@@ -2458,8 +2458,8 @@
     
     $(document).ready(function(){
         $('.move-down').click(function(){
-            if ($(this).next()) {
-                console.log($(this).next());
+            if (($(this).next()) && ($(this).parents("#bisavo").next().attr('id') == "bisavo")) {
+                console.log("IF MOVE-DOWN");
                 var t = $(this);
                 t.parents("#bisavo").animate({top: '20px'}, 500, function(){
                     t.parents("#bisavo").next().animate({top: '-20px'}, 500, function(){
@@ -2470,10 +2470,13 @@
                 });
                 // $(this).parents("#bisavo").insertAfter($(this).parents("#bisavo").next());
             }
+            else {
+                console.log("ELSE MOVE-DOWN");
+            }
         });
         $('.move-up').click(function(){
-            if ($(this).prev()) {
-                console.log($(this).prev());
+            if (($(this).prev()) && ($(this).parents("#bisavo").prev().attr('id') == "bisavo")) {
+                console.log("IF MOVE-UP");
                 var t = $(this);
                 t.parents("#bisavo").animate({top: '-20px'}, 500, function(){
                     t.parents("#bisavo").prev().animate({top: '20px'}, 500, function(){
@@ -2483,6 +2486,9 @@
                     });
                 });
                 // $(this).parents("#bisavo").insertBefore($(this).parents("#bisavo").prev());
+            }
+            else {
+                console.log("ELSE MOVE-UP");
             }
         });
     });
