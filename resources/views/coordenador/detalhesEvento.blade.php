@@ -1245,11 +1245,11 @@
                         <div class="row justify-content-left">
                             
                             <div class="col-sm-auto">
-                                <h4 id="classeh4"></h4>
+                                <h4 id="classeh4">{{$etiquetas->etiquetanomeevento}}:</h4>
                             </div>
-                            {{-- <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-nome" style="width:20px"></a> --}}
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-nome" style="width:20px"></a>
                             {{-- <button type="button" id="botao-editar-nome" class="btn btn-outline-dark">Editar</button> --}}
-                            <div class="col-sm-3" id="etiqueta-nome-evento">
+                            <div class="col-sm-3" id="etiqueta-nome-evento" style="display: none">
                                 <input type="text" class="form-control etiquetanomeevento" id="etiquetanomeevento" name="etiquetanomeevento" placeholder="Editar Etiqueta">
                             </div>
 
@@ -1264,7 +1264,7 @@
                         <div class="row justify-content-left">
             
                             <div class="col-sm-auto">
-                                <h4>{{$etiquetas->etiquetadescricaoevento}}:</h4>
+                                <h4 id="classeh5">{{$etiquetas->etiquetadescricaoevento}}:</h4>
                             </div>
                             <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-descricao" style="width:20px"></a>
                             {{-- <button type="button" id="botao-editar-descricao" class="btn btn-outline-dark">Editar</button> --}}
@@ -1280,7 +1280,7 @@
 
                         <div class="row justify-content-left">
                             <div class="col-sm-auto">
-                                <h4>{{$etiquetas->etiquetatipoevento}}:</h4>
+                                <h4 id="classeh6">{{$etiquetas->etiquetatipoevento}}:</h4>
                             </div>
                             <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-tipo" style="width:20px"></a>
                             {{-- <button type="button" id="botao-editar-tipo" class="btn btn-outline-dark">Editar</button> --}}
@@ -1296,7 +1296,7 @@
                         
                         <div class="row justify-content-left">
                             <div class="col-sm-auto info-evento">
-                                <h4>{{$etiquetas->etiquetadatas}}:</h4>
+                                <h4 id="classeh7">{{$etiquetas->etiquetadatas}}:</h4>
                             </div>
                             <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-datas" style="width:20px"></a>
                             {{-- <button type="button" id="botao-editar-datas" class="btn btn-outline-dark">Editar</button> --}}
@@ -1315,7 +1315,7 @@
                         
                         <div class="row justify-content-left">
                             <div class="col-sm-auto info-evento">
-                                <h4>{{$etiquetas->etiquetasubmissoes}}:</h4>
+                                <h4 id="classeh8">{{$etiquetas->etiquetasubmissoes}}:</h4>
                             </div>
                             <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-submissoes" style="width:20px"></a>
                             {{-- <button type="button" id="botao-editar-submissoes" class="btn btn-outline-dark">Editar</button> --}}
@@ -1346,7 +1346,7 @@
                                 <a>
                                     <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                                 </a>
-                                <label for="nomeTrabalho" class="col-form-label">{{$etiquetas->etiquetabaixarregra}}:</label>
+                                <label for="nomeTrabalho" class="col-form-label" id="classeh9">{{$etiquetas->etiquetabaixarregra}}:</label>
                                 <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-etiqueta-regra" style="width:20px"></a>
                                 {{-- <button type="button" id="botao-editar-etiqueta-regra" class="btn btn-outline-dark">Editar</button> --}}
                             </div>
@@ -1360,7 +1360,7 @@
                                 <a>
                                     <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                                 </a>
-                                <label for="nomeTrabalho" class="col-form-label">{{$etiquetas->etiquetabaixartemplate}}:</label>
+                                <label for="nomeTrabalho" class="col-form-label" id="classeh10">{{$etiquetas->etiquetabaixartemplate}}:</label>
                                 <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-etiqueta-template" style="width:20px"></a>
                                 {{-- <button type="button" id="botao-editar-etiqueta-template" class="btn btn-outline-dark">Editar</button> --}}
                             </div>
@@ -1371,11 +1371,11 @@
 
                         <div class="row justify-content-left" style="margin-top: 20px">
                             <div class="col-sm-auto info-evento">
-                                <h4>{{$etiquetas->etiquetaenderecoevento}}:</h4>
+                                <h4 id="classeh11">{{$etiquetas->etiquetaenderecoevento}}:</h4>
                             </div>
                             <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-endereco" style="width:20px"></a>
                             {{-- <button type="button" id="botao-editar-endereco" class="btn btn-outline-dark">Editar</button> --}}
-                            <div class="col-sm-3" id="etiqueta-endereco-evento" style="display: none">
+                            <div class="col-sm-auto" id="etiqueta-endereco-evento" style="display: none">
                                 <input type="text" class="form-control" id="etiquetaenderecoevento" name="etiquetaenderecoevento" placeholder="Editar Etiqueta">
                             </div>
                         </div>
@@ -1387,7 +1387,7 @@
 
                         <div class="row justify-content-left" style="margin-top: 10px">
                             <div class="col-sm-auto info-evento">
-                                <h4>{{$etiquetas->etiquetamoduloinscricao}}:</h4>
+                                <h4 id="classeh12">{{$etiquetas->etiquetamoduloinscricao}}:</h4>
                             </div>
                             <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-inscricao" style="width:20px"></a>
                             {{-- <button type="button" id="botao-editar-modulo-inscricao" class="btn btn-outline-dark">Editar</button> --}}
@@ -1401,7 +1401,7 @@
 
                         <div class="row justify-content-left">
                             <div class="col-sm-auto info-evento">
-                                <h4>{{$etiquetas->etiquetamoduloprogramacao}}:</h4>
+                                <h4 id="classeh13">{{$etiquetas->etiquetamoduloprogramacao}}:</h4>
                             </div>
                             <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-programacao" style="width:20px"></a>
                             {{-- <button type="button" id="botao-editar-modulo-programacao" class="btn btn-outline-dark">Editar</button> --}}
@@ -1415,7 +1415,7 @@
 
                         <div class="row justify-content-left">
                             <div class="col-sm-auto info-evento">
-                                <h4>{{$etiquetas->etiquetamoduloorganizacao}}:</h4>
+                                <h4 id="classeh14">{{$etiquetas->etiquetamoduloorganizacao}}:</h4>
                             </div>
                             <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-organizacao" style="width:20px"></a>
                             {{-- <button type="button" id="botao-editar-modulo-organizacao" class="btn btn-outline-dark">Editar</button> --}}
@@ -1599,12 +1599,12 @@
                                 <div class="card-body">
                                     <div class="row" id="1" value="1">
                                         <div class="col-sm-auto">
-                                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
+                                            <label for="nomeTrabalho" class="col-form-label" id="classeh15">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
                                         </div>
                                         <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-titulo" style="width:20px"></a>
                                         {{-- <button type="button" id="botao-editar-titulo" class="btn btn-outline-dark">Editar</button> --}}
                                         <div class="col-sm-3" id="etiqueta-titulo-trabalho" style="display: none">
-                                            <input type="text" class="form-control" id="inputEmail3" name="etiquetatitulotrabalho" placeholder="Editar Etiqueta">
+                                            <input type="text" class="form-control" id="etiquetatitulotrabalho" name="etiquetatitulotrabalho" placeholder="Editar Etiqueta">
                                         </div>
                                         <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesTitulo" style="width:20px; margin-left:10px"></a>
                                         <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisTitulo" style="width:20px"></a>
@@ -1618,12 +1618,12 @@
                                 <div class="card-body">
                                     <div class="row justify-content-left" id="2" style="margin-top: 10px">
                                         <div class="col-sm-auto">
-                                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
+                                            <label for="nomeTrabalho" class="col-form-label" id="classeh16">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
                                         </div>
                                         <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-autor" style="width:20px"></a>
                                         {{-- <button type="button" id="botao-editar-autor" class="btn btn-outline-dark">Editar</button> --}}
                                         <div class="col-sm-3" id="etiqueta-autor-trabalho" style="display: none">
-                                            <input type="text" class="form-control" style="margin-top: 10px" id="inputEmail3" name="etiquetaautortrabalho" placeholder="Editar Etiqueta">
+                                            <input type="text" class="form-control" style="margin-top: 10px" id="etiquetaautortrabalho" name="etiquetaautortrabalho" placeholder="Editar Etiqueta">
                                         </div>
                                         <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
                                         <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
@@ -1637,12 +1637,12 @@
                                 <div class="card-body">
                                     <div class="row justify-content-left" id="3" style="margin-top: 10px">
                                         <div class="col-sm-auto">
-                                        <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px" disabled>{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</a>
+                                        <a href="#" class="btn btn-primary" id="classeh17" style="width:100%;margin-top:10px" disabled>{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</a>
                                         </div>
                                         <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-coautor" style="width:20px"></a>
                                         {{-- <button type="button" id="botao-editar-coautor" class="btn btn-outline-dark">Editar</button> --}}
                                         <div class="col-sm-3" id="etiqueta-coautor-trabalho" style="display: none">
-                                            <input type="text" class="form-control" id="inputEmail3" name="etiquetacoautortrabalho" placeholder="Editar Etiqueta">
+                                            <input type="text" class="form-control" id="etiquetacoautortrabalho" name="etiquetacoautortrabalho" placeholder="Editar Etiqueta">
                                         </div>
                                         <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
                                         <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
@@ -1655,12 +1655,12 @@
                                 <div class="card-body">
                                     <div class="row justify-content-left">
                                         <div class="col-sm-auto">
-                                            <label for="resumo" class="col-form-label">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
+                                            <label for="resumo" class="col-form-label" id="classeh18">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
                                         </div>
                                         <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-resumo" style="width:20px"></a>
                                         {{-- <button type="button" id="botao-editar-resumo" class="btn btn-outline-dark">Editar</button> --}}
                                         <div class="col-sm-auto" id="etiqueta-resumo-trabalho" style="display: none">
-                                            <input type="text" class="form-control" id="inputEmail3" name="etiquetaresumotrabalho" placeholder="Editar Etiqueta">
+                                            <input type="text" class="form-control" id="etiquetaresumotrabalho" name="etiquetaresumotrabalho" placeholder="Editar Etiqueta">
                                         </div>
                                         <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
                                         <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
@@ -1676,12 +1676,12 @@
                                     <!-- Areas -->
                                     <div class="row justify-content-left">
                                         <div class="col-auto">
-                                            <label for="area" class="col-form-label">{{$etiquetasSubTrab->etiquetaareatrabalho}}:</label>
+                                            <label for="area" class="col-form-label" id="classeh19">{{$etiquetasSubTrab->etiquetaareatrabalho}}:</label>
                                         </div>
                                         <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-area" style="width:20px"></a>
                                         {{-- <button type="button" id="botao-editar-area" class="btn btn-outline-dark">Editar</button> --}}
                                         <div class="col-sm-auto" id="etiqueta-area-trabalho" style="display: none">
-                                            <input type="text" class="form-control" id="inputEmail3" name="etiquetaareatrabalho" placeholder="Editar Etiqueta">
+                                            <input type="text" class="form-control" id="etiquetaareatrabalho" name="etiquetaareatrabalho" placeholder="Editar Etiqueta">
                                         </div>
                                         <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
                                         <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
@@ -1698,12 +1698,12 @@
                                     <div class="row justify-content-left">
                                         {{-- Arquivo --}}
                                         <div class="col-sm-auto">
-                                            <label for="nomeTrabalho" class="col-form-label">{{$etiquetasSubTrab->etiquetauploadtrabalho}}:</label>
+                                            <label for="nomeTrabalho" class="col-form-label" id="classeh20">{{$etiquetasSubTrab->etiquetauploadtrabalho}}:</label>
                                         </div>
                                         <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-upload" style="width:20px"></a>
                                         {{-- <button type="button" id="botao-editar-upload" class="btn btn-outline-dark">Editar</button> --}}
                                         <div class="col-sm-auto" id="etiqueta-upload-trabalho" style="display: none">
-                                            <input type="text" class="form-control" id="inputEmail3" name="etiquetauploadtrabalho" placeholder="Editar Etiqueta">
+                                            <input type="text" class="form-control" id="etiquetauploadtrabalho" name="etiquetauploadtrabalho" placeholder="Editar Etiqueta">
                                         </div>
                                         <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
                                         <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
@@ -1719,9 +1719,9 @@
                                 <div class="card-body">
                                     <div class="form-group row">
                                         <input type="hidden" name="checkcampoextra1" value="false" id="checkcampoextra1">
-                                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra1}}:</label>
-                                        <div class="col-sm-4">
-                                        <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra1" placeholder="Editar Etiqueta">
+                                        <label for="etiquetacampoextra1" class="col-sm-auto col-form-label" id="classeh21">{{$etiquetasSubTrab->etiquetacampoextra1}}:</label>
+                                        <div class="col-sm-auto">
+                                        <input type="text" class="form-control" id="etiquetacampoextra1" name="etiquetacampoextra1" placeholder="Editar Etiqueta">
                                         </div>
                                         <div class="form-group col-sm-3">
                                             <select class="form-control" id="exampleFormControlSelect1" name="select_campo1">
@@ -1763,9 +1763,9 @@
                                 <div class="card-body">
                                     <div class="form-group row">
                                         <input type="hidden" name="checkcampoextra2" value="false" id="checkcampoextra2">
-                                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra2}}:</label>
-                                        <div class="col-sm-4">
-                                        <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra2" placeholder="Editar Etiqueta">
+                                        <label for="etiquetacampoextra2" class="col-sm-auto col-form-label" id="classeh22">{{$etiquetasSubTrab->etiquetacampoextra2}}:</label>
+                                        <div class="col-sm-auto">
+                                        <input type="text" class="form-control" id="etiquetacampoextra2" name="etiquetacampoextra2" placeholder="Editar Etiqueta">
                                         </div>
                                         <div class="form-group col-sm-3">
                                             <select class="form-control" id="exampleFormControlSelect1" name="select_campo2">
@@ -1807,9 +1807,9 @@
                                 <div class="card-body">
                                     <div class="form-group row">
                                         <input type="hidden" name="checkcampoextra3" value="false" id="checkcampoextra3">
-                                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra3}}:</label>
-                                        <div class="col-sm-4">
-                                        <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra3" placeholder="Editar Etiqueta">
+                                        <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh23">{{$etiquetasSubTrab->etiquetacampoextra3}}:</label>
+                                        <div class="col-sm-auto">
+                                        <input type="text" class="form-control" id="etiquetacampoextra3" name="etiquetacampoextra3" placeholder="Editar Etiqueta">
                                         </div>
                                         <div class="form-group col-sm-3">
                                             <select class="form-control" id="exampleFormControlSelect1" name="select_campo3">
@@ -1851,9 +1851,9 @@
                                 <div class="card-body">
                                     <div class="form-group row">
                                         <input type="hidden" name="checkcampoextra4" value="false" id="checkcampoextra4">
-                                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra4}}:</label>
-                                        <div class="col-sm-4">
-                                        <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra4" placeholder="Editar Etiqueta">
+                                        <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh24">{{$etiquetasSubTrab->etiquetacampoextra4}}:</label>
+                                        <div class="col-sm-auto">
+                                        <input type="text" class="form-control" id="etiquetacampoextra4" name="etiquetacampoextra4" placeholder="Editar Etiqueta">
                                         </div>
                                         <div class="form-group col-sm-3">
                                             <select class="form-control" id="exampleFormControlSelect1" name="select_campo4">
@@ -1895,9 +1895,9 @@
                                 <div class="card-body">
                                     <div class="form-group row">
                                         <input type="hidden" name="checkcampoextra5" value="false" id="checkcampoextra5">
-                                        <label for="inputEmail3" class="col-sm-auto col-form-label">{{$etiquetasSubTrab->etiquetacampoextra5}}:</label>
-                                        <div class="col-sm-4">
-                                        <input type="text" class="form-control" id="inputEmail3" name="etiquetacampoextra5" placeholder="Editar Etiqueta">
+                                        <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh25">{{$etiquetasSubTrab->etiquetacampoextra5}}:</label>
+                                        <div class="col-sm-auto">
+                                        <input type="text" class="form-control" id="etiquetacampoextra5" name="etiquetacampoextra5" placeholder="Editar Etiqueta">
                                         </div>
                                         <div class="form-group col-sm-3">
                                             <select class="form-control" id="exampleFormControlSelect1" name="select_campo5">
@@ -2455,7 +2455,191 @@
 @endsection
 @section('javascript')
   <script type="text/javascript" >
+
+    // Exibir campo ao mesmo tempo que é escrito
+    $(document).ready(function() {
+
+        // Tela de evento
+        $('#etiquetanomeevento').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh4').html("{{$etiquetas->etiquetanomeevento}}:");    
+            }else {
+                $('#classeh4').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetadescricaoevento').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh5').html("{{$etiquetas->etiquetadescricaoevento}}:");    
+            }else {
+                $('#classeh5').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetatipoevento').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh6').html("{{$etiquetas->etiquetatipoevento}}:");    
+            }else {
+                $('#classeh6').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetadatas').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh7').html("{{$etiquetas->etiquetadatas}}:");    
+            }else {
+                $('#classeh7').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetasubmissoes').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh8').html("{{$etiquetas->etiquetasubmissoes}}:");    
+            }else {
+                $('#classeh8').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetabaixarregra').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh9').html("{{$etiquetas->etiquetabaixarregra}}:");    
+            }else {
+                $('#classeh9').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetabaixartemplate').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh10').html("{{$etiquetas->etiquetabaixartemplate}}:");    
+            }else {
+                $('#classeh10').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetaenderecoevento').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh11').html("{{$etiquetas->etiquetaenderecoevento}}:");    
+            }else {
+                $('#classeh11').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetamoduloinscricao').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh12').html("{{$etiquetas->etiquetamoduloinscricao}}:");    
+            }else {
+                $('#classeh12').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetamoduloprogramacao').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh13').html("{{$etiquetas->etiquetamoduloprogramacao}}:");    
+            }else {
+                $('#classeh13').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetamoduloorganizacao').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh14').html("{{$etiquetas->etiquetamoduloorganizacao}}:");    
+            }else {
+                $('#classeh14').html($(this).val()+":");
+            }
+        });
+
+
+        // Tela de submissão de trabalho
+        $('#etiquetatitulotrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh15').html("{{$etiquetasSubTrab->etiquetatitulotrabalho}}:");    
+            }else {
+                $('#classeh15').html($(this).val()+":");
+            }
+        });
+        
+        $('#etiquetaautortrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh16').html("{{$etiquetasSubTrab->etiquetaautortrabalho}}:");    
+            }else {
+                $('#classeh16').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacoautortrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh17').html("{{$etiquetasSubTrab->etiquetacoautortrabalho}}:");    
+            }else {
+                $('#classeh17').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetaresumotrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh18').html("{{$etiquetasSubTrab->etiquetaresumotrabalho}}:");    
+            }else {
+                $('#classeh18').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetaareatrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh19').html("{{$etiquetasSubTrab->etiquetaareatrabalho}}:");    
+            }else {
+                $('#classeh19').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetauploadtrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh20').html("{{$etiquetasSubTrab->etiquetauploadtrabalho}}:");    
+            }else {
+                $('#classeh20').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacampoextra1').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh21').html("{{$etiquetasSubTrab->etiquetacampoextra1}}:");    
+            }else {
+                $('#classeh21').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacampoextra2').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh22').html("{{$etiquetasSubTrab->etiquetacampoextra2}}:");    
+            }else {
+                $('#classeh22').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacampoextra3').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh23').html("{{$etiquetasSubTrab->etiquetacampoextra3}}:");    
+            }else {
+                $('#classeh23').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacampoextra4').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh24').html("{{$etiquetasSubTrab->etiquetacampoextra4}}:");    
+            }else {
+                $('#classeh24').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacampoextra5').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh25').html("{{$etiquetasSubTrab->etiquetacampoextra5}}:");    
+            }else {
+                $('#classeh25').html($(this).val()+":");
+            }
+        });
+    });
     
+    // Ordenar campos de submissão de trabalhos
     $(document).ready(function(){
         $('.move-down').click(function(){
             if (($(this).next()) && ($(this).parents("#bisavo").next().attr('id') == "bisavo")) {

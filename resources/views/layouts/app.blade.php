@@ -107,6 +107,8 @@
     @yield('javascript')
     @else
     @endif
-
+    <script>
+        
+    </script>
 </body>
 </html>
