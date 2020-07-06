@@ -27,11 +27,17 @@ class CreateTrabalhosTable extends Migration
             $table->integer('autorId');
             $table->integer('eventoId');
 
-            $table->string('campoextra1')->nullable();
-            $table->string('campoextra2')->nullable();
-            $table->string('campoextra3')->nullable();
-            $table->string('campoextra4')->nullable();
-            $table->string('campoextra5')->nullable();
+            // Campos extras: Texto simples e Texto maior
+            $table->string('campoextra1simples')->nullable();
+            $table->text('campoextra1grande')->nullable();
+            $table->string('campoextra2simples')->nullable();
+            $table->text('campoextra2grande')->nullable();
+            $table->string('campoextra3simples')->nullable();
+            $table->text('campoextra3grande')->nullable();
+            $table->string('campoextra4simples')->nullable();
+            $table->text('campoextra4grande')->nullable();
+            $table->string('campoextra5simples')->nullable();
+            $table->text('campoextra5grande')->nullable();
         });
     }
 

@@ -13,7 +13,9 @@ class Trabalho extends Model
    */
   protected $fillable = [
       'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
-      'campoextra1', 'campoextra2', 'campoextra3', 'campoextra4', 'campoextra5', 
+      'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
+      'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
+      'campoextra4grande', 'campoextra5grande',
   ];
 
   public function recurso(){

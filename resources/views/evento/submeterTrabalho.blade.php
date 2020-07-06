@@ -153,10 +153,10 @@
                                 <div class="row justify-content-center">
                                   {{-- Nome Trabalho  --}}
                                   <div class="col-sm-12">
-                                        <label for="campoextra1" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
-                                        <input id="campoextra1" type="text" class="form-control @error('campoextra1') is-invalid @enderror" name="campoextra1" value="{{ old('campoextra1') }}" required autocomplete="campoextra1" autofocus>
+                                        <label for="campoextra1simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
+                                        <input id="campoextra1simples" type="text" class="form-control @error('campoextra1simples') is-invalid @enderror" name="campoextra1simples" value="{{ old('campoextra1simples') }}" required autocomplete="campoextra1simples" autofocus>
       
-                                        @error('campoextra1')
+                                        @error('campoextra1simples')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -166,12 +166,11 @@
                               @elseif ($formSubTraba->tipocampoextra1 == "textogrande")
                                 {{-- Texto Grande --}}
                                 <div class="row justify-content-center">
-                                  {{-- Nome Trabalho  --}}
                                 <div class="col-sm-12">
-                                      <label for="campoextra1" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
-                                      <textarea id="campoextra1" type="text" class="form-control @error('campoextra1') is-invalid @enderror" name="campoextra1" value="{{ old('campoextra1') }}" required autocomplete="campoextra1" autofocus></textarea>
+                                      <label for="campoextra1grande" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
+                                      <textarea id="campoextra1grande" type="text" class="form-control @error('campoextra1grande') is-invalid @enderror" name="campoextra1grande" value="{{ old('campoextra1grande') }}" required autocomplete="campoextra1grande" autofocus></textarea>
       
-                                      @error('campoextra1')
+                                      @error('campoextra1grande')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
                                       </span>
@@ -179,15 +178,14 @@
                                   </div>
                                 </div>
                               @elseif ($formSubTraba->tipocampoextra1 == "upload")
-                                {{-- Arquivo de Regras  --}}
                                 <div class="col-sm-12" style="margin-top: 20px;">
-                                  <label for="campoextra1" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
+                                  <label for="campoextra1arquivo" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
             
                                   <div class="custom-file">
-                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra1">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra1arquivo" required>
                                   </div>
                                   <small>Algum texto aqui?</small>
-                                  @error('campoextra1')
+                                  @error('campoextra1arquivo')
                                   <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                     <strong>{{ $message }}</strong>
                                   </span>
@@ -202,10 +200,10 @@
                                 <div class="row justify-content-center">
                                   {{-- Nome Trabalho  --}}
                                 <div class="col-sm-12">
-                                      <label for="campoextra2" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
-                                      <input id="campoextra2" type="text" class="form-control @error('campoextra2') is-invalid @enderror" name="campoextra2" value="{{ old('campoextra2') }}" required autocomplete="campoextra2" autofocus>
+                                      <label for="campoextra2simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
+                                      <input id="campoextra2simples" type="text" class="form-control @error('campoextra2simples') is-invalid @enderror" name="campoextra2simples" value="{{ old('campoextra2simples') }}" required autocomplete="campoextra2simples" autofocus>
           
-                                      @error('campoextra2')
+                                      @error('campoextra2simples')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
                                       </span>
@@ -216,10 +214,10 @@
                                 <div class="row justify-content-center">
                                   {{-- Nome Trabalho  --}}
                                 <div class="col-sm-12">
-                                      <label for="campoextra2" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
-                                      <textarea id="campoextra2" type="text" class="form-control @error('campoextra2') is-invalid @enderror" name="campoextra2" value="{{ old('campoextra2') }}" required autocomplete="campoextra2" autofocus></textarea>
+                                      <label for="campoextra2grande" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
+                                      <textarea id="campoextra2grande" type="text" class="form-control @error('campoextra2grande') is-invalid @enderror" name="campoextra2grande" value="{{ old('campoextra2grande') }}" required autocomplete="campoextra2grande" autofocus></textarea>
           
-                                      @error('campoextra2')
+                                      @error('campoextra2grande')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
                                       </span>
@@ -227,15 +225,14 @@
                                   </div>
                                 </div>
                               @elseif ($formSubTraba->tipocampoextra2 == "upload")
-                                {{-- Arquivo de Regras  --}}
                                 <div class="col-sm-12" style="margin-top: 20px;">
-                                  <label for="campoextra2" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
+                                  <label for="campoextra2arquivo" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
             
                                   <div class="custom-file">
-                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra2">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra2arquivo" required>
                                   </div>
                                   <small>Algum texto aqui?</small>
-                                  @error('campoextra2')
+                                  @error('campoextra2arquivo')
                                   <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                     <strong>{{ $message }}</strong>
                                   </span>
@@ -250,10 +247,10 @@
                                 <div class="row justify-content-center">
                                   {{-- Nome Trabalho  --}}
                                 <div class="col-sm-12">
-                                      <label for="campoextra3" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
-                                      <input id="campoextra3" type="text" class="form-control @error('campoextra3') is-invalid @enderror" name="campoextra3" value="{{ old('campoextra3') }}" required autocomplete="campoextra3" autofocus>
+                                      <label for="campoextra3simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
+                                      <input id="campoextra3simples" type="text" class="form-control @error('campoextra3simples') is-invalid @enderror" name="campoextra3simples" value="{{ old('campoextra3simples') }}" required autocomplete="campoextra3simples" autofocus>
       
-                                      @error('campoextra3')
+                                      @error('campoextra3simples')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
                                       </span>
@@ -264,10 +261,10 @@
                                 <div class="row justify-content-center">
                                   {{-- Nome Trabalho  --}}
                                 <div class="col-sm-12">
-                                      <label for="campoextra3" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
-                                      <textarea id="campoextra3" type="text" class="form-control @error('campoextra3') is-invalid @enderror" name="campoextra3" value="{{ old('campoextra3') }}" required autocomplete="campoextra3" autofocus></textarea>
+                                      <label for="campoextra3grande" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
+                                      <textarea id="campoextra3grande" type="text" class="form-control @error('campoextra3grande') is-invalid @enderror" name="campoextra3grande" value="{{ old('campoextra3grande') }}" required autocomplete="campoextra3grande" autofocus></textarea>
       
-                                      @error('campoextra3')
+                                      @error('campoextra3grande')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
                                       </span>
@@ -277,13 +274,13 @@
                               @elseif ($formSubTraba->tipocampoextra3 == "upload")
                                 {{-- Arquivo de Regras  --}}
                                 <div class="col-sm-12" style="margin-top: 20px;">
-                                  <label for="campoextra3" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
+                                  <label for="campoextra3arquivo" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
             
                                   <div class="custom-file">
-                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra3">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra3arquivo" required>
                                   </div>
                                   <small>Algum texto aqui?</small>
-                                  @error('campoextra3')
+                                  @error('campoextra3arquivo')
                                   <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                     <strong>{{ $message }}</strong>
                                   </span>
@@ -298,10 +295,10 @@
                                 <div class="row justify-content-center">
                                   {{-- Nome Trabalho  --}}
                                 <div class="col-sm-12">
-                                      <label for="campoextra4" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}:</label>
-                                      <input id="campoextra4" type="text" class="form-control @error('campoextra4') is-invalid @enderror" name="campoextra4" value="{{ old('campoextra4') }}" required autocomplete="campoextra4" autofocus>
+                                      <label for="campoextra4simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}:</label>
+                                      <input id="campoextra4simples" type="text" class="form-control @error('campoextra4simples') is-invalid @enderror" name="campoextra4simples" value="{{ old('campoextra4simples') }}" required autocomplete="campoextra4simples" autofocus>
       
-                                      @error('campoextra4')
+                                      @error('campoextra4simples')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
                                       </span>
@@ -312,10 +309,10 @@
                                 <div class="row justify-content-center">
                                   {{-- Nome Trabalho  --}}
                                 <div class="col-sm-12">
-                                      <label for="campoextra4" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}:</label>
-                                      <textarea id="campoextra4" type="text" class="form-control @error('campoextra4') is-invalid @enderror" name="campoextra4" value="{{ old('campoextra4') }}" required autocomplete="campoextra4" autofocus></textarea>
+                                      <label for="campoextra4grande" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}:</label>
+                                      <textarea id="campoextra4grande" type="text" class="form-control @error('campoextra4grande') is-invalid @enderror" name="campoextra4grande" value="{{ old('campoextra4grande') }}" required autocomplete="campoextra4grande" autofocus></textarea>
       
-                                      @error('campoextra4')
+                                      @error('campoextra4grande')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
                                       </span>
@@ -325,13 +322,13 @@
                               @elseif ($formSubTraba->tipocampoextra4 == "upload")
                                 {{-- Arquivo de Regras  --}}
                                 <div class="col-sm-12" style="margin-top: 20px;">
-                                  <label for="campoextra4" class="col-form-label">{{$formSubTraba->etiquetacampoextra4}}:</label>
+                                  <label for="campoextra4arquivo" class="col-form-label">{{$formSubTraba->etiquetacampoextra4}}:</label>
             
                                   <div class="custom-file">
-                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra4">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra4arquivo" required>
                                   </div>
                                   <small>Algum texto aqui?</small>
-                                  @error('campoextra4')
+                                  @error('campoextra4arquivo')
                                   <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                     <strong>{{ $message }}</strong>
                                   </span>
@@ -346,10 +343,10 @@
                                 <div class="row justify-content-center">
                                   {{-- Nome Trabalho  --}}
                                 <div class="col-sm-12">
-                                      <label for="campoextra5" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
-                                      <input id="campoextra5" type="text" class="form-control @error('campoextra5') is-invalid @enderror" name="campoextra5" value="{{ old('campoextra5') }}" required autocomplete="campoextra5" autofocus>
+                                      <label for="campoextra5simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
+                                      <input id="campoextra5simples" type="text" class="form-control @error('campoextra5simples') is-invalid @enderror" name="campoextra5simples" value="{{ old('campoextra5simples') }}" required autocomplete="campoextra5simples" autofocus>
       
-                                      @error('campoextra5')
+                                      @error('campoextra5simples')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
                                       </span>
@@ -361,9 +358,9 @@
                                   {{-- Nome Trabalho  --}}
                                 <div class="col-sm-12">
                                       <label for="campoextra5" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
-                                      <textarea id="campoextra5" type="text" class="form-control @error('campoextra5') is-invalid @enderror" name="campoextra5" value="{{ old('campoextra5') }}" required autocomplete="campoextra5" autofocus></textarea>
+                                      <textarea id="campoextra5grande" type="text" class="form-control @error('campoextra5grande') is-invalid @enderror" name="campoextra5grande" value="{{ old('campoextra5grande') }}" required autocomplete="campoextra5grande" autofocus></textarea>
       
-                                      @error('campoextra5')
+                                      @error('campoextra5grande')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
                                       </span>
@@ -373,13 +370,13 @@
                               @elseif ($formSubTraba->tipocampoextra5 == "upload")
                                 {{-- Arquivo de Regras  --}}
                                 <div class="col-sm-12" style="margin-top: 20px;">
-                                  <label for="campoextra5" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
+                                  <label for="campoextra5arquivo" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
             
                                   <div class="custom-file">
-                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra5">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra5arquivo" required>
                                   </div>
                                   <small>Algum texto aqui?</small>
-                                  @error('campoextra5')
+                                  @error('campoextra5arquivo')
                                   <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                     <strong>{{ $message }}</strong>
                                   </span>
