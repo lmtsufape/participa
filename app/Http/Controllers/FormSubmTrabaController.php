@@ -27,8 +27,6 @@ class FormSubmTrabaController extends Controller
             'etiquetaresumotrabalho'    => ['nullable', 'string'],
             'etiquetaareatrabalho'      => ['nullable', 'string'],
             'etiquetauploadtrabalho'    => ['nullable', 'string'],
-            'etiquetabaixarregra'       => ['nullable', 'string'],
-            'etiquetabaixartemplate'    => ['nullable', 'string'],
             'etiquetacampoextra1'       => ['nullable', 'string'],
             'etiquetacampoextra2'       => ['nullable', 'string'],
             'etiquetacampoextra3'       => ['nullable', 'string'],

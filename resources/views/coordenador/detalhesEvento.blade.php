@@ -1239,7 +1239,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Modelo Atual - Card de Eventos</h5>
                     <p class="card-text">
-                    <form method="POST" action="{{route('etiquetas.update', $evento->id)}}">
+                    <form method="POST" id="formCardEventos" action="{{route('etiquetas.update', $evento->id)}}">
                         @csrf
 
                         <div class="row justify-content-left">
@@ -1426,15 +1426,34 @@
                         <p>
                             Informações sobre a organização
                         </p>
-                        <div class="row justify-content-center">
-
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary" style="width:100%">
-                                    {{ __('Finalizar') }}
-                                </button>
-                            </div>
-                        </div>
                     </form>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <form method="POST" id="formCardEventosPadrao" action="{{route('etiquetas.update', $evento->id)}}">
+                                @csrf
+                                <input type="hidden" name="etiquetanomeevento"          value="Nome">
+                                <input type="hidden" name="etiquetatipoevento"          value="Tipo">
+                                <input type="hidden" name="etiquetadescricaoevento"     value="Descrição">
+                                <input type="hidden" name="etiquetadatas"               value="Realização">
+                                <input type="hidden" name="etiquetasubmissoes"          value="Submissões">
+                                <input type="hidden" name="etiquetaenderecoevento"      value="Endereço">
+                                <input type="hidden" name="etiquetamoduloinscricao"     value="Inscrições">
+                                <input type="hidden" name="etiquetamoduloprogramacao"   value="Programação">
+                                <input type="hidden" name="etiquetamoduloorganizacao"   value="Organização">
+                                <input type="hidden" name="etiquetabaixarregra"         value="Regras">
+                                <input type="hidden" name="etiquetabaixartemplate"      value="Template">
+                                
+                                <button type="submit" class="btn btn-primary" form="formCardEventosPadrao" style="width:100%">
+                                    {{ __('Retornar ao Padrão') }}
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary" form="formCardEventos" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1588,7 +1607,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Modelo Atual - Form de Submissão de Trabalhos</h5>
                     <p class="card-text">
-                    <form method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
+                    <form id="formSubmTrabaEtiquetas" method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
                     @csrf
                     <?php
                         $ordemCampos = explode(",", $etiquetasSubTrab->ordemCampos);
@@ -1936,15 +1955,44 @@
                         @endif
                     @endforeach
 
+                    </form>
                     <div class="row justify-content-center">
-
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary" style="width:100%">
+                        <div class="col-md-6">
+                            <form id="formSubmTrabaEtiquetasPadrao" method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
+                                @csrf
+                                <input type="hidden" name="etiquetatitulotrabalho"  value="Titulo">
+                                <input type="hidden" name="etiquetaautortrabalho"   value="Autor">
+                                <input type="hidden" name="etiquetacoautortrabalho" value="Co-Autor">
+                                <input type="hidden" name="etiquetaresumotrabalho"  value="Resumo">
+                                <input type="hidden" name="etiquetaareatrabalho"    value="Área">
+                                <input type="hidden" name="etiquetauploadtrabalho"  value="Upload de Trabalho">
+                                <input type="hidden" name="etiquetacampoextra1"     value="Campo Extra">
+                                <input type="hidden" name="etiquetacampoextra2"     value="Campo Extra">
+                                <input type="hidden" name="etiquetacampoextra3"     value="Campo Extra">
+                                <input type="hidden" name="etiquetacampoextra4"     value="Campo Extra">
+                                <input type="hidden" name="etiquetacampoextra5"     value="Campo Extra">
+                                <input type="hidden" name="select_campo1"           value="textosimples">
+                                <input type="hidden" name="select_campo2"           value="textosimples">
+                                <input type="hidden" name="select_campo3"           value="textosimples">
+                                <input type="hidden" name="select_campo4"           value="textosimples">
+                                <input type="hidden" name="select_campo5"           value="textosimples">
+                                <input type="hidden" name="checkcampoextra1"        value="false">
+                                <input type="hidden" name="checkcampoextra2"        value="false">
+                                <input type="hidden" name="checkcampoextra3"        value="false">
+                                <input type="hidden" name="checkcampoextra4"        value="false">
+                                <input type="hidden" name="checkcampoextra5"        value="false">
+                                
+                                <button type="submit" class="btn btn-primary" form="formSubmTrabaEtiquetasPadrao" style="width:100%">
+                                    {{ __('Retornar ao Padrão') }}
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary" form="formSubmTrabaEtiquetas" style="width:100%">
                                 {{ __('Finalizar') }}
                             </button>
                         </div>
                     </div>
-                    </form>
                 </div>
             </div>
         </div>
