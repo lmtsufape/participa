@@ -33,8 +33,10 @@ Route::get('/#', function () {
 
 Auth::routes(['verify' => true]);
 
+Route::get('/perfil','UserController@perfil')->name('perfil');
+Route::post('/perfil','UserController@editarPerfil')->name('perfil');
+
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
-  Route::get('/perfil','UserController@perfil')->name('perfil');
 
   Route::get('/home', 'EventoController@index')->name('home');
 
@@ -42,8 +44,6 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::get('/coordenador/home','EventoController@index')->name('coord.home');
 
   Route::get('/coordenador/evento/detalhes', 'EventoController@detalhes')->name('coord.detalhesEvento');
-
-  Route::post('/perfil','UserController@editarPerfil')->name('perfil');
 
   // Visualizar trabalhos do usuário
   Route::get('/user/trabalhos', 'UserController@meusTrabalhos')->name('user.meusTrabalhos');
