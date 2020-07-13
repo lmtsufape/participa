@@ -12,7 +12,7 @@ class Revisor extends Model
      * @var array
      */
     protected $fillable = [
-        'prazo', 'trabalhosCorrigidos', 'correcoesEmAndamento','revisorId', 'eventoId', 'areaId',
+        'prazo', 'trabalhosCorrigidos', 'correcoesEmAndamento','revisorId', 'eventoId', 'areaId', 'modalidadeId',
     ];
 
     public function user(){

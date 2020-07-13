@@ -1099,7 +1099,7 @@
                         <p class="card-text">
                             <input type="hidden" name="eventoId" value="{{$evento->id}}">
                             <div class="row justify-content-center">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <label for="nomeRevisor" class="col-form-label">{{ __('Nome do Revisor') }}</label>
                                     <input id="nomeRevisor" type="text" class="form-control @error('nomeRevisor') is-invalid @enderror" name="nomeRevisor" value="{{ old('nomeRevisor') }}" required autocomplete="nomeRevisor" autofocus>
 
@@ -1109,7 +1109,7 @@
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <label for="emailRevisor" class="col-form-label">{{ __('Email do Revisor') }}</label>
                                     <input id="emailRevisor" type="text" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{ old('emailRevisor') }}" required autocomplete="emailRevisor" autofocus>
 
@@ -1119,12 +1119,27 @@
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <label for="areaRevisor" class="col-form-label">{{ __('Área') }}</label>
                                     <select class="form-control @error('areaRevisor') is-invalid @enderror" id="areaRevisor" name="areaRevisor">
                                         <option value="" disabled selected hidden>-- Área --</option>
                                         @foreach($areas as $area)
                                         <option value="{{$area->id}}">{{$area->nome}}</option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('areaRevisor')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="modalidadeRevisor" class="col-form-label">{{ __('Modalidade') }}</label>
+                                    <select class="form-control @error('modalidadeRevisor') is-invalid @enderror" id="modalidadeRevisor" name="modalidadeRevisor">
+                                        <option value="" disabled selected hidden>-- Modalidade --</option>
+                                        @foreach($modalidades as $modalidade)
+                                        <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
                                         @endforeach
                                     </select>
 

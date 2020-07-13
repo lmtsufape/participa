@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Revisor;
 use App\User;
+use App\Trabalho;
 use App\Evento;
 use Illuminate\Http\Request;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
@@ -22,8 +23,11 @@ class RevisorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function indexListarTrabalhos()
-    {
-        return view('revisor.listarTrabalhos');
+    { 
+        $revisor = Revisor::where("revisorId", Auth::user()->id)->first();
+        $trabalhos = Trabalho::where("areaId", $revisor->areaId)->where("modalidadeId", $revisor->modalidadeId)->get();
+        // dd($trabalhos);
+        return view('revisor.listarTrabalhos', ["trabalhos" => $trabalhos]);
     }
 
     /**
@@ -45,9 +49,10 @@ class RevisorController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-          'emailRevisor' => ['required', 'string', 'email', 'max:255'],
-          'nomeRevisor' => ['required', 'string', 'max:255'],
-          'areaRevisor'  => ['required', 'integer'],
+          'emailRevisor'       => ['required', 'string', 'email', 'max:255'],
+          'nomeRevisor'        => ['required', 'string', 'max:255'],
+          'areaRevisor'        => ['required', 'integer'],
+          'modalidadeRevisor'  => ['required', 'integer'],
         ]);
 
         $usuario = User::where('email', $request->emailRevisor)->first();
@@ -68,7 +73,8 @@ class RevisorController extends Controller
           'correcoesEmAndamento'  => 0,
           'eventoId'              => $request->eventoId,
           'revisorId'             => $usuario->id,
-          'areaId'                => $request->areaRevisor
+          'areaId'                => $request->areaRevisor,
+          'modalidadeId'          => $request->modalidadeRevisor,
         ]);
 
 

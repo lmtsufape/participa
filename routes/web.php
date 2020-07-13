@@ -99,4 +99,6 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::get(   '/encontrarModalidade',   'ModalidadeController@find'                  )->name('findModalidade');
   // Ajax para encontrar modalidade especifica e enviar para o modal de edição
   Route::post(   '/atualizarModalidade',   'ModalidadeController@update'                )->name('modalidade.update');
+  // 
+  Route::get(    '/area/revisores',        'RevisorController@indexListarTrabalhos'    )->name('avaliar.trabalhos');
 });
