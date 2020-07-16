@@ -22,6 +22,14 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styleIndex.css') }}" rel="stylesheet">
+    <?php
+        use App\Revisor;
+        use App\User;
+        use App\ComissaoEvento;
+        use Illuminate\Support\Facades\Auth;
+        use Illuminate\Http\Request;
+    ?>
+    
 </head>
 <body>
     <div id="app">
@@ -56,6 +64,46 @@
                                 </li>
                             @endif
                         @else
+                            <?php 
+
+                                $revisor = Revisor::where("revisorId", Auth::user()->id)->first();
+                                $ComissaoEvento = ComissaoEvento::where('userId', Auth::user()->id)->first();
+                            
+                            
+                            ?>
+                            <li class="nav-item dropdown" style="margin-right: 40px">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    Perfis <span class="caret"></span>
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    {{-- Link Perfil --}}
+                                    <a class="dropdown-item" href="{{ route('home') }}">
+                                        <img src="{{asset('img/icons/perfil.svg')}}" alt="">
+                                        {{ __('Área do Participante') }}
+                                    </a>
+                                    @if (isset($revisor))
+                                        {{-- Rota - Area de Revisores --}}
+                                        <a class="dropdown-item" href="{{ route('avaliar.trabalhos') }}">
+                                            <img src="{{asset('img/icons/revisor.png')}}" alt="">
+                                            {{ __('Área do Revisor') }}
+                                        </a>
+                                    @endif
+
+                                    @if (isset($ComissaoEvento))
+                                        {{-- Rota - Area da Comissao --}}
+                                        <a class="dropdown-item" href="{{ route('home') }}">
+                                            <img src="{{asset('img/icons/comissao.png')}}" alt="">
+                                            {{ __('Área da Comissão') }}
+                                        </a>
+                                    @endif
+
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
