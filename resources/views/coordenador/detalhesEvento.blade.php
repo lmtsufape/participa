@@ -1458,7 +1458,7 @@
                                 <input type="hidden" name="etiquetabaixarregra"         value="Regras">
                                 <input type="hidden" name="etiquetabaixartemplate"      value="Template">
                                 
-                                <button type="submit" class="btn btn-primary" form="formCardEventosPadrao" style="width:100%">
+                                <button type="submit" class="btn btn-primary" form="formCardEventosPadrao" onclick="return default_edicaoCardEvento()" style="width:100%">
                                     {{ __('Retornar ao Padrão') }}
                                 </button>
                             </form>
@@ -1997,7 +1997,7 @@
                                 <input type="hidden" name="checkcampoextra4"        value="false">
                                 <input type="hidden" name="checkcampoextra5"        value="false">
                                 
-                                <button type="submit" class="btn btn-primary" form="formSubmTrabaEtiquetasPadrao" style="width:100%">
+                                <button type="submit" class="btn btn-primary" form="formSubmTrabaEtiquetasPadrao" onclick='return default_formsubmtraba()' style="width:100%">
                                     {{ __('Retornar ao Padrão') }}
                                 </button>
                             </form>
@@ -2518,6 +2518,16 @@
 @endsection
 @section('javascript')
   <script type="text/javascript" >
+
+    // Função para retornar campos de edição de etiquetas para submissão de trabalhos ao default.
+    function default_formsubmtraba(){
+        return confirm('Tem certeza que deseja voltar a ordem e valores padrões dos campos?'); 
+    }
+
+    // Função para retornar campos de edição card de evento ao default.
+    function default_edicaoCardEvento(){
+        return confirm('Tem certeza que deseja restaurar os valores padrões dos campos?'); 
+    }
 
     // Exibir campo ao mesmo tempo que é escrito
     $(document).ready(function() {

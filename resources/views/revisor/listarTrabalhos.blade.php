@@ -20,7 +20,26 @@
                     <th scope="col">Atribuir Nota</th>
                   </tr>
                 </thead>
-                <tbody>
+                @foreach($trabalhos as $trabalho)
+                  @foreach ($areas as $area)
+                    @if ($area->id == $trabalho->areaId)
+                      <tr>
+                        <td>{{$trabalho->id}}</td>
+                        <td>{{$area->nome}}</td>
+                        @if ($trabalho->avaliado == "sim")
+                          <td>Avaliado</td>
+                        @else
+                          <td>Pendente</td>    
+                        @endif
+                        <td>
+                          <a href="#"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
+                        </td>
+                        <td><a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#exampleModal"></a></td>                    
+                      </tr>
+                    @endif                      
+                  @endforeach
+                @endforeach
+                {{-- <tbody>
                   <tr>
                     <td>1</td>
                     <td>Área</td>
@@ -28,9 +47,9 @@
                       <a href="#"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                     </td>
                     <td>-</td>
-                    <td><a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#exampleModal"></a></td>
+                    
                   </tr>
-                </tbody>
+                </tbody> --}}
               </table>
         </div>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Revisor;
 use App\User;
+use App\Area;
 use App\Trabalho;
 use App\Evento;
 use Illuminate\Http\Request;
@@ -26,8 +27,9 @@ class RevisorController extends Controller
     { 
         $revisor = Revisor::where("revisorId", Auth::user()->id)->first();
         $trabalhos = Trabalho::where("areaId", $revisor->areaId)->where("modalidadeId", $revisor->modalidadeId)->get();
-        // dd($trabalhos);
-        return view('revisor.listarTrabalhos', ["trabalhos" => $trabalhos]);
+        $areas = Area::all();
+        // dd($areas);
+        return view('revisor.listarTrabalhos', ["trabalhos" => $trabalhos, "areas" => $areas]);
     }
 
     /**
