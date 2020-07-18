@@ -597,8 +597,6 @@
             <h1 class="titulo-detalhes">Cadastrar Modalidade</h1>
         </div>
     </div>
-    <input id="input"/>
-    <p id="demo"></p>
     {{-- row card --}}
     <div class="row justify-content-center">
         <div class="col-sm-6">

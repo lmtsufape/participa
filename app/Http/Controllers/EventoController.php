@@ -373,7 +373,7 @@ class EventoController extends Controller
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
         $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::all();
+        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
         $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();        
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();

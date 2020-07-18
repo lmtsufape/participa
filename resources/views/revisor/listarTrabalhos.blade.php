@@ -14,7 +14,9 @@
                 <thead>
                   <tr>
                     <th scope="col">Código</th>
+                    <th scope="col">Evento</th>
                     <th scope="col">Área</th>
+                    <th scope="col">Modalidade</th>
                     <th scope="col">Status</th>
                     <th scope="col">Baixar</th>
                     <th scope="col">Atribuir Nota</th>
@@ -22,21 +24,27 @@
                 </thead>
                 @foreach($trabalhos as $trabalho)
                   @foreach ($areas as $area)
-                    @if ($area->id == $trabalho->areaId)
-                      <tr>
-                        <td>{{$trabalho->id}}</td>
-                        <td>{{$area->nome}}</td>
-                        @if ($trabalho->avaliado == "sim")
-                          <td>Avaliado</td>
-                        @else
-                          <td>Pendente</td>    
+                    @foreach ($modalidades as $modalidade)
+                      @foreach ($eventos as $evento)
+                        @if ($area->id == $trabalho->areaId && $modalidade->id == $trabalho->modalidadeId && $evento->id == $trabalho->eventoId)
+                          <tr>
+                            <td>{{$trabalho->id}}</td>
+                            <td>{{$evento->nome}}</td>
+                            <td>{{$area->nome}}</td>
+                            <td>{{$modalidade->nome}}</td>
+                            @if ($trabalho->avaliado == "sim")
+                              <td>Avaliado</td>
+                            @else
+                              <td>Pendente</td>    
+                            @endif
+                            <td>
+                              <a href="#"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
+                            </td>
+                            <td><a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#exampleModal"></a></td>                    
+                          </tr>
                         @endif
-                        <td>
-                          <a href="#"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
-                        </td>
-                        <td><a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#exampleModal"></a></td>                    
-                      </tr>
-                    @endif                      
+                      @endforeach
+                    @endforeach
                   @endforeach
                 @endforeach
                 {{-- <tbody>
