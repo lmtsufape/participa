@@ -97,6 +97,12 @@ class TrabalhoController extends Controller
         //
     }
 
+    public function findResumo(Request $request)
+    {
+      $trabalhoResumo = Trabalho::find($request->trabalhoId);
+      return $trabalhoResumo;
+    }
+
     /**
      * Store a newly created resource in storage.
      *

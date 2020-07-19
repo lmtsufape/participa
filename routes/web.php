@@ -101,4 +101,6 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(   '/atualizarModalidade',   'ModalidadeController@update'                )->name('modalidade.update');
   // 
   Route::get(    '/area/revisores',        'RevisorController@indexListarTrabalhos'    )->name('avaliar.trabalhos');
+  // Encontrar resumo especifico para trabalhos 
+  Route::get(   '/encontrarResumo',    'TrabalhoController@findResumo'                  )->name('trabalhoResumo');
 });

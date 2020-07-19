@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Revisor;
 use App\User;
 use App\Area;
+use App\Arquivo;
 use App\Atribuicao;
 use App\Trabalho;
 use App\Evento;
@@ -70,7 +71,23 @@ class RevisorController extends Controller
           } 
         }
 
-        return view('revisor.listarTrabalhos', ["trabalhos" => $trabalhos, "areas" => $areas, "modalidades" => $modalidades, "eventos" => $eventos]);
+        $arquivos = [];
+        foreach ($trabalhos as $trabalho) {
+          $temp = Arquivo::where("trabalhoId", $trabalho->id)->get();
+          for ($i=0; $i < count($temp); $i++) {
+            if (!in_array($temp[$i], $arquivos)) { 
+              array_push($arquivos, $temp[$i]);
+            }
+          } 
+        }
+
+
+        return view('revisor.listarTrabalhos', [
+          "trabalhos" => $trabalhos,
+          "areas" => $areas,
+          "modalidades" => $modalidades,
+          "eventos" => $eventos,
+          "arquivos" => $arquivos]);
     } 
 
     /**
