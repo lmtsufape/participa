@@ -40,24 +40,6 @@
                             @endif
                             <td>
                               <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
-                                <!-- Modal Resumo-->
-                                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                  <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">Resumo</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
-                                        </button>
-                                      </div>
-                                      <div class="modal-body" id="resumoTrabalhoModal">
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
                             </td>
                             <td>
                               @foreach ($arquivos as $arquivo)
@@ -120,6 +102,22 @@
       </div>
     </div>
 
+    <!-- Modal Resumo-->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Resumo</h5>
+          </div>
+          <div class="modal-body" name="resumoTrabalhoModal" id="resumoTrabalhoModal">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </div>
 <input type="hidden" name="resumoModalAjax" value="1" id="resumoModalAjax">
 @endsection
@@ -150,7 +148,7 @@
             },
             success: function(result){
               console.log(result.resumo);
-              $('#resumoTrabalhoModal').val(result.resumo);
+              $('#resumoTrabalhoModal').append(result.resumo);
           }});
         });
       });
