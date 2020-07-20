@@ -99,6 +99,16 @@
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Modalidades</h5>
                         </li>
                     </a>
+                    <a id="cadastrarCriterio" onclick="habilitarPagina('cadastrarCriterio')">
+                        <li>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Cadastrar Critérios</h5>
+                        </li>
+                    </a>
+                    <a id="listarCriterios" onclick="habilitarPagina('listarCriterios')">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Criterios</h5>
+                        </li>
+                    </a>
                 </div>
             </a>
 
@@ -1141,7 +1151,7 @@
                                         @endforeach
                                     </select>
 
-                                    @error('areaRevisor')
+                                    @error('modalidadeRevisor')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -1603,6 +1613,110 @@
     </div>
     {{-- Fim --}}
   
+</div>
+
+<div id="divCadastrarCriterio" class="comissao">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Cadastrar Critério</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Novo Critério</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Cadastre um novo critério por modalidade</h6>
+                  <form action="{{route('cadastrar.criterio')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
+                    <p class="card-text">
+                        <div class="row justify-content-right">
+                            <div class="col-sm-6">
+                                <label for="modalidade" class="col-form-label">{{ __('Escolha a Modalidade') }}</label>
+                                <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidade">
+                                    <option value="" disabled selected hidden>-- Modalidade --</option>
+                                    @foreach($modalidades as $modalidade)
+                                    <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
+                                    @endforeach
+                                </select>
+
+                                @error('modalidade')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                              <div id="criterios">
+  
+                              </div>
+                              <a href="#" class="btn btn-primary" id="addCriterio" style="width:100%;margin-top:10px">Novo</a>
+                            </div>
+                        </div>
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
+                    </div>
+
+                    </form>
+                </div>
+              </div>{{-- end card--}}
+        </div>
+    </div>
+</div>{{-- End cadastrar Comissão --}}
+
+<div id="divListarCriterio" class="comissao">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Listar Critérios</h1>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Critérios</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Critérios cadastrados por modalidades</h6>
+                  <p class="card-text">
+                    <table class="table table-hover table-responsive-lg table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Peso</th>
+                            <th scope="col">Modalidade</th>
+                            <th scope="col">Editar</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($criterios as $criterio)
+                                @foreach ($modalidades as $modalidade)
+                                    @if ($modalidade->id == $criterio->modalidadeId)
+                                        <tr>
+                                            <td>{{$criterio->nome}}</td>
+                                            <td>{{$criterio->peso}}</td>
+                                            <td>{{$modalidade->nome}}</td>
+                                            <td style="text-align:center">
+                                                <a class="botaoAjax" href="#" data-toggle="modal" onclick="criterioId({{$criterio->id}})" data-target="#modalEditarCriterio"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                    </table>
+                  </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -2448,6 +2562,39 @@
 </div>
 {{-- Fim Modal --}}
 
+{{-- Modal para edição de critérios --}}
+<div class="modal fade" tabindex="-1" id="modalEditarCriterio" aria-labelledby="modalEditarCriterio" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Critério</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="formCriterioUpdate" method="POST" action="{{route('atualizar.criterio')}}">
+                @csrf
+                <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                <input type="hidden" name="modalidadeId" id="modalidadeIdCriterioUpdate" value="">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Nome</label>
+                  <input type="text" class="form-control" name="nomeCriterioUpdate" id="nomeCriterioUpdate" value="">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Peso</label>
+                  <input type="number" class="form-control" name="pesoCriterioUpdate" id="pesoCriterioUpdate" value="">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" form="formCriterioUpdate">Atualizar</button>
+        </div>
+      </div>
+    </div>
+</div>
+{{-- Fim Modal --}}
+
 
 <!-- Modal Trabalho -->
 <div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
@@ -2512,10 +2659,44 @@
 </div>
 <input type="hidden" name="trabalhoIdAjax" value="1" id="trabalhoIdAjax">
 <input type="hidden" name="modalidadeIdAjax" value="1" id="modalidadeIdAjax">
+<input type="hidden" name="criterioIdAjax" value="1" id="criterioIdAjax">
 
 @endsection
 @section('javascript')
   <script type="text/javascript" >
+    
+    // Adicionar novo criterio
+    $(function(){
+        $('#addCriterio').click(function(){
+            linha = montarLinhaInput();
+            $('#criterios').append(linha);
+        });
+    });
+
+    // Remover Criterio
+    $(document).on('click','.delete',function(){
+        $(this).closest('.row').remove();
+            return false;
+    });
+
+    // Montar div para novo criterio 
+    function montarLinhaInput(){
+        return  "<div class="+"row"+">"+
+                    "<div class="+"col-sm-6"+">"+
+                        "<label>Nome</label>"+
+                        "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'nomeCriterio[]'+" placeholder="+"Nome"+" required>"+
+                    "</div>"+
+                    "<div class="+"col-sm-5"+">"+
+                        "<label>Peso</label>"+
+                        "<input"+" type="+'number'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'pesoCriterio[]'+" placeholder="+"Peso"+" required>"+
+                    "</div>"+
+                    "<div class="+"col-sm-1"+">"+
+                        "<a href="+"#"+" class="+"delete"+">"+
+                        "<img src="+"/img/icons/lixo.png"+" style="+"width:25px;margin-top:35px"+">"+
+                        "</a>"+
+                    "</div>"+
+                "</div>";
+    }
 
     // Função para retornar campos de edição de etiquetas para submissão de trabalhos ao default.
     function default_formsubmtraba(){
@@ -2953,6 +3134,10 @@
     document.getElementById('modalidadeIdAjax').value = x;
   }
 
+  function criterioId(x){
+    document.getElementById('criterioIdAjax').value = x;
+  }
+
   $(function(){
     $('#areas').click(function(){
         $('#dropdownAreas').slideToggle(200);
@@ -3073,6 +3258,19 @@
 
                 $('#odtEdit').prop('checked', true);
             }
+          }});
+
+          jQuery.ajax({
+          url: "{{ route('encontrar.criterio') }}",
+          method: 'get',
+          data: {
+             criterioId: $('#criterioIdAjax').val()
+          },
+          success: function(result){
+            console.log(result);
+            $('#nomeCriterioUpdate').val(result.nome);
+            $('#pesoCriterioUpdate').val(result.peso);
+            $('#modalidadeIdCriterioUpdate').val(result.id);
           }});
        });
 
@@ -3205,6 +3403,9 @@
         editarEtiqueta = document.getElementById('divEditarEtiquetas'); //Etiquetas do card de eventos
         editarEtiquetaSubTrabalhos = document.getElementById('divEditarEtiquetasSubTrabalho');
 
+        cadastrarCriterio = document.getElementById('divCadastrarCriterio');
+        listarCriterios = document.getElementById('divListarCriterio');
+
         // habilita divInformacoes
         if(id == 'informacoes'){
             console.log('informacoes');
@@ -3224,6 +3425,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'listarTrabalhos'){
             console.log('listarTrabalhos');
@@ -3243,6 +3446,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
 
         if(id == 'modalidades'){
@@ -3263,6 +3468,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
 
         }
         if(id == 'colocacao'){
@@ -3283,7 +3490,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
-
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'atividades'){
             console.log('atividades');
@@ -3303,7 +3511,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
-
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'cadastrarAreas'){
             console.log('cadastrarAreas');
@@ -3323,7 +3532,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
-
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'listarAreas'){
             console.log('listarAreas');
@@ -3343,7 +3553,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
-
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
 
         if(id == 'cadastrarRevisores'){
@@ -3364,7 +3575,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
-
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'listarRevisores'){
             console.log('listarRevisores');
@@ -3384,7 +3596,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
-
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'cadastrarComissao'){
             console.log('cadastrarComissao');
@@ -3404,7 +3617,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
-
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'definirCoordComissao'){
             console.log('definirCoordComissao');
@@ -3424,6 +3638,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'listarComissao'){
             console.log('listarComissao');
@@ -3443,6 +3659,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'cadastrarModalidade'){
             console.log('cadastrarModalidade');
@@ -3462,6 +3680,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'listarModalidade'){
             console.log('listarModalidade');
@@ -3481,6 +3701,8 @@
             listarModalidade.style.display = "block";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'submissoesTrabalhos'){
           informacoes.style.display = "none";
@@ -3499,6 +3721,8 @@
           listarModalidade.style.display = "none";
           editarEtiqueta.style.display = "none";
           editarEtiquetaSubTrabalhos.style.display = "none";
+          cadastrarCriterio.style.display = "none";
+          listarCriterios.style.display = "none";
         }
 
         if(id == 'editarEtiqueta'){
@@ -3519,6 +3743,8 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "block";
             editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
 
         if(id == 'editarEtiquetaSubTrabalhos'){
@@ -3538,8 +3764,50 @@
             listarModalidade.style.display = "none";
             editarEtiqueta.style.display = "none";
             editarEtiquetaSubTrabalhos.style.display = "block";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
 
+        if (id == 'cadastrarCriterio') {
+            informacoes.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
+            cadastrarRevisores.style.display = "none";
+            listarRevisores.style.display = "none";
+            cadastrarComissao.style.display = "none";
+            definirCoordComissao.style.display = "none";
+            listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "block";
+            listarCriterios.style.display = "none";
+        }
+        if (id == 'listarCriterios') {
+            informacoes.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
+            cadastrarRevisores.style.display = "none";
+            listarRevisores.style.display = "none";
+            cadastrarComissao.style.display = "none";
+            definirCoordComissao.style.display = "none";
+            listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "block";
+        }
     }
 
 

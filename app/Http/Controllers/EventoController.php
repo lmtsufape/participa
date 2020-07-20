@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Area;
 use App\Evento;
 use App\Coautor;
+use App\Criterio;
 use App\Revisor;
 use App\Atribuicao;
 use App\Modalidade;
@@ -387,6 +388,17 @@ class EventoController extends Controller
         $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
+
+        // Criterios por modalidades
+        $criteriosModalidade = [];
+        foreach ($modalidades as $indice) {
+          $criterios = Criterio::where("modalidadeId", $indice->id)->get();
+          for ($i=0; $i < count($criterios); $i++) {
+            if (!in_array($criterios[$i],$criteriosModalidade)) {
+              array_push($criteriosModalidade, $criterios[$i]);
+            }
+          }
+        }
         
         return view('coordenador.detalhesEvento', [
                                                     'evento'                  => $evento,
@@ -403,7 +415,8 @@ class EventoController extends Controller
                                                     'numeroRevisores'         => $numeroRevisores,
                                                     'numeroComissao'          => $numeroComissao,
                                                     'etiquetas'               => $etiquetas,
-                                                    'etiquetasSubTrab'        => $etiquetasSubTrab
+                                                    'etiquetasSubTrab'        => $etiquetasSubTrab,
+                                                    'criterios'               => $criteriosModalidade,
                                                   ]);
     }
 
