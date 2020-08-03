@@ -13,8 +13,7 @@ class Evento extends Model
    */
   protected $fillable = [
       'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim',
-      'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao',
-      'inicioResultado', 'fimResultado', 'possuiTaxa', 'valorTaxa', 'fotoEvento',
+      'possuiTaxa', 'valorTaxa', 'fotoEvento',
       'enderecoId', 'coordenadorId',
       'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo',
   ];

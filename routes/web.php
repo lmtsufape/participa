@@ -33,8 +33,10 @@ Route::get('/#', function () {
 
 Auth::routes(['verify' => true]);
 
+Route::get('/perfil','UserController@perfil')->name('perfil');
+Route::post('/perfil','UserController@editarPerfil')->name('perfil');
+
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
-  Route::get('/perfil','UserController@perfil')->name('perfil');
 
   Route::get('/home', 'EventoController@index')->name('home');
 
@@ -42,8 +44,6 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::get('/coordenador/home','EventoController@index')->name('coord.home');
 
   Route::get('/coordenador/evento/detalhes', 'EventoController@detalhes')->name('coord.detalhesEvento');
-
-  Route::post('/perfil','UserController@editarPerfil')->name('perfil');
 
   // Visualizar trabalhos do usuário
   Route::get('/user/trabalhos', 'UserController@meusTrabalhos')->name('user.meusTrabalhos');
@@ -75,9 +75,9 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   //AreaModalidade
   Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
   //Trabalho
-  Route::get(   '/trabalho/submeter/{id}','TrabalhoController@index'                   )->name('trabalho.index');
+  Route::get(   '/trabalho/submeter/{id}/{idModalidade}','TrabalhoController@index'                   )->name('trabalho.index');
   Route::post(  '/trabalho/novaVersao',   'TrabalhoController@novaVersao'              )->name('trabalho.novaVersao');
-  Route::post(  '/trabalho/criar',        'TrabalhoController@store'                   )->name('trabalho.store');
+  Route::post(  '/trabalho/criar/{id}}',        'TrabalhoController@store'                   )->name('trabalho.store');
   //Atribuição
   Route::get(   '/atribuir',              'AtribuicaoController@distribuicaoAutomatica')->name('distribuicao');
   Route::get(   '/atribuirPorArea',       'AtribuicaoController@distribuicaoPorArea'   )->name('distribuicaoAutomaticaPorArea');
@@ -85,5 +85,28 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/removerAtribuicao',     'AtribuicaoController@deletePorRevisores'    )->name('atribuicao.delete');
   // rota downloadArquivo
   Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
-
+  // rota download arquivo de regras para submissão de trabalho
+  Route::get(   '/downloadArquivoRegras',       'RegraSubmisController@downloadArquivo')->name('download.regra');
+  // rota download arquivo de templates para submissão de trabalho
+  Route::get(   '/downloadArquivoTemplates',    'TemplateSubmisController@downloadArquivo'       )->name('download.template');
+  // atualizar etiquetas do form de eventos
+  Route::post(  '/etiquetas/editar/{id}', 'FormEventoController@update'                )->name('etiquetas.update');
+  // atualizar etiquetas do form de submissão de trabalhos
+  Route::post(  '/etiquetas/submissao_trabalhos/editar/{id}', 'FormSubmTrabaController@update')->name('etiquetas_sub_trabalho.update');
+  // Inserir novos campos para o form de submissão de trabalhos
+  Route::post(  '/adicionarnovocampo/{id}', 'FormSubmTrabaController@store'            )->name('novocampo.store');
+  // Exibir ou ocultar modulos do card de eventos
+  Route::post(  '/modulos/{id}', 'FormEventoController@exibirModulo'                   )->name('exibir.modulo');
+  // Ajax para encontrar modalidade especifica e enviar para o modal de edição
+  Route::get(   '/encontrarModalidade',   'ModalidadeController@find'                  )->name('findModalidade');
+  // Ajax para encontrar modalidade especifica e enviar para o modal de edição
+  Route::post(   '/atualizarModalidade',   'ModalidadeController@update'                )->name('modalidade.update');
+  // 
+  Route::get(    '/area/revisores',        'RevisorController@indexListarTrabalhos'     )->name('avaliar.trabalhos');
+  // Encontrar resumo especifico para trabalhos 
+  Route::get(   '/encontrarResumo',    'TrabalhoController@findResumo'                  )->name('trabalhoResumo');
+  // Critérios
+  Route::post(  '/criterio/', 'CriteriosController@store'                               )->name('cadastrar.criterio');
+  Route::post(  '/criterioUpdate/', 'CriteriosController@update'                        )->name('atualizar.criterio');
+  Route::get(   '/encontrarCriterio', 'CriteriosController@findCriterio'                )->name('encontrar.criterio');
 });

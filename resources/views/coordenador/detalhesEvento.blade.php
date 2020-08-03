@@ -99,26 +99,35 @@
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Modalidades</h5>
                         </li>
                     </a>
+                    <a id="cadastrarCriterio" onclick="habilitarPagina('cadastrarCriterio')">
+                        <li>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Cadastrar Critérios</h5>
+                        </li>
+                    </a>
+                    <a id="listarCriterios" onclick="habilitarPagina('listarCriterios')">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Criterios</h5>
+                        </li>
+                    </a>
                 </div>
             </a>
-            <a id="publicar">
+
+            <a id="eventos">
               <li>
-                <img src="{{ asset('img/icons/publish.svg') }}" alt=""><h5>Publicar</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                  <img src="{{asset('img/icons/sitemap-solid.svg')}}" alt=""><h5>Evento</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
               </li>
-              <div id="dropdownPublicar" style="background-color: gray">
-                <a id="publicarEvento" onclick="habilitarEvento()">
-                  <form id="habilitarEventoForm" method="GET" action="{{route('evento.habilitar', ['id' => $evento->id])}}"></form>
+              <div id="dropdownEvento" style="background-color: gray">
+                  <a id="editarEtiqueta" onclick="habilitarPagina('editarEtiqueta')">
+                      <li>
+                          <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Etiquetas Eventos</h5>
+                      </li>
+                  </a>
+                  <a id="editarEtiquetaSubTrabalhos" onclick="habilitarPagina('editarEtiquetaSubTrabalhos')">
                     <li>
-                        <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Publicar Evento</h5>
+                        <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Etiquetas Trabalho</h5>
                     </li>
-                </a>
-                <a id="desabilitarEventoPublicado" onclick="desabilitarEvento()">
-                  <form id="desabilitarEventoForm" method="GET" action="{{route('evento.desabilitar', ['id' => $evento->id])}}"></form>
-                    <li>
-                        <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Desfazer publicação</h5>
-                    </li>
-                </a>
-            </div>
+                  </a>
+              </div>
             </a>
             <!-- <a id="colocacao" onclick="habilitarPagina('colocacao')">
                 <li>
@@ -531,44 +540,7 @@
                 </div>
         </div>
     </div>
-    <div class="row justify-content-center">
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Resumo</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Informe se os trabalhos enviados possuem resumos.</h6>
-                    <form method="POST" action="{{route('evento.setResumo')}}">
-                    @csrf
-                    <p class="card-text">
-                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                        <input type="hidden" name="hasResumo" value="false" id="hasResumo">
-
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <input id="hasResumoCheck" type="checkbox" onclick="document.getElementById('hasResumo').value = 'true'"  autocomplete="hasResumo" autofocus>
-                                <label for="hasResumoCheck" >{{ __('Possui') }}</label>
-
-                                @error('hasResumo')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                        </div>{{-- end row--}}
-                    </p>
-                    <div class="row justify-content-center">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary" style="width:100%">
-                                {{ __('Finalizar') }}
-                            </button>
-                        </div>
-                    </div>
-                    </form>
-                </div>
-                </div>
-        </div>
-    </div>
+    
     <div class="row justify-content-center">
         <div class="col-sm-6">
             <div class="card">
@@ -606,7 +578,36 @@
         </div>
     </div>
 </div><!-- Definir Submissões -->
-
+<div>
+    @error('comparacaocaracteres')
+      @include('componentes.mensagens')
+    @enderror
+</div>
+<div>
+    @error('comparacaopalavras')
+      @include('componentes.mensagens')
+    @enderror
+</div>
+<div>
+    @error('marcarextensao')
+      @include('componentes.mensagens')
+    @enderror
+</div>
+<div>
+    @error('caracteresoupalavras')
+      @include('componentes.mensagens')
+    @enderror
+</div>
+<div>
+    @error('semcaractere')
+      @include('componentes.mensagens')
+    @enderror
+</div>
+<div>
+    @error('sempalavra')
+      @include('componentes.mensagens')
+    @enderror
+</div>
 {{-- Modalidade --}}
 <div id="divCadastrarModalidades" class="modalidades">
     <div class="row">
@@ -621,13 +622,13 @@
                 <div class="card-body">
                     <h5 class="card-title">Nova Modalidade</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova modalidade para o seu evento</h6>
-                    <form method="POST" action="{{route('modalidade.store')}}">
+                    <form method="POST" action="{{route('modalidade.store')}}" enctype="multipart/form-data">
                     @csrf
                     <p class="card-text">
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="nomeModalidade" class="col-form-label">{{ __('Nome') }}</label>
+                                <label for="nomeModalidade" class="col-form-label">*{{ __('Nome') }}</label>
 
                             </div>
                         </div>
@@ -645,6 +646,219 @@
                         </div>{{-- end row--}}
 
                     </p>
+
+                    {{-- Data: inicioSubmissao | fimSubmissao --}}
+                    <div class="row justify-content-center">
+
+                        <div class="col-sm-6">
+                            <label for="inicioSubmissao" class="col-form-label">{{ __('Início da Submissão') }}</label>
+                            <input id="inicioSubmissao" type="date" class="form-control @error('inicioSubmissao') is-invalid @enderror" name="inicioSubmissao" value="{{ old('inicioSubmissao') }}" autocomplete="inicioSubmissao" autofocus>
+
+                            @error('inicioSubmissao')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="fimSubmissao" class="col-form-label">{{ __('Fim da Submissão') }}</label>
+                            <input id="fimSubmissao" type="date" class="form-control @error('fimSubmissao') is-invalid @enderror" name="fimSubmissao" value="{{ old('fimSubmissao') }}" autocomplete="fimSubmissao" autofocus>
+
+                            @error('fimSubmissao')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                    {{-- end Data: inicioSubmissao | fimSubmissao --}}
+
+                    {{-- Data: inicioRevisao | fimRevisao --}}
+                    <div class="row justify-content-center">
+
+                        <div class="col-sm-6">
+                            <label for="inicioRevisao" class="col-form-label">{{ __('Início da Revisão') }}</label>
+                            <input id="inicioRevisao" type="date" class="form-control @error('inicioRevisao') is-invalid @enderror" name="inicioRevisao" value="{{ old('inicioRevisao') }}" autocomplete="inicioRevisao" autofocus>
+
+                            @error('inicioRevisao')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="fimRevisao" class="col-form-label">{{ __('Fim da Revisão') }}</label>
+                            <input id="fimRevisao" type="date" class="form-control @error('fimRevisao') is-invalid @enderror" name="fimRevisao" value="{{ old('fimRevisao') }}" autocomplete="fimRevisao" autofocus>
+
+                            @error('fimRevisao')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                    {{-- end Data: inicioRevisão | fimRevisao --}}
+
+                    {{-- Data: resultado --}}
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <label for="inicioResultado" class="col-form-label">{{ __('Início do Resultado') }}</label>
+                            <input id="inicioResultado" type="date" class="form-control @error('inicioResultado') is-invalid @enderror" name="inicioResultado" value="{{ old('inicioResultado') }}" autocomplete="inicioResultado" autofocus>
+
+                            @error('inicioResultado')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                    {{-- end Data: resultado --}}
+
+                    {{-- Inicio - Tipo de submissão --}}
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <label class="col-form-label">{{ __('Restrições de resumo:') }}</label>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1" required>
+                                <label class="form-check-label" for="texto">
+                                    Quantidade de caracteres 
+                                </label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-2" value="limit-option2" required>
+                                <label class="form-check-label" for="arquivo">
+                                    Quantidade de palavras 
+                                </label>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6" id="min-max-caracteres" style="display: none">
+                                    <div class="form-group">
+                                        <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                        <div>
+                                          <input class="form-control" type="number" id="min_caracteres" name="mincaracteres">
+                                        </div>
+                                    </div>
+        
+                                    <div class="form-group">
+                                        <label class="col-form-label">{{ __('Máximo') }}</label>
+                                        <div>
+                                          <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6" id="min-max-palavras" style="display: none">
+                                    <div class="form-group">
+                                        <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                        <div>
+                                          <input class="form-control" type="number" id="min_palavras" name="minpalavras">
+                                        </div>
+                                    </div>
+        
+                                    <div class="form-group">
+                                        <label class="col-form-label">{{ __('Máximo') }}</label>
+                                        <div>
+                                          <input class="form-control" type="number" id="max_palavras" name="maxpalavras">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-check" style="margin-top: 10px">
+                                <input class="form-check-input incluirarquivo" type="checkbox" name="arquivo" id="id-custom_field-account-1-2">
+                                <label class="form-check-label" for="arquivo">
+                                    Incluir submissão por arquivo 
+                                </label>
+                                @error('arquivo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6" id="tipo-arquivo" style="display: none">
+
+                            <div class="titulo-detalhes" style="margin-top: 10px"></div>
+                            <label class="col-form-label">{{ __('Tipos de extensão aceitas') }}</label>
+
+                            <div class="form-check" style="margin-top: 10px">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="pdf">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .pdf
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="jpg">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .jpg
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="jpeg">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .jpeg
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="png">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .png
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="docx">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .docx
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="defaultCheck1" name="odt">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    .odt
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        {{-- Arquivo de Regras  --}}
+                        <div class="col-sm-12" style="margin-top: 20px;">
+                          <label for="arquivoRegras" class="col-form-label">{{ __('Enviar regras:') }}</label>
+
+                          <div class="custom-file">
+                            <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegras">
+                          </div>
+                          <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
+                          @error('arquivoRegras')
+                          <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                          @enderror
+                        </div>
+                        {{-- Arquivo de Templates --}}
+                        <div class="col-sm-12" id="area-template" style="margin-top: 20px; display:none">
+                            <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar template:') }}</label>
+  
+                            <div class="custom-file">
+                              <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates">
+                            </div>
+                            <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
+                            @error('arquivoTemplates')
+                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                              <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
                     <div class="row justify-content-center">
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-primary" style="width:100%">
@@ -733,12 +947,16 @@
                         <thead>
                         <tr>
                             <th scope="col">Nome</th>
+                            <th scope="col">Editar</th>
                         </tr>
                         </thead>
                         <tbody>
                             @foreach($modalidades as $modalidade)
                             <tr>
                                 <td>{{$modalidade->nome}}</td>
+                                <td style="text-align:center">
+                                    <a class="botaoAjax" href="#" data-toggle="modal" onclick="modalidadeId({{$modalidade->id}})" data-target="#modalEditarModalidade"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                </td>
                             </tr>
                             @endforeach
 
@@ -897,7 +1115,7 @@
                         <p class="card-text">
                             <input type="hidden" name="eventoId" value="{{$evento->id}}">
                             <div class="row justify-content-center">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <label for="nomeRevisor" class="col-form-label">{{ __('Nome do Revisor') }}</label>
                                     <input id="nomeRevisor" type="text" class="form-control @error('nomeRevisor') is-invalid @enderror" name="nomeRevisor" value="{{ old('nomeRevisor') }}" required autocomplete="nomeRevisor" autofocus>
 
@@ -907,7 +1125,7 @@
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <label for="emailRevisor" class="col-form-label">{{ __('Email do Revisor') }}</label>
                                     <input id="emailRevisor" type="text" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{ old('emailRevisor') }}" required autocomplete="emailRevisor" autofocus>
 
@@ -917,7 +1135,7 @@
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <label for="areaRevisor" class="col-form-label">{{ __('Área') }}</label>
                                     <select class="form-control @error('areaRevisor') is-invalid @enderror" id="areaRevisor" name="areaRevisor">
                                         <option value="" disabled selected hidden>-- Área --</option>
@@ -927,6 +1145,21 @@
                                     </select>
 
                                     @error('areaRevisor')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="modalidadeRevisor" class="col-form-label">{{ __('Modalidade') }}</label>
+                                    <select class="form-control @error('modalidadeRevisor') is-invalid @enderror" id="modalidadeRevisor" name="modalidadeRevisor">
+                                        <option value="" disabled selected hidden>-- Modalidade --</option>
+                                        @foreach($modalidades as $modalidade)
+                                        <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('modalidadeRevisor')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -1021,6 +1254,892 @@
         </div>
     </div>
 </div>
+
+{{-- Evento --}}
+<div id="divEditarEtiquetas" class="eventos" style="display: none">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Editar Etiquetas</h1>
+        </div>
+    </div>
+    {{-- row card - Edição de Etiquetas --}}
+
+    <div class="row justify-content-center">
+        <div class="col-sm-10">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Modelo Atual - Card de Eventos</h5>
+                    <p class="card-text">
+                    <form method="POST" id="formCardEventos" action="{{route('etiquetas.update', $evento->id)}}">
+                        @csrf
+
+                        <div class="row justify-content-left">
+                            
+                            <div class="col-sm-auto">
+                                <h4 id="classeh4">{{$etiquetas->etiquetanomeevento}}:</h4>
+                            </div>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-nome" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-nome" class="btn btn-outline-dark">Editar</button> --}}
+                            <div class="col-sm-3" id="etiqueta-nome-evento" style="display: none">
+                                <input type="text" class="form-control etiquetanomeevento" id="etiquetanomeevento" name="etiquetanomeevento" placeholder="Editar Etiqueta">
+                            </div>
+
+                        </div>
+                        <div class="row justify-content-left">
+                            <div class="col-sm-12">
+                                <p>{{$evento->nome}}</p>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="row justify-content-left">
+            
+                            <div class="col-sm-auto">
+                                <h4 id="classeh5">{{$etiquetas->etiquetadescricaoevento}}:</h4>
+                            </div>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-descricao" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-descricao" class="btn btn-outline-dark">Editar</button> --}}
+                            <div class="col-sm-3" id="etiqueta-descricao-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetadescricaoevento" name="etiquetadescricaoevento" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <p>{{$evento->descricao}}</p>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-left">
+                            <div class="col-sm-auto">
+                                <h4 id="classeh6">{{$etiquetas->etiquetatipoevento}}:</h4>
+                            </div>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-tipo" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-tipo" class="btn btn-outline-dark">Editar</button> --}}
+                            <div class="col-sm-3" id="etiqueta-tipo-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetatipoevento" name="etiquetatipoevento" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <p>{{$evento->tipo}}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row justify-content-left">
+                            <div class="col-sm-auto info-evento">
+                                <h4 id="classeh7">{{$etiquetas->etiquetadatas}}:</h4>
+                            </div>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-datas" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-datas" class="btn btn-outline-dark">Editar</button> --}}
+                            <div class="col-sm-3" id="etiqueta-data-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetadatas" name="etiquetadatas" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+                        <div class="row justify-content-left">
+                            <div class="col-sm-12">
+                                <p>
+                                    <img class="" alt="">
+                                    Data: --/--/-- * --/--/--
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="row justify-content-left">
+                            <div class="col-sm-auto info-evento">
+                                <h4 id="classeh8">{{$etiquetas->etiquetasubmissoes}}:</h4>
+                            </div>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-submissoes" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-submissoes" class="btn btn-outline-dark">Editar</button> --}}
+                            <div class="col-sm-3" id="etiqueta-submissoes-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetasubmissoes" name="etiquetasubmissoes" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <h6>Modalidade: Nome da modalidade aqui</h6>
+                                <p>
+                                    <img class="" alt="">
+                                    Submissão datas: --/--/-- * --/--/--
+                                </p>
+                                <p>
+                                    <img class="" alt="">
+                                    Revisão datas: --/--/-- * --/--/--
+                                </p>
+                                <p>
+                                    <img class="" alt="">
+                                    Resultado data: --/--/--
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-left">
+                            <div class="col-sm-auto">
+                                <a>
+                                    <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                </a>
+                                <label for="nomeTrabalho" class="col-form-label" id="classeh9">{{$etiquetas->etiquetabaixarregra}}:</label>
+                                <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-etiqueta-regra" style="width:20px"></a>
+                                {{-- <button type="button" id="botao-editar-etiqueta-regra" class="btn btn-outline-dark">Editar</button> --}}
+                            </div>
+                            <div class="col-sm-auto" id="etiqueta-baixar-regra-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetabaixarregra" name="etiquetabaixarregra" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-left">
+                            <div class="col-sm-auto">
+                                <a>
+                                    <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                </a>
+                                <label for="nomeTrabalho" class="col-form-label" id="classeh10">{{$etiquetas->etiquetabaixartemplate}}:</label>
+                                <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-etiqueta-template" style="width:20px"></a>
+                                {{-- <button type="button" id="botao-editar-etiqueta-template" class="btn btn-outline-dark">Editar</button> --}}
+                            </div>
+                            <div class="col-sm-auto" id="etiqueta-baixar-template-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetabaixartemplate" name="etiquetabaixartemplate" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-left" style="margin-top: 20px">
+                            <div class="col-sm-auto info-evento">
+                                <h4 id="classeh11">{{$etiquetas->etiquetaenderecoevento}}:</h4>
+                            </div>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-endereco" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-endereco" class="btn btn-outline-dark">Editar</button> --}}
+                            <div class="col-sm-auto" id="etiqueta-endereco-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetaenderecoevento" name="etiquetaenderecoevento" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12"  style="margin-top: 10px">
+                                Local do evento aqui: {{$evento->endereco->rua}}, {{$evento->endereco->numero}} - {{$evento->endereco->cidade}} / {{$evento->endereco->uf}}.
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-left" style="margin-top: 10px">
+                            <div class="col-sm-auto info-evento">
+                                <h4 id="classeh12">{{$etiquetas->etiquetamoduloinscricao}}:</h4>
+                            </div>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-inscricao" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-modulo-inscricao" class="btn btn-outline-dark">Editar</button> --}}
+                            <div class="col-sm-3" id="etiqueta-modulo-inscricao-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetamoduloinscricao" name="etiquetamoduloinscricao" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+                        <p style="margin-top: 10px">
+                            Informações sobre inscrições
+                        </p>
+
+                        <div class="row justify-content-left">
+                            <div class="col-sm-auto info-evento">
+                                <h4 id="classeh13">{{$etiquetas->etiquetamoduloprogramacao}}:</h4>
+                            </div>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-programacao" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-modulo-programacao" class="btn btn-outline-dark">Editar</button> --}}
+                            <div class="col-sm-3" id="etiqueta-modulo-programacao-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetamoduloprogramacao" name="etiquetamoduloprogramacao" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+                        <p style="margin-top: 10px">
+                            Informações sobre programação
+                        </p>
+
+                        <div class="row justify-content-left">
+                            <div class="col-sm-auto info-evento">
+                                <h4 id="classeh14">{{$etiquetas->etiquetamoduloorganizacao}}:</h4>
+                            </div>
+                            <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-organizacao" style="width:20px"></a>
+                            {{-- <button type="button" id="botao-editar-modulo-organizacao" class="btn btn-outline-dark">Editar</button> --}}
+                            <div class="col-sm-3" id="etiqueta-modulo-organizacao-evento" style="display: none">
+                                <input type="text" class="form-control" id="etiquetamoduloorganizacao" name="etiquetamoduloorganizacao" placeholder="Editar Etiqueta">
+                            </div>
+                        </div>
+                        <p>
+                            Informações sobre a organização
+                        </p>
+                    </form>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <form method="POST" id="formCardEventosPadrao" action="{{route('etiquetas.update', $evento->id)}}">
+                                @csrf
+                                <input type="hidden" name="etiquetanomeevento"          value="Nome">
+                                <input type="hidden" name="etiquetatipoevento"          value="Tipo">
+                                <input type="hidden" name="etiquetadescricaoevento"     value="Descrição">
+                                <input type="hidden" name="etiquetadatas"               value="Realização">
+                                <input type="hidden" name="etiquetasubmissoes"          value="Submissões">
+                                <input type="hidden" name="etiquetaenderecoevento"      value="Endereço">
+                                <input type="hidden" name="etiquetamoduloinscricao"     value="Inscrições">
+                                <input type="hidden" name="etiquetamoduloprogramacao"   value="Programação">
+                                <input type="hidden" name="etiquetamoduloorganizacao"   value="Organização">
+                                <input type="hidden" name="etiquetabaixarregra"         value="Regras">
+                                <input type="hidden" name="etiquetabaixartemplate"      value="Template">
+                                
+                                <button type="submit" class="btn btn-primary" form="formCardEventosPadrao" onclick="return default_edicaoCardEvento()" style="width:100%">
+                                    {{ __('Retornar ao Padrão') }}
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary" form="formCardEventos" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>{{-- end row card --}}
+
+    {{-- Habilitar Modulos --}}
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Módulos</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Escolha quais módulos serão exibidos</h6>
+                    <form method="POST" action="{{route('exibir.modulo', $evento->id)}}">
+                    @csrf
+                    
+                    <p class="card-text">
+                        <input type="hidden" name="modinscricao" value="false" id="modinscricao">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="modinscricao" class="col-form-label">{{ __('Inscrições') }}</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" @if($etiquetas->modinscricao) checked @endif name="modinscricao" id="modinscricao">
+                                    <label class="form-check-label" for="modinscricao">
+                                      Habilitar
+                                    </label>
+                                </div>
+    
+                                @error('modinscricao')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>{{-- end row--}}
+                    </p>
+    
+                    <p class="card-text">
+                      <input type="hidden" name="modprogramacao" value="false" id="modprogramacao">
+                      <div class="row">
+                          <div class="col-sm-12">
+                              <label for="modprogramacao" class="col-form-label">{{ __('Programação') }}</label>
+                          </div>
+                      </div>
+                      <div class="row justify-content-center">
+                          <div class="col-sm-12">
+                              <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" @if($etiquetas->modprogramacao) checked @endif name="modprogramacao" id="modprogramacao">
+                                  <label class="form-check-label" for="modprogramacao">
+                                    Habilitar
+                                  </label>
+                              </div>
+    
+                              @error('modprogramacao')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                          </div>
+    
+                      </div>{{-- end row--}}
+    
+                    </p>
+    
+                    <p class="card-text">
+                      <input type="hidden" name="modorganizacao" value="false" id="modorganizacao">
+                      <div class="row">
+                          <div class="col-sm-12">
+                              <label for="modorganizacao" class="col-form-label">{{ __('Organização e Apoio') }}</label>
+                          </div>
+                      </div>
+                      <div class="row justify-content-center">
+                          <div class="col-sm-12">
+                              
+                              <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" @if($etiquetas->modorganizacao) checked @endif name="modorganizacao" id="modorganizacao">
+                                  <label class="form-check-label" for="modorganizacao">
+                                    Habilitar
+                                  </label>
+                              </div>
+    
+                              @error('modorganizacao')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                          </div>
+    
+                      </div>{{-- end row--}}
+    
+                    </p>
+    
+                    <p class="card-text">
+                      <input type="hidden" name="modsubmissao" value="false" id="modsubmissao">
+                      <div class="row">
+                          <div class="col-sm-12">
+                              <label for="modsubmissao" class="col-form-label">{{ __('Submissões de Trabalhos') }}</label>
+                          </div>
+                      </div>
+                      <div class="row justify-content-center">
+                          <div class="col-sm-12">
+                              
+                              <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" @if($etiquetas->modsubmissao) checked @endif name="modsubmissao" id="modsubmissao">
+                                  <label class="form-check-label" for="modsubmissao">
+                                    Habilitar
+                                  </label>
+                              </div>
+    
+                              @error('modsubmissao')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                          </div>
+    
+                      </div>{{-- end row--}}
+    
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Fim --}}
+  
+</div>
+
+<div id="divCadastrarCriterio" class="comissao">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Cadastrar Critério</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Novo Critério</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Cadastre um novo critério por modalidade</h6>
+                  <form action="{{route('cadastrar.criterio')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
+                    <p class="card-text">
+                        <div class="row justify-content-right">
+                            <div class="col-sm-6">
+                                <label for="modalidade" class="col-form-label">{{ __('Escolha a Modalidade') }}</label>
+                                <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidade">
+                                    <option value="" disabled selected hidden>-- Modalidade --</option>
+                                    @foreach($modalidades as $modalidade)
+                                    <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
+                                    @endforeach
+                                </select>
+
+                                @error('modalidade')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                              <div id="criterios">
+  
+                              </div>
+                              <a href="#" class="btn btn-primary" id="addCriterio" style="width:100%;margin-top:10px">Novo</a>
+                            </div>
+                        </div>
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
+                    </div>
+
+                    </form>
+                </div>
+              </div>{{-- end card--}}
+        </div>
+    </div>
+</div>{{-- End cadastrar Comissão --}}
+
+<div id="divListarCriterio" class="comissao">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Listar Critérios</h1>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Critérios</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Critérios cadastrados por modalidades</h6>
+                  <p class="card-text">
+                    <table class="table table-hover table-responsive-lg table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Peso</th>
+                            <th scope="col">Modalidade</th>
+                            <th scope="col">Editar</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($criterios as $criterio)
+                                @foreach ($modalidades as $modalidade)
+                                    @if ($modalidade->id == $criterio->modalidadeId)
+                                        <tr>
+                                            <td>{{$criterio->nome}}</td>
+                                            <td>{{$criterio->peso}}</td>
+                                            <td>{{$modalidade->nome}}</td>
+                                            <td style="text-align:center">
+                                                <a class="botaoAjax" href="#" data-toggle="modal" onclick="criterioId({{$criterio->id}})" data-target="#modalEditarCriterio"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                    </table>
+                  </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{-- Submissão de Trabalhos - edição de etiquetas --}}
+<div id="divEditarEtiquetasSubTrabalho" class="eventos" style="display: none">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Editar Etiquetas</h1>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-sm-10">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Modelo Atual - Form de Submissão de Trabalhos</h5>
+                    <p class="card-text">
+                    <form id="formSubmTrabaEtiquetas" method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
+                    @csrf
+                    <?php
+                        $ordemCampos = explode(",", $etiquetasSubTrab->ordemCampos);
+                    ?>
+                    @foreach ($ordemCampos as $indice)
+                        @if ($indice == "etiquetatitulotrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="row" id="1" value="1">
+                                        <div class="col-sm-auto">
+                                            <label for="nomeTrabalho" class="col-form-label" id="classeh15">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-titulo" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-titulo" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-3" id="etiqueta-titulo-trabalho" style="display: none">
+                                            <input type="text" class="form-control" id="etiquetatitulotrabalho" name="etiquetatitulotrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesTitulo" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisTitulo" style="width:20px"></a>
+                                        <input id="nomeTrabalho" type="text" class="form-control" style="margin-top: 10px" disabled><br/>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetaautortrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="row justify-content-left" id="2" style="margin-top: 10px">
+                                        <div class="col-sm-auto">
+                                            <label for="nomeTrabalho" class="col-form-label" id="classeh16">{{$etiquetasSubTrab->etiquetaautortrabalho}}:</label>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-autor" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-autor" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-3" id="etiqueta-autor-trabalho" style="display: none">
+                                            <input type="text" class="form-control" style="margin-top: 10px" id="etiquetaautortrabalho" name="etiquetaautortrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                        <input class="form-control" type="text" style="margin-top: 10px" disabled><br/>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetacoautortrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="row justify-content-left" id="3" style="margin-top: 10px">
+                                        <div class="col-sm-auto">
+                                        <a href="#" class="btn btn-primary" id="classeh17" style="width:100%;margin-top:10px" disabled>{{$etiquetasSubTrab->etiquetacoautortrabalho}}:</a>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-coautor" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-coautor" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-3" id="etiqueta-coautor-trabalho" style="display: none">
+                                            <input type="text" class="form-control" id="etiquetacoautortrabalho" name="etiquetacoautortrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetaresumotrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="row justify-content-left">
+                                        <div class="col-sm-auto">
+                                            <label for="resumo" class="col-form-label" id="classeh18">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-resumo" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-resumo" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-auto" id="etiqueta-resumo-trabalho" style="display: none">
+                                            <input type="text" class="form-control" id="etiquetaresumotrabalho" name="etiquetaresumotrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                        <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" style="margin-top: 10px" disabled></textarea>
+                                        <p class="text-muted"><small><span name="resumo">0</span></small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetaareatrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <!-- Areas -->
+                                    <div class="row justify-content-left">
+                                        <div class="col-auto">
+                                            <label for="area" class="col-form-label" id="classeh19">{{$etiquetasSubTrab->etiquetaareatrabalho}}:</label>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-area" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-area" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-auto" id="etiqueta-area-trabalho" style="display: none">
+                                            <input type="text" class="form-control" id="etiquetaareatrabalho" name="etiquetaareatrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                        <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId" style="margin-top: 10px" disabled>
+                                            <option value="" disabled selected hidden>-- Área --</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetauploadtrabalho")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="row justify-content-left">
+                                        {{-- Arquivo --}}
+                                        <div class="col-sm-auto">
+                                            <label for="nomeTrabalho" class="col-form-label" id="classeh20">{{$etiquetasSubTrab->etiquetauploadtrabalho}}:</label>
+                                        </div>
+                                        <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-upload" style="width:20px"></a>
+                                        {{-- <button type="button" id="botao-editar-upload" class="btn btn-outline-dark">Editar</button> --}}
+                                        <div class="col-sm-auto" id="etiqueta-upload-trabalho" style="display: none">
+                                            <input type="text" class="form-control" id="etiquetauploadtrabalho" name="etiquetauploadtrabalho" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                    <div class="custom-file" style="margin-top: 10px">
+                                        <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetacampoextra1")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <input type="hidden" name="checkcampoextra1" value="false" id="checkcampoextra1">
+                                        <label for="etiquetacampoextra1" class="col-sm-auto col-form-label" id="classeh21">{{$etiquetasSubTrab->etiquetacampoextra1}}:</label>
+                                        <div class="col-sm-auto">
+                                        <input type="text" class="form-control" id="etiquetacampoextra1" name="etiquetacampoextra1" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo1">
+                                            @if ($etiquetasSubTrab->tipocampoextra1 == "textosimples")
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                            @elseif ($etiquetasSubTrab->tipocampoextra1 == "textogrande")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande" selected>Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                            @elseif ($etiquetasSubTrab->tipocampoextra1 == "upload")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                            @else
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                            @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra1) checked @endif name="checkcampoextra1">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exibir
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetacampoextra2")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <input type="hidden" name="checkcampoextra2" value="false" id="checkcampoextra2">
+                                        <label for="etiquetacampoextra2" class="col-sm-auto col-form-label" id="classeh22">{{$etiquetasSubTrab->etiquetacampoextra2}}:</label>
+                                        <div class="col-sm-auto">
+                                        <input type="text" class="form-control" id="etiquetacampoextra2" name="etiquetacampoextra2" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo2">
+                                                @if ($etiquetasSubTrab->tipocampoextra2 == "textosimples")
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra2 == "textogrande")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande" selected>Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra2 == "upload")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @else
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra2) checked @endif name="checkcampoextra2">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exibir
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetacampoextra3")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <input type="hidden" name="checkcampoextra3" value="false" id="checkcampoextra3">
+                                        <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh23">{{$etiquetasSubTrab->etiquetacampoextra3}}:</label>
+                                        <div class="col-sm-auto">
+                                        <input type="text" class="form-control" id="etiquetacampoextra3" name="etiquetacampoextra3" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo3">
+                                                @if ($etiquetasSubTrab->tipocampoextra3 == "textosimples")
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra3 == "textogrande")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande" selected>Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra3 == "upload")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @else
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra3) checked @endif name="checkcampoextra3">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exibir
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetacampoextra4")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <input type="hidden" name="checkcampoextra4" value="false" id="checkcampoextra4">
+                                        <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh24">{{$etiquetasSubTrab->etiquetacampoextra4}}:</label>
+                                        <div class="col-sm-auto">
+                                        <input type="text" class="form-control" id="etiquetacampoextra4" name="etiquetacampoextra4" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo4">
+                                                @if ($etiquetasSubTrab->tipocampoextra4 == "textosimples")
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra4 == "textogrande")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande" selected>Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra4 == "upload")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @else
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra4) checked @endif name="checkcampoextra4">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exibir
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($indice == "etiquetacampoextra5")
+                            <div class="card" id="bisavo">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <input type="hidden" name="checkcampoextra5" value="false" id="checkcampoextra5">
+                                        <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh25">{{$etiquetasSubTrab->etiquetacampoextra5}}:</label>
+                                        <div class="col-sm-auto">
+                                        <input type="text" class="form-control" id="etiquetacampoextra5" name="etiquetacampoextra5" placeholder="Editar Etiqueta">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <select class="form-control" id="exampleFormControlSelect1" name="select_campo5">
+                                                @if ($etiquetasSubTrab->tipocampoextra5 == "textosimples")
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra5 == "textogrande")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande" selected>Texto grande</option>
+                                                <option value="upload">Upload</option>
+                                                @elseif ($etiquetasSubTrab->tipocampoextra5 == "upload")
+                                                <option value="textosimples">Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @else
+                                                <option value="textosimples" selected>Texto Simples</option>
+                                                <option value="textogrande">Texto grande</option>
+                                                <option value="upload" selected>Upload</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra5) checked @endif name="checkcampoextra5">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exibir
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
+                                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+
+                    </form>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <form id="formSubmTrabaEtiquetasPadrao" method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
+                                @csrf
+                                <input type="hidden" name="etiquetatitulotrabalho"  value="Titulo">
+                                <input type="hidden" name="etiquetaautortrabalho"   value="Autor">
+                                <input type="hidden" name="etiquetacoautortrabalho" value="Co-Autor">
+                                <input type="hidden" name="etiquetaresumotrabalho"  value="Resumo">
+                                <input type="hidden" name="etiquetaareatrabalho"    value="Área">
+                                <input type="hidden" name="etiquetauploadtrabalho"  value="Upload de Trabalho">
+                                <input type="hidden" name="etiquetacampoextra1"     value="Campo Extra">
+                                <input type="hidden" name="etiquetacampoextra2"     value="Campo Extra">
+                                <input type="hidden" name="etiquetacampoextra3"     value="Campo Extra">
+                                <input type="hidden" name="etiquetacampoextra4"     value="Campo Extra">
+                                <input type="hidden" name="etiquetacampoextra5"     value="Campo Extra">
+                                <input type="hidden" name="select_campo1"           value="textosimples">
+                                <input type="hidden" name="select_campo2"           value="textosimples">
+                                <input type="hidden" name="select_campo3"           value="textosimples">
+                                <input type="hidden" name="select_campo4"           value="textosimples">
+                                <input type="hidden" name="select_campo5"           value="textosimples">
+                                <input type="hidden" name="checkcampoextra1"        value="false">
+                                <input type="hidden" name="checkcampoextra2"        value="false">
+                                <input type="hidden" name="checkcampoextra3"        value="false">
+                                <input type="hidden" name="checkcampoextra4"        value="false">
+                                <input type="hidden" name="checkcampoextra5"        value="false">
+                                
+                                <button type="submit" class="btn btn-primary" form="formSubmTrabaEtiquetasPadrao" onclick='return default_formsubmtraba()' style="width:100%">
+                                    {{ __('Retornar ao Padrão') }}
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary" form="formSubmTrabaEtiquetas" style="width:100%">
+                                {{ __('Finalizar') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>{{-- end row card --}}
+
+
+
+    
+</div>
+{{-- Template 2 - edição de etiquetas --}}
+
+
 
 
 <!-- Modal Revisor -->
@@ -1168,6 +2287,322 @@
   </div>
 </div>
 
+<!-- Modal Editar Modalidade/FormTipoSubm -->
+
+<!-- Modal -->
+<div class="modal fade" id="modalEditarModalidade" tabindex="-1" role="dialog" aria-labelledby="modalEditarModalidade" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Editar Modalidade</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                @error('marcarextensao')
+                                  @include('componentes.mensagens')
+                                @enderror
+                            </div>
+                            <form method="POST" action="{{route('modalidade.update')}}" enctype="multipart/form-data">
+                            @csrf
+                            <p class="card-text">
+                                <input type="hidden" name="modalidadeEditId" id="modalidadeEditId" value="">
+                                <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label for="nomeModalidadeEdit" class="col-form-label">*{{ __('Nome') }}</label>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-12">
+                                        <input id="nomeModalidadeEdit" type="text" class="form-control @error('nomeModalidadeEdit') is-invalid @enderror" name="nomeModalidadeEdit" value="" required autocomplete="nomeModalidadeEdit" autofocus>
+            
+                                        @error('nomeModalidadeEdit')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+            
+                                </div>{{-- end row--}}
+            
+                            </p>
+            
+                            {{-- Data: inicioSubmissao | fimSubmissao --}}
+                            <div class="row justify-content-center">
+            
+                                <div class="col-sm-6">
+                                    <label for="inicioSubmissaoEdit" class="col-form-label">{{ __('Início da Submissão') }}</label>
+                                    <input id="inicioSubmissaoEdit" type="date" class="form-control @error('inicioSubmissaoEdit') is-invalid @enderror" name="inicioSubmissaoEdit" value="{{ old('inicioSubmissaoEdit') }}" autocomplete="inicioSubmissaoEdit" autofocus>
+            
+                                    @error('inicioSubmissaoEdit')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="fimSubmissaoEdit" class="col-form-label">{{ __('Fim da Submissão') }}</label>
+                                    <input id="fimSubmissaoEdit" type="date" class="form-control @error('fimSubmissaoEdit') is-invalid @enderror" name="fimSubmissaoEdit" value="{{ old('fimSubmissaoEdit') }}" autocomplete="fimSubmissaoEdit" autofocus>
+            
+                                    @error('fimSubmissaoEdit')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            {{-- end Data: inicioSubmissao | fimSubmissao --}}
+            
+                            {{-- Data: inicioRevisao | fimRevisao --}}
+                            <div class="row justify-content-center">
+            
+                                <div class="col-sm-6">
+                                    <label for="inicioRevisaoEdit" class="col-form-label">{{ __('Início da Revisão') }}</label>
+                                    <input id="inicioRevisaoEdit" type="date" class="form-control @error('inicioRevisaoEdit') is-invalid @enderror" name="inicioRevisaoEdit" value="{{ old('inicioRevisaoEdit') }}" autocomplete="inicioRevisaoEdit" autofocus>
+            
+                                    @error('inicioRevisaoEdit')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="fimRevisaoEdit" class="col-form-label">{{ __('Fim da Revisão') }}</label>
+                                    <input id="fimRevisaoEdit" type="date" class="form-control @error('fimRevisaoEdit') is-invalid @enderror" name="fimRevisaoEdit" value="{{ old('fimRevisaoEdit') }}" autocomplete="fimRevisaoEdit" autofocus>
+            
+                                    @error('fimRevisaoEdit')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            {{-- end Data: inicioRevisão | fimRevisao --}}
+            
+                            {{-- Data: resultado --}}
+                            <div class="row">
+            
+                                <div class="col-sm-6">
+                                    <label for="inicioResultadoEdit" class="col-form-label">{{ __('Início do Resultado') }}</label>
+                                    <input id="inicioResultadoEdit" type="date" class="form-control @error('inicioResultadoEdit') is-invalid @enderror" name="inicioResultadoEdit" value="{{ old('inicioResultadoEdit') }}" autocomplete="inicioResultadoEdit" autofocus>
+            
+                                    @error('inicioResultadoEdit')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            {{-- end Data: resultado --}}
+            
+                            {{-- Inicio - Tipo de submissão --}}
+                            <div class="row">
+            
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">*{{ __('Restrições de resumo:') }}</label>
+            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="limitEdit" id="id-limit-custom_field-accountEdit-1-1" value="limit-option1Edit">
+                                        <label class="form-check-label" for="texto">
+                                            Quantidade de caracteres 
+                                        </label>
+                                        </div>
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="limitEdit" id="id-limit-custom_field-accountEdit-1-2" value="limit-option2Edit">
+                                        <label class="form-check-label" for="arquivo">
+                                            Quantidade de palavras 
+                                        </label>
+                                    </div>
+            
+                                    <div class="row">
+                                        <div class="col-sm-6" id="min-max-caracteresEdit" style="display: none">
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('MínimoC') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="mincaracteresEdit" name="mincaracteresEdit">
+                                                </div>
+                                            </div>
+                
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('MáximoC') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="maxcaracteresEdit" name="maxcaracteresEdit">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="row">
+                                        <div class="col-sm-6" id="min-max-palavrasEdit" style="display: none">
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('MínimoP') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="minpalavrasEdit" name="minpalavrasEdit">
+                                                </div>
+                                            </div>
+                
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('MáximoP') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="maxpalavrasEdit" name="maxpalavrasEdit">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-check" style="margin-top: 10px">
+                                        <input class="form-check-input incluirarquivoEdit" type="checkbox" name="arquivoEdit" id="id-custom_field-accountEdit-1-2">
+                                        <label class="form-check-label" for="arquivoEdit">
+                                            Incluir submissão por arquivo 
+                                        </label>
+                                        @error('arquivoEdit')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <div class="row">
+                                <div class="col-sm-6" id="tipo-arquivoEdit" style="display: none">
+            
+                                    <div class="titulo-detalhes" style="margin-top: 10px"></div>
+                                    <label class="col-form-label">{{ __('Tipos de extensão aceitas') }}</label>
+            
+                                    <div class="form-check" style="margin-top: 10px">
+                                        <input class="form-check-input" type="checkbox" id="pdfEdit" name="pdfEdit">
+                                        <label class="form-check-label" for="pdfEdit">
+                                            .pdf
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="jpgEdit" name="jpgEdit">
+                                        <label class="form-check-label" for="jpgEdit">
+                                            .jpg
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="jpegEdit" name="jpegEdit">
+                                        <label class="form-check-label" for="jpegEdit">
+                                            .jpeg
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="pngEdit" name="pngEdit">
+                                        <label class="form-check-label" for="pngEdit">
+                                            .png
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="docxEdit" name="docxEdit">
+                                        <label class="form-check-label" for="docxEdit">
+                                            .docx
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="odtEdit" name="odtEdit">
+                                        <label class="form-check-label" for="odtEdit">
+                                            .odt
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                {{-- Arquivo de Regras  --}}
+                                <div class="col-sm-12" style="margin-top: 20px;">
+                                  <label for="arquivoRegras" class="col-form-label">{{ __('Enviar regras:') }}</label>
+            
+                                  <div class="custom-file">
+                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegrasEdit">
+                                  </div>
+                                  <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
+                                  @error('arquivoRegras')
+                                  <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                    <strong>{{ $message }}</strong>
+                                  </span>
+                                  @enderror
+                                </div>
+                                {{-- Arquivo de Templates --}}
+                                <div class="col-sm-12" id="area-templateEdit" style="margin-top: 20px; display:none">
+                                    <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar template:') }}</label>
+            
+                                    <div class="custom-file">
+                                      <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplatesEdit">
+                                    </div>
+                                    <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
+                                    @error('arquivoTemplates')
+                                    <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                      <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row justify-content-center">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary" style="width:100%">
+                                        {{ __('Finalizar') }}
+                                    </button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>{{-- end row card --}}
+            
+            
+            </div>
+        </div>
+        {{-- <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div> --}}
+      </div>
+    </div>
+</div>
+{{-- Fim Modal --}}
+
+{{-- Modal para edição de critérios --}}
+<div class="modal fade" tabindex="-1" id="modalEditarCriterio" aria-labelledby="modalEditarCriterio" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Critério</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="formCriterioUpdate" method="POST" action="{{route('atualizar.criterio')}}">
+                @csrf
+                <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                <input type="hidden" name="modalidadeId" id="modalidadeIdCriterioUpdate" value="">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Nome</label>
+                  <input type="text" class="form-control" name="nomeCriterioUpdate" id="nomeCriterioUpdate" value="">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Peso</label>
+                  <input type="number" class="form-control" name="pesoCriterioUpdate" id="pesoCriterioUpdate" value="">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" form="formCriterioUpdate">Atualizar</button>
+        </div>
+      </div>
+    </div>
+</div>
+{{-- Fim Modal --}}
+
 
 <!-- Modal Trabalho -->
 <div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
@@ -1231,10 +2666,473 @@
 
 </div>
 <input type="hidden" name="trabalhoIdAjax" value="1" id="trabalhoIdAjax">
+<input type="hidden" name="modalidadeIdAjax" value="1" id="modalidadeIdAjax">
+<input type="hidden" name="criterioIdAjax" value="1" id="criterioIdAjax">
 
 @endsection
 @section('javascript')
   <script type="text/javascript" >
+    
+    // Adicionar novo criterio
+    $(function(){
+        $('#addCriterio').click(function(){
+            linha = montarLinhaInput();
+            $('#criterios').append(linha);
+        });
+    });
+
+    // Remover Criterio
+    $(document).on('click','.delete',function(){
+        $(this).closest('.row').remove();
+            return false;
+    });
+
+    // Montar div para novo criterio 
+    function montarLinhaInput(){
+        return  "<div class="+"row"+">"+
+                    "<div class="+"col-sm-6"+">"+
+                        "<label>Nome</label>"+
+                        "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'nomeCriterio[]'+" placeholder="+"Nome"+" required>"+
+                    "</div>"+
+                    "<div class="+"col-sm-5"+">"+
+                        "<label>Peso</label>"+
+                        "<input"+" type="+'number'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'pesoCriterio[]'+" placeholder="+"Peso"+" required>"+
+                    "</div>"+
+                    "<div class="+"col-sm-1"+">"+
+                        "<a href="+"#"+" class="+"delete"+">"+
+                        "<img src="+"/img/icons/lixo.png"+" style="+"width:25px;margin-top:35px"+">"+
+                        "</a>"+
+                    "</div>"+
+                "</div>";
+    }
+
+    // Função para retornar campos de edição de etiquetas para submissão de trabalhos ao default.
+    function default_formsubmtraba(){
+        return confirm('Tem certeza que deseja voltar a ordem e valores padrões dos campos?'); 
+    }
+
+    // Função para retornar campos de edição card de evento ao default.
+    function default_edicaoCardEvento(){
+        return confirm('Tem certeza que deseja restaurar os valores padrões dos campos?'); 
+    }
+
+    // Exibir campo ao mesmo tempo que é escrito
+    $(document).ready(function() {
+
+        // Tela de evento
+        $('#etiquetanomeevento').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh4').html("{{$etiquetas->etiquetanomeevento}}:");    
+            }else {
+                $('#classeh4').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetadescricaoevento').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh5').html("{{$etiquetas->etiquetadescricaoevento}}:");    
+            }else {
+                $('#classeh5').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetatipoevento').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh6').html("{{$etiquetas->etiquetatipoevento}}:");    
+            }else {
+                $('#classeh6').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetadatas').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh7').html("{{$etiquetas->etiquetadatas}}:");    
+            }else {
+                $('#classeh7').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetasubmissoes').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh8').html("{{$etiquetas->etiquetasubmissoes}}:");    
+            }else {
+                $('#classeh8').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetabaixarregra').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh9').html("{{$etiquetas->etiquetabaixarregra}}:");    
+            }else {
+                $('#classeh9').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetabaixartemplate').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh10').html("{{$etiquetas->etiquetabaixartemplate}}:");    
+            }else {
+                $('#classeh10').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetaenderecoevento').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh11').html("{{$etiquetas->etiquetaenderecoevento}}:");    
+            }else {
+                $('#classeh11').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetamoduloinscricao').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh12').html("{{$etiquetas->etiquetamoduloinscricao}}:");    
+            }else {
+                $('#classeh12').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetamoduloprogramacao').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh13').html("{{$etiquetas->etiquetamoduloprogramacao}}:");    
+            }else {
+                $('#classeh13').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetamoduloorganizacao').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh14').html("{{$etiquetas->etiquetamoduloorganizacao}}:");    
+            }else {
+                $('#classeh14').html($(this).val()+":");
+            }
+        });
+
+
+        // Tela de submissão de trabalho
+        $('#etiquetatitulotrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh15').html("{{$etiquetasSubTrab->etiquetatitulotrabalho}}:");    
+            }else {
+                $('#classeh15').html($(this).val()+":");
+            }
+        });
+        
+        $('#etiquetaautortrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh16').html("{{$etiquetasSubTrab->etiquetaautortrabalho}}:");    
+            }else {
+                $('#classeh16').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacoautortrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh17').html("{{$etiquetasSubTrab->etiquetacoautortrabalho}}:");    
+            }else {
+                $('#classeh17').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetaresumotrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh18').html("{{$etiquetasSubTrab->etiquetaresumotrabalho}}:");    
+            }else {
+                $('#classeh18').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetaareatrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh19').html("{{$etiquetasSubTrab->etiquetaareatrabalho}}:");    
+            }else {
+                $('#classeh19').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetauploadtrabalho').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh20').html("{{$etiquetasSubTrab->etiquetauploadtrabalho}}:");    
+            }else {
+                $('#classeh20').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacampoextra1').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh21').html("{{$etiquetasSubTrab->etiquetacampoextra1}}:");    
+            }else {
+                $('#classeh21').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacampoextra2').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh22').html("{{$etiquetasSubTrab->etiquetacampoextra2}}:");    
+            }else {
+                $('#classeh22').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacampoextra3').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh23').html("{{$etiquetasSubTrab->etiquetacampoextra3}}:");    
+            }else {
+                $('#classeh23').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacampoextra4').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh24').html("{{$etiquetasSubTrab->etiquetacampoextra4}}:");    
+            }else {
+                $('#classeh24').html($(this).val()+":");
+            }
+        });
+
+        $('#etiquetacampoextra5').on('keyup', function() {
+            if($(this).val().length == 0){
+                $('#classeh25').html("{{$etiquetasSubTrab->etiquetacampoextra5}}:");    
+            }else {
+                $('#classeh25').html($(this).val()+":");
+            }
+        });
+    });
+    
+    // Ordenar campos de submissão de trabalhos
+    $(document).ready(function(){
+        $('.move-down').click(function(){
+            if (($(this).next()) && ($(this).parents("#bisavo").next().attr('id') == "bisavo")) {
+                console.log("IF MOVE-DOWN");
+                var t = $(this);
+                t.parents("#bisavo").animate({top: '20px'}, 500, function(){
+                    t.parents("#bisavo").next().animate({top: '-20px'}, 500, function(){
+                        t.parents("#bisavo").css('top', '0px');
+                        t.parents("#bisavo").next().css('top', '0px');
+                        t.parents("#bisavo").insertAfter(t.parents("#bisavo").next());
+                    });
+                });
+                // $(this).parents("#bisavo").insertAfter($(this).parents("#bisavo").next());
+            }
+            else {
+                console.log("ELSE MOVE-DOWN");
+            }
+        });
+        $('.move-up').click(function(){
+            if (($(this).prev()) && ($(this).parents("#bisavo").prev().attr('id') == "bisavo")) {
+                console.log("IF MOVE-UP");
+                var t = $(this);
+                t.parents("#bisavo").animate({top: '-20px'}, 500, function(){
+                    t.parents("#bisavo").prev().animate({top: '20px'}, 500, function(){
+                        t.parents("#bisavo").css('top', '0px');
+                        t.parents("#bisavo").prev().css('top', '0px');
+                        t.parents("#bisavo").insertBefore(t.parents("#bisavo").prev());
+                    });
+                });
+                // $(this).parents("#bisavo").insertBefore($(this).parents("#bisavo").prev());
+            }
+            else {
+                console.log("ELSE MOVE-UP");
+            }
+        });
+    });
+
+    // Exibir ou ocultar opções de Texto na criação de modalidade - com checkbox
+    $(document).ready(function() {
+        $('input:checkbox[class="form-check-input incluirarquivo"]').on("change", function() {
+            if (this.checked) {
+                $("#area-template").show();
+                $("#tipo-arquivo").show();
+            } else {
+                $("#area-template").hide();
+                $("#tipo-arquivo").hide();
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('input:checkbox[class="form-check-input incluirarquivoEdit"]').on("change", function() {
+            if (this.checked) {
+                $("#area-templateEdit").show();
+                $("#tipo-arquivoEdit").show();
+            } else {
+                $("#area-templateEdit").hide();
+                $("#tipo-arquivoEdit").hide();
+            }
+        });
+    });
+
+    // Exibir ou ocultar opções de texto ou arquivo, em cadastro de modalidade
+    // $(document).ready(function() {
+    //     $('input:radio[name="custom_field"]').on("change", function() {
+    //         if (this.checked && this.value == 'option1') {
+    //             $("#limite-caracteres").show();
+    //             $("#tipo-arquivo").hide();
+    //             $("#area-template").hide();
+    //         } else {
+    //             $("#tipo-arquivo").show();
+    //             $("#limite-caracteres").hide();
+    //             $("#area-template").show();
+    //         }
+    //     });
+    // });
+
+    // Exibir ou ocultar opções de texto ou arquivo, em edição de modalidade
+    // $(document).ready(function() {
+    //     $('input:radio[name="custom_fieldEdit"]').on("change", function() {
+    //         if (this.checked && this.value == 'option1Edit') {
+    //             $("#limite-caracteresEdit").show();
+    //             $("#tipo-arquivoEdit").hide();
+    //             $("#area-templateEdit").hide();
+    //         } else {
+    //             $("#tipo-arquivoEdit").show();
+    //             $("#limite-caracteresEdit").hide();
+    //             $("#area-templateEdit").show();
+    //         }
+    //     });
+    // });
+
+    $(document).ready(function() {
+        $('input:radio[name="limit"]').on("change", function() {
+            if (this.checked && this.value == 'limit-option1') {
+                $("#min-max-caracteres").show();
+                $("#min-max-palavras").hide();
+            } else {
+                $("#min-max-palavras").show();
+                $("#min-max-caracteres").hide();
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('input:radio[name="limitEdit"]').on("change", function() {
+            if (this.checked && this.value == 'limit-option1Edit') {
+                $("#min-max-caracteresEdit").show();
+                $("#min-max-palavrasEdit").hide();
+            } else {
+                $("#min-max-palavrasEdit").show();
+                $("#min-max-caracteresEdit").hide();
+            }
+        });
+    });
+
+    // Exibir ou ocultar campos de edição de etiquetas de eventos
+    $(document).ready(function() {
+        $('#botao-editar-nome').on("click", function() {
+            $("#etiqueta-nome-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-descricao').on("click", function() {
+            $("#etiqueta-descricao-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-tipo').on("click", function() {
+            $("#etiqueta-tipo-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-datas').on("click", function() {
+            $("#etiqueta-data-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-submissoes').on("click", function() {
+            $("#etiqueta-submissoes-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-endereco').on("click", function() {
+            $("#etiqueta-endereco-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-modulo-inscricao').on("click", function() {
+            $("#etiqueta-modulo-inscricao-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-modulo-programacao').on("click", function() {
+            $("#etiqueta-modulo-programacao-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-modulo-organizacao').on("click", function() {
+            $("#etiqueta-modulo-organizacao-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-etiqueta-regra').on("click", function() {
+            $("#etiqueta-baixar-regra-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-etiqueta-template').on("click", function() {
+            $("#etiqueta-baixar-template-evento").toggle(500);
+        });
+    });
+    // Fim
+
+    // Exibir ou ocultar campos de edição de etiquetas de trabalhos
+    $(document).ready(function() {
+        $('#botao-editar-titulo').on("click", function() {
+            $("#etiqueta-titulo-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-autor').on("click", function() {
+            $("#etiqueta-autor-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-coautor').on("click", function() {
+            $("#etiqueta-coautor-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-resumo').on("click", function() {
+            $("#etiqueta-resumo-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-area').on("click", function() {
+            $("#etiqueta-area-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-upload').on("click", function() {
+            $("#etiqueta-upload-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-regras').on("click", function() {
+            $("#etiqueta-regras-trabalho").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-templates').on("click", function() {
+            $("#etiqueta-templates-trabalho").toggle(500);
+        });
+    });
+    // Fim
 
   function habilitarEvento() {
     var form = document.getElementById("habilitarEventoForm");
@@ -1250,6 +3148,14 @@
     document.getElementById('trabalhoIdAjax').value = x;
   }
 
+  function modalidadeId(x){
+    document.getElementById('modalidadeIdAjax').value = x;
+  }
+
+  function criterioId(x){
+    document.getElementById('criterioIdAjax').value = x;
+  }
+
   $(function(){
     $('#areas').click(function(){
         $('#dropdownAreas').slideToggle(200);
@@ -1262,6 +3168,9 @@
     });
     $('#modalidades').click(function(){
             $('#dropdownModalidades').slideToggle(200);
+    });
+    $('#eventos').click(function(){
+            $('#dropdownEvento').slideToggle(200);
     });
     $('#trabalhos').click(function(){
             $('#dropdownTrabalhos').slideToggle(200);
@@ -1288,6 +3197,7 @@
              trabalhoId: $('#trabalhoIdAjax').val()
           },
           success: function(result){
+            console.log(result);
             // result = JSON.parse(result[0]);
             // console.log(result.titulo);
             $('#tituloTrabalhoAjax').html(result.titulo);
@@ -1304,7 +3214,87 @@
             result.revisoresDisponiveis.forEach(addOptionToSelect);
 
           }});
+          jQuery.ajax({
+          url: "{{ route('findModalidade') }}",
+          method: 'get',
+          data: {
+             modalidadeId: $('#modalidadeIdAjax').val()
+          },
+          success: function(result){
+            console.log(result);
+            // document.getElementById('nomeModalidadeEdit').value = result.nome;
+            $('#modalidadeEditId').val(result.id);
+            $('#nomeModalidadeEdit').val(result.nome);
+            $('#inicioSubmissaoEdit').val(result.inicioSubmissao);
+            $('#fimSubmissaoEdit').val(result.fimSubmissao);
+            $('#inicioRevisaoEdit').val(result.inicioRevisao);
+            $('#fimRevisaoEdit').val(result.fimRevisao);
+            $('#inicioResultadoEdit').val(result.inicioResultado);
+            
+
+            if(result.caracteres == true){
+                $('#id-limit-custom_field-accountEdit-1-1').prop('checked', true);
+                $("#min-max-caracteresEdit").show();
+                $("#min-max-palavrasEdit").hide();
+            }   
+            if(result.palavras == true){
+                $('#id-limit-custom_field-accountEdit-1-2').prop('checked', true);
+                $("#min-max-caracteresEdit").hide();
+                $("#min-max-palavrasEdit").show();
+            }            
+            $('#maxcaracteresEdit').val(result.maxcaracteres);
+            $('#mincaracteresEdit').val(result.mincaracteres);
+            $('#maxpalavrasEdit').val(result.maxpalavras);
+            $('#minpalavrasEdit').val(result.minpalavras);
+
+
+            if(result.arquivo == true){
+
+                $('#id-custom_field-accountEdit-1-2').prop('checked', true);
+                $("#area-templateEdit").show();
+                $("#tipo-arquivoEdit").show();
+            }
+
+            if(result.pdf == true){
+
+                $('#pdfEdit').prop('checked', true);
+            }
+            if(result.jpg == true){
+
+                $('#jpgEdit').prop('checked', true);
+            }
+            if(result.jpeg == true){
+
+                $('#jpegEdit').prop('checked', true);
+            }
+            if(result.png == true){
+
+                $('#pngEdit').prop('checked', true);
+            }
+            if(result.docx == true){
+
+                $('#docxEdit').prop('checked', true);
+            }
+            if(result.odt == true){
+
+                $('#odtEdit').prop('checked', true);
+            }
+          }});
+
+          jQuery.ajax({
+          url: "{{ route('encontrar.criterio') }}",
+          method: 'get',
+          data: {
+             criterioId: $('#criterioIdAjax').val()
+          },
+          success: function(result){
+            console.log(result);
+            $('#nomeCriterioUpdate').val(result.nome);
+            $('#pesoCriterioUpdate').val(result.peso);
+            $('#modalidadeIdCriterioUpdate').val(result.id);
+          }});
        });
+
     $('#areaIdformDistribuicaoPorArea').change(function () {
       $.ajaxSetup({
          headers: {
@@ -1431,6 +3421,12 @@
         cadastrarModalidade = document.getElementById('divCadastrarModalidades');
         listarModalidade = document.getElementById('divListarModalidades');
 
+        editarEtiqueta = document.getElementById('divEditarEtiquetas'); //Etiquetas do card de eventos
+        editarEtiquetaSubTrabalhos = document.getElementById('divEditarEtiquetasSubTrabalho');
+
+        cadastrarCriterio = document.getElementById('divCadastrarCriterio');
+        listarCriterios = document.getElementById('divListarCriterio');
+
         // habilita divInformacoes
         if(id == 'informacoes'){
             console.log('informacoes');
@@ -1448,6 +3444,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'listarTrabalhos'){
             console.log('listarTrabalhos');
@@ -1465,6 +3465,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
 
         if(id == 'modalidades'){
@@ -1483,6 +3487,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
 
         }
         if(id == 'colocacao'){
@@ -1501,7 +3509,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'atividades'){
             console.log('atividades');
@@ -1519,7 +3530,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'cadastrarAreas'){
             console.log('cadastrarAreas');
@@ -1537,7 +3551,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'listarAreas'){
             console.log('listarAreas');
@@ -1555,7 +3572,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
 
         if(id == 'cadastrarRevisores'){
@@ -1574,8 +3594,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
-
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'listarRevisores'){
             console.log('listarRevisores');
@@ -1593,8 +3615,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
-
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'cadastrarComissao'){
             console.log('cadastrarComissao');
@@ -1612,8 +3636,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
-
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'definirCoordComissao'){
             console.log('definirCoordComissao');
@@ -1631,8 +3657,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
-
-
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'listarComissao'){
             console.log('listarComissao');
@@ -1650,6 +3678,10 @@
             listarComissao.style.display = "block";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'cadastrarModalidade'){
             console.log('cadastrarModalidade');
@@ -1667,6 +3699,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "block";
             listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'listarModalidade'){
             console.log('listarModalidade');
@@ -1684,6 +3720,10 @@
             listarComissao.style.display = "none";
             cadastrarModalidade.style.display = "none";
             listarModalidade.style.display = "block";
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
         }
         if(id == 'submissoesTrabalhos'){
           informacoes.style.display = "none";
@@ -1700,8 +3740,95 @@
           listarComissao.style.display = "none";
           cadastrarModalidade.style.display = "none";
           listarModalidade.style.display = "none";
+          editarEtiqueta.style.display = "none";
+          editarEtiquetaSubTrabalhos.style.display = "none";
+          cadastrarCriterio.style.display = "none";
+          listarCriterios.style.display = "none";
         }
 
+        if(id == 'editarEtiqueta'){
+            console.log('editarEtiqueta');
+            informacoes.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
+            cadastrarRevisores.style.display = "none";
+            listarRevisores.style.display = "none";
+            cadastrarComissao.style.display = "none";
+            definirCoordComissao.style.display = "none";
+            listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "block";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
+        }
+
+        if(id == 'editarEtiquetaSubTrabalhos'){
+            informacoes.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
+            cadastrarRevisores.style.display = "none";
+            listarRevisores.style.display = "none";
+            cadastrarComissao.style.display = "none";
+            definirCoordComissao.style.display = "none";
+            listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "block";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "none";
+        }
+
+        if (id == 'cadastrarCriterio') {
+            informacoes.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
+            cadastrarRevisores.style.display = "none";
+            listarRevisores.style.display = "none";
+            cadastrarComissao.style.display = "none";
+            definirCoordComissao.style.display = "none";
+            listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "block";
+            listarCriterios.style.display = "none";
+        }
+        if (id == 'listarCriterios') {
+            informacoes.style.display = "none";
+            listarTrabalhos.style.display = "none";
+            submissoesTrabalhos.style.display = "none";
+            classificacao.style.display = "none";
+            atividades.style.display = "none";
+            cadastrarAreas.style.display = "none";
+            listarAreas.style.display = "none";
+            cadastrarRevisores.style.display = "none";
+            listarRevisores.style.display = "none";
+            cadastrarComissao.style.display = "none";
+            definirCoordComissao.style.display = "none";
+            listarComissao.style.display = "none";
+            cadastrarModalidade.style.display = "none";
+            listarModalidade.style.display = "none";
+            editarEtiqueta.style.display = "none";
+            editarEtiquetaSubTrabalhos.style.display = "none";
+            cadastrarCriterio.style.display = "none";
+            listarCriterios.style.display = "block";
+        }
     }
 
 
