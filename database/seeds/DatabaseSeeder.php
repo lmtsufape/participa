@@ -69,6 +69,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           // 'valorTaxa'=>10,
           'enderecoId'=>2,
           'coordenadorId'=>1,
+          'publicado'=>true,
         ]);
 
         $areasEventoZoo = [

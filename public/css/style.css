@@ -221,6 +221,13 @@ body{
     font-size: 11px;
 }
 
+#dropdownEvento{
+    display: none;
+}
+#dropdownEvento h5{
+    font-size: 11px;
+}
+
 .arrow{
     float:right;
     margin-top: -5px;

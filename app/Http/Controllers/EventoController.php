@@ -170,6 +170,7 @@ class EventoController extends Controller
         // }
 
         $evento->coordenadorId = Auth::user()->id;
+        $evento->publicado = false;
         $evento->save();
 
         $user = Auth::user();
