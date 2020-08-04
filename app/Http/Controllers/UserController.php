@@ -23,8 +23,8 @@ class UserController extends Controller
 
         $validator = $request->validate([
             'name' => 'required|string|max:255',
-            'cpf' => 'required',
-            'celular' => 'required|string',
+            'cpf' => 'required|cpf',
+            'celular' => 'required|string|telefone',
             'instituicao' => 'required|string| max:255',
             // 'especProfissional' => 'nullable|string',
             'rua' => 'required|string|max:255',
@@ -32,7 +32,7 @@ class UserController extends Controller
             'bairro' => 'required|string|max:255',
             'cidade' => 'required|string|max:255',
             'uf' => 'required|string',
-            'cep' => 'required|integer',
+            'cep' => 'required|string',
         ]);
 
         if(Auth()->user()->usuarioTemp == true){
