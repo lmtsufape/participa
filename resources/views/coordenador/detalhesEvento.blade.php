@@ -138,13 +138,13 @@
                   <a id="publicarEvento" onclick="habilitarEvento()">
                     <form id="habilitarEventoForm" method="GET" action="{{route('evento.habilitar', ['id' => $evento->id])}}"></form>
                       <li>
-                          <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Publicar Evento</h5>
+                          <img src="{{asset('img/icons/alto-falante.svg')}}" alt=""><h5> Publicar Evento</h5>
                       </li>
                   </a>
                   <a id="desabilitarEventoPublicado" onclick="desabilitarEvento()">
                     <form id="desabilitarEventoForm" method="GET" action="{{route('evento.desabilitar', ['id' => $evento->id])}}"></form>
                       <li>
-                          <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Desfazer publicação</h5>
+                          <img src="{{asset('img/icons/alto-falante-nao.svg')}}" alt=""><h5> Desfazer publicação</h5>
                       </li>
                   </a>
               </div>
