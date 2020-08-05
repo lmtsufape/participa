@@ -123,7 +123,7 @@
         <div class="row justify-content-center" style="margin-top:10px">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label for="fotoEvento">Logo: </label><a href="">Logo atual</a>
+                    <label for="fotoEvento">Logo</label> @if($evento->fotoEvento != null) <a href="{{ route('download.foto.evento', ['id' => $evento->id]) }}">atual</a> @endif
                     <input id="fotoEvento" type="file" name="fotoEvento" class="form-control-file @error('fotoEvento') is-invalid @enderror" >
                     <small>Para trocar o logo envie outra imagem*</small>
                     

@@ -359,7 +359,7 @@ class EventoController extends Controller
         
         // se a foto for diferente de nula apaga a foto existente e salva a nova
         if($request->fotoEvento != null){
-          if(Storage::disk()->exists($evento->fotoEvento)) {
+          if(Storage::disk()->exists('public/'.$evento->fotoEvento)) {
             Storage::delete($evento->fotoEvento);
           }
           $file = $request->fotoEvento;
@@ -525,5 +525,13 @@ class EventoController extends Controller
       $evento->publicado = false;
       $evento->update();
       return redirect()->back()->with('mensagem', 'O evento foi ocultado ao público.');
+    }
+
+    public function downloadFotoEvento($id) {
+      $evento = Evento::find($id);
+      if (Storage::disk()->exists('public/'.$evento->fotoEvento)) {
+        return Storage::download('public/'.$evento->fotoEvento);
+      }
+      return abort(404);
     }
 }
