@@ -238,7 +238,7 @@
             <input hidden name="id" value="{{$user->id}}">
             <div class="col-md-8">
                 <label for="name" class="col-form-label">{{ __('Name') }}</label>
-                <input value="{{$user->name}}" id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" @if(old('name') != null) value="{{ old('name') }}" @else value="{{$user->name}}" @endif required autocomplete="name" autofocus>
 
                 @error('name')
                     <span class="invalid-feedback" role="alert">
@@ -249,7 +249,7 @@
 
             <div class="col-md-4">
                 <label for="cpf" class="col-form-label">{{ __('CPF') }}</label>
-                <input value="{{$user->cpf}}" id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ old('cpf') }}" required autocomplete="cpf" autofocus>
+                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" @if(old('cpf') != null) value="{{ old('cpf') }}" @else value="{{$user->cpf}}" @endif required autocomplete="cpf" autofocus>
 
                 @error('cpf')
                     <span class="invalid-feedback" role="alert">
@@ -263,7 +263,7 @@
 
             <div class="col-md-8">
               <label for="instituicao" class="col-form-label">{{ __('Instituição de Ensino') }}</label>
-              <input value="{{$user->instituicao}}" id="instituicao" type="text" class="form-control @error('instituicao') is-invalid @enderror" name="instituicao" value="{{ old('instituicao') }}" required autocomplete="instituicao" autofocus>
+              <input id="instituicao" type="text" class="form-control @error('instituicao') is-invalid @enderror" name="instituicao" @if(old('instituicao') != null) value="{{ old('instituicao') }}" @else value="{{$user->instituicao}}" @endif required autocomplete="instituicao" autofocus>
 
               @error('instituicao')
                   <span class="invalid-feedback" role="alert">
@@ -274,7 +274,7 @@
 
             <div class="col-md-4">
                 <label for="celular" class="col-form-label">{{ __('Celular') }}</label>
-                <input value="{{$user->celular}}" id="celular" type="number" class="form-control @error('celular') is-invalid @enderror" name="celular" value="{{ old('celular') }}" required autocomplete="celular" autofocus>
+                <input id="celular" type="text" class="form-control @error('celular') is-invalid @enderror" name="celular" @if(old('celular') != null) value="{{ old('celular') }}" @else value="{{$user->celular}}" @endif required autocomplete="celular" autofocus>
 
                 @error('celular')
                     <span class="invalid-feedback" role="alert">
@@ -354,33 +354,33 @@
                 {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
                 <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                     <option value="" disabled selected hidden>-- UF --</option>
-                    <option value="AC">Acre</option>
-                    <option value="AL">Alagoas</option>
-                    <option value="AP">Amapá</option>
-                    <option value="AM">Amazonas</option>
-                    <option value="BA">Bahia</option>
-                    <option value="CE">Ceará</option>
-                    <option value="DF">Distrito Federal</option>
-                    <option value="ES">Espírito Santo</option>
-                    <option value="GO">Goiás</option>
-                    <option value="MA">Maranhão</option>
-                    <option value="MT">Mato Grosso</option>
-                    <option value="MS">Mato Grosso do Sul</option>
-                    <option value="MG">Minas Gerais</option>
-                    <option value="PA">Pará</option>
-                    <option value="PB">Paraíba</option>
-                    <option value="PR">Paraná</option>
-                    <option value="PE">Pernambuco</option>
-                    <option value="PI">Piauí</option>
-                    <option value="RJ">Rio de Janeiro</option>
-                    <option value="RN">Rio Grande do Norte</option>
-                    <option value="RS">Rio Grande do Sul</option>
-                    <option value="RO">Rondônia</option>
-                    <option value="RR">Roraima</option>
-                    <option value="SC">Santa Catarina</option>
-                    <option value="SP">São Paulo</option>
-                    <option value="SE">Sergipe</option>
-                    <option value="TO">Tocantins</option>
+                    <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
+                    <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
+                    <option @if(old('uf') == 'AP') selected @endif value="AP">Amapá</option>
+                    <option @if(old('uf') == 'AM') selected @endif value="AM">Amazonas</option>
+                    <option @if(old('uf') == 'BA') selected @endif value="BA">Bahia</option>
+                    <option @if(old('uf') == 'CE') selected @endif value="CE">Ceará</option>
+                    <option @if(old('uf') == 'DF') selected @endif value="DF">Distrito Federal</option>
+                    <option @if(old('uf') == 'ES') selected @endif value="ES">Espírito Santo</option>
+                    <option @if(old('uf') == 'GO') selected @endif value="GO">Goiás</option>
+                    <option @if(old('uf') == 'MA') selected @endif value="MA">Maranhão</option>
+                    <option @if(old('uf') == 'MT') selected @endif value="MT">Mato Grosso</option>
+                    <option @if(old('uf') == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
+                    <option @if(old('uf') == 'MG') selected @endif value="MG">Minas Gerais</option>
+                    <option @if(old('uf') == 'PA') selected @endif value="PA">Pará</option>
+                    <option @if(old('uf') == 'PB') selected @endif value="PB">Paraíba</option>
+                    <option @if(old('uf') == 'PR') selected @endif value="PR">Paraná</option>
+                    <option @if(old('uf') == 'PE') selected @endif value="PE">Pernambuco</option>
+                    <option @if(old('uf') == 'PI') selected @endif value="PI">Piauí</option>
+                    <option @if(old('uf') == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
+                    <option @if(old('uf') == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
+                    <option @if(old('uf') == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
+                    <option @if(old('uf') == 'RO') selected @endif value="RO">Rondônia</option>
+                    <option @if(old('uf') == 'RR') selected @endif value="RR">Roraima</option>
+                    <option @if(old('uf') == 'SC') selected @endif value="SC">Santa Catarina</option>
+                    <option @if(old('uf') == 'SP') selected @endif value="SP">São Paulo</option>
+                    <option @if(old('uf') == 'SE') selected @endif value="SE">Sergipe</option>
+                    <option @if(old('uf') == 'TO') selected @endif value="TO">Tocantins</option>
                 </select>
 
                 @error('uf')
