@@ -393,6 +393,10 @@ class EventoController extends Controller
         $evento = Evento::find($id);
         // dd($id);
         $endereco = Endereco::find($evento->enderecoId);
+        $formEvento = FormEvento::where('eventoId', $id)->first();
+        $formSubTraba = FormSubmTraba::where('eventoId', $id)->first();
+        $formEvento->delete();
+        $formSubTraba->delete();
         $evento->delete();
         $endereco->delete();
 
