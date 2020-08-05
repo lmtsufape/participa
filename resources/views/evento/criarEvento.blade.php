@@ -125,7 +125,7 @@
         <div class="row justify-content-center">
             <div class="col-sm-4">
                 <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
-                <input value="{{ old('cep') }}" onblur="pesquisacep(this.value);" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" required autocomplete="cep">
+                <input value="{{ old('cep') }}" onblur="pesquisacep(this.value);" id="cep" name="cep" type="text" class="form-control @error('cep') is-invalid @enderror" required autocomplete="cep">
 
                 @error('cep')
                 <span class="invalid-feedback" role="alert">
