@@ -114,17 +114,17 @@
 
             <a id="eventos">
               <li>
-                  <img src="{{asset('img/icons/sitemap-solid.svg')}}" alt=""><h5>Evento</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                  <img src="{{asset('img/icons/palestrante.svg')}}" alt=""><h5>Evento</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
               </li>
               <div id="dropdownEvento" style="background-color: gray">
                   <a id="editarEtiqueta" onclick="habilitarPagina('editarEtiqueta')">
                       <li>
-                          <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Etiquetas Eventos</h5>
+                          <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Etiquetas Eventos</h5>
                       </li>
                   </a>
                   <a id="editarEtiquetaSubTrabalhos" onclick="habilitarPagina('editarEtiquetaSubTrabalhos')">
                     <li>
-                        <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Etiquetas Trabalho</h5>
+                        <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Etiquetas Trabalho</h5>
                     </li>
                   </a>
               </div>
