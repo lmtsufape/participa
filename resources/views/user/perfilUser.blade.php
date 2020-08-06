@@ -98,7 +98,7 @@
 
             <div class="col-md-4">
               <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-              <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$end->numero}}" @endif required autocomplete="numero">
+              <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$end->numero}}" @endif required autocomplete="numero">
 
               @error('numero')
                   <span class="invalid-feedback" role="alert">

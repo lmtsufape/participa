@@ -146,7 +146,7 @@
             </div>
             <div class="col-sm-2">
                 <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" value="{{ old('numero') }}" required autocomplete="numero" autofocus>
+                <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" value="{{ old('numero') }}" required autocomplete="numero" autofocus>
 
                 @error('numero')
                 <span class="invalid-feedback" role="alert">
