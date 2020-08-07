@@ -24,36 +24,26 @@
                   </tr>
                 </thead>
                 @foreach($trabalhos as $trabalho)
-                  @foreach ($areas as $area)
-                    @foreach ($modalidades as $modalidade)
-                      @foreach ($eventos as $evento)
-                        @if ($area->id == $trabalho->areaId && $modalidade->id == $trabalho->modalidadeId && $evento->id == $trabalho->eventoId)
-                          <tr>
-                            <td>{{$trabalho->id}}</td>
-                            <td>{{$evento->nome}}</td>
-                            <td>{{$area->nome}}</td>
-                            <td>{{$modalidade->nome}}</td>
-                            @if ($trabalho->avaliado == "sim")
-                              <td>Avaliado</td>
-                            @else
-                              <td>Pendente</td>    
-                            @endif
-                            <td>
-                              <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
-                            </td>
-                            <td>
-                              @foreach ($arquivos as $arquivo)
-                                @if ($arquivo->trabalhoId == $trabalho->id)
-                                  <a href="{{route('download', ['file' => $arquivo->nome])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
-                                @endif
-                              @endforeach
-                            </td>
-                            <td><a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#exampleModal"></a></td>                    
-                          </tr>
+                    <tr>
+                      <td>{{$trabalho->id}}</td>
+                      <td>{{$trabalho->evento->nome}}</td>
+                      <td>{{$trabalho->area->nome}}</td>
+                      <td>{{$trabalho->modalidade->nome}}</td>
+                      @if ($trabalho->avaliado == "sim")
+                        <td>Avaliado</td>
+                      @else
+                        <td>Pendente</td>    
+                      @endif
+                      <td>
+                        <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
+                      </td>
+                      <td>
+                        @if (!(empty($trabalho->arquivo->items)))
+                          <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                         @endif
-                      @endforeach
-                    @endforeach
-                  @endforeach
+                      </td>
+                      <td><a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#exampleModal"></a></td>                    
+                    </tr>
                 @endforeach
                 {{-- <tbody>
                   <tr>

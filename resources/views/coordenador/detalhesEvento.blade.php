@@ -481,10 +481,9 @@
                 }
                 @endphp
                 @endforeach
-                <img onclick="document.getElementById('formDownload{{$i}}').submit();" class="" src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px" alt="">
-                <form method="GET" action="{{ route('download') }}" target="_new" id="formDownload{{$i}}">
-                  <input type="hidden" name="file" value="{{$arquivo}}">
-                </form>
+                @if (!(empty($trabalho->arquivo->items)))
+                    <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
+                @endif
               </td>
               <td style="text-align:center">
                 <a class="botaoAjax" href="#" data-toggle="modal" onclick="trabalhoId({{$trabalho->id}})" data-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>

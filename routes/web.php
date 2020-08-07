@@ -85,6 +85,8 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/removerAtribuicao',     'AtribuicaoController@deletePorRevisores'    )->name('atribuicao.delete');
   // rota downloadArquivo
   Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
+  // rota download do arquivo do trabalho
+  Route::get(   '/download-trabalho/{id}',     'TrabalhoController@downloadArquivo'         )->name('downloadTrabalho');
   // rota download da foto do evento
   Route::get(   '/download-logo-evento/{id}',   'EventoController@downloadFotoEvento'  )->name('download.foto.evento');
   // rota download arquivo de regras para submissão de trabalho
