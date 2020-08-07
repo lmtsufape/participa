@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Revisor;
 use App\User;
+use App\Area;
+use App\Arquivo;
+use App\Atribuicao;
+use App\Trabalho;
 use App\Evento;
+use App\Modalidade;
 use Illuminate\Http\Request;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailLembrete;
@@ -22,9 +27,24 @@ class RevisorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function indexListarTrabalhos()
-    {
-        return view('revisor.listarTrabalhos');
-    }
+    { 
+        $revisores = Revisor::where("revisorId", Auth::user()->id)->get();
+        $atribuicoes = [];
+        foreach ($revisores as $revisor) {
+          $temp = Atribuicao::where("revisorId", $revisor->id)->get();
+          for ($i=0; $i < count($temp); $i++) { 
+            array_push($atribuicoes, $temp[$i]);  
+          }
+        }
+        $trabalhos = [];
+        foreach ($atribuicoes as $atribuicao) {
+          array_push($trabalhos, Trabalho::where("id", $atribuicao->trabalhoId)->first());  
+        }
+
+
+        return view('revisor.listarTrabalhos', [
+          "trabalhos" => $trabalhos,]);
+    } 
 
     /**
      * Show the form for creating a new resource.
@@ -45,9 +65,10 @@ class RevisorController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-          'emailRevisor' => ['required', 'string', 'email', 'max:255'],
-          'nomeRevisor' => ['required', 'string', 'max:255'],
-          'areaRevisor'  => ['required', 'integer'],
+          'emailRevisor'       => ['required', 'string', 'email', 'max:255'],
+          'nomeRevisor'        => ['required', 'string', 'max:255'],
+          'areaRevisor'        => ['required', 'integer'],
+          'modalidadeRevisor'  => ['required', 'integer'],
         ]);
 
         $usuario = User::where('email', $request->emailRevisor)->first();
@@ -68,7 +89,8 @@ class RevisorController extends Controller
           'correcoesEmAndamento'  => 0,
           'eventoId'              => $request->eventoId,
           'revisorId'             => $usuario->id,
-          'areaId'                => $request->areaRevisor
+          'areaId'                => $request->areaRevisor,
+          'modalidadeId'          => $request->modalidadeRevisor,
         ]);
 
 
@@ -116,14 +138,9 @@ class RevisorController extends Controller
      * @param  \App\Revisor  $revisor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Revisor $revisor)
     {
-        $revisor = Revisor::where('eventoId', $request->eventoId)
-        ->where('revisorId', $request->userId);
-        // dd($revisor);
-        $revisor->delete();
-
-        return redirect()->back();
+        //
     }
 
     public function numeroDeRevisoresAjax(Request $request){

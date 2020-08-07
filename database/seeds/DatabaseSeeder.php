@@ -63,19 +63,44 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'tipo'=>'teste',
           'dataInicio'=>'2020-07-01',
           'dataFim'=>'2020-07-03',
-          'inicioSubmissao'=>'2020-03-30',
-          'fimSubmissao'=>'2020-04-20',
-          'inicioRevisao'=>'2020-04-21',
-          'fimRevisao'=>'2020-05-21',
-          'inicioResultado'=>'2020-05-22',
-          'fimResultado'=>'2020-05-23',
           'numMaxTrabalhos' => 2,
           'numMaxCoautores' => 5,
           // 'possuiTaxa'=>true,
           // 'valorTaxa'=>10,
           'enderecoId'=>2,
           'coordenadorId'=>1,
-          'hasResumo'=>false,
+          'publicado'=>true,
+        ]);
+
+        DB::table('form_eventos')->insert([
+          'etiquetanomeevento'             => 'Nome',
+          'etiquetatipoevento'             => 'Tipo',
+          'etiquetadescricaoevento'        => 'Descrição',
+          'etiquetadatas'                  => 'Realização',
+          'etiquetasubmissoes'             => 'Submissões',
+          'etiquetabaixarregra'            => 'Regras',
+          'etiquetabaixartemplate'         => 'Template',
+          'etiquetaenderecoevento'         => 'Endereço',
+          'etiquetamoduloinscricao'        => 'Inscrições',
+          'etiquetamoduloprogramacao'      => 'Programação',
+          'etiquetamoduloorganizacao'      => 'Organização',
+          'eventoId'                       => 1,
+        ]);
+
+        DB::table('form_subm_trabas')->insert([
+          'etiquetatitulotrabalho'         => 'Titulo',
+          'etiquetaautortrabalho'          => 'Autor',
+          'etiquetacoautortrabalho'        => 'Co-Autor',
+          'etiquetaresumotrabalho'         => 'Resumo',
+          'etiquetaareatrabalho'           => 'Área',
+          'etiquetauploadtrabalho'         => 'Upload de Trabalho',
+          'etiquetacampoextra1'            => 'Campo Extra',
+          'etiquetacampoextra2'            => 'Campo Extra',
+          'etiquetacampoextra3'            => 'Campo Extra',
+          'etiquetacampoextra4'            => 'Campo Extra',
+          'etiquetacampoextra5'            => 'Campo Extra',
+          'ordemCampos'                    => 'etiquetatitulotrabalho,etiquetaautortrabalho,etiquetacoautortrabalho,etiquetaresumotrabalho,etiquetaareatrabalho,etiquetauploadtrabalho,checkcampoextra1,etiquetacampoextra1,select_campo1,checkcampoextra2,etiquetacampoextra2,select_campo2,checkcampoextra3,etiquetacampoextra3,select_campo3,checkcampoextra4,etiquetacampoextra4,select_campo4,checkcampoextra5,etiquetacampoextra5,select_campo5',
+          'eventoId'                       => 1,
         ]);
 
         $areasEventoZoo = [
@@ -99,7 +124,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         }
 
         DB::table('modalidades')->insert([
-          'nome' => 'Resumo'
+          'nome' => 'Resumo',
         ]);
 
         for($i = 0; $i < sizeof($areasEventoZoo); $i++){

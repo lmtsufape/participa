@@ -51,12 +51,10 @@
     <div class="row justify-content-center titulo">
         <div class="col-sm-12">
             <div class="row">
-              <div class="col-sm-10">
-                <h1>Meus Trabalhos</h1>
-              </div>
-              <div class="col-sm-2">
-                <a href="{{route('home')}}" class="btn btn-primary">Eventos</a>
-              </div>
+                <div class="col-sm-12">
+                    <h1>Meus Trabalhos</h1>
+                </div>
+               
             </div>
         </div>
     </div>
@@ -78,7 +76,6 @@
                 <th>Título</th>
                 <th style="text-align:center">Baixar</th>
                 <th style="text-align:center">Nova Versão</th>
-                <th style="text-align:center">Status</th>
             </tr>
             </thead>
             <tbody>
@@ -124,8 +121,7 @@
             <thead>
             <tr>
                 <th>Título</th>
-                <th style="text-align:center">Baixar</th>
-                <th style="text-align:center">Status</th>
+                <th  style="text-align:center">Baixar</th>
             </tr>
             </thead>
             <tbody>
