@@ -33,8 +33,8 @@ Route::get('/#', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/perfil','UserController@perfil')->name('perfil');
-Route::post('/perfil','UserController@editarPerfil')->name('perfil');
+Route::get('/perfil','UserController@perfil')->name('perfil')->middleware('auth');
+Route::post('/perfil','UserController@editarPerfil')->name('perfil')->middleware('auth');
 
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 

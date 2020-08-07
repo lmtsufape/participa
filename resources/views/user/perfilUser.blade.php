@@ -223,7 +223,7 @@
 
 <div class="container content">
     <div class="row titulo">
-        <h1>Perfil</h1>
+        <h1>Complete seu cadastro</h1>
     </div>
 
     <div class="row subtitulo">
@@ -281,6 +281,26 @@
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <label for="password" class="col-form-label">{{ __('Senha') }}</label>
+                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+
+                @error('password')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="col-md-4">
+                <label for="password-confirm" class="col-form-label">{{ __('Confirme a Senha') }}</label>
+                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
             </div>
 
         </div>

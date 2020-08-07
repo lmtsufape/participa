@@ -21,22 +21,22 @@ class UserController extends Controller
     function editarPerfil(Request $request){
         // dd($request->name);
 
-        $validator = $request->validate([
-            'name' => 'required|string|max:255',
-            'cpf' => 'required|cpf',
-            'celular' => 'required|string|telefone',
-            'instituicao' => 'required|string| max:255',
-            // 'especProfissional' => 'nullable|string',
-            'rua' => 'required|string|max:255',
-            'numero' => 'required|string',
-            'bairro' => 'required|string|max:255',
-            'cidade' => 'required|string|max:255',
-            'uf' => 'required|string',
-            'cep' => 'required|string',
-        ]);
-
         if(Auth()->user()->usuarioTemp == true){
-            
+            $validator = $request->validate([
+                'name' => 'required|string|max:255',
+                'cpf' => 'required|cpf|unique:users',
+                'celular' => 'required|string|telefone',
+                'instituicao' => 'required|string| max:255',
+                // 'especProfissional' => 'nullable|string',
+                'rua' => 'required|string|max:255',
+                'numero' => 'required|string',
+                'bairro' => 'required|string|max:255',
+                'cidade' => 'required|string|max:255',
+                'uf' => 'required|string',
+                'cep' => 'required|string',
+                'password' => 'required|string|min:8|confirmed'
+            ]);
+
             // criar endereço
             $end = new Endereco();
             $end->rua = $request->input('rua');
@@ -54,6 +54,7 @@ class UserController extends Controller
             $user->cpf = $request->input('cpf');
             $user->celular = $request->input('celular');
             $user->instituicao = $request->input('instituicao');
+            $user->password = bcrypt($request->password);
             // $user->especProfissional = $request->input('especProfissional');
             $user->usuarioTemp = null;
             $user->enderecoId = $end->id;
@@ -64,7 +65,20 @@ class UserController extends Controller
         }
 
         else {
-            
+            $validator = $request->validate([
+                'name' => 'required|string|max:255',
+                'cpf' => 'required|cpf',
+                'celular' => 'required|string|telefone',
+                'instituicao' => 'required|string| max:255',
+                // 'especProfissional' => 'nullable|string',
+                'rua' => 'required|string|max:255',
+                'numero' => 'required|string',
+                'bairro' => 'required|string|max:255',
+                'cidade' => 'required|string|max:255',
+                'uf' => 'required|string',
+                'cep' => 'required|string',
+            ]);
+
             // User
             $user = User::find($request->id);
             $user->name = $request->input('name');
