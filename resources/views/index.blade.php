@@ -108,6 +108,7 @@
 
       <div class="row">
         @foreach ($eventos as $evento)
+          @if($evento->publicado) 
             <div class="card" style="width: 18rem;">
                 @if(isset($evento->fotoEvento))
                   <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
@@ -157,8 +158,8 @@
                     </div>
                     <p class="card-text">
                         <strong>Realização:</strong> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
-                        <strong>Submissão:</strong> {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}<br>
-                        <strong>Revisão:</strong> {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}<br>
+                        {{-- <strong>Submissão:</strong> {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}<br>
+                        <strong>Revisão:</strong> {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}<br> --}}
                     </p>
                     <p>
 
@@ -175,6 +176,7 @@
                 </div>
 
             </div>
+          @endif
         @endforeach
       </div>
 

@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Area;
-use App\AreaModalidade;
-use App\Pertence;
-use App\Revisor;
-use App\Trabalho;
 use Illuminate\Http\Request;
 
 class AreaController extends Controller
@@ -91,29 +87,8 @@ class AreaController extends Controller
      * @param  \App\Area  $area
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Area $area)
     {
-        $area = Area::find($id);
-        $area_modalidade = AreaModalidade::where('areaId', $id);
-        $pertence = Pertence::where('areaId', $id);
-        $revisores = Revisor::where('areaId', $id);
-        $trabalhos = Trabalho::where('areaId', $id);
-        
-        if(isset($area_modalidade)){
-            $area_modalidade->delete();
-        }
-        if(isset($pertence)){
-            $pertence->delete();
-        }
-        if(isset($revisores)){
-            $revisores->delete();
-        }
-        if(isset($trabalhos)){
-            $trabalhos->delete();    
-        }
-
-        $area->delete();
-
-        return redirect()->back();
+        //
     }
 }

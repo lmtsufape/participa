@@ -22,6 +22,7 @@ class CreateRevisorsTable extends Migration
 
             $table->integer('revisorId');
             $table->integer('areaId');
+            $table->integer('modalidadeId');
             $table->integer('eventoId');
         });
     }

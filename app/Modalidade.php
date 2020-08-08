@@ -12,7 +12,10 @@ class Modalidade extends Model
    * @var array
    */
   protected $fillable = [
-      'nome',
+      'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao', 
+      'inicioResultado', 'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres',
+      'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt',
+      'regra', 'template',
   ];
 
   public function trabalho(){

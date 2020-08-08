@@ -14,13 +14,38 @@
                 <thead>
                   <tr>
                     <th scope="col">Código</th>
+                    <th scope="col">Evento</th>
                     <th scope="col">Área</th>
+                    <th scope="col">Modalidade</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Resumo</th>
                     <th scope="col">Baixar</th>
                     <th scope="col">Atribuir Nota</th>
                   </tr>
                 </thead>
-                <tbody>
+                @foreach($trabalhos as $trabalho)
+                    <tr>
+                      <td>{{$trabalho->id}}</td>
+                      <td>{{$trabalho->evento->nome}}</td>
+                      <td>{{$trabalho->area->nome}}</td>
+                      <td>{{$trabalho->modalidade->nome}}</td>
+                      @if ($trabalho->avaliado == "sim")
+                        <td>Avaliado</td>
+                      @else
+                        <td>Pendente</td>    
+                      @endif
+                      <td>
+                        <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
+                      </td>
+                      <td>
+                        @if (!(empty($trabalho->arquivo->items)))
+                          <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
+                        @endif
+                      </td>
+                      <td><a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#exampleModal"></a></td>                    
+                    </tr>
+                @endforeach
+                {{-- <tbody>
                   <tr>
                     <td>1</td>
                     <td>Área</td>
@@ -28,16 +53,16 @@
                       <a href="#"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                     </td>
                     <td>-</td>
-                    <td><a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#exampleModal"></a></td>
+                    
                   </tr>
-                </tbody>
+                </tbody> --}}
               </table>
         </div>
 
     </div>
 
 
-    <!-- Modal -->
+    <!-- Modal Nota -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -67,5 +92,56 @@
       </div>
     </div>
 
+    <!-- Modal Resumo-->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Resumo</h5>
+          </div>
+          <div class="modal-body" name="resumoTrabalhoModal" id="resumoTrabalhoModal">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </div>
+<input type="hidden" name="resumoModalAjax" value="1" id="resumoModalAjax">
+@endsection
+
+@section('javascript')
+  <script type="text/javascript" >
+      function resumoModal(x){
+        console.log(x);
+        document.getElementById('resumoModalAjax').value = x;
+      }
+
+      $(function(){
+        $('.resumoTrabalho').click(function(e){
+          e.preventDefault();
+          $.ajaxSetup({
+              headers: {
+                  // 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                  'Content-Type': 'application/json',
+                  'X-Requested-With': 'XMLHttpRequest'
+              }
+          });
+
+          jQuery.ajax({
+            url: "{{ route('trabalhoResumo') }}",
+            method: 'get',
+            data: {
+              trabalhoId: $('#resumoModalAjax').val()
+            },
+            success: function(result){
+              console.log(result.resumo);
+              $('#resumoTrabalhoModal').append(result.resumo);
+          }});
+        });
+      });
+
+  </script>
 @endsection

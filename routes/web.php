@@ -33,9 +33,8 @@ Route::get('/#', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/perfil','UserController@perfil')->name('perfil')->middleware(['auth', 'verified']);
-Route::post('/perfil','UserController@editarPerfil')->name('perfil')->middleware(['auth', 'verified']);
-
+Route::get('/perfil','UserController@perfil')->name('perfil')->middleware('auth');
+Route::post('/perfil','UserController@editarPerfil')->name('perfil')->middleware('auth');
 
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 
@@ -56,37 +55,33 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   // Cadastrar Comissão
   Route::post('/evento/cadastrarComissao','ComissaoController@store'                   )->name('cadastrar.comissao');
   Route::post('/evento/cadastrarCoordComissao','ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
-  // Deletar Comissão
-  Route::delete('/evento/apagar-comissao/','ComissaoController@destroy')->name('delete.comissao');
   //Evento
   Route::get(   '/evento/criar',          'EventoController@create'                    )->name('evento.criar');
   Route::post(  '/evento/criar',          'EventoController@store'                     )->name('evento.criar');
   Route::get(   '/evento/visualizar/{id}','EventoController@show'                      )->name('evento.visualizar');
   Route::delete('/evento/excluir/{id}',   'EventoController@destroy'                   )->name('evento.deletar');
   Route::get(   '/evento/editar/{id}',    'EventoController@edit'                      )->name('evento.editar');
-  Route::post(   '/evento/editar/{id}',    'EventoController@update'                      )->name('evento.update');
+  Route::post(   '/evento/editar/{id}',    'EventoController@update'                   )->name('evento.update');
   Route::post(  '/evento/setResumo',      'EventoController@setResumo'                 )->name('evento.setResumo');
   Route::post(  '/evento/setFoto',        'EventoController@setFotoEvento'             )->name('evento.setFotoEvento');
-  Route::post(  '/evento/numTrabalhos',    'EventoController@numTrabalhos'             )->name('trabalho.numTrabalhos');
+  Route::post(  '/evento/numTrabalhos',   'EventoController@numTrabalhos'             )->name('trabalho.numTrabalhos');
+  Route::get(  '/evento/habilitar/{id}',  'EventoController@habilitar'                )->name('evento.habilitar');
+  Route::get(  '/evento/desabilitar/{id}', 'EventoController@desabilitar'             )->name('evento.desabilitar');
   //Modalidade
   Route::post(  '/modalidade/criar',      'ModalidadeController@store'                 )->name('modalidade.store');
   //Area
   Route::post(  '/area/criar',            'AreaController@store'                       )->name('area.store');
-  //Deletar Area
-  Route::delete('/area/deletar/{id}',          'AreaController@destroy'                     )->name('area.delete');
   //Revisores
   Route::post(  '/revisor/criar',         'RevisorController@store'                    )->name('revisor.store');
   Route::get(   '/revisor/listarTrabalhos','RevisorController@indexListarTrabalhos'    )->name('revisor.listarTrabalhos');
   Route::post(  '/revisor/email',         'RevisorController@enviarEmailRevisor'       )->name('revisor.email');
   Route::post(  '/revisor/emailTodos',    'RevisorController@enviarEmailTodosRevisores')->name('revisor.emailTodos');
-  //Deletar Revisores
-  Route::delete(  '/revisor/apagar',      'RevisorController@destroy'                  )->name('revisor.delete');
   //AreaModalidade
   Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
   //Trabalho
-  Route::get(   '/trabalho/submeter/{id}','TrabalhoController@index'                   )->name('trabalho.index');
+  Route::get(   '/trabalho/submeter/{id}/{idModalidade}','TrabalhoController@index'                   )->name('trabalho.index');
   Route::post(  '/trabalho/novaVersao',   'TrabalhoController@novaVersao'              )->name('trabalho.novaVersao');
-  Route::post(  '/trabalho/criar',        'TrabalhoController@store'                   )->name('trabalho.store');
+  Route::post(  '/trabalho/criar/{id}}',        'TrabalhoController@store'                   )->name('trabalho.store');
   //Atribuição
   Route::get(   '/atribuir',              'AtribuicaoController@distribuicaoAutomatica')->name('distribuicao');
   Route::get(   '/atribuirPorArea',       'AtribuicaoController@distribuicaoPorArea'   )->name('distribuicaoAutomaticaPorArea');
@@ -94,10 +89,32 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/removerAtribuicao',     'AtribuicaoController@deletePorRevisores'    )->name('atribuicao.delete');
   // rota downloadArquivo
   Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
-  // Area do participante
-  Route::get(   '/participante',          'EventoController@areaParticipante'          )->name('area.participante');
-  // Area da comissao
-  Route::get(   '/comissoes',             'EventoController@listComissao'              )->name('comissoes');
-  Route::get(   '/area/comissao',         'EventoController@listComissaoTrabalhos'     )->name('area.comissao');
-
+  // rota download do arquivo do trabalho
+  Route::get(   '/download-trabalho/{id}',     'TrabalhoController@downloadArquivo'         )->name('downloadTrabalho');
+  // rota download da foto do evento
+  Route::get(   '/download-logo-evento/{id}',   'EventoController@downloadFotoEvento'  )->name('download.foto.evento');
+  // rota download arquivo de regras para submissão de trabalho
+  Route::get(   '/downloadArquivoRegras',       'RegraSubmisController@downloadArquivo')->name('download.regra');
+  // rota download arquivo de templates para submissão de trabalho
+  Route::get(   '/downloadArquivoTemplates',    'TemplateSubmisController@downloadArquivo'       )->name('download.template');
+  // atualizar etiquetas do form de eventos
+  Route::post(  '/etiquetas/editar/{id}', 'FormEventoController@update'                )->name('etiquetas.update');
+  // atualizar etiquetas do form de submissão de trabalhos
+  Route::post(  '/etiquetas/submissao_trabalhos/editar/{id}', 'FormSubmTrabaController@update')->name('etiquetas_sub_trabalho.update');
+  // Inserir novos campos para o form de submissão de trabalhos
+  Route::post(  '/adicionarnovocampo/{id}', 'FormSubmTrabaController@store'            )->name('novocampo.store');
+  // Exibir ou ocultar modulos do card de eventos
+  Route::post(  '/modulos/{id}', 'FormEventoController@exibirModulo'                   )->name('exibir.modulo');
+  // Ajax para encontrar modalidade especifica e enviar para o modal de edição
+  Route::get(   '/encontrarModalidade',   'ModalidadeController@find'                  )->name('findModalidade');
+  // Ajax para encontrar modalidade especifica e enviar para o modal de edição
+  Route::post(   '/atualizarModalidade',   'ModalidadeController@update'                )->name('modalidade.update');
+  // 
+  Route::get(    '/area/revisores',        'RevisorController@indexListarTrabalhos'     )->name('avaliar.trabalhos');
+  // Encontrar resumo especifico para trabalhos 
+  Route::get(   '/encontrarResumo',    'TrabalhoController@findResumo'                  )->name('trabalhoResumo');
+  // Critérios
+  Route::post(  '/criterio/', 'CriteriosController@store'                               )->name('cadastrar.criterio');
+  Route::post(  '/criterioUpdate/', 'CriteriosController@update'                        )->name('atualizar.criterio');
+  Route::get(   '/encontrarCriterio', 'CriteriosController@findCriterio'                )->name('encontrar.criterio');
 });

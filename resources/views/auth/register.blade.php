@@ -129,7 +129,7 @@
 
             <div class="col-md-2">
                 <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero">
+                <input value="{{old('numero')}}" id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero">
 
                 @error('numero')
                     <span class="invalid-feedback" role="alert">
