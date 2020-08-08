@@ -1,7 +1,8 @@
 @extends('coordenador.detalhesEvento')
 
 @section('menu')
-    <div id="divInformacoes" class="informacoes">
+    {{-- Informações --}}
+    <div id="divInformacoes" class="informacoes" style="display: block">
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Informações</h1>

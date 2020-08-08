@@ -43,11 +43,23 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   // rotas de teste
   Route::get('/coordenador/home','EventoController@index')->name('coord.home');
 
-  Route::get('/coord/evento/detalhes', 'EventoController@detalhes')->name('coord.detalhesEvento');
+  Route::get('/coord/evento/detalhes', 'EventoController@informacoes')->name('coord.detalhesEvento');
   Route::get('/coord/evento/informacoes', 'EventoController@informacoes')->name('coord.informacoes');
   Route::get('/coord/evento/definirSubmissoes', 'EventoController@definirSubmissoes')->name('coord.definirSubmissoes');
   Route::get('/coord/evento/listarTrabalhos', 'EventoController@listarTrabalhos')->name('coord.listarTrabalhos');
   Route::get('/coord/evento/cadastrarComissao', 'EventoController@cadastrarComissao')->name('coord.cadastrarComissao');
+  Route::get('/coord/evento/cadastrarAreas', 'EventoController@cadastrarAreas')->name('coord.cadastrarAreas');
+  Route::get('/coord/evento/listarAreas', 'EventoController@listarAreas')->name('coord.listarAreas');
+  Route::get('/coord/evento/cadastrarRevisores', 'EventoController@cadastrarRevisores')->name('coord.cadastrarRevisores');
+  Route::get('/coord/evento/listarRevisores', 'EventoController@listarRevisores')->name('coord.listarRevisores');
+  Route::get('/coord/evento/definirCoordComissao', 'EventoController@definirCoordComissao')->name('coord.definirCoordComissao');
+  Route::get('/coord/evento/listarComissao', 'EventoController@listarComissao')->name('coord.listarComissao');
+  Route::get('/coord/evento/cadastrarModalidade', 'EventoController@cadastrarModalidade')->name('coord.cadastrarModalidade');
+  Route::get('/coord/evento/listarModalidade', 'EventoController@listarModalidade')->name('coord.listarModalidade');
+  Route::get('/coord/evento/cadastrarCriterio', 'EventoController@cadastrarCriterio')->name('coord.cadastrarCriterio');
+  Route::get('/coord/evento/listarCriterios', 'EventoController@listarCriterios')->name('coord.listarCriterios');
+  Route::get('/coord/evento/editarEtiqueta', 'EventoController@editarEtiqueta')->name('coord.editarEtiqueta');
+  Route::get('/coord/evento/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('coord.etiquetasTrabalhos');
 
   // Visualizar trabalhos do usuário
   Route::get('/user/trabalhos', 'UserController@meusTrabalhos')->name('user.meusTrabalhos');
@@ -109,9 +121,9 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::get(   '/encontrarModalidade',   'ModalidadeController@find'                  )->name('findModalidade');
   // Ajax para encontrar modalidade especifica e enviar para o modal de edição
   Route::post(   '/atualizarModalidade',   'ModalidadeController@update'                )->name('modalidade.update');
-  // 
+  //
   Route::get(    '/area/revisores',        'RevisorController@indexListarTrabalhos'     )->name('avaliar.trabalhos');
-  // Encontrar resumo especifico para trabalhos 
+  // Encontrar resumo especifico para trabalhos
   Route::get(   '/encontrarResumo',    'TrabalhoController@findResumo'                  )->name('trabalhoResumo');
   // Critérios
   Route::post(  '/criterio/', 'CriteriosController@store'                               )->name('cadastrar.criterio');

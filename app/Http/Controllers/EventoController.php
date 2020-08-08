@@ -45,45 +45,28 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenador', $evento);
 
-        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
-        // dd($ComissaoEventos);
-        $ids = [];
-        foreach($ComissaoEvento as $ce){
-          array_push($ids,$ce->userId);
-        }
-        $users = User::find($ids);
-
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
         $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::all();
-        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
-        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
+        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
         $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
-
-        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
+        $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
         $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
-        // $atribuicoesProcessando
-        // dd($trabalhosEnviados);
-        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
+
+
 
         return view('coordenador.informacoes', [
                                                     'evento'                  => $evento,
-                                                    'areas'                   => $areas,
-                                                    'revisores'               => $revisores,
-                                                    'revs'                    => $revs,
-                                                    'users'                   => $users,
-                                                    'modalidades'             => $modalidades,
-                                                    'areaModalidades'         => $areaModalidades,
-                                                    'trabalhos'               => $trabalhos,
                                                     'trabalhosEnviados'       => $trabalhosEnviados,
                                                     'trabalhosAvaliados'      => $trabalhosAvaliados,
                                                     'trabalhosPendentes'      => $trabalhosPendentes,
                                                     'numeroRevisores'         => $numeroRevisores,
-                                                    'numeroComissao'          => $numeroComissao
+                                                    'numeroComissao'          => $numeroComissao,
+
                                                   ]);
 
     }
@@ -91,46 +74,11 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenador', $evento);
-
-        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
-        // dd($ComissaoEventos);
-        $ids = [];
-        foreach($ComissaoEvento as $ce){
-          array_push($ids,$ce->userId);
-        }
-        $users = User::find($ids);
-
-        $areas = Area::where('eventoId', $evento->id)->get();
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
-        $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::all();
-        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
-        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
-        $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
-        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
-        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
-
-        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
-        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
-        // $atribuicoesProcessando
-        // dd($trabalhosEnviados);
-        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
+        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
+        $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
         return view('coordenador.trabalhos.definirSubmissoes', [
                                                     'evento'                  => $evento,
-                                                    'areas'                   => $areas,
-                                                    'revisores'               => $revisores,
-                                                    'revs'                    => $revs,
-                                                    'users'                   => $users,
-                                                    'modalidades'             => $modalidades,
-                                                    'areaModalidades'         => $areaModalidades,
-                                                    'trabalhos'               => $trabalhos,
-                                                    'trabalhosEnviados'       => $trabalhosEnviados,
-                                                    'trabalhosAvaliados'      => $trabalhosAvaliados,
-                                                    'trabalhosPendentes'      => $trabalhosPendentes,
-                                                    'numeroRevisores'         => $numeroRevisores,
-                                                    'numeroComissao'          => $numeroComissao
                                                   ]);
 
     }
@@ -149,39 +97,95 @@ class EventoController extends Controller
 
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
-        $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::all();
-        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
-        $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
-        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
-        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
-
-        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
-        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
-        // $atribuicoesProcessando
-        // dd($trabalhosEnviados);
-        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
 
         return view('coordenador.trabalhos.listarTrabalhos', [
                                                     'evento'                  => $evento,
                                                     'areas'                   => $areas,
-                                                    'revisores'               => $revisores,
-                                                    'revs'                    => $revs,
-                                                    'users'                   => $users,
-                                                    'modalidades'             => $modalidades,
-                                                    'areaModalidades'         => $areaModalidades,
                                                     'trabalhos'               => $trabalhos,
-                                                    'trabalhosEnviados'       => $trabalhosEnviados,
-                                                    'trabalhosAvaliados'      => $trabalhosAvaliados,
-                                                    'trabalhosPendentes'      => $trabalhosPendentes,
-                                                    'numeroRevisores'         => $numeroRevisores,
-                                                    'numeroComissao'          => $numeroComissao
+
                                                   ]);
 
     }
     public function cadastrarComissao(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+
+        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
+        $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
+
+
+        return view('coordenador.comissao.cadastrarComissao', [
+                                                    'evento'                  => $evento,
+
+                                                  ]);
+
+    }
+
+    public function cadastrarAreas(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
+        $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
+
+
+        return view('coordenador.areas.cadastrarAreas', [
+                                                    'evento'                  => $evento,
+
+                                                  ]);
+
+    }
+
+    public function listarAreas(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+
+        return view('coordenador.areas.listarAreas', [
+                                                    'evento'                  => $evento,
+                                                    'areas'                   => $areas,
+
+                                                  ]);
+
+    }
+
+    public function cadastrarRevisores(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+
+
+        return view('coordenador.revisores.cadastrarRevisores', [
+                                                    'evento'                  => $evento,
+                                                    'areas'                   => $areas,
+                                                    'modalidades'             => $modalidades,
+
+                                                  ]);
+
+    }
+
+    public function listarRevisores(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
+
+        return view('coordenador.revisores.listarRevisores', [
+                                                    'evento'                  => $evento,
+                                                    'revisores'               => $revisores,
+                                                    'revs'                    => $revs,
+
+                                                  ]);
+
+    }
+
+    public function definirCoordComissao(Request $request)
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenador', $evento);
@@ -194,40 +198,166 @@ class EventoController extends Controller
         }
         $users = User::find($ids);
 
-        $areas = Area::where('eventoId', $evento->id)->get();
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
-        $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::all();
-        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
-        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
-        $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
-        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
-        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
 
-        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
-        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
-        // $atribuicoesProcessando
-        // dd($trabalhosEnviados);
-        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
 
-        return view('coordenador.comissao.cadastrarComissao', [
+        return view('coordenador.comissao.definirCoordComissao', [
                                                     'evento'                  => $evento,
-                                                    'areas'                   => $areas,
-                                                    'revisores'               => $revisores,
-                                                    'revs'                    => $revs,
                                                     'users'                   => $users,
-                                                    'modalidades'             => $modalidades,
-                                                    'areaModalidades'         => $areaModalidades,
-                                                    'trabalhos'               => $trabalhos,
-                                                    'trabalhosEnviados'       => $trabalhosEnviados,
-                                                    'trabalhosAvaliados'      => $trabalhosAvaliados,
-                                                    'trabalhosPendentes'      => $trabalhosPendentes,
-                                                    'numeroRevisores'         => $numeroRevisores,
-                                                    'numeroComissao'          => $numeroComissao
+
                                                   ]);
 
     }
+
+    public function listarComissao(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+
+        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
+        // dd($ComissaoEventos);
+        $ids = [];
+        foreach($ComissaoEvento as $ce){
+          array_push($ids,$ce->userId);
+        }
+        $users = User::find($ids);
+
+
+        return view('coordenador.comissao.listarComissao', [
+                                                    'evento'                  => $evento,
+                                                    'users'                   => $users,
+
+                                                  ]);
+
+    }
+
+    public function cadastrarModalidade(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+
+        return view('coordenador.modalidade.cadastrarModalidade', [
+                                                    'evento'                  => $evento,
+                                                    'areas'                   => $areas,
+                                                    'modalidades'             => $modalidades,
+
+                                                  ]);
+
+    }
+
+    public function listarModalidade(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+
+
+        return view('coordenador.modalidade.listarModalidade', [
+                                                    'evento'                  => $evento,
+                                                    'modalidades'             => $modalidades,
+                                                    'areaModalidades'         => $areaModalidades,
+
+                                                  ]);
+
+    }
+
+    public function cadastrarCriterio(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+
+        return view('coordenador.modalidade.cadastrarCriterio', [
+                                                    'evento'                  => $evento,
+                                                    'modalidades'             => $modalidades,
+
+                                                  ]);
+
+    }
+
+    public function listarCriterios(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
+        $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
+
+        // Criterios por modalidades
+        $criteriosModalidade = [];
+        foreach ($modalidades as $indice) {
+          $criterios = Criterio::where("modalidadeId", $indice->id)->get();
+          for ($i=0; $i < count($criterios); $i++) {
+            if (!in_array($criterios[$i],$criteriosModalidade)) {
+              array_push($criteriosModalidade, $criterios[$i]);
+            }
+          }
+        }
+
+        return view('coordenador.modalidade.listarCriterio', [
+                                                    'evento'                  => $evento,
+                                                    'modalidades'             => $modalidades,
+                                                    'criterios'               => $criteriosModalidade,
+                                                  ]);
+
+    }
+
+    public function editarEtiqueta(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
+        $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
+        $modalidades = Modalidade::all();
+        // Criterios por modalidades
+        $criteriosModalidade = [];
+        foreach ($modalidades as $indice) {
+          $criterios = Criterio::where("modalidadeId", $indice->id)->get();
+          for ($i=0; $i < count($criterios); $i++) {
+            if (!in_array($criterios[$i],$criteriosModalidade)) {
+              array_push($criteriosModalidade, $criterios[$i]);
+            }
+          }
+        }
+
+        return view('coordenador.evento.editarEtiqueta', [
+                                                    'evento'                  => $evento,
+                                                    'etiquetas'               => $etiquetas,
+                                                    'etiquetasSubTrab'        => $etiquetasSubTrab,
+                                                    'criterios'               => $criteriosModalidade,
+                                                  ]);
+
+    }
+
+    public function etiquetasTrabalhos(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
+        $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
+        $modalidades = Modalidade::all();
+        // Criterios por modalidades
+        $criteriosModalidade = [];
+        foreach ($modalidades as $indice) {
+          $criterios = Criterio::where("modalidadeId", $indice->id)->get();
+          for ($i=0; $i < count($criterios); $i++) {
+            if (!in_array($criterios[$i],$criteriosModalidade)) {
+              array_push($criteriosModalidade, $criterios[$i]);
+            }
+          }
+        }
+
+        return view('coordenador.evento.etiquetasTrabalhos', [
+                                                    'evento'                  => $evento,
+                                                    'etiquetas'               => $etiquetas,
+                                                    'etiquetasSubTrab'        => $etiquetasSubTrab,
+                                                    'criterios'               => $criteriosModalidade,
+                                                  ]);
+
+    }
+
 
     /**
      * Show the form for creating a new resource.
