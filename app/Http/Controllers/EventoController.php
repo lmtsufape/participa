@@ -31,8 +31,197 @@ class EventoController extends Controller
         $eventos = Evento::all();
         // $comissaoEvento = ComissaoEvento::all();
         // $eventos = Evento::where('coordenadorId', Auth::user()->id)->get();
-        
+
         return view('coordenador.home',['eventos'=>$eventos]);
+
+    }
+
+    public function informacoes(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+
+        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
+        // dd($ComissaoEventos);
+        $ids = [];
+        foreach($ComissaoEvento as $ce){
+          array_push($ids,$ce->userId);
+        }
+        $users = User::find($ids);
+
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
+        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::all();
+        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
+        $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
+        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
+        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+
+        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
+        // $atribuicoesProcessando
+        // dd($trabalhosEnviados);
+        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
+
+        return view('coordenador.informacoes', [
+                                                    'evento'                  => $evento,
+                                                    'areas'                   => $areas,
+                                                    'revisores'               => $revisores,
+                                                    'revs'                    => $revs,
+                                                    'users'                   => $users,
+                                                    'modalidades'             => $modalidades,
+                                                    'areaModalidades'         => $areaModalidades,
+                                                    'trabalhos'               => $trabalhos,
+                                                    'trabalhosEnviados'       => $trabalhosEnviados,
+                                                    'trabalhosAvaliados'      => $trabalhosAvaliados,
+                                                    'trabalhosPendentes'      => $trabalhosPendentes,
+                                                    'numeroRevisores'         => $numeroRevisores,
+                                                    'numeroComissao'          => $numeroComissao
+                                                  ]);
+
+    }
+    public function definirSubmissoes(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+
+        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
+        // dd($ComissaoEventos);
+        $ids = [];
+        foreach($ComissaoEvento as $ce){
+          array_push($ids,$ce->userId);
+        }
+        $users = User::find($ids);
+
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
+        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::all();
+        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
+        $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
+        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
+        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+
+        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
+        // $atribuicoesProcessando
+        // dd($trabalhosEnviados);
+        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
+
+        return view('coordenador.trabalhos.definirSubmissoes', [
+                                                    'evento'                  => $evento,
+                                                    'areas'                   => $areas,
+                                                    'revisores'               => $revisores,
+                                                    'revs'                    => $revs,
+                                                    'users'                   => $users,
+                                                    'modalidades'             => $modalidades,
+                                                    'areaModalidades'         => $areaModalidades,
+                                                    'trabalhos'               => $trabalhos,
+                                                    'trabalhosEnviados'       => $trabalhosEnviados,
+                                                    'trabalhosAvaliados'      => $trabalhosAvaliados,
+                                                    'trabalhosPendentes'      => $trabalhosPendentes,
+                                                    'numeroRevisores'         => $numeroRevisores,
+                                                    'numeroComissao'          => $numeroComissao
+                                                  ]);
+
+    }
+    public function listarTrabalhos(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+
+        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
+        // dd($ComissaoEventos);
+        $ids = [];
+        foreach($ComissaoEvento as $ce){
+          array_push($ids,$ce->userId);
+        }
+        $users = User::find($ids);
+
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
+        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::all();
+        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
+        $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
+        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
+        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+
+        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
+        // $atribuicoesProcessando
+        // dd($trabalhosEnviados);
+        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
+
+        return view('coordenador.trabalhos.listarTrabalhos', [
+                                                    'evento'                  => $evento,
+                                                    'areas'                   => $areas,
+                                                    'revisores'               => $revisores,
+                                                    'revs'                    => $revs,
+                                                    'users'                   => $users,
+                                                    'modalidades'             => $modalidades,
+                                                    'areaModalidades'         => $areaModalidades,
+                                                    'trabalhos'               => $trabalhos,
+                                                    'trabalhosEnviados'       => $trabalhosEnviados,
+                                                    'trabalhosAvaliados'      => $trabalhosAvaliados,
+                                                    'trabalhosPendentes'      => $trabalhosPendentes,
+                                                    'numeroRevisores'         => $numeroRevisores,
+                                                    'numeroComissao'          => $numeroComissao
+                                                  ]);
+
+    }
+    public function cadastrarComissao(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+
+        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
+        // dd($ComissaoEventos);
+        $ids = [];
+        foreach($ComissaoEvento as $ce){
+          array_push($ids,$ce->userId);
+        }
+        $users = User::find($ids);
+
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
+        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::all();
+        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
+        $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
+        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
+        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+
+        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
+        // $atribuicoesProcessando
+        // dd($trabalhosEnviados);
+        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
+
+        return view('coordenador.comissao.cadastrarComissao', [
+                                                    'evento'                  => $evento,
+                                                    'areas'                   => $areas,
+                                                    'revisores'               => $revisores,
+                                                    'revs'                    => $revs,
+                                                    'users'                   => $users,
+                                                    'modalidades'             => $modalidades,
+                                                    'areaModalidades'         => $areaModalidades,
+                                                    'trabalhos'               => $trabalhos,
+                                                    'trabalhosEnviados'       => $trabalhosEnviados,
+                                                    'trabalhosAvaliados'      => $trabalhosAvaliados,
+                                                    'trabalhosPendentes'      => $trabalhosPendentes,
+                                                    'numeroRevisores'         => $numeroRevisores,
+                                                    'numeroComissao'          => $numeroComissao
+                                                  ]);
 
     }
 
@@ -311,7 +500,7 @@ class EventoController extends Controller
         $comissao = ComissaoEvento::where('eventosId', $id);
         $revisores = Revisor::where('eventoId', $id);
         $trabalhos = Trabalho::where('eventoId', $id);
-        
+
         if(isset($areas)){
             $areas->delete();
         }
@@ -319,13 +508,13 @@ class EventoController extends Controller
             $atividades->delete();
         }
         if(isset($comissao)){
-            $comissao->delete();    
+            $comissao->delete();
         }
         if(isset($revisores)){
-          $revisores->delete();    
+          $revisores->delete();
         }
         if(isset($trabalhos)){
-          $trabalhos->delete();    
+          $trabalhos->delete();
         }
 
         $evento->delete();
@@ -351,7 +540,7 @@ class EventoController extends Controller
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
         $revisores = Revisor::where('eventoId', $evento->id)->get();
         $modalidades = Modalidade::all();
-        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();        
+        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
@@ -435,7 +624,7 @@ class EventoController extends Controller
     public function areaParticipante() {
 
       $eventos = Evento::all();
-      
+
       return view('user.areaParticipante',['eventos'=>$eventos]);
 
     }
@@ -453,7 +642,7 @@ class EventoController extends Controller
           }
         }
       }
-      
+
       return view('user.comissoes',['eventos'=>$evnts]);
 
     }
@@ -463,7 +652,7 @@ class EventoController extends Controller
       $evento = Evento::find($request->eventoId);
       $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
       $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
-      
+
       return view('user.areaComissao', ['trabalhos' => $trabalhos]);
     }
 

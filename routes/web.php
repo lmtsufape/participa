@@ -44,7 +44,11 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   // rotas de teste
   Route::get('/coordenador/home','EventoController@index')->name('coord.home');
 
-  Route::get('/coordenador/evento/detalhes', 'EventoController@detalhes')->name('coord.detalhesEvento');
+  Route::get('/coord/evento/detalhes', 'EventoController@detalhes')->name('coord.detalhesEvento');
+  Route::get('/coord/evento/informacoes', 'EventoController@informacoes')->name('coord.informacoes');
+  Route::get('/coord/evento/definirSubmissoes', 'EventoController@definirSubmissoes')->name('coord.definirSubmissoes');
+  Route::get('/coord/evento/listarTrabalhos', 'EventoController@listarTrabalhos')->name('coord.listarTrabalhos');
+  Route::get('/coord/evento/cadastrarComissao', 'EventoController@cadastrarComissao')->name('coord.cadastrarComissao');
 
   // Visualizar trabalhos do usuário
   Route::get('/user/trabalhos', 'UserController@meusTrabalhos')->name('user.meusTrabalhos');

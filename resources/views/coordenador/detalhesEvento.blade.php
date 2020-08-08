@@ -4,7 +4,7 @@
     <div class="sidebar">
         <h2>{{{$evento->nome}}}</h2>
         <ul>
-            <a id="informacoes" onclick="habilitarPagina('informacoes')">
+            <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
                 <li>
                     <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
                 </li>
@@ -15,12 +15,12 @@
                     <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Trabalhos</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownTrabalhos" style="background-color: gray">
-                    <a id="submissoesTrabalhos" onclick="habilitarPagina('submissoesTrabalhos')">
+                    <a id="submissoesTrabalhos" href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Definir Submissões</h5>
                         </li>
                     </a>
-                    <a id="listarTrabalhos" onclick="habilitarPagina('listarTrabalhos')">
+                    <a id="listarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}" >
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5>
                         </li>
@@ -67,7 +67,7 @@
                     <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownComissao" style="background-color: gray">
-                    <a id="cadastrarComissao" onclick="habilitarPagina('cadastrarComissao')">
+                    <a id="cadastrarComissao" href="{{ route('coord.cadastrarComissao', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar Comissão</h5>
                         </li>
@@ -120,142 +120,13 @@
 @section('content')
 
 <div class="main_content">
-    {{-- {{ $evento->id ?? '' }} --}}
-    {{-- Informações --}}
-    <div id="divInformacoes" class="informacoes">
-        <div class="row">
-            <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Informações</h1>
-            </div>
-        </div>
-
-        <!-- Row trabalhos -->
-        <div class="row justify-content-center">
-          <div class="col-sm-8">
 
 
-            <div class="row justify-content-center">
-              <div class="col-sm-12">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Trabalhos</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Informações referente aos trabalhos enviados</h6>
-                    <p class="card-text">
-                      <div class="row justify-content-center">
-                        <div class="col-sm-12">
-                          <table class="table table-responsive-lg table-hover">
-                            <thead>
-                              <tr>
-                                <th style="text-align:center">Enviados</th>
-                                <th style="text-align:center">Avaliados</th>
-                                <th style="text-align:center">Pendentes</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td style="text-align:center"> {{$trabalhosEnviados}} </td>
-                                <td style="text-align:center"> {{$trabalhosAvaliados}} </td>
-                                <td style="text-align:center"> {{$trabalhosPendentes}} </td>
-                              </tr>
-                            </tbody>
-                          </table>
-
-                        </div>
-
-                      </div>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row justify-content-center">
-              <div class="col-sm-12">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Organização</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Informações referentes ao número de participantes na organização do evento</h6>
-                    <p class="card-text">
-                      <div class="row justify-content-center">
-                        <div class="col-sm-12">
-                          <table class="table table-responsive-lg table-hover">
-                            <thead>
-                              <tr>
-                                <th style="text-align:center">Número de Revisores</th>
-                                <th style="text-align:center">Número de Integrantes na Comissão</th>
-
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td style="text-align:center"> {{$numeroRevisores}} </td>
-                                <td style="text-align:center"> {{$numeroComissao}} </td>
-                              </tr>
-                            </tbody>
-                          </table>
-
-                        </div>
-
-                      </div>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
+    @yield('menu')
 
 
 
-        </div><!-- end Row trabalhos -->
 
-    </div>
-    {{-- Comissão --}}
-    <div id="divCadastrarComissao" class="comissao">
-        <div class="row">
-            <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Cadastrar Comissão</h1>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-sm-5">
-                <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Novo Membro</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">Cadastre um membro para sua Comissão</h6>
-                      <form action="{{route('cadastrar.comissao')}}" method="POST">
-                        @csrf
-                        <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
-                        <p class="card-text">
-                            <div class="row justify-content-center">
-                                <div class="col-sm-12">
-                                    <label for="emailMembroComissao" class="control-label">E-mail do novo membro</label>
-                                    <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail">
-                                    @error('emailMembroComissao')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-
-                        </div>
-                        </p>
-                        <div class="row justify-content-center">
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary" style="width:100%">
-                                    {{ __('Finalizar') }}
-                                </button>
-                            </div>
-                        </div>
-
-                        </form>
-                    </div>
-                  </div>{{-- end card--}}
-            </div>
-
-        </div>
-
-    </div>{{-- End cadastrar Comissão --}}
 
     <div id="divDefinirCoordComissao" class="comissao">
         <div class="row">
@@ -387,217 +258,8 @@
         </div>
     </div>{{-- End Listar Comissão --}}
 
-    <!-- Trabalhos -->
-    <div id="divListarTrabalhos" style="display: none">
 
-        <div class="row titulo-detalhes">
-            <div class="col-sm-10">
-                <h1 class="">Trabalhos</h1>
-            </div>
 
-            <form method="GET" action="{{route('distribuicao')}}">
-              <input type="hidden" name="eventoId" value="{{$evento->id}}">
-              <div class="row justify-content-center">
-                <div class="col-md-12">
-                  <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
-                    {{ __('Distribuir Trabalhos') }}
-                  </button>
-                </div>
-              </div>
-            </form>
-
-        </div>
-
-    {{-- Tabela Trabalhos --}}
-    <div class="row">
-      <div class="col-sm-12">
-        <table class="table table-hover table-responsive-lg table-sm">
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Área</th>
-              <th scope="col">Modalidade</th>
-              <th scope="col">Revisores</th>
-              <th scope="col" style="text-align:center">Baixar</th>
-              <th scope="col" style="text-align:center">Visualizar</th>
-            </tr>
-          </thead>
-          <tbody>
-            @php $i = 0; @endphp
-            @foreach($trabalhos as $trabalho)
-
-            <tr>
-              <td>{{$trabalho->id}}</td>
-              <td>{{$trabalho->area->nome}}</td>
-              <td>{{$trabalho->modalidade->nome}}</td>
-              <td>
-                @foreach($trabalho->atribuicao as $atribuicao)
-                {{$atribuicao->revisor->user->email}},
-                @endforeach
-              </td>
-              <td style="text-align:center">
-                @php $arquivo = ""; $i++; @endphp
-                @foreach($trabalho->arquivo as $key)
-                @php
-                if($key->versaoFinal == true){
-                  $arquivo = $key->nome;
-                }
-                @endphp
-                @endforeach
-                <img onclick="document.getElementById('formDownload{{$i}}').submit();" class="" src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px" alt="">
-                <form method="GET" action="{{ route('download') }}" target="_new" id="formDownload{{$i}}">
-                  <input type="hidden" name="file" value="{{$arquivo}}">
-                </form>
-              </td>
-              <td style="text-align:center">
-                <a class="botaoAjax" href="#" data-toggle="modal" onclick="trabalhoId({{$trabalho->id}})" data-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
-              </td>
-
-            </tr>
-            @endforeach
-          </tbody>
-        </table>
-      </div>
-
-    </div>
-
-</div><!-- End Trabalhos -->
-<!-- Definir Submissões -->
-<div id="divDefinirSubmissoes" style="display: none">
-
-    <div class="row titulo-detalhes">
-        <div class="col-sm-10">
-            <h1 class="">Definir Submissões</h1>
-        </div>
-    </div>
-
-    <div class="row justify-content-center">
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Definir Submissões do Trabalho</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Informe o número de trabalhos que cada autor poderá enviar e o número de trabalhos em que um usuário poderá ser um coautor</h6>
-                    <form method="POST" action="{{route('trabalho.numTrabalhos')}}">
-                    @csrf
-                    <p class="card-text">
-                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
-
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <label for="trabalhosPorAutor" class="col-form-label">{{ __('Número de trabalhos por Autor') }}</label>
-                                <input id="trabalhosPorAutor" type="text" class="form-control @error('trabalhosPorAutor') is-invalid @enderror" name="trabalhosPorAutor" value="{{ old('trabalhosPorAutor') }}" required autocomplete="trabalhosPorAutor" autofocus>
-
-                                @error('trabalhosPorAutor')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                        </div>{{-- end row--}}
-
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <label for="numCoautor" class="col-form-label">{{ __('Número de trabalhos como Coautor') }}</label>
-                                <input id="numCoautor" type="text" class="form-control @error('numCoautor') is-invalid @enderror" name="numCoautor" value="{{ old('numCoautor') }}" required autocomplete="numCoautor" autofocus>
-
-                                @error('numCoautor')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                        </div>{{-- end row--}}
-
-                    </p>
-                    <div class="row justify-content-center">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary" style="width:100%">
-                                {{ __('Finalizar') }}
-                            </button>
-                        </div>
-                    </div>
-                    </form>
-                </div>
-                </div>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Resumo</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Informe se os trabalhos enviados possuem resumos.</h6>
-                    <form method="POST" action="{{route('evento.setResumo')}}">
-                    @csrf
-                    <p class="card-text">
-                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                        <input type="hidden" name="hasResumo" value="false" id="hasResumo">
-
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <input id="hasResumoCheck" type="checkbox" onclick="document.getElementById('hasResumo').value = 'true'"  autocomplete="hasResumo" autofocus>
-                                <label for="hasResumoCheck" >{{ __('Possui') }}</label>
-
-                                @error('hasResumo')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                        </div>{{-- end row--}}
-                    </p>
-                    <div class="row justify-content-center">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary" style="width:100%">
-                                {{ __('Finalizar') }}
-                            </button>
-                        </div>
-                    </div>
-                    </form>
-                </div>
-                </div>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Logo Evento</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Modifique a foto do evento aqui.</h6>
-                    <form method="POST" action="{{route('evento.setFotoEvento')}}" enctype="multipart/form-data">
-                    @csrf
-                    <p class="card-text">
-                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
-
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                              <label for="fotoEvento">Logo</label>
-                              <input type="file" class="form-control-file @error('fotoEvento') is-invalid @enderror" name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
-                              @error('fotoEvento')
-                                  <span class="invalid-feedback" role="alert">
-                                      <strong>{{ $message }}</strong>
-                                  </span>
-                              @enderror
-                            </div>
-
-                        </div>{{-- end row--}}
-                    </p>
-                    <div class="row justify-content-center">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary" style="width:100%">
-                                {{ __('Finalizar') }}
-                            </button>
-                        </div>
-                    </div>
-                    </form>
-                </div>
-                </div>
-        </div>
-    </div>
-</div><!-- Definir Submissões -->
 
 {{-- Modalidade --}}
 <div id="divCadastrarModalidades" class="modalidades">
@@ -1021,7 +683,7 @@
                               </button>
                           </form>
                       @endif
-                      
+
                   </p>
 
                 </div>
@@ -1406,298 +1068,298 @@
     //   alert("The text has been changed.");
     // });
 
-    function habilitarPagina(id){
-        informacoes = document.getElementById('divInformacoes');
-
-        listarTrabalhos = document.getElementById('divListarTrabalhos');
-        submissoesTrabalhos = document.getElementById('divDefinirSubmissoes');
-
-        classificacao = document.getElementById('divClassificacao');
-        atividades = document.getElementById('divAtividades');
-        cadastrarAreas = document.getElementById('divCadastrarAreas');
-        listarAreas = document.getElementById('divListarAreas');
-        cadastrarRevisores = document.getElementById('divCadastrarRevisores');
-        listarRevisores = document.getElementById('divListarRevisores');
-
-        cadastrarComissao = document.getElementById('divCadastrarComissao');
-        definirCoordComissao = document.getElementById('divDefinirCoordComissao');
-        listarComissao = document.getElementById('divListarComissao');
-
-        cadastrarModalidade = document.getElementById('divCadastrarModalidades');
-        listarModalidade = document.getElementById('divListarModalidades');
-
-        // habilita divInformacoes
-        if(id == 'informacoes'){
-            console.log('informacoes');
-            informacoes.style.display = "block";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-        }
-        if(id == 'listarTrabalhos'){
-            console.log('listarTrabalhos');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "block";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-        }
-
-        if(id == 'modalidades'){
-            console.log('modalidades');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-
-        }
-        if(id == 'colocacao'){
-            console.log('colocacao');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "block";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-
-        }
-        if(id == 'atividades'){
-            console.log('atividades');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "block";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-
-        }
-        if(id == 'cadastrarAreas'){
-            console.log('cadastrarAreas');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "block";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-
-        }
-        if(id == 'listarAreas'){
-            console.log('listarAreas');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "block";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-
-        }
-
-        if(id == 'cadastrarRevisores'){
-            console.log('cadastrarRevisores');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "block";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-
-
-        }
-        if(id == 'listarRevisores'){
-            console.log('listarRevisores');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "block";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-
-
-        }
-        if(id == 'cadastrarComissao'){
-            console.log('cadastrarComissao');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "block";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-
-
-        }
-        if(id == 'definirCoordComissao'){
-            console.log('definirCoordComissao');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "block";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-
-
-        }
-        if(id == 'listarComissao'){
-            console.log('listarComissao');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "block";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "none";
-        }
-        if(id == 'cadastrarModalidade'){
-            console.log('cadastrarModalidade');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "block";
-            listarModalidade.style.display = "none";
-        }
-        if(id == 'listarModalidade'){
-            console.log('listarModalidade');
-            informacoes.style.display = "none";
-            listarTrabalhos.style.display = "none";
-            submissoesTrabalhos.style.display = "none";
-            classificacao.style.display = "none";
-            atividades.style.display = "none";
-            cadastrarAreas.style.display = "none";
-            listarAreas.style.display = "none";
-            cadastrarRevisores.style.display = "none";
-            listarRevisores.style.display = "none";
-            cadastrarComissao.style.display = "none";
-            definirCoordComissao.style.display = "none";
-            listarComissao.style.display = "none";
-            cadastrarModalidade.style.display = "none";
-            listarModalidade.style.display = "block";
-        }
-        if(id == 'submissoesTrabalhos'){
-          informacoes.style.display = "none";
-          listarTrabalhos.style.display = "none";
-          submissoesTrabalhos.style.display = "block";
-          classificacao.style.display = "none";
-          atividades.style.display = "none";
-          cadastrarAreas.style.display = "none";
-          listarAreas.style.display = "none";
-          cadastrarRevisores.style.display = "none";
-          listarRevisores.style.display = "none";
-          cadastrarComissao.style.display = "none";
-          definirCoordComissao.style.display = "none";
-          listarComissao.style.display = "none";
-          cadastrarModalidade.style.display = "none";
-          listarModalidade.style.display = "none";
-        }
-
-    }
+    // function habilitarPagina(id){
+    //     informacoes = document.getElementById('divInformacoes');
+    //
+    //     listarTrabalhos = document.getElementById('divListarTrabalhos');
+    //     submissoesTrabalhos = document.getElementById('divDefinirSubmissoes');
+    //
+    //     classificacao = document.getElementById('divClassificacao');
+    //     atividades = document.getElementById('divAtividades');
+    //     cadastrarAreas = document.getElementById('divCadastrarAreas');
+    //     listarAreas = document.getElementById('divListarAreas');
+    //     cadastrarRevisores = document.getElementById('divCadastrarRevisores');
+    //     listarRevisores = document.getElementById('divListarRevisores');
+    //
+    //     cadastrarComissao = document.getElementById('divCadastrarComissao');
+    //     definirCoordComissao = document.getElementById('divDefinirCoordComissao');
+    //     listarComissao = document.getElementById('divListarComissao');
+    //
+    //     cadastrarModalidade = document.getElementById('divCadastrarModalidades');
+    //     listarModalidade = document.getElementById('divListarModalidades');
+    //
+    //     // habilita divInformacoes
+    //     if(id == 'informacoes'){
+    //         console.log('informacoes');
+    //         informacoes.style.display = "block";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //     }
+    //     if(id == 'listarTrabalhos'){
+    //         console.log('listarTrabalhos');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "block";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //     }
+    //
+    //     if(id == 'modalidades'){
+    //         console.log('modalidades');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //
+    //     }
+    //     if(id == 'colocacao'){
+    //         console.log('colocacao');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "block";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //
+    //     }
+    //     if(id == 'atividades'){
+    //         console.log('atividades');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "block";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //
+    //     }
+    //     if(id == 'cadastrarAreas'){
+    //         console.log('cadastrarAreas');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "block";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //
+    //     }
+    //     if(id == 'listarAreas'){
+    //         console.log('listarAreas');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "block";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //
+    //     }
+    //
+    //     if(id == 'cadastrarRevisores'){
+    //         console.log('cadastrarRevisores');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "block";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //
+    //
+    //     }
+    //     if(id == 'listarRevisores'){
+    //         console.log('listarRevisores');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "block";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //
+    //
+    //     }
+    //     if(id == 'cadastrarComissao'){
+    //         console.log('cadastrarComissao');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "block";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //
+    //
+    //     }
+    //     if(id == 'definirCoordComissao'){
+    //         console.log('definirCoordComissao');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "block";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //
+    //
+    //     }
+    //     if(id == 'listarComissao'){
+    //         console.log('listarComissao');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "block";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "none";
+    //     }
+    //     if(id == 'cadastrarModalidade'){
+    //         console.log('cadastrarModalidade');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "block";
+    //         listarModalidade.style.display = "none";
+    //     }
+    //     if(id == 'listarModalidade'){
+    //         console.log('listarModalidade');
+    //         informacoes.style.display = "none";
+    //         listarTrabalhos.style.display = "none";
+    //         submissoesTrabalhos.style.display = "none";
+    //         classificacao.style.display = "none";
+    //         atividades.style.display = "none";
+    //         cadastrarAreas.style.display = "none";
+    //         listarAreas.style.display = "none";
+    //         cadastrarRevisores.style.display = "none";
+    //         listarRevisores.style.display = "none";
+    //         cadastrarComissao.style.display = "none";
+    //         definirCoordComissao.style.display = "none";
+    //         listarComissao.style.display = "none";
+    //         cadastrarModalidade.style.display = "none";
+    //         listarModalidade.style.display = "block";
+    //     }
+    //     if(id == 'submissoesTrabalhos'){
+    //       informacoes.style.display = "none";
+    //       listarTrabalhos.style.display = "none";
+    //       submissoesTrabalhos.style.display = "block";
+    //       classificacao.style.display = "none";
+    //       atividades.style.display = "none";
+    //       cadastrarAreas.style.display = "none";
+    //       listarAreas.style.display = "none";
+    //       cadastrarRevisores.style.display = "none";
+    //       listarRevisores.style.display = "none";
+    //       cadastrarComissao.style.display = "none";
+    //       definirCoordComissao.style.display = "none";
+    //       listarComissao.style.display = "none";
+    //       cadastrarModalidade.style.display = "none";
+    //       listarModalidade.style.display = "none";
+    //     }
+    //
+    // }
 
 
 
