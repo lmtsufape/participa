@@ -171,9 +171,9 @@
 
     @yield('menu')
 
-    {{-- @hasSection ('javascript')
-        @yield('javascript')
-    @endif --}}
+    @hasSection ('script')
+        @yield('script')
+    @endif
 
 
 
