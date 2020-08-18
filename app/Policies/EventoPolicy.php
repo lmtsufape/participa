@@ -23,4 +23,11 @@ class EventoPolicy
     public function isCoordenador(User $user, Evento $evento){
       return $user->id === $evento->coordenador->id;
     }
+
+    public function isPublishOrIsCoordenador(User $user, Evento $evento) {
+      if ($user->id === $evento->coordenador->id || $evento->publicado) {
+        return true;
+      }
+      return false;
+    }
 }

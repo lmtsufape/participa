@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Revisor;
 use App\User;
+use App\Area;
+use App\Arquivo;
+use App\Atribuicao;
+use App\Trabalho;
 use App\Evento;
+use App\Modalidade;
 use Illuminate\Http\Request;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailLembrete;
@@ -22,9 +27,68 @@ class RevisorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function indexListarTrabalhos()
-    {
-        return view('revisor.listarTrabalhos');
-    }
+    { 
+        $revisores = Revisor::where("revisorId", Auth::user()->id)->get();
+        $atribuicoes = [];
+        foreach ($revisores as $revisor) {
+          $temp = Atribuicao::where("revisorId", $revisor->id)->get();
+          for ($i=0; $i < count($temp); $i++) { 
+            array_push($atribuicoes, $temp[$i]);  
+          }
+        }
+        $trabalhos = [];
+        foreach ($atribuicoes as $atribuicao) {
+          array_push($trabalhos, Trabalho::where("id", $atribuicao->trabalhoId)->first());  
+        }
+
+        $areas = [];
+        foreach ($revisores as $revisor) {
+          $temp = Area::where("id", $revisor->areaId)->get();
+          for ($i=0; $i < count($temp); $i++) {
+            if (!in_array($temp[$i], $areas)) { 
+              array_push($areas, $temp[$i]);
+            }
+          } 
+        }
+
+        $modalidades = [];
+        foreach ($revisores as $revisor) {
+          $temp = Modalidade::where("id", $revisor->modalidadeId)->get();
+          for ($i=0; $i < count($temp); $i++) {
+            if (!in_array($temp[$i], $modalidades)) { 
+              array_push($modalidades, $temp[$i]);
+            }
+          } 
+        }
+        
+        $eventos = [];
+        foreach ($revisores as $revisor) {
+          $temp = Evento::where("id", $revisor->eventoId)->get();
+          for ($i=0; $i < count($temp); $i++) {
+            if (!in_array($temp[$i], $eventos)) { 
+              array_push($eventos, $temp[$i]);
+            }
+          } 
+        }
+
+        $arquivos = [];
+        foreach ($trabalhos as $trabalho) {
+          $temp = Arquivo::where("trabalhoId", $trabalho->id)->get();
+          for ($i=0; $i < count($temp); $i++) {
+            if (!in_array($temp[$i], $arquivos)) { 
+              array_push($arquivos, $temp[$i]);
+            }
+          } 
+        }
+
+
+        return view('revisor.listarTrabalhos', [
+          "trabalhos" => $trabalhos,
+          "areas" => $areas,
+          "modalidades" => $modalidades,
+          "eventos" => $eventos,
+          "arquivos" => $arquivos]);
+    } 
 
     /**
      * Show the form for creating a new resource.
@@ -45,9 +109,10 @@ class RevisorController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-          'emailRevisor' => ['required', 'string', 'email', 'max:255'],
-          'nomeRevisor' => ['required', 'string', 'max:255'],
-          'areaRevisor'  => ['required', 'integer'],
+          'emailRevisor'       => ['required', 'string', 'email', 'max:255'],
+          'nomeRevisor'        => ['required', 'string', 'max:255'],
+          'areaRevisor'        => ['required', 'integer'],
+          'modalidadeRevisor'  => ['required', 'integer'],
         ]);
 
         $usuario = User::where('email', $request->emailRevisor)->first();
@@ -68,7 +133,8 @@ class RevisorController extends Controller
           'correcoesEmAndamento'  => 0,
           'eventoId'              => $request->eventoId,
           'revisorId'             => $usuario->id,
-          'areaId'                => $request->areaRevisor
+          'areaId'                => $request->areaRevisor,
+          'modalidadeId'          => $request->modalidadeRevisor,
         ]);
 
 

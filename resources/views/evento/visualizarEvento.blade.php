@@ -80,6 +80,12 @@
         </button>
       </div>
     @endif
+
+    <div class="row margin">
+        <div class="col-sm-12">
+            <h4>{{$etiquetas->etiquetanomeevento}}:</h4>
+        </div>
+    </div>
     <div class="row margin">
         <div class="col-sm-12">
             <h1>
@@ -90,7 +96,7 @@
 
     <div class="row margin">
         <div class="col-sm-12">
-            <h4>Descrição</h4>
+            <h4>{{$etiquetas->etiquetadescricaoevento}}:</h4>
         </div>
     </div>
     <div class="row margin">
@@ -98,44 +104,144 @@
             <p>{{$evento->descricao}}</p>
         </div>
     </div>
+
+    <div class="row margin">
+      <div class="col-sm-12">
+          <h4>{{$etiquetas->etiquetatipoevento}}:</h4>
+      </div>
+    </div>
+    <div class="row margin">
+        <div class="col-sm-12">
+            <p>{{$evento->tipo}}</p>
+        </div>
+    </div>
+
     <div class="row margin">
         <div class="col-sm-12 info-evento">
-            <h4>Realização do Evento</h4>
+            <h4>{{$etiquetas->etiquetadatas}}:</h4>
             <p>
                 <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
                 {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}
             </p>
         </div>
     </div>
-    <div class="row margin">
+
+    @if ($etiquetas->modsubmissao == true)
+      <div class="row margin">
         <div class="col-sm-12 info-evento">
-            <h4>Submissão de Trabalhos</h4>
-            <p>
+            <h4>{{$etiquetas->etiquetasubmissoes}}:</h4>
+            @foreach ($modalidades as $modalidade)
+              <h6>Modalidade: {{$modalidade->nome}}</h6>
+              @if (isset($modalidade->inicioSubmissao))
+                <p>
+                  <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
+                  Submissão: {{date('d/m/Y',strtotime($modalidade->inicioSubmissao))}} - {{date('d/m/Y',strtotime($modalidade->fimSubmissao))}}
+                </p>
+              @endif
+
+              @if (isset($modalidade->inicioRevisao))
+              <p>
                 <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}
-            </p>
-        </div>
-    </div>
-    <div class="row margin">
-        <div class="col-sm-12 info-evento">
-            <h4>Revisão de Trabalhos</h4>
-            <p>
+                Revisão: {{date('d/m/Y',strtotime($modalidade->inicioRevisao))}} - {{date('d/m/Y',strtotime($modalidade->fimRevisao))}}
+              </p>
+              @endif
+
+              @if (isset($modalidade->inicioResultado))
+              <p>
                 <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}
-            </p>
+                Resultado: {{date('d/m/Y',strtotime($modalidade->inicioResultado))}}
+              </p>
+              @endif
+
+              @if($modalidade->inicioSubmissao <= $mytime)
+                @if($mytime < $modalidade->fimSubmissao)
+                  @if ($modalidade->arquivo == true)
+                    @if(isset($modalidade->regra))
+                      <div style="margin-top: 20px; margin-bottom: 10px;">
+                        <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                          <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                        </a>
+                        <label for="nomeTrabalho" class="col-form-label">Regra</label>
+                      </div>
+                    @endif
+                    @if (isset($modalidade->template))
+                      <div style="margin-top: 20px; margin-bottom: 10px;">
+                        <a href="{{route('download.template', ['file' => $modalidade->template])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                          <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                        </a>
+                        <label for="nomeTrabalho" class="col-form-label">Template</label>
+                      </div>  
+                    @endif
+                  @else
+                    @if(isset($modalidade->regra))
+                      <div style="margin-top: 20px; margin-bottom: 10px;">
+                        <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                          <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                        </a>
+                        <label for="nomeTrabalho" class="col-form-label">Regras</label>
+                      </div>  
+                    @endif
+                  @endif
+                  <div class="col-md-6 botao-form-left" style="">
+                    <a class="btn btn-secondary" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">Submeter Trabalho</a>
+                  </div>
+                @endif
+              @endif
+            <br>
+            @endforeach
         </div>
-    </div>
+      </div>
+    @else
+    
+    @endif
 
     <div class="row margin">
         <div class="col-sm-12 info-evento">
-            <h4>Endereço</h4>
+            <h4>{{$etiquetas->etiquetaenderecoevento}}:</h4>
             <p>
                 <img class="" src="{{asset('img/icons/map-marker-alt-solid.svg')}}" alt="">
                 {{$evento->endereco->rua}}, {{$evento->endereco->numero}} - {{$evento->endereco->cidade}} / {{$evento->endereco->uf}}.
             </p>
         </div>
     </div>
-    @if($hasFile == true)
+
+    {{-- Modulo de inscrição --}}
+    @if ($etiquetas->modinscricao == true)
+      <div class="row margin">
+        <div class="col-sm-12 info-evento">
+            <h4>{{$etiquetas->etiquetamoduloinscricao}}:</h4>
+            <p>
+                LOCAL DA INSCRIÇÃO!!!
+            </p>
+        </div>
+      </div>
+    @endif
+
+    {{-- Modulo Programação --}}
+    @if ($etiquetas->modprogramacao == true)
+      <div class="row margin">
+        <div class="col-sm-12 info-evento">
+            <h4>{{$etiquetas->etiquetamoduloprogramacao}}:</h4>
+            <p>
+                LOCAL DA PROGRAMAÇÃO
+            </p>
+        </div>
+      </div>        
+    @endif
+
+    {{-- Modulo Organização --}}
+    @if ($etiquetas->modorganizacao == true)
+      <div class="row margin">
+        <div class="col-sm-12 info-evento">
+            <h4>{{$etiquetas->etiquetamoduloorganizacao}}:</h4>
+            <p>
+                LOCAL DA ORGANIZAÇÃO
+            </p>
+        </div>
+      </div>    
+    @endif
+    
+    {{-- @if($hasFile == true)
       <div class="row margin">
           <div class="col-sm-12">
               <h1>
@@ -238,7 +344,7 @@
           </div>
         </div>
       @endif
-    @endif
+    @endif --}}
 
     <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 
