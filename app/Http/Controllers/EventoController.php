@@ -158,7 +158,7 @@ class EventoController extends Controller
           $path = 'public/eventos/' . $evento->id;
           $nome = '/logo.png';
           Storage::putFileAs($path, $file, $nome);
-          $evento->fotoEvento = $path . $nome;
+          $evento->fotoEvento = 'eventos/' . $evento->id . $nome;
           $evento->save();
         }
 
@@ -309,25 +309,65 @@ class EventoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   
+        $mytime = Carbon::now('America/Recife');
         $evento = Evento::find($id);
+        // dd($request);
+        // validar datas nulas antes, pois pode gerar um bug
+
+        if($request->dataInicio == null || $request->dataFim == null){
+          $validatedData = $request->validate([
+            'nome'                => ['required', 'string'],
+            'descricao'           => ['required', 'string'],
+            'tipo'                => ['required', 'string'],
+            'dataInicio'          => ['required', 'date', 'after_or_equal:'. $evento->dataInicio],
+            'dataFim'             => ['required', 'date', 'after:'. $request->dataInicio],
+            'fotoEvento'          => ['file', 'mimes:png'],
+          ]);
+        }
+
+        // validacao normal
+
+        $validatedData = $request->validate([
+          'nome'                => ['required', 'string'],
+          'descricao'           => ['required', 'string'],
+          'tipo'                => ['required', 'string'],
+          'dataInicio'          => ['required', 'date', 'after_or_equal:' . $evento->dataInicio],
+          'dataFim'             => ['required', 'date', 'after:' . $request->dataInicio],
+          'fotoEvento'          => ['file', 'mimes:png'],
+        ]);
+
+        // validar endereco
+
+        $validatedData = $request->validate([
+          'rua'                 => ['required', 'string'],
+          'numero'              => ['required', 'string'],
+          'bairro'              => ['required', 'string'],
+          'cidade'              => ['required', 'string'],
+          'uf'                  => ['required', 'string'],
+          'cep'                 => ['required', 'string'],
+        ]);
+        
         $endereco = Endereco::find($evento->enderecoId);
 
         $evento->nome                 = $request->nome;
-        // $evento->numeroParticipantes  = $request->numeroParticipantes;
         $evento->descricao            = $request->descricao;
         $evento->tipo                 = $request->tipo;
         $evento->dataInicio           = $request->dataInicio;
         $evento->dataFim              = $request->dataFim;
-        // $evento->inicioSubmissao      = $request->inicioSubmissao;
-        // $evento->fimSubmissao         = $request->fimSubmissao;
-        // $evento->inicioRevisao        = $request->inicioRevisao;
-        // $evento->fimRevisao           = $request->fimRevisao;
-        // $evento->inicioResultado      = $request->inicioResultado;
-        // $evento->fimResultado         = $request->fimResultado;
-        // $evento->possuiTaxa           = $request->possuiTaxa;
-        // $evento->valorTaxa            = $request->valorTaxa;
         $evento->enderecoId           = $endereco->id;
+        
+        // se a foto for diferente de nula apaga a foto existente e salva a nova
+        if($request->fotoEvento != null){
+          if(Storage::disk()->exists('public/'.$evento->fotoEvento)) {
+            Storage::delete($evento->fotoEvento);
+          }
+          $file = $request->fotoEvento;
+          $path = 'public/eventos/' . $evento->id;
+          $nome = '/logo.png';
+          Storage::putFileAs($path, $file, $nome);
+          $evento->fotoEvento = 'eventos/' . $evento->id . $nome;
+        }
         $evento->save();
 
         $endereco->rua                = $request->rua;
@@ -338,8 +378,8 @@ class EventoController extends Controller
         $endereco->cep                = $request->cep;
         $endereco->save();
 
-        $eventos = Evento::all();
-        return view('coordenador.home',['eventos'=>$eventos]);
+        // $eventos = Evento::all();
+        return redirect( route('home') );
     }
 
     /**
@@ -353,6 +393,10 @@ class EventoController extends Controller
         $evento = Evento::find($id);
         // dd($id);
         $endereco = Endereco::find($evento->enderecoId);
+        $formEvento = FormEvento::where('eventoId', $id)->first();
+        $formSubTraba = FormSubmTraba::where('eventoId', $id)->first();
+        $formEvento->delete();
+        $formSubTraba->delete();
         $evento->delete();
         $endereco->delete();
 
@@ -485,5 +529,13 @@ class EventoController extends Controller
       $evento->publicado = false;
       $evento->update();
       return redirect()->back()->with('mensagem', 'O evento foi ocultado ao público.');
+    }
+
+    public function downloadFotoEvento($id) {
+      $evento = Evento::find($id);
+      if (Storage::disk()->exists('public/'.$evento->fotoEvento)) {
+        return Storage::download('public/'.$evento->fotoEvento);
+      }
+      return abort(404);
     }
 }

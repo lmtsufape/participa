@@ -24,7 +24,7 @@
             @can('isPublishOrIsCoordenador', $evento)
                 <div class="card" style="width: 18rem;">
                     @if(isset($evento->fotoEvento))
-                    <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+                    <img src="{{asset('storage/' . $evento->fotoEvento)}}" class="card-img-top" alt="...">
                     @else
                     <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                     @endif
@@ -71,8 +71,8 @@
                         </div>
                         <p class="card-text">
                             <strong>Realização:</strong> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
-                            <strong>Submissão:</strong> {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}<br>
-                            <strong>Revisão:</strong> {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}<br>
+                            {{-- <strong>Submissão:</strong> {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}<br>
+                            <strong>Revisão:</strong> {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}<br> --}}
                         </p>
                         <p>
 

@@ -16,6 +16,7 @@ use App\Arquivo;
 use App\FormTipoSubm;
 use App\FormSubmTraba;
 use App\RegraSubmis;
+use App\ComissaoEvento;
 use App\TemplateSubmis;
 use Carbon\Carbon;
 use Auth;
@@ -505,4 +506,35 @@ class TrabalhoController extends Controller
                               ], 200);
     }
 
+    //função para download do arquivo do trabalho
+    public function downloadArquivo($id) {
+      $trabalho = Trabalho::find($id);
+      $revisor = Revisor::where([['eventoId', '=', $trabalho->eventoId], ['revisorId', '=', auth()->user()->id]])->first();
+      $comissaoEvento = ComissaoEvento::where([['userId', '=', auth()->user()->id], ['eventosId', '=', $trabalho->evento->id]])->first();
+
+      /*
+        O usuário só tera permissão para baixar o arquivo se for revisor do trabalho
+        ou se for coordenador do evento, coordenador da comissão, se pertencer a comissão
+        do evento ou se for autor do trabalho.        
+      */
+      if ($revisor != null) {
+        $permissao = Atribuicao::where([['trabalhoId' ,'=', $id], ['revisorId', '=', $revisor->id]]);
+
+        if ($permissao != null) {
+          if (Storage::disk()->exists('app/'.$trabalho->arquivo->nome)) {
+            return response()->download(storage_path('app/'.$trabalho->arquivo->nome));
+          }
+          return abort(404);
+        }
+        return abort(403);
+      
+      
+      } else if ($trabalho->evento->coordenadorId == auth()->user()->id || $trabalho->evento->coordComissaoId == auth()->user()->id || $comissaoEvento != null || $trabalho->autorId == auth()->user()->id) {
+        if (Storage::disk()->exists('app/'.$trabalho->arquivo->nome)) {
+          return response()->download(storage_path('app/'.$trabalho->arquivo->nome));
+        }
+        return abort(404);
+      }
+      return abort(403);
+    }
 }

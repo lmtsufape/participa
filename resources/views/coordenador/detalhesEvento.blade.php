@@ -114,17 +114,17 @@
 
             <a id="eventos">
               <li>
-                  <img src="{{asset('img/icons/sitemap-solid.svg')}}" alt=""><h5>Evento</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                  <img src="{{asset('img/icons/palestrante.svg')}}" alt=""><h5>Evento</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
               </li>
               <div id="dropdownEvento" style="background-color: gray">
                   <a id="editarEtiqueta" onclick="habilitarPagina('editarEtiqueta')">
                       <li>
-                          <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Etiquetas Eventos</h5>
+                          <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Etiquetas Eventos</h5>
                       </li>
                   </a>
                   <a id="editarEtiquetaSubTrabalhos" onclick="habilitarPagina('editarEtiquetaSubTrabalhos')">
                     <li>
-                        <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Etiquetas Trabalho</h5>
+                        <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Etiquetas Trabalho</h5>
                     </li>
                   </a>
               </div>
@@ -481,10 +481,9 @@
                 }
                 @endphp
                 @endforeach
-                <img onclick="document.getElementById('formDownload{{$i}}').submit();" class="" src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px" alt="">
-                <form method="GET" action="{{ route('download') }}" target="_new" id="formDownload{{$i}}">
-                  <input type="hidden" name="file" value="{{$arquivo}}">
-                </form>
+                @if (!(empty($trabalho->arquivo->items)))
+                    <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
+                @endif
               </td>
               <td style="text-align:center">
                 <a class="botaoAjax" href="#" data-toggle="modal" onclick="trabalhoId({{$trabalho->id}})" data-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>

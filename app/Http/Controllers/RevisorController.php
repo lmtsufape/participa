@@ -41,53 +41,9 @@ class RevisorController extends Controller
           array_push($trabalhos, Trabalho::where("id", $atribuicao->trabalhoId)->first());  
         }
 
-        $areas = [];
-        foreach ($revisores as $revisor) {
-          $temp = Area::where("id", $revisor->areaId)->get();
-          for ($i=0; $i < count($temp); $i++) {
-            if (!in_array($temp[$i], $areas)) { 
-              array_push($areas, $temp[$i]);
-            }
-          } 
-        }
-
-        $modalidades = [];
-        foreach ($revisores as $revisor) {
-          $temp = Modalidade::where("id", $revisor->modalidadeId)->get();
-          for ($i=0; $i < count($temp); $i++) {
-            if (!in_array($temp[$i], $modalidades)) { 
-              array_push($modalidades, $temp[$i]);
-            }
-          } 
-        }
-        
-        $eventos = [];
-        foreach ($revisores as $revisor) {
-          $temp = Evento::where("id", $revisor->eventoId)->get();
-          for ($i=0; $i < count($temp); $i++) {
-            if (!in_array($temp[$i], $eventos)) { 
-              array_push($eventos, $temp[$i]);
-            }
-          } 
-        }
-
-        $arquivos = [];
-        foreach ($trabalhos as $trabalho) {
-          $temp = Arquivo::where("trabalhoId", $trabalho->id)->get();
-          for ($i=0; $i < count($temp); $i++) {
-            if (!in_array($temp[$i], $arquivos)) { 
-              array_push($arquivos, $temp[$i]);
-            }
-          } 
-        }
-
 
         return view('revisor.listarTrabalhos', [
-          "trabalhos" => $trabalhos,
-          "areas" => $areas,
-          "modalidades" => $modalidades,
-          "eventos" => $eventos,
-          "arquivos" => $arquivos]);
+          "trabalhos" => $trabalhos,]);
     } 
 
     /**

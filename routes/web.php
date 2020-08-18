@@ -33,8 +33,8 @@ Route::get('/#', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/perfil','UserController@perfil')->name('perfil');
-Route::post('/perfil','UserController@editarPerfil')->name('perfil');
+Route::get('/perfil','UserController@perfil')->name('perfil')->middleware('auth');
+Route::post('/perfil','UserController@editarPerfil')->name('perfil')->middleware('auth');
 
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 
@@ -57,7 +57,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::get(   '/evento/visualizar/{id}','EventoController@show'                      )->name('evento.visualizar');
   Route::delete('/evento/excluir/{id}',   'EventoController@destroy'                   )->name('evento.deletar');
   Route::get(   '/evento/editar/{id}',    'EventoController@edit'                      )->name('evento.editar');
-  Route::post(   '/evento/editar/{id}',    'EventoController@update'                      )->name('evento.update');
+  Route::post(   '/evento/editar/{id}',    'EventoController@update'                   )->name('evento.update');
   Route::post(  '/evento/setResumo',      'EventoController@setResumo'                 )->name('evento.setResumo');
   Route::post(  '/evento/setFoto',        'EventoController@setFotoEvento'             )->name('evento.setFotoEvento');
   Route::post(  '/evento/numTrabalhos',   'EventoController@numTrabalhos'             )->name('trabalho.numTrabalhos');
@@ -85,6 +85,10 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/removerAtribuicao',     'AtribuicaoController@deletePorRevisores'    )->name('atribuicao.delete');
   // rota downloadArquivo
   Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
+  // rota download do arquivo do trabalho
+  Route::get(   '/download-trabalho/{id}',     'TrabalhoController@downloadArquivo'         )->name('downloadTrabalho');
+  // rota download da foto do evento
+  Route::get(   '/download-logo-evento/{id}',   'EventoController@downloadFotoEvento'  )->name('download.foto.evento');
   // rota download arquivo de regras para submissão de trabalho
   Route::get(   '/downloadArquivoRegras',       'RegraSubmisController@downloadArquivo')->name('download.regra');
   // rota download arquivo de templates para submissão de trabalho
