@@ -92,7 +92,7 @@
 
                                     @if (isset($ComissaoEvento))
                                         {{-- Rota - Area da Comissao --}}
-                                        <a class="dropdown-item" href="{{ route('home') }}">
+                                        <a class="dropdown-item" href="{{ route('home.comissao') }}">
                                             <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                             {{ __('Área da Comissão') }}
                                         </a>

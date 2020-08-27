@@ -40,6 +40,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 
   Route::get('/home', 'EventoController@index')->name('home');
 
+  Route::get('/home/comissao', 'EventoController@areaComissao')->name('home.comissao');
   // rotas de teste
   Route::get('/coordenador/home','EventoController@index')->name('coord.home');
   Route::prefix('/coord/evento/')->name('coord.')->group(function(){
@@ -61,6 +62,10 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
       Route::get('editarEtiqueta', 'EventoController@editarEtiqueta')->name('editarEtiqueta');
       Route::get('etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
 
+  });
+
+  Route::prefix('/comissao/cientifica/evento/')->name('comissao.cientifica.')->group(function(){
+    Route::get('detalhes', 'ComissaoController@informacoes')->name('detalhesEvento');
   });
 
   // Visualizar trabalhos do usuário
