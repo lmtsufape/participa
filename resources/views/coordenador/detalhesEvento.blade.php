@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('sidebar')
+
 <div class="wrapper">
     <div class="sidebar">
         <h2>{{{$evento->nome}}}</h2>
@@ -31,6 +32,7 @@
             </a>
             @endcan
             <a id="areas">
+                
                 <li>
                     <img src="{{asset('img/icons/area.svg')}}" alt=""><h5> Áreas</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>

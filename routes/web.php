@@ -90,6 +90,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/modalidade/criar',      'ModalidadeController@store'                 )->name('modalidade.store');
   //Area
   Route::post(  '/area/criar',            'AreaController@store'                       )->name('area.store');
+  Route::delete(  '/area/deletar/{id}',     'AreaController@destroy'                     )->name('area.destroy');
   //Revisores
   Route::post(  '/revisor/criar',         'RevisorController@store'                    )->name('revisor.store');
   Route::get(   '/revisor/listarTrabalhos','RevisorController@indexListarTrabalhos'    )->name('revisor.listarTrabalhos');

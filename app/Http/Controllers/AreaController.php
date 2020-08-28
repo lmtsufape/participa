@@ -87,8 +87,13 @@ class AreaController extends Controller
      * @param  \App\Area  $area
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Area $area)
+    public function destroy($id)
     {
-        //
+
+        /* !!!  EM CONSTRUÇÃO, CONTINUAR APÓS AS ALTERAÇÕES NO BANCO DE DADOS  !!! */
+
+        // $area = Area::find($id);
+        // // dd($area->modalidades);
+        // $area->delete();
     }
 }
