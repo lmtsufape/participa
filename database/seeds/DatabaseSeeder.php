@@ -73,6 +73,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         ]);
 
         DB::table('form_eventos')->insert([
+          'eventoId'                       => 1,
           'etiquetanomeevento'             => 'Nome',
           'etiquetatipoevento'             => 'Tipo',
           'etiquetadescricaoevento'        => 'Descrição',
@@ -84,10 +85,11 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'etiquetamoduloinscricao'        => 'Inscrições',
           'etiquetamoduloprogramacao'      => 'Programação',
           'etiquetamoduloorganizacao'      => 'Organização',
-          'eventoId'                       => 1,
+          
         ]);
 
         DB::table('form_subm_trabas')->insert([
+          'eventoId'                       => 1,
           'etiquetatitulotrabalho'         => 'Titulo',
           'etiquetaautortrabalho'          => 'Autor',
           'etiquetacoautortrabalho'        => 'Co-Autor',
@@ -100,7 +102,6 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'etiquetacampoextra4'            => 'Campo Extra',
           'etiquetacampoextra5'            => 'Campo Extra',
           'ordemCampos'                    => 'etiquetatitulotrabalho,etiquetaautortrabalho,etiquetacoautortrabalho,etiquetaresumotrabalho,etiquetaareatrabalho,etiquetauploadtrabalho,checkcampoextra1,etiquetacampoextra1,select_campo1,checkcampoextra2,etiquetacampoextra2,select_campo2,checkcampoextra3,etiquetacampoextra3,select_campo3,checkcampoextra4,etiquetacampoextra4,select_campo4,checkcampoextra5,etiquetacampoextra5,select_campo5',
-          'eventoId'                       => 1,
         ]);
 
         $areasEventoZoo = [

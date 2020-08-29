@@ -607,6 +607,8 @@ class EventoController extends Controller
         $hasFile = false;
         $trabalhos = null;
         $trabalhosCoautor = null;
+        $etiquetas = FormEvento::where('eventoId',$evento->id)->first();
+        $formSubTraba = FormSubmTraba::all();
 
         $mytime = Carbon::now('America/Recife');
         // dd(false);
@@ -617,7 +619,9 @@ class EventoController extends Controller
                                                 'hasTrabalho'         => $hasTrabalho,
                                                 'hasTrabalhoCoautor'  => $hasTrabalhoCoautor,
                                                 'hasFile'             => $hasFile,
-                                                'mytime'              => $mytime
+                                                'mytime'              => $mytime,
+                                                'etiquetas'           => $etiquetas,
+                                                'formSubTraba'        => $formSubTraba,
                                                ]);
     }
 
