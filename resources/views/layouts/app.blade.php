@@ -66,7 +66,7 @@
                         @else
                             <?php 
 
-                                $revisor = Revisor::where("revisorId", Auth::user()->id)->first();
+                                $revisor =  Auth::user()->revisor;
                                 $ComissaoEvento = ComissaoEvento::where('userId', Auth::user()->id)->first();
                             
                             
