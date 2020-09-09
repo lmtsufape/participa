@@ -28,7 +28,7 @@ class RevisorController extends Controller
      */
     public function indexListarTrabalhos()
     { 
-        $revisores = Revisor::where("revisorId", Auth::user()->id)->get();
+        $revisores = Revisor::where("user_id", Auth::user()->id)->get();
         $atribuicoes = [];
         foreach ($revisores as $revisor) {
           $temp = Atribuicao::where("revisorId", $revisor->id)->get();
@@ -88,7 +88,7 @@ class RevisorController extends Controller
           'trabalhosCorrigidos'   => 0,
           'correcoesEmAndamento'  => 0,
           'eventoId'              => $request->eventoId,
-          'revisorId'             => $usuario->id,
+          'user_id'               => $usuario->id,
           'areaId'                => $request->areaRevisor,
           'modalidadeId'          => $request->modalidadeRevisor,
         ]);

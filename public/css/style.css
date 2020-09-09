@@ -228,6 +228,13 @@ body{
     font-size: 11px;
 }
 
+#dropdownProgramacao{
+    display: none;
+}
+#dropdownProgramacao h5{
+    font-size: 11px;
+}
+
 .arrow{
     float:right;
     margin-top: -5px;

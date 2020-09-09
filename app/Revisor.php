@@ -12,11 +12,11 @@ class Revisor extends Model
      * @var array
      */
     protected $fillable = [
-        'prazo', 'trabalhosCorrigidos', 'correcoesEmAndamento','revisorId', 'eventoId', 'areaId', 'modalidadeId',
+        'prazo', 'trabalhosCorrigidos', 'correcoesEmAndamento','user_id', 'eventoId', 'areaId', 'modalidadeId',
     ];
 
     public function user(){
-        return $this->belongsTo('App\User', 'revisorId');
+        return $this->belongsTo('App\User', 'user_id');
     }
 
     public function evento(){

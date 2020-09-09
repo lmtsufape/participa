@@ -58,16 +58,12 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrComissao', $evento);
 
-        $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
         $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
         $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
-        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
-        $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
         $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
 
 
@@ -113,10 +109,10 @@ class EventoController extends Controller
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
 
         return view('coordenador.trabalhos.listarTrabalhos', [
-                                                    'evento'                  => $evento,
-                                                    'areas'                   => $areas,
-                                                    'trabalhos'               => $trabalhos,
-
+                                                    'evento'            => $evento,
+                                                    'areas'             => $areas,
+                                                    'trabalhos'         => $trabalhos,
+                                                
                                                   ]);
 
     }
@@ -264,7 +260,8 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrComissao', $evento);
         $modalidades = Modalidade::where('eventoId', $evento->id)->get();
-        // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
 
 
         return view('coordenador.modalidade.listarModalidade', [
