@@ -16,12 +16,16 @@ class CreateAtividadesTable extends Migration
         Schema::create('atividades', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->string('nome');
-            $table->integer('versao');
-            $table->boolean('versaoFinal');
-            $table->date('data');
-
-            $table->integer('eventoId');
+            $table->string('titulo');
+            $table->integer('vagas');
+            $table->float('valor');
+            $table->text('descricao');
+            $table->string('local');
+            $table->string('carga_horaria');
+            $table->string('palavras_chave');
+            $table->boolean('visibilidade_participante');
+            
+            $table->integer('eventoId')->refereces('id')->on('eventos');
         });
     }
 

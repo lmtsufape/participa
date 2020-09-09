@@ -12,7 +12,8 @@ class Atividade extends Model
    * @var array
    */
   protected $fillable = [
-      'nome', 'versao', 'versaoFinal', 'data', 'eventoId',
+      'titulo', 'vagas', 'valor', 'descricao', 'local', 'carga_horaria', 'tags', 
+      'data_inicio', 'data_fim', 'tipo_id', 'inscricao_id',
   ];
 
   public function evento(){

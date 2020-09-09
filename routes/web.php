@@ -67,7 +67,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
       Route::get('eventos/editarEtiqueta', 'EventoController@editarEtiqueta')->name('editarEtiqueta');
       Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
 
-      Route::get('evento/atividades/{id}', 'AtividadeController@index')->name('atividades');
+      Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');
 
   });
 
