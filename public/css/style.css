@@ -208,6 +208,12 @@ body{
 #dropdownModalidades h5{
     font-size: 11px;
 }
+#dropdownProgramacao {
+    display: none;
+}
+#dropdownProgramacao h5{
+    font-size: 11px;
+}
 #dropdownTrabalhos{
     display: none;
 }

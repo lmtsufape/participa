@@ -23,7 +23,7 @@ class Evento extends Model
   }
 
   public function atividade(){
-      return $this->hasOne('App\Atividade', 'eventoId');
+      return $this->hasMany('App\Atividade', 'eventoId');
   }
 
   public function area(){

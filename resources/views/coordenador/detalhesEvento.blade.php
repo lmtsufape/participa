@@ -137,7 +137,7 @@
                     <img src="{{asset('img/icons/slideshow.svg')}}" alt=""><h5>Programação</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownProgramacao" @if(request()->is('coord/evento/modalidade*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                    <a id="cadastrarModalidade" href="{{ route('coord.cadastrarModalidade', ['eventoId' => $evento->id]) }}">
+                    <a id="cadastrarModalidade" href="{{ route('coord.atividades', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Atividades</h5>
                         </li>
