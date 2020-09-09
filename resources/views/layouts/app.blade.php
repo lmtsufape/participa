@@ -66,7 +66,6 @@
                         @else
                             <?php 
 
-                                $revisor =  Auth::user()->revisor;
                                 $ComissaoEvento = ComissaoEvento::where('userId', Auth::user()->id)->first();
                             
                             
@@ -82,7 +81,7 @@
                                         <img src="{{asset('img/icons/perfil.svg')}}" alt="">
                                         {{ __('Área do Participante') }}
                                     </a>
-                                    @if (isset($revisor))
+                                    @if (isset(Auth::user()->revisor))
                                         {{-- Rota - Area de Revisores --}}
                                         <a class="dropdown-item" href="{{ route('avaliar.trabalhos') }}">
                                             <img src="{{asset('img/icons/revisor.png')}}" alt="">
