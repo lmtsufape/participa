@@ -68,7 +68,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
       Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
 
       Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');
-
+      Route::post('atividade/{id}/editar', 'AtividadeController@update')->name('atividades.update');
   });
 
   Route::prefix('/comissao/cientifica/evento/')->name('comissao.cientifica.')->group(function(){

@@ -254,7 +254,6 @@
 @endsection
 @section('javascript')
   <script type="text/javascript" >
-
     // Adicionar novo criterio
     $(function(){
         $('#addCriterio').click(function(){
@@ -776,8 +775,15 @@
       alert("The text has been changed.");
     });
 
-
-
+    // Marcar a visibilidade da atividade para participantes
+    // Estudar como fazer
+    function setVisibilidadeAtv(id) {
+        var checkbox = document.getElementById('checkbox_' + id);
+        // jQuery.ajax({
+        //   url: "{{ route('detalhesTrabalho') }}",
+        //   method: 'get',
+        // )};
+    }
   </script>
 
 @endsection

@@ -198,5 +198,45 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'email_verified_at' => '2020-02-15',
           'enderecoId' => 1,
         ]);
+
+        DB::table('tipo_atividades')->insert([  //
+          'descricao' => 'palestra',
+        ]);
+
+        DB::table('tipo_atividades')->insert([  //
+          'descricao' => 'minicurso',
+        ]);
+
+        DB::table('tipo_atividades')->insert([  //
+          'descricao' => 'oficina',
+        ]);
+
+        DB::table('atividades')->insert([  //
+          'titulo' => 'Atividade teste',
+          'vagas' => 100,
+          'valor' => 50.0,
+          'descricao' => 'atividade criada pelo seeder',
+          'local' => 'sala 14, 2º andar',
+          'carga_horaria' => 8,
+          'palavras_chave' => 'teste, testando',
+          'visibilidade_participante' => true,
+          'eventoId' => 1,
+          'tipo_id' => 1,
+        ]);
+
+        
+        DB::table('convidados')->insert([  //
+          'nome' => 'Carlos',
+          'email' => 'carlos.andre12@live.com',
+          'funcao' => 'palestrante',
+          'atividade_id' => 1,
+        ]);
+
+        DB::table('datas_atividades')->insert([
+          'data' => '2020-09-21',
+          'hora_inicio' => '14:00',
+          'hora_fim' => '18:00',
+          'atividade_id' => 1,
+        ]);
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Atividade;
+use App\Evento;
+use App\TipoAtividade;
 use Illuminate\Http\Request;
 
 class AtividadeController extends Controller
@@ -14,7 +16,12 @@ class AtividadeController extends Controller
      */
     public function index($id)
     {
-        dd($id);
+        $evento = Evento::find($id);
+        $atividades = Atividade::where('eventoId', $id)->get();
+        $tipoDeAtividades = TipoAtividade::all();
+        return view('coordenador.programacao.atividades')->with(['evento' => $evento,
+                                                                 'atividades' => $atividades,
+                                                                 'tipos' => $tipoDeAtividades]);
     }
 
     /**
@@ -67,9 +74,12 @@ class AtividadeController extends Controller
      * @param  \App\Atividade  $atividade
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Atividade $atividade)
+    public function update(Request $request, $id)
     {
-        //
+        // ver um modo de retornar o erro
+        $validated = $request->validate([
+            'titulo' => 'required',
+        ]);
     }
 
     /**

@@ -15,7 +15,7 @@ class CreateDatasAtividadesTable extends Migration
     {
         Schema::create('datas_atividades', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->time('data');
+            $table->date('data');
             $table->time('hora_inicio');
             $table->time('hora_fim');
             $table->bigInteger('atividade_id')->refereces('id')->on('atividades');

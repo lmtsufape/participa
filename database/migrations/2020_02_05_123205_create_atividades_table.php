@@ -21,7 +21,7 @@ class CreateAtividadesTable extends Migration
             $table->float('valor');
             $table->text('descricao');
             $table->string('local');
-            $table->string('carga_horaria');
+            $table->integer('carga_horaria');
             $table->string('palavras_chave');
             $table->boolean('visibilidade_participante');
             
