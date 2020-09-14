@@ -71,8 +71,8 @@
         </div>
     </div>
 @endforeach
-<div class="modal fade" id="modalCriarAtividade" tabindex="-1" role="dialog" aria-labelledby="modalLabelCriarAtividade" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade bd-example-modal-lg" id="modalCriarAtividade" tabindex="-1" role="dialog" aria-labelledby="modalLabelCriarAtividade" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
         <div class="modal-header" style="background-color: #114048ff; color: white;">
             <h5 class="modal-title" id="modalLabelCriarAtividade">Criar Atividade</h5>
@@ -208,7 +208,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <label for="data1">Data*:</label>
-                                            <input type="date" class="form-control @error('primeiroDia') is-invalid @enderror" name="primeiroDia" id="data1" value="{{ old('data1') }}">
+                                            <input type="date" class="form-control @error('primeiroDia') is-invalid @enderror" name="primeiroDia" id="data1" value="{{ old('primeiroDia') }}">
 
                                             @error('primeiroDia')
                                             <span class="invalid-feedback" role="alert">
@@ -218,7 +218,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="inicio1">Início:</label>
-                                            <input type="time" class="form-control @error('inicio') is-invalid @enderror" name="inicio" id="inicio1" value="{{ old('inicio1') }}">
+                                            <input type="time" class="form-control @error('inicio') is-invalid @enderror" name="inicio" id="inicio1" value="{{ old('inicio') }}">
 
                                             @error('inicio')
                                             <span class="invalid-feedback" role="alert">
@@ -228,7 +228,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="fim1">Fim:</label>
-                                            <input type="time" class="form-control @error('fim') is-invalid @enderror" name="fim" id="fim1" value="{{ old('fim1') }}">
+                                            <input type="time" class="form-control @error('fim') is-invalid @enderror" name="fim" id="fim1" value="{{ old('fim') }}">
                                         
                                             @error('fim')
                                             <span class="invalid-feedback" role="alert">
@@ -242,7 +242,7 @@
                                     <div class="row" style="margin-top: 10px;">
                                         <div class="col-sm-6">
                                             <label for="data2">Data 2º dia:</label>
-                                            <input type="date" class="form-control @error('segundoDia') is-invalid @enderror" name="segundoDia" id="data2" value="{{ old('data2') }}">
+                                            <input type="date" class="form-control @error('segundoDia') is-invalid @enderror" name="segundoDia" id="data2" value="{{ old('segundoDia') }}">
                                             
                                             @error('segundoDia')
                                             <span class="invalid-feedback" role="alert">
@@ -252,7 +252,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="inicio2">Início:</label>
-                                            <input type="time" class="form-control @error('segundoInicio') is-invalid @enderror" name="segundoInicio" id="inicio2" value="{{ old('inicio2') }}">
+                                            <input type="time" class="form-control @error('segundoInicio') is-invalid @enderror" name="segundoInicio" id="inicio2" value="{{ old('segundoInicio') }}">
                                         
                                             @error('segundoInicio')
                                             <span class="invalid-feedback" role="alert">
@@ -262,7 +262,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="fim2">Fim:</label>
-                                            <input type="time" class="form-control @error('segundoFim') is-invalid @enderror" name="segundoFim" id="fim2" value="{{ old('fim2') }}">
+                                            <input type="time" class="form-control @error('segundoFim') is-invalid @enderror" name="segundoFim" id="fim2" value="{{ old('segundoFim') }}">
                                         
                                             @error('segundoFim')
                                             <span class="invalid-feedback" role="alert">
@@ -276,7 +276,7 @@
                                     <div class="row" style="margin-top: 10px;">
                                         <div class="col-sm-6">
                                             <label for="data3">Data 3º dia:</label>
-                                            <input type="date" class="form-control @error('terceiroDia') is-invalid @enderror" name="terceiroDia" id="data3" value="{{ old('data3') }}">
+                                            <input type="date" class="form-control @error('terceiroDia') is-invalid @enderror" name="terceiroDia" id="data3" value="{{ old('terceiroDia') }}">
                                         
                                             @error('terceiroDia')
                                             <span class="invalid-feedback" role="alert">
@@ -286,7 +286,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="inicio3">Início:</label>
-                                            <input type="time" class="form-control @error('terceiroInicio') is-invalid @enderror" name="terceiroInicio" id="inicio3" value="{{ old('inicio3') }}">
+                                            <input type="time" class="form-control @error('terceiroInicio') is-invalid @enderror" name="terceiroInicio" id="inicio3" value="{{ old('terceiroInicio') }}">
                                         
                                             @error('terceiroInicio')
                                             <span class="invalid-feedback" role="alert">
@@ -296,7 +296,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="fim3">Fim:</label>
-                                            <input type="time" class="form-control @error('terceiroFim') is-invalid @enderror" name="terceiroFim" id="fim3" value="{{ old('fim3') }}">
+                                            <input type="time" class="form-control @error('terceiroFim') is-invalid @enderror" name="terceiroFim" id="fim3" value="{{ old('terceiroFim') }}">
                                         
                                             @error('terceiroFim')
                                             <span class="invalid-feedback" role="alert">
@@ -310,7 +310,7 @@
                                     <div class="row" style="margin-top: 10px;">
                                         <div class="col-sm-6">
                                             <label for="data4">Data 4º dia:</label>
-                                            <input type="date" class="form-control @error('quartoDia') is-invalid @enderror" name="quartoDia" id="data4" value="{{ old('data4') }}">
+                                            <input type="date" class="form-control @error('quartoDia') is-invalid @enderror" name="quartoDia" id="data4" value="{{ old('quartoDia') }}">
                                         
                                             @error('quartoDia')
                                             <span class="invalid-feedback" role="alert">
@@ -320,7 +320,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="inicio4">Início:</label>
-                                            <input type="time" class="form-control @error('quartoInicio') is-invalid @enderror" name="quartoInicio" id="inicio4" value="{{ old('inicio4') }}">
+                                            <input type="time" class="form-control @error('quartoInicio') is-invalid @enderror" name="quartoInicio" id="inicio4" value="{{ old('quartoInicio') }}">
                                         
                                             @error('quartoInicio')
                                             <span class="invalid-feedback" role="alert">
@@ -330,7 +330,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="fim4">Fim:</label>
-                                            <input type="time" class="form-control @error('quartoFim') is-invalid @enderror" name="quartoFim" id="fim4" value="{{ old('fim4') }}">
+                                            <input type="time" class="form-control @error('quartoFim') is-invalid @enderror" name="quartoFim" id="fim4" value="{{ old('quartoFim') }}">
                                         
                                             @error('quartoFim')
                                             <span class="invalid-feedback" role="alert">
@@ -344,7 +344,7 @@
                                     <div class="row" style="margin-top: 10px;">
                                         <div class="col-sm-6">
                                             <label for="data5">Data 5º dia:</label>
-                                            <input type="date" class="form-control @error('quintoDia') is-invalid @enderror" name="quintoDia" id="data5" value="{{ old('data5') }}">
+                                            <input type="date" class="form-control @error('quintoDia') is-invalid @enderror" name="quintoDia" id="data5" value="{{ old('quintoDia') }}">
                                         
                                             @error('quintoDia')
                                             <span class="invalid-feedback" role="alert">
@@ -354,7 +354,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="inicio5">Início:</label>
-                                            <input type="time" class="form-control @error('quintoInicio') is-invalid @enderror" name="quintoInicio" id="inicio5" value="{{ old('inicio5') }}">
+                                            <input type="time" class="form-control @error('quintoInicio') is-invalid @enderror" name="quintoInicio" id="inicio5" value="{{ old('quintoInicio') }}">
                                         
                                             @error('quintoInicio')
                                             <span class="invalid-feedback" role="alert">
@@ -364,7 +364,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="fim5">Fim:</label>
-                                            <input type="time" class="form-control @error('quintoFim') is-invalid @enderror" name="quintoFim" id="fim5" value="{{ old('fim5') }}">
+                                            <input type="time" class="form-control @error('quintoFim') is-invalid @enderror" name="quintoFim" id="fim5" value="{{ old('quintoFim') }}">
                                         
                                             @error('quintoFim')
                                             <span class="invalid-feedback" role="alert">
@@ -378,7 +378,7 @@
                                     <div class="row" style="margin-top: 10px;">
                                         <div class="col-sm-6">
                                             <label for="data6">Data 6º dia:</label>
-                                            <input type="date" class="form-control @error('sextoDia') is-invalid @enderror" name="sextoDia" id="data6" value="{{ old('data6') }}">
+                                            <input type="date" class="form-control @error('sextoDia') is-invalid @enderror" name="sextoDia" id="data6" value="{{ old('sextoDia') }}">
                                         
                                             @error('sextoDia')
                                             <span class="invalid-feedback" role="alert">
@@ -388,7 +388,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="inicio6">Início:</label>
-                                            <input type="time" class="form-control @error('sextoInicio') is-invalid @enderror" name="sextoInicio" id="inicio6" value="{{ old('inicio6') }}">
+                                            <input type="time" class="form-control @error('sextoInicio') is-invalid @enderror" name="sextoInicio" id="inicio6" value="{{ old('sextoInicio') }}">
                                         
                                             @error('sextoInicio')
                                             <span class="invalid-feedback" role="alert">
@@ -398,7 +398,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="fim6">Fim:</label>
-                                            <input type="time" class="form-control @error('sextoFim') is-invalid @enderror" name="sextoFim" id="fim6" value="{{ old('fim6') }}">
+                                            <input type="time" class="form-control @error('sextoFim') is-invalid @enderror" name="sextoFim" id="fim6" value="{{ old('sextoFim') }}">
                                         
                                             @error('sextoFim')
                                             <span class="invalid-feedback" role="alert">
@@ -412,7 +412,7 @@
                                     <div class="row" style="margin-top: 10px;">
                                         <div class="col-sm-6">
                                             <label for="data7">Data 7º dia:</label>
-                                            <input type="date" class="form-control @error('setimoDia') is-invalid @enderror" name="setimoDia" id="data7" value="{{ old('data7') }}">
+                                            <input type="date" class="form-control @error('setimoDia') is-invalid @enderror" name="setimoDia" id="data7" value="{{ old('setimoDia') }}">
                                         
                                             @error('setimoDia')
                                             <span class="invalid-feedback" role="alert">
@@ -422,7 +422,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="inicio7">Início:</label>
-                                            <input type="time" class="form-control @error('setimoInicio') is-invalid @enderror" name="setimoInicio" id="inicio7" value="{{ old('inicio7') }}">
+                                            <input type="time" class="form-control @error('setimoInicio') is-invalid @enderror" name="setimoInicio" id="inicio7" value="{{ old('setimoInicio') }}">
                                         
                                             @error('setimoInicio')
                                             <span class="invalid-feedback" role="alert">
@@ -432,7 +432,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="fim7">Fim:</label>
-                                            <input type="time" class="form-control @error('setimoFim') is-invalid @enderror" name="setimoFim" id="fim7" value="{{ old('fim7') }}">
+                                            <input type="time" class="form-control @error('setimoFim') is-invalid @enderror" name="setimoFim" id="fim7" value="{{ old('setimoFim') }}">
                                         
                                             @error('setimoFim')
                                             <span class="invalid-feedback" role="alert">
