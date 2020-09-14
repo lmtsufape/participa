@@ -784,6 +784,184 @@
         //   method: 'get',
         // )};
     }
+    //Funções do form de atividades da programação
+    $(document).ready(function() {
+        $('#duracaoAtividade').change(function(){
+            document.getElementById('divDuracaoAtividade').style.display = "block";
+            switch ($(this).val()) {
+                case '1':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "none";
+                    document.getElementById('dia3').style.display = "none";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '2':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "none";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '3':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '4':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '5':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '6':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "block";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '7':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "block";
+                    document.getElementById('dia7').style.display = "block";
+                    break;
+            }
+        });
+
+        $('#submitNovaAtividade').click(function(){
+            var form = document.getElementById('formNovaAtividade');
+            form.submit();
+        });
+
+        $('#buttomFormNovoTipoAtividade').click(function(){
+            if (document.getElementById('formNovoTipoAtividade').style.display == "block") {
+                document.getElementById('formNovoTipoAtividade').style.display = "none";
+            } else {
+                document.getElementById('formNovoTipoAtividade').style.display = "block";
+            }
+        });
+
+        $('#buttonformNovaFuncaoDeConvidado').click(function() {
+            if (document.getElementById('formNovaFuncaoDeConvidado').style.display == "block") {
+                document.getElementById('formNovaFuncaoDeConvidado').style.display = "none";
+            } else {
+                document.getElementById('formNovaFuncaoDeConvidado').style.display = "block";
+            }
+        });
+    });
+    
+    
   </script>
 
+    
+
+  @if(old('idAtividade') != null)
+    <script>
+        $(document).ready(function() {
+            $('#modalAtividadeEdit{{old('idAtividade')}}').modal('show');
+        });
+    </script>
+  @endif
+  @if(old('idNovaAtividade') == 2)
+    <script>
+        $(document).ready(function() {
+            $('#modalCriarAtividade').modal('show');
+        });
+        $(document).ready(function() {
+            document.getElementById('divDuracaoAtividade').style.display = "block";
+            switch ($('#duracaoAtividade').val()) {
+                case '1':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "none";
+                    document.getElementById('dia3').style.display = "none";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '2':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "none";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '3':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '4':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '5':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '6':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "block";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '7':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "block";
+                    document.getElementById('dia7').style.display = "block";
+                    break;
+            }
+        });
+    </script>
+  @endif
 @endsection
