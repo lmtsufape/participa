@@ -948,6 +948,11 @@
             }
         });
     });
+
+    function editarAtividade(id) {
+        var form = document.getElementById('formEdidarAtividade' + id);
+        form.submit();
+    }
     
   </script>
 
