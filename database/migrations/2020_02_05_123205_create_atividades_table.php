@@ -17,12 +17,12 @@ class CreateAtividadesTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('titulo');
-            $table->integer('vagas');
-            $table->float('valor');
+            $table->integer('vagas')->nullable();
+            $table->float('valor')->nullable();
             $table->text('descricao');
             $table->string('local');
-            $table->integer('carga_horaria');
-            $table->string('palavras_chave');
+            $table->integer('carga_horaria')->nullable();
+            $table->string('palavras_chave')->nullable();
             $table->boolean('visibilidade_participante');
             
             $table->integer('eventoId')->refereces('id')->on('eventos');

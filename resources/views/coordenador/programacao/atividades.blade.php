@@ -4,69 +4,447 @@
   
 <!-- Modal para editar a atividade-->
 @foreach ($atividades as $atv)
-    <div class="modal fade" id="modalAtividadeEdit{{$atv->id}}" tabindex="-1" role="dialog" aria-labelledby="modalLabelAtividadeEdit{{$atv->id}}" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade bd-example-modal-lg" id="modalAtividadeEdit{{$atv->id}}" tabindex="-1" role="dialog" aria-labelledby="modalLabelAtividadeEdit{{$atv->id}}" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title" id="modalLabelAtividadeEdit{{$atv->id}}">Editar Atividade</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" action="{{ route('coord.atividades.update', ['id' => $atv->id]) }}">
                 <div class="modal-body">
+                    <form id="formEdidarAtividade{{$atv->id}}" method="POST" action="{{ route('coord.atividades.update', ['id' => $atv->id]) }}">
                         @csrf
                         <div class="container">
                             <div class="row form-group">
-                                <input type="hidden" name="idAtividade" id="id" value="{{$atv->id}}">
+                                <input type="hidden" name="idAtividade" value="{{ $atv->id }}">
+                                <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                                 <div class="col-sm-6">
-                                    <label for="titulo">Titulo:</label>
-                                    <input class="form-control" type="text" name="titulo" id="titulo" value="{{$atv->titulo}}">
+                                    <label for="titulo">Titulo*:</label>
+                                    <input class="form-control @error('titulo') is-invalid @enderror" type="text" name="titulo" id="titulo{{$atv->id}}" value="@if ( old('titulo') != null ) {{ old('titulo') }} @else {{$atv->titulo}} @endif" placeholder="Nova atividade">
+                                    
+                                    @error('titulo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="tipo">Tipo*:</label>
+                                    <select class="form-control @error('tipo') is-invalid @enderror" name="tipo" id="tipo{{$atv->id}}">
+                                        <option value="" selected disabled>-- Tipo --</option>
+                                        @if (old('titulo') != null)
+                                            @foreach ($tipos as $tipo)
+                                                <option value="{{ $tipo->id }}" @if(old('tipo') == $tipo->id) selected @endif >{{ $tipo->descricao }}</option>
+                                            @endforeach
+                                        @else
+                                            @foreach ($tipos as $tipo)
+                                                <option value="{{ $tipo->id }}" @if($atv->tipo_id == $tipo->id) selected @endif >{{ $tipo->descricao }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+    
+                                    @error('tipo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-2">
+                                    <button id="buttomFormNovoTipoAtividade{{$atv->id}}" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Tipo</button>
+                                </div>
+                            </div>
+                            <div id="formNovoTipoAtividade{{$atv->id}}" class="form-group" style="display: none;">
+                                <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
+                                    <div class="col-sm-12">
+                                        <label for="nomeTipo">Nome*:</label>
+                                        <input class="form-control" type="text" name="nomeTipo" id="nomeTipo{{$atv->id}}" placeholder="Nome do novo tipo">
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <button id="submitNovoTipoAtividade{{$atv->id}}" type="button" class="btn btn-primary">Salvar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row form-group">
+                                <div class="container">
+                                    <h5>Convidado</h5>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label for="nome">Nome:</label>
+                                            <input class="form-control" type="text" name="nomeDoConvidado" id="nome{{$atv->id}}"  value="{{ old('nomeConvidado') }}" placeholder="Nome do convidado">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label for="email">E-mail:</label>
+                                            <input class="form-control" type="text" name="emailDoConvidado" id="email{{$atv->id}}" value="{{ old('emailConvidado') }}" placeholder="E-mail do convidado">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <label for="funcao">Função:</label>
+                                            <select class="form-control" name="funçãoDoConvidado" id="funcao{{$atv->id}}">
+                                                <option value="" selected disabled>-- Função --</option>
+                                                <option value="Palestrate">Palestrate</option>
+                                                <option value="Avaliador">Avaliador</option>
+                                                <option value="Ouvinte">Ouvinte</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <button id="buttonformNovaFuncaoDeConvidado{{$atv->id}}" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Função</button>
+                                        </div>
+                                    </div>
+                                    <div id="formNovaFuncaoDeConvidado{{$atv->id}}" class="form-group" style="display: none; margin-top: 15px;">
+                                        <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
+                                            <div class="col-sm-12">
+                                                <label for="nomeTipo">Nome*:</label>
+                                                <input class="form-control" type="text" name="nomeTipo" id="nomeTipoConvidado{{$atv->id}}" placeholder="Nome da nova função do convidado">
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <button id="submitNovaFuncaoDeConvidado{{$atv->id}}" type="button" class="btn btn-primary">Salvar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row form-group">
+                                <div class="col-sm-12">
+                                    <label for="descricao">Descricao*:</label>
+                                    <textarea class="form-control @error('descricao') is-invalid @enderror" rows="5" name="descricao" id="descricao{{$atv->id}}" placeholder="Descreva em detalhes sua atividade">@if (old('descricao') != null) {{ old('descricao') }} @else {{$atv->descricao}} @endif</textarea>
+                                    
+                                    @error('descricao')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row form-group">
+                                <div class="col-sm-12">
+                                    <label for="duracaoAtividade">Duração*:</label>
+                                    <select class="form-control  @error('duracaoDaAtividade') is-invalid @enderror" name="duracaoDaAtividade" id="duracaoAtividade{{$atv->id}}" onchange="exibirDias({{ $atv->id }})">
+                                        <option value="" selected disabled>-- Duração --</option>
+                                        @if (old('duracaoDaAtividade') != null) 
+                                            <option value="1" @if(old('duracaoDaAtividade') == "1") selected @endif >Um dia</option>
+                                            <option value="2" @if(old('duracaoDaAtividade') == "2") selected @endif>Dois dia</option>
+                                            <option value="3" @if(old('duracaoDaAtividade') == "3") selected @endif>Três dia</option>
+                                            <option value="4" @if(old('duracaoDaAtividade') == "4") selected @endif>Quatro dia</option>
+                                            <option value="5" @if(old('duracaoDaAtividade') == "5") selected @endif>Cinco dia</option>
+                                            <option value="6" @if(old('duracaoDaAtividade') == "6") selected @endif>Seis dia</option>
+                                            <option value="7" @if(old('duracaoDaAtividade') == "7") selected @endif>Sete dia</option>
+                                        @else
+                                            @for ($i = 0; $i < count($ids); $i++)
+                                                @if ($ids[$i] == $atv->id) 
+                                                    <option value="1" @if($duracaoAtividades[$i] == "1") selected @endif >Um dia</option>
+                                                    <option value="2" @if($duracaoAtividades[$i] == "2") selected @endif>Dois dia</option>
+                                                    <option value="3" @if($duracaoAtividades[$i] == "3") selected @endif>Três dia</option>
+                                                    <option value="4" @if($duracaoAtividades[$i] == "4") selected @endif>Quatro dia</option>
+                                                    <option value="5" @if($duracaoAtividades[$i] == "5") selected @endif>Cinco dia</option>
+                                                    <option value="6" @if($duracaoAtividades[$i] == "6") selected @endif>Seis dia</option>
+                                                    <option value="7" @if($duracaoAtividades[$i] == "7") selected @endif>Sete dia</option>
+                                                @endif
+                                            @endfor
+                                        @endif
+                                    <select>
+                                        {{-- {{dd()}} --}}
+                                    @error('duracaoDaAtividade')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                
+                            </div>
+                            
+                            @for ($i = 0; $i < count($ids); $i++)
+                                @if ($ids[$i] == $atv->id)
+                                    <div id="divDuracaoAtividade{{ $atv->id }}" class="row form-group" @if ($duracaoAtividades[$i] != 0) style="display: block" @else style="display: none" @endif>
+                                        <div class="container" style="background-color: rgb(238, 238, 238); border-radius: 5px; padding: 15px;">
+                                            <div id="dia1{{ $atv->id }}" @if ($duracaoAtividades[$i] >= 1) style="display: block" @else style="display: none" @endif>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label for="data1">Data*:</label>
+                                                        
+                                                    <input type="date" class="form-control @error('primeiroDia') is-invalid @enderror" name="primeiroDia" id="data1{{$atv->id}}" value="@if (old('primeiroDia') != null) {{ old('primeiroDia') }} @elseif(array_key_exists(0, $atv->datasAtividade->toArray())){{date('Y-m-d', strtotime($atv->datasAtividade[0]->data))}}@endif">
+                                                        @error('primeiroDia')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="inicio1">Início:</label>
+                                                        <input type="time" class="form-control @error('inicio') is-invalid @enderror" name="inicio" id="inicio1{{$atv->id}}" value="@if (old('inicio1') != null) {{ old('inicio1') }} @elseif(array_key_exists(0, $atv->datasAtividade->toArray())){{$atv->datasAtividade[0]->hora_inicio}}@endif">
+            
+                                                        @error('inicio')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="fim1">Fim:</label>
+                                                        <input type="time" class="form-control @error('fim') is-invalid @enderror" name="fim" id="fim1{{$atv->id}}" value="@if (old('fim1') != null) {{ old('fim1') }} @elseif(array_key_exists(0, $atv->datasAtividade->toArray())){{$atv->datasAtividade[0]->hora_fim}}@endif">
+                                                    
+                                                        @error('fim')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="dia2{{ $atv->id }}" @if ($duracaoAtividades[$i] >= 2) style="display: block" @else style="display: none" @endif>
+                                                <div class="row" style="margin-top: 10px;">
+                                                    <div class="col-sm-6">
+                                                        <label for="data2">Data 2º dia:</label>
+                                                        <input type="date" class="form-control @error('segundoDia') is-invalid @enderror" name="segundoDia" id="data2{{$atv->id}}" value="@if (old('segundoDia') != null) {{ old('segundoDia') }} @elseif(array_key_exists(1, $atv->datasAtividade->toArray())){{date('Y-m-d', strtotime($atv->datasAtividade[1]->data))}}@endif">
+                                                        
+                                                        @error('segundoDia')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="inicio2">Início:</label>
+                                                        <input type="time" class="form-control @error('segundoInicio') is-invalid @enderror" name="segundoInicio" id="inicio2{{$atv->id}}" value="@if (old('segundoInicio') != null) {{ old('segundoInicio') }} @elseif(array_key_exists(1, $atv->datasAtividade->toArray())){{$atv->datasAtividade[1]->hora_inicio}}@endif">
+                                                    
+                                                        @error('segundoInicio')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="fim2">Fim:</label>
+                                                        <input type="time" class="form-control @error('segundoFim') is-invalid @enderror" name="segundoFim" id="fim2{{$atv->id}}" value="@if (old('segundoFim') != null) {{ old('segundoFim') }} @elseif(array_key_exists(1, $atv->datasAtividade->toArray())){{$atv->datasAtividade[1]->hora_fim}}@endif">
+                                                    
+                                                        @error('segundoFim')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="dia3{{ $atv->id }}" @if ($duracaoAtividades[$i] >= 3) style="display: block" @else style="display: none" @endif>
+                                                <div class="row" style="margin-top: 10px;">
+                                                    <div class="col-sm-6">
+                                                        <label for="data3">Data 3º dia:</label>
+                                                        <input type="date" class="form-control @error('terceiroDia') is-invalid @enderror" name="terceiroDia" id="data3{{$atv->id}}" value="@if (old('terceiroDia') != null) {{ old('terceiroDia') }} @elseif(array_key_exists(2, $atv->datasAtividade->toArray())){{date('Y-m-d', strtotime($atv->datasAtividade[2]->data))}}@endif">
+                                                    
+                                                        @error('terceiroDia')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="inicio3">Início:</label>
+                                                        <input type="time" class="form-control @error('terceiroInicio') is-invalid @enderror" name="terceiroInicio" id="inicio3{{$atv->id}}" value="@if (old('terceiroInicio') != null) {{ old('terceiroInicio') }} @elseif(array_key_exists(2, $atv->datasAtividade->toArray())){{$atv->datasAtividade[2]->hora_inicio}}@endif">
+                                                    
+                                                        @error('terceiroInicio')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="fim3">Fim:</label>
+                                                        <input type="time" class="form-control @error('terceiroFim') is-invalid @enderror" name="terceiroFim" id="fim3{{$atv->id}}" value="@if (old('terceiroFim') != null) {{ old('terceiroFim') }} @elseif(array_key_exists(2, $atv->datasAtividade->toArray())){{$atv->datasAtividade[2]->hora_fim}}@endif">
+                                                    
+                                                        @error('terceiroFim')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="dia4{{ $atv->id }}" @if ($duracaoAtividades[$i] >= 4) style="display: block" @else style="display: none" @endif>
+                                                <div class="row" style="margin-top: 10px;">
+                                                    <div class="col-sm-6">
+                                                        <label for="data4">Data 4º dia:</label>
+                                                        <input type="date" class="form-control @error('quartoDia') is-invalid @enderror" name="quartoDia" id="data4{{$atv->id}}" value="@if (old('quartoDia') != null) {{ old('quartoDia') }} @elseif(array_key_exists(3, $atv->datasAtividade->toArray())){{date('Y-m-d', strtotime($atv->datasAtividade[3]->data))}}@endif">
+                                                    
+                                                        @error('quartoDia')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="inicio4">Início:</label>
+                                                        <input type="time" class="form-control @error('quartoInicio') is-invalid @enderror" name="quartoInicio" id="inicio4{{$atv->id}}" value="@if (old('quartoInicio') != null) {{ old('quartoInicio') }} @elseif(array_key_exists(3, $atv->datasAtividade->toArray())){{$atv->datasAtividade[3]->hora_inicio}}@endif">
+                                                    
+                                                        @error('quartoInicio')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="fim4">Fim:</label>
+                                                        <input type="time" class="form-control @error('quartoFim') is-invalid @enderror" name="quartoFim" id="fim4{{$atv->id}}" value="@if (old('quartoFim') != null) {{ old('quartoFim') }} @elseif(array_key_exists(3, $atv->datasAtividade->toArray())){{$atv->datasAtividade[3]->hora_fim}}@endif">
+                                                    
+                                                        @error('quartoFim')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="dia5{{ $atv->id }}" @if ($duracaoAtividades[$i] >= 5) style="display: block" @else style="display: none" @endif>
+                                                <div class="row" style="margin-top: 10px;">
+                                                    <div class="col-sm-6">
+                                                        <label for="data5">Data 5º dia:</label>
+                                                        <input type="date" class="form-control @error('quintoDia') is-invalid @enderror" name="quintoDia" id="data5{{$atv->id}}" value="@if (old('quintoDia') != null) {{ old('quintoDia') }} @elseif(array_key_exists(4, $atv->datasAtividade->toArray())){{date('Y-m-d', strtotime($atv->datasAtividade[4]->data))}}@endif">
+                                                    
+                                                        @error('quintoDia')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="inicio5">Início:</label>
+                                                        <input type="time" class="form-control @error('quintoInicio') is-invalid @enderror" name="quintoInicio" id="inicio5{{$atv->id}}" value="@if (old('quintoInicio') != null) {{ old('quintoInicio') }} @elseif(array_key_exists(4, $atv->datasAtividade->toArray())){{$atv->datasAtividade[4]->hora_inicio}}@endif">
+                                                    
+                                                        @error('quintoInicio')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="fim5">Fim:</label>
+                                                        <input type="time" class="form-control @error('quintoFim') is-invalid @enderror" name="quintoFim" id="fim5{{$atv->id}}" value="@if (old('quintoFim') != null) {{ old('quintoFim') }} @elseif(array_key_exists(4, $atv->datasAtividade->toArray())){{$atv->datasAtividade[4]->hora_fim}}@endif">
+                                                    
+                                                        @error('quintoFim')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="dia6{{ $atv->id }}" @if ($duracaoAtividades[$i] >= 6) style="display: block" @else style="display: none" @endif>
+                                                <div class="row" style="margin-top: 10px;">
+                                                    <div class="col-sm-6">
+                                                        <label for="data6">Data 6º dia:</label>
+                                                        <input type="date" class="form-control @error('sextoDia') is-invalid @enderror" name="sextoDia" id="data6{{$atv->id}}" value="@if (old('sextoDia') != null) {{ old('sextoDia') }} @elseif(array_key_exists(5, $atv->datasAtividade->toArray())){{date('Y-m-d', strtotime($atv->datasAtividade[5]->data))}}@endif">
+                                                    
+                                                        @error('sextoDia')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="inicio6">Início:</label>
+                                                        <input type="time" class="form-control @error('sextoInicio') is-invalid @enderror" name="sextoInicio" id="inicio6{{$atv->id}}" value="@if (old('sextoInicio') != null) {{ old('sextoInicio') }} @elseif(array_key_exists(5, $atv->datasAtividade->toArray())){{$atv->datasAtividade[5]->hora_inicio}}@endif">
+                                                    
+                                                        @error('sextoInicio')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="fim6">Fim:</label>
+                                                        <input type="time" class="form-control @error('sextoFim') is-invalid @enderror" name="sextoFim" id="fim6{{$atv->id}}" value="@if (old('sextoFim') != null) {{ old('sextoFim') }} @elseif(array_key_exists(5, $atv->datasAtividade->toArray())){{$atv->datasAtividade[5]->hora_fim}}@endif">
+                                                    
+                                                        @error('sextoFim')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="dia7{{ $atv->id }}" @if ($duracaoAtividades[$i] == 7) style="display: block" @else style="display: none" @endif>
+                                                <div class="row" style="margin-top: 10px;">
+                                                    <div class="col-sm-6">
+                                                        <label for="data7">Data 7º dia:</label>
+                                                        <input type="date" class="form-control @error('setimoDia') is-invalid @enderror" name="setimoDia" id="data7{{$atv->id}}" value="@if (old('setimoDia') != null) {{ old('setimoDia') }} @elseif(array_key_exists(6, $atv->datasAtividade->toArray())){{date('Y-m-d', strtotime($atv->datasAtividade[6]->data))}}@endif">
+                                                    
+                                                        @error('setimoDia')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="inicio7">Início:</label>
+                                                        <input type="time" class="form-control @error('setimoInicio') is-invalid @enderror" name="setimoInicio" id="inicio7{{$atv->id}}" value="@if (old('setimoInicio') != null) {{ old('setimoInicio') }} @elseif(array_key_exists(6, $atv->datasAtividade->toArray())){{$atv->datasAtividade[6]->hora_inicio}}@endif">
+                                                    
+                                                        @error('setimoInicio')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="fim7">Fim:</label>
+                                                        <input type="time" class="form-control @error('setimoFim') is-invalid @enderror" name="setimoFim" id="fim7{{$atv->id}}" value="@if (old('setimoFim') != null) {{ old('setimoFim') }} @elseif(array_key_exists(6, $atv->datasAtividade->toArray())){{$atv->datasAtividade[6]->hora_fim}}@endif">
+                                                    
+                                                        @error('setimoFim')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endfor
+                            <hr>
+                            <div class="row form-group">
+                                <div class="col-sm-6">
+                                    <label for="vagas">Vagas:</label>
+                                    <input class="form-control" type="number" name="vagas" id="vagas{{$atv->id}}" placeholder="Quantidade de vagas" value="@if (old('vagas') != null) {{ old('vagas') }} @else{{$atv->vagas}}@endif">
                                 </div>
                                 <div class="col-sm-6">
-                                    <label for="tipo">Tipo:</label>
-                                    <select class="form-control" name="tipo" id="tipo">
-                                        @foreach ($tipos as $tipo)
-                                            <option value="{{ $tipo->id }}" @if($tipo->id === $atv->tipoAtividade->id) selected @endif>{{ $tipo->descricao }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="valor">Valor:</label>
+                                    <input type="number" step="0.01" class="form-control" min="0.01" id="valor{{$atv->id}}" name="valor" placeholder="Valor para participar" value="@if (old('valor') != null) {{ old('valor') }} @else{{$atv->valor}}@endif">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row form-group">
+                                <div class="col-sm-6">
+                                    <label for="local">Local*:</label>
+                                    <input class="form-control @error('local') is-invalid @enderror" type="text" name="local" id="local{{$atv->id}}"  placeholder="Local da atividade"  value="@if(old('local') != null) {{ old('local') }} @else{{$atv->local}}@endif">
+                                
+                                    @error('local')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="carga_horaria">Carga horária:</label>
+                                    <input type="number" class="form-control" id="carga_horaria{{$atv->id}}" name="carga_horaria" placeholder="Carga horária da atividade" value="@if (old('carga_horaria') != null) {{ old('carga_horaria') }} @else{{$atv->carga_horaria}}@endif">
                                 </div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-12">
-                                    <label for="descricao">Descricao:</label>
-                                    <textarea class="form-control" rows="5" name="descricao" id="descricao">{{ $atv->descricao }}</textarea>
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-sm-6">
-                                    <label for="vagas">Vagas:</label>
-                                    <input class="form-control" type="number" name="vagas" id="vagas" value="{{$atv->vagas}}">
-                                </div>
-                                <div class="col-sm-6">
-                                    <label for="valor">Valor:</label>
-                                    <input type="number" step="0.01" class="form-control" min="0.01" id="valor" name="valor" value="{{$atv->valor}}">
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-sm-6">
-                                    <label for="local">Local:</label>
-                                    <input class="form-control" type="text" name="local" id="local" value="{{$atv->local}}">
-                                </div>
-                                <div class="col-sm-6">
-                                    <label for="carga_horaria">Carga horária:</label>
-                                    <input type="number" class="form-control" id="carga_horaria" name="carga_horaria" value="{{$atv->carga_horaria}}">
+                                    <label for="palavrasChaves">Palavras-chave:</label>
+                                    <input class="form-control" type="text" name="palavrasChaves" id="palavrasChaves{{$atv->id}}"  placeholder='Palavras que ajudam na busca, separe-as por ","'  value="@if (old('palavrasChaves') != null) {{ old('palavrasChaves') }} @else {{ $atv->palavras_chave }} @endif">   
                                 </div>
                             </div>
                         </div>
-                        
-                    
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
-            </form>
             </div>
         </div>
     </div>
@@ -86,6 +464,7 @@
                     <div class="container">
                         <div class="row form-group">
                             <input type="hidden" name="idNovaAtividade" value="2">
+                            <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                             <div class="col-sm-6">
                                 <label for="titulo">Titulo*:</label>
                                 <input class="form-control @error('titulo') is-invalid @enderror" type="text" name="titulo" id="titulo" value="{{ old('titulo')}}" placeholder="Nova atividade">
@@ -158,7 +537,7 @@
                                     <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
                                         <div class="col-sm-12">
                                             <label for="nomeTipo">Nome*:</label>
-                                            <input class="form-control" type="text" name="nomeTipo" id="nomeTipo" placeholder="Nome da nova função do convidado">
+                                            <input class="form-control" type="text" name="nomeTipo" id="nomeTipoConvidado" placeholder="Nome da nova função do convidado">
                                         </div>
                                         <div class="col-sm-12">
                                             <button id="submitNovaFuncaoDeConvidado" type="button" class="btn btn-primary">Salvar</button>
@@ -184,7 +563,7 @@
                         <div class="row form-group">
                             <div class="col-sm-12">
                                 <label for="duracaoAtividade">Duração*:</label>
-                                <select class="form-control  @error('duracaoDaAtividade') is-invalid @enderror" name="duracaoDaAtividade" id="duracaoAtividade">
+                                <select class="form-control  @error('duracaoDaAtividade') is-invalid @enderror" name="duracaoDaAtividade" id="duracaoAtividade" onchange="exibirDias(0)">
                                     <option value="" selected disabled>-- Duração --</option>
                                     <option value="1" @if(old('duracaoDaAtividade') == "1") selected @endif >Um dia</option>
                                     <option value="2" @if(old('duracaoDaAtividade') == "2") selected @endif>Dois dia</option>
@@ -472,6 +851,12 @@
                                 <input type="number" class="form-control" id="carga_horaria" name="carga_horaria" placeholder="Carga horária da atividade" value="{{ old('carga_horaria') }}">
                             </div>
                         </div>
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                <label for="palavrasChaves">Palavras-chave:</label>
+                                <input class="form-control" type="text" name="palavrasChaves" id="palavrasChaves"  placeholder='Palavras que ajudam na busca, separe-as por ","'  value="{{ old('palavrasChaves') }}">   
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -489,6 +874,16 @@
             <h1 class="titulo-detalhes">Programação</h1>
         </div>
     </div>
+    {{-- Alerta para mensagens de sucesso
+    @if(session('mensagem'))
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 5px;">
+            <div class="alert alert-success">
+                <p>{{session('mensagem')}}</p>
+            </div>
+        </div>
+    </div>
+    @endif --}}
     <div class="row">
         <div class="col-sm-12">
             <div class="card">

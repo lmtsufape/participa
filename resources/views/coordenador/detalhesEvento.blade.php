@@ -785,10 +785,79 @@
         // )};
     }
     //Funções do form de atividades da programação
-    $(document).ready(function() {
-        $('#duracaoAtividade').change(function(){
+    function exibirDias(id) {
+        if (id != 0) {
+            document.getElementById('divDuracaoAtividade'+id).style.display = "block";
+            var select = document.getElementById('duracaoAtividade'+id);
+            switch (select.value) {
+                case '1':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "none";
+                    document.getElementById('dia3'+id).style.display = "none";
+                    document.getElementById('dia4'+id).style.display = "none";
+                    document.getElementById('dia5'+id).style.display = "none";
+                    document.getElementById('dia6'+id).style.display = "none";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '2':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "none";
+                    document.getElementById('dia4'+id).style.display = "none";
+                    document.getElementById('dia5'+id).style.display = "none";
+                    document.getElementById('dia6'+id).style.display = "none";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '3':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "block";
+                    document.getElementById('dia4'+id).style.display = "none";
+                    document.getElementById('dia5'+id).style.display = "none";
+                    document.getElementById('dia6'+id).style.display = "none";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '4':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "block";
+                    document.getElementById('dia4'+id).style.display = "block";
+                    document.getElementById('dia5'+id).style.display = "none";
+                    document.getElementById('dia6'+id).style.display = "none";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '5':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "block";
+                    document.getElementById('dia4'+id).style.display = "block";
+                    document.getElementById('dia5'+id).style.display = "block";
+                    document.getElementById('dia6'+id).style.display = "none";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '6':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "block";
+                    document.getElementById('dia4'+id).style.display = "block";
+                    document.getElementById('dia5'+id).style.display = "block";
+                    document.getElementById('dia6'+id).style.display = "block";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '7':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "block";
+                    document.getElementById('dia4'+id).style.display = "block";
+                    document.getElementById('dia5'+id).style.display = "block";
+                    document.getElementById('dia6'+id).style.display = "block";
+                    document.getElementById('dia7'+id).style.display = "block";
+                    break;
+            }
+        } else {
             document.getElementById('divDuracaoAtividade').style.display = "block";
-            switch ($(this).val()) {
+            var select = document.getElementById('duracaoAtividade');
+            switch (select.value) {
                 case '1':
                     document.getElementById('dia1').style.display = "block";
                     document.getElementById('dia2').style.display = "none";
@@ -853,8 +922,11 @@
                     document.getElementById('dia7').style.display = "block";
                     break;
             }
-        });
+        }
 
+    }
+
+    $(document).ready(function() {
         $('#submitNovaAtividade').click(function(){
             var form = document.getElementById('formNovaAtividade');
             form.submit();
@@ -876,7 +948,6 @@
             }
         });
     });
-    
     
   </script>
 
