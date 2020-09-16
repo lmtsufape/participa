@@ -254,6 +254,7 @@
 @endsection
 @section('javascript')
   <script type="text/javascript" >
+
     // Adicionar novo criterio
     $(function(){
         $('#addCriterio').click(function(){
@@ -775,15 +776,22 @@
       alert("The text has been changed.");
     });
 
+    
     // Marcar a visibilidade da atividade para participantes
     // Estudar como fazer
     function setVisibilidadeAtv(id) {
         var checkbox = document.getElementById('checkbox_' + id);
-        // jQuery.ajax({
-        //   url: "{{ route('detalhesTrabalho') }}",
-        //   method: 'get',
-        // )};
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            }
+        });
+        jQuery.ajax({
+          url: "/coord/evento/atividades/"+ id +"/visibilidade",
+          method: 'post',
+        });
     }
+
     //Funções do form de atividades da programação
     function exibirDias(id) {
         if (id != 0) {

@@ -32,6 +32,7 @@
     
 </head>
 <body>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div id="app">
         {{-- Navbar --}}
         <nav class="navbar navbar-expand-md navbar-dark  shadow-sm">

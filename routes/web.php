@@ -68,6 +68,8 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
       Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
 
       Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');
+      // Atenção se mudar url da rota abaixo mudar função setVisibilidadeAtv na view detalhesEvento.blade.php
+      Route::post('atividades/{id}/visibilidade', 'AtividadeController@setVisibilidadeAjax')->name('atividades.visibilidade');
       Route::post('atividade/nova', 'AtividadeController@store')->name('atividades.store');
       Route::post('atividade/{id}/editar', 'AtividadeController@update')->name('atividades.update');
   });

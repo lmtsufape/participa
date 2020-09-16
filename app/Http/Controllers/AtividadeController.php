@@ -329,4 +329,16 @@ class AtividadeController extends Controller
     {
         //
     }
+
+    // Salva a visibilidade da atividade para participantes
+    public function setVisibilidadeAjax($id) {
+        $atividade = Atividade::find($id);
+
+        if ($atividade->visibilidade_participante) {
+            $atividade->visibilidade_participante = false;
+        } else {
+            $atividade->visibilidade_participante = true;
+        }
+        $atividade->save();
+    }
 }
