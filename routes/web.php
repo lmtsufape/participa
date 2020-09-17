@@ -72,6 +72,9 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
       Route::post('atividades/{id}/visibilidade', 'AtividadeController@setVisibilidadeAjax')->name('atividades.visibilidade');
       Route::post('atividade/nova', 'AtividadeController@store')->name('atividades.store');
       Route::post('atividade/{id}/editar', 'AtividadeController@update')->name('atividades.update');
+      Route::post('atividade/{id}/excluir', 'AtividadeController@destroy')->name('atividade.destroy');
+
+      Route::get('tipo-de-atividade/new', 'TipoAtividadeController@storeAjax')->name('tipo.store.ajax');
   });
 
   Route::prefix('/comissao/cientifica/evento/')->name('comissao.cientifica.')->group(function(){

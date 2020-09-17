@@ -325,9 +325,17 @@ class AtividadeController extends Controller
      * @param  \App\Atividade  $atividade
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Atividade $atividade)
+    public function destroy($id)
     {
-        //
+        $atividade = Atividade::find($id);
+        
+        foreach ($atividade->datasAtividade as $da) {
+            $da->delete();
+        }
+
+        $atividade->delete();
+
+        return redirect()->back()->with(['mensagem' => 'Atividade excluida com sucesso!']);
     }
 
     // Salva a visibilidade da atividade para participantes

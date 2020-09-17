@@ -67,47 +67,7 @@
                                 </div>
                             </div>
                             <hr>
-                            <div class="row form-group">
-                                <div class="container">
-                                    <h5>Convidado</h5>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <label for="nome">Nome:</label>
-                                            <input class="form-control" type="text" name="nomeDoConvidado" id="nome{{$atv->id}}"  value="{{ old('nomeConvidado') }}" placeholder="Nome do convidado">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label for="email">E-mail:</label>
-                                            <input class="form-control" type="text" name="emailDoConvidado" id="email{{$atv->id}}" value="{{ old('emailConvidado') }}" placeholder="E-mail do convidado">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-8">
-                                            <label for="funcao">Função:</label>
-                                            <select class="form-control" name="funçãoDoConvidado" id="funcao{{$atv->id}}">
-                                                <option value="" selected disabled>-- Função --</option>
-                                                <option value="Palestrate">Palestrate</option>
-                                                <option value="Avaliador">Avaliador</option>
-                                                <option value="Ouvinte">Ouvinte</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <button id="buttonformNovaFuncaoDeConvidado{{$atv->id}}" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Função</button>
-                                        </div>
-                                    </div>
-                                    <div id="formNovaFuncaoDeConvidado{{$atv->id}}" class="form-group" style="display: none; margin-top: 15px;">
-                                        <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
-                                            <div class="col-sm-12">
-                                                <label for="nomeTipo">Nome*:</label>
-                                                <input class="form-control" type="text" name="nomeTipo" id="nomeTipoConvidado{{$atv->id}}" placeholder="Nome da nova função do convidado">
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <button id="submitNovaFuncaoDeConvidado{{$atv->id}}" type="button" class="btn btn-primary">Salvar</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
+                            
                             <div class="row form-group">
                                 <div class="col-sm-12">
                                     <label for="descricao">Descricao*:</label>
@@ -122,7 +82,7 @@
                             </div>
                             <hr>
                             <div class="row form-group">
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     <label for="duracaoAtividade">Duração*:</label>
                                     <select class="form-control  @error('duracaoDaAtividade') is-invalid @enderror" name="duracaoDaAtividade" id="duracaoAtividade{{$atv->id}}" onchange="exibirDias({{ $atv->id }})">
                                         <option value="" selected disabled>-- Duração --</option>
@@ -155,7 +115,16 @@
                                     </span>
                                     @enderror
                                 </div>
+                                <div class="col-sm-6">
+                                    <label for="local">Local*:</label>
+                                    <input class="form-control @error('local') is-invalid @enderror" type="text" name="local" id="local{{$atv->id}}"  placeholder="Local da atividade"  value="@if(old('local') != null){{old('local')}}@else{{$atv->local}}@endif">
                                 
+                                    @error('local')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
                             </div>
                             
                             @for ($i = 0; $i < count($ids); $i++)
@@ -405,38 +374,74 @@
                                 @endif
                             @endfor
                             <hr>
-                            <div class="row form-group">
-                                <div class="col-sm-6">
-                                    <label for="vagas">Vagas:</label>
-                                    <input class="form-control" type="number" name="vagas" id="vagas{{$atv->id}}" placeholder="Quantidade de vagas" value="@if (old('vagas') != null){{old('vagas')}}@else{{$atv->vagas}}@endif">
+                            <button id="buttonAbrirDadosAdicionais{{$atv->id}}" type="button" class="btn btn-primary" style="background-color: white; color: rgb(50, 132, 255); border-color: rgb(50, 132, 255); @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) display: none; @else display: block; @endif" onclick="abrirDadosAdicionais({{$atv->id}})">+Abrir dados opcionais</button>
+                            <button id="buttonFecharDadosAdicionais{{$atv->id}}" type="button" class="btn btn-primary" style="background-color: white; color: rgb(41, 109, 211); border-color: rgb(50, 132, 255); @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) display: block; @else display: none; @endif" onclick="fecharDadosAdicionais({{$atv->id}})">-Fechar dados opcionais</button>
+                            <div id="dadosAdicionaisNovaAtividade{{$atv->id}}" @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) @else style="display: none;" @endif>
+                                <div class="row form-group">
+                                    <div class="col-sm-6">
+                                        <label for="vagas">Vagas:</label>
+                                        <input class="form-control" type="number" name="vagas" id="vagas{{$atv->id}}" placeholder="Quantidade de vagas" value="@if (old('vagas') != null){{old('vagas')}}@else{{$atv->vagas}}@endif">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="valor">Valor:</label>
+                                        <input type="number" step="0.01" class="form-control" min="0.01" id="valor{{$atv->id}}" name="valor" placeholder="Valor para participar" value="@if (old('valor') != null){{old('valor') }}@else{{$atv->valor}}@endif">
+                                    </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label for="valor">Valor:</label>
-                                    <input type="number" step="0.01" class="form-control" min="0.01" id="valor{{$atv->id}}" name="valor" placeholder="Valor para participar" value="@if (old('valor') != null){{old('valor') }}@else{{$atv->valor}}@endif">
+                                <hr>
+                                <div class="row form-group">
+                                    <div class="col-sm-6">
+                                        <label for="carga_horaria">Carga horária:</label>
+                                        <input type="number" class="form-control" id="carga_horaria{{$atv->id}}" name="carga_horaria" placeholder="Carga horária da atividade" value="@if (old('carga_horaria') != null){{old('carga_horaria')}}@else{{$atv->carga_horaria}}@endif">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="palavrasChaves">Palavras-chave:</label>
+                                        <input class="form-control" type="text" name="palavrasChaves" id="palavrasChaves{{$atv->id}}"  placeholder='Palavras que ajudam na busca, separe-as por ","'  value="@if (old('palavrasChaves') != null){{old('palavrasChaves')}}@else {{ $atv->palavras_chave }} @endif">   
+                                    </div>
                                 </div>
-                            </div>
-                            <hr>
-                            <div class="row form-group">
-                                <div class="col-sm-6">
-                                    <label for="local">Local*:</label>
-                                    <input class="form-control @error('local') is-invalid @enderror" type="text" name="local" id="local{{$atv->id}}"  placeholder="Local da atividade"  value="@if(old('local') != null){{old('local')}}@else{{$atv->local}}@endif">
-                                
-                                    @error('local')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                <div id="convidadosDeUmaAtividade{{$atv->id}}">
+                                    <div class="row form-group">
+                                        <div class="container">
+                                            <h5>Convidado</h5>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="nome">Nome:</label>
+                                                    <input class="form-control" type="text" name="nomeDoConvidado" id="nome{{$atv->id}}"  value="{{ old('nomeConvidado') }}" placeholder="Nome do convidado">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="email">E-mail:</label>
+                                                    <input class="form-control" type="text" name="emailDoConvidado" id="email{{$atv->id}}" value="{{ old('emailConvidado') }}" placeholder="E-mail do convidado">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <label for="funcao">Função:</label>
+                                                    <select class="form-control" name="funçãoDoConvidado" id="funcao{{$atv->id}}">
+                                                        <option value="" selected disabled>-- Função --</option>
+                                                        <option value="Palestrate">Palestrate</option>
+                                                        <option value="Avaliador">Avaliador</option>
+                                                        <option value="Ouvinte">Ouvinte</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <button id="buttonformNovaFuncaoDeConvidado{{$atv->id}}" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Função</button>
+                                                </div>
+                                            </div>
+                                            <div id="formNovaFuncaoDeConvidado{{$atv->id}}" class="form-group" style="display: none; margin-top: 15px;">
+                                                <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
+                                                    <div class="col-sm-12">
+                                                        <label for="nomeTipo">Nome*:</label>
+                                                        <input class="form-control" type="text" name="nomeTipo" id="nomeTipoConvidado{{$atv->id}}" placeholder="Nome da nova função do convidado">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <button id="submitNovaFuncaoDeConvidado{{$atv->id}}" type="button" class="btn btn-primary">Salvar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
-                                <div class="col-sm-6">
-                                    <label for="carga_horaria">Carga horária:</label>
-                                    <input type="number" class="form-control" id="carga_horaria{{$atv->id}}" name="carga_horaria" placeholder="Carga horária da atividade" value="@if (old('carga_horaria') != null){{old('carga_horaria')}}@else{{$atv->carga_horaria}}@endif">
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-sm-12">
-                                    <label for="palavrasChaves">Palavras-chave:</label>
-                                    <input class="form-control" type="text" name="palavrasChaves" id="palavrasChaves{{$atv->id}}"  placeholder='Palavras que ajudam na busca, separe-as por ","'  value="@if (old('palavrasChaves') != null){{old('palavrasChaves')}}@else {{ $atv->palavras_chave }} @endif">   
-                                </div>
+                                <button id="buttonNovoConvidado{{$atv->id}}" class="btn btn-primary" type="button" onclick="adicionarConvidado({{$atv->id}})">+Adicionar convidado</button>
                             </div>
                         </div>
                     </form>
@@ -498,55 +503,15 @@
                             <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
                                 <div class="col-sm-12">
                                     <label for="nomeTipo">Nome*:</label>
-                                    <input class="form-control" type="text" name="nomeTipo" id="nomeTipo" placeholder="Nome do novo tipo">
+                                    <input class="form-control" type="text" name="nomeNovoTipo" id="nomeTipo" placeholder="Nome do novo tipo">
                                 </div>
                                 <div class="col-sm-12">
-                                    <button id="submitNovoTipoAtividade" type="button" class="btn btn-primary">Salvar</button>
+                                    <button id="submitNovoTipoAtividade" type="button" class="btn btn-primary" onclick="salvarTipoAtividadeAjax()">Salvar</button>
                                 </div>
                             </div>
                         </div>
                         <hr>
-                        <div class="row form-group">
-                            <div class="container">
-                                <h5>Convidado</h5>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label for="nome">Nome:</label>
-                                        <input class="form-control" type="text" name="nomeDoConvidado" id="nome"  value="{{ old('nomeConvidado') }}" placeholder="Nome do convidado">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label for="email">E-mail:</label>
-                                        <input class="form-control" type="text" name="emailDoConvidado" id="email" value="{{ old('emailConvidado') }}" placeholder="E-mail do convidado">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <label for="funcao">Função:</label>
-                                        <select class="form-control" name="funçãoDoConvidado" id="funcao">
-                                            <option value="" selected disabled>-- Função --</option>
-                                            <option value="Palestrate">Palestrate</option>
-                                            <option value="Avaliador">Avaliador</option>
-                                            <option value="Ouvinte">Ouvinte</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <button id="buttonformNovaFuncaoDeConvidado" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Função</button>
-                                    </div>
-                                </div>
-                                <div id="formNovaFuncaoDeConvidado" class="form-group" style="display: none; margin-top: 15px;">
-                                    <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
-                                        <div class="col-sm-12">
-                                            <label for="nomeTipo">Nome*:</label>
-                                            <input class="form-control" type="text" name="nomeTipo" id="nomeTipoConvidado" placeholder="Nome da nova função do convidado">
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <button id="submitNovaFuncaoDeConvidado" type="button" class="btn btn-primary">Salvar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
+                        
                         <div class="row form-group">
                             <div class="col-sm-12">
                                 <label for="descricao">Descricao*:</label>
@@ -561,7 +526,7 @@
                         </div>
                         <hr>
                         <div class="row form-group">
-                            <div class="col-sm-12">
+                            <div class="col-sm-6">
                                 <label for="duracaoAtividade">Duração*:</label>
                                 <select class="form-control  @error('duracaoDaAtividade') is-invalid @enderror" name="duracaoDaAtividade" id="duracaoAtividade" onchange="exibirDias(0)">
                                     <option value="" selected disabled>-- Duração --</option>
@@ -579,7 +544,16 @@
                                 </span>
                                 @enderror
                             </div>
+                            <div class="col-sm-6">
+                                <label for="local">Local*:</label>
+                                <input class="form-control @error('local') is-invalid @enderror" type="text" name="local" id="local"  placeholder="Local da atividade"  value="{{ old('local') }}">
                             
+                                @error('local')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
                         <div id="divDuracaoAtividade" class="row form-group" style="display: none;">
                             <div class="container" style="background-color: rgb(238, 238, 238); border-radius: 5px; padding: 15px;">
@@ -824,38 +798,75 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="row form-group">
-                            <div class="col-sm-6">
-                                <label for="vagas">Vagas:</label>
-                                <input class="form-control" type="number" name="vagas" id="vagas" placeholder="Quantidade de vagas" value="{{ old('vagas') }}">
+                        <button id="buttonAbrirDadosAdicionais" type="button" class="btn btn-primary" style="background-color: white; color: rgb(50, 132, 255); border-color: rgb(50, 132, 255); @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) display: none; @else display: block; @endif" onclick="abrirDadosAdicionais(0)">+Abrir dados opcionais</button>
+                        <button id="buttonFecharDadosAdicionais" type="button" class="btn btn-primary" style="background-color: white; color: rgb(41, 109, 211); border-color: rgb(50, 132, 255); @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) display: block; @else display: none; @endif" onclick="fecharDadosAdicionais(0)">-Fechar dados opcionais</button>
+                        <div id="dadosAdicionaisNovaAtividade" @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) @else style="display: none;" @endif>
+                            <hr>
+                            <div class="row form-group">
+                                <div class="col-sm-6">
+                                    <label for="vagas">Vagas:</label>
+                                    <input class="form-control" type="number" name="vagas" id="vagas" placeholder="Quantidade de vagas" value="{{ old('vagas') }}">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="valor">Valor:</label>
+                                    <input type="number" step="0.01" class="form-control" min="0.01" id="valor" name="valor" placeholder="Valor para participar" value="{{ old('valor') }}">
+                                </div>
                             </div>
-                            <div class="col-sm-6">
-                                <label for="valor">Valor:</label>
-                                <input type="number" step="0.01" class="form-control" min="0.01" id="valor" name="valor" placeholder="Valor para participar" value="{{ old('valor') }}">
+                            <hr>
+                            <div class="row form-group">
+                                <div class="col-sm-6">
+                                    <label for="carga_horaria">Carga horária:</label>
+                                    <input type="number" class="form-control" id="carga_horaria" name="carga_horaria" placeholder="Carga horária da atividade" value="{{ old('carga_horaria') }}">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="palavrasChaves">Palavras-chave:</label>
+                                    <input class="form-control" type="text" name="palavrasChaves" id="palavrasChaves"  placeholder='Palavras que ajudam na busca, separe-as por ","'  value="{{ old('palavrasChaves') }}">   
+                                </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="row form-group">
-                            <div class="col-sm-6">
-                                <label for="local">Local*:</label>
-                                <input class="form-control @error('local') is-invalid @enderror" type="text" name="local" id="local"  placeholder="Local da atividade"  value="{{ old('local') }}">
-                            
-                                @error('local')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+                            <hr>
+                            <div id="convidadosDeUmaAtividade">
+                                <div class="row form-group">
+                                    <div class="container">
+                                        <h5>Convidado</h5>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label for="nome">Nome:</label>
+                                                <input class="form-control" type="text" name="nomeDoConvidado" id="nome"  value="{{ old('nomeConvidado') }}" placeholder="Nome do convidado">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label for="email">E-mail:</label>
+                                                <input class="form-control" type="text" name="emailDoConvidado" id="email" value="{{ old('emailConvidado') }}" placeholder="E-mail do convidado">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <label for="funcao">Função:</label>
+                                                <select class="form-control" name="funçãoDoConvidado" id="funcao">
+                                                    <option value="" selected disabled>-- Função --</option>
+                                                    <option value="Palestrate">Palestrate</option>
+                                                    <option value="Avaliador">Avaliador</option>
+                                                    <option value="Ouvinte">Ouvinte</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <button id="buttonformNovaFuncaoDeConvidado" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Função</button>
+                                            </div>
+                                        </div>
+                                        <div id="formNovaFuncaoDeConvidado" class="form-group" style="display: none; margin-top: 15px;">
+                                            <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
+                                                <div class="col-sm-12">
+                                                    <label for="nomeTipo">Nome*:</label>
+                                                    <input class="form-control" type="text" name="nomeTipo" id="nomeTipoConvidado" placeholder="Nome da nova função do convidado">
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <button id="submitNovaFuncaoDeConvidado" type="button" class="btn btn-primary">Salvar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-6">
-                                <label for="carga_horaria">Carga horária:</label>
-                                <input type="number" class="form-control" id="carga_horaria" name="carga_horaria" placeholder="Carga horária da atividade" value="{{ old('carga_horaria') }}">
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-sm-12">
-                                <label for="palavrasChaves">Palavras-chave:</label>
-                                <input class="form-control" type="text" name="palavrasChaves" id="palavrasChaves"  placeholder='Palavras que ajudam na busca, separe-as por ","'  value="{{ old('palavrasChaves') }}">   
-                            </div>
+                            <button id="buttonNovoConvidado" class="btn btn-primary" type="button" onclick="adicionarConvidado(0)">+Adicionar convidado</button>
                         </div>
                     </div>
                 </form>
@@ -868,6 +879,31 @@
         </div>
     </div>
 </div>
+@foreach ($atividades as $atv) 
+    <!-- Modal de exclusão -->
+    <div class="modal fade" id="modalExcluirAtividade{{$atv->id}}" tabindex="-1" role="dialog" aria-labelledby="modalExcluirAtividadeLabel{{$atv->id}}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalExcluirAtividadeLabel{{$atv->id}}">Confirmar</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja excluir?
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <form method="POST" action="{{ route('coord.atividade.destroy', ['id' => $atv->id]) }}">
+                @csrf
+                <button type="submit" class="btn btn-primary">Excluir</button>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+@endforeach
 <div id="divListarComissao" class="comissao" style="display: block">
     <div class="row">
         <div class="col-sm-12">
@@ -909,6 +945,7 @@
                             </th>
                         </thead>
                         @foreach ($atividades as $atv)
+                        
                             <tbody>
                                 <th>
                                     <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->titulo}}</td>
@@ -918,7 +955,7 @@
                                     <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->local}}</td>
                                     <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->carga_horaria}}</td>
                                     <td><input id="checkbox_{{$atv->id}}" type="checkbox" @if($atv->visibilidade_participante) checked @endif onclick="setVisibilidadeAtv({{$atv->id}})"></td>
-                                    <td><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></td>
+                                    <td data-toggle="modal" data-target="#modalExcluirAtividade{{$atv->id}}"><button style="border: none; background-color: rgba(255, 255, 255, 0);"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></button></td>
                                 </th>
                             </tbody>
                         @endforeach

@@ -792,6 +792,42 @@
         });
     }
 
+    function salvarTipoAtividadeAjax() {
+        console.log("passou");
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            }
+        });
+        $.ajax({
+            url: "{{route('coord.tipo.store.ajax')}}",
+            method: 'get',
+            type: 'get',
+            data: {
+              name: $('#nomeNovoTipo').val(),  
+            },
+            success: function(result){
+                console.log(result);
+                
+            // if(result == 0){
+            //     $('#numeroDeRevisoresPorTrabalhoButton').prop('disabled', true);
+            //     alert("Não existem revisores nessa área.");
+            // }
+            // else{
+            //     if($('#numeroDeRevisoresPorTrabalhoInput').val() < 1){
+            //     $('#numeroDeRevisoresPorTrabalhoButton').prop('disabled', true);
+            //     }
+            //     else{
+            //     $('#numeroDeRevisoresPorTrabalhoButton').prop('disabled', false);
+            //     }
+            // }
+            // // $('#tituloTrabalhoAjax').html(result.titulo);
+            // // $('#resumoTrabalhoAjax').html(result.resumo);
+            // // $("h1, h2, p").toggleClass("blue");
+            }
+        });
+    }
+
     //Funções do form de atividades da programação
     function exibirDias(id) {
         if (id != 0) {
@@ -934,12 +970,18 @@
 
     }
 
+    // Variavel para definios os ids das divs dos cantidatos
+    var contadorConvidados = 1;
+
+    
     $(document).ready(function() {
+        //Função que submete o form uma nova atividade
         $('#submitNovaAtividade').click(function(){
             var form = document.getElementById('formNovaAtividade');
             form.submit();
         });
 
+        //Função para controlar a exibição da div para cadastro de um novo tipo de atividade
         $('#buttomFormNovoTipoAtividade').click(function(){
             if (document.getElementById('formNovoTipoAtividade').style.display == "block") {
                 document.getElementById('formNovoTipoAtividade').style.display = "none";
@@ -948,6 +990,7 @@
             }
         });
 
+        //Função para controlar a exibição da div para cadastro de um novo tipo de função de convidado
         $('#buttonformNovaFuncaoDeConvidado').click(function() {
             if (document.getElementById('formNovaFuncaoDeConvidado').style.display == "block") {
                 document.getElementById('formNovaFuncaoDeConvidado').style.display = "none";
@@ -957,11 +1000,125 @@
         });
     });
 
+    //Função para adicionar o conteudo de um novo convidado
+    function adicionarConvidado(id) {
+        contadorConvidados++;
+        if (id == 0) {
+            $('#convidadosDeUmaAtividade').append(
+                "<div id='novoConvidadoAtividade"+ contadorConvidados +"' class='row form-group'>" +
+                    "<div class='container'>" +
+                        "<h5>Convidado</h5>" +
+                        "<div class='row'>" +
+                            "<div class='col-sm-6'>" +
+                                "<label for='nome'>Nome:</label>" +
+                                "<input class='form-control' type='text' name='nomeDoConvidado' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
+                            "</div>" +
+                            "<div class='col-sm-6'>" + 
+                                "<label for='email'>E-mail:</label>" +
+                                "<input class='form-control' type='text' name='emailDoConvidado' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='row'>" +
+                            "<div class='col-sm-8'>" +
+                                "<label for='funcao'>Função:</label>" +
+                                "<select class='form-control' name='funçãoDoConvidado' id='funcao'>" +
+                                    "<option value='' selected disabled>-- Função --</option>" +
+                                    "<option value='Palestrate'>Palestrate</option>" +
+                                    "<option value='Avaliador'>Avaliador</option>" +
+                                    "<option value='Ouvinte'>Ouvinte</option>" +
+                                "</select>" +
+                            "</div>" +
+                            "<div class='col-sm-4'>" + 
+                                "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>"+
+                "</div>"
+            )
+        } else if (id > 0) {
+            $('#convidadosDeUmaAtividade'+id).append(
+                "<div id='novoConvidadoAtividade"+ contadorConvidados +"' class='row form-group'>" +
+                    "<div class='container'>" +
+                        "<h5>Convidado</h5>" +
+                        "<div class='row'>" +
+                            "<div class='col-sm-6'>" +
+                                "<label for='nome'>Nome:</label>" +
+                                "<input class='form-control' type='text' name='nomeDoConvidado' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
+                            "</div>" +
+                            "<div class='col-sm-6'>" + 
+                                "<label for='email'>E-mail:</label>" +
+                                "<input class='form-control' type='text' name='emailDoConvidado' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='row'>" +
+                            "<div class='col-sm-8'>" +
+                                "<label for='funcao'>Função:</label>" +
+                                "<select class='form-control' name='funçãoDoConvidado' id='funcao'>" +
+                                    "<option value='' selected disabled>-- Função --</option>" +
+                                    "<option value='Palestrate'>Palestrate</option>" +
+                                    "<option value='Avaliador'>Avaliador</option>" +
+                                    "<option value='Ouvinte'>Ouvinte</option>" +
+                                "</select>" +
+                            "</div>" +
+                            "<div class='col-sm-4'>" + 
+                                "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>"+
+                "</div>"
+            )
+        }
+    }
+
+    //Função que remove o convidado
+    function removerConvidadoNovaAtividade(id) {
+        contadorConvidados--;
+        $("#novoConvidadoAtividade"+id).remove();
+    }
+    
+    //Função que subemete o form de edição de uma atividade
     function editarAtividade(id) {
         var form = document.getElementById('formEdidarAtividade' + id);
         form.submit();
     }
-    
+
+    //Função que abre a exibição dos botões dos dados opcionais e a div em para uma nova e a edição de uma atividade
+    function abrirDadosAdicionais(id) {
+        if (id == 0) {
+            var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade");
+            var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais");
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"); 
+            divDadosAdicionais.style.display = "block";
+            buttonAbrir.style.display = "none";
+            buttonFechar.style.display = "block";
+        } else if (id > 0) {
+            var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade"+id);
+            var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais"+id);
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"+id); 
+            divDadosAdicionais.style.display = "block";
+            buttonAbrir.style.display = "none";
+            buttonFechar.style.display = "block";
+        }
+    }
+
+    //Função que oculta a exibição dos botões dos dados opcionais e a em para uma nova e a edição de uma atividade
+    function fecharDadosAdicionais(id) {
+        if (id == 0) {
+            var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade");
+            var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais");
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"); 
+            divDadosAdicionais.style.display = "none";
+            buttonAbrir.style.display = "block";
+            buttonFechar.style.display = "none";
+        } else if (id > 0) {
+            var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade"+id);
+            var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais"+id);
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"+id); 
+            divDadosAdicionais.style.display = "none";
+            buttonAbrir.style.display = "block";
+            buttonFechar.style.display = "none";
+        }
+    }
   </script>
 
     
