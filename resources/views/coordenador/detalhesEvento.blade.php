@@ -1019,7 +1019,7 @@
                             "</div>" +
                         "</div>" +
                         "<div class='row'>" +
-                            "<div class='col-sm-8'>" +
+                            "<div class='col-sm-6'>" +
                                 "<label for='funcao'>Função:</label>" +
                                 "<select class='form-control' name='funçãoDoConvidado[]' id='funcao'>" +
                                     "<option value='' selected disabled>-- Função --</option>" +
@@ -1051,7 +1051,7 @@
                             "</div>" +
                         "</div>" +
                         "<div class='row'>" +
-                            "<div class='col-sm-8'>" +
+                            "<div class='col-sm-6'>" +
                                 "<label for='funcao'>Função:</label>" +
                                 "<select class='form-control' name='funçãoDoConvidado' id='funcao'>" +
                                     "<option value='' selected disabled>-- Função --</option>" +
@@ -1118,6 +1118,11 @@
             buttonAbrir.style.display = "block";
             buttonFechar.style.display = "none";
         }
+    }
+
+    //Remover convidado existente de editar atividade
+    function removerConvidadoAtividade(id) {
+        $("#convidadoAtividade"+id).remove();
     }
   </script>
 

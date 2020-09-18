@@ -399,47 +399,58 @@
                                     </div>
                                 </div>
                                 <div id="convidadosDeUmaAtividade{{$atv->id}}">
-                                    <div class="row form-group">
-                                        <div class="container">
-                                            <h5>Convidado</h5>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label for="nome">Nome:</label>
-                                                    <input class="form-control" type="text" name="nomeDoConvidado" id="nome{{$atv->id}}"  value="{{ old('nomeConvidado') }}" placeholder="Nome do convidado">
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label for="email">E-mail:</label>
-                                                    <input class="form-control" type="text" name="emailDoConvidado" id="email{{$atv->id}}" value="{{ old('emailConvidado') }}" placeholder="E-mail do convidado">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-8">
-                                                    <label for="funcao">Função:</label>
-                                                    <select class="form-control" name="funçãoDoConvidado" id="funcao{{$atv->id}}">
-                                                        <option value="" selected disabled>-- Função --</option>
-                                                        <option value="Palestrate">Palestrate</option>
-                                                        <option value="Avaliador">Avaliador</option>
-                                                        <option value="Ouvinte">Ouvinte</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <button id="buttonformNovaFuncaoDeConvidado{{$atv->id}}" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Função</button>
-                                                </div>
-                                            </div>
-                                            <div id="formNovaFuncaoDeConvidado{{$atv->id}}" class="form-group" style="display: none; margin-top: 15px;">
-                                                <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
-                                                    <div class="col-sm-12">
-                                                        <label for="nomeTipo">Nome*:</label>
-                                                        <input class="form-control" type="text" name="nomeTipo" id="nomeTipoConvidado{{$atv->id}}" placeholder="Nome da nova função do convidado">
+                                    @foreach ($atv->convidados as $convidado)
+                                    <div id="convidadoAtividade{{$convidado->id}}" class="row form-group">
+                                        <input type="hidden" name="idConvidado[]" id="" value="{{$convidado->id}}">
+                                            <div class="container">
+                                                <h5>Convidado</h5>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label for="nome">Nome:</label>
+                                                        <input class="form-control" type="text" name="nomeDoConvidado[]" id="nome{{$atv->id}}{{$convidado->id}}"  value="@if(old('nomeConvidado[]') != null){{old('nomeConvidado[]')}}@else{{$convidado->nome}}@endif" placeholder="Nome do convidado">
                                                     </div>
-                                                    <div class="col-sm-12">
-                                                        <button id="submitNovaFuncaoDeConvidado{{$atv->id}}" type="button" class="btn btn-primary">Salvar</button>
+                                                    <div class="col-sm-6">
+                                                        <label for="email">E-mail:</label>
+                                                        <input class="form-control" type="text" name="emailDoConvidado[]" id="email{{$atv->id}}{{$convidado->id}}" value="@if(old('emailDoConvidado[]') != null){{old('emailDoConvidado[]')}}@else{{$convidado->email}}@endif" placeholder="E-mail do convidado">
                                                     </div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label for="funcao">Função:</label>
+                                                        <select class="form-control" name="funçãoDoConvidado[]" id="funcao{{$atv->id}}{{$convidado->id}}">
+                                                            <option value="" selected disabled>-- Função --</option>
+                                                            @if (old('funçãoDoConvidado[]')) 
+                                                                <option @if(old('funçãoDoConvidado[]') == "Palestrate") selected @endif value="Palestrate">Palestrate</option>
+                                                                <option @if(old('funçãoDoConvidado[]') == "Avaliador") selected @endif value="Avaliador">Avaliador</option>
+                                                                <option @if(old('funçãoDoConvidado[]') == "Ouvinte") selected @endif value="Ouvinte">Ouvinte</option>
+                                                            @else 
+                                                                <option @if($convidado->funcao == "Palestrate") selected @endif value="Palestrate">Palestrate</option>
+                                                                <option @if($convidado->funcao == "Avaliador") selected @endif value="Avaliador">Avaliador</option>
+                                                                <option @if($convidado->funcao == "Ouvinte") selected @endif value="Ouvinte">Ouvinte</option>
+                                                            @endif
+                                                        </select>
+                                                    </div>
+                                                    {{-- <div class="col-sm-4">
+                                                        <button id="buttonformNovaFuncaoDeConvidado{{$atv->id}}{{}}" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Função</button>
+                                                    </div> --}}
+                                                    <div class='col-sm-4'>
+                                                        <button type='button' onclick='removerConvidadoAtividade({{$convidado->id}})' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>
+                                                    </div>
+                                                </div>
+                                                {{-- <div id="formNovaFuncaoDeConvidado{{$atv->id}}" class="form-group" style="display: none; margin-top: 15px;">
+                                                    <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
+                                                        <div class="col-sm-12">
+                                                            <label for="nomeTipo">Nome*:</label>
+                                                            <input class="form-control" type="text" name="nomeTipo" id="nomeTipoConvidado{{$atv->id}}" placeholder="Nome da nova função do convidado">
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <button id="submitNovaFuncaoDeConvidado{{$atv->id}}" type="button" class="btn btn-primary">Salvar</button>
+                                                        </div>
+                                                    </div>
+                                                </div> --}}
                                             </div>
                                         </div>
-                                    </div>
-                                    
+                                    @endforeach                                    
                                 </div>
                                 <button id="buttonNovoConvidado{{$atv->id}}" class="btn btn-primary" type="button" onclick="adicionarConvidado({{$atv->id}})">+Adicionar convidado</button>
                             </div>
@@ -851,7 +862,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-sm-8">
+                                            <div class="col-sm-6">
                                                 <label for="funcao">Função:</label>
                                                 <select class="form-control @error('funçãoDoConvidado[]') is-invalid @enderror" name="funçãoDoConvidado[]" id="funcao">
                                                     <option value="" selected disabled>-- Função --</option>
@@ -866,11 +877,11 @@
                                                 </span>
                                                 @enderror
                                             </div>
-                                            <div class="col-sm-4">
+                                            {{-- <div class="col-sm-4">
                                                 <button id="buttonformNovaFuncaoDeConvidado" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Função</button>
-                                            </div>
+                                            </div> --}}
                                         </div>
-                                        <div id="formNovaFuncaoDeConvidado" class="form-group" style="display: none; margin-top: 15px;">
+                                        {{-- <div id="formNovaFuncaoDeConvidado" class="form-group" style="display: none; margin-top: 15px;">
                                             <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
                                                 <div class="col-sm-12">
                                                     <label for="nomeTipo">Nome*:</label>
@@ -880,7 +891,7 @@
                                                     <button id="submitNovaFuncaoDeConvidado" type="button" class="btn btn-primary">Salvar</button>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -968,10 +979,10 @@
                                 <th>
                                     <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->titulo}}</td>
                                     <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->tipoAtividade->descricao}}</td>
-                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->vagas}}</td>
-                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">R$ {{$atv->valor}},00</td>
+                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">@if(empty($atv->vagas)) Ilimitado @else {{$atv->vagas}} @endif</td>
+                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">@if(empty($atv->valor)) Grátis @else R$ {{$atv->valor}},00 @endif</td>
                                     <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->local}}</td>
-                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->carga_horaria}}</td>
+                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">@if(empty($atv->carga_horaria)) Nenhuma @else {{$atv->carga_horaria}} @endif</td>
                                     <td><input id="checkbox_{{$atv->id}}" type="checkbox" @if($atv->visibilidade_participante) checked @endif onclick="setVisibilidadeAtv({{$atv->id}})"></td>
                                     <td data-toggle="modal" data-target="#modalExcluirAtividade{{$atv->id}}"><button style="border: none; background-color: rgba(255, 255, 255, 0);"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></button></td>
                                 </th>

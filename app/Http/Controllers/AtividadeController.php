@@ -7,7 +7,9 @@ use App\Evento;
 use App\TipoAtividade;
 use App\DatasAtividade;
 use App\Convidado;
-use App\Mail\EmailConvidadoAtividade;
+use App\Mail\ConvidadoAtividade\EmailConvidadoAtividade;
+use App\Mail\ConvidadoAtividade\EmailDesconvidandoAtividade;
+use App\Mail\ConvidadoAtividade\EmailAtualizandoConvidadoAtividade;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
@@ -223,6 +225,7 @@ class AtividadeController extends Controller
      */
     public function update(Request $request, $id)
     {
+        
         $validated = $request->validate([
             'idAtividade'       => ['required', 'integer'],
             'titulo'                => ['required', 'max:50'],
@@ -233,9 +236,6 @@ class AtividadeController extends Controller
             'valor'                 => ['nullable', 'string'],
             'local'                 => ['required', 'string'],
             'duracaoDaAtividade'    => ['required', 'string'],
-            'nomeDoConvidado'       => ['nullable', 'string'],
-            'emailDoConvidado'      => ['nullable', 'string'],
-            'funçãoDoConvidado'     => ['nullable', 'string'],
         ]);
 
         $validateDuracaoAtividade = $request->validate([
@@ -264,6 +264,14 @@ class AtividadeController extends Controller
             'sextoFim'      => ($request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:sextoInicio'] : [''],
             'setimoFim'     => ($request->duracaoAtividade == 7) ? ['time', 'after_time:setimoInicio'] : [''],
         ]);
+
+        $validatedConvidados = $request->validate([
+            'nomeDoConvidado.*'     => 'nullable',
+            'emailDoConvidado.*'    => ($request->nomeDoConvidado[0] != null) ? 'required' : 'nullable',
+            'funçãoDoConvidado.*'   => ($request->nomeDoConvidado[0] != null) ? 'required' : 'nullable',
+        ]);
+            
+        
         
         $atividade = Atividade::find($id);
         $atividade->tipo_id                     = $request->tipo; 
@@ -335,6 +343,55 @@ class AtividadeController extends Controller
             $dataAtividade->hora_fim        = $request->setimoFim;
             $dataAtividade->atividade_id    = $atividade->id;
             $dataAtividade->save();
+        }
+
+        $idsConvidados = Convidado::where('atividade_id', $id)->get('id');
+        
+        $ids = [];
+        foreach ($idsConvidados as $idsConv) {
+            array_push($ids, $idsConv->id);
+        }
+
+        if ($request->nomeDoConvidado[0] != null) {
+            if ($request->idConvidado != null) {
+                for ($i = 0; $i < count($ids); $i++) {
+                    if (in_array($ids[$i], $request->idConvidado)) {
+                        $key = array_search($ids[$i], $request->idConvidado);
+                        $convidado = Convidado::find($ids[$i]);
+                        $convidado->nome            = $request->nomeDoConvidado[$key];
+                        $convidado->email           = $request->emailDoConvidado[$key];
+                        $convidado->funcao          = $request->funçãoDoConvidado[$key];
+                        $convidado->atividade_id    = $atividade->id;
+                        $convidado->update();
+        
+                        $subject = "Convite atualizado para atividade";
+                        Mail::to($convidado->email)->send(new EmailAtualizandoConvidadoAtividade($convidado, $subject));
+                    } else {
+                        $convidado = Convidado::find($ids[$i]);
+                        $subject = "Você foi removido da atividade";
+                        Mail::to($convidado->email)->send(new EmailDesconvidandoAtividade($convidado, $subject));
+                        $convidado->delete();
+                    }
+                }
+            } else {
+                for ($i = 0; $i < count($atividade->convidados); $i++) {
+                    $convidado = Convidado::find($atividade->convidados[$i]);
+                    $subject = "Você foi removido da atividade";
+                    Mail::to($convidado->email)->send(new EmailDesconvidandoAtividade($convidado, $subject));
+                    $convidado->delete();
+                }
+                for ($i = 0; $i < count($request->nomeConvidado); $i++) {
+                    $convidado = new Convidado();
+                    $convidado->nome            = $request->nomeDoConvidado[$i];
+                    $convidado->email           = $request->emailDoConvidado[$i];
+                    $convidado->funcao          = $request->funçãoDoConvidado[$i];
+                    $convidado->atividade_id    = $atividade->id;
+                    $convidado->save();
+    
+                    $subject = "Convite na edição da atividade";
+                    Mail::to($convidado->email)->send(new EmailConvidadoAtividade($convidado, $subject)); 
+                }
+            }
         }
         
         return redirect()->back()->with(['mensagem' => 'Atividade editada com sucesso!']);

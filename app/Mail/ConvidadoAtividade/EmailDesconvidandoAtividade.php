@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\ConvidadoAtividade;
 
 use App\Convidado;
 use Illuminate\Bus\Queueable;
@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class EmailConvidadoAtividade extends Mailable
+class EmailDesconvidandoAtividade extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -36,7 +36,7 @@ class EmailConvidadoAtividade extends Mailable
     {
         return  $this->from('lmtsteste@gmail.com', 'Eventos - LMTS')
                     ->subject($this->subject)
-                    ->view('emails.convidadoAtividade')
+                    ->view('emails.convidadoAtividade.desconvidandoAtividade')
                     ->with([
                         'convidado' => $this->convidado,
                         'info' => $this->informacoes,
