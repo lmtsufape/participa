@@ -831,22 +831,40 @@
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <label for="nome">Nome:</label>
-                                                <input class="form-control" type="text" name="nomeDoConvidado" id="nome"  value="{{ old('nomeConvidado') }}" placeholder="Nome do convidado">
+                                                <input class="form-control @error('nomeDoConvidado[]') is-invalid @enderror" type="text" name="nomeDoConvidado[]" id="nome"  value="{{ old('nomeDoConvidado[]') }}" placeholder="Nome do convidado">
+
+                                                @error('nomeDoConvidado[]')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                             </div>
                                             <div class="col-sm-6">
                                                 <label for="email">E-mail:</label>
-                                                <input class="form-control" type="text" name="emailDoConvidado" id="email" value="{{ old('emailConvidado') }}" placeholder="E-mail do convidado">
+                                                <input class="form-control @error('emailDoConvidado[]') is-invalid @enderror" type="text" name="emailDoConvidado[]" id="email" value="{{ old('emailDoConvidado[]') }}" placeholder="E-mail do convidado">
+                                                
+                                                @error('emailDoConvidado[]')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
                                                 <label for="funcao">Função:</label>
-                                                <select class="form-control" name="funçãoDoConvidado" id="funcao">
+                                                <select class="form-control @error('funçãoDoConvidado[]') is-invalid @enderror" name="funçãoDoConvidado[]" id="funcao">
                                                     <option value="" selected disabled>-- Função --</option>
                                                     <option value="Palestrate">Palestrate</option>
                                                     <option value="Avaliador">Avaliador</option>
                                                     <option value="Ouvinte">Ouvinte</option>
                                                 </select>
+
+                                                @error('funçãoDoConvidado[]')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
                                             </div>
                                             <div class="col-sm-4">
                                                 <button id="buttonformNovaFuncaoDeConvidado" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Função</button>

@@ -2,31 +2,29 @@
 
 namespace App\Mail;
 
+use App\Convidado;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class EmailLembrete extends Mailable
+class EmailConvidadoAtividade extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public $convidado;
     public $subject;
     public $informacoes;
-
-
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $subject, $informacoes = "")
+    public function __construct(Convidado $convidado, $subject, $informacoes = "")
     {
-        $this->user = $user;
-        $this->subject = $subject;
-        $this->informacoes = $informacoes;
-
+        $this->convidado    = $convidado;
+        $this->subject      = $subject;
+        $this->informacoes  = $informacoes;
     }
 
     /**
@@ -36,14 +34,12 @@ class EmailLembrete extends Mailable
      */
     public function build()
     {
-        $subject = 'Eventos - Lembrete de Evento';
         return  $this->from('lmtsteste@gmail.com', 'Eventos - LMTS')
                     ->subject($this->subject)
-                    ->view('emails.emailLembreteRevisor')
+                    ->view('emails.convidadoAtividade')
                     ->with([
-                        'user' => $this->user,
+                        'convidado' => $this->convidado,
                         'info' => $this->informacoes,
-                        
                     ]);
     }
 }

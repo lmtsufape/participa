@@ -41,7 +41,6 @@ class TipoAtividadeController extends Controller
     // Salvar uma nova tipo de atividade
     public function storeAjax($request) {
         $tipos = TipoAtividade::all();
-        return $tipos;
     }
 
     /**

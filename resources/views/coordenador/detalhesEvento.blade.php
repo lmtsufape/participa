@@ -801,8 +801,8 @@
         });
         $.ajax({
             url: "{{route('coord.tipo.store.ajax')}}",
-            method: 'get',
-            type: 'get',
+            method: 'post',
+            type: 'post',
             data: {
               name: $('#nomeNovoTipo').val(),  
             },
@@ -1011,17 +1011,17 @@
                         "<div class='row'>" +
                             "<div class='col-sm-6'>" +
                                 "<label for='nome'>Nome:</label>" +
-                                "<input class='form-control' type='text' name='nomeDoConvidado' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
+                                "<input class='form-control' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
                             "</div>" +
                             "<div class='col-sm-6'>" + 
                                 "<label for='email'>E-mail:</label>" +
-                                "<input class='form-control' type='text' name='emailDoConvidado' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
+                                "<input class='form-control' type='text' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
                             "</div>" +
                         "</div>" +
                         "<div class='row'>" +
                             "<div class='col-sm-8'>" +
                                 "<label for='funcao'>Função:</label>" +
-                                "<select class='form-control' name='funçãoDoConvidado' id='funcao'>" +
+                                "<select class='form-control' name='funçãoDoConvidado[]' id='funcao'>" +
                                     "<option value='' selected disabled>-- Função --</option>" +
                                     "<option value='Palestrate'>Palestrate</option>" +
                                     "<option value='Avaliador'>Avaliador</option>" +

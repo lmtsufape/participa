@@ -6,6 +6,9 @@ use App\Atividade;
 use App\Evento;
 use App\TipoAtividade;
 use App\DatasAtividade;
+use App\Convidado;
+use App\Mail\EmailConvidadoAtividade;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
 class AtividadeController extends Controller
@@ -55,7 +58,7 @@ class AtividadeController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        
         $validated = $request->validate([
             'idNovaAtividade'       => ['required', 'integer'],
             'titulo'                => ['required', 'max:50'],
@@ -66,9 +69,6 @@ class AtividadeController extends Controller
             'valor'                 => ['nullable', 'string'],
             'local'                 => ['required', 'string'],
             'duracaoDaAtividade'    => ['required', 'string'],
-            'nomeDoConvidado'       => ['nullable', 'string'],
-            'emailDoConvidado'      => ['nullable', 'string'],
-            'funçãoDoConvidado'     => ['nullable', 'string'],
         ]);
 
         $validateDuracaoAtividade = $request->validate([
@@ -98,6 +98,13 @@ class AtividadeController extends Controller
             'setimoFim'     => ($request->duracaoAtividade == 7) ? ['time', 'after_time:setimoInicio'] : [''],
         ]);
         
+        $validatedConvidados = $request->validate([
+            'nomeDoConvidado.*'     => 'nullable',
+            'emailDoConvidado.*'    => ($request->nomeDoConvidado[0] != null) ? 'required' : 'nullable',
+            'funçãoDoConvidado.*'   => ($request->nomeDoConvidado[0] != null) ? 'required' : 'nullable',
+        ]);
+
+        // dd($request);
         $atividade = new Atividade();
         $atividade->eventoId                    = $request->eventoId;
         $atividade->tipo_id                     = $request->tipo; 
@@ -166,6 +173,20 @@ class AtividadeController extends Controller
             $dataAtividade->hora_fim        = $request->setimoFim;
             $dataAtividade->atividade_id    = $atividade->id;
             $dataAtividade->save();
+        }
+
+        if ($request->nomeDoConvidado[0] != null) {
+            for ($i = 0; $i < count($request->nomeDoConvidado); $i++) {
+                $convidado = new Convidado();
+                $convidado->nome            = $request->nomeDoConvidado[$i];
+                $convidado->email           = $request->emailDoConvidado[$i];
+                $convidado->funcao          = $request->funçãoDoConvidado[$i];
+                $convidado->atividade_id    = $atividade->id;
+                $convidado->save();
+
+                $subject = "Convite para atividade";
+                Mail::to($convidado->email)->send(new EmailConvidadoAtividade($convidado, $subject));
+            }
         }
         
         return redirect()->back()->with(['mensagem' => 'Atividade cadastrada com sucesso!']);
