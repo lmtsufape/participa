@@ -1019,15 +1019,20 @@
                             "</div>" +
                         "</div>" +
                         "<div class='row'>" +
-                            "<div class='col-sm-6'>" +
+                            "<div class='col-sm-4'>" +
                                 "<label for='funcao'>Função:</label>" +
-                                "<select class='form-control' name='funçãoDoConvidado[]' id='funcao'>" +
+                                "<select class='form-control' name='funçãoDoConvidado[]' id='funcao' onchange='outraFuncaoConvidado(0, this,"+ contadorConvidados +")'>" +
                                     "<option value='' selected disabled>-- Função --</option>" +
                                     "<option value='Palestrate'>Palestrate</option>" +
                                     "<option value='Avaliador'>Avaliador</option>" +
                                     "<option value='Ouvinte'>Ouvinte</option>" +
+                                    "<option value='Outra'>Outra</option>" +
                                 "</select>" +
                             "</div>" +
+                            "<div id='divOutraFuncao"+contadorConvidados+"' class='col-sm-4' style='display: none;'>" +
+                                "<label for='Outra'>Qual?</label>"+
+                                "<input type='text' class='form-control' name='outra[]' id='outraFuncao'>"+
+                            "</div>"+
                             "<div class='col-sm-4'>" + 
                                 "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
                             "</div>" +
@@ -1051,15 +1056,20 @@
                             "</div>" +
                         "</div>" +
                         "<div class='row'>" +
-                            "<div class='col-sm-6'>" +
+                            "<div class='col-sm-4'>" +
                                 "<label for='funcao'>Função:</label>" +
-                                "<select class='form-control' name='funçãoDoConvidado' id='funcao'>" +
+                                "<select class='form-control' name='funçãoDoConvidado' id='funcao' onchange='outraFuncaoConvidado("+contadorConvidados+", this,"+ contadorConvidados +")'>" +
                                     "<option value='' selected disabled>-- Função --</option>" +
                                     "<option value='Palestrate'>Palestrate</option>" +
                                     "<option value='Avaliador'>Avaliador</option>" +
                                     "<option value='Ouvinte'>Ouvinte</option>" +
+                                    "<option value='Outra'>Outra</option>" +
                                 "</select>" +
                             "</div>" +
+                            "<div id='divOutraFuncao"+contadorConvidados+"' class='col-sm-4' style='display: none;'>" +
+                                "<label for='Outra'>Qual?</label>"+
+                                "<input type='text' class='form-control' name='outra[]' id='outraFuncao'>"+
+                            "</div>"+
                             "<div class='col-sm-4'>" + 
                                 "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
                             "</div>" +
@@ -1123,6 +1133,54 @@
     //Remover convidado existente de editar atividade
     function removerConvidadoAtividade(id) {
         $("#convidadoAtividade"+id).remove();
+    }
+
+    //Função que exibe a caixa de outra função do convidado
+    function outraFuncaoConvidado(id, funcaoSelect, contador) {
+        if (id == 0 && contador == 0) {
+            var div = document.getElementById('divOutraFuncao');
+            if (funcaoSelect.value == "Outra") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        } else if (id == 0 && contador > 0) {
+            var div = document.getElementById('divOutraFuncao'+contador);
+            if (funcaoSelect.value == "Outra") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        } else if (id > 0 && contador == 0){
+            var div = document.getElementById('divOutraFuncao'+id);
+            if (funcaoSelect.value == "Outra") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        } else if (id > 0 && contador > 0) {
+            var div = document.getElementById('divOutraFuncao'+id);
+            if (funcaoSelect.value == "Outra") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        }
+        // if (contador != 0) {
+        //     var div = document.getElementById('divOutraFuncao'+contador);
+        //     if (funcaoSelect.value == "Outra") {
+        //         div.style.display = "block";
+        //     } else {
+        //         div.style.display = "none";
+        //     }
+        // } else {
+        //     var div = document.getElementById('divOutraFuncao');
+        //     if (funcaoSelect.value == "Outra") {
+        //         div.style.display = "block";
+        //     } else {
+        //         div.style.display = "none";
+        //     }
+        // }
     }
   </script>
 

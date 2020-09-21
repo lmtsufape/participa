@@ -401,7 +401,7 @@
                                 <div id="convidadosDeUmaAtividade{{$atv->id}}">
                                     @foreach ($atv->convidados as $convidado)
                                     <div id="convidadoAtividade{{$convidado->id}}" class="row form-group">
-                                        <input type="hidden" name="idConvidado[]" id="" value="{{$convidado->id}}">
+                                        <input type="hidden" name="idConvidado[]" id="convidado-{{$convidado->id}}" value="{{$convidado->id}}">
                                             <div class="container">
                                                 <h5>Convidado</h5>
                                                 <div class="row">
@@ -415,20 +415,35 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-sm-6">
+                                                    <div class="col-sm-4">
                                                         <label for="funcao">Função:</label>
-                                                        <select class="form-control" name="funçãoDoConvidado[]" id="funcao{{$atv->id}}{{$convidado->id}}">
+                                                        <select class="form-control" name="funçãoDoConvidado[]" id="funcao{{$atv->id}}{{$convidado->id}}" onchange="outraFuncaoConvidado({{$atv->id}}+''+{{$convidado->id}}, this, 0)">
                                                             <option value="" selected disabled>-- Função --</option>
                                                             @if (old('funçãoDoConvidado[]')) 
                                                                 <option @if(old('funçãoDoConvidado[]') == "Palestrate") selected @endif value="Palestrate">Palestrate</option>
                                                                 <option @if(old('funçãoDoConvidado[]') == "Avaliador") selected @endif value="Avaliador">Avaliador</option>
                                                                 <option @if(old('funçãoDoConvidado[]') == "Ouvinte") selected @endif value="Ouvinte">Ouvinte</option>
+                                                                <option @if(old('funçãoDoConvidado[]') == "Outra") selected @endif value="Outra">Outra</option>
                                                             @else 
                                                                 <option @if($convidado->funcao == "Palestrate") selected @endif value="Palestrate">Palestrate</option>
                                                                 <option @if($convidado->funcao == "Avaliador") selected @endif value="Avaliador">Avaliador</option>
                                                                 <option @if($convidado->funcao == "Ouvinte") selected @endif value="Ouvinte">Ouvinte</option>
+                                                                <option @if($convidado->funcao == "Outra") selected @endif value="Outra">Outra</option>
+                                                                @if($convidado->funcao != "Ouvinte" && $convidado->funcao != "Avaliador" && $convidado->funcao != "Palestrate")  
+                                                                    <option selected value="{{$convidado->funcao}}">{{$convidado->funcao}}</option>
+                                                                @endif
                                                             @endif
                                                         </select>
+                                                    </div>
+                                                    <div id="divOutraFuncao{{$atv->id}}+''+{{$convidado->id}}" class="col-sm-4" @if (old('outra[]') != null) style="display: block;" @else style="display: none;" @endif>
+                                                        <label for="Outra">Qual?</label>
+                                                        <input type="text" class="form-control @error('outra[]') is-invalid @enderror" name="outra[]" id="outraFuncao{{$atv->id}}{{$convidado->id}}">
+                                                        
+                                                        @error('outra[]')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
                                                     </div>
                                                     {{-- <div class="col-sm-4">
                                                         <button id="buttonformNovaFuncaoDeConvidado{{$atv->id}}{{}}" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Função</button>
@@ -864,14 +879,25 @@
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <label for="funcao">Função:</label>
-                                                <select class="form-control @error('funçãoDoConvidado[]') is-invalid @enderror" name="funçãoDoConvidado[]" id="funcao">
+                                                <select class="form-control @error('funçãoDoConvidado[]') is-invalid @enderror" name="funçãoDoConvidado[]" id="funcaoConvidado" onchange="outraFuncaoConvidado(0, this, 0)">
                                                     <option value="" selected disabled>-- Função --</option>
                                                     <option value="Palestrate">Palestrate</option>
                                                     <option value="Avaliador">Avaliador</option>
                                                     <option value="Ouvinte">Ouvinte</option>
+                                                    <option value="Outra">Outra</option>
                                                 </select>
 
                                                 @error('funçãoDoConvidado[]')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                            <div id="divOutraFuncao" class="col-sm-6" @if (old('outra[]') != null) style="display: block;" @else style="display: none;" @endif>
+                                                <label for="Outra">Qual?</label>
+                                                <input type="text" class="form-control @error('outra[]') is-invalid @enderror" name="outra[]" id="outraFuncao">
+                                                
+                                                @error('outra[]')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
