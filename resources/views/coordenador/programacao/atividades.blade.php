@@ -417,7 +417,7 @@
                                                 <div class="row">
                                                     <div class="col-sm-4">
                                                         <label for="funcao">Função:</label>
-                                                        <select class="form-control" name="funçãoDoConvidado[]" id="funcao{{$atv->id}}{{$convidado->id}}" onchange="outraFuncaoConvidado({{$atv->id}}+''+{{$convidado->id}}, this, 0)">
+                                                        <select class="form-control" name="funçãoDoConvidado[]" id="funcao{{$atv->id}}{{$convidado->id}}" onchange="outraFuncaoConvidado({{$atv->id}}{{$convidado->id}}, this, 0)">
                                                             <option value="" selected disabled>-- Função --</option>
                                                             @if (old('funçãoDoConvidado[]')) 
                                                                 <option @if(old('funçãoDoConvidado[]') == "Palestrate") selected @endif value="Palestrate">Palestrate</option>
@@ -435,7 +435,7 @@
                                                             @endif
                                                         </select>
                                                     </div>
-                                                    <div id="divOutraFuncao{{$atv->id}}+''+{{$convidado->id}}" class="col-sm-4" @if (old('outra[]') != null) style="display: block;" @else style="display: none;" @endif>
+                                                    <div id="divOutraFuncao{{$atv->id}}{{$convidado->id}}" class="col-sm-4" @if (old('outra[]') != null) style="display: block;" @else style="display: none;" @endif>
                                                         <label for="Outra">Qual?</label>
                                                         <input type="text" class="form-control @error('outra[]') is-invalid @enderror" name="outra[]" id="outraFuncao{{$atv->id}}{{$convidado->id}}">
                                                         

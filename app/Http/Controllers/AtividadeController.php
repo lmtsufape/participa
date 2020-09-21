@@ -104,6 +104,7 @@ class AtividadeController extends Controller
             'nomeDoConvidado.*'     => 'nullable',
             'emailDoConvidado.*'    => ($request->nomeDoConvidado[0] != null) ? 'required' : 'nullable',
             'funçãoDoConvidado.*'   => ($request->nomeDoConvidado[0] != null) ? 'required' : 'nullable',
+            // 'outra.*'               => ($request->funçãoDoConvidado[0] == "Outra") ? 'required' : 'nullable',
         ]);
 
         // dd($request);
@@ -182,7 +183,11 @@ class AtividadeController extends Controller
                 $convidado = new Convidado();
                 $convidado->nome            = $request->nomeDoConvidado[$i];
                 $convidado->email           = $request->emailDoConvidado[$i];
-                $convidado->funcao          = $request->funçãoDoConvidado[$i];
+                if ($request->funçãoDoConvidado[$i] == "Outra") {
+                    $convidado->funcao      = $request->outra[$i];
+                } else {
+                    $convidado->funcao      = $request->funçãoDoConvidado[$i];
+                }
                 $convidado->atividade_id    = $atividade->id;
                 $convidado->save();
 
@@ -360,7 +365,11 @@ class AtividadeController extends Controller
                         $convidado = Convidado::find($ids[$i]);
                         $convidado->nome            = $request->nomeDoConvidado[$key];
                         $convidado->email           = $request->emailDoConvidado[$key];
-                        $convidado->funcao          = $request->funçãoDoConvidado[$key];
+                        if ($request->funçãoDoConvidado[$key] == "Outra") {
+                            $convidado->funcao      = $request->outra[$key];
+                        } else {
+                            $convidado->funcao      = $request->funçãoDoConvidado[$key];
+                        }
                         $convidado->atividade_id    = $atividade->id;
                         $convidado->update();
         
@@ -384,7 +393,11 @@ class AtividadeController extends Controller
                     $convidado = new Convidado();
                     $convidado->nome            = $request->nomeDoConvidado[$i];
                     $convidado->email           = $request->emailDoConvidado[$i];
-                    $convidado->funcao          = $request->funçãoDoConvidado[$i];
+                    if ($request->funçãoDoConvidado[$i] == "Outra") {
+                        $convidado->funcao      = $request->outra[$i];
+                    } else {
+                        $convidado->funcao      = $request->funçãoDoConvidado[$i];
+                    }
                     $convidado->atividade_id    = $atividade->id;
                     $convidado->save();
     
