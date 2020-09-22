@@ -33,6 +33,7 @@
 </head>
 <body>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="token" content="{{ csrf_token() }}">
     <div id="app">
         {{-- Navbar --}}
         <nav class="navbar navbar-expand-md navbar-dark  shadow-sm">
@@ -155,8 +156,5 @@
     @yield('javascript')
     @else
     @endif
-    <script>
-        
-    </script>
 </body>
 </html>

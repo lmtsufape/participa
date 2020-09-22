@@ -793,37 +793,53 @@
     }
 
     function salvarTipoAtividadeAjax() {
-        console.log("passou");
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            }
-        });
         $.ajax({
-            url: "{{route('coord.tipo.store.ajax')}}",
-            method: 'post',
-            type: 'post',
+            url: "/coord/evento/tipo-de-atividade/new/" + $('#nomeTipo').val(),
+            method: 'get',
+            type: 'get',
             data: {
-              name: $('#nomeNovoTipo').val(),  
+                _token: '{{csrf_token()}}',
+                name: $('#nomeNovoTipo').val(),  
             },
-            success: function(result){
-                console.log(result);
-                
-            // if(result == 0){
-            //     $('#numeroDeRevisoresPorTrabalhoButton').prop('disabled', true);
-            //     alert("Não existem revisores nessa área.");
-            // }
-            // else{
-            //     if($('#numeroDeRevisoresPorTrabalhoInput').val() < 1){
-            //     $('#numeroDeRevisoresPorTrabalhoButton').prop('disabled', true);
-            //     }
-            //     else{
-            //     $('#numeroDeRevisoresPorTrabalhoButton').prop('disabled', false);
-            //     }
-            // }
-            // // $('#tituloTrabalhoAjax').html(result.titulo);
-            // // $('#resumoTrabalhoAjax').html(result.resumo);
-            // // $("h1, h2, p").toggleClass("blue");
+            statusCode: {
+                404: function() {
+                    alert("O nome é obrigatório");
+                }
+            },
+            success: function(data){
+                // var data = JSON.parse(result);
+                if (data != null) {
+                    if (data.length > 0) {
+                        if($('#tipo').val() == null || $('#tipo').val() == ""){
+                            var option = '<option selected disabled>-- Tipo --</option>';
+                        }
+                        $.each(data, function(i, obj) {
+                            if($('#tipo').val() != null && $('#tipo').val() == obj.id && i > 0){
+                                option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                            } else if (i == 0) {
+                                option = '<option selected disabled>-- Tipo --</option>';
+                            } else {
+                                option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                            }
+                        })
+                    } else {
+                        var option = "<option selected disabled>-- Tipo --</option>";
+                    }
+                    $('#tipo').html(option).show();
+                    if (data.length > 0) {
+                        for(var i = 0; i < data.length; i++) {
+                            // console.log('---------------------------------'+i+'------------------------');
+                            // console.log(data[i].descricao);
+                            // console.log(document.getElementById('nomeTipo').value);
+                            // console.log(data[i].descricao === document.getElementById('nomeTipo').value);
+                            if (data[i].descricao === document.getElementById('nomeTipo').value) {
+                                document.getElementById('tipo').selectedIndex = i;
+                            }
+                        }
+                    }
+                    document.getElementById('nomeTipo').value = "";
+                    $('#buttomFormNovoTipoAtividade').click();
+                }
             }
         });
     }

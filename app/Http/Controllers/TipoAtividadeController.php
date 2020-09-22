@@ -39,8 +39,17 @@ class TipoAtividadeController extends Controller
     }
 
     // Salvar uma nova tipo de atividade
-    public function storeAjax($request) {
-        $tipos = TipoAtividade::all();
+    public function storeAjax($nome = "") {
+        if ($nome != "") {
+            $tipoAtv = new TipoAtividade();
+            $tipoAtv->descricao = $nome;
+            $tipoAtv->save();
+
+            $tiposAtividades = TipoAtividade::orderBy('descricao')->get();
+            // dd($tiposAtividades);
+            return $tiposAtividades;
+        }
+        return null;
     }
 
     /**

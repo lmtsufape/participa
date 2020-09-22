@@ -26,7 +26,7 @@ class AtividadeController extends Controller
         $ids = [];
 
         $evento = Evento::find($id);
-        $atividades = Atividade::where('eventoId', $id)->get();
+        $atividades = Atividade::where('eventoId', $id)->orderBy('titulo')->get();
         
         foreach ($atividades as $atv) {
             $datasAtividades = DatasAtividade::where('atividade_id', $atv->id)->get();
@@ -34,7 +34,7 @@ class AtividadeController extends Controller
             array_push($duracaoAtividades, count($datasAtividades));
         }
 
-        $tipoDeAtividades = TipoAtividade::all();
+        $tipoDeAtividades = TipoAtividade::orderBy('descricao')->get();
         return view('coordenador.programacao.atividades')->with(['evento' => $evento,
                                                                  'atividades' => $atividades,
                                                                  'tipos' => $tipoDeAtividades,
