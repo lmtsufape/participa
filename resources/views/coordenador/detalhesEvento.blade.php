@@ -1062,6 +1062,7 @@
                     "<div class='container'>" +
                         "<h5>Convidado</h5>" +
                         "<div class='row'>" +
+                            "<input type='hidden' name='idConvidado[]' value='0'>" +
                             "<div class='col-sm-6'>" +
                                 "<label for='nome'>Nome:</label>" +
                                 "<input class='form-control' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +

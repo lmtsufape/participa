@@ -385,6 +385,25 @@ class AtividadeController extends Controller
                     }
                     $convidado->delete();
                 }
+            }               
+            for ($i = 0; $i < count($request->idConvidado); $i++) {
+                if ($request->idConvidado[$i] == 0) {
+                    $convidado = new Convidado();
+                    $convidado->nome            = $request->nomeDoConvidado[$i];
+                    $convidado->email           = $request->emailDoConvidado[$i];
+                    if ($request->funçãoDoConvidado[$i] == "Outra") {
+                        $convidado->funcao      = $request->outra[$i];
+                    } else {
+                        $convidado->funcao      = $request->funçãoDoConvidado[$i];
+                    }
+                    $convidado->atividade_id    = $atividade->id;
+                    $convidado->save();
+    
+                    if ($this->valida_email($convidado->email)) {
+                        $subject = "Convite na edição da atividade";
+                        Mail::to($convidado->email)->send(new EmailConvidadoAtividade($convidado, $subject)); 
+                    }
+                }
             }
         } else {
             for ($i = 0; $i < count($atividade->convidados); $i++) {
