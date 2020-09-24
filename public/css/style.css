@@ -373,3 +373,27 @@ body{
       padding:0;
     }
 }
+
+.modal-show-atividade h4 {
+    font-weight: bolder;
+}
+
+.modal-show-atividade p {
+    font-weight: normal;
+    font-size: 20px;
+}
+
+.modal-show-atividade .imagemConvidado {
+    text-align: center;
+    align-content: center;
+}
+
+.convidadoFuncao {
+    position: relative;
+    bottom: 15px;
+}
+
+.modal-show-atividade img {
+    padding: 0px;
+    margin-top: 20px;
+}

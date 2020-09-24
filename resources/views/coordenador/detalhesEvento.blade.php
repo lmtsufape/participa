@@ -1064,17 +1064,17 @@
                         "<div class='row'>" +
                             "<div class='col-sm-6'>" +
                                 "<label for='nome'>Nome:</label>" +
-                                "<input class='form-control' type='text' name='nomeDoConvidado' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
+                                "<input class='form-control' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
                             "</div>" +
                             "<div class='col-sm-6'>" + 
                                 "<label for='email'>E-mail:</label>" +
-                                "<input class='form-control' type='text' name='emailDoConvidado' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
+                                "<input class='form-control' type='text' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
                             "</div>" +
                         "</div>" +
                         "<div class='row'>" +
                             "<div class='col-sm-4'>" +
                                 "<label for='funcao'>Função:</label>" +
-                                "<select class='form-control' name='funçãoDoConvidado' id='funcao' onchange='outraFuncaoConvidado("+contadorConvidados+", this,"+ contadorConvidados +")'>" +
+                                "<select class='form-control' name='funçãoDoConvidado[]' id='funcao' onchange='outraFuncaoConvidado("+contadorConvidados+", this,"+ contadorConvidados +")'>" +
                                     "<option value='' selected disabled>-- Função --</option>" +
                                     "<option value='Palestrate'>Palestrate</option>" +
                                     "<option value='Avaliador'>Avaliador</option>" +

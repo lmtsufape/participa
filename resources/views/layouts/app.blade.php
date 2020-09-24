@@ -16,12 +16,17 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
-    <script src="{{ asset('js/jquery-3.4.1.min.js')}}"></script>
+    <script src="{{ asset('js/jquery-3.5.1.slim.min.js')}}"></script>
     <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
+    
+    <script src='{{asset('fullcalendar-5.3.2/lib/main.js')}}'></script>
+    <script src='{{asset('fullcalendar-5.3.2/lib/locales-all.js')}}'></script>
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styleIndex.css') }}" rel="stylesheet">
+    <link href='{{asset('fullcalendar-5.3.2/lib/main.css')}}' rel='stylesheet' />
+    
     <?php
         use App\Revisor;
         use App\User;

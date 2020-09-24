@@ -272,7 +272,7 @@ class AtividadeController extends Controller
 
         $validatedConvidados = $request->validate([
             'nomeDoConvidado.*'     => 'nullable',
-            'emailDoConvidado.*'    => ($request->nomeDoConvidado[0] != null) ? 'required' : 'nullable',
+            'emailDoConvidado.*'    => ($request->nomeDoConvidado[0] != null) ? 'required|email' : 'nullable',
             'funçãoDoConvidado.*'   => ($request->nomeDoConvidado[0] != null) ? 'required' : 'nullable',
         ]);
             
@@ -357,39 +357,48 @@ class AtividadeController extends Controller
             array_push($ids, $idsConv->id);
         }
 
-        if ($request->nomeDoConvidado[0] != null) {
-            if ($request->idConvidado != null) {
-                for ($i = 0; $i < count($ids); $i++) {
-                    if (in_array($ids[$i], $request->idConvidado)) {
-                        $key = array_search($ids[$i], $request->idConvidado);
-                        $convidado = Convidado::find($ids[$i]);
-                        $convidado->nome            = $request->nomeDoConvidado[$key];
-                        $convidado->email           = $request->emailDoConvidado[$key];
-                        if ($request->funçãoDoConvidado[$key] == "Outra") {
-                            $convidado->funcao      = $request->outra[$key];
-                        } else {
-                            $convidado->funcao      = $request->funçãoDoConvidado[$key];
-                        }
-                        $convidado->atividade_id    = $atividade->id;
-                        $convidado->update();
-        
+        if ($request->idConvidado != null && count($request->idConvidado) > 0) {
+            for ($i = 0; $i < count($ids); $i++) {
+                if (in_array($ids[$i], $request->idConvidado)) {
+                    $key = array_search($ids[$i], $request->idConvidado);
+                    $convidado = Convidado::find($ids[$i]);
+                    $convidado->nome            = $request->nomeDoConvidado[$key];
+                    $convidado->email           = $request->emailDoConvidado[$key];
+                    if ($request->funçãoDoConvidado[$key] == "Outra") {
+                        $convidado->funcao      = $request->outra[$key];
+                    } else {
+                        $convidado->funcao      = $request->funçãoDoConvidado[$key];
+                    }
+                    $convidado->atividade_id    = $atividade->id;
+                    $convidado->update();
+                    
+                    if ($this->valida_email($convidado->email)) {
                         $subject = "Convite atualizado para atividade";
                         Mail::to($convidado->email)->send(new EmailAtualizandoConvidadoAtividade($convidado, $subject));
-                    } else {
-                        $convidado = Convidado::find($ids[$i]);
+                    }
+                } else {
+                    $convidado = Convidado::find($ids[$i]);
+                    
+                    if ($this->valida_email($convidado->email)) {
                         $subject = "Você foi removido da atividade";
                         Mail::to($convidado->email)->send(new EmailDesconvidandoAtividade($convidado, $subject));
-                        $convidado->delete();
                     }
-                }
-            } else {
-                for ($i = 0; $i < count($atividade->convidados); $i++) {
-                    $convidado = Convidado::find($atividade->convidados[$i]);
-                    $subject = "Você foi removido da atividade";
-                    Mail::to($convidado->email)->send(new EmailDesconvidandoAtividade($convidado, $subject));
                     $convidado->delete();
                 }
-                for ($i = 0; $i < count($request->nomeConvidado); $i++) {
+            }
+        } else {
+            for ($i = 0; $i < count($atividade->convidados); $i++) {
+                $convidado = Convidado::find($atividade->convidados[$i]->id);
+                
+                if ($this->valida_email($convidado->email)) {
+                    $subject = "Você foi removido da atividade";
+                    Mail::to($convidado->email)->send(new EmailDesconvidandoAtividade($convidado, $subject));
+                }
+                $convidado->delete();
+            }
+            // dd($request);
+            if ($request->nomeDoConvidado != null) {
+                for ($i = 0; $i < count($request->nomeDoConvidado); $i++) {
                     $convidado = new Convidado();
                     $convidado->nome            = $request->nomeDoConvidado[$i];
                     $convidado->email           = $request->emailDoConvidado[$i];
@@ -401,8 +410,10 @@ class AtividadeController extends Controller
                     $convidado->atividade_id    = $atividade->id;
                     $convidado->save();
     
-                    $subject = "Convite na edição da atividade";
-                    Mail::to($convidado->email)->send(new EmailConvidadoAtividade($convidado, $subject)); 
+                    if ($this->valida_email($convidado->email)) {
+                        $subject = "Convite na edição da atividade";
+                        Mail::to($convidado->email)->send(new EmailConvidadoAtividade($convidado, $subject)); 
+                    }
                 }
             }
         }
@@ -439,5 +450,62 @@ class AtividadeController extends Controller
             $atividade->visibilidade_participante = true;
         }
         $atividade->save();
+    }
+
+    public function atividadesJson($id) {
+        
+        $evento = Evento::find($id);
+        $atividades = Atividade::where('eventoId', $id)->get();
+        $eventsFC = collect();
+
+        if (auth()->user() != null && auth()->user()->id === $evento->coordenadorId) {
+            foreach ($atividades as $atv) {
+                $color = $this->random_color();
+                for ($i = 0; $i < count($atv->datasAtividade); $i++) {
+                    $atividade = [
+                        'id' => $atv->id,
+                        'title' => $atv->titulo,
+                        'start' => $atv->datasAtividade[$i]->data . " " . $atv->datasAtividade[$i]->hora_inicio,
+                        'end' => $atv->datasAtividade[$i]->data . " " . $atv->datasAtividade[$i]->hora_fim,
+                        'color' => $color,
+                    ];
+                    $eventsFC->push($atividade);
+                }
+            }
+        } else {
+            foreach ($atividades as $atv) {
+                if ($atv->visibilidade_participante) {
+                    $color = $this->random_color();
+                    for ($i = 0; $i < count($atv->datasAtividade); $i++) {
+                        $atividade = [
+                            'id' => $atv->id,
+                            'title' => $atv->titulo,
+                            'start' => $atv->datasAtividade[$i]->data . " " . $atv->datasAtividade[$i]->hora_inicio,
+                            'end' => $atv->datasAtividade[$i]->data . " " . $atv->datasAtividade[$i]->hora_fim,
+                            'color' => $color,
+                        ];
+                        $eventsFC->push($atividade);
+                    }
+                }   
+            }
+        }
+        
+        // dd(response()->json($eventsFC));
+
+        return response()->json($eventsFC);
+    }
+
+    public function random_color() {
+        $letters = '0123456789ABCDEF';
+        $color = '#';
+        for($i = 0; $i < 6; $i++) {
+            $index = rand(0,15);
+            $color .= $letters[$index];
+        }
+        return $color;
+    }
+
+    public function valida_email($email) {
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 }

@@ -36,6 +36,12 @@ Auth::routes(['verify' => true]);
 Route::get('/perfil','UserController@perfil')->name('perfil')->middleware('auth');
 Route::post('/perfil','UserController@editarPerfil')->name('perfil')->middleware('auth');
 
+Route::get('/fullCalendar', function() {
+  return view('fullCalendar.test');
+});
+
+Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('atividades.json');
+
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 
   Route::get('/home', 'EventoController@index')->name('home');

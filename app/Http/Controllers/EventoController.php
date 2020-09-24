@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Area;
+use App\Atividade;
 use App\Evento;
 use App\Coautor;
 use App\Criterio;
@@ -567,6 +568,7 @@ class EventoController extends Controller
         $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
         $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
         $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $atividades = Atividade::where('eventoId', $id)->get();
 
         if($trabalhosCount != 0){
           $hasTrabalho = true;
@@ -593,6 +595,7 @@ class EventoController extends Controller
                                                 'etiquetas'           => $etiquetas,
                                                 'modalidades'         => $modalidades,
                                                 'formSubTraba'        => $formSubTraba,
+                                                'atividades'          => $atividades,
                                                ]);
     }
 
@@ -606,6 +609,7 @@ class EventoController extends Controller
         $trabalhosCoautor = null;
         $etiquetas = FormEvento::where('eventoId',$evento->id)->first();
         $formSubTraba = FormSubmTraba::all();
+        $atividades = Atividade::where([['eventoId', $id], ['visibilidade_participante', true]])->get();
 
         $mytime = Carbon::now('America/Recife');
         // dd(false);
@@ -619,6 +623,7 @@ class EventoController extends Controller
                                                 'mytime'              => $mytime,
                                                 'etiquetas'           => $etiquetas,
                                                 'formSubTraba'        => $formSubTraba,
+                                                'atividades'          => $atividades,
                                                ]);
     }
 
