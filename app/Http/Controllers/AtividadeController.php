@@ -76,30 +76,58 @@ class AtividadeController extends Controller
 
         $validateDuracaoAtividade = $request->validate([
             // Validação das datas
-            'primeiroDia'   => ($request->duracaoAtividade == 1 || $request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date'] : [''],
-            'segundoDia'    => ($request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date', 'after:primeiroDia'] : [''],
-            'terceiroDia'   => ($request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date', 'after:segundoDia'] : [''],
-            'quartoDia'     => ($request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date', 'after:terceiroDia'] : [''],
-            'quintoDia'     => ($request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date', 'after:quartoDia'] : [''],
-            'sextoDia'      => ($request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date', 'after:quintoDia'] : [''],
+            'primeiroDia'   => ($request->duracaoAtividade >= 1) ? ['required', 'date'] : [''],
+            'segundoDia'    => ($request->duracaoAtividade >= 2) ? ['required', 'date', 'after:primeiroDia'] : [''],
+            'terceiroDia'   => ($request->duracaoAtividade >= 3) ? ['required', 'date', 'after:segundoDia'] : [''],
+            'quartoDia'     => ($request->duracaoAtividade >= 4) ? ['required', 'date', 'after:terceiroDia'] : [''],
+            'quintoDia'     => ($request->duracaoAtividade >= 5) ? ['required', 'date', 'after:quartoDia'] : [''],
+            'sextoDia'      => ($request->duracaoAtividade >= 6) ? ['required', 'date', 'after:quintoDia'] : [''],
             'setimoDia'     => ($request->duracaoAtividade == 7) ? ['required', 'date', 'after:sextoDia'] : [''],
             
             // Validação das horas
-            'inicio'        => ($request->duracaoAtividade == 1 || $request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'segundoInicio' => ($request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'terceiroInicio'=> ($request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'quartoInicio'  => ($request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'quintoInicio'  => ($request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'sextoInicio'   => ($request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'setimoInicio'  => ($request->duracaoAtividade == 7) ? ['time'] : [''],
-            'fim'           => ($request->duracaoAtividade == 1 || $request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:inicio'] : [''],
-            'segundoFim'    => ($request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:segundoInicio'] : [''],
-            'terceiroFim'   => ($request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:terceiroInicio'] : [''],
-            'quartoFim'     => ($request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:quartoInicio'] : [''],
-            'quintoFim'     => ($request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:quintoInicio'] : [''],
-            'sextoFim'      => ($request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:sextoInicio'] : [''],
-            'setimoFim'     => ($request->duracaoAtividade == 7) ? ['time', 'after_time:setimoInicio'] : [''],
+            'inicio'        => ($request->duracaoAtividade >= 1) ? ['required','time'] : [''],
+            'segundoInicio' => ($request->duracaoAtividade >= 2) ? ['required','time'] : [''],
+            'terceiroInicio'=> ($request->duracaoAtividade >= 3) ? ['required','time'] : [''],
+            'quartoInicio'  => ($request->duracaoAtividade >= 4) ? ['required','time'] : [''],
+            'quintoInicio'  => ($request->duracaoAtividade >= 5) ? ['required','time'] : [''],
+            'sextoInicio'   => ($request->duracaoAtividade >= 6) ? ['required','time'] : [''],
+            'setimoInicio'  => ($request->duracaoAtividade == 7) ? ['required','time'] : [''],
+            'fim'           => ($request->duracaoAtividade >= 1) ? ['required','time'] : [''],
+            'segundoFim'    => ($request->duracaoAtividade >= 2) ? ['required','time'] : [''],
+            'terceiroFim'   => ($request->duracaoAtividade >= 3) ? ['required','time'] : [''],
+            'quartoFim'     => ($request->duracaoAtividade >= 4) ? ['required','time'] : [''],
+            'quintoFim'     => ($request->duracaoAtividade >= 5) ? ['required','time'] : [''],
+            'sextoFim'      => ($request->duracaoAtividade >= 6) ? ['required','time'] : [''],
+            'setimoFim'     => ($request->duracaoAtividade == 7) ? ['required','time'] : [''],
         ]);
+
+        if ($request->inicio != null && strtotime($request->inicio) > strtotime($request->fim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'fim' => 'Fim deve ser um horário após ' . $request->inicio])->withInput();
+        }
+
+        if ($request->segundoInicio != null && strtotime($request->segundoInicio) > strtotime($request->segundoFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'segundoFim' => 'Segundo fim deve ser um horário após ' . $request->segundoInicio])->withInput();
+        }
+
+        if ($request->terceiroInicio != null && strtotime($request->terceiroInicio) > strtotime($request->terceiroFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'terceiroFim' => 'Fim deve ser um horário após ' . $request->terceiroInicio])->withInput();
+        }
+
+        if ($request->quartoInicio != null && strtotime($request->quartoInicio) > strtotime($request->quartoFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'quartoFim' => 'Fim deve ser um horário após ' . $request->quartoInicio])->withInput();
+        }
+
+        if ($request->quintoInicio != null && strtotime($request->quintoInicio) > strtotime($request->quintoFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'quintoFim' => 'Fim deve ser um horário após ' . $request->quintoInicio])->withInput();
+        }
+
+        if ($request->sextoInicio != null && strtotime($request->sextoInicio) > strtotime($request->sextoFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'sextoFim' => 'Fim deve ser um horário após ' . $request->sextoInicio])->withInput();
+        }
+
+        if ($request->setimoInicio != null && strtotime($request->setimoInicio) > strtotime($request->setimoFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'setimoFim' => 'Fim deve ser um horário após ' . $request->setimoInicio])->withInput();
+        }
         
         $validatedConvidados = $request->validate([
             'nomeDoConvidado.*'     => 'nullable',
@@ -233,7 +261,7 @@ class AtividadeController extends Controller
     {
         
         $validated = $request->validate([
-            'idAtividade'       => ['required', 'integer'],
+            'idAtividade'           => ['required', 'integer'],
             'titulo'                => ['required', 'max:50'],
             'tipo'                  => ['required', 'string'],
             'descricao'             => ['required', 'max:500'],
@@ -246,30 +274,58 @@ class AtividadeController extends Controller
 
         $validateDuracaoAtividade = $request->validate([
             // Validação das datas
-            'primeiroDia'   => ($request->duracaoAtividade == 1 || $request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date'] : [''],
-            'segundoDia'    => ($request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date', 'after:primeiroDia'] : [''],
-            'terceiroDia'   => ($request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date', 'after:segundoDia'] : [''],
-            'quartoDia'     => ($request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date', 'after:terceiroDia'] : [''],
-            'quintoDia'     => ($request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date', 'after:quartoDia'] : [''],
-            'sextoDia'      => ($request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['required', 'date', 'after:quintoDia'] : [''],
+            'primeiroDia'   => ($request->duracaoAtividade >= 1) ? ['required', 'date'] : [''],
+            'segundoDia'    => ($request->duracaoAtividade >= 2) ? ['required', 'date', 'after:primeiroDia'] : [''],
+            'terceiroDia'   => ($request->duracaoAtividade >= 3) ? ['required', 'date', 'after:segundoDia'] : [''],
+            'quartoDia'     => ($request->duracaoAtividade >= 4) ? ['required', 'date', 'after:terceiroDia'] : [''],
+            'quintoDia'     => ($request->duracaoAtividade >= 5) ? ['required', 'date', 'after:quartoDia'] : [''],
+            'sextoDia'      => ($request->duracaoAtividade >= 6) ? ['required', 'date', 'after:quintoDia'] : [''],
             'setimoDia'     => ($request->duracaoAtividade == 7) ? ['required', 'date', 'after:sextoDia'] : [''],
             
             // Validação das horas
-            'inicio'        => ($request->duracaoAtividade == 1 || $request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'segundoInicio' => ($request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'terceiroInicio'=> ($request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'quartoInicio'  => ($request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'quintoInicio'  => ($request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'sextoInicio'   => ($request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time'] : [''],
-            'setimoInicio'  => ($request->duracaoAtividade == 7) ? ['time'] : [''],
-            'fim'           => ($request->duracaoAtividade == 1 || $request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:inicio'] : [''],
-            'segundoFim'    => ($request->duracaoAtividade == 2 || $request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:segundoInicio'] : [''],
-            'terceiroFim'   => ($request->duracaoAtividade == 3 || $request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:terceiroInicio'] : [''],
-            'quartoFim'     => ($request->duracaoAtividade == 4 || $request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:quartoInicio'] : [''],
-            'quintoFim'     => ($request->duracaoAtividade == 5 || $request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:quintoInicio'] : [''],
-            'sextoFim'      => ($request->duracaoAtividade == 6 || $request->duracaoAtividade == 7) ? ['time', 'after_time:sextoInicio'] : [''],
-            'setimoFim'     => ($request->duracaoAtividade == 7) ? ['time', 'after_time:setimoInicio'] : [''],
+            'inicio'        => ($request->duracaoAtividade >= 1) ? ['required','time'] : [''],
+            'segundoInicio' => ($request->duracaoAtividade >= 2) ? ['required','time'] : [''],
+            'terceiroInicio'=> ($request->duracaoAtividade >= 3) ? ['required','time'] : [''],
+            'quartoInicio'  => ($request->duracaoAtividade >= 4) ? ['required','time'] : [''],
+            'quintoInicio'  => ($request->duracaoAtividade >= 5) ? ['required','time'] : [''],
+            'sextoInicio'   => ($request->duracaoAtividade >= 6) ? ['required','time'] : [''],
+            'setimoInicio'  => ($request->duracaoAtividade == 7) ? ['required','time'] : [''],
+            'fim'           => ($request->duracaoAtividade >= 1) ? ['required','time'] : [''],
+            'segundoFim'    => ($request->duracaoAtividade >= 2) ? ['required','time'] : [''],
+            'terceiroFim'   => ($request->duracaoAtividade >= 3) ? ['required','time'] : [''],
+            'quartoFim'     => ($request->duracaoAtividade >= 4) ? ['required','time'] : [''],
+            'quintoFim'     => ($request->duracaoAtividade >= 5) ? ['required','time'] : [''],
+            'sextoFim'      => ($request->duracaoAtividade >= 6) ? ['required','time'] : [''],
+            'setimoFim'     => ($request->duracaoAtividade == 7) ? ['required','time'] : [''],
         ]);
+
+        if ($request->inicio != null && strtotime($request->inicio) > strtotime($request->fim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'fim' => 'Fim deve ser um horário após ' . $request->inicio])->withInput();
+        }
+
+        if ($request->segundoInicio != null && strtotime($request->segundoInicio) > strtotime($request->segundoFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'segundoFim' => 'Segundo fim deve ser um horário após ' . $request->segundoInicio])->withInput();
+        }
+
+        if ($request->terceiroInicio != null && strtotime($request->terceiroInicio) > strtotime($request->terceiroFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'terceiroFim' => 'Fim deve ser um horário após ' . $request->terceiroInicio])->withInput();
+        }
+
+        if ($request->quartoInicio != null && strtotime($request->quartoInicio) > strtotime($request->quartoFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'quartoFim' => 'Fim deve ser um horário após ' . $request->quartoInicio])->withInput();
+        }
+
+        if ($request->quintoInicio != null && strtotime($request->quintoInicio) > strtotime($request->quintoFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'quintoFim' => 'Fim deve ser um horário após ' . $request->quintoInicio])->withInput();
+        }
+
+        if ($request->sextoInicio != null && strtotime($request->sextoInicio) > strtotime($request->sextoFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'sextoFim' => 'Fim deve ser um horário após ' . $request->sextoInicio])->withInput();
+        }
+
+        if ($request->setimoInicio != null && strtotime($request->setimoInicio) > strtotime($request->setimoFim)) {
+            return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'setimoFim' => 'Fim deve ser um horário após ' . $request->setimoInicio])->withInput();
+        }
 
         $validatedConvidados = $request->validate([
             'nomeDoConvidado.*'     => 'nullable',
