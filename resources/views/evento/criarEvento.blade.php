@@ -171,7 +171,7 @@
             </div>
             <div class="col-sm-4">
                 <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
-                <input id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" value="{{ old('cidade') }}" required autocomplete="cidade" autofocus>
+                <input id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" value="{{ old('cidade') }}" required autocomplete="cidade" autofocus>
 
                 @error('cidade')
                 <span class="invalid-feedback" role="alert">
@@ -241,6 +241,13 @@
   <script type="text/javascript" >
     $(document).ready(function($){
       $('#cep').mask('00000-000');
+    });
+
+    $(".apenasLetras").mask("#", {
+        maxlength: false,
+        translation: {
+            '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
+        }
     });
 
     function limpa_formulário_cep() {
