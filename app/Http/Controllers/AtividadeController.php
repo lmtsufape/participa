@@ -7,6 +7,7 @@ use App\Evento;
 use App\TipoAtividade;
 use App\DatasAtividade;
 use App\Convidado;
+use Illuminate\Support\Facades\DB;
 use App\Mail\ConvidadoAtividade\EmailConvidadoAtividade;
 use App\Mail\ConvidadoAtividade\EmailDesconvidandoAtividade;
 use App\Mail\ConvidadoAtividade\EmailAtualizandoConvidadoAtividade;
@@ -474,38 +475,42 @@ class AtividadeController extends Controller
     public function atividadesJson($id) {
         
         $evento = Evento::find($id);
-        $atividades = Atividade::where('eventoId', $id)->get();
+        $atividades = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->orderBy('atividade_id')->orderBy('data')->where('eventoId', '=', $id)->get();
+        
         $eventsFC = collect();
-
+        $idAtividade = 0;
+        
         if (auth()->user() != null && auth()->user()->id === $evento->coordenadorId) {
             foreach ($atividades as $atv) {
-                $color = $this->random_color();
-                for ($i = 0; $i < count($atv->datasAtividade); $i++) {
+                if ($idAtividade != $atv->atividade_id) {
+                    $idAtividade = $atv->atividade_id;
+                    $color = $this->random_color();
+                }
+                $atividade = [
+                    'id' => $atv->atividade_id,
+                    'title' => $atv->titulo,
+                    'start' => $atv->data . " " . $atv->hora_inicio,
+                    'end' => $atv->data . " " . $atv->hora_fim,
+                    'color' => $color,
+                ];
+                $eventsFC->push($atividade);
+            }
+        } else {
+            foreach ($atividades as $atv) {
+                if ($idAtividade != $atv->atividade_id) {
+                    $idAtividade = $atv->atividade_id;
+                    $color = $this->random_color();
+                }
+                if ($atv->visibilidade_participante) {
                     $atividade = [
-                        'id' => $atv->id,
+                        'id' => $atv->atividade_id,
                         'title' => $atv->titulo,
-                        'start' => $atv->datasAtividade[$i]->data . " " . $atv->datasAtividade[$i]->hora_inicio,
-                        'end' => $atv->datasAtividade[$i]->data . " " . $atv->datasAtividade[$i]->hora_fim,
+                        'start' => $atv->data . " " . $atv->hora_inicio,
+                        'end' => $atv->data . " " . $atv->hora_fim,
                         'color' => $color,
                     ];
                     $eventsFC->push($atividade);
                 }
-            }
-        } else {
-            foreach ($atividades as $atv) {
-                if ($atv->visibilidade_participante) {
-                    $color = $this->random_color();
-                    for ($i = 0; $i < count($atv->datasAtividade); $i++) {
-                        $atividade = [
-                            'id' => $atv->id,
-                            'title' => $atv->titulo,
-                            'start' => $atv->datasAtividade[$i]->data . " " . $atv->datasAtividade[$i]->hora_inicio,
-                            'end' => $atv->datasAtividade[$i]->data . " " . $atv->datasAtividade[$i]->hora_fim,
-                            'color' => $color,
-                        ];
-                        $eventsFC->push($atividade);
-                    }
-                }   
             }
         }
         

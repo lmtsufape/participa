@@ -20,6 +20,7 @@ use App\RegraSubmis;
 use App\TemplateSubmis;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -569,7 +570,8 @@ class EventoController extends Controller
         $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
         $modalidades = Modalidade::where('eventoId', $evento->id)->get();
         $atividades = Atividade::where('eventoId', $id)->get();
-
+        $primeiraAtividade = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
+      
         if($trabalhosCount != 0){
           $hasTrabalho = true;
           $hasFile = true;
@@ -584,6 +586,9 @@ class EventoController extends Controller
 
         $formSubTraba = FormSubmTraba::all();
 
+        if ($primeiraAtividade == null) {
+          $primeiraAtividade = "";
+        }
         return view('evento.visualizarEvento', [
                                                 'evento'              => $evento,
                                                 'trabalhos'           => $trabalhos,
@@ -596,6 +601,7 @@ class EventoController extends Controller
                                                 'modalidades'         => $modalidades,
                                                 'formSubTraba'        => $formSubTraba,
                                                 'atividades'          => $atividades,
+                                                'dataInicial'         => $primeiraAtividade,
                                                ]);
     }
 
@@ -610,9 +616,14 @@ class EventoController extends Controller
         $etiquetas = FormEvento::where('eventoId',$evento->id)->first();
         $formSubTraba = FormSubmTraba::all();
         $atividades = Atividade::where([['eventoId', $id], ['visibilidade_participante', true]])->get();
+        $primeiraAtividade = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where([['eventoId', '=', $id], ['visibilidade_participante', '=', true]])->first();
 
         $mytime = Carbon::now('America/Recife');
         // dd(false);
+
+        if ($primeiraAtividade == null) {
+          $primeiraAtividade = "";
+        }
         return view('evento.visualizarEvento', [
                                                 'evento'              => $evento,
                                                 'trabalhos'           => $trabalhos,
@@ -624,6 +635,7 @@ class EventoController extends Controller
                                                 'etiquetas'           => $etiquetas,
                                                 'formSubTraba'        => $formSubTraba,
                                                 'atividades'          => $atividades,
+                                                'dataInicial'         => $primeiraAtividade,
                                                ]);
     }
 

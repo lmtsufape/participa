@@ -67,7 +67,7 @@
                     @if ($atv->valor != null)
                       <div class="col-sm-6">
                         <label for="valor">Valor:</label>
-                        <h4 class="valor">{{$atv->valor}}</h4>
+                        <h4 class="valor">R$ {{$atv->valor}}</h4>
                       </div>
                     @endif
                   </div>
@@ -306,11 +306,15 @@
             <h4>{{$etiquetas->etiquetamoduloprogramacao}}:</h4>
             <p>
                 {{-- LOCAL DA PROGRAMAÇÃO --}}
-                <div id="wrap">
-                  <div id='calendar-wrap' style="width: 750px; height: 850px;">
-                    <div id='calendar'></div>
+                @if ($atividades != null && count($atividades) > 0) 
+                  <div id="wrap">
+                    <div id='calendar-wrap' style="width: 750px; height: 850px;">
+                      <div id='calendar'></div>
+                    </div>
                   </div>
-                </div>
+                @else 
+                  Nenhuma atividade programada
+                @endif
             </p>
         </div>
       </div>        
@@ -455,58 +459,62 @@
 
 @section('javascript')
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-
-    /* initialize the external events
-    -----------------------------------------------------------------*/
-
-    // var containerEl = document.getElementById('external-events-list');
-    // new FullCalendar.Draggable(containerEl, {
-    //   itemSelector: '.fc-event',
-    //   eventData: function(eventEl) {
-    //     return {
-    //       title: eventEl.innerText.trim()
-    //     }
-    //   }
-    // });
-
-    //// the individual way to do it
-    // var containerEl = document.getElementById('external-events-list');
-    // var eventEls = Array.prototype.slice.call(
-    //   containerEl.querySelectorAll('.fc-event')
-    // );
-    // eventEls.forEach(function(eventEl) {
-    //   new FullCalendar.Draggable(eventEl, {
-    //     eventData: {
-    //       title: eventEl.innerText.trim(),
-    //     }
-    //   });
-    // });
-
-    /* initialize the calendar
-    -----------------------------------------------------------------*/
-
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      headerToolbar: {
-        left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
-        center: 'title',
-        right: 'prev,next today'
-      },
-      locale: 'pt-br',
-      editable: false,
-      eventClick: function (info) {
-        var idModal = "#modalAtividadeShow"+info.event.id;
-        $(idModal).modal('show');
-      },
-      events: "{{ route('atividades.json', ['id' => $evento->id]) }}",
-    });
-    calendar.render();
-
-  });
-
   function changeTrabalho(x){
     document.getElementById('trabalhoNovaVersaoId').value = x;
   }
 </script>
+  @if ($dataInicial != "")
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+
+      /* initialize the external events
+      -----------------------------------------------------------------*/
+
+      // var containerEl = document.getElementById('external-events-list');
+      // new FullCalendar.Draggable(containerEl, {
+      //   itemSelector: '.fc-event',
+      //   eventData: function(eventEl) {
+      //     return {
+      //       title: eventEl.innerText.trim()
+      //     }
+      //   }
+      // });
+
+      //// the individual way to do it
+      // var containerEl = document.getElementById('external-events-list');
+      // var eventEls = Array.prototype.slice.call(
+      //   containerEl.querySelectorAll('.fc-event')
+      // );
+      // eventEls.forEach(function(eventEl) {
+      //   new FullCalendar.Draggable(eventEl, {
+      //     eventData: {
+      //       title: eventEl.innerText.trim(),
+      //     }
+      //   });
+      // });
+
+      /* initialize the calendar
+      -----------------------------------------------------------------*/
+
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialDate: "{{$dataInicial->data}}",    
+        headerToolbar: {
+          left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+          center: 'title',
+          right: 'prev,next today'
+        },
+        locale: 'pt-br',
+        editable: false,
+        eventClick: function (info) {
+          var idModal = "#modalAtividadeShow"+info.event.id;
+          $(idModal).modal('show');
+        },
+        events: "{{ route('atividades.json', ['id' => $evento->id]) }}",
+        
+      });
+      calendar.render();
+      });
+    </script>
+  @endif
 @endsection
