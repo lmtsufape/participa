@@ -240,16 +240,16 @@
 @section('javascript')
   <script type="text/javascript" >
     $(document).ready(function($){
-      $('#cep').mask('00000-000');
+        $('#cep').mask('00000-000');
+        $(".apenasLetras").mask("#", {
+            maxlength: false,
+            translation: {
+                '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
+            }
+        });
+        $('#numero').mask('0000000000000');
     });
-
-    $(".apenasLetras").mask("#", {
-        maxlength: false,
-        translation: {
-            '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
-        }
-    });
-    $('#numero').mask('0000000000000');
+    
 
     function limpa_formulário_cep() {
             //Limpa valores do formulário de cep.
