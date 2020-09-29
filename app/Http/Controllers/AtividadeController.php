@@ -25,8 +25,9 @@ class AtividadeController extends Controller
     {
         $duracaoAtividades = [];
         $ids = [];
-
+        
         $evento = Evento::find($id);
+        $this->authorize('isCoordenador', $evento);
         $atividades = Atividade::where('eventoId', $id)->orderBy('titulo')->get();
         
         foreach ($atividades as $atv) {
@@ -506,6 +507,7 @@ class AtividadeController extends Controller
     public function destroy($id)
     {
         $atividade = Atividade::find($id);
+        $this->authorize('isCoordenador', $atividade->evento);
         
         foreach ($atividade->datasAtividade as $da) {
             $da->delete();
