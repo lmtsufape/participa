@@ -166,7 +166,7 @@
             </div>
             <div class="col-sm-2">
                 <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$endereco->numero}}" @endif required autocomplete="numero" autofocus>
+                <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$endereco->numero}}" @endif required autocomplete="numero" autofocus>
 
                 @error('numero')
                 <span class="invalid-feedback" role="alert">
@@ -191,7 +191,7 @@
             </div>
             <div class="col-sm-4">
                 <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
-                <input id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" @if(old('cidade') != null) value="{{ old('cidade') }}" @else value="{{$endereco->cidade}}" @endif required autocomplete="cidade" autofocus>
+                <input id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" @if(old('cidade') != null) value="{{ old('cidade') }}" @else value="{{$endereco->cidade}}" @endif required autocomplete="cidade" autofocus>
 
                 @error('cidade')
                 <span class="invalid-feedback" role="alert">
@@ -290,7 +290,14 @@
 @section('javascript')
   <script type="text/javascript" >
     $(document).ready(function($){
-      $('#cep').mask('00000-000');
+        $('#cep').mask('00000-000');
+        $(".apenasLetras").mask("#", {
+            maxlength: false,
+            translation: {
+                '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
+            }
+        });
+        $('#numero').mask('0000000000000');
     });
 
     function limpa_formulário_cep() {

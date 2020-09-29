@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\User;
 use App\Evento;
+use App\ComissaoEvento;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EventoPolicy
@@ -29,5 +30,10 @@ class EventoPolicy
         return true;
       }
       return false;
+    }
+
+    public function isCoordenadorOrComissao(User $user, Evento $evento) {
+      $comissao = ComissaoEvento::where([['eventosId', $evento->id], ['userId', $user->id]])->first();
+      return $user->id === $evento->coordenador->id || !(is_null($comissao));
     }
 }

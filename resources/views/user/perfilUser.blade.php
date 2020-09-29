@@ -238,7 +238,7 @@
             <input hidden name="id" value="{{$user->id}}">
             <div class="col-md-8">
                 <label for="name" class="col-form-label">{{ __('Name') }}</label>
-                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" @if(old('name') != null) value="{{ old('name') }}" @else value="{{$user->name}}" @endif required autocomplete="name" autofocus>
+                <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" @if(old('name') != null) value="{{ old('name') }}" @else value="{{$user->name}}" @endif required autocomplete="name" autofocus>
 
                 @error('name')
                     <span class="invalid-feedback" role="alert">
@@ -263,7 +263,7 @@
 
             <div class="col-md-8">
               <label for="instituicao" class="col-form-label">{{ __('Instituição de Ensino') }}</label>
-              <input id="instituicao" type="text" class="form-control @error('instituicao') is-invalid @enderror" name="instituicao" @if(old('instituicao') != null) value="{{ old('instituicao') }}" @else value="{{$user->instituicao}}" @endif required autocomplete="instituicao" autofocus>
+              <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" @if(old('instituicao') != null) value="{{ old('instituicao') }}" @else value="{{$user->instituicao}}" @endif required autocomplete="instituicao" autofocus>
 
               @error('instituicao')
                   <span class="invalid-feedback" role="alert">
@@ -336,7 +336,7 @@
 
             <div class="col-md-4">
               <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-              <input value="{{old('numero')}}" id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero">
+              <input value="{{old('numero')}}" id="numero" min="0" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero">
 
               @error('numero')
                   <span class="invalid-feedback" role="alert">
@@ -361,7 +361,7 @@
 
             <div class="col-md-4">
                   <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
-                  <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" required autocomplete="cidade">
+                  <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" required autocomplete="cidade">
 
                   @error('cidade')
                       <span class="invalid-feedback" role="alert">
@@ -434,6 +434,13 @@
     $(document).ready(function($){
       $('#cep').mask('00000-000');
       $('#cpf').mask('000.000.000-00');
+      $(".apenasLetras").mask("#", {
+        maxlength: false,
+        translation: {
+            '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
+        }
+      });
+      $('#numero').mask('0000000000000');
       var SPMaskBehavior = function (val) {
         return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
       },

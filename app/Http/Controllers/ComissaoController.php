@@ -8,6 +8,10 @@ use App\ComissaoEvento;
 use App\Evento;
 use App\Area;
 use App\Revisor;
+use App\Trabalho;
+use App\Atribuicao;
+use App\FormEvento;
+use App\FormSubmTraba;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -34,6 +38,33 @@ class ComissaoController extends Controller
         //
     }
 
+    public function informacoes(Request $request) {
+        $evento = Evento::find($request->eventoId);
+
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
+        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
+        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
+        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
+        $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
+        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
+
+
+
+        return view('coordenador.informacoes', [
+                                                    'evento'                  => $evento,
+                                                    'trabalhosEnviados'       => $trabalhosEnviados,
+                                                    'trabalhosAvaliados'      => $trabalhosAvaliados,
+                                                    'trabalhosPendentes'      => $trabalhosPendentes,
+                                                    'numeroRevisores'         => $numeroRevisores,
+                                                    'numeroComissao'          => $numeroComissao,
+
+                                                  ]);
+    }
     /**
      * Store a newly created resource in storage.
      *

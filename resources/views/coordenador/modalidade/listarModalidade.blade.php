@@ -43,7 +43,7 @@
             </div>{{-- end table--}}
 
             {{-- table modalidades Área--}}
-            <div class="col-sm-6">
+            {{-- <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
                       <h5 class="card-title">Áreas por Modalidade</h5>
@@ -71,7 +71,8 @@
                     </div>
                   </div>
 
-            </div>{{-- end table área--}}
+            </div> --}}
+            {{-- end table área --}}
         </div>
     </div>
         <div id="divClassificacao" class="classificacao">

@@ -16,14 +16,19 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
-    <script src="{{ asset('js/jquery-3.4.1.min.js')}}"></script>
+    <script src="{{ asset('js/jquery-3.5.1.slim.min.js')}}"></script>
     <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    
+    <script src='{{asset('fullcalendar-5.3.2/lib/main.js')}}'></script>
+    <script src='{{asset('fullcalendar-5.3.2/lib/locales-all.js')}}'></script>
+
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styleIndex.css') }}" rel="stylesheet">
+    <link href='{{asset('fullcalendar-5.3.2/lib/main.css')}}' rel='stylesheet' />
+    
     <?php
         use App\Revisor;
         use App\User;
@@ -34,6 +39,8 @@
     
 </head>
 <body>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="token" content="{{ csrf_token() }}">
     <div id="app">
         {{-- Navbar --}}
         <nav class="navbar navbar-expand-md navbar-dark  shadow-sm">
@@ -101,7 +108,9 @@
 
                                     @if (isset(Auth::user()->coordComissaoCientifica))
                                         {{-- Rota - Area da Comissao --}}
+
                                         <a class="dropdown-item" href="{{ route('cientifica.home') }}">
+
                                             <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                             {{ __('Área da Comissão Cientifica') }}
                                         </a>
@@ -179,8 +188,5 @@
     @yield('javascript')
     @else
     @endif
-    <script>
-        
-    </script>
 </body>
 </html>

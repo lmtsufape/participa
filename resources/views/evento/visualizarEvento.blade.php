@@ -2,6 +2,94 @@
 
 @section('content')
 
+@foreach ($atividades as $atv)
+  <div class="modal fade bd-example modal-show-atividade" id="modalAtividadeShow{{$atv->id}}" tabindex="-1" role="dialog" aria-labelledby="modalLabelAtividadeShow{{$atv->id}}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalLabelAtividadeShow{{$atv->id}}">{{ $atv->titulo }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+            <div class="modal-body">
+              <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 for="tipo">Tipo</h4>
+                        <p>
+                          {{$atv->tipoAtividade->descricao}}
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row form-group">
+                    <div class="col-sm-12">
+                        <h4 for="descricao">Descrição</label>
+                        <p>
+                          {{$atv->descricao}}
+                        </p>
+                    </div>
+                </div>
+                @if (count($atv->convidados) > 0)
+                  <hr>
+                  <h4>Convidados</h4>
+                  <div class="convidadosDeUmaAtividade">
+                    <div class="row">
+                      @foreach ($atv->convidados as $convidado)
+                        <div class="col-sm-3 imagemConvidado">
+                            <img src="{{asset('img/icons/user.png')}}" alt="Foto de {{$convidado->nome}}" width="50px" height="auto">
+                            <h5 class="convidadoNome">{{$convidado->nome}}</h5>
+                            <small class="convidadoFuncao">{{$convidado->funcao}}</small>
+                        </div>
+                      @endforeach  
+                    </div>                                  
+                  </div>
+                @endif
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 for="local">Local</h4>
+                        <p class="local">
+                          {{$atv->local}}
+                        </p>
+                    </div>
+                </div>
+                @if ($atv->vagas != null || $atv->valor != null)
+                  <hr>
+                  <div class="row">
+                    @if ($atv->vagas != null)
+                      <div class="col-sm-6">
+                        <label for="vagas">Vagas:</label>
+                        <h4 class="vagas">{{$atv->vagas}}</h4>
+                      </div>
+                    @endif
+                    @if ($atv->valor != null)
+                      <div class="col-sm-6">
+                        <label for="valor">Valor:</label>
+                        <h4 class="valor">R$ {{$atv->valor}}</h4>
+                      </div>
+                    @endif
+                  </div>
+                @endif
+                @if ($atv->carga_horaria != null)
+                <hr>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <label for="carga_horaria">Carga horária para estudantes:</label>
+                    <h4 class="carga_horaria">{{$atv->carga_horaria}}</h4>
+                  </div>
+                </div>
+                @endif
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+  </div>
+@endforeach
 
 <div class="modal fade" id="modalTrabalho" tabindex="-1" role="dialog" aria-labelledby="modalTrabalho" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -47,12 +135,6 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-
 
 
 
@@ -127,7 +209,7 @@
     </div>
 
     {{-- @if ($etiquetas->modsubmissao == true) --}}
-      <div class="row margin">
+      {{-- <div class="row margin">
         <div class="col-sm-12 info-evento">
             <h4>{{$etiquetas->etiquetasubmissoes}}:</h4>
             @foreach ($modalidades as $modalidade)
@@ -190,7 +272,7 @@
             <br>
             @endforeach
         </div>
-      </div>
+      </div> --}}
     {{-- @else
     
     @endif --}}
@@ -223,7 +305,16 @@
         <div class="col-sm-12 info-evento">
             <h4>{{$etiquetas->etiquetamoduloprogramacao}}:</h4>
             <p>
-                LOCAL DA PROGRAMAÇÃO
+                {{-- LOCAL DA PROGRAMAÇÃO --}}
+                @if ($atividades != null && count($atividades) > 0) 
+                  <div id="wrap">
+                    <div id='calendar-wrap' style="width: 750px; height: 850px;">
+                      <div id='calendar'></div>
+                    </div>
+                  </div>
+                @else 
+                  Nenhuma atividade programada
+                @endif
             </p>
         </div>
       </div>        
@@ -372,4 +463,58 @@
     document.getElementById('trabalhoNovaVersaoId').value = x;
   }
 </script>
+  @if ($dataInicial != "")
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+
+      /* initialize the external events
+      -----------------------------------------------------------------*/
+
+      // var containerEl = document.getElementById('external-events-list');
+      // new FullCalendar.Draggable(containerEl, {
+      //   itemSelector: '.fc-event',
+      //   eventData: function(eventEl) {
+      //     return {
+      //       title: eventEl.innerText.trim()
+      //     }
+      //   }
+      // });
+
+      //// the individual way to do it
+      // var containerEl = document.getElementById('external-events-list');
+      // var eventEls = Array.prototype.slice.call(
+      //   containerEl.querySelectorAll('.fc-event')
+      // );
+      // eventEls.forEach(function(eventEl) {
+      //   new FullCalendar.Draggable(eventEl, {
+      //     eventData: {
+      //       title: eventEl.innerText.trim(),
+      //     }
+      //   });
+      // });
+
+      /* initialize the calendar
+      -----------------------------------------------------------------*/
+
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialDate: "{{$dataInicial->data}}",    
+        headerToolbar: {
+          left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+          center: 'title',
+          right: 'prev,next today'
+        },
+        locale: 'pt-br',
+        editable: false,
+        eventClick: function (info) {
+          var idModal = "#modalAtividadeShow"+info.event.id;
+          $(idModal).modal('show');
+        },
+        events: "{{ route('atividades.json', ['id' => $evento->id]) }}",
+        
+      });
+      calendar.render();
+      });
+    </script>
+  @endif
 @endsection

@@ -1,15 +1,18 @@
 @extends('layouts.app')
 @section('sidebar')
+
 <div class="wrapper">
     <div class="sidebar">
         <h2>{{{$evento->nome}}}</h2>
         <ul>
-            <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
-                <li>
-                    <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
-                </li>
-            </a>
-
+            @can('isCoordenador', $evento)
+                <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
+                    <li>
+                        <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
+                    </li>
+                </a>
+            @endcan
+            @can('isCoordenador', $evento)
             <a id="trabalhos">
                 <li>
                     <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Submissões</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -38,7 +41,9 @@
                     </a>
                 </div>
             </a>
+            @endcan
             <a id="areas">
+                
                 <li>
                     <img src="{{asset('img/icons/area.svg')}}" alt=""><h5> Áreas</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
@@ -56,6 +61,7 @@
                 </div>
 
             </a>
+            @can('isCoordenador', $evento)
             <a id="revisores">
                 <li>
                     <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Revisores</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -73,6 +79,7 @@
                     </a>
                 </div>
             </a>
+            @endcan
             <a id="comissao" >
                 <li>
                     <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -83,11 +90,13 @@
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar Comissão</h5>
                         </li>
                     </a>
+                    @can('isCoordenador', $evento)
                     <a id="definirCoordComissao" href="{{ route('coord.definirCoordComissao', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/crown-solid.svg')}}" alt=""><h5> Definir Coordenador</h5>
                         </li>
                     </a>
+                    @endif
                     <a id="listarComissao" href="{{ route('coord.listarComissao', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Comissão</h5>
@@ -122,18 +131,18 @@
                     </a>
                 </div>
             </a>
-
+            @can('isCoordenador', $evento)
             <a id="programacao">
                 <li>
                     <img src="{{asset('img/icons/slideshow.svg')}}" alt=""><h5>Programação</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownProgramacao" @if(request()->is('coord/evento/modalidade*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                    <a id="cadastrarModalidade" href="{{ route('coord.cadastrarModalidade', ['eventoId' => $evento->id]) }}">
+                    <a id="cadastrarModalidade" href="{{ route('coord.atividades', ['id' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Atividades</h5>
                         </li>
                     </a> 
-                    <a id="cadastrarModalidade" href="{{ route('coord.cadastrarModalidade', ['eventoId' => $evento->id]) }}">
+                    <a id="cadastrarModalidade" href="{{ route('coord.cadastrarModalidade', ['id' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Palestrantes</h5>
                         </li>
@@ -158,7 +167,6 @@
                   </a>
               </div>
             </a>
-
             <a id="publicar">
                 <li>
                   <img src="{{ asset('img/icons/publish.svg') }}" alt=""><h5>Publicar</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -178,7 +186,7 @@
                   </a>
               </div>
             </a>
-
+            @endcan
         </ul>
     </div>
 
@@ -768,8 +776,513 @@
       alert("The text has been changed.");
     });
 
+    
+    // Marcar a visibilidade da atividade para participantes
+    // Estudar como fazer
+    function setVisibilidadeAtv(id) {
+        var checkbox = document.getElementById('checkbox_' + id);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            }
+        });
+        jQuery.ajax({
+          url: "/coord/evento/atividades/"+ id +"/visibilidade",
+          method: 'post',
+        });
+    }
 
+    function salvarTipoAtividadeAjax() {
+        $.ajax({
+            url: "/coord/evento/tipo-de-atividade/new/" + $('#nomeTipo').val(),
+            method: 'get',
+            type: 'get',
+            data: {
+                _token: '{{csrf_token()}}',
+                name: $('#nomeNovoTipo').val(),  
+            },
+            statusCode: {
+                404: function() {
+                    alert("O nome é obrigatório");
+                }
+            },
+            success: function(data){
+                // var data = JSON.parse(result);
+                if (data != null) {
+                    if (data.length > 0) {
+                        if($('#tipo').val() == null || $('#tipo').val() == ""){
+                            var option = '<option selected disabled>-- Tipo --</option>';
+                        }
+                        $.each(data, function(i, obj) {
+                            if($('#tipo').val() != null && $('#tipo').val() == obj.id && i > 0){
+                                option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                            } else if (i == 0) {
+                                option = '<option selected disabled>-- Tipo --</option>';
+                            } else {
+                                option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                            }
+                        })
+                    } else {
+                        var option = "<option selected disabled>-- Tipo --</option>";
+                    }
+                    $('#tipo').html(option).show();
+                    if (data.length > 0) {
+                        for(var i = 0; i < data.length; i++) {
+                            // console.log('---------------------------------'+i+'------------------------');
+                            // console.log(data[i].descricao);
+                            // console.log(document.getElementById('nomeTipo').value);
+                            // console.log(data[i].descricao === document.getElementById('nomeTipo').value);
+                            if (data[i].descricao === document.getElementById('nomeTipo').value) {
+                                document.getElementById('tipo').selectedIndex = i;
+                            }
+                        }
+                    }
+                    document.getElementById('nomeTipo').value = "";
+                    $('#buttomFormNovoTipoAtividade').click();
+                }
+            }
+        });
+    }
 
+    //Funções do form de atividades da programação
+    function exibirDias(id) {
+        if (id != 0) {
+            document.getElementById('divDuracaoAtividade'+id).style.display = "block";
+            var select = document.getElementById('duracaoAtividade'+id);
+            switch (select.value) {
+                case '1':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "none";
+                    document.getElementById('dia3'+id).style.display = "none";
+                    document.getElementById('dia4'+id).style.display = "none";
+                    document.getElementById('dia5'+id).style.display = "none";
+                    document.getElementById('dia6'+id).style.display = "none";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '2':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "none";
+                    document.getElementById('dia4'+id).style.display = "none";
+                    document.getElementById('dia5'+id).style.display = "none";
+                    document.getElementById('dia6'+id).style.display = "none";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '3':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "block";
+                    document.getElementById('dia4'+id).style.display = "none";
+                    document.getElementById('dia5'+id).style.display = "none";
+                    document.getElementById('dia6'+id).style.display = "none";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '4':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "block";
+                    document.getElementById('dia4'+id).style.display = "block";
+                    document.getElementById('dia5'+id).style.display = "none";
+                    document.getElementById('dia6'+id).style.display = "none";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '5':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "block";
+                    document.getElementById('dia4'+id).style.display = "block";
+                    document.getElementById('dia5'+id).style.display = "block";
+                    document.getElementById('dia6'+id).style.display = "none";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '6':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "block";
+                    document.getElementById('dia4'+id).style.display = "block";
+                    document.getElementById('dia5'+id).style.display = "block";
+                    document.getElementById('dia6'+id).style.display = "block";
+                    document.getElementById('dia7'+id).style.display = "none";
+                    break;
+                case '7':
+                    document.getElementById('dia1'+id).style.display = "block";
+                    document.getElementById('dia2'+id).style.display = "block";
+                    document.getElementById('dia3'+id).style.display = "block";
+                    document.getElementById('dia4'+id).style.display = "block";
+                    document.getElementById('dia5'+id).style.display = "block";
+                    document.getElementById('dia6'+id).style.display = "block";
+                    document.getElementById('dia7'+id).style.display = "block";
+                    break;
+            }
+        } else {
+            document.getElementById('divDuracaoAtividade').style.display = "block";
+            var select = document.getElementById('duracaoAtividade');
+            switch (select.value) {
+                case '1':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "none";
+                    document.getElementById('dia3').style.display = "none";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '2':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "none";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '3':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '4':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '5':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '6':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "block";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '7':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "block";
+                    document.getElementById('dia7').style.display = "block";
+                    break;
+            }
+        }
+
+    }
+
+    // Variavel para definios os ids das divs dos cantidatos
+    var contadorConvidados = 1;
+
+    
+    $(document).ready(function() {
+        //Função que submete o form uma nova atividade
+        $('#submitNovaAtividade').click(function(){
+            var form = document.getElementById('formNovaAtividade');
+            form.submit();
+        });
+
+        //Função para controlar a exibição da div para cadastro de um novo tipo de atividade
+        $('#buttomFormNovoTipoAtividade').click(function(){
+            if (document.getElementById('formNovoTipoAtividade').style.display == "block") {
+                document.getElementById('formNovoTipoAtividade').style.display = "none";
+            } else {
+                document.getElementById('formNovoTipoAtividade').style.display = "block";
+            }
+        });
+
+        //Função para controlar a exibição da div para cadastro de um novo tipo de função de convidado
+        $('#buttonformNovaFuncaoDeConvidado').click(function() {
+            if (document.getElementById('formNovaFuncaoDeConvidado').style.display == "block") {
+                document.getElementById('formNovaFuncaoDeConvidado').style.display = "none";
+            } else {
+                document.getElementById('formNovaFuncaoDeConvidado').style.display = "block";
+            }
+        });
+    });
+
+    //Função para adicionar o conteudo de um novo convidado
+    function adicionarConvidado(id) {
+        contadorConvidados++;
+        if (id == 0) {
+            $('#convidadosDeUmaAtividade').append(
+                "<div id='novoConvidadoAtividade"+ contadorConvidados +"' class='row form-group'>" +
+                    "<div class='container'>" +
+                        "<h5>Convidado</h5>" +
+                        "<div class='row'>" +
+                            "<div class='col-sm-6'>" +
+                                "<label for='nome'>Nome:</label>" +
+                                "<input class='form-control' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
+                            "</div>" +
+                            "<div class='col-sm-6'>" + 
+                                "<label for='email'>E-mail:</label>" +
+                                "<input class='form-control' type='text' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='row'>" +
+                            "<div class='col-sm-4'>" +
+                                "<label for='funcao'>Função:</label>" +
+                                "<select class='form-control' name='funçãoDoConvidado[]' id='funcao' onchange='outraFuncaoConvidado(0, this,"+ contadorConvidados +")'>" +
+                                    "<option value='' selected disabled>-- Função --</option>" +
+                                    "<option value='Palestrate'>Palestrate</option>" +
+                                    "<option value='Avaliador'>Avaliador</option>" +
+                                    "<option value='Ouvinte'>Ouvinte</option>" +
+                                    "<option value='Outra'>Outra</option>" +
+                                "</select>" +
+                            "</div>" +
+                            "<div id='divOutraFuncao"+contadorConvidados+"' class='col-sm-4' style='display: none;'>" +
+                                "<label for='Outra'>Qual?</label>"+
+                                "<input type='text' class='form-control' name='outra[]' id='outraFuncao'>"+
+                            "</div>"+
+                            "<div class='col-sm-4'>" + 
+                                "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>"+
+                "</div>"
+            )
+        } else if (id > 0) {
+            $('#convidadosDeUmaAtividade'+id).append(
+                "<div id='novoConvidadoAtividade"+ contadorConvidados +"' class='row form-group'>" +
+                    "<div class='container'>" +
+                        "<h5>Convidado</h5>" +
+                        "<div class='row'>" +
+                            "<input type='hidden' name='idConvidado[]' value='0'>" +
+                            "<div class='col-sm-6'>" +
+                                "<label for='nome'>Nome:</label>" +
+                                "<input class='form-control' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
+                            "</div>" +
+                            "<div class='col-sm-6'>" + 
+                                "<label for='email'>E-mail:</label>" +
+                                "<input class='form-control' type='text' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='row'>" +
+                            "<div class='col-sm-4'>" +
+                                "<label for='funcao'>Função:</label>" +
+                                "<select class='form-control' name='funçãoDoConvidado[]' id='funcao' onchange='outraFuncaoConvidado("+contadorConvidados+", this,"+ contadorConvidados +")'>" +
+                                    "<option value='' selected disabled>-- Função --</option>" +
+                                    "<option value='Palestrate'>Palestrate</option>" +
+                                    "<option value='Avaliador'>Avaliador</option>" +
+                                    "<option value='Ouvinte'>Ouvinte</option>" +
+                                    "<option value='Outra'>Outra</option>" +
+                                "</select>" +
+                            "</div>" +
+                            "<div id='divOutraFuncao"+contadorConvidados+"' class='col-sm-4' style='display: none;'>" +
+                                "<label for='Outra'>Qual?</label>"+
+                                "<input type='text' class='form-control' name='outra[]' id='outraFuncao'>"+
+                            "</div>"+
+                            "<div class='col-sm-4'>" + 
+                                "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>"+
+                "</div>"
+            )
+        }
+    }
+
+    //Função que remove o convidado
+    function removerConvidadoNovaAtividade(id) {
+        contadorConvidados--;
+        $("#novoConvidadoAtividade"+id).remove();
+    }
+    
+    //Função que subemete o form de edição de uma atividade
+    function editarAtividade(id) {
+        var form = document.getElementById('formEdidarAtividade' + id);
+        form.submit();
+    }
+
+    //Função que abre a exibição dos botões dos dados opcionais e a div em para uma nova e a edição de uma atividade
+    function abrirDadosAdicionais(id) {
+        if (id == 0) {
+            var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade");
+            var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais");
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"); 
+            divDadosAdicionais.style.display = "block";
+            buttonAbrir.style.display = "none";
+            buttonFechar.style.display = "block";
+        } else if (id > 0) {
+            var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade"+id);
+            var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais"+id);
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"+id); 
+            divDadosAdicionais.style.display = "block";
+            buttonAbrir.style.display = "none";
+            buttonFechar.style.display = "block";
+        }
+    }
+
+    //Função que oculta a exibição dos botões dos dados opcionais e a em para uma nova e a edição de uma atividade
+    function fecharDadosAdicionais(id) {
+        if (id == 0) {
+            var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade");
+            var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais");
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"); 
+            divDadosAdicionais.style.display = "none";
+            buttonAbrir.style.display = "block";
+            buttonFechar.style.display = "none";
+        } else if (id > 0) {
+            var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade"+id);
+            var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais"+id);
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"+id); 
+            divDadosAdicionais.style.display = "none";
+            buttonAbrir.style.display = "block";
+            buttonFechar.style.display = "none";
+        }
+    }
+
+    //Remover convidado existente de editar atividade
+    function removerConvidadoAtividade(id) {
+        $("#convidadoAtividade"+id).remove();
+    }
+
+    //Função que exibe a caixa de outra função do convidado
+    function outraFuncaoConvidado(id, funcaoSelect, contador) {
+        if (id == 0 && contador == 0) {
+            var div = document.getElementById('divOutraFuncao');
+            if (funcaoSelect.value == "Outra") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        } else if (id == 0 && contador > 0) {
+            var div = document.getElementById('divOutraFuncao'+contador);
+            if (funcaoSelect.value == "Outra") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        } else if (id > 0 && contador == 0){
+            var div = document.getElementById('divOutraFuncao'+id);
+            if (funcaoSelect.value == "Outra") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        } else if (id > 0 && contador > 0) {
+            var div = document.getElementById('divOutraFuncao'+id);
+            if (funcaoSelect.value == "Outra") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        }
+        // if (contador != 0) {
+        //     var div = document.getElementById('divOutraFuncao'+contador);
+        //     if (funcaoSelect.value == "Outra") {
+        //         div.style.display = "block";
+        //     } else {
+        //         div.style.display = "none";
+        //     }
+        // } else {
+        //     var div = document.getElementById('divOutraFuncao');
+        //     if (funcaoSelect.value == "Outra") {
+        //         div.style.display = "block";
+        //     } else {
+        //         div.style.display = "none";
+        //     }
+        // }
+    }
   </script>
 
+    
+
+  @if(old('idAtividade') != null)
+    <script>
+        $(document).ready(function() {
+            $('#modalAtividadeEdit{{old('idAtividade')}}').modal('show');
+        });
+    </script>
+  @endif
+  @if(old('idNovaAtividade') == 2)
+    <script>
+        $(document).ready(function() {
+            $('#modalCriarAtividade').modal('show');
+        });
+        $(document).ready(function() {
+            document.getElementById('divDuracaoAtividade').style.display = "block";
+            switch ($('#duracaoAtividade').val()) {
+                case '1':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "none";
+                    document.getElementById('dia3').style.display = "none";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '2':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "none";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '3':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "none";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '4':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "none";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '5':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "none";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '6':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "block";
+                    document.getElementById('dia7').style.display = "none";
+                    break;
+                case '7':
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "block";
+                    document.getElementById('dia7').style.display = "block";
+                    break;
+            }
+        });
+    </script>
+  @endif
 @endsection
