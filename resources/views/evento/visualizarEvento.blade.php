@@ -126,7 +126,7 @@
         </div>
     </div>
 
-    @if ($etiquetas->modsubmissao == true)
+    {{-- @if ($etiquetas->modsubmissao == true) --}}
       <div class="row margin">
         <div class="col-sm-12 info-evento">
             <h4>{{$etiquetas->etiquetasubmissoes}}:</h4>
@@ -191,9 +191,9 @@
             @endforeach
         </div>
       </div>
-    @else
+    {{-- @else
     
-    @endif
+    @endif --}}
 
     <div class="row margin">
         <div class="col-sm-12 info-evento">

@@ -125,7 +125,7 @@ class ChavesEstrangeiras extends Migration
       //------------------------------------------------------------------------
 
       Schema::table('revisors', function (Blueprint $table) {
-          $table->foreign('revisorId')->references('id')->on('users');
+          $table->foreign('user_id')->references('id')->on('users');
       });
       Schema::table('revisors', function (Blueprint $table) {
           $table->foreign('eventoId')->references('id')->on('eventos');
