@@ -37,7 +37,9 @@
                                             {{$evento->nome}}
                                                 <div class="btn-group dropright dropdown-options">
                                                     <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {{-- <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px"> --}}
+                                                        <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
+                                                            <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
+                                                        </div>
                                                     </a>
                                                     <div class="dropdown-menu">
                                                         <a href="{{ route('comissao.cientifica.detalhesEvento', ['eventoId' => $evento->id]) }}" class="dropdown-item">
