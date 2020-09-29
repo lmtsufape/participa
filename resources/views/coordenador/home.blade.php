@@ -38,7 +38,9 @@
                                             @can('isCoordenador', $evento)
                                                 <div class="btn-group dropright dropdown-options">
                                                     <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {{-- <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px"> --}}
+                                                        <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
+                                                            <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
+                                                        </div>
                                                     </a>
                                                     <div class="dropdown-menu">
                                                         <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}" class="dropdown-item">
@@ -66,7 +68,6 @@
                                     </div>
 
                                 </h4>
-
                             </div>
                         </div>
                         <p class="card-text">
@@ -92,20 +93,7 @@
             @endcan
         @endforeach
     </div>
-    {{-- <input type="text" value="some tex" id="input">
-    <p id="p"></p> --}}
 
 </div>
 
 @endsection
-
-{{-- @section('javascript')
-  <script type="text/javascript" >
-  $( "#input" )
-  .keyup(function() {
-    var value = $( this ).val();
-    $( "#p" ).text( value );
-  })
-  .keyup();
-  </script>
-@endsection --}}

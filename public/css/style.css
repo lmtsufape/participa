@@ -24,7 +24,6 @@ color dark: #071b1eff
     height: 22px;
     width: 10px;
     /* background-color: blue; */
-    background-image: url('/img/icons/ellipsis-v-solid.svg');
     background-position: center;
     background-repeat: no-repeat;
     /* background-size: cover; */
@@ -34,7 +33,6 @@ color dark: #071b1eff
     display:none;
 }
 #options:hover{
-    background-image: url('/img/icons/ellipsis-v-solid-hover.svg');
     transition: 0.2s;
 }
 .dropdown-options{
@@ -208,6 +206,12 @@ body{
 #dropdownModalidades h5{
     font-size: 11px;
 }
+#dropdownProgramacao {
+    display: none;
+}
+#dropdownProgramacao h5{
+    font-size: 11px;
+}
 #dropdownTrabalhos{
     display: none;
 }
@@ -366,4 +370,28 @@ body{
     .botao-form-right{
       padding:0;
     }
+}
+
+.modal-show-atividade h4 {
+    font-weight: bolder;
+}
+
+.modal-show-atividade p {
+    font-weight: normal;
+    font-size: 20px;
+}
+
+.modal-show-atividade .imagemConvidado {
+    text-align: center;
+    align-content: center;
+}
+
+.convidadoFuncao {
+    position: relative;
+    bottom: 15px;
+}
+
+.modal-show-atividade img {
+    padding: 0px;
+    margin-top: 20px;
 }

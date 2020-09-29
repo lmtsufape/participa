@@ -37,7 +37,7 @@ class EmailLembrete extends Mailable
     public function build()
     {
         $subject = 'Eventos - Lembrete de Evento';
-        return $this->from('lmtsteste@gmail.com', 'Eventos - LMTS')
+        return  $this->from('lmtsteste@gmail.com', 'Eventos - LMTS')
                     ->subject($this->subject)
                     ->view('emails.emailLembreteRevisor')
                     ->with([

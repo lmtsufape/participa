@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth','verified']);
+        $this->middleware(['auth']);
     }
 
     /**
@@ -24,7 +25,30 @@ class HomeController extends Controller
      */
     public function index()
     {        
-        return view('home');
+        $eventos = \App\Evento::all();        
+        
+          if(Auth::user()->administradors != null){            
+            return view('administrador.index');
+
+          }else if(Auth::user()->coordComissaoCientifica != null){            
+            return view('coordComissaoCientifica.index');
+
+          }else if(Auth::user()->coordComissaoOrganizadora != null){            
+            return view('coordComissaoOrganizadora.index');
+
+          }else if(Auth::user()->membroComissao != null){            
+            return view('membroComissao.index');
+
+          }else if(Auth::user()->revisor != null){            
+            return view('revisor.index');
+
+          }else if(Auth::user()->coautor != null){            
+            return view('coautor.index');
+            
+          }else {
+            return view('home');
+          } 
+              
     }
 
     public function downloadArquivo(Request $request){

@@ -11,14 +11,7 @@
 |
 */
 use App\Evento;
-Route::get('/', function () {
-    if(Auth::check()){
-      return redirect()->route('home');
-    }
-
-    $eventos = Evento::all();
-    return view('index',['eventos'=>$eventos]);
-});
+Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/#', function () {
     if(Auth::check()){
@@ -33,12 +26,35 @@ Route::get('/#', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/perfil','UserController@perfil')->name('perfil')->middleware('auth');
-Route::post('/perfil','UserController@editarPerfil')->name('perfil')->middleware('auth');
+// Route::get('/fullCalendar', function() {
+//   return view('fullCalendar.test');
+// });
+
+Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('atividades.json');
 
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 
   Route::get('/home', 'EventoController@index')->name('home');
+  Route::get('/perfil','UserController@perfil')->name('perfil');
+  Route::post('/perfil','UserController@editarPerfil')->name('perfil');
+
+
+  // rotas do administrador
+  Route::get('admin/home', 'AdministradorController@index')->name('admin.home');
+  Route::get('admin/editais', 'AdministradorController@editais')->name('admin.editais');
+  Route::get('admin/areas', 'AdministradorController@areas')->name('admin.areas');
+  Route::get('admin/usuarios', 'AdministradorController@usuarios')->name('admin.usuarios');
+  // rotas da Comissao Cientifica
+  Route::get('comissaoCientifica/home', 'CoordComissaoCientificaController@index')->name('cientifica.home');
+  Route::get('comissaoCientifica/editais', 'CoordComissaoCientificaController@index')->name('cientifica.editais');
+  Route::get('comissaoCientifica/usuarios', 'CoordComissaoCientificaController@usuarios')->name('cientifica.usuarios');
+  Route::get('comissaoCientifica/areas', 'CoordComissaoCientificaController@index')->name('cientifica.areas');
+  Route::post('comissaoCientifica/permissoes', 'CoordComissaoCientificaController@permissoes')->name('cientifica.permissoes');
+
+  // rotas do Comissao Organizadora
+  Route::get('/home/comissaoOrganizadora', 'CoordComissaoOrganizadoraController@index')->name('home.organizadora');
+  // rotas do Membro da Comissao
+  Route::get('/home/membroComissao', 'MembroComissaoController@index')->name('home.membro');
 
   // rotas de teste
   Route::get('/coordenador/home','EventoController@index')->name('coord.home');
@@ -66,6 +82,18 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
       Route::get('eventos/editarEtiqueta', 'EventoController@editarEtiqueta')->name('editarEtiqueta');
       Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
 
+      Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');
+      // Atenção se mudar url da rota abaixo mudar função setVisibilidadeAtv na view detalhesEvento.blade.php
+      Route::post('atividades/{id}/visibilidade', 'AtividadeController@setVisibilidadeAjax')->name('atividades.visibilidade');
+      Route::post('atividade/nova', 'AtividadeController@store')->name('atividades.store');
+      Route::post('atividade/{id}/editar', 'AtividadeController@update')->name('atividades.update');
+      Route::post('atividade/{id}/excluir', 'AtividadeController@destroy')->name('atividade.destroy');
+
+      Route::get('tipo-de-atividade/new/{nome}', 'TipoAtividadeController@storeAjax')->name('tipo.store.ajax');
+  });
+
+  Route::prefix('/comissao/cientifica/evento/')->name('comissao.cientifica.')->group(function(){
+    Route::get('detalhes', 'ComissaoController@informacoes')->name('detalhesEvento');
   });
 
   // Visualizar trabalhos do usuário
@@ -90,6 +118,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/modalidade/criar',      'ModalidadeController@store'                 )->name('modalidade.store');
   //Area
   Route::post(  '/area/criar',            'AreaController@store'                       )->name('area.store');
+  Route::delete(  '/area/deletar/{id}',     'AreaController@destroy'                     )->name('area.destroy');
   //Revisores
   Route::post(  '/revisor/criar',         'RevisorController@store'                    )->name('revisor.store');
   Route::get(   '/revisor/listarTrabalhos','RevisorController@indexListarTrabalhos'    )->name('revisor.listarTrabalhos');
