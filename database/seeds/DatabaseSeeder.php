@@ -199,6 +199,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'enderecoId' => 1,
         ]);
 
+
         DB::table('tipo_atividades')->insert([  //
           'descricao' => 'palestra',
         ]);
@@ -238,5 +239,14 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'hora_fim' => '18:00',
           'atividade_id' => 1,
         ]);
+
+        $this->call(UsersSeed::class);
+        $this->call(AdministradorSeed::class);
+        $this->call(CoordComissaoCientificaSeed::class);
+        $this->call(CoordComissaoOrganizadoraSeed::class);
+        $this->call(MembroComissaoSeed::class);
+        $this->call(ParticipanteSeed::class);
+        
+
     }
 }
