@@ -129,7 +129,7 @@
 
             <div class="col-md-2">
                 <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                <input value="{{old('numero')}}" id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero">
+                <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero">
 
                 @error('numero')
                     <span class="invalid-feedback" role="alert">
@@ -234,6 +234,7 @@
             '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
         }
       });
+      $('#numero').mask('0000000000000');
       var SPMaskBehavior = function (val) {
         return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
       },
