@@ -197,5 +197,13 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'email_verified_at' => '2020-02-15',
           'enderecoId' => 1,
         ]);
+
+        $this->call(UsersSeed::class);
+        $this->call(AdministradorSeed::class);
+        $this->call(CoordComissaoCientificaSeed::class);
+        $this->call(CoordComissaoOrganizadoraSeed::class);
+        $this->call(MembroComissaoSeed::class);
+        $this->call(ParticipanteSeed::class);
+        
     }
 }

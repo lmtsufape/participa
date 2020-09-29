@@ -11,14 +11,7 @@
 |
 */
 use App\Evento;
-Route::get('/', function () {
-    if(Auth::check()){
-      return redirect()->route('home');
-    }
-
-    $eventos = Evento::all();
-    return view('index',['eventos'=>$eventos]);
-});
+Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/#', function () {
     if(Auth::check()){
@@ -39,6 +32,23 @@ Route::post('/perfil','UserController@editarPerfil')->name('perfil')->middleware
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 
   Route::get('/home', 'EventoController@index')->name('home');
+
+  // rotas do administrador
+  Route::get('admin/home', 'AdministradorController@index')->name('admin.home');
+  Route::get('admin/editais', 'AdministradorController@editais')->name('admin.editais');
+  Route::get('admin/areas', 'AdministradorController@areas')->name('admin.areas');
+  Route::get('admin/usuarios', 'AdministradorController@usuarios')->name('admin.usuarios');
+  // rotas da Comissao Cientifica
+  Route::get('comissaoCientifica/home', 'CoordComissaoCientificaController@index')->name('cientifica.home');
+  Route::get('comissaoCientifica/editais', 'CoordComissaoCientificaController@index')->name('cientifica.editais');
+  Route::get('comissaoCientifica/usuarios', 'CoordComissaoCientificaController@usuarios')->name('cientifica.usuarios');
+  Route::get('comissaoCientifica/areas', 'CoordComissaoCientificaController@index')->name('cientifica.areas');
+  Route::post('comissaoCientifica/permissoes', 'CoordComissaoCientificaController@permissoes')->name('cientifica.permissoes');
+
+  // rotas do Comissao Organizadora
+  Route::get('/home/comissaoOrganizadora', 'CoordComissaoOrganizadoraController@index')->name('home.organizadora');
+  // rotas do Membro da Comissao
+  Route::get('/home/membroComissao', 'MembroComissaoController@index')->name('home.membro');
 
   // rotas de teste
   Route::get('/coordenador/home','EventoController@index')->name('coord.home');
