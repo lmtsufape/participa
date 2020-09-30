@@ -1,4 +1,4 @@
-<!doctype html>
+    <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -18,9 +18,11 @@
 
     <script src="{{ asset('js/jquery-3.5.1.slim.min.js')}}"></script>
     <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
+
     
     <script src='{{asset('fullcalendar-5.3.2/lib/main.js')}}'></script>
     <script src='{{asset('fullcalendar-5.3.2/lib/locales-all.js')}}'></script>
+
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
@@ -94,16 +96,41 @@
                                             <img src="{{asset('img/icons/revisor.png')}}" alt="">
                                             {{ __('Área do Revisor') }}
                                         </a>
-                                    @endif
+                                    @endif                                    
 
-                                    @if (isset($ComissaoEvento))
+                                    @if (isset(Auth::user()->administradors))
                                         {{-- Rota - Area da Comissao --}}
-                                        <a class="dropdown-item" href="{{ route('home.comissao') }}">
+                                        <a class="dropdown-item" href="{{ route('admin.home') }}">
                                             <img src="{{asset('img/icons/comissao.png')}}" alt="">
-                                            {{ __('Área da Comissão') }}
+                                            {{ __('Área do Administrador') }}
                                         </a>
                                     @endif
 
+                                    @if (isset(Auth::user()->coordComissaoCientifica))
+                                        {{-- Rota - Area da Comissao --}}
+
+                                        <a class="dropdown-item" href="{{ route('cientifica.home') }}">
+
+                                            <img src="{{asset('img/icons/comissao.png')}}" alt="">
+                                            {{ __('Área da Comissão Cientifica') }}
+                                        </a>
+                                    @endif
+
+                                    @if (isset(Auth::user()->coordComissaoOrganizadora))
+                                        {{-- Rota - Area da Comissao --}}
+                                        <a class="dropdown-item" href="{{ route('home.organizadora') }}">
+                                            <img src="{{asset('img/icons/comissao.png')}}" alt="">
+                                            {{ __('Área da Comissão Organizadora') }}
+                                        </a>
+                                    @endif
+
+                                    @if (isset(Auth::user()->membroComissao))
+                                        {{-- Rota - Area da Comissao --}}
+                                        <a class="dropdown-item" href="{{ route('home.membro') }}">
+                                            <img src="{{asset('img/icons/comissao.png')}}" alt="">
+                                            {{ __('Área do Membro da Comissão') }}
+                                        </a>
+                                    @endif
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
