@@ -66,7 +66,7 @@ class RevisorController extends Controller
     {
         $validatedData = $request->validate([
           'emailRevisor'       => ['required', 'string', 'email', 'max:255'],
-          'nomeRevisor'        => ['required', 'string', 'max:255'],
+          'nomeRevisor'        => 'required|alpha|max:255',
           'areaRevisor'        => ['required', 'integer'],
           'modalidadeRevisor'  => ['required', 'integer'],
         ]);
@@ -154,7 +154,7 @@ class RevisorController extends Controller
     }
 
     public function enviarEmailRevisor(Request $request){
-        $subject = "Lembrete Controller Um";
+        $subject = "Lembrete ";
 
         $user = json_decode($request->input('user'));
         //Log::debug('Revisores ' . gettype($user));
@@ -166,7 +166,7 @@ class RevisorController extends Controller
         return redirect()->back();
     }
     public function enviarEmailTodosRevisores(Request $request){
-        $subject = "Lembrete Controller Todos";
+        $subject = "Lembrete ";
         
         $revisores = json_decode($request->input('revisores')) ;
 

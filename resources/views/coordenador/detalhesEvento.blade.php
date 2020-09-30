@@ -1273,16 +1273,4 @@
                     document.getElementById('dia7').style.display = "none";
                     break;
                 case '7':
-                    document.getElementById('dia1').style.display = "block";
-                    document.getElementById('dia2').style.display = "block";
-                    document.getElementById('dia3').style.display = "block";
-                    document.getElementById('dia4').style.display = "block";
-                    document.getElementById('dia5').style.display = "block";
-                    document.getElementById('dia6').style.display = "block";
-                    document.getElementById('dia7').style.display = "block";
-                    break;
-            }
-        });
-    </script>
-  @endif
-@endsection
+                    document.getElementById(
