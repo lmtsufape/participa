@@ -11,7 +11,15 @@
 |
 */
 use App\Evento;
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home.user');
+
+Route::get('/index', function () {
+    $eventos = Evento::all();
+    // dd($eventos);
+    return view('index',['eventos'=>$eventos]);
+})->name('index');
+
+Route::get('/home', 'EventoController@index')->name('home');
 
 Route::get('/#', function () {
     if(Auth::check()){
@@ -33,8 +41,8 @@ Auth::routes(['verify' => true]);
 Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('atividades.json');
 
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
+  
 
-  Route::get('/home', 'EventoController@index')->name('home');
   Route::get('/perfil','UserController@perfil')->name('perfil');
   Route::post('/perfil','UserController@editarPerfil')->name('perfil');
 

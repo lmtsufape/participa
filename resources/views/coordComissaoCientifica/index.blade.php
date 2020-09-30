@@ -4,7 +4,7 @@
 
 <div class="container">
     	<h2 style="margin-top: 100px; ">
-    		{{ Auth()->user()->name }} - Perfil: Administrador
+    		{{ Auth()->user()->name }} - Perfil: Coord. Comissão Cientifica
     	</h2>
     	
        	<div class="row justify-content-center d-flex align-items-center">	      
