@@ -22,6 +22,9 @@ class CreateEventosTable extends Migration
             $table->string('tipo')->nullable();
             $table->date('dataInicio')->nullable();
             $table->date('dataFim')->nullable();
+
+            $table->boolean('exibir_calendario_programacao')->nullable();
+            $table->string('pdf_programacao')->nullable();
             
             $table->integer('numMaxTrabalhos')->nullable();
             $table->integer('numMaxCoautores')->nullable();

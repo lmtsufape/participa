@@ -890,4 +890,33 @@ class EventoController extends Controller
       }
       return abort(404);
     }
+
+    public function pdfProgramacao(Request $request, $id) {
+      $evento = Evento::find($id);
+      
+      $request->validate([
+        'pdf_programacao' => ['file', 'mimetypes:application/pdf']
+      ]);
+
+      $formEvento = FormEvento::where('eventoId', $id)->first();
+
+      if ($evento->pdf_programacao != null) {
+        Storage::delete('public/' . $evento->pdf_programacao);
+      }
+
+      if($request->pdf_programacao != null){
+        $file = $request->pdf_programacao;
+        $path = 'public/eventos/' . $evento->id;
+        $nome = '/pdf-programacao.pdf';
+        Storage::putFileAs($path, $file, $nome);
+        $evento->pdf_programacao = 'eventos/' . $evento->id . $nome;
+        $evento->exibir_calendario_programacao = false; 
+        $evento->save();
+
+        $formEvento->modprogramacao = true;
+        $formEvento->update();
+      } 
+      
+      return redirect()->back()->with(['mensagem' => 'PDF salvo com sucesso!']);
+    }
 }

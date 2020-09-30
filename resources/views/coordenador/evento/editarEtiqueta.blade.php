@@ -294,7 +294,26 @@
                                   @enderror
                               </div>
 
-                          </div>{{-- end row--}}
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" @if($etiquetas->modprogramacao == true && $evento->exibir_calendario_programacao) checked @endif name="exibir_calendario" id="exibir_calendario">
+                                        <label class="form-check-label" for="exibir_calendario">
+                                          Exibir com calendário                                    
+                                        </label>
+                                      </div>
+                                  </div>
+    
+                                  <div class="col-sm-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" @if($etiquetas->modprogramacao == true && !($evento->exibir_calendario_programacao)) checked @endif name="exibir_pdf" id="exibir_pdf">
+                                        <label class="form-check-label" for="exibir_pdf">
+                                          Exibir o pdf enviado                                    
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>{{-- end row--}}
 
                         </p>
 

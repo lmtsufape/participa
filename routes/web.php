@@ -78,7 +78,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
       Route::post('atividade/nova', 'AtividadeController@store')->name('atividades.store');
       Route::post('atividade/{id}/editar', 'AtividadeController@update')->name('atividades.update');
       Route::post('atividade/{id}/excluir', 'AtividadeController@destroy')->name('atividade.destroy');
-
+      Route::post('{id}/atividade/salvar-pdf-programacao', 'EventoController@pdfProgramacao')->name('evento.pdf.programacao');
       Route::get('tipo-de-atividade/new/{nome}', 'TipoAtividadeController@storeAjax')->name('tipo.store.ajax');
   });
 
