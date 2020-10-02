@@ -664,6 +664,8 @@ class EventoController extends Controller
     {
         $mytime = Carbon::now('America/Recife');
         $evento = Evento::find($id);
+
+        $this->authorize('isCoordenador', $evento);
         // dd($request);
         // validar datas nulas antes, pois pode gerar um bug
 
@@ -743,6 +745,7 @@ class EventoController extends Controller
     public function destroy($id)
     {
         $evento = Evento::find($id);
+        $this->authorize('isCoordenador', $evento);
         // dd($id);
         $endereco = Endereco::find($evento->enderecoId);
         $formEvento = FormEvento::where('eventoId', $id)->first();

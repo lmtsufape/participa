@@ -1211,78 +1211,78 @@
     </script>
   @endif
   @if(old('idNovaAtividade') == 2)
-    <script>
-        $(document).ready(function() {
-            $('#modalCriarAtividade').modal('show');
-        });
-        $(document).ready(function() {
-            document.getElementById('divDuracaoAtividade').style.display = "block";
-            switch ($('#duracaoAtividade').val()) {
-                case '1':
-                    document.getElementById('dia1').style.display = "block";
-                    document.getElementById('dia2').style.display = "none";
-                    document.getElementById('dia3').style.display = "none";
-                    document.getElementById('dia4').style.display = "none";
-                    document.getElementById('dia5').style.display = "none";
-                    document.getElementById('dia6').style.display = "none";
-                    document.getElementById('dia7').style.display = "none";
-                    break;
-                case '2':
-                    document.getElementById('dia1').style.display = "block";
-                    document.getElementById('dia2').style.display = "block";
-                    document.getElementById('dia3').style.display = "none";
-                    document.getElementById('dia4').style.display = "none";
-                    document.getElementById('dia5').style.display = "none";
-                    document.getElementById('dia6').style.display = "none";
-                    document.getElementById('dia7').style.display = "none";
-                    break;
-                case '3':
-                    document.getElementById('dia1').style.display = "block";
-                    document.getElementById('dia2').style.display = "block";
-                    document.getElementById('dia3').style.display = "block";
-                    document.getElementById('dia4').style.display = "none";
-                    document.getElementById('dia5').style.display = "none";
-                    document.getElementById('dia6').style.display = "none";
-                    document.getElementById('dia7').style.display = "none";
-                    break;
-                case '4':
-                    document.getElementById('dia1').style.display = "block";
-                    document.getElementById('dia2').style.display = "block";
-                    document.getElementById('dia3').style.display = "block";
-                    document.getElementById('dia4').style.display = "block";
-                    document.getElementById('dia5').style.display = "none";
-                    document.getElementById('dia6').style.display = "none";
-                    document.getElementById('dia7').style.display = "none";
-                    break;
-                case '5':
-                    document.getElementById('dia1').style.display = "block";
-                    document.getElementById('dia2').style.display = "block";
-                    document.getElementById('dia3').style.display = "block";
-                    document.getElementById('dia4').style.display = "block";
-                    document.getElementById('dia5').style.display = "block";
-                    document.getElementById('dia6').style.display = "none";
-                    document.getElementById('dia7').style.display = "none";
-                    break;
-                case '6':
-                    document.getElementById('dia1').style.display = "block";
-                    document.getElementById('dia2').style.display = "block";
-                    document.getElementById('dia3').style.display = "block";
-                    document.getElementById('dia4').style.display = "block";
-                    document.getElementById('dia5').style.display = "block";
-                    document.getElementById('dia6').style.display = "block";
-                    document.getElementById('dia7').style.display = "none";
-                    break;
-                case '7':
-                    document.getElementById(document.getElementById('dia1').style.display = "block";
-                    document.getElementById('dia2').style.display = "block";
-                    document.getElementById('dia3').style.display = "block";
-                    document.getElementById('dia4').style.display = "block";
-                    document.getElementById('dia5').style.display = "block";
-                    document.getElementById('dia6').style.display = "block";
-                    document.getElementById('dia7').style.display = "block";
-                    break;
-            }
-        });
-    </script>
+        <script>
+            $(document).ready(function() {
+                $('#modalCriarAtividade').modal('show');
+            });
+            $(document).ready(function() {
+                document.getElementById('divDuracaoAtividade').style.display = "block";
+                switch ($('#duracaoAtividade').val()) {
+                    case '1':
+                        document.getElementById('dia1').style.display = "block";
+                        document.getElementById('dia2').style.display = "none";
+                        document.getElementById('dia3').style.display = "none";
+                        document.getElementById('dia4').style.display = "none";
+                        document.getElementById('dia5').style.display = "none";
+                        document.getElementById('dia6').style.display = "none";
+                        document.getElementById('dia7').style.display = "none";
+                        break;
+                    case '2':
+                        document.getElementById('dia1').style.display = "block";
+                        document.getElementById('dia2').style.display = "block";
+                        document.getElementById('dia3').style.display = "none";
+                        document.getElementById('dia4').style.display = "none";
+                        document.getElementById('dia5').style.display = "none";
+                        document.getElementById('dia6').style.display = "none";
+                        document.getElementById('dia7').style.display = "none";
+                        break;
+                    case '3':
+                        document.getElementById('dia1').style.display = "block";
+                        document.getElementById('dia2').style.display = "block";
+                        document.getElementById('dia3').style.display = "block";
+                        document.getElementById('dia4').style.display = "none";
+                        document.getElementById('dia5').style.display = "none";
+                        document.getElementById('dia6').style.display = "none";
+                        document.getElementById('dia7').style.display = "none";
+                        break;
+                    case '4':
+                        document.getElementById('dia1').style.display = "block";
+                        document.getElementById('dia2').style.display = "block";
+                        document.getElementById('dia3').style.display = "block";
+                        document.getElementById('dia4').style.display = "block";
+                        document.getElementById('dia5').style.display = "none";
+                        document.getElementById('dia6').style.display = "none";
+                        document.getElementById('dia7').style.display = "none";
+                        break;
+                    case '5':
+                        document.getElementById('dia1').style.display = "block";
+                        document.getElementById('dia2').style.display = "block";
+                        document.getElementById('dia3').style.display = "block";
+                        document.getElementById('dia4').style.display = "block";
+                        document.getElementById('dia5').style.display = "block";
+                        document.getElementById('dia6').style.display = "none";
+                        document.getElementById('dia7').style.display = "none";
+                        break;
+                    case '6':
+                        document.getElementById('dia1').style.display = "block";
+                        document.getElementById('dia2').style.display = "block";
+                        document.getElementById('dia3').style.display = "block";
+                        document.getElementById('dia4').style.display = "block";
+                        document.getElementById('dia5').style.display = "block";
+                        document.getElementById('dia6').style.display = "block";
+                        document.getElementById('dia7').style.display = "none";
+                        break;
+                    case '7':
+                        document.getElementById(document.getElementById('dia1').style.display = "block";
+                        document.getElementById('dia2').style.display = "block";
+                        document.getElementById('dia3').style.display = "block";
+                        document.getElementById('dia4').style.display = "block";
+                        document.getElementById('dia5').style.display = "block";
+                        document.getElementById('dia6').style.display = "block";
+                        document.getElementById('dia7').style.display = "block";
+                        break;
+                }
+            });
+        </script>
   @endif
 @endsection
