@@ -13,7 +13,7 @@ class ComissaoEvento extends Model
         'userId',
     ];
 
-    function comissao(){
+    function users(){
         return $this->belongsToMany('App\User','comissao_eventos','userId');
     }
 }

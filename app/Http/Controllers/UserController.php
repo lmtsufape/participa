@@ -9,14 +9,16 @@ use App\User;
 use App\Endereco;
 use App\Trabalho;
 use App\Coautor;
+use App\ComissaoEvento;
 
 class UserController extends Controller
 {
     //
     function perfil(){
         $user = User::find(Auth::user()->id);
+        $comissao = ComissaoEvento::where('userId', Auth::user()->id)->get();
         $end = $user->endereco;
-        return view('user.perfilUser',['user'=>$user,'end'=>$end]);
+        return view('user.perfilUser',['user'=>$user,'end'=>$end, 'comissao' => $comissao]);
     }
     function editarPerfil(Request $request){
         // dd($request->name);
@@ -27,7 +29,7 @@ class UserController extends Controller
                 'cpf' => 'required|cpf|unique:users',
                 'celular' => 'required|string|telefone',
                 'instituicao' => 'required|string| max:255',
-                // 'especProfissional' => 'nullable|string',
+                'especialidade' => 'nullable|string',
                 'rua' => 'required|string|max:255',
                 'numero' => 'required|string',
                 'bairro' => 'required|string|max:255',
@@ -55,7 +57,9 @@ class UserController extends Controller
             $user->celular = $request->input('celular');
             $user->instituicao = $request->input('instituicao');
             $user->password = bcrypt($request->password);
-            // $user->especProfissional = $request->input('especProfissional');
+            if ($request->input('especialidade') != null) {
+                $user->especProfissional = $request->input('especialidade');
+            }
             $user->usuarioTemp = null;
             $user->enderecoId = $end->id;
             $user->save();

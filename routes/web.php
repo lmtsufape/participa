@@ -11,7 +11,9 @@
 |
 */
 use App\Evento;
-Route::get('/', 'HomeController@index')->name('home.user');
+Route::get('/', 'HomeController@index')->name('home.user')->middleware('isTemp');
+Route::get('/perfil','UserController@perfil')->name('perfil')->middleware('auth', 'verified');
+Route::post('/atualizar-perfil','UserController@editarPerfil')->name('perfil.update')->middleware('auth', 'verified');
 
 Route::get('/index', function () {
     $eventos = Evento::all();
@@ -43,8 +45,7 @@ Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('ativ
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   
 
-  Route::get('/perfil','UserController@perfil')->name('perfil');
-  Route::post('/perfil','UserController@editarPerfil')->name('perfil');
+  
 
 
   // rotas do administrador
