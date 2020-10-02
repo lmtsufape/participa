@@ -17,9 +17,9 @@ Route::get('/index', function () {
     $eventos = Evento::all();
     // dd($eventos);
     return view('index',['eventos'=>$eventos]);
-})->name('index');
+})->name('index')->middleware('verified', 'isTemp');
 
-Route::get('/home', 'EventoController@index')->name('home');
+Route::get('/home', 'EventoController@index')->name('home')->middleware('verified', 'isTemp');
 
 Route::get('/#', function () {
     if(Auth::check()){
