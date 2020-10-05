@@ -286,7 +286,7 @@
         </div>
 
         <div class="row">
-            @if ($comissao != null && count($comissao) > 0)
+            @if ($user->membroComissaoEvento != null && count($user->membroComissaoEvento) > 0)
                 <div class="col-md-4">
                     <label for="especialidade" class="col-form-label">{{ __('Especialidade profissional') }}</label>
                     <input id="especialidade" type="text" class="form-control apenasLetras @error('especialidade') is-invalid @enderror" name="especialidade" required autocomplete="new-password">

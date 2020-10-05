@@ -33,7 +33,7 @@ class EventoPolicy
     }
 
     public function isCoordenadorOrComissao(User $user, Evento $evento) {
-      $comissao = ComissaoEvento::where([['eventosId', $evento->id], ['userId', $user->id]])->first();
-      return $user->id === $evento->coordenador->id || !(is_null($comissao));
+      $membro = $evento->usuariosDaComissao()->where([['user_id', $user->id], ['evento_id', $evento->id]])->first();
+      return $user->id === $evento->coordenador->id || !(is_null($membro));
     }
 }

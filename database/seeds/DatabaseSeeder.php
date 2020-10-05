@@ -244,7 +244,6 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         $this->call(AdministradorSeed::class);
         $this->call(CoordComissaoCientificaSeed::class);
         $this->call(CoordComissaoOrganizadoraSeed::class);
-        $this->call(MembroComissaoSeed::class);
         $this->call(ParticipanteSeed::class);
         
 

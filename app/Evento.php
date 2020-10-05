@@ -34,5 +34,7 @@ class Evento extends Model
       return $this->belongsTo('App\User', 'coordenadorId');
   }
 
-
+  function usuariosDaComissao(){
+    return $this->belongsToMany('App\User','comissao_eventos','evento_id','user_id');
+  }  
 }

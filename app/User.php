@@ -93,8 +93,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne('App\CoordComissaoOrganizadora');
     }
 
-    public function membroComissao(){
-        return $this->hasOne('App\MembroComissao');
+    function membroComissaoEvento(){
+        return $this->belongsToMany('App\Evento','comissao_eventos','user_id','evento_id');
     }
 
     public function sendPasswordResetNotification($token){

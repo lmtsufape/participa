@@ -16,9 +16,8 @@ class UserController extends Controller
     //
     function perfil(){
         $user = User::find(Auth::user()->id);
-        $comissao = ComissaoEvento::where('userId', Auth::user()->id)->get();
         $end = $user->endereco;
-        return view('user.perfilUser',['user'=>$user,'end'=>$end, 'comissao' => $comissao]);
+        return view('user.perfilUser',['user'=>$user,'end'=>$end]);
     }
     function editarPerfil(Request $request){
         // dd($request->name);

@@ -91,12 +91,9 @@
                                 </li>
                             @endif
                         @else
-                            <?php 
 
-                                $ComissaoEvento = ComissaoEvento::where('userId', Auth::user()->id)->first();
+                                {{-- $ComissaoEvento = ComissaoEvento::where('user_id', Auth::user()->id)->first(); --}}
                             
-                            
-                            ?>
                             <li class="nav-item dropdown" style="margin-right: 40px">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     Perfis <span class="caret"></span>
