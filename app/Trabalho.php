@@ -42,7 +42,7 @@ class Trabalho extends Model
       return $this->hasMany('App\Coautor', 'trabalhoId');
   }
 
-  public function parecer(){
+  public function pareceres(){
       return $this->hasMany('App\Parecer', 'trabalhoId');
   }
 
