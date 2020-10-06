@@ -21,17 +21,7 @@
                 <div id="dropdownTrabalhos"  @if(request()->is('coord/evento/trabalhos*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                     <a id="submissoesTrabalhos" href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
                         <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Tipo</h5>
-                        </li>
-                    </a>
-                    <a id="listarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
-                        <li>
-                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Avaliação</h5>
-                        </li>
-                    </a>
-                    <a id="submissoesTrabalhos" href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
-                        <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Resultado</h5>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Difinir Submissões</h5>
                         </li>
                     </a>
                     <a id="listarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
@@ -39,6 +29,7 @@
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5>
                         </li>
                     </a>
+                    
                 </div>
             </a>
             @endcan
@@ -1273,4 +1264,16 @@
                     document.getElementById('dia7').style.display = "none";
                     break;
                 case '7':
-                    document.getElementById(
+                    document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "block";
+                    document.getElementById('dia7').style.display = "block";
+                    break;
+            }
+        });
+    </script>
+  @endif
+@endsection
