@@ -36,4 +36,11 @@ class EventoPolicy
       $membro = $evento->usuariosDaComissao()->where([['user_id', $user->id], ['evento_id', $evento->id]])->first();
       return $user->id === $evento->coordenador->id || !(is_null($membro));
     }
+
+    public function isRevisorComAtribuicao(User $user) {
+      if ($user->atribuicao != null && count($user->atribuicao) > 0) {
+        return true;
+      }
+      return false;
+    }
 }

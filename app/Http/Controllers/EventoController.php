@@ -78,7 +78,7 @@ class EventoController extends Controller
     public function definirSubmissoes(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrComissao', $evento);
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
@@ -90,7 +90,7 @@ class EventoController extends Controller
     public function listarTrabalhos(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrComissao', $evento);
         $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->get();
@@ -153,7 +153,7 @@ class EventoController extends Controller
     public function cadastrarRevisores(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrComissao', $evento);
         $areas = Area::where('eventoId', $evento->id)->get();
         $modalidades = Modalidade::where('eventoId', $evento->id)->get();
 
@@ -170,7 +170,7 @@ class EventoController extends Controller
     public function listarRevisores(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrComissao', $evento);
         $revisores = Revisor::where('eventoId', $evento->id)->get();
         $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
 

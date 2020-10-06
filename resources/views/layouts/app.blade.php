@@ -10,16 +10,15 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
+    <script src="{{ asset('js/jquery-3.5.1.slim.min.js')}}"></script>
+    <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
+    
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
-    <script src="{{ asset('js/jquery-3.5.1.slim.min.js')}}"></script>
-    <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
-
-    
     <script src='{{asset('fullcalendar-5.3.2/lib/main.js')}}'></script>
     <script src='{{asset('fullcalendar-5.3.2/lib/locales-all.js')}}'></script>
 
@@ -139,7 +138,7 @@
                                         </a>
                                     @endif
 
-                                    @if (isset(Auth::user()->membroComissao))
+                                    @if (isset(Auth::user()->membroComissaoEvento))
                                         {{-- Rota - Area da Comissao --}}
                                         <a class="dropdown-item" href="{{ route('home.membro') }}">
                                             <img src="{{asset('img/icons/comissao.png')}}" alt="">

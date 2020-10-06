@@ -537,4 +537,12 @@ class TrabalhoController extends Controller
       }
       return abort(403);
     }
+
+    public function resultados($id) {
+      $evento = Evento::find($id);
+      $trabalhos = Trabalho::where('eventoId', $id)->get();
+
+      return view('coordenador.trabalhos.resultados')->with(['trabalhos' => $trabalhos,
+                                                             'evento' => $evento]);
+    }
 }
