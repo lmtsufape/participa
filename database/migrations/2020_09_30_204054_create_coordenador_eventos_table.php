@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCoautorsTable extends Migration
+class CreateCoordenadorEventosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateCoautorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('coautors', function (Blueprint $table) {
+        Schema::create('coordenador_eventos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->string('ordem')->nullable();
-            
-            $table->unsignedBigInteger('user_id');                        
-            $table->integer('trabalhoId')->nullable();
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -30,6 +29,6 @@ class CreateCoautorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coautors');
+        Schema::dropIfExists('coordenador_eventos');
     }
 }

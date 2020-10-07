@@ -45,7 +45,11 @@ class HomeController extends Controller
           }else if(Auth::user()->coautor != null){            
             return view('coautor.index');
             
-          }else {
+          }else if(Auth::user()->coordEvento != null){  
+            return view('coordenador.index');
+            
+          }
+          else {
             return view('home');
           } 
               

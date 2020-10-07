@@ -57,22 +57,6 @@ class UsersSeed extends Seeder
           'especProfissional' => 'e',
           'email_verified_at' => '2020-02-15',
           'enderecoId' => 1,
-        ]);
-
-        DB::table('users')->insert([  //
-          'name' => 'MembroComissao',
-          'email' => 'membro@ufrpe.br',
-          'password' => bcrypt('12345678'),
-          'cpf' => 123132131,
-          'instituicao'     => 'd',
-          'celular'    => 2,
-          'especProfissional' => 'e',
-          'email_verified_at' => '2020-02-15',
-          'enderecoId' => 1,
-        ]);
-
-        
-
-        
+        ]);   
     }
 }

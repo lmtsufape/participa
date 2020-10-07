@@ -62,8 +62,9 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 
   // rotas do Comissao Organizadora
   Route::get('/home/comissaoOrganizadora', 'CoordComissaoOrganizadoraController@index')->name('home.organizadora');
-  // rotas do Membro da Comissao
-  Route::get('/home/membroComissao', 'MembroComissaoController@index')->name('home.membro');
+  // rotas do Coordenador de evento
+  Route::get('/home/coord', 'CoordEventoController@index')->name('coord.index');
+  Route::get('/home/coord/eventos', 'CoordEventoController@listaEventos')->name('coord.eventos');
 
   // rotas de teste
   Route::get('/coordenador/home','EventoController@index')->name('coord.home');
