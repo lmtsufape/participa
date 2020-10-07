@@ -138,6 +138,14 @@
                                         </a>
                                     @endif
 
+                                    @if (isset(Auth::user()->membroComissaoEvento))
+                                        {{-- Rota - Area da Comissao --}}
+                                        <a class="dropdown-item" href="{{ route('home.membro') }}">
+                                            <img src="{{asset('img/icons/comissao.png')}}" alt="">
+                                            {{ __('Área do Membro da Comissão') }}
+                                        </a>
+                                    @endif
+
                                     @if (isset(Auth::user()->coordEvento))
                                         {{-- Rota - Area da Comissao --}}
                                         <a class="dropdown-item" href="{{ route('coord.index') }}">

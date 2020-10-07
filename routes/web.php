@@ -43,17 +43,13 @@ Auth::routes(['verify' => true]);
 Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('atividades.json');
 
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
-  
-
-  
-
-
   // rotas do administrador
   Route::get('admin/home', 'AdministradorController@index')->name('admin.home');
   Route::get('admin/editais', 'AdministradorController@editais')->name('admin.editais');
   Route::get('admin/areas', 'AdministradorController@areas')->name('admin.areas');
   Route::get('admin/usuarios', 'AdministradorController@usuarios')->name('admin.usuarios');
   // rotas da Comissao Cientifica
+  Route::get('comissao', 'MembroComissaoController@index')->name('home.membro');
   Route::get('comissaoCientifica/home', 'CoordComissaoCientificaController@index')->name('cientifica.home');
   Route::get('comissaoCientifica/editais', 'CoordComissaoCientificaController@index')->name('cientifica.editais');
   Route::get('comissaoCientifica/usuarios', 'CoordComissaoCientificaController@usuarios')->name('cientifica.usuarios');
