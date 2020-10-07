@@ -24,30 +24,32 @@
                                     <th>Direção</th>
                                 </th>
                             </thead>
-                                @foreach ($users as $user)
-                                    <tbody>
+                                @if ($users != null)
+                                  @foreach ($users as $user)
+                                  <tbody>
 
-                                        <th>
-                                          @if (isset($user->name))
-                                            <td>{{$user->name}}</td>
-                                            <td>{{$user->especProfissional}}</td>
-                                            <td>{{$user->celular}}</td>
-                                            <td>{{$user->email}}</td>
-                                            @if ($evento->coordComissaoId == $user->id)
-                                              <td>Coordenador</td>
-                                            @endif
-                                          @else
-                                            <td>Usuário temporário - Sem nome</td>
-                                            <td>Usuário temporário - Sem Especialidade</td>
-                                            <td>Usuário temporário - Sem Celular</td>
-                                            <td>{{$user->email}}</td>
-                                            @if ($evento->coordComissaoId == $user->id)
-                                              <td>Coordenador</td>
-                                            @endif
+                                      <th>
+                                        @if (isset($user->name))
+                                          <td>{{$user->name}}</td>
+                                          <td>{{$user->especProfissional}}</td>
+                                          <td>{{$user->celular}}</td>
+                                          <td>{{$user->email}}</td>
+                                          @if ($evento->coordComissaoId == $user->id)
+                                            <td>Coordenador</td>
                                           @endif
-                                        </th>
-                                    </tbody>
-                                @endforeach
+                                        @else
+                                          <td>Usuário temporário - Sem nome</td>
+                                          <td>Usuário temporário - Sem Especialidade</td>
+                                          <td>Usuário temporário - Sem Celular</td>
+                                          <td>{{$user->email}}</td>
+                                          @if ($evento->coordComissaoId == $user->id)
+                                            <td>Coordenador</td>
+                                          @endif
+                                        @endif
+                                      </th>
+                                  </tbody>
+                                  @endforeach    
+                                @endif
                         </table>
                       </p>
                     </div>

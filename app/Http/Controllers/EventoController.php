@@ -43,14 +43,8 @@ class EventoController extends Controller
     }
 
     public function areaComissao() {
-        $comissao = ComissaoEvento::where('userId', auth()->user()->id)->get();
-        if (count($comissao) > 0) {
-          $ids = [];
-          foreach($comissao as $co) {
-            array_push($ids, $co->eventosId);
-          }
-        }
-        $eventos = Evento::find($ids);
+        $user = User::find(auth()->user()->id);
+        $eventos = $user->membroComissaoEvento;
 
         return view('comissao.home')->with(['eventos' => $eventos]);      
     }
@@ -66,7 +60,7 @@ class EventoController extends Controller
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
         $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
-        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
+        $numeroComissao = count($evento->usuariosDaComissao);
 
 
 
@@ -84,7 +78,7 @@ class EventoController extends Controller
     public function definirSubmissoes(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrComissao', $evento);
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
@@ -96,15 +90,8 @@ class EventoController extends Controller
     public function listarTrabalhos(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
-
-        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
-        // dd($ComissaoEventos);
-        $ids = [];
-        foreach($ComissaoEvento as $ce){
-          array_push($ids,$ce->userId);
-        }
-        $users = User::find($ids);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+        $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
@@ -166,7 +153,7 @@ class EventoController extends Controller
     public function cadastrarRevisores(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrComissao', $evento);
         $areas = Area::where('eventoId', $evento->id)->get();
         $modalidades = Modalidade::where('eventoId', $evento->id)->get();
 
@@ -183,7 +170,7 @@ class EventoController extends Controller
     public function listarRevisores(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrComissao', $evento);
         $revisores = Revisor::where('eventoId', $evento->id)->get();
         $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
 
@@ -200,16 +187,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenador', $evento);
-
-        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
-        // dd($ComissaoEventos);
-        $ids = [];
-        foreach($ComissaoEvento as $ce){
-          array_push($ids,$ce->userId);
-        }
-        $users = User::find($ids);
-
-
+        $users = $evento->usuariosDaComissao;
 
         return view('coordenador.comissao.definirCoordComissao', [
                                                     'evento'                  => $evento,
@@ -223,14 +201,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrComissao', $evento);
-
-        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
-        // dd($ComissaoEventos);
-        $ids = [];
-        foreach($ComissaoEvento as $ce){
-          array_push($ids,$ce->userId);
-        }
-        $users = User::find($ids);
+        $users = $evento->usuariosDaComissao;
 
 
         return view('coordenador.comissao.listarComissao', [
@@ -664,6 +635,8 @@ class EventoController extends Controller
     {
         $mytime = Carbon::now('America/Recife');
         $evento = Evento::find($id);
+
+        $this->authorize('isCoordenador', $evento);
         // dd($request);
         // validar datas nulas antes, pois pode gerar um bug
 
@@ -743,6 +716,7 @@ class EventoController extends Controller
     public function destroy($id)
     {
         $evento = Evento::find($id);
+        $this->authorize('isCoordenador', $evento);
         // dd($id);
         $endereco = Endereco::find($evento->enderecoId);
         $formEvento = FormEvento::where('eventoId', $id)->first();
@@ -758,14 +732,7 @@ class EventoController extends Controller
     public function detalhes(Request $request){
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenador', $evento);
-
-        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
-        // dd($ComissaoEventos);
-        $ids = [];
-        foreach($ComissaoEvento as $ce){
-          array_push($ids,$ce->userId);
-        }
-        $users = User::find($ids);
+        $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
@@ -779,7 +746,7 @@ class EventoController extends Controller
         $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
 
         $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
-        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
+        $numeroComissao = count($evento->usuariosDaComissao);
         // $atribuicoesProcessando
         // dd($trabalhosEnviados);
         $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();

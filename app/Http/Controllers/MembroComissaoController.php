@@ -13,7 +13,8 @@ class MembroComissaoController extends Controller
      */
     public function index()
     {
-        return view('membroComissao.index');
+        $eventos = auth()->user()->membroComissaoEvento;
+        return view('comissao.home')->with(['eventos' => $eventos]);
     }
 
     /**

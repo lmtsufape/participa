@@ -104,7 +104,7 @@ class AtribuicaoController extends Controller
     }
 
     public function distribuicaoAutomatica(Request $request){
-      $this->authorize('isCoordenador', $evento);
+      $this->authorize('isCoordenadorOrComissao', $evento);
 
       $validatedData = $request->validate([
         'eventoId' => ['required', 'integer'],
@@ -146,7 +146,7 @@ class AtribuicaoController extends Controller
       ]);
 
       $evento = Evento::find($request->eventoId);
-      $this->authorize('isCoordenador', $evento);
+      $this->authorize('isCoordenadorOrComissao', $evento);
 
 
       $evento = Evento::find($request->eventoId);
