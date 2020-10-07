@@ -73,27 +73,32 @@ class RevisorController extends Controller
 
         $usuario = User::where('email', $request->emailRevisor)->first();
         $evento = Evento::find($request->eventoId);
-
+        $revisor;
         if($usuario == null){
           $passwordTemporario = Str::random(8);
           Mail::to($request->emailRevisor)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Revisor', $evento->nome, $passwordTemporario));
-          $usuario = User::create([
-            'email' => $request->emailRevisor,
-            'name' => $request->nomeRevisor,
-            'password' => bcrypt($passwordTemporario),
-            'usuarioTemp' => true,
-          ]);
-        }
-        $revisor = Revisor::create([
-          'trabalhosCorrigidos'   => 0,
-          'correcoesEmAndamento'  => 0,
-          'eventoId'              => $request->eventoId,
-          'user_id'               => $usuario->id,
-          'areaId'                => $request->areaRevisor,
-          'modalidadeId'          => $request->modalidadeRevisor,
-        ]);
+          
+          $usuario = new User();
+          $usuario->email       = $request->emailRevisor;
+          $usuario->name        = $request->nomeRevisor;
+          $usuario->password    = bcrypt($passwordTemporario);
+          $usuario->usuarioTemp = true;
+          $usuario->save();
+          
 
+          $revisor = new Revisor();
+          $revisor->trabalhosCorrigidos   = 0;
+          $revisor->correcoesEmAndamento  = 0;
+          $revisor->user_id               = $usuario->id;
+          $revisor->areaId                = $request->areaRevisor;
+          $revisor->modalidadeId          = $request->modalidadeRevisor;
+          $revisor->save();
 
+        } else {
+          $revisor = $usuario->revisor;
+        }        
+        
+        $evento->revisores()->attach($revisor->id, ['convite_aceito'=> true]);
 
         return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
@@ -178,4 +183,8 @@ class RevisorController extends Controller
 
         return redirect()->back();
     }
+
+    // public function listarRevisores() {
+      
+    // }
 }

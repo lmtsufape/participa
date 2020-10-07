@@ -12,15 +12,15 @@ class Revisor extends Model
      * @var array
      */
     protected $fillable = [
-        'prazo', 'trabalhosCorrigidos', 'correcoesEmAndamento','user_id', 'eventoId', 'areaId', 'modalidadeId',
+        'prazo', 'trabalhosCorrigidos', 'correcoesEmAndamento','user_id', 'areaId', 'modalidadeId',
     ];
 
     public function user(){
         return $this->belongsTo('App\User', 'user_id');
     }
 
-    public function evento(){
-        return $this->belongsTo('App\Evento', 'eventoId');
+    public function eventosComoRevisor(){
+        return $this->belongsToMany('App\Evento', 'evento_revisors', 'revisor_id', 'evento_id')->withPivot('convite_aceito')->withTimestamps();
     }
 
     public function area(){

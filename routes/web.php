@@ -77,6 +77,8 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
       Route::get('revisores/cadastrarRevisores', 'EventoController@cadastrarRevisores')->name('cadastrarRevisores');
       Route::get('revisores/listarRevisores', 'EventoController@listarRevisores')->name('listarRevisores');
 
+      Route::get('revisores/disponiveis', 'RevisorController@listarRevisores')->name('adicionarRevisores');
+
       Route::get('comissao/cadastrarComissao', 'EventoController@cadastrarComissao')->name('cadastrarComissao');
       Route::get('comissao/definirCoordComissao', 'EventoController@definirCoordComissao')->name('definirCoordComissao');
       Route::get('comissao/listarComissao', 'EventoController@listarComissao')->name('listarComissao');

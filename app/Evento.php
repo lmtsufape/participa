@@ -37,4 +37,8 @@ class Evento extends Model
   function usuariosDaComissao(){
     return $this->belongsToMany('App\User','comissao_eventos','evento_id','user_id');
   }  
+
+  public function revisores(){
+    return $this->belongsToMany('App\Revisor', 'evento_revisors', 'evento_id', 'revisor_id')->withPivot('convite_aceito')->withTimestamps();
+  }
 }

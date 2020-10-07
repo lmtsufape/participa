@@ -74,6 +74,11 @@
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar Revisores</h5>
                         </li>
                     </a>
+                    <a id="adicionarRevisores" href="{{ route('coord.adicionarRevisores', ['eventoId' => $evento->id]) }}">
+                        <li>
+                            <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Adicionar Revisores</h5>
+                        </li>
+                    </a>
                     <a id="listarRevisores" href="{{ route('coord.listarRevisores', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Revisores</h5>
