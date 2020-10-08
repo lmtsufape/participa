@@ -77,7 +77,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
       Route::get('revisores/cadastrarRevisores', 'EventoController@cadastrarRevisores')->name('cadastrarRevisores');
       Route::get('revisores/listarRevisores', 'EventoController@listarRevisores')->name('listarRevisores');
 
-      Route::get('revisores/disponiveis', 'RevisorController@listarRevisores')->name('adicionarRevisores');
+      Route::get('{id}/revisores/disponiveis', 'RevisorController@listarRevisores')->name('adicionarRevisores');
 
       Route::get('comissao/cadastrarComissao', 'EventoController@cadastrarComissao')->name('cadastrarComissao');
       Route::get('comissao/definirCoordComissao', 'EventoController@definirCoordComissao')->name('definirCoordComissao');
@@ -132,6 +132,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/revisor/criar',         'RevisorController@store'                    )->name('revisor.store');
   Route::get(   '/revisor/listarTrabalhos','RevisorController@indexListarTrabalhos'    )->name('revisor.listarTrabalhos');
   Route::post(  '/revisor/email',         'RevisorController@enviarEmailRevisor'       )->name('revisor.email');
+  Route::post(  '{id}/revisor/convite',   'RevisorController@conviteParaEvento'        )->name('revisor.convite.evento');
   Route::post(  '/revisor/emailTodos',    'RevisorController@enviarEmailTodosRevisores')->name('revisor.emailTodos');
   //AreaModalidade
   Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');

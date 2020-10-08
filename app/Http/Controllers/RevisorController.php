@@ -13,6 +13,7 @@ use App\Modalidade;
 use Illuminate\Http\Request;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailLembrete;
+use App\Mail\EmailConviteRevisor;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -184,7 +185,40 @@ class RevisorController extends Controller
         return redirect()->back();
     }
 
-    // public function listarRevisores() {
+    public function listarRevisores($id) {
+      $evento = Evento::find($id);
+      $areas = Area::all();
+      $revisores = Revisor::all();
+
+      // dd($revisores[0]);
       
-    // }
+      return view('coordenador.revisores.revisoresCadastrados')->with(['evento'    => $evento,
+                                                                       'revisores' => $revisores,
+                                                                       'areas'     => $areas]);
+    }
+
+    public function conviteParaEvento(Request $request, $id) {
+      $subject = "Evento - Convinte para revisor";
+      $evento = Evento::find($id);
+
+      $user = User::find(json_decode($request->input('user'))->id);
+
+      if ($user->revisor->eventosComoRevisor()->where([['evento_id', $id], ['convite_aceito', null]])->first() != null) {
+        return redirect()->back()->with(['error' => 'Há um convite pendente para esse usuário']);
+      }
+
+      if ($user->revisor->eventosComoRevisor()->where([['evento_id', $id], ['convite_aceito', true]])->first() != null) {
+        return redirect()->back()->with(['error' => 'Esse usuário já aceitou o convite!']);
+      }
+
+      $evento->revisores()->attach($user->revisor->id, ['convite_aceito'=> null]);
+
+      //Log::debug('Revisores ' . gettype($user));
+      //Log::debug('Revisores ' . $request->input('user'));
+
+      Mail::to($user->email)
+          ->send(new EmailConviteRevisor($user, $evento, $subject));
+
+      return redirect()->back()->with(['mensagem' => 'Convite enviado']);
+    }
 }
