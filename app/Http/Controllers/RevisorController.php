@@ -187,7 +187,7 @@ class RevisorController extends Controller
 
     public function listarRevisores($id) {
       $evento = Evento::find($id);
-      $areas = Area::all();
+      $areas = Area::orderBy('nome')->get();
       $revisores = Revisor::all();
 
       // dd($revisores[0]);
@@ -200,8 +200,8 @@ class RevisorController extends Controller
     public function conviteParaEvento(Request $request, $id) {
       $subject = "Evento - Convinte para revisor";
       $evento = Evento::find($id);
-
-      $user = User::find(json_decode($request->input('user'))->id);
+      
+      $user = User::find($request->id);
 
       if ($user->revisor->eventosComoRevisor()->where([['evento_id', $id], ['convite_aceito', null]])->first() != null) {
         return redirect()->back()->with(['error' => 'Há um convite pendente para esse usuário']);
@@ -220,5 +220,25 @@ class RevisorController extends Controller
           ->send(new EmailConviteRevisor($user, $evento, $subject));
 
       return redirect()->back()->with(['mensagem' => 'Convite enviado']);
+    }
+
+    public function revisoresPorAreaAjax($id) {
+      $revisores = Revisor::where('areaId', $id)->get();
+
+      $revsPorArea = collect();
+
+      foreach ($revisores as $revisor) {
+        $revisor = [
+          'id'    => $revisor->user->id,
+          'email' => $revisor->user->email,
+          'area' => $revisor->area->nome,
+          'emAndamento' => $revisor->correcoesEmAndamento,
+          'concluido'   => $revisor->trabalhosCorrigidos
+        ];
+
+        $revsPorArea->push($revisor);
+      }
+
+      return response()->json($revsPorArea);
     }
 }

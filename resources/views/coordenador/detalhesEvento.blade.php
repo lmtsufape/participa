@@ -1231,6 +1231,60 @@
             } 
         });
     });
+
+    function revisoresPorArea() {
+        var idArea = document.getElementById('area_revisores').value;
+        $.ajaxSetup({
+            headers: {
+                // 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        jQuery.ajax({
+            url: "/revisores-por-area/" + idArea,
+            method: 'get',
+            success: function(result){
+                if (result != null) {
+                    $('#revisores_cadastrados').html("");
+                    var table = "<thead>" +
+                          "<tr>" +
+                            "<th scope='col'>Nome</th>" +
+                            "<th scope='col'>Área</th>" +
+                            "<th scope='col' style='text-align:center'>Em Andamento</th>" +
+                            "<th scope='col' style='text-align:center'>Finalizados</th>" +
+                            "<th scope='col' style='text-align:center'>Visualizar</th>" +
+                            "<th scope='col' style='text-align:center'>Lembrar</th>" +
+                          "</tr>" +
+                        "</thead>" +
+                        "<tbody>";
+                    $.each(result, function(i, obj) {
+                        table += "<tr>" +
+                                "<td>"+ obj.email +"</td>"+
+                                "<td>"+ obj.area +"</td>" +
+                                "<td style='text-align:center'>"+ obj.emAndamento +"</td>" +
+                                "<td style='text-align:center'>"+ obj.concluido +"</td>" +
+                                "<td style='text-align:center'>" +
+                                  "<a href='#' data-toggle='modal' data-target='#modalRevisor'"+obj.id+">" +
+                                    "<img src='{{asset('img/icons/eye-regular.svg')}}' style='width:20px'>" +
+                                  "</a>" +
+                                "</td>" +
+                                "<td style='text-align:center'>" +
+                                    "<form action='{{route('revisor.convite.evento', ['id' => $evento->id])}}' method='get' >" +
+                                        "<input type='hidden' name='id' value='"+obj.id+"'>" +
+                                        "<button class='btn btn-primary btn-sm' type='submit'>" +
+                                            "Enviar convite" +
+                                        "</button>" +
+                                    "</form>" +
+                                "</td>" +
+                              "</tr>";
+                    })
+                    table += "</tbody>"
+                    $('#revisores_cadastrados').html(table);
+                }
+            }
+        });
+    }
   </script>
 
     
