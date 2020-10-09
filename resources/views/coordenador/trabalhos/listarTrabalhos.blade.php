@@ -45,8 +45,8 @@
               <td>{{$trabalho->area->nome}}</td>
               <td>{{$trabalho->modalidade->nome}}</td>
               <td>
-                @foreach($trabalho->atribuicao as $atribuicao)
-                {{$atribuicao->revisor->user->email}},
+                @foreach($trabalho->atribuicoes as $revisor)
+                  {{$revisor->user->email}},
                 @endforeach
               </td>
               <td style="text-align:center">

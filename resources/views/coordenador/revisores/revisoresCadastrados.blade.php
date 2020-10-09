@@ -139,9 +139,11 @@
                               </td>
                             </tr>
                           @endif
+                          {{dd($revisor->trabalhosAtribuidos)}}
                         @endforeach
                       </tbody>
                     </table>
+                    
                     {{-- @if(count($revisores) > 0 && isset($revisores))
                       <form action="{{route('revisor.emailTodos')}}" method="POST" >
                           @csrf

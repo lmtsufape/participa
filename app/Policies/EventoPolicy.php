@@ -38,7 +38,7 @@ class EventoPolicy
     }
 
     public function isRevisorComAtribuicao(User $user) {
-      if ($user->atribuicao != null && count($user->atribuicao) > 0) {
+      if ($user->revisor->trabalhosAtribuidos != null && count($user->revisor->trabalhosAtribuidos) > 0) {
         return true;
       }
       return false;

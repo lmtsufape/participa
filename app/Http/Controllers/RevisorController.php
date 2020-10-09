@@ -29,19 +29,8 @@ class RevisorController extends Controller
      */
     public function indexListarTrabalhos()
     { 
-        $revisores = Revisor::where("user_id", Auth::user()->id)->get();
-        $atribuicoes = [];
-        foreach ($revisores as $revisor) {
-          $temp = Atribuicao::where("revisorId", $revisor->id)->get();
-          for ($i=0; $i < count($temp); $i++) { 
-            array_push($atribuicoes, $temp[$i]);  
-          }
-        }
-        $trabalhos = [];
-        foreach ($atribuicoes as $atribuicao) {
-          array_push($trabalhos, Trabalho::where("id", $atribuicao->trabalhoId)->first());  
-        }
-
+        $revisor = Revisor::where("user_id", Auth::user()->id)->first();
+        $trabalhos = $revisor->trabalhosAtribuidos;
 
         return view('revisor.listarTrabalhos', [
           "trabalhos" => $trabalhos,]);

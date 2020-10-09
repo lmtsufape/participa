@@ -50,9 +50,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Parecer', 'revisorId');
     }
 
-    public function atribuicao(){
-        return $this->hasMany('App\Atribuicao', 'revisorId');
-    }
+    // public function atribuicao(){
+    //     return $this->hasMany('App\Atribuicao', 'revisorId');
+    // }
 
     public function pertence(){
         return $this->hasMany('App\Pertence', 'revisorId');

@@ -456,23 +456,24 @@ class TrabalhoController extends Controller
       ]);
 
       $trabalho = Trabalho::find($request->trabalhoId);
-      $revisores = Atribuicao::where('trabalhoId', $request->trabalhoId)->get();
+      $revisores = $trabalho->atribuicoes;
       $revisoresAux = [];
       foreach ($revisores as $key) {
-        if($key->revisor->user->name != null){
+        if($key->user->name != null){
           array_push($revisoresAux, [
-            'id' => $key->revisor->id,
-            'nomeOuEmail'  => $key->revisor->user->name
+            'id' => $key->id,
+            'nomeOuEmail'  => $key->user->name
           ]);
         }
         else{
           array_push($revisoresAux, [
-            'id' => $key->revisor->id,
-            'nomeOuEmail'  => $key->revisor->user->email
+            'id' => $key->id,
+            'nomeOuEmail'  => $key->user->email
           ]);
         }
       }
-      $revisoresDisponeis = Revisor::where('eventoId', $trabalho->eventoId)->where('areaId', $trabalho->areaId)->get();
+      $evento = Evento::find($trabalho->eventoId);
+      $revisoresDisponeis = $evento->revisores()->where('areaId', $trabalho->areaId)->get();
       $revisoresAux1 = [];
       foreach ($revisoresDisponeis as $key) {
         //verificar se ja é um revisor deste trabalhos

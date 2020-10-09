@@ -55,11 +55,17 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrComissao', $evento);
 
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
         $numeroRevisores = count($evento->revisores);
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
-        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+
+        $trabalhosAvaliados = 0;
+        foreach ($trabalhosId as $trabalho) {
+          $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
+        }
+        
         $numeroComissao = count($evento->usuariosDaComissao);
 
 
@@ -741,7 +747,10 @@ class EventoController extends Controller
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
-        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+        $trabalhosAvaliados = 0;
+        foreach ($trabalhosId as $trabalho) {
+          $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
+        }
 
         $numeroRevisores = count($evento->revisores);
         $numeroComissao = count($evento->usuariosDaComissao);

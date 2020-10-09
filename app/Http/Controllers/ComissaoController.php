@@ -48,7 +48,10 @@ class ComissaoController extends Controller
         $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
-        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+        $trabalhosAvaliados = 0;
+        foreach ($trabalhosId as $trabalho) {
+          $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
+        }
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
         $numeroComissao = count($evento->usuariosDaComissao);

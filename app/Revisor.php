@@ -26,4 +26,8 @@ class Revisor extends Model
     public function area(){
         return $this->belongsTo('App\Area', 'areaId');
     }
+
+    public function trabalhosAtribuidos(){
+        return $this->belongsToMany('App\Trabalho', 'atribuicaos', 'revisor_id', 'trabalho_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
+    }
 }
