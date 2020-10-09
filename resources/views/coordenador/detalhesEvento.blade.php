@@ -1285,6 +1285,48 @@
             }
         });
     }
+
+    function pesquisaResultadoTrabalho() {
+        var idArea = document.getElementById('area_trabalho_pesquisa').value;
+        var pesquisaTexto = document.getElementById('pesquisaTexto').value;
+        $.ajaxSetup({
+            headers: {
+                // 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        jQuery.ajax({
+            url: "{{ route('trabalho.pesquisa.ajax') }}",
+            method: 'get',
+            data: {
+                areaId: idArea,
+                texto: pesquisaTexto,
+            },
+            success: function(result){
+                console.log(result);
+                if (result != null) {
+                    $('#cards_com_trabalhos').html("");
+                    var cards = "";
+                    $.each(result, function(i, obj) {
+                        cards +=    "<div class='card bg-light mb-3' style='width: 20rem;'>"+
+                                        "<div class='card-body'>" +
+                                            "<h5 class='card-title'>" + obj.titulo +"</h5>" +
+                                            "<h6 class='card-subtitle mb-2 text-muted'>" + obj.nome + "</h6>" +
+                                            "<label for='area'>Área:</label>" +
+                                            "<p id='area'>" + obj.area +"</p>" +
+                                            "<label for='modalidade'>Modalidade:</label>" +
+                                            "<p id='modalidade'>"+ obj.modalidade +"</p>" +
+                                            "<a href='#' class='card-link' data-toggle='modal' data-target='#modalResultados"+ obj.id +"'>Resultado</a>" +
+                                            "<a href='#' class='card-link'>Baixar</a>" +
+                                        "</div>" +
+                                    "</div>";
+                    })
+                    $('#cards_com_trabalhos').html(cards);
+                }
+            }
+        })
+    }
   </script>
 
     

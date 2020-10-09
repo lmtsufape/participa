@@ -548,4 +548,35 @@ class TrabalhoController extends Controller
                                                              'evento' => $evento,
                                                              'areas' => $areas]);
     }
+    
+    public function pesquisaAjax(Request $request) {
+      if ($request->areaId != null) {
+        $area_id = $request->areaId;
+      } else {
+        $area_id = 1;
+      }
+
+      if ($request->texto != null) {
+        $texto = $request->texto;
+      } else {
+        $texto = "";
+      }
+
+      $trabalhos = Trabalho::where([['areaId', $area_id], ['titulo', 'ilike', '%'. $texto .'%']])->get();
+
+      $trabalhoJson = collect();
+
+      foreach ($trabalhos as $trab) {
+        $trabalho = [
+          'id'          => $trab->id,
+          'titulo'      => $trab->titulo,
+          'nome'        => $trab->autor->name,
+          'area'        => $trab->area->nome,
+          'modalidade'   => $trab->modalidade->nome,
+        ];
+        $trabalhoJson->push($trabalho);
+      }
+
+      return response()->json($trabalhoJson);
+    }
 }
