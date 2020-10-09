@@ -139,7 +139,6 @@
                               </td>
                             </tr>
                           @endif
-                          {{dd($revisor->trabalhosAtribuidos)}}
                         @endforeach
                       </tbody>
                     </table>
@@ -207,14 +206,15 @@
                   <tr>
                     <th scope="col">Título</th>
                     <th scope="col">Status</th>
-
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Título do trabalho</td>
-                    <td>Status do trabalho</td>
-                  </tr>
+                  @foreach ($revisor->trabalhosAtribuidos as $trabalho)
+                    <tr>
+                      <td>{{$trabalho->titulo}}</td>
+                      <td>{{$trabalho->avaliado}}</td>
+                    </tr>
+                  @endforeach
                 </tbody>
               </table>
           </div>
