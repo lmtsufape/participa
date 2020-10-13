@@ -44,8 +44,8 @@ class ComissaoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $revisores = $evento->revisores;
+        $numeroRevisores = count($evento->revisores);
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
         $trabalhosAvaliados = 0;
@@ -104,7 +104,7 @@ class ComissaoController extends Controller
 
         $evento = Evento::find($request->input('eventoId'));
         $areas = Area::where('eventoId', $evento->id)->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $revisores = $evento->revisores;
         $users = $evento->usuariosDaComissao;
         return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
@@ -119,7 +119,7 @@ class ComissaoController extends Controller
         $evento->save();
 
         $areas = Area::where('eventoId', $evento->id)->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $revisores = $evento->revisores;
         // dd($ComissaoEventos);
         $users = $evento->usuariosDaComissao;
         // return view('coordenador.detalhesEvento', [

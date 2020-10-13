@@ -542,7 +542,7 @@ class TrabalhoController extends Controller
     public function resultados($id) {
       $evento = Evento::find($id);
       $trabalhos = Trabalho::where('eventoId', $id)->get();
-      $areas = Area::where('eventoId', $evento->id)->get();
+      $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
 
       return view('coordenador.trabalhos.resultados')->with(['trabalhos' => $trabalhos,
                                                              'evento' => $evento,

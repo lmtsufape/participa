@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Area;
 use App\User;
 use App\Endereco;
 use App\Trabalho;
@@ -17,7 +18,8 @@ class UserController extends Controller
     function perfil(){
         $user = User::find(Auth::user()->id);
         $end = $user->endereco;
-        return view('user.perfilUser',['user'=>$user,'end'=>$end]);
+        $areas = Area::orderBy('nome')->get();
+        return view('user.perfilUser',['user'=>$user,'end'=>$end,'areas'=>$areas]);
     }
     function editarPerfil(Request $request){
         // dd($request->name);
@@ -35,7 +37,8 @@ class UserController extends Controller
                 'cidade' => 'required|string|max:255',
                 'uf' => 'required|string',
                 'cep' => 'required|string',
-                'password' => 'required|string|min:8|confirmed'
+                'password' => 'required|string|min:8|confirmed',
+                'primeiraArea' => 'required|string',
             ]);
 
             // criar endereço
@@ -62,6 +65,15 @@ class UserController extends Controller
             $user->usuarioTemp = null;
             $user->enderecoId = $end->id;
             $user->save();
+
+            if ($user->revisor != null) {
+                $revisor = $user->revisor;
+                $revisor->areaId = $request->primeiraArea;
+                if ($request->segundaArea != null) {
+                    $revisor->area_alternativa_id = $request->segundaArea;
+                }
+                $revisor->save();
+            }
 
             return redirect(route('home'));
             

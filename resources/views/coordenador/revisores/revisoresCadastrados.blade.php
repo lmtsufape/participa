@@ -52,7 +52,7 @@
                             <th scope="col" style="text-align:center">Em Andamento</th>
                             <th scope="col" style="text-align:center">Finalizados</th>
                             <th scope="col" style="text-align:center">Visualizar</th>
-                            <th scope="col" style="text-align:center">Lembrar</th>
+                            <th scope="col" style="text-align:center">Convidar</th>
                           </tr>
                         </thead>
                         <tbody>
