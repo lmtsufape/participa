@@ -26,7 +26,7 @@
                             <th scope="col">Status</th>
                             <th scope="col">Resumo</th>
                             <th scope="col">Baixar</th>
-                            <th scope="col">Atribuir Nota</th>
+                            <th scope="col">Avaliar</th>
                           </tr>
                         </thead>
                         @foreach($trabalhosDaArea as $trabalho)
@@ -94,7 +94,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Resumo</h5>
+            <h5 class="modal-title" id="resumoModalLongTitle"></h5>
           </div>
           <div class="modal-body" name="resumoTrabalhoModal" id="resumoTrabalhoModal">
           </div>
@@ -135,7 +135,8 @@
             },
             success: function(result){
               console.log(result.resumo);
-              $('#resumoTrabalhoModal').append(result.resumo);
+              $('#resumoModalLongTitle').html('Resumo de ' + result.titulo);
+              $('#resumoTrabalhoModal').html(result.resumo);
           }});
         });
       });
