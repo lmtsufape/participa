@@ -40,7 +40,7 @@ class HomeController extends Controller
             return view('membroComissao.index');
 
           }else if(Auth::user()->revisor != null){            
-            return view('revisor.index');
+            return redirect( route('revisor.index') );
 
           }else if(Auth::user()->coautor != null){            
             return view('coautor.index');

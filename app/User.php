@@ -75,7 +75,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function coautor(){
-        return $this->hasOne('App\Coautor');
+        return $this->hasOne('App\Coautor', 'autorId');
     }
 
     public function revisor(){

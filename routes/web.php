@@ -170,7 +170,9 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   // Ajax para encontrar modalidade especifica e enviar para o modal de edição
   Route::post(   '/atualizarModalidade',   'ModalidadeController@update'                )->name('modalidade.update');
   //
-  Route::get(    '/area/revisores',        'RevisorController@indexListarTrabalhos'     )->name('avaliar.trabalhos');
+  Route::get('/area/revisores/trabalhos/area/{area_id}/modalidade/{modalidade_id}', 'RevisorController@indexListarTrabalhos')->name('avaliar.listar.trabalhos.filtro');
+  Route::get('/area/revisores/{id}/trabalhos',  'RevisorController@trabalhosDoEvento' )->name('revisor.trabalhos.evento');
+  Route::get('/area/revisores',        'RevisorController@index'                      )->name('revisor.index');
   // Encontrar resumo especifico para trabalhos
   Route::get(   '/encontrarResumo',    'TrabalhoController@findResumo'                  )->name('trabalhoResumo');
   // Critérios

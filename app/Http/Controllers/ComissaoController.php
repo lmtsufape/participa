@@ -44,8 +44,8 @@ class ComissaoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $revisores = $evento->revisores;
-        $numeroRevisores = count($evento->revisores);
+        $revisores = Revisor::where('evento_id', $evento->id)->get();
+        $numeroRevisores = count($revisores);
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
         $trabalhosAvaliados = 0;

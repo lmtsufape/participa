@@ -27,6 +27,14 @@ class RevisorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function index() {
+      $idsEventos = Revisor::where('user_id', auth()->user()->id)->groupBy('evento_id')->select('evento_id')->get();
+      $eventosComoRevisor = Evento::whereIn('id', $idsEventos)->get();
+      // dd($eventosComoRevisor);
+      return view('revisor.index')->with(['eventos' => $eventosComoRevisor]);
+    }
+
+
     public function indexListarTrabalhos()
     { 
         $revisor = Revisor::where("user_id", Auth::user()->id)->first();
@@ -236,5 +244,16 @@ class RevisorController extends Controller
       }
 
       return response()->json($revsPorArea);
+    }
+
+    public function trabalhosDoEvento($id) {
+      $evento = Evento::find($id);
+      $revisores = Revisor::where([['user_id', auth()->user()->id],['evento_id', $id]])->get();
+      $trabalhos = collect();
+      foreach ($revisores as $revisor) {
+        $trabalhos->push($revisor->trabalhosAtribuidos);
+      }
+      return view('revisor.listarTrabalhos')->with(['evento' => $evento,'trabalhosPorArea' => $trabalhos]);
+      // $trabalhos = Atribuicao::where('eventoId', $id);
     }
 }

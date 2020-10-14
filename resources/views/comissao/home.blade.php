@@ -42,7 +42,7 @@
                                                         </div>
                                                     </a>
                                                     <div class="dropdown-menu">
-                                                        <a href="{{ route('comissao.cientifica.detalhesEvento', ['eventoId' => $evento->id]) }}" class="dropdown-item">
+                                                        <a href="" class="dropdown-item">
                                                             <img src="{{asset('img/icons/eye-regular.svg')}}" class="icon-card" alt="">
                                                             Detalhes
                                                         </a>

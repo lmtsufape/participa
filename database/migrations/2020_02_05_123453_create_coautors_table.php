@@ -18,7 +18,7 @@ class CreateCoautorsTable extends Migration
             $table->timestamps();
             $table->string('ordem')->nullable();
             
-            $table->unsignedBigInteger('user_id');                        
+            $table->unsignedBigInteger('autorId');                       
             $table->integer('trabalhoId')->nullable();
         });
     }

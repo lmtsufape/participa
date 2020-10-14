@@ -36,7 +36,7 @@ class AreaController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-          'nome'  =>  'required|alpha',
+          'nome'  =>  'required|string',
         ]);
 
         Area::create([

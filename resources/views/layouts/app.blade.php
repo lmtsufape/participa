@@ -106,7 +106,7 @@
                                     </a>
                                     @if (isset(Auth::user()->revisor))
                                         {{-- Rota - Area de Revisores --}}
-                                        <a class="dropdown-item" href="{{ route('avaliar.trabalhos') }}">
+                                        <a class="dropdown-item" href="{{ route('revisor.index') }}">
                                             <img src="{{asset('img/icons/revisor.png')}}" alt="">
                                             {{ __('Área do Revisor') }}
                                         </a>
