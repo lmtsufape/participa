@@ -38,7 +38,7 @@ class UserController extends Controller
                 'uf' => 'required|string',
                 'cep' => 'required|string',
                 'password' => 'required|string|min:8|confirmed',
-                'primeiraArea' => 'required|string',
+                // 'primeiraArea' => 'required|string',
             ]);
 
             // criar endereço
@@ -66,14 +66,14 @@ class UserController extends Controller
             $user->enderecoId = $end->id;
             $user->save();
 
-            if ($user->revisor != null) {
-                $revisor = $user->revisor;
-                $revisor->areaId = $request->primeiraArea;
-                if ($request->segundaArea != null) {
-                    $revisor->area_alternativa_id = $request->segundaArea;
-                }
-                $revisor->save();
-            }
+            // if ($user->revisor != null) {
+            //     $revisor = $user->revisor;
+            //     $revisor->areaId = $request->primeiraArea;
+            //     if ($request->segundaArea != null) {
+            //         $revisor->area_alternativa_id = $request->segundaArea;
+            //     }
+            //     $revisor->save();
+            // }
 
             return redirect(route('home'));
             

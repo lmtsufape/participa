@@ -22,8 +22,9 @@ class CreateRevisorsTable extends Migration
 
             $table->unsignedBigInteger('user_id');
             $table->bigInteger('areaId')->nullable();
-            $table->bigInteger('area_alternativa_id')->nullable();
+            // $table->bigInteger('area_alternativa_id')->nullable();
             $table->integer('modalidadeId')->nullable();
+            $table->integer('evento_id')->nullable();
         });
     }
 

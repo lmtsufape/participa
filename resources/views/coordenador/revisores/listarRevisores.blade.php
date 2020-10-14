@@ -53,16 +53,15 @@
                               @endforeach
                             </tbody>
                           </table>
-                          {{-- Revisão necessaria --}}
-                          {{-- @if(count($revisores) > 0 && isset($revisores))
+                          @if(count($revs) > 0 && isset($revs))
                             <form action="{{route('revisor.emailTodos')}}" method="POST" >
                                 @csrf
-                                  <input type="hidden" name="revisores" value='@json($revisores)'>
+                                  <input type="hidden" name="revisores" value='@json($revs)'>
                                   <button class="btn btn-primary btn-sm" type="submit">
                                       Lembrar todos
                                   </button>
                               </form>
-                          @endif --}}
+                          @endif
 
                       </p>
 

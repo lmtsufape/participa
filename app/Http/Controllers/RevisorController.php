@@ -56,7 +56,7 @@ class RevisorController extends Controller
     {
         $validatedData = $request->validate([
           'emailRevisor'       => ['required', 'string', 'email', 'max:255'],
-          'nomeRevisor'        => 'required|string|max:255',
+          // 'nomeRevisor'        => 'required|string|max:255',
           'areaRevisor'        => ['required', 'integer'],
           'modalidadeRevisor'  => ['required', 'integer'],
         ]);
@@ -70,7 +70,7 @@ class RevisorController extends Controller
           
           $usuario = new User();
           $usuario->email       = $request->emailRevisor;
-          $usuario->name        = $request->nomeRevisor;
+          // $usuario->name        = $request->nomeRevisor;
           $usuario->password    = bcrypt($passwordTemporario);
           $usuario->usuarioTemp = true;
           $usuario->save();
@@ -82,13 +82,20 @@ class RevisorController extends Controller
           $revisor->user_id               = $usuario->id;
           $revisor->areaId                = $request->areaRevisor;
           $revisor->modalidadeId          = $request->modalidadeRevisor;
+          $revisor->evento_id             = $evento->id;
           $revisor->save();
 
         } else {
-          $revisor = $usuario->revisor;
+          $revisor = new Revisor();
+          $revisor->trabalhosCorrigidos   = 0;
+          $revisor->correcoesEmAndamento  = 0;
+          $revisor->user_id               = $usuario->id;
+          $revisor->areaId                = $request->areaRevisor;
+          $revisor->modalidadeId          = $request->modalidadeRevisor;
+          $revisor->evento_id             = $evento->id;
+          $revisor->save();
         }        
         
-        $evento->revisores()->attach($revisor->id, ['convite_aceito'=> true]);
 
         return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }

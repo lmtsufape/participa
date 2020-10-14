@@ -318,8 +318,8 @@
             </div>
 
         </div>
-        
-        @if(isset(Auth::user()->revisor))
+
+        {{-- @if(isset(Auth::user()->revisor))
         <div class="row subtitulo" style="margin-top:20px">
             <div class="col-sm-12">
                 <p>Informações do perfil de revisor</p>
@@ -361,7 +361,7 @@
                 </select>
             </div>
         </div>
-        @endif
+        @endif --}}
         
         <div class="row subtitulo" style="margin-top:20px">
             <div class="col-sm-12">

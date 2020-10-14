@@ -57,7 +57,7 @@ class EventoController extends Controller
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $numeroRevisores = count($evento->revisores);
+        $numeroRevisores = Revisor::where('evento_id', $evento->id)->count();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
 
@@ -177,12 +177,13 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrComissao', $evento);
-        $revisores = $evento->revisores;
+        $revisores = Revisor::where('evento_id', $evento->id)->get();
+        $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
 
         return view('coordenador.revisores.listarRevisores', [
                                                     'evento'                  => $evento,
                                                     'revisores'               => $revisores,
-
+                                                    'revs'                    => $revs,
                                                   ]);
 
     }
@@ -741,7 +742,7 @@ class EventoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $revisores = $evento->revisores;
+        $revisores = Revisor::where('evento_id', $evento->id)->get();
         $modalidades = Modalidade::where('eventoId', $evento->id)->get();
         $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
@@ -752,11 +753,11 @@ class EventoController extends Controller
           $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
         }
 
-        $numeroRevisores = count($evento->revisores);
+        $numeroRevisores = Revisor::where('evento_id', $evento->id)->count();
         $numeroComissao = count($evento->usuariosDaComissao);
         // $atribuicoesProcessando
         // dd($trabalhosEnviados);
-        // $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
+        $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
@@ -775,7 +776,7 @@ class EventoController extends Controller
                                                     'evento'                  => $evento,
                                                     'areas'                   => $areas,
                                                     'revisores'               => $revisores,
-                                                    // 'revs'                    => $revs,
+                                                    'revs'                    => $revs,
                                                     'users'                   => $users,
                                                     'modalidades'             => $modalidades,
                                                     'areaModalidades'         => $areaModalidades,
