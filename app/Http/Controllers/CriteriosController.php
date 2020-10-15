@@ -80,4 +80,16 @@ class CriteriosController extends Controller
         $criterio = Criterio::find($request->criterioId);
         return $criterio;
     }
+
+    public function destroy($evento_id, $id) {
+        $criterio = Criterio::find($id);
+        
+        foreach ($criterio->opcoes as $opcao) {
+            $opcao->delete();
+        }
+
+        $criterio->delete();
+
+        return redirect()->route('coord.detalhesEvento', ["eventoId" => $evento_id]);
+    }
 }

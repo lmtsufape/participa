@@ -178,5 +178,6 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   // Critérios
   Route::post(  '/criterio/', 'CriteriosController@store'                               )->name('cadastrar.criterio');
   Route::post(  '/criterio/{id}/atualizar', 'CriteriosController@update'                )->name('atualizar.criterio');
+  Route::get(   '/{evento_id}/criterio/{id}/deletar',   'CriteriosController@destroy'               )->name('criterio.destroy');
   Route::get(   '/encontrarCriterio', 'CriteriosController@findCriterio'                )->name('encontrar.criterio');
 });

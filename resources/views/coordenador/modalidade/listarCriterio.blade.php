@@ -23,6 +23,7 @@
                                 <th scope="col">Peso</th>
                                 <th scope="col">Modalidade</th>
                                 <th scope="col">Editar</th>
+                                <th scope="col">Excluir</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -34,7 +35,10 @@
                                                 <td>{{$criterio->peso}}</td>
                                                 <td>{{$modalidade->nome}}</td>
                                                 <td style="text-align:center">
-                                                <a href="#" data-toggle="modal" data-target="#modalEditarCriterio{{$criterio->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                                    <a href="#" data-toggle="modal" data-target="#modalEditarCriterio{{$criterio->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                                </td>
+                                                <td style="text-align:center">
+                                                    <a href="#" data-toggle="modal" data-target="#modalExcluirCriterio{{$criterio->id}}"><img src="{{asset('img/icons/lixo.png')}}" style="width:20px"></a> 
                                                 </td>
                                             </tr>
                                         @endif
@@ -85,6 +89,28 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" form="formCriterioUpdate">Atualizar</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        {{-- Fim Modal --}}
+
+        {{-- Modal para excluir critérios --}}
+        <div class="modal fade" tabindex="-1" id="modalExcluirCriterio{{$criterio->id}}" aria-labelledby="modalExcluirCriterio{{$criterio->id}}" role="dialog">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title">Confirmação</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir {{$criterio->nome}}?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                    <a href="{{route('criterio.destroy', ['evento_id' => $evento->id, 'id' => $criterio->id])}}"><button type="button" class="btn btn-primary">Sim</button></a>
                 </div>
             </div>
             </div>
