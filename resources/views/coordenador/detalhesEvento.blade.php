@@ -262,11 +262,19 @@
 @section('javascript')
   <script type="text/javascript" >
     // Adicionar novo criterio
+    var contadorOpcoes = 0;
     $(document).ready(function(){
         $('#addCriterio').click(function(){
-            linha = montarLinhaInput();
-            $('#criterios').append(linha);
+            if ($('#modalidade').val() != null) {
+                linha = montarLinhaInput();
+                $('#criterios').append(linha);
+                contadorOpcoes++;
+            } else {
+                alert("Escolha uma modalidade");
+            }
         });
+
+        
     });
 
     // Remover Criterio
@@ -280,18 +288,45 @@
         return  "<div class="+"row"+">"+
                     "<div class="+"col-sm-6"+">"+
                         "<label>Nome</label>"+
-                        "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'nomeCriterio[]'+" placeholder="+"Nome"+" required>"+
+                        "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'nomeCriterio'+contadorOpcoes+" placeholder="+"Nome"+" required>"+
                     "</div>"+
                     "<div class="+"col-sm-5"+">"+
                         "<label>Peso</label>"+
-                        "<input"+" type="+'number'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'pesoCriterio[]'+" placeholder="+"Peso"+" required>"+
+                        "<input"+" type="+'number'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'pesoCriterio'+contadorOpcoes+" placeholder="+"Peso"+" required>"+
                     "</div>"+
                     "<div class="+"col-sm-1"+">"+
                         "<a href="+"#"+" class="+"delete"+">"+
-                        "<img src="+"/img/icons/lixo.png"+" style="+"width:25px;margin-top:35px"+">"+
+                            "<img src="+"/img/icons/lixo.png"+" style="+"width:25px;margin-top:35px"+">"+
                         "</a>"+
                     "</div>"+
+                    "<div class='container'>" +
+                        "<div class='row'>" +
+                            "<div class='col-sm-12'>" +
+                            "<h6>Opções para avaliar</h6>" +
+                            "</div>" +
+                            "<div class='col-sm-11'>" +
+                                "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'opcaoCriterio_'+contadorOpcoes+'[]'+" placeholder="+"Opção"+" required>"+
+                            "</div>" +
+                            "<div class='col-sm-1'>" +
+                                "<a href="+"#"+" onclick="+"addOpcaoCriterio(this,"+contadorOpcoes+")"+">"+
+                                    "<img src="+"{{ asset('/img/icons/plus-square-solid_black.svg')}}"+" style="+"width:25px;margin-top:5px"+">"+
+                                "</a>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>" +
+                "<hr>";
+    }
+
+    function montarLinhaOpcaoCriterio(idName) {
+        return  "<div class='col-sm-11'>" +
+                    "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'opcaoCriterio_'+idName+'[]'+" placeholder="+"Opção"+" required>"+
                 "</div>";
+    }
+
+    function addOpcaoCriterio(elem, idName){
+        linhaDeOpcaoCriterio = montarLinhaOpcaoCriterio(idName);
+        $(elem).closest('.row').append(linhaDeOpcaoCriterio);
     }
 
     // Função para retornar campos de edição de etiquetas para submissão de trabalhos ao default.

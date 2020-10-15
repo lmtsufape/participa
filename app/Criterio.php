@@ -19,4 +19,8 @@ class Criterio extends Model
     public function modalidade(){
         return $this->belongsTo('App\Modalidade', 'modalidadeId');
     }
+
+    public function opcoes() {
+        return $this->hasMany('App\OpcoesCriterio', 'criterio_id');
+    }
 }

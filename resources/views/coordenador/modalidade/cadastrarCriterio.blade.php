@@ -24,7 +24,7 @@
                                     <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidade">
                                         <option value="" disabled selected hidden>-- Modalidade --</option>
                                         @foreach($modalidades as $modalidade)
-                                        <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
+                                            <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
                                         @endforeach
                                     </select>
 
