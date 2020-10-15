@@ -52,20 +52,26 @@ class CriteriosController extends Controller
         return redirect()->route('coord.detalhesEvento', ["eventoId" => $request->eventoId]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-
+        // dd($request);
         $validatedData = $request->validate([
             'nomeCriterioUpdate' => ['string'],
             'pesoCriterioUpdate' => ['integer'],
         ]);
 
-        $criterio = Criterio::find($request->modalidadeId);
+        $criterio = Criterio::find($id);
         
         $criterio->nome = $request->nomeCriterioUpdate;
         $criterio->peso = $request->pesoCriterioUpdate;
 
-        $criterio->save();
+        for ($i = 0; $i < count($request->idOpcaoCriterio); $i++) {
+            $opcao = OpcoesCriterio::find($request->idOpcaoCriterio[$i]);
+            $opcao->nome_opcao = $request->opcaoCriterio[$i];
+            $opcao->update();
+        }
+
+        $criterio->update();
 
         return redirect()->route('coord.detalhesEvento', ["eventoId" => $request->eventoId]);
     }
