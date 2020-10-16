@@ -53,4 +53,8 @@ class Trabalho extends Model
   public function evento(){
       return $this->belongsTo('App\Evento', 'eventoId');
   }
+
+  public function avaliacoes() {
+    return $this->hasMany('App\Avaliacao', 'trabalho_id');
+  }
 }

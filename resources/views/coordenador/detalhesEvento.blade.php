@@ -1363,9 +1363,6 @@
         })
     }
   </script>
-
-    
-
   @if(old('idAtividade') != null)
     <script>
         $(document).ready(function() {

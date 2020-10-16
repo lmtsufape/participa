@@ -21,4 +21,8 @@ class Modalidade extends Model
   public function trabalho(){
       return $this->hasMany('App\Trabalho', 'modalidadeId');
   }
+
+  public function criterios() {
+    return $this->hasMany('App\Criterio', 'modalidadeId');
+  }
 }

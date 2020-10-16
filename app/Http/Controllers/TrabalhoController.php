@@ -8,6 +8,7 @@ use App\Evento;
 use App\User;
 use App\AreaModalidade;
 use App\Area;
+use App\Avaliacao;
 use App\Arquivoextra;
 use App\Revisor;
 use App\Modalidade;
@@ -16,6 +17,7 @@ use App\Arquivo;
 use App\FormTipoSubm;
 use App\FormSubmTraba;
 use App\RegraSubmis;
+use App\Parecer;
 use App\ComissaoEvento;
 use App\TemplateSubmis;
 use Carbon\Carbon;
@@ -578,5 +580,54 @@ class TrabalhoController extends Controller
       }
 
       return response()->json($trabalhoJson);
+    }
+
+    public function avaliarTrabalho(Request $request, $trabalho_id) {
+      // dd($request);
+      $exibirValidacao = $request->validate([
+        'avaliar_trabalho_id' => 'required',
+        'modalidade_id'       => 'required',
+        'area_id'             => 'required',
+        'evento_id'           => 'required',
+      ]);
+
+      $modalidade = Modalidade::find($request->modalidade_id);
+      $revisor = Revisor::where([['user_id', auth()->user()->id], ['modalidadeId', $request->modalidade_id], ['areaId', $request->area_id], ['evento_id', $request->evento_id]])->first();
+      $trabalho = Trabalho::find($trabalho_id);
+
+      // dd($revisor);
+      foreach ($modalidade->criterios as $criterio) {
+        $validarCriterio = $request->validate([
+          'criterio_'.$criterio->id => 'required',
+        ]);
+      }
+
+      $validarParecer = $request->validate([
+        'parecer_final' => 'required',
+        'justificativa' => 'required',
+      ]);
+
+      foreach ($modalidade->criterios as $criterio) {
+        $avaliacao = new Avaliacao();
+        $avaliacao->revisor_id          = $revisor->id;
+        $avaliacao->opcao_criterio_id   = $request->input("criterio_".$criterio->id);
+        $avaliacao->trabalho_id         = $trabalho_id;
+        $avaliacao->save();
+      }
+
+      // Atualizando tabelas
+      $atribuicao = $trabalho->atribuicoes()->updateExistingPivot($revisor->id, ['confirmacao'=>true,'parecer'=>'dado']);  
+      $trabalho->avaliado = "sim";
+      $trabalho->update();
+      
+      // Salvando parecer final
+      $parecer = new Parecer();
+      $parecer->resultado     = $request->parecer_final;
+      $parecer->justificativa = $request->justificativa;
+      $parecer->revisorId     = $revisor->id;
+      $parecer->trabalhoId    = $trabalho->id;
+      $parecer->save();
+
+      return redirect()->back()->with(['mensagem' => 'Avaliação salva']);
     }
 }

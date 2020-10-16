@@ -13,4 +13,8 @@ class OpcoesCriterio extends Model
     public function criterio() {
         return $this->belongsTo('App\Criterio', 'criterio_id');
     }
+
+    public function avaliacoes() {
+        return $this->hasMany('App\Avaliacao', 'opcao_criterio_id');
+    }
 }
