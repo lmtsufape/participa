@@ -16,7 +16,7 @@ class Parecer extends Model
   ];
 
   public function revisor(){
-      return $this->belongsTo('App\User', 'revisorId');
+      return $this->belongsTo('App\Revisor', 'revisorId');
   }
 
   public function trabalho(){
