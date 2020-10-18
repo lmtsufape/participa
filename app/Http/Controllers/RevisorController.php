@@ -83,7 +83,10 @@ class RevisorController extends Controller
             'password' => bcrypt($passwordTemporario),
             'usuarioTemp' => true,
           ]);
+
+          
         }
+
         $revisor = Revisor::create([
           'trabalhosCorrigidos'   => 0,
           'correcoesEmAndamento'  => 0,
@@ -92,6 +95,9 @@ class RevisorController extends Controller
           'areaId'                => $request->areaRevisor,
           'modalidadeId'          => $request->modalidadeRevisor,
         ]);
+
+        $usuario->revisor()->save($revisor);
+        $usuario->revisor->eventos()->attach($evento);
 
 
 

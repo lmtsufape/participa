@@ -70,8 +70,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo('App\Endereco', 'enderecoId');
     }
 
-    public function evento(){
-        return $this->hasMany('App\Evento', 'coordenadorId');
+    
+
+    public function comissaoEvento(){
+        return $this->hasMany('App\ComissaoEvento');
     }
 
     public function coautor(){

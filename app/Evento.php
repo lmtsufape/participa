@@ -34,5 +34,13 @@ class Evento extends Model
       return $this->belongsTo('App\User', 'coordenadorId');
   }
 
+  public function coordComissaoCientifica(){
+      return $this->belongsTo('App\CoordComissaoCientifica');
+  }
+
+  public function revisors(){
+      return $this->belongsToMany('App\Revisor', 'evento_revisor', 'evento_id', 'revisor_id');
+  }
+
 
 }

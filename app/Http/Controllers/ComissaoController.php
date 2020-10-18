@@ -90,20 +90,17 @@ class ComissaoController extends Controller
           ]);
         }
 
-        // dd($user->id);
         $comissaoEventos = new ComissaoEvento();
 
         $comissaoEventos->eventosId = $request->input('eventoId');
         $comissaoEventos->userId = $user->id;
-        // $comissaoEventos->especProfissional = $request->input('especProfissional');
+        
         $comissaoEventos->save();
 
 
         $evento = Evento::find($request->input('eventoId'));
         $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
-        $areas = Area::where('eventoId', $evento->id)->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
-        // dd($ComissaoEventos);
+                
         $ids = [];
         foreach($ComissaoEvento as $ce){
           array_push($ids,$ce->userId);

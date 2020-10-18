@@ -5,14 +5,14 @@
     <div class="sidebar">
         <h2>{{{$evento->nome}}}</h2>
         <ul>
-            @can('isCoordenador', $evento)
+            {{-- @can('isCoordenador', $evento) --}}
                 <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
                     <li>
                         <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
                     </li>
                 </a>
-            @endcan
-            @can('isCoordenador', $evento)
+            {{-- @endcan --}}
+            {{-- @can('isCoordenador', $evento) --}}
             <a id="trabalhos">
                 <li>
                     <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Submissões</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -32,7 +32,7 @@
                     
                 </div>
             </a>
-            @endcan
+            {{-- @endcan --}}
             <a id="areas">
                 
                 <li>
@@ -52,7 +52,7 @@
                 </div>
 
             </a>
-            @can('isCoordenador', $evento)
+            {{-- @can('isCoordenador', $evento) --}}
             <a id="revisores">
                 <li>
                     <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Revisores</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -68,9 +68,14 @@
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Revisores</h5>
                         </li>
                     </a>
+                    <a id="listarUsuarios" href="{{ route('coord.listarUsuarios', ['evento_id' => $evento->id]) }}">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Usuários</h5>
+                        </li>
+                    </a>
                 </div>
             </a>
-            @endcan
+            {{-- @endcan --}}
             <a id="comissao" >
                 <li>
                     <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -81,13 +86,13 @@
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar Comissão</h5>
                         </li>
                     </a>
-                    @can('isCoordenador', $evento)
+                    {{-- @can('isCoordenador', $evento) --}}
                     <a id="definirCoordComissao" href="{{ route('coord.definirCoordComissao', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/crown-solid.svg')}}" alt=""><h5> Definir Coordenador</h5>
                         </li>
                     </a>
-                    @endif
+                    {{-- @endif --}}
                     <a id="listarComissao" href="{{ route('coord.listarComissao', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Comissão</h5>
@@ -122,7 +127,7 @@
                     </a>
                 </div>
             </a>
-            @can('isCoordenador', $evento)
+            {{-- @can('isCoordenador', $evento) --}}
             <a id="programacao">
                 <li>
                     <img src="{{asset('img/icons/slideshow.svg')}}" alt=""><h5>Programação</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -177,7 +182,7 @@
                   </a>
               </div>
             </a>
-            @endcan
+            {{-- @endcan --}}
         </ul>
     </div>
 
