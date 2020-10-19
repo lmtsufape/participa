@@ -617,9 +617,15 @@ class TrabalhoController extends Controller
 
       // Atualizando tabelas
       $atribuicao = $trabalho->atribuicoes()->updateExistingPivot($revisor->id, ['confirmacao'=>true,'parecer'=>'dado']);  
-      $trabalho->avaliado = "sim";
+      $trabalho->avaliado = "Avaliado";
       $trabalho->update();
       
+      //Atualizando os status do revisor
+      $revisor = $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first();
+      $revisor->trabalhosCorrigidos++;
+      $revisor->correcoesEmAndamento--;
+      $revisor->update();
+
       // Salvando parecer final
       $parecer = new Parecer();
       $parecer->resultado     = $request->parecer_final;

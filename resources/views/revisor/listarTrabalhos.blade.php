@@ -44,7 +44,7 @@
                             <tr>
                               <td>{{$trabalho->id}}</td>
                               <td>{{$trabalho->titulo}}</td>
-                              @if ($trabalho->avaliado == "sim")
+                              @if ($trabalho->avaliado == "Avaliado")
                                 <td>Avaliado</td>
                               @else
                                 <td>Pendente</td>    
@@ -57,7 +57,7 @@
                                   <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                                 @endif
                               </td>
-                              @if ($trabalho->avaliado != "sim") 
+                              @if ($trabalho->avaliado != "Avaliado") 
                                 @if (date('yy-m-d') >= $trabalho->modalidade->inicioRevisao && date('yy-m-d') <= $trabalho->modalidade->fimRevisao)
                                   <td>
                                     <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
