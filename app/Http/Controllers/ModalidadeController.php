@@ -337,4 +337,9 @@ class ModalidadeController extends Controller
     {
         //
     }
+
+    public function downloadRegras($id) {
+        $modalidade = Modalidade::find($id);
+        return Storage::download($modalidade->regra);
+    }
 }

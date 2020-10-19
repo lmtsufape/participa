@@ -24,7 +24,9 @@
               <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Trabalhos da área de {{$trabalhosDaArea[0]->area->nome}}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Que tem como modalidade {{$trabalhosDaArea[0]->modalidade->nome}}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">Que tem como modalidade {{$trabalhosDaArea[0]->modalidade->nome}} 
+                      <a href="#" data-toggle="modal" data-target="#modalRegrasModalidade{{$trabalhosDaArea[0]->modalidade->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Visualizar regras da modalidade" width="15px" title="Visualizar regras da modalidade"></a>
+                    </h6>
                     <p class="card-text">
                       <div class="col-sm-12">
                       <table class="table table-hover table-responsive-lg table-sm">
@@ -55,10 +57,10 @@
                                   <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                                 @endif
                               </td>
-                              @if ($trabalho->avaliado == "sim") 
-                                {{-- <td><a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalEditarAvaliacaoTrabalho{{$trabalho->id}}"></a></td> --}}
-                              @else
-                                <td><a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a></td>
+                              @if ($trabalho->avaliado != "sim") 
+                                <td>
+                                  <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
+                                </td>
                               @endif
                             </tr>
                         @endforeach
@@ -75,6 +77,70 @@
 
 
     @foreach ($trabalhosPorArea as $trabalhosDaArea)
+      <!-- Modal regras da Modalidade-->
+      <div class="modal fade" id="modalRegrasModalidade{{$trabalhosDaArea[0]->modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#labelModalRegrasModalidade{{$trabalhosDaArea[0]->modalidade->id}}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="resumoModalLongTitle">Regras da modalidade {{$trabalhosDaArea[0]->modalidade->nome}} </h5>
+            </div>
+            <div class="modal-body" name="resumoTrabalhoModal" id="resumoTrabalhoModal">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <strong>Periodo de avaliação</strong>
+                    <p id="periodo">
+                      De {{date('d/m/Y',strtotime($trabalhosDaArea[0]->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDaArea[0]->modalidade->fimRevisao))}}
+                    </p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    @if ($trabalhosDaArea[0]->modalidade->arquivo != null && $trabalhosDaArea[0]->modalidade->arquivo == true)
+                      <strong>Forma de avaliação</strong>
+                      <p id="formaDeAvaliacao">
+                        Avaliação por arquivo submetido
+                      </p>
+                    @else
+                      <strong>Forma de avaliação</strong>
+                      <p id="formaDeAvaliacao">
+                        Avaliação por texto digitado
+                      </p>
+                    @endif
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    @if ($trabalhosDaArea[0]->modalidade->caracteres)
+                      <strong>Limite por quantidade caracteres</strong>
+                      <p>
+                        Minimo: {{number_format($trabalhosDaArea[0]->modalidade->mincaracteres, 0, ',', '.')}}<br>
+                        Máximo: {{number_format($trabalhosDaArea[0]->modalidade->maxcaracteres, 0, ',', '.')}}
+                      </p>
+                    @elseif ($trabalhosDaArea[0]->modalidade->palavras)
+                      <strong>Limite por quantidade palavras</strong>
+                      <p>
+                        Minimo: {{number_format($trabalhosDaArea[0]->modalidade->minpalavras, 0, ',', '.')}}<br>
+                        Máximo: {{number_format($trabalhosDaArea[0]->modalidade->maxpalavras, 0, ',', '.')}}
+                      </p>
+                    @endif
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    @if ($trabalhosDaArea[0]->modalidade->regra != null)
+                      <a href="{{route('modalidade.regras.download', ['id' => $trabalhosDaArea[0]->modalidade->id])}}">Arquivo de regras extras</a>
+                    @endif
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
       @foreach($trabalhosDaArea as $trabalho)
         <!-- Modal Nota -->
         <div class="modal fade" id="modalEditarAvaliacaoTrabalho{{$trabalho->id}}" tabindex="-1" role="dialog" aria-labelledby="labelModalEditarAvaliacaoTrabalho{{$trabalho->id}}" aria-hidden="true">
