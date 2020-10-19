@@ -58,7 +58,7 @@
                                 @endif
                               </td>
                               @if ($trabalho->avaliado != "sim") 
-                                @if (date('y-m-d') >= $trabalho->modalidade->inicioRevisao && date('y-m-d') <= $trabalho->modalidade->fimRevisao)
+                                @if (date('yy-m-d') >= $trabalho->modalidade->inicioRevisao && date('yy-m-d') <= $trabalho->modalidade->fimRevisao)
                                   <td>
                                     <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
                                   </td>
@@ -151,71 +151,6 @@
           </div>
         </div>
       </div>
-      @foreach($trabalhosDaArea as $trabalho)
-        <!-- Modal Nota -->
-        <div class="modal fade" id="modalEditarAvaliacaoTrabalho{{$trabalho->id}}" tabindex="-1" role="dialog" aria-labelledby="labelModalEditarAvaliacaoTrabalho{{$trabalho->id}}" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="labelModalEditarAvaliacaoTrabalho{{$trabalho->id}}">Avaliar {{$trabalho->titulo}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form id="formAvaliarTrabalho{{$trabalho->id}}" class="" action="{{ route('trabalho.avaliacao.revisor', ['id' => $trabalho->id]) }}" method="POST">
-                  @csrf
-                  <div class="form-group">
-                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                    <input type="hidden" name="avaliar_trabalho_id" value="{{$trabalho->id}}">
-                    <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
-                    <input type="hidden" name="area_id" value="{{$trabalho->area->id}}">
-                    @foreach ($trabalho->modalidade->criterios as $criterio)
-                      <div class="row">
-                        <div class="col-sm-12">
-                          <label for="nota">{{$criterio->nome}}</label>
-                          <select class="form-control @error('criterio_{{$criterio->id}}') is-invalid @enderror" name="criterio_{{$criterio->id}}" id="" required>
-                            <option value="" selected disabled>-- Selecionar opção --</option>
-                            @foreach ($criterio->opcoes as $opcao)
-                              <option value="{{$opcao->id}}">{{$opcao->nome_opcao}}</option>
-                            @endforeach
-                          </select>
-
-                          @error('criterio_{{$criterio->id}}')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                          @enderror
-                        </div>
-                      </div>    
-                    @endforeach
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <label for="nota">Parecer final</label>
-                        <select class="form-control" name="parecer_final" id="" required>
-                          <option value="" selected disabled>-- Selecionar parecer --</option>
-                          <option value="true">Aprovado</option>
-                          <option value="false">Reprovado</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <label for="nota">Justificativa</label>
-                        <textarea class="form-control" name="justificativa" id="" cols="30" rows="5" placeholder="Justificativa" required></textarea>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary" form="formAvaliarTrabalho{{$trabalho->id}}">Atribuir Nota</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      @endforeach
     @endforeach
 
     @foreach ($trabalhosPorArea as $trabalhosDaArea)

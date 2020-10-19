@@ -590,7 +590,7 @@ class TrabalhoController extends Controller
         'area_id'             => 'required',
         'evento_id'           => 'required',
       ]);
-
+      
       $modalidade = Modalidade::find($request->modalidade_id);
       $revisor = Revisor::where([['user_id', auth()->user()->id], ['modalidadeId', $request->modalidade_id], ['areaId', $request->area_id], ['evento_id', $request->evento_id]])->first();
       $trabalho = Trabalho::find($trabalho_id);
@@ -601,7 +601,7 @@ class TrabalhoController extends Controller
           'criterio_'.$criterio->id => 'required',
         ]);
       }
-
+      
       $validarParecer = $request->validate([
         'parecer_final' => 'required',
         'justificativa' => 'required',
