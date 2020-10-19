@@ -32,10 +32,11 @@ class CriteriosController extends Controller
             }
 
             if ($request->input('opcaoCriterio_'.$c) != null) {
-                foreach ($request->input('opcaoCriterio_'.$c) as $opcao) {
+                for ($i = 0; $i < count($request->input('opcaoCriterio_'.$c)); $i++) {
                     $opCriterio = new OpcoesCriterio();
-                    $opCriterio->nome_opcao     = $opcao;
+                    $opCriterio->nome_opcao     = $request->input('opcaoCriterio_'.$c)[$i];
                     $opCriterio->criterio_id    = $criterio->id;
+                    $opCriterio->valor_real     = ($i + 1) * (10 / count($request->input('opcaoCriterio_'.$c)));
                     $opCriterio->save();
                 }
                 $opcoesCriterioCadastrado = true;

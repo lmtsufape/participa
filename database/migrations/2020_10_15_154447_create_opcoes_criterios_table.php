@@ -17,6 +17,7 @@ class CreateOpcoesCriteriosTable extends Migration
             $table->bigIncrements('id');
             $table->string('nome_opcao');
             $table->bigInteger('criterio_id');
+            $table->double('valor_real');
             $table->timestamps();
 
             $table->foreign('criterio_id')->references('id')->on('criterios');
