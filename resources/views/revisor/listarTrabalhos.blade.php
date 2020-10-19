@@ -58,9 +58,19 @@
                                 @endif
                               </td>
                               @if ($trabalho->avaliado != "sim") 
-                                <td>
-                                  <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
-                                </td>
+                                @if (date('y-m-d') >= $trabalho->modalidade->inicioRevisao && date('y-m-d') <= $trabalho->modalidade->fimRevisao)
+                                  <td>
+                                    <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
+                                  </td>
+                                @else 
+                                  <td>
+                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
+                                  </td>
+                                @endif
+                              @else
+                              <td>
+                                <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Trabalho já avaliado">
+                              </td>
                               @endif
                             </tr>
                         @endforeach
