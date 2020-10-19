@@ -251,7 +251,7 @@ class RevisorController extends Controller
       $revisores = Revisor::where([['user_id', auth()->user()->id],['evento_id', $id]])->get();
       $trabalhos = collect();
       foreach ($revisores as $revisor) {
-        $trabalhos->push($revisor->trabalhosAtribuidos);
+        $trabalhos->push($revisor->trabalhosAtribuidos()->orderBy('titulo')->get());
       }
       return view('revisor.listarTrabalhos')->with(['evento' => $evento,'trabalhosPorArea' => $trabalhos]);
       // $trabalhos = Atribuicao::where('eventoId', $id);

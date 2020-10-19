@@ -119,7 +119,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        @foreach ($revisor->trabalhosAtribuidos()->orderBy('avaliado')->get() as $trabalho)
+                        @foreach ($revisor->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
                           <tr>
                             <td>{{$trabalho->titulo}}</td>
                             <td>{{$trabalho->avaliado}}</td>
