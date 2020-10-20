@@ -88,69 +88,71 @@
 
     @foreach ($trabalhosPorArea as $trabalhosDaArea)
       <!-- Modal regras da Modalidade-->
-      <div class="modal fade" id="modalRegrasModalidade{{$trabalhosDaArea[0]->modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#labelModalRegrasModalidade{{$trabalhosDaArea[0]->modalidade->id}}" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="resumoModalLongTitle">Regras da modalidade {{$trabalhosDaArea[0]->modalidade->nome}} </h5>
-            </div>
-            <div class="modal-body" name="resumoTrabalhoModal" id="resumoTrabalhoModal">
-              <div class="container">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <strong>Periodo de avaliação</strong>
-                    <p id="periodo">
-                      De {{date('d/m/Y',strtotime($trabalhosDaArea[0]->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDaArea[0]->modalidade->fimRevisao))}}
-                    </p>
+      @if($trabalhosDaArea != null && count($trabalhosDaArea) > 0)
+        <div class="modal fade" id="modalRegrasModalidade{{$trabalhosDaArea[0]->modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#labelModalRegrasModalidade{{$trabalhosDaArea[0]->modalidade->id}}" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="resumoModalLongTitle">Regras da modalidade {{$trabalhosDaArea[0]->modalidade->nome}} </h5>
+              </div>
+              <div class="modal-body" name="resumoTrabalhoModal" id="resumoTrabalhoModal">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <strong>Periodo de avaliação</strong>
+                      <p id="periodo">
+                        De {{date('d/m/Y',strtotime($trabalhosDaArea[0]->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDaArea[0]->modalidade->fimRevisao))}}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-12">
-                    @if ($trabalhosDaArea[0]->modalidade->arquivo != null && $trabalhosDaArea[0]->modalidade->arquivo == true)
-                      <strong>Forma de avaliação</strong>
-                      <p id="formaDeAvaliacao">
-                        Avaliação por arquivo submetido
-                      </p>
-                    @else
-                      <strong>Forma de avaliação</strong>
-                      <p id="formaDeAvaliacao">
-                        Avaliação por texto digitado
-                      </p>
-                    @endif
+                  <div class="row">
+                    <div class="col-sm-12">
+                      @if ($trabalhosDaArea[0]->modalidade->arquivo != null && $trabalhosDaArea[0]->modalidade->arquivo == true)
+                        <strong>Forma de avaliação</strong>
+                        <p id="formaDeAvaliacao">
+                          Avaliação por arquivo submetido
+                        </p>
+                      @else
+                        <strong>Forma de avaliação</strong>
+                        <p id="formaDeAvaliacao">
+                          Avaliação por texto digitado
+                        </p>
+                      @endif
+                    </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-12">
-                    @if ($trabalhosDaArea[0]->modalidade->caracteres)
-                      <strong>Limite por quantidade caracteres</strong>
-                      <p>
-                        Minimo: {{number_format($trabalhosDaArea[0]->modalidade->mincaracteres, 0, ',', '.')}}<br>
-                        Máximo: {{number_format($trabalhosDaArea[0]->modalidade->maxcaracteres, 0, ',', '.')}}
-                      </p>
-                    @elseif ($trabalhosDaArea[0]->modalidade->palavras)
-                      <strong>Limite por quantidade palavras</strong>
-                      <p>
-                        Minimo: {{number_format($trabalhosDaArea[0]->modalidade->minpalavras, 0, ',', '.')}}<br>
-                        Máximo: {{number_format($trabalhosDaArea[0]->modalidade->maxpalavras, 0, ',', '.')}}
-                      </p>
-                    @endif
+                  <div class="row">
+                    <div class="col-sm-12">
+                      @if ($trabalhosDaArea[0]->modalidade->caracteres)
+                        <strong>Limite por quantidade caracteres</strong>
+                        <p>
+                          Minimo: {{number_format($trabalhosDaArea[0]->modalidade->mincaracteres, 0, ',', '.')}}<br>
+                          Máximo: {{number_format($trabalhosDaArea[0]->modalidade->maxcaracteres, 0, ',', '.')}}
+                        </p>
+                      @elseif ($trabalhosDaArea[0]->modalidade->palavras)
+                        <strong>Limite por quantidade palavras</strong>
+                        <p>
+                          Minimo: {{number_format($trabalhosDaArea[0]->modalidade->minpalavras, 0, ',', '.')}}<br>
+                          Máximo: {{number_format($trabalhosDaArea[0]->modalidade->maxpalavras, 0, ',', '.')}}
+                        </p>
+                      @endif
+                    </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-12">
-                    @if ($trabalhosDaArea[0]->modalidade->regra != null)
-                      <a href="{{route('modalidade.regras.download', ['id' => $trabalhosDaArea[0]->modalidade->id])}}">Arquivo de regras extras</a>
-                    @endif
+                  <div class="row">
+                    <div class="col-sm-12">
+                      @if ($trabalhosDaArea[0]->modalidade->regra != null)
+                        <a href="{{route('modalidade.regras.download', ['id' => $trabalhosDaArea[0]->modalidade->id])}}">Arquivo de regras extras</a>
+                      @endif
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      @endif
     @endforeach
 
     @foreach ($trabalhosPorArea as $trabalhosDaArea)
