@@ -80,8 +80,8 @@
               </div>
           </div>
         </div>
-      @else
-        <h4>Nenhum trabalho atribuido para correção</h4>
+      {{-- @else
+        <h4>Nenhum trabalho atribuido para correção</h4> --}}
       @endif
     @endforeach
 
