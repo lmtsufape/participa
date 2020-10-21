@@ -73,6 +73,7 @@ class CriteriosController extends Controller
         for ($i = 0; $i < count($request->idOpcaoCriterio); $i++) {
             $opcao = OpcoesCriterio::find($request->idOpcaoCriterio[$i]);
             $opcao->nome_opcao = $request->opcaoCriterio[$i];
+            $opcao->valor_real = $request->valor_real_criterio[$i];
             $opcao->update();
         }
 

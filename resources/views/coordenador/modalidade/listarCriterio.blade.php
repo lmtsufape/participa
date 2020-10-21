@@ -70,20 +70,39 @@
                         <div class="form-group">
                             <input type="hidden" name="eventoId" value="{{$evento->id}}">
                             <label for="exampleInputEmail1">Nome</label>
-                            <input type="text" class="form-control" name="nomeCriterioUpdate" id="nomeCriterioUpdate" value="{{$criterio->nome}}">
+                            <input type="text" class="form-control" name="nomeCriterioUpdate" id="nomeCriterioUpdate" value="{{$criterio->nome}}" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Peso</label>
-                            <input type="number" class="form-control" name="pesoCriterioUpdate" id="pesoCriterioUpdate" value="{{$criterio->peso}}">
+                            <input type="number" class="form-control" name="pesoCriterioUpdate" id="pesoCriterioUpdate" value="{{$criterio->peso}}" required>
                         </div>
                         <div class="form-group">
                             <h5>Opções para avaliação</h5>
                         </div>
-                        @foreach ($criterio->opcoes as $opcao)
+                        @foreach ($criterio->opcoes as $i => $opcao)
+                            @if ($i == 0)
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <h6>Opções</h6>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <h6>Valores reais</h6>
+                                        </div>
+                                    </div>
+                                </div> 
+                            @endif
                             <div class="form-group">
-                                <input type="hidden" name="idOpcaoCriterio[]" value="{{$opcao->id}}">
-                                <input type="text" class="form-control" name="opcaoCriterio[]" value="{{$opcao->nome_opcao}}">
-                            </div> 
+                                <div class="row">
+                                    <div class="col-sm-7">
+                                        <input type="hidden" name="idOpcaoCriterio[]" value="{{$opcao->id}}" >
+                                        <input type="text" class="form-control" name="opcaoCriterio[]" value="{{$opcao->nome_opcao}}"required>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <input type="number" class="form-control" name="valor_real_criterio[]" value="{{$opcao->valor_real}}" required onchange="validandoValorReal(this)">
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
                     </form>
                 </div>
