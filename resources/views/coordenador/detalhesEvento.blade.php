@@ -1383,6 +1383,13 @@
         });
     </script>
   @endif
+  @if (old('distribuirTrabalhosAutomaticamente') != null) 
+    <script>
+        $(document).ready(function() {
+            $('#modalDistribuicaoAutomatica').modal('show');
+        });
+    </script>
+  @endif
   @if(old('idNovaAtividade') == 2)
     <script>
         $(document).ready(function() {

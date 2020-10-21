@@ -133,7 +133,7 @@ class AtribuicaoController extends Controller
     public function distribuicaoPorArea(Request $request){
       $validatedData = $request->validate([
         'eventoId'                     => ['required', 'integer'],
-        'areaId'                       => ['required', 'integer', 'min:1'],
+        'área'                       => ['required', 'integer', 'min:1'],
         'numeroDeRevisoresPorTrabalho' => ['required', 'integer']
       ]);
 

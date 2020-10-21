@@ -91,15 +91,16 @@
           <input type="hidden" name="eventoId" value="{{$evento->id}}">
           <div class="row">
             <div class="col-sm-12">
+                <input type="hidden" name="distribuirTrabalhosAutomaticamente" value="{{$evento->id}}">
                 <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
-                <select class="form-control @error('areaId') is-invalid @enderror" id="areaIdformDistribuicaoPorArea" name="areaId">
-                    <option value="" disabled selected hidden> Área </option>
+                <select class="form-control @error('área') is-invalid @enderror" id="areaIdformDistribuicaoPorArea" name="área" required>
+                    <option value="" disabled selected hidden>-- Área --</option>
                     @foreach($areas as $area)
                         <option value="{{$area->id}}">{{$area->nome}}</option>
                     @endforeach
                 </select>
 
-                @error('areaId')
+                @error('área')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
@@ -127,7 +128,7 @@
       </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        <button id="numeroDeRevisoresPorTrabalhoButton" disabled onclick="document.getElementById('formDistribuicaoPorArea').submit();" type="button" class="btn btn-primary">Distribuir</button>
+        <button id="numeroDeRevisoresPorTrabalhoButton" onclick="document.getElementById('formDistribuicaoPorArea').submit();" type="button" class="btn btn-primary">Distribuir</button>
       </div>
     </div>
   </div>
