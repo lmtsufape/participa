@@ -11,16 +11,20 @@
             <form class="form-inline">
                 <div class="form-group mx-sm-1 mb-2">
                     <select class="form-control" name="area" id="area_trabalho_pesquisa">
-                        @foreach ($areas as $area)
-                            <option value="{{$area->id}}">{{$area->nome}}</option>
-                        @endforeach
+                        @if (count($areas) > 0)
+                            @foreach ($areas as $area)
+                                <option value="{{$area->id}}">{{$area->nome}}</option>
+                            @endforeach
+                        @else
+                            <option value="" selected disabled>-- Nenhuma área cadastrada --</option>
+                        @endif
                     </select>
                 </div>
                 <div class="form-group mx-sm-3 mb-2">
                     <label for="pesquisaTexto" class="sr-only">Nome do trabalho</label>
-                    <input type="text" class="form-control" id="pesquisaTexto" name="pesquisaTexto" placeholder="Nome do trabalho">
+                    <input type="text" class="form-control" id="pesquisaTexto" name="pesquisaTexto" placeholder="Nome do trabalho" @if (count($areas) == 0) disabled @endif>
                 </div>
-                <button type="button" class="btn btn-primary mb-2" onclick="pesquisaResultadoTrabalho()">Pesquisar</button>
+                <button type="button" class="btn btn-primary mb-2" onclick="pesquisaResultadoTrabalho()" @if (count($areas) == 0) disabled @endif>Pesquisar</button>
             </form>
         </div>
     </div>
