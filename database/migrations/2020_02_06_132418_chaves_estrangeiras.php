@@ -23,10 +23,10 @@ class ChavesEstrangeiras extends Migration
       //------------------------------------------------------------------------
 
       Schema::table('area_modalidades', function (Blueprint $table) {
-          $table->foreign('areaId')->references('id')->on('areas');
+          $table->foreign('areaId')->references('id')->on('areas')->onDelete('cascade');
       });
       Schema::table('area_modalidades', function (Blueprint $table) {
-          $table->foreign('modalidadeId')->references('id')->on('modalidades');
+          $table->foreign('modalidadeId')->references('id')->on('modalidades')->onDelete('cascade');
       });
 
       //------------------------------------------------------------------------

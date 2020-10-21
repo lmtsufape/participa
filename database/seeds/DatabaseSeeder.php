@@ -85,7 +85,6 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'etiquetamoduloinscricao'        => 'Inscrições',
           'etiquetamoduloprogramacao'      => 'Programação',
           'etiquetamoduloorganizacao'      => 'Organização',
-          
         ]);
 
         DB::table('form_subm_trabas')->insert([

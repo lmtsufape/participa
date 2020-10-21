@@ -371,33 +371,13 @@ class EventoController extends Controller
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
 
-        // dd($request);
-        // validar datas nulas antes, pois pode gerar um bug
-
-        if(
-          $request->dataInicio == null      ||
-          $request->dataFim == null
-          // $request->inicioSubmissao == null ||
-          // $request->fimSubmissao == null    ||
-          // $request->inicioRevisao == null   ||
-          // $request->fimRevisao == null      ||
-          // $request->inicioResultado == null ||
-          // $request->fimResultado == null
-        ){
+        if($request->dataInicio == null || $request->dataFim == null){
           $validatedData = $request->validate([
             'nome'                => ['required', 'string'],
-            // 'numeroParticipantes' => ['required', 'integer', 'gt:0'],
             'descricao'           => ['required', 'string'],
             'tipo'                => ['required', 'string'],
             'dataInicio'          => ['required', 'date','after:'. $yesterday],
             'dataFim'             => ['required', 'date'],
-            // 'inicioSubmissao'     => ['required', 'date'],
-            // 'fimSubmissao'        => ['required', 'date'],
-            // 'inicioRevisao'       => ['required', 'date'],
-            // 'fimRevisao'          => ['required', 'date'],
-            // 'inicioResultado'     => ['required', 'date'],
-            // 'fimResultado'        => ['required', 'date'],
-            // 'valorTaxa'           => ['required', 'integer'],
             'fotoEvento'          => ['file', 'mimes:png'],
           ]);
         }
@@ -406,18 +386,10 @@ class EventoController extends Controller
 
         $validatedData = $request->validate([
           'nome'                => ['required', 'string'],
-          // 'numeroParticipantes' => ['required', 'integer', 'gt:0'],
           'descricao'           => ['required', 'string'],
           'tipo'                => ['required', 'string'],
           'dataInicio'          => ['required', 'date', 'after:' . $yesterday],
           'dataFim'             => ['required', 'date', 'after:' . $request->dataInicio],
-          // 'inicioSubmissao'     => ['required', 'date', 'after:' . $yesterday],
-          // 'fimSubmissao'        => ['required', 'date', 'after:' . $request->inicioSubmissao],
-          // 'inicioRevisao'       => ['required', 'date', 'after:' . $yesterday],
-          // 'fimRevisao'          => ['required', 'date', 'after:' . $request->inicioRevisao],
-          // 'inicioResultado'     => ['required', 'date', 'after:' . $yesterday],
-          // 'fimResultado'        => ['required', 'date', 'after:' . $request->inicioResultado],
-          // 'valorTaxa'           => ['required', 'integer'],
           'fotoEvento'          => ['file', 'mimes:png'],
         ]);
 
@@ -443,19 +415,10 @@ class EventoController extends Controller
 
         $evento = Evento::create([
           'nome'                => $request->nome,
-          // 'numeroParticipantes' => $request->numeroParticipantes,
           'descricao'           => $request->descricao,
           'tipo'                => $request->tipo,
           'dataInicio'          => $request->dataInicio,
           'dataFim'             => $request->dataFim,
-          // 'inicioSubmissao'     => $request->inicioSubmissao,
-          // 'fimSubmissao'        => $request->fimSubmissao,
-          // 'inicioRevisao'       => $request->inicioRevisao,
-          // 'fimRevisao'          => $request->fimRevisao,
-          // 'inicioResultado'     => $request->inicioResultado,
-          // 'fimResultado'        => $request->fimResultado,
-          // 'possuiTaxa'          => $request->possuiTaxa,
-          // 'valorTaxa'           => $request->valorTaxa,
           'enderecoId'          => $endereco->id,
           'coordenadorId'       => Auth::user()->id,
         ]);
@@ -470,13 +433,6 @@ class EventoController extends Controller
           $evento->fotoEvento = 'eventos/' . $evento->id . $nome;
           $evento->save();
         }
-
-        // se vou me tornar coordenador do Evento
-
-        // if($request->isCoordenador == true){
-        //   $evento->coordenadorId = Auth::user()->id;
-        //   $evento->save();
-        // }
 
         $evento->coordenadorId = Auth::user()->id;
         $evento->publicado = false;
@@ -722,13 +678,20 @@ class EventoController extends Controller
     {
         $evento = Evento::find($id);
         $this->authorize('isCoordenador', $evento);
-        // dd($id);
-        $endereco = Endereco::find($evento->enderecoId);
-        $formEvento = FormEvento::where('eventoId', $id)->first();
-        $formSubTraba = FormSubmTraba::where('eventoId', $id)->first();
-        $formEvento->delete();
-        $formSubTraba->delete();
+        
+        // dd($evento->endereco);
+        $evento->formEvento->delete();
+        $evento->formSubTrab->delete();
+        $endereco = $evento->endereco;
+        
+        if ($evento->areas != null) {
+          foreach ($evento->areas as $area) {
+            $area->delete();
+          }
+        }
+
         $evento->delete();
+
         $endereco->delete();
 
         return redirect()->back();
