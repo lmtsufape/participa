@@ -285,7 +285,7 @@
 
     // Montar div para novo criterio
     function montarLinhaInput(){
-        return  "<div class="+"row"+">"+
+        return  "<div class="+"row"+" style='position:relative; top:10px;'>"+
                     "<div class="+"col-sm-6"+">"+
                         "<label>Nome</label>"+
                         "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'nomeCriterio'+contadorOpcoes+" placeholder="+"Nome"+" required>"+
@@ -302,10 +302,13 @@
                     "<div class='container'>" +
                         "<div class='row'>" +
                             "<div class='col-sm-12'>" +
-                            "<h6>Opções para avaliar</h6>" +
+                                "<h6>Opções para avaliar<img src='{{asset('/img/icons/interrogacao.png')}}' width='15px' style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Essas opções serão exibidas ao revisor na hora da avaliação do trabalho'></h6>" +
                             "</div>" +
-                            "<div class='col-sm-11'>" +
+                            "<div class='col-sm-7'>" +
                                 "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'opcaoCriterio_'+contadorOpcoes+'[]'+" placeholder="+"Opção"+" required>"+
+                            "</div>" +
+                            "<div class='col-sm-4'>" +
+                                "<input"+" type="+'number'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'valor_real_opcao_'+contadorOpcoes+'[]'+" placeholder="+"Valor entre 0 a 10"+" required min='0.00' onchange='validandoValorReal(this)'>"+
                             "</div>" +
                             "<div class='col-sm-1'>" +
                                 "<a href="+"#"+" onclick="+"addOpcaoCriterio(this,"+contadorOpcoes+")"+">"+
@@ -313,14 +316,24 @@
                                 "</a>" +
                             "</div>" +
                         "</div>" +
+                        "<hr>" +
                     "</div>" +
-                "</div>" +
-                "<hr>";
+                "</div>";
     }
 
+    function validandoValorReal(input) {
+        // console.log(input);
+        if (input.value > 10 || input.value < 0) {
+            alert("O valor da opção deve estar entre 0 e 10");
+            input.value = 0;
+        } 
+    }
     function montarLinhaOpcaoCriterio(idName) {
-        return  "<div class='col-sm-11'>" +
+        return  "<div class='col-sm-7'>" +
                     "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'opcaoCriterio_'+idName+'[]'+" placeholder="+"Opção"+" required>"+
+                "</div>" +
+                "<div class='col-sm-4'>" +
+                    "<input"+" type="+'number'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'valor_real_opcao_'+idName+'[]'+" placeholder="+"Valor entre 0 a 10"+" required min='0.0' onchange='validandoValorReal(this)'>"+
                 "</div>";
     }
 

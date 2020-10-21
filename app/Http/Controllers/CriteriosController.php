@@ -10,33 +10,37 @@ class CriteriosController extends Controller
 {
     public function store(Request $request)
     {   
-        $quantDeCriterios = (count($request->all())- 3) / 3;
+        // dd($request);
+        $quantDeCriterios = (count($request->all())- 3) / 4;
+        // dd($quantDeCriterios);
         $c = 0;
         while ($quantDeCriterios != 0) {
             $criterioCadastrado         = false;
             $opcoesCriterioCadastrado   = false;
 
             if ($request->input('nomeCriterio'.$c) != null && $request->input('pesoCriterio'.$c) != null) {
-                $validatedData = $request->validate([
-                    'nomeCriterio'.$c       => ['string'],
-                    'pesoCriterio'.$c       => ['integer'],
-                    'modalidade'           => ['integer'],
-                ]);
+                // $validatedData = $request->validate([
+                //     'nomeCriterio'.$c       => ['string'],
+                //     'pesoCriterio'.$c       => ['string'],
+                //     'valor_real_opcao_'.$c  => ['string'],
+                //     'modalidade'            => ['string'],
+                // ]);
                 
-                $criterio = Criterio::create([
-                    'nome' => $request->input('nomeCriterio'.$c),
-                    'peso' => $request->input('pesoCriterio'.$c),
-                    'modalidadeId' => $request->modalidade,
-                ]);
+                $criterio = new Criterio();
+                $criterio->nome             = $request->input('nomeCriterio'.$c);
+                $criterio->peso             = $request->input('pesoCriterio'.$c);
+                $criterio->modalidadeId     = $request->modalidade;
+                $criterio->save();
+
                 $criterioCadastrado = true;
             }
 
-            if ($request->input('opcaoCriterio_'.$c) != null) {
+            if ($request->input('opcaoCriterio_'.$c) != null && $request->input('valor_real_opcao_'.$c) != null) {
                 for ($i = 0; $i < count($request->input('opcaoCriterio_'.$c)); $i++) {
                     $opCriterio = new OpcoesCriterio();
                     $opCriterio->nome_opcao     = $request->input('opcaoCriterio_'.$c)[$i];
                     $opCriterio->criterio_id    = $criterio->id;
-                    $opCriterio->valor_real     = ($i + 1) * (10 / count($request->input('opcaoCriterio_'.$c)));
+                    $opCriterio->valor_real     = $request->input('valor_real_opcao_'.$c)[$i];
                     $opCriterio->save();
                 }
                 $opcoesCriterioCadastrado = true;
