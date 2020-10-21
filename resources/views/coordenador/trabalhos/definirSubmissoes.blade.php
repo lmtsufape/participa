@@ -67,7 +67,7 @@
                 <div class="col-sm-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Logo Evento</h5>
+                            <h5 class="card-title">Logo Evento</h5> @if($evento->fotoEvento != null) <a href="{{ route('download.foto.evento', ['id' => $evento->id]) }}">atual</a> @endif
                             <h6 class="card-subtitle mb-2 text-muted">Modifique a foto do evento aqui.</h6>
                             <form method="POST" action="{{route('evento.setFotoEvento')}}" enctype="multipart/form-data">
                             @csrf
