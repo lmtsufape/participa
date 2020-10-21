@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="areaRevisor" class="col-form-label">{{ __('Área') }}</label>
-                                        <select class="form-control @error('areaRevisor') is-invalid @enderror" id="areaRevisor" name="areaRevisor">
+                                        <select class="form-control @error('areaRevisor') is-invalid @enderror" id="areaRevisor" name="areaRevisor" required>
                                             <option value="" disabled selected hidden>-- Área --</option>
                                             @foreach($areas as $area)
                                             <option value="{{$area->id}}">{{$area->nome}}</option>
@@ -59,7 +59,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="modalidadeRevisor" class="col-form-label">{{ __('Modalidade') }}</label>
-                                        <select class="form-control @error('modalidadeRevisor') is-invalid @enderror" id="modalidadeRevisor" name="modalidadeRevisor">
+                                        <select class="form-control @error('modalidadeRevisor') is-invalid @enderror" id="modalidadeRevisor" name="modalidadeRevisor" required>
                                             <option value="" disabled selected hidden>-- Modalidade --</option>
                                             @foreach($modalidades as $modalidade)
                                             <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>

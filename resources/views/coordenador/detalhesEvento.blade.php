@@ -277,6 +277,17 @@
         
     });
 
+    $(document).ready(function($){
+        $('.cep').mask('00000-000');
+        $(".apenasLetras").mask("#", {
+            maxlength: false,
+            translation: {
+                '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
+            }
+        });
+        $('.numero').mask('0000000');
+    });
+
     // Remover Criterio
     $(document).on('click','.delete',function(){
         $(this).closest('.row').remove();

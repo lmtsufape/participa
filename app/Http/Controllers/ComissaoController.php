@@ -76,10 +76,10 @@ class ComissaoController extends Controller
      */
     public function store(Request $request)
     {
-        $validationData = $this->validate($request,[
-            'emailMembroComissao'=>'required|string|email',
+        $validationData = $request->validate([
+            'emailMembroComissao' => 'required|string|email',
             // 'especProfissional'=>'required|string',
-            ]);
+        ]);
 
         $user = User::where('email',$request->input('emailMembroComissao'))->first();
         $evento = Evento::find($request->eventoId);
