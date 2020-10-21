@@ -24,7 +24,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
                                     <label for="trabalhosPorAutor" class="col-form-label">{{ __('Número de trabalhos por Autor') }}</label>
-                                    <input id="trabalhosPorAutor" type="text" class="form-control @error('trabalhosPorAutor') is-invalid @enderror" name="trabalhosPorAutor" value="{{ old('trabalhosPorAutor') }}" required autocomplete="trabalhosPorAutor" autofocus>
+                                    <input id="trabalhosPorAutor" type="text" class="form-control @error('trabalhosPorAutor') is-invalid @enderror" name="trabalhosPorAutor" value="@if ($evento->numMaxTrabalhos != null){{$evento->numMaxTrabalhos}}@else{{old('trabalhosPorAutor')}}@endif" required autocomplete="trabalhosPorAutor" autofocus>
 
                                     @error('trabalhosPorAutor')
                                     <span class="invalid-feedback" role="alert">
@@ -38,7 +38,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
                                     <label for="numCoautor" class="col-form-label">{{ __('Número de trabalhos como Coautor') }}</label>
-                                    <input id="numCoautor" type="text" class="form-control @error('numCoautor') is-invalid @enderror" name="numCoautor" value="{{ old('numCoautor') }}" required autocomplete="numCoautor" autofocus>
+                                    <input id="numCoautor" type="text" class="form-control @error('numCoautor') is-invalid @enderror" name="numCoautor" value="@if ($evento->numMaxTrabalhos != null){{$evento->numMaxCoautores}}@else{{old('numCoautor')}}@endif" required autocomplete="numCoautor" autofocus>
 
                                     @error('numCoautor')
                                     <span class="invalid-feedback" role="alert">
