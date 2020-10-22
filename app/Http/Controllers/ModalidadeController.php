@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 // use Illuminate\Http\File;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
+use App\Evento;
 
 class ModalidadeController extends Controller
 {
@@ -53,14 +54,15 @@ class ModalidadeController extends Controller
         $mytime = Carbon::now('America/Recife');
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
+        $evento = Evento::find($request->eventoId);
 
         $validatedData = $request->validate([
 
-            'inicioSubmissao'   => ['nullable', 'date'],
-            'fimSubmissao'      => ['nullable', 'date'],
-            'inicioRevisao'     => ['nullable', 'date'],
-            'fimRevisao'        => ['nullable', 'date'],
-            'inicioResultado'   => ['nullable', 'date'],
+            'inícioDaSubmissão' => ['required', 'date'],
+            'fimDaSubmissão'    => ['required', 'date', 'after:inícioDaSubmissão'],
+            'inícioDaRevisão'   => ['required', 'date', 'after:inícioDaSubmissão'],
+            'fimDaRevisão'      => ['required', 'date', 'after:inícioDaRevisão'],
+            'inícioDoResultado' => ['required', 'date', 'after:fimDaRevisão'],
             'mincaracteres'     => ['nullable', 'integer'],
             'maxcaracteres'     => ['nullable', 'integer'],
             'minpalavras'       => ['nullable', 'integer'],
@@ -108,11 +110,11 @@ class ModalidadeController extends Controller
         // Campo TEXTO boolean removido? 
         $modalidade = Modalidade::create([
             'nome'              => $request->nomeModalidade,
-            'inicioSubmissao'   => $request->inicioSubmissao,
-            'fimSubmissao'      => $request->fimSubmissao,
-            'inicioRevisao'     => $request->inicioRevisao,
-            'fimRevisao'        => $request->fimRevisao,
-            'inicioResultado'   => $request->inicioResultado,
+            'inicioSubmissao'   => $request->input("inícioDaSubmissão"),
+            'fimSubmissao'      => $request->input("fimDaSubmissão"),
+            'inicioRevisao'     => $request->input("inícioDaRevisão"),
+            'fimRevisao'        => $request->input("fimDaRevisão"),
+            'inicioResultado'   => $request->input("inícioDoResultado"),
             // 'texto'             => $texto,
             'arquivo'           => $request->arquivo,
             'caracteres'        => $caracteres,
@@ -152,7 +154,7 @@ class ModalidadeController extends Controller
         
         $modalidade->save();
 
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+        return redirect()->back()->with(['mensagem' => 'Modalidade cadastrada com sucesso!']);
     }
 
     /**
