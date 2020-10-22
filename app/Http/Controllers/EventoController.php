@@ -438,8 +438,8 @@ class EventoController extends Controller
           'enderecoId'          => $endereco->id,
           'coordenadorId'       => Auth::user()->id,
         ]);
-        $user = Auth::user();
-        $user->evento()->save($evento);
+        // $user = Auth::user();
+        // $user->evento()->save($evento);
 
         //$user->save();
         // se o evento tem foto
