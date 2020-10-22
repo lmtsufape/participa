@@ -16,12 +16,11 @@ class CreateComissaoEventosTable extends Migration
         Schema::create('comissao_eventos', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('especProfissional')->nullable();
-            $table->unsignedBigInteger('eventosId');
-            $table->foreign('eventosId')->references('id')->on('eventos');
+            $table->unsignedBigInteger('evento_id');
+            $table->foreign('evento_id')->references('id')->on('eventos');
 
-            $table->unsignedBigInteger('userId');
-            $table->foreign('userId')->references('id')->on('users');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });

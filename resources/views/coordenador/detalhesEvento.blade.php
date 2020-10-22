@@ -11,28 +11,46 @@
                         <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
                     </li>
                 </a>
+
             {{-- @endcan --}}
             {{-- @can('isCoordenador', $evento) --}}
+
+
             <a id="trabalhos">
                 <li>
                     <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Submissões</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
 
                 <div id="dropdownTrabalhos"  @if(request()->is('coord/evento/trabalhos*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                    <a id="submissoesTrabalhos" href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
-                        <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Difinir Submissões</h5>
-                        </li>
-                    </a>
-                    <a id="listarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
-                        <li>
-                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5>
-                        </li>
-                    </a>
-                    
+                    @can('isCoordenadorOrComissao', $evento)
+                        <a id="submissoesTrabalhos" href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
+                            <li>
+                                <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Tipo</h5>
+                            </li>
+                        </a>
+                        <a id="resultadosTrabalhos" href="{{ route('coord.resultados', ['id' => $evento->id]) }}">
+                            <li>
+                                <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Resultado</h5>
+                            </li>
+                        </a>
+                        <a id="listarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
+                            <li>
+                                <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5>
+                            </li>
+                        </a>
+                    @endcan
+                    @can('isRevisorComAtribuicao')
+                        <a id="avaliarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
+                            <li>
+                                <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Avaliação</h5>
+                            </li>
+                        </a>
+                    @endcan
                 </div>
             </a>
+
             {{-- @endcan --}}
+
             <a id="areas">
                 
                 <li>
@@ -52,7 +70,9 @@
                 </div>
 
             </a>
+
             {{-- @can('isCoordenador', $evento) --}}
+
             <a id="revisores">
                 <li>
                     <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Revisores</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -250,9 +270,8 @@
 @endsection
 @section('javascript')
   <script type="text/javascript" >
-
     // Adicionar novo criterio
-    $(function(){
+    $(document).ready(function(){
         $('#addCriterio').click(function(){
             linha = montarLinhaInput();
             $('#criterios').append(linha);
@@ -1010,6 +1029,17 @@
                 document.getElementById('formNovaFuncaoDeConvidado').style.display = "block";
             }
         });
+
+        
+    });
+    
+    $(document).ready(function($){
+        $(".apenasLetras").mask("#", {
+            maxlength: false,
+            translation: {
+                '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
+            }
+        });
     });
 
     //Função para adicionar o conteudo de um novo convidado
@@ -1195,6 +1225,21 @@
         //     }
         // }
     }
+
+    // Funções da aba de etiquetas
+    $(document).ready(function(){
+        $('#exibir_calendario').click(function() {
+            if (this.checked) {
+                document.getElementById('exibir_pdf').checked = false;
+            } 
+        });
+
+        $('#exibir_pdf').click(function() {
+            if (this.checked) {
+                document.getElementById('exibir_calendario').checked = false;
+            } 
+        });
+    });
   </script>
 
     
@@ -1269,7 +1314,7 @@
                     document.getElementById('dia7').style.display = "none";
                     break;
                 case '7':
-                    document.getElementById('dia1').style.display = "block";
+                document.getElementById('dia1').style.display = "block";
                     document.getElementById('dia2').style.display = "block";
                     document.getElementById('dia3').style.display = "block";
                     document.getElementById('dia4').style.display = "block";

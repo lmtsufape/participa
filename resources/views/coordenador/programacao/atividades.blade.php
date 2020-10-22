@@ -959,6 +959,40 @@
         </div>
     </div>
 @endforeach
+
+<!-- Modal para adicionar o pdf com a programação -->
+<div class="modal fade" id="modalAdicionarPdf" tabindex="-1" role="dialog" aria-labelledby="modalAdicionarPdfLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #114048ff; color: white;">
+        <h5 class="modal-title" id="modalAdicionarPdfLabel">Adicionar PDF com a programação</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <form method="POST" action="{{ route('coord.evento.pdf.programacao', ['id' => $evento->id]) }}" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row form-group">
+                        <div class="col-sm-12">
+                            <label for="pdf_programacao">Arquivo com a programação:</label>
+                            <input type="file" name="pdf_programacao" id="pdf_programacao" >
+                            <br>
+                            <small>Para mudar o arquivo presente enviar um novo*</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>
+
 <div id="divListarComissao" class="comissao" style="display: block">
     <div class="row">
         <div class="col-sm-12">
@@ -981,10 +1015,18 @@
                 <div class="card-body">
                     <h5 class="card-title">Atividades</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Atividades que seu evento irá realizar.</h6>
-                    <div class="rightButton">
-                       <button data-toggle="modal" data-target="#modalCriarAtividade" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px;">+ Criar atividade</button>
-                    </div>
                     <small>Clique em uma atividade para editar</small>
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <button id="adicionarPdf" data-toggle="modal" data-target="#modalAdicionarPdf" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; left: 120px;">+ PDF com as atividades</button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button id="criarAtividade" data-toggle="modal" data-target="#modalCriarAtividade" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; margin-left: 20px;">+ Criar atividade</button>
+                            </div>
+                        </div>
+                    </div>
                     <p class="card-text">  
                     <table class="table table-hover table-responsive-lg table-sm" style="position: relative; top: -22px;">
                         <thead>

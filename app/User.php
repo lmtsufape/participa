@@ -100,6 +100,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne('App\CoordComissaoOrganizadora');
     }
 
+    function membroComissaoEvento(){
+        return $this->belongsToMany('App\Evento','comissao_eventos','user_id','evento_id');
+    }
+    
     public function coordEvento(){
         return $this->hasOne('App\CoordenadorEvento');
     }
