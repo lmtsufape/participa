@@ -794,8 +794,16 @@
     });
   });
 
+    function cadastrarCriterio() {
+        var form = document.getElementById('formCadastrarCriterio');
+        var modalidade = document.getElementById('modalidade');
 
-
+        if (modalidade.value != "") {
+            form.submit();
+        } else {
+            alert("Escolha uma modalidade");
+        }
+    }
 
     function myFunction(item, index) {
       // document.getElementById("demo").innerHTML += index + ":" + item + "<br>";
