@@ -24,7 +24,7 @@
                                 <div class="row justify-content-center">
                                     <div class="col-sm-3">
                                         <label for="nomeRevisor" class="col-form-label">{{ __('Nome do Revisor') }}</label>
-                                        <input id="nomeRevisor" type="text" class="form-control @error('nomeRevisor') is-invalid @enderror" name="nomeRevisor" value="{{ old('nomeRevisor') }}" required autocomplete="nomeRevisor" autofocus>
+                                        <input id="nomeRevisor" type="text" class="form-control apenasLetras @error('nomeRevisor') is-invalid @enderror" name="nomeRevisor" value="{{ old('nomeRevisor') }}" required autocomplete="nomeRevisor" autofocus>
 
                                         @error('nomeRevisor')
                                         <span class="invalid-feedback" role="alert">

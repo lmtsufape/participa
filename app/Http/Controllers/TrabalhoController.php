@@ -509,8 +509,8 @@ class TrabalhoController extends Controller
     //função para download do arquivo do trabalho
     public function downloadArquivo($id) {
       $trabalho = Trabalho::find($id);
-      $revisor = Revisor::where([['eventoId', '=', $trabalho->eventoId], ['revisorId', '=', auth()->user()->id]])->first();
-      $comissaoEvento = ComissaoEvento::where([['userId', '=', auth()->user()->id], ['eventosId', '=', $trabalho->evento->id]])->first();
+      $revisor = Revisor::where([['eventoId', '=', $trabalho->eventoId], ['user_id', '=', auth()->user()->id]])->first();
+      $user = User::find(auth()->user()->id);
 
       /*
         O usuário só tera permissão para baixar o arquivo se for revisor do trabalho
@@ -529,12 +529,22 @@ class TrabalhoController extends Controller
         return abort(403);
       
       
-      } else if ($trabalho->evento->coordenadorId == auth()->user()->id || $trabalho->evento->coordComissaoId == auth()->user()->id || $comissaoEvento != null || $trabalho->autorId == auth()->user()->id) {
+      } else if ($trabalho->evento->coordenadorId == auth()->user()->id || $trabalho->evento->coordComissaoId == auth()->user()->id || $user->membroComissaoEvento != null && $user->membroComissaoEvento == $trabalho->eventoId || $trabalho->autorId == auth()->user()->id) {
         if (Storage::disk()->exists('app/'.$trabalho->arquivo->nome)) {
           return response()->download(storage_path('app/'.$trabalho->arquivo->nome));
         }
         return abort(404);
       }
       return abort(403);
+    }
+
+    public function resultados($id) {
+      $evento = Evento::find($id);
+      $trabalhos = Trabalho::where('eventoId', $id)->get();
+      $areas = Area::where('eventoId', $evento->id)->get();
+
+      return view('coordenador.trabalhos.resultados')->with(['trabalhos' => $trabalhos,
+                                                             'evento' => $evento,
+                                                             'areas' => $areas]);
     }
 }

@@ -395,3 +395,15 @@ body{
     padding: 0px;
     margin-top: 20px;
 }
+
+.resultado_card h5 {
+    font-weight: bolder;
+}
+
+.resultado_card label {
+    font-weight: bolder;
+}
+
+.resultado_card #resumo {
+    text-align: justify;
+}

@@ -9,6 +9,59 @@
       <div class="col-sm-10">
         <h3>Usuarios</h3> 
       </div>
+      <div class="col-sm-2">
+        
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+          Adicionar Usuário
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form action="">
+              <div class="modal-body">
+                 <!-- <form action="" method="POST">
+                  @csrf
+                  <input type="hidden" name="evento_id" value="" >
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Nome Completo</label>
+                    <input type="text" class="form-control" name="nomeAvaliador" id="exampleInputNome1">            
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Email</label>
+                    <input type="email" class="form-control" name="emailAvaliador" id="exampleInputEmail1">            
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Tipo</label>
+                    <select class="form-control" name="tipo" id="exampleFormControlSelect1">
+                      <option value="avaliador" >Avaliador</option>
+                    </select>
+                  </div>
+
+                  <div class="mx-auto" >
+                    <button type="submit" class="btn btn-success mx-auto">Enviar</button>
+                  </div>             
+                </form>
+                 --> 
+                
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <hr>
@@ -39,14 +92,17 @@
             @if($usuario->coordComissaoOrganizadora)
               {{ "Cood. Comissão Organizadora " }}
             @endif
-            @if($usuario->membroComissao)
-              {{ "Membro da Comissão " }}
-            @endif
             @if($usuario->revisor)
               {{ "Revisor " }}
             @endif
             @if($usuario->coautor)
               {{ "Coutor " }}
+            @endif
+            @if($usuario->participante)
+              {{ "Participante " }}
+            @endif
+            @if($usuario->coordEvento)
+              {{ "Coordenador de Evento " }}
             @endif
 
           </td>
@@ -66,49 +122,46 @@
                       </button>
                     </div>
                     <div class="modal-body">
-                      
-                      @if($usuario->coordComissaoOrganizadora)
-                        {{ "Cood. Comissão Organizadora " }}
-                      @endif
-                      @if($usuario->membroComissao)
-                        {{ "Membro da Comissão " }}
-                      @endif
-                      @if($usuario->revisor)
-                        {{ "Revisor " }}
-                      @endif
-                      @if($usuario->coautor)
-                        {{ "Coutor " }}
-                      @endif
+
                       <form action="{{ route('cientifica.permissoes') }}" method="POST" id="form{{ $usuario->id }}">
                         @csrf
                         
+                        <input type="hidden" name="user_id" value="{{ $usuario->id }}">
+
                         <div class="custom-control custom-switch">
-                          <input type="checkbox" name="permissoes[]" value="coordComissaoCientifica" class="custom-control-input" id="customSwitch1" @if($usuario->coordComissaoCientifica)
+                          <input type="checkbox" name="coordComissaoCientifica" value="coordComissaoCientifica" class="custom-control-input" id="customSwitch1" @if($usuario->coordComissaoCientifica)
                           checked=""
                         @endif  >
                           <label class="custom-control-label" for="customSwitch1">Coord. da Comissão Cientifica</label>
                         </div><br>
 
                         <div class="custom-control custom-switch">
-                          <input type="checkbox" name="permissoes[]" value="membroComissao" class="custom-control-input" id="customSwitch2" @if($usuario->membroComissao)
-                          checked=""
-                        @endif  >
-                          <label class="custom-control-label" for="customSwitch2">Membro da Comissão</label>
-                        </div><br>
-
-                        <div class="custom-control custom-switch">
-                          <input type="checkbox" name="permissoes[]" value="revisor" class="custom-control-input" id="customSwitch3" @if($usuario->revisor)
+                          <input type="checkbox" name="revisor" value="revisor" class="custom-control-input" id="customSwitch3" @if($usuario->revisor)
                           checked=""
                         @endif  >
                           <label class="custom-control-label" for="customSwitch3">Revisor</label>
                         </div><br>
 
                         <div class="custom-control custom-switch">
-                          <input type="checkbox" name="permissoes[]" value="coutor" class="custom-control-input" id="customSwitch4" @if($usuario->coautor)
+                          <input type="checkbox" name="coautor" value="coautor" class="custom-control-input" id="customSwitch4" @if($usuario->coautor)
                           checked=""
                         @endif  >
-                          <label class="custom-control-label" for="customSwitch4">Coutor</label>
-                        </div>                    
+                          <label class="custom-control-label" for="customSwitch4">Coautor</label>
+                        </div><br> 
+
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="participante" value="participante" class="custom-control-input" id="customSwitch5" @if($usuario->participante)
+                          checked=""
+                        @endif  >
+                          <label class="custom-control-label" for="customSwitch5">Participante</label>
+                        </div><br>  
+
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" name="coordEvento" value="coordEvento" class="custom-control-input" id="customSwitch6" @if($usuario->coordEvento)
+                          checked=""
+                        @endif  >
+                          <label class="custom-control-label" for="customSwitch6">Coordenador de Evento</label>
+                        </div><br>                       
 
                         
                         <div class="modal-footer">

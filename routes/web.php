@@ -11,15 +11,17 @@
 |
 */
 use App\Evento;
-Route::get('/', 'HomeController@index')->name('home.user');
+Route::get('/', 'HomeController@index')->name('home.user')->middleware('isTemp');
+Route::get('/perfil','UserController@perfil')->name('perfil')->middleware('auth', 'verified');
+Route::post('/atualizar-perfil','UserController@editarPerfil')->name('perfil.update')->middleware('auth', 'verified');
 
 Route::get('/index', function () {
     $eventos = Evento::all();
     // dd($eventos);
     return view('index',['eventos'=>$eventos]);
-})->name('index');
+})->name('index')->middleware('verified', 'isTemp');
 
-Route::get('/home', 'EventoController@index')->name('home');
+Route::get('/home', 'EventoController@index')->name('home')->middleware('verified', 'isTemp');
 
 Route::get('/#', function () {
     if(Auth::check()){
@@ -43,8 +45,7 @@ Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('ativ
 Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   
 
-  Route::get('/perfil','UserController@perfil')->name('perfil');
-  Route::post('/perfil','UserController@editarPerfil')->name('perfil');
+  
 
 
   // rotas do administrador
@@ -61,8 +62,9 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 
   // rotas do Comissao Organizadora
   Route::get('/home/comissaoOrganizadora', 'CoordComissaoOrganizadoraController@index')->name('home.organizadora');
-  // rotas do Membro da Comissao
-  Route::get('/home/membroComissao', 'MembroComissaoController@index')->name('home.membro');
+  // rotas do Coordenador de evento
+  Route::get('/home/coord', 'CoordEventoController@index')->name('coord.index');
+  Route::get('/home/coord/eventos', 'CoordEventoController@listaEventos')->name('coord.eventos');
 
   // rotas de teste
   Route::get('/coordenador/home','EventoController@index')->name('coord.home');
@@ -71,6 +73,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
       Route::get('informacoes', 'EventoController@informacoes')->name('informacoes');
       Route::get('trabalhos/definirSubmissoes', 'EventoController@definirSubmissoes')->name('definirSubmissoes');
       Route::get('trabalhos/listarTrabalhos', 'EventoController@listarTrabalhos')->name('listarTrabalhos');
+      Route::get('trabalhos/{id}/resultados', 'TrabalhoController@resultados')->name('resultados');
 
       Route::get('areas/cadastrarAreas', 'EventoController@cadastrarAreas')->name('cadastrarAreas');
       Route::get('areas/listarAreas', 'EventoController@listarAreas')->name('listarAreas');
@@ -96,7 +99,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
       Route::post('atividade/nova', 'AtividadeController@store')->name('atividades.store');
       Route::post('atividade/{id}/editar', 'AtividadeController@update')->name('atividades.update');
       Route::post('atividade/{id}/excluir', 'AtividadeController@destroy')->name('atividade.destroy');
-
+      Route::post('{id}/atividade/salvar-pdf-programacao', 'EventoController@pdfProgramacao')->name('evento.pdf.programacao');
       Route::get('tipo-de-atividade/new/{nome}', 'TipoAtividadeController@storeAjax')->name('tipo.store.ajax');
   });
 

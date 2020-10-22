@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMembroComissaosTable extends Migration
+class CreateCoordenadorEventosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateMembroComissaosTable extends Migration
      */
     public function up()
     {
-        Schema::create('membro_comissaos', function (Blueprint $table) {
+        Schema::create('coordenador_eventos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
 
@@ -29,6 +29,6 @@ class CreateMembroComissaosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('membro_comissaos');
+        Schema::dropIfExists('coordenador_eventos');
     }
 }

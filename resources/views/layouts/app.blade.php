@@ -10,16 +10,15 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
+    <script src="{{ asset('js/jquery-3.5.1.slim.min.js')}}"></script>
+    <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
+    
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
-    <script src="{{ asset('js/jquery-3.5.1.slim.min.js')}}"></script>
-    <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
-
-    
     <script src='{{asset('fullcalendar-5.3.2/lib/main.js')}}'></script>
     <script src='{{asset('fullcalendar-5.3.2/lib/locales-all.js')}}'></script>
 
@@ -91,12 +90,9 @@
                                 </li>
                             @endif
                         @else
-                            <?php 
 
-                                $ComissaoEvento = ComissaoEvento::where('userId', Auth::user()->id)->first();
+                                {{-- $ComissaoEvento = ComissaoEvento::where('user_id', Auth::user()->id)->first(); --}}
                             
-                            
-                            ?>
                             <li class="nav-item dropdown" style="margin-right: 40px">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     Perfis <span class="caret"></span>
@@ -142,11 +138,11 @@
                                         </a>
                                     @endif
 
-                                    @if (isset(Auth::user()->membroComissao))
+                                    @if (isset(Auth::user()->coordEvento))
                                         {{-- Rota - Area da Comissao --}}
-                                        <a class="dropdown-item" href="{{ route('home.membro') }}">
+                                        <a class="dropdown-item" href="{{ route('coord.index') }}">
                                             <img src="{{asset('img/icons/comissao.png')}}" alt="">
-                                            {{ __('Área do Membro da Comissão') }}
+                                            {{ __('Área do Coordenador de Evento') }}
                                         </a>
                                     @endif
 
