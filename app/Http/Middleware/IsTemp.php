@@ -15,9 +15,10 @@ class IsTemp
      */
     public function handle($request, Closure $next)
     {
-        if(Auth()->user()->usuarioTemp == true){
-            Log::info('redirect - perfil');
-            return redirect('perfil');
+
+        if(Auth()->user()->usuarioTemp === true){
+          return redirect('perfil');
+
         }
         return $next($request);
     }

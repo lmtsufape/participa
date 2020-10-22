@@ -66,7 +66,7 @@ class RevisorController extends Controller
     {
         $validatedData = $request->validate([
           'emailRevisor'       => ['required', 'string', 'email', 'max:255'],
-          'nomeRevisor'        => 'required|alpha|max:255',
+          'nomeRevisor'        => 'required|string|max:255',
           'areaRevisor'        => ['required', 'integer'],
           'modalidadeRevisor'  => ['required', 'integer'],
         ]);

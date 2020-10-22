@@ -18,9 +18,9 @@ Route::get('/index', function () {
     $eventos = Evento::all();
     // dd($eventos);
     return view('index',['eventos'=>$eventos]);
-})->name('index');
+})->name('index')->middleware('verified', 'isTemp');
 
-Route::get('/home', 'EventoController@index')->name('home');
+Route::get('/home', 'EventoController@index')->name('home')->middleware('verified', 'isTemp');
 
 Route::get('/#', function () {
     if(Auth::check()){
@@ -73,6 +73,7 @@ Route::group(['middleware' => ['auth', 'verified']], function(){
       Route::get('informacoes', 'EventoController@informacoes')->name('informacoes');
       Route::get('trabalhos/definirSubmissoes', 'EventoController@definirSubmissoes')->name('definirSubmissoes');
       Route::get('trabalhos/listarTrabalhos', 'EventoController@listarTrabalhos')->name('listarTrabalhos');
+      Route::get('trabalhos/{id}/resultados', 'TrabalhoController@resultados')->name('resultados');
 
       Route::get('areas/cadastrarAreas', 'EventoController@cadastrarAreas')->name('cadastrarAreas');
       Route::get('areas/listarAreas', 'EventoController@listarAreas')->name('listarAreas');
@@ -99,7 +100,7 @@ Route::group(['middleware' => ['auth', 'verified']], function(){
       Route::post('atividade/nova', 'AtividadeController@store')->name('atividades.store');
       Route::post('atividade/{id}/editar', 'AtividadeController@update')->name('atividades.update');
       Route::post('atividade/{id}/excluir', 'AtividadeController@destroy')->name('atividade.destroy');
-
+      Route::post('{id}/atividade/salvar-pdf-programacao', 'EventoController@pdfProgramacao')->name('evento.pdf.programacao');
       Route::get('tipo-de-atividade/new/{nome}', 'TipoAtividadeController@storeAjax')->name('tipo.store.ajax');
   });
 

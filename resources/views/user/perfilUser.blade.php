@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('perfil') }}">
+    <form method="POST" action="{{ route('perfil.update') }}">
         @csrf
         <div class="row justify-content-center">
             <input hidden name="id" value="{{$user->id}}">
@@ -232,7 +232,7 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('perfil') }}">
+    <form method="POST" action="{{ route('perfil.update') }}">
         @csrf
         <div class="row justify-content-center">
             <input hidden name="id" value="{{$user->id}}">
@@ -286,6 +286,18 @@
         </div>
 
         <div class="row">
+            @if ($user->membroComissaoEvento != null && count($user->membroComissaoEvento) > 0)
+                <div class="col-md-4">
+                    <label for="especialidade" class="col-form-label">{{ __('Especialidade profissional') }}</label>
+                    <input id="especialidade" type="text" class="form-control apenasLetras @error('especialidade') is-invalid @enderror" name="especialidade" required autocomplete="new-password">
+
+                    @error('especialidade')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            @endif
 
             <div class="col-md-4">
                 <label for="password" class="col-form-label">{{ __('Senha') }}</label>
