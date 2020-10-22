@@ -1125,11 +1125,11 @@
                         "<div class='row'>" +
                             "<div class='col-sm-6'>" +
                                 "<label for='nome'>Nome:</label>" +
-                                "<input class='form-control' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
+                                "<input class='form-control apenasLetras' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
                             "</div>" +
                             "<div class='col-sm-6'>" + 
                                 "<label for='email'>E-mail:</label>" +
-                                "<input class='form-control' type='text' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
+                                "<input class='form-control' type='email' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
                             "</div>" +
                         "</div>" +
                         "<div class='row'>" +
@@ -1145,7 +1145,7 @@
                             "</div>" +
                             "<div id='divOutraFuncao"+contadorConvidados+"' class='col-sm-4' style='display: none;'>" +
                                 "<label for='Outra'>Qual?</label>"+
-                                "<input type='text' class='form-control' name='outra[]' id='outraFuncao'>"+
+                                "<input type='text' class='form-control apenasLetras' name='outra[]' id='outraFuncao'>"+
                             "</div>"+
                             "<div class='col-sm-4'>" + 
                                 "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
@@ -1163,11 +1163,11 @@
                             "<input type='hidden' name='idConvidado[]' value='0'>" +
                             "<div class='col-sm-6'>" +
                                 "<label for='nome'>Nome:</label>" +
-                                "<input class='form-control' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
+                                "<input class='form-control apenasLetras' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
                             "</div>" +
                             "<div class='col-sm-6'>" + 
                                 "<label for='email'>E-mail:</label>" +
-                                "<input class='form-control' type='text' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
+                                "<input class='form-control' type='email' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
                             "</div>" +
                         "</div>" +
                         "<div class='row'>" +
@@ -1183,7 +1183,7 @@
                             "</div>" +
                             "<div id='divOutraFuncao"+contadorConvidados+"' class='col-sm-4' style='display: none;'>" +
                                 "<label for='Outra'>Qual?</label>"+
-                                "<input type='text' class='form-control' name='outra[]' id='outraFuncao'>"+
+                                "<input type='text' class='form-control apenasLetras' name='outra[]' id='outraFuncao'>"+
                             "</div>"+
                             "<div class='col-sm-4'>" + 
                                 "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
