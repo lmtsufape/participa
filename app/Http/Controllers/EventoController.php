@@ -325,7 +325,7 @@ class EventoController extends Controller
             }
           }
         }
-
+        dd($request);
         return view('coordenador.evento.editarEtiqueta', [
                                                     'evento'                  => $evento,
                                                     'etiquetas'               => $etiquetas,
@@ -708,9 +708,12 @@ class EventoController extends Controller
             $area->delete();
           }
         }
-
+        foreach ($evento->atividade as $atividade) {
+          $atividade->delete();
+        }
+        
         $evento->delete();
-
+        
         $endereco->delete();
 
         return redirect()->back();
