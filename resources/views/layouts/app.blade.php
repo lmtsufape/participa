@@ -123,7 +123,7 @@
                                     @if (isset(Auth::user()->coordComissaoCientifica))
                                         {{-- Rota - Area da Comissao --}}
 
-                                        <a class="dropdown-item" href="{{ route('cientifica.home') }}">
+                                        <a class="dropdown-item" href="{{ route('home.user') }}">
 
                                             <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                             {{ __('Área da Comissão Cientifica') }}

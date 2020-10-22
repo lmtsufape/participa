@@ -17,6 +17,9 @@ class CreateCoautorsTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('ordem')->nullable();
+
+            $table->unsignedBigInteger('eventos_id');
+            $table->foreign('eventos_id')->references('id')->on('eventos');
             
             $table->unsignedBigInteger('user_id');                        
             $table->integer('trabalhoId')->nullable();

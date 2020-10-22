@@ -33,7 +33,7 @@ class CreateEventosTable extends Migration
             $table->string('fotoEvento')->nullable();
             $table->boolean('publicado')->nullable();
 
-            $table->integer('coordComissaoId')->nullable();
+            $table->integer('coord_comissao_cientifica_id')->nullable();
             $table->integer('enderecoId')->nullable();
             $table->integer('coordenadorId')->nullable();
         });

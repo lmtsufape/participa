@@ -19,6 +19,8 @@ class CreateCoordComissaoOrganizadorasTable extends Migration
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('eventos_id');
+            $table->foreign('eventos_id')->references('id')->on('eventos');
         });
     }
 

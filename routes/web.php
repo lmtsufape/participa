@@ -10,10 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Illuminate\Support\Facades\Log;
 use App\Evento;
-Route::get('/', 'HomeController@index')->name('home.user')->middleware('isTemp');
-Route::get('/perfil','UserController@perfil')->name('perfil')->middleware('auth', 'verified');
-Route::post('/atualizar-perfil','UserController@editarPerfil')->name('perfil.update')->middleware('auth', 'verified');
+
 
 Route::get('/index', function () {
     $eventos = Evento::all();
@@ -35,17 +34,18 @@ Route::get('/#', function () {
   Route::get('/evento/visualizar/naologado/{id}','EventoController@showNaoLogado')->name('evento.visualizarNaoLogado');
 
 Auth::routes(['verify' => true]);
-
+Log::info('redirect - verify');
 // Route::get('/fullCalendar', function() {
 //   return view('fullCalendar.test');
 // });
 
 Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('atividades.json');
 
-Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
-  
-
-  
+Route::group(['middleware' => ['auth', 'verified']], function(){
+  Log::info('redirect - routes');
+  Route::get('/', 'HomeController@index')->name('home.user');
+  Route::get('/perfil','UserController@perfil')->name('perfil');
+  Route::post('/perfil/editar','UserController@editarPerfil')->name('perfil');
 
 
   // rotas do administrador
@@ -56,9 +56,9 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   // rotas da Comissao Cientifica
   Route::get('comissaoCientifica/home', 'CoordComissaoCientificaController@index')->name('cientifica.home');
   Route::get('comissaoCientifica/editais', 'CoordComissaoCientificaController@index')->name('cientifica.editais');
-  Route::get('comissaoCientifica/usuarios', 'CoordComissaoCientificaController@usuarios')->name('cientifica.usuarios');
   Route::get('comissaoCientifica/areas', 'CoordComissaoCientificaController@index')->name('cientifica.areas');
   Route::post('comissaoCientifica/permissoes', 'CoordComissaoCientificaController@permissoes')->name('cientifica.permissoes');
+  Route::post('comissaoCientifica/novoUsuario', 'CoordComissaoCientificaController@novoUsuario')->name('cientifica.novoUsuario');
 
   // rotas do Comissao Organizadora
   Route::get('/home/comissaoOrganizadora', 'CoordComissaoOrganizadoraController@index')->name('home.organizadora');
@@ -80,6 +80,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
 
       Route::get('revisores/cadastrarRevisores', 'EventoController@cadastrarRevisores')->name('cadastrarRevisores');
       Route::get('revisores/listarRevisores', 'EventoController@listarRevisores')->name('listarRevisores');
+      Route::get('revisores/listarUsuarios', 'EventoController@listarUsuarios')->name('listarUsuarios');
 
       Route::get('comissao/cadastrarComissao', 'EventoController@cadastrarComissao')->name('cadastrarComissao');
       Route::get('comissao/definirCoordComissao', 'EventoController@definirCoordComissao')->name('definirCoordComissao');
@@ -177,3 +178,7 @@ Route::group(['middleware' => ['isTemp', 'auth', 'verified']], function(){
   Route::post(  '/criterioUpdate/', 'CriteriosController@update'                        )->name('atualizar.criterio');
   Route::get(   '/encontrarCriterio', 'CriteriosController@findCriterio'                )->name('encontrar.criterio');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
