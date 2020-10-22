@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
         //   'email_verified_at' => '2020-02-15',
         // ]);
 
-        DB::table('eventos')->insert([
+        $evento = DB::table('eventos')->insert([
           'nome'=>'II CONGRESSO REGIONAL DE ZOOTECNIA',
           // 'numeroParticipantes'=>60,
           'descricao'=>'Cada autor inscrito poderá submeter até dois (2) resumos;
@@ -71,6 +71,8 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'coordenadorId'=>1,
           'publicado'=>true,
         ]);
+        // $user_id = DB::table('eventos')->where('nome','II CONGRESSO REGIONAL DE ZOOTECNIA')->pluck('id');
+        
 
         DB::table('form_eventos')->insert([
           'eventoId'                       => 1,
@@ -245,6 +247,13 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         $this->call(CoordComissaoOrganizadoraSeed::class);
         $this->call(ParticipanteSeed::class);
         $this->call(CoordEventoSeed::class);
+
+        // $user = App\User::find(1);
+        // $coordCC = App\User::find(4);
+        // $evento = App\Evento::find(1);
+        // $coordComissaoCientifica = App\CoordComissaoCientifica::find(1);
+        // $user->coordEvento->evento()->save($evento);
+        // $coordCC->coordComissaoCientifica->eventos()->save($evento);
         
 
     }

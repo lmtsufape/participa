@@ -106,6 +106,7 @@ class ComissaoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->get();
         $revisores = $evento->revisores;
         $users = $evento->usuariosDaComissao;
+
         return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 

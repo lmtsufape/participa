@@ -2116,6 +2116,7 @@
             ],
             "description": "Symfony ErrorHandler Component",
             "homepage": "https://symfony.com",
+
             "time": "2020-10-01T16:21:20+00:00"
         },
         {
@@ -2298,6 +2299,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
+
             "time": "2020-10-02T07:34:48+00:00"
         },
         {
@@ -2415,6 +2417,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
+
             "time": "2020-09-27T14:14:06+00:00"
         },
         {
@@ -2507,6 +2510,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
+
             "time": "2020-10-04T07:48:13+00:00"
         },
         {
@@ -3271,6 +3275,7 @@
                 "uri",
                 "url"
             ],
+
             "time": "2020-10-01T16:25:17+00:00"
         },
         {
@@ -3409,6 +3414,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
+
             "time": "2020-10-02T07:34:48+00:00"
         },
         {
@@ -3470,6 +3476,7 @@
                 "interoperability",
                 "standards"
             ],
+
             "time": "2020-09-28T13:05:58+00:00"
         },
         {

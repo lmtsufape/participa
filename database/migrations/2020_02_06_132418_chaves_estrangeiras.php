@@ -137,7 +137,7 @@ class ChavesEstrangeiras extends Migration
     //     $table->foreign('area_alternativa_id')->references('id')->on('areas');
     //   });
       Schema::table('eventos',function (Blueprint $table){
-        $table->foreign('coordComissaoId')->references('id')->on('users');
+        $table->foreign('coord_comissao_cientifica_id')->references('id')->on('users');
       });
       //------------------------------------------------------------------------
     }
