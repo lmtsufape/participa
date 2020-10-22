@@ -194,7 +194,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->evento_id);
         
-        $usuarios = User::doesntHave('administradors')->paginate(10);
+        $usuarios = User::doesntHave('administradors')->get();
 
         return view('coordenador.revisores.listarUsuarios', compact('usuarios', 'evento'));
 

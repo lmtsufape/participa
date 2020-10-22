@@ -149,11 +149,11 @@
     </table>    
   </div>
   <div class="container">
-    <div class="row" >
+    {{-- <div class="row" >
       <div class="col-sm-12 d-flex justify-content-center" >
         {{ $usuarios->links() }}
       </div>
-    </div>
+    </div> --}}
   </div>
 
 
