@@ -19,8 +19,8 @@ class Revisor extends Model
         return $this->belongsTo('App\User', 'user_id');
     }
 
-    public function evento(){
-        return $this->belongsTo('App\Evento', 'eventoId');
+    public function eventos(){
+        return $this->belongsToMany('App\Evento', 'evento_revisor', 'evento_id', 'revisor_id');
     }
 
     public function area(){

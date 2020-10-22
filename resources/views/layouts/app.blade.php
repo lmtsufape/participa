@@ -127,7 +127,7 @@
                                     @if (isset(Auth::user()->coordComissaoCientifica))
                                         {{-- Rota - Area da Comissao --}}
 
-                                        <a class="dropdown-item" href="{{ route('cientifica.home') }}">
+                                        <a class="dropdown-item" href="{{ route('home.user') }}">
 
                                             <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                             {{ __('Área da Comissão Cientifica') }}
@@ -142,11 +142,11 @@
                                         </a>
                                     @endif
 
-                                    @if (isset(Auth::user()->membroComissao))
+                                    @if (isset(Auth::user()->coordEvento))
                                         {{-- Rota - Area da Comissao --}}
-                                        <a class="dropdown-item" href="{{ route('home.membro') }}">
+                                        <a class="dropdown-item" href="{{ route('coord.index') }}">
                                             <img src="{{asset('img/icons/comissao.png')}}" alt="">
-                                            {{ __('Área do Membro da Comissão') }}
+                                            {{ __('Área do Coordenador de Evento') }}
                                         </a>
                                     @endif
 

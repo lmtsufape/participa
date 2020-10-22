@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
-
+use Illuminate\Support\Facades\Log;
 use Closure;
 
 class IsTemp
@@ -16,7 +16,8 @@ class IsTemp
     public function handle($request, Closure $next)
     {
         if(Auth()->user()->usuarioTemp == true){
-          return redirect('perfil');
+            Log::info('redirect - perfil');
+            return redirect('perfil');
         }
         return $next($request);
     }

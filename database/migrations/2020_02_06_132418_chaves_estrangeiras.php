@@ -56,7 +56,7 @@ class ChavesEstrangeiras extends Migration
           $table->foreign('trabalhoId')->references('id')->on('trabalhos');
       });
       Schema::table('coautors', function (Blueprint $table) {
-          $table->foreign('autorId')->references('id')->on('users');
+          $table->foreign('user_id')->references('id')->on('users');
       });
 
       //------------------------------------------------------------------------
@@ -134,7 +134,7 @@ class ChavesEstrangeiras extends Migration
           $table->foreign('areaId')->references('id')->on('areas');
       });
       Schema::table('eventos',function (Blueprint $table){
-        $table->foreign('coordComissaoId')->references('id')->on('users');
+        $table->foreign('coord_comissao_cientifica_id')->references('id')->on('users');
       });
       //------------------------------------------------------------------------
     }

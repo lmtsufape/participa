@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMembroComissaosTable extends Migration
+class CreateCoordenadorEventosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateMembroComissaosTable extends Migration
      */
     public function up()
     {
-        Schema::create('membro_comissaos', function (Blueprint $table) {
+        Schema::create('coordenador_eventos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('eventos_id')->nullable();
+            $table->foreign('eventos_id')->references('id')->on('eventos');
         });
     }
 
@@ -29,6 +31,6 @@ class CreateMembroComissaosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('membro_comissaos');
+        Schema::dropIfExists('coordenador_eventos');
     }
 }

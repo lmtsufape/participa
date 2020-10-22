@@ -620,6 +620,7 @@
         },
         {
             "name": "laravel/framework",
+<<<<<<< HEAD
             "version": "v6.19.1",
             "source": {
                 "type": "git",
@@ -630,6 +631,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/7eb0b25daf58ec9374c59bd700949b3ea78d0276",
                 "reference": "7eb0b25daf58ec9374c59bd700949b3ea78d0276",
+=======
+            "version": "v6.18.42",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/framework.git",
+                "reference": "ea27c9af8f9fbd27ab0753749830c267f25de9d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/ea27c9af8f9fbd27ab0753749830c267f25de9d4",
+                "reference": "ea27c9af8f9fbd27ab0753749830c267f25de9d4",
+>>>>>>> 8ba5f6b0f2bef80da6da09207ead50ae79a5223e
                 "shasum": ""
             },
             "require": {
@@ -765,7 +778,11 @@
                 "framework",
                 "laravel"
             ],
+<<<<<<< HEAD
             "time": "2020-10-20T18:43:17+00:00"
+=======
+            "time": "2020-10-06T14:21:51+00:00"
+>>>>>>> 8ba5f6b0f2bef80da6da09207ead50ae79a5223e
         },
         {
             "name": "laravel/tinker",
@@ -1215,6 +1232,7 @@
         },
         {
             "name": "nesbot/carbon",
+<<<<<<< HEAD
             "version": "2.41.3",
             "source": {
                 "type": "git",
@@ -1225,6 +1243,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/e148788eeae9b9b7b87996520358b86faad37b52",
                 "reference": "e148788eeae9b9b7b87996520358b86faad37b52",
+=======
+            "version": "2.41.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/briannesbitt/Carbon.git",
+                "reference": "35959c93ada06469107a05df6b15b65074a960cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/35959c93ada06469107a05df6b15b65074a960cf",
+                "reference": "35959c93ada06469107a05df6b15b65074a960cf",
+>>>>>>> 8ba5f6b0f2bef80da6da09207ead50ae79a5223e
                 "shasum": ""
             },
             "require": {
@@ -1300,7 +1330,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2020-10-12T20:36:09+00:00"
+=======
+            "time": "2020-10-10T23:35:06+00:00"
+>>>>>>> 8ba5f6b0f2bef80da6da09207ead50ae79a5223e
         },
         {
             "name": "nikic/php-parser",
