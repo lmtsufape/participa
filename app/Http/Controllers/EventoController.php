@@ -235,7 +235,7 @@ class EventoController extends Controller
 
     public function cadastrarModalidade(Request $request)
     {
-        $evento = Evento::find($request->id);
+        $evento = Evento::find($request->eventoId);
         // dd($request);
         $areas = Area::where('eventoId', $evento->id)->get();
         $modalidades = Modalidade::where('eventoId', $evento->id)->get();
