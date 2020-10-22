@@ -325,7 +325,7 @@ class EventoController extends Controller
             }
           }
         }
-        dd($request);
+        // dd($request);
         return view('coordenador.evento.editarEtiqueta', [
                                                     'evento'                  => $evento,
                                                     'etiquetas'               => $etiquetas,

@@ -27,7 +27,7 @@
                                 <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-nome" style="width:20px"></a>
                                 {{-- <button type="button" id="botao-editar-nome" class="btn btn-outline-dark">Editar</button> --}}
                                 <div class="col-sm-3" id="etiqueta-nome-evento" style="display: none">
-                                    <input type="text" class="form-control etiquetanomeevento" id="etiquetanomeevento" name="etiquetanomeevento" placeholder="Editar Etiqueta">
+                                    <input type="text" class="form-control etiquetanomeevento apenasLetras" id="etiquetanomeevento" name="etiquetanomeevento" placeholder="Editar Etiqueta">
                                 </div>
 
                             </div>
@@ -46,7 +46,7 @@
                                 <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-descricao" style="width:20px"></a>
                                 {{-- <button type="button" id="botao-editar-descricao" class="btn btn-outline-dark">Editar</button> --}}
                                 <div class="col-sm-3" id="etiqueta-descricao-evento" style="display: none">
-                                    <input type="text" class="form-control" id="etiquetadescricaoevento" name="etiquetadescricaoevento" placeholder="Editar Etiqueta">
+                                    <input type="text" class="form-control apenasLetras" id="etiquetadescricaoevento" name="etiquetadescricaoevento" placeholder="Editar Etiqueta">
                                 </div>
                             </div>
                             <div class="row justify-content-center">
@@ -62,7 +62,7 @@
                                 <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-tipo" style="width:20px"></a>
                                 {{-- <button type="button" id="botao-editar-tipo" class="btn btn-outline-dark">Editar</button> --}}
                                 <div class="col-sm-3" id="etiqueta-tipo-evento" style="display: none">
-                                    <input type="text" class="form-control" id="etiquetatipoevento" name="etiquetatipoevento" placeholder="Editar Etiqueta">
+                                    <input type="text" class="form-control apenasLetras" id="etiquetatipoevento" name="etiquetatipoevento" placeholder="Editar Etiqueta">
                                 </div>
                             </div>
                             <div class="row justify-content-center">
@@ -78,7 +78,7 @@
                                 <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-datas" style="width:20px"></a>
                                 {{-- <button type="button" id="botao-editar-datas" class="btn btn-outline-dark">Editar</button> --}}
                                 <div class="col-sm-3" id="etiqueta-data-evento" style="display: none">
-                                    <input type="text" class="form-control" id="etiquetadatas" name="etiquetadatas" placeholder="Editar Etiqueta">
+                                    <input type="text" class="form-control apenasLetras" id="etiquetadatas" name="etiquetadatas" placeholder="Editar Etiqueta">
                                 </div>
                             </div>
                             <div class="row justify-content-left">
@@ -97,7 +97,7 @@
                                 <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-submissoes" style="width:20px"></a>
                                 {{-- <button type="button" id="botao-editar-submissoes" class="btn btn-outline-dark">Editar</button> --}}
                                 <div class="col-sm-3" id="etiqueta-submissoes-evento" style="display: none">
-                                    <input type="text" class="form-control" id="etiquetasubmissoes" name="etiquetasubmissoes" placeholder="Editar Etiqueta">
+                                    <input type="text" class="form-control apenasLetras" id="etiquetasubmissoes" name="etiquetasubmissoes" placeholder="Editar Etiqueta">
                                 </div>
                             </div>
                             <div class="row justify-content-center">
@@ -128,7 +128,7 @@
                                     {{-- <button type="button" id="botao-editar-etiqueta-regra" class="btn btn-outline-dark">Editar</button> --}}
                                 </div>
                                 <div class="col-sm-auto" id="etiqueta-baixar-regra-evento" style="display: none">
-                                    <input type="text" class="form-control" id="etiquetabaixarregra" name="etiquetabaixarregra" placeholder="Editar Etiqueta">
+                                    <input type="text" class="form-control apenasLetras" id="etiquetabaixarregra" name="etiquetabaixarregra" placeholder="Editar Etiqueta">
                                 </div>
                             </div>
 
@@ -142,7 +142,7 @@
                                     {{-- <button type="button" id="botao-editar-etiqueta-template" class="btn btn-outline-dark">Editar</button> --}}
                                 </div>
                                 <div class="col-sm-auto" id="etiqueta-baixar-template-evento" style="display: none">
-                                    <input type="text" class="form-control" id="etiquetabaixartemplate" name="etiquetabaixartemplate" placeholder="Editar Etiqueta">
+                                    <input type="text" class="form-control apenasLetras" id="etiquetabaixartemplate" name="etiquetabaixartemplate" placeholder="Editar Etiqueta">
                                 </div>
                             </div>
 
@@ -153,7 +153,7 @@
                                 <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-endereco" style="width:20px"></a>
                                 {{-- <button type="button" id="botao-editar-endereco" class="btn btn-outline-dark">Editar</button> --}}
                                 <div class="col-sm-auto" id="etiqueta-endereco-evento" style="display: none">
-                                    <input type="text" class="form-control" id="etiquetaenderecoevento" name="etiquetaenderecoevento" placeholder="Editar Etiqueta">
+                                    <input type="text" class="form-control apenasLetras" id="etiquetaenderecoevento" name="etiquetaenderecoevento" placeholder="Editar Etiqueta">
                                 </div>
                             </div>
                             <div class="row justify-content-center">
@@ -169,7 +169,7 @@
                                 <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-inscricao" style="width:20px"></a>
                                 {{-- <button type="button" id="botao-editar-modulo-inscricao" class="btn btn-outline-dark">Editar</button> --}}
                                 <div class="col-sm-3" id="etiqueta-modulo-inscricao-evento" style="display: none">
-                                    <input type="text" class="form-control" id="etiquetamoduloinscricao" name="etiquetamoduloinscricao" placeholder="Editar Etiqueta">
+                                    <input type="text" class="form-control apenasLetras" id="etiquetamoduloinscricao" name="etiquetamoduloinscricao" placeholder="Editar Etiqueta">
                                 </div>
                             </div>
                             <p style="margin-top: 10px">
@@ -183,7 +183,7 @@
                                 <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-programacao" style="width:20px"></a>
                                 {{-- <button type="button" id="botao-editar-modulo-programacao" class="btn btn-outline-dark">Editar</button> --}}
                                 <div class="col-sm-3" id="etiqueta-modulo-programacao-evento" style="display: none">
-                                    <input type="text" class="form-control" id="etiquetamoduloprogramacao" name="etiquetamoduloprogramacao" placeholder="Editar Etiqueta">
+                                    <input type="text" class="form-control apenasLetras" id="etiquetamoduloprogramacao" name="etiquetamoduloprogramacao" placeholder="Editar Etiqueta">
                                 </div>
                             </div>
                             <p style="margin-top: 10px">
@@ -197,7 +197,7 @@
                                 <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-modulo-organizacao" style="width:20px"></a>
                                 {{-- <button type="button" id="botao-editar-modulo-organizacao" class="btn btn-outline-dark">Editar</button> --}}
                                 <div class="col-sm-3" id="etiqueta-modulo-organizacao-evento" style="display: none">
-                                    <input type="text" class="form-control" id="etiquetamoduloorganizacao" name="etiquetamoduloorganizacao" placeholder="Editar Etiqueta">
+                                    <input type="text" class="form-control apenasLetras" id="etiquetamoduloorganizacao" name="etiquetamoduloorganizacao" placeholder="Editar Etiqueta">
                                 </div>
                             </div>
                             <p>
