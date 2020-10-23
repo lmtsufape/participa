@@ -166,16 +166,14 @@
               <div class="col-sm-12">
                 <h5>Revisores atribuidos ao trabalho</h5>
               </div>
-            </div>
           @else
             <div class="row justify-content-center">
               <div class="col-sm-12">
                 <h5>Nenhum revisor atribuido</h5>
               </div>
-            </div>
           @endif
           @foreach ($trabalho->atribuicoes as $i => $revisor) 
-            @if ($i % 3 == 0) <div class="row"> @endif
+            @if ($i % 3 == 0) </div><div class="row"> @endif
               <div class="col-sm-4">
                 <div class="card" style="width: 13.5rem; text-align: center;">
                   <img class="" src="{{asset('img/icons/user.png')}}" width="100px" alt="Revisor" style="position: relative; left: 30%; top: 10px;">
@@ -190,8 +188,8 @@
                   </div>
                 </div>
               </div>
-            @if ($i % 3 == 0) </div> @endif
           @endforeach
+          </div>
           <br>
           <div class="row">
             <div class="col-sm-12">
