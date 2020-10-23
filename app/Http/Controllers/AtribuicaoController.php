@@ -136,13 +136,13 @@ class AtribuicaoController extends Controller
         'área'                       => ['required', 'integer', 'min:1'],
         'numeroDeRevisoresPorTrabalho' => ['required', 'integer']
       ]);
-
+      
       $evento = Evento::find($request->eventoId);
       $this->authorize('isCoordenadorOrComissao', $evento);
 
 
       $evento = Evento::find($request->eventoId);
-      $area = Area::find($request->areaId);
+      $area = Area::find($request->input('área'));
       $revisores = Revisor::where('areaId', $area->id)->get();
       $trabalhos = Trabalho::where('areaId', $area->id)->get();
       $trabalhosArea = Trabalho::where('areaId', $area->id)->get();
@@ -207,33 +207,34 @@ class AtribuicaoController extends Controller
       return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
-    public function deletePorRevisores(Request $request){
-      $validatedData = $request->validate([
-        'eventoId'    => ['required', 'integer'],
-        'trabalhoId'  => ['required', 'integer'],
-        'revisores.*' => ['required', 'integer']
-      ]);
+    public function deletePorRevisores(Request $request, $id){
+      dd($request);
+      // $validatedData = $request->validate([
+      //   'eventoId'    => ['required', 'integer'],
+      //   'trabalhoId'  => ['required', 'integer'],
+      //   'revisores.*' => ['required', 'integer']
+      // ]);
 
-      $evento = Evento::find($request->eventoId);
-      $this->authorize('isCoordenador', $evento);
+      // $evento = Evento::find($request->eventoId);
+      // $this->authorize('isCoordenador', $evento);
 
-      foreach ($request->revisores as $key) {
-        $revisor = Revisor::find($key);
-        $atribuicao = $revisor->trabalhosAtribuidos()->where('trabalho_id', $request->trabalhoId)->get();
-        if($atribuicao != null && count($atribuicao) > 0){
-          $atribuicao->delete();
+      // foreach ($request->revisores as $key) {
+      //   $revisor = Revisor::find($key);
+      //   $atribuicao = $revisor->trabalhosAtribuidos()->where('trabalho_id', $request->trabalhoId)->get();
+      //   if($atribuicao != null && count($atribuicao) > 0){
+      //     $atribuicao->delete();
 
-          $trabalho = Trabalho::find($request->trabalhoId);
-          $trabalho->avaliado = 'nao';
-          $trabalho->save();
+      //     $trabalho = Trabalho::find($request->trabalhoId);
+      //     $trabalho->avaliado = 'nao';
+      //     $trabalho->save();
 
-          $revisor = Revisor::find($key);
-          $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento - 1;
-          $revisor->save();
-        }
+      //     $revisor = Revisor::find($key);
+      //     $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento - 1;
+      //     $revisor->save();
+      //   }
 
-      }
+      // }
 
-      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      // return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 }
