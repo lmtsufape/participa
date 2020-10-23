@@ -90,10 +90,17 @@ class AreaController extends Controller
     public function destroy($id)
     {
 
-        /* !!!  EM CONSTRUÇÃO, CONTINUAR APÓS AS ALTERAÇÕES NO BANCO DE DADOS  !!! */
+        $area = Area::find($id);
+        
+        if (count($area->revisor) > 0) {
+            return redirect()->back()->withErrors(['excluirAtividade' => 'Não é possível excluir, existem revisores ligados a essa área.']);
+        }
+        if (count($area->trabalho) > 0) {
+            return redirect()->back()->withErrors(['excluirAtividade' => 'Não é possível excluir, existem trabalhos ligados a essa área.']);
+        }
 
-        // $area = Area::find($id);
-        // // dd($area->modalidades);
-        // $area->delete();
+        $area->delete();
+
+        return redirect()->back()->with(['mensagem' => 'Área excluida com sucesso!']);
     }
 }
