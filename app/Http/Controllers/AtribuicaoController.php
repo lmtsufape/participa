@@ -136,7 +136,7 @@ class AtribuicaoController extends Controller
         'área'                       => ['required', 'integer', 'min:1'],
         'numeroDeRevisoresPorTrabalho' => ['required', 'integer']
       ]);
-      
+
       $evento = Evento::find($request->eventoId);
       $this->authorize('isCoordenadorOrComissao', $evento);
 
@@ -186,7 +186,7 @@ class AtribuicaoController extends Controller
         'trabalhoId'=> ['required', 'integer'],
         'revisorId' => ['required', 'integer']
       ]);
-
+        
       $evento = Evento::find($request->eventoId);
       $this->authorize('isCoordenador', $evento);
 
@@ -203,8 +203,9 @@ class AtribuicaoController extends Controller
       $informacoes = $trabalho->titulo;
       Mail::to($revisor->user->email)
             ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
-
-      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      
+      $mensagem = $trabalho->titulo . ' atribuido ao revisor ' . $revisor->user->name . ' com sucesso!';
+      return redirect()->back()->with(['mensagem' => $mensagem]);
     }
 
     public function deletePorRevisores(Request $request, $id){

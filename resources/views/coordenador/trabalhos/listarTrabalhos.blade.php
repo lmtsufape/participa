@@ -200,7 +200,7 @@
           </div>
           <form action="{{ route('distribuicaoManual') }}" method="post">
             @csrf
-            <input type="hidden" name="trabalhoId" value="" id="distribuicaoManualTrabalhoId">
+            <input type="hidden" name="trabalhoId" value="{{$trabalho->id}}">
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
             <div class="row" >
               <div class="col-sm-9">
