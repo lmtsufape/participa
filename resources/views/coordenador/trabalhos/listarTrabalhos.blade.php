@@ -183,6 +183,8 @@
                     <p class="card-text">{{$revisor->user->email}}</p>
                     <form action="{{ route('atribuicao.delete', ['id' => $revisor->id]) }}" method="post">
                       @csrf
+                      <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                      <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
                       <button type="submit" class="btn btn-primary" id="removerRevisorTrabalho">Remover Revisor</button>
                     </form>
                   </div>

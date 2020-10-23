@@ -209,33 +209,20 @@ class AtribuicaoController extends Controller
     }
 
     public function deletePorRevisores(Request $request, $id){
-      dd($request);
-      // $validatedData = $request->validate([
-      //   'eventoId'    => ['required', 'integer'],
-      //   'trabalhoId'  => ['required', 'integer'],
-      //   'revisores.*' => ['required', 'integer']
-      // ]);
+      // dd($id);
+      $validatedData = $request->validate([
+        'eventoId'      => ['required', 'integer'],
+        'trabalho_id'   => ['required', 'integer'],
+      ]);
 
-      // $evento = Evento::find($request->eventoId);
-      // $this->authorize('isCoordenador', $evento);
+      $evento = Evento::find($request->eventoId);
+      $this->authorize('isCoordenador', $evento);
 
-      // foreach ($request->revisores as $key) {
-      //   $revisor = Revisor::find($key);
-      //   $atribuicao = $revisor->trabalhosAtribuidos()->where('trabalho_id', $request->trabalhoId)->get();
-      //   if($atribuicao != null && count($atribuicao) > 0){
-      //     $atribuicao->delete();
+      $trabalho = Trabalho::find($request->trabalho_id);
+      $trabalho->atribuicoes()->detach($id);
 
-      //     $trabalho = Trabalho::find($request->trabalhoId);
-      //     $trabalho->avaliado = 'nao';
-      //     $trabalho->save();
+      $mensagem = $trabalho->titulo . ' foi retirado de ' . Revisor::find($id)->user->name . ' com sucesso!';
 
-      //     $revisor = Revisor::find($key);
-      //     $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento - 1;
-      //     $revisor->save();
-      //   }
-
-      // }
-
-      // return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      return redirect()->back()->with(['mensagem' => $mensagem]);
     }
 }
