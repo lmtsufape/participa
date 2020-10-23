@@ -159,6 +159,8 @@
                                         @endif
                                     </div>
                                 @endfor 
+                            @else
+                                <h4>Nenhum resultado</h4>
                             @endif
                         </div>
                         <div class="modal-footer">

@@ -218,10 +218,14 @@ class AtribuicaoController extends Controller
       $evento = Evento::find($request->eventoId);
       $this->authorize('isCoordenador', $evento);
 
+      $revisor = Revisor::find($id);
+      $revisor->correcoesEmAndamento -= 1; 
+      $revisor->update();
+
       $trabalho = Trabalho::find($request->trabalho_id);
       $trabalho->atribuicoes()->detach($id);
 
-      $mensagem = $trabalho->titulo . ' foi retirado de ' . Revisor::find($id)->user->name . ' com sucesso!';
+      $mensagem = $trabalho->titulo . ' foi retirado de ' . $revisor->user->name . ' com sucesso!';
 
       return redirect()->back()->with(['mensagem' => $mensagem]);
     }
