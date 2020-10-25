@@ -50,6 +50,14 @@ class HomeController extends Controller
             $eventos = $user->coautor->eventos;            
             return view('coordenador.index', compact('eventos'));
             
+          }else if($user->coordEvento != null){
+            $eventos = $user->coordEvento->evento;            
+            return view('coordenador.index', compact('eventos'));
+            
+          }else if($user->participante != null){
+            $eventos = Evento::all();            
+            return view('coordenador.index', compact('eventos'));
+            
           }else {
             return view('home');
           } 

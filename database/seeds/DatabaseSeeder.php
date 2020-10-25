@@ -253,8 +253,8 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         $coordCC = App\User::find(4);
         $evento = App\Evento::find(1);
         $coordComissaoCientifica = App\CoordComissaoCientifica::find(1);
-        $user->coordEvento->evento()->save($evento);
-        $coordCC->coordComissaoCientifica->eventos()->save($evento);
+        // $user->coordEvento->evento()->save($evento);
+        // $coordCC->coordComissaoCientifica->eventos()->save($evento);
         
 
     }
