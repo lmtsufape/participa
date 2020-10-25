@@ -44,11 +44,14 @@ class ComissaoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $revisores = Revisor::where('evento_id', $evento->id)->get();
+        $numeroRevisores = count($revisores);
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
-        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+        $trabalhosAvaliados = 0;
+        foreach ($trabalhosId as $trabalho) {
+          $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
+        }
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
         $numeroComissao = count($evento->usuariosDaComissao);
@@ -73,10 +76,10 @@ class ComissaoController extends Controller
      */
     public function store(Request $request)
     {
-        $validationData = $this->validate($request,[
-            'emailMembroComissao'=>'required|string|email',
+        $validationData = $request->validate([
+            'emailMembroComissao' => 'required|string|email',
             // 'especProfissional'=>'required|string',
-            ]);
+        ]);
 
         $user = User::where('email',$request->input('emailMembroComissao'))->first();
         $evento = Evento::find($request->eventoId);
@@ -101,7 +104,7 @@ class ComissaoController extends Controller
 
         $evento = Evento::find($request->input('eventoId'));
         $areas = Area::where('eventoId', $evento->id)->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $revisores = $evento->revisores;
         $users = $evento->usuariosDaComissao;
 
         return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
@@ -117,7 +120,7 @@ class ComissaoController extends Controller
         $evento->save();
 
         $areas = Area::where('eventoId', $evento->id)->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $revisores = $evento->revisores;
         // dd($ComissaoEventos);
         $users = $evento->usuariosDaComissao;
         // return view('coordenador.detalhesEvento', [

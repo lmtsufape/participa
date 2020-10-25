@@ -12,18 +12,30 @@ class Revisor extends Model
      * @var array
      */
     protected $fillable = [
-        'prazo', 'trabalhosCorrigidos', 'correcoesEmAndamento','user_id', 'eventoId', 'areaId', 'modalidadeId',
+        'prazo', 'trabalhosCorrigidos', 'correcoesEmAndamento','user_id','evento_id', 'areaId', 'modalidadeId',
     ];
 
     public function user(){
         return $this->belongsTo('App\User', 'user_id');
     }
 
-    public function eventos(){
-        return $this->belongsToMany('App\Evento', 'evento_revisor', 'evento_id', 'revisor_id');
+    public function evento(){
+        return $this->belongsTo('App\Evento', 'evento_id');
     }
 
     public function area(){
         return $this->belongsTo('App\Area', 'areaId');
+    }
+
+    public function modalidade(){
+        return $this->belongsTo('App\Modalidade', 'modalidadeId');
+    }
+
+    public function trabalhosAtribuidos(){
+        return $this->belongsToMany('App\Trabalho', 'atribuicaos', 'revisor_id', 'trabalho_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
+    }
+
+    public function avaliacoes() {
+        return $this->hasMany('App\Avaliacao', 'trabalho_id');
     }
 }

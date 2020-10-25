@@ -19,7 +19,7 @@ class CreateConvidadosTable extends Migration
             $table->string('email');
             $table->string('funcao');
 
-            $table->bigInteger('atividade_id')->references('id')->on('atividades');
+            $table->bigInteger('atividade_id')->references('id')->on('atividades')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -23,9 +23,10 @@ class CreateRevisorsTable extends Migration
             // $table->unsignedBigInteger('eventos_id')->nullable();
             // $table->foreign('eventos_id')->references('id')->on('eventos');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('eventoId');
-            $table->integer('areaId')->nullable();
+            $table->bigInteger('areaId')->nullable();
+            // $table->bigInteger('area_alternativa_id')->nullable();
             $table->integer('modalidadeId')->nullable();
+            $table->integer('evento_id')->nullable();
         });
     }
 

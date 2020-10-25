@@ -65,41 +65,41 @@ class AtividadeController extends Controller
         
         $validated = $request->validate([
             'idNovaAtividade'       => ['required', 'integer'],
-            'titulo'                => ['required', 'max:50'],
+            'título'                => ['required', 'max:50'],
             'tipo'                  => ['required', 'string'],
-            'descricao'             => ['required', 'max:500'],
+            'descrição'             => ['required', 'max:500'],
             'carga_horaria'         => ['nullable', 'string'],
             'vagas'                 => ['nullable', 'string'],
             'valor'                 => ['nullable', 'string'],
             'local'                 => ['required', 'string'],
-            'duracaoDaAtividade'    => ['required', 'string'],
+            'duraçãoDaAtividade'    => ['required', 'string'],
         ]);
 
         $validateDuracaoAtividade = $request->validate([
             // Validação das datas
-            'primeiroDia'   => ($request->duracaoAtividade >= 1) ? ['required', 'date'] : [''],
-            'segundoDia'    => ($request->duracaoAtividade >= 2) ? ['required', 'date', 'after:primeiroDia'] : [''],
-            'terceiroDia'   => ($request->duracaoAtividade >= 3) ? ['required', 'date', 'after:segundoDia'] : [''],
-            'quartoDia'     => ($request->duracaoAtividade >= 4) ? ['required', 'date', 'after:terceiroDia'] : [''],
-            'quintoDia'     => ($request->duracaoAtividade >= 5) ? ['required', 'date', 'after:quartoDia'] : [''],
-            'sextoDia'      => ($request->duracaoAtividade >= 6) ? ['required', 'date', 'after:quintoDia'] : [''],
-            'setimoDia'     => ($request->duracaoAtividade == 7) ? ['required', 'date', 'after:sextoDia'] : [''],
+            'primeiroDia'   => ($request->input("duraçãoDaAtividade") >= 1) ? ['required', 'date'] : [''],
+            'segundoDia'    => ($request->input("duraçãoDaAtividade") >= 2) ? ['required', 'date', 'after:primeiroDia'] : [''],
+            'terceiroDia'   => ($request->input("duraçãoDaAtividade") >= 3) ? ['required', 'date', 'after:segundoDia'] : [''],
+            'quartoDia'     => ($request->input("duraçãoDaAtividade") >= 4) ? ['required', 'date', 'after:terceiroDia'] : [''],
+            'quintoDia'     => ($request->input("duraçãoDaAtividade") >= 5) ? ['required', 'date', 'after:quartoDia'] : [''],
+            'sextoDia'      => ($request->input("duraçãoDaAtividade") >= 6) ? ['required', 'date', 'after:quintoDia'] : [''],
+            'setimoDia'     => ($request->input("duraçãoDaAtividade") == 7) ? ['required', 'date', 'after:sextoDia'] : [''],
             
             // Validação das horas
-            'inicio'        => ($request->duracaoAtividade >= 1) ? ['required','time'] : [''],
-            'segundoInicio' => ($request->duracaoAtividade >= 2) ? ['required','time'] : [''],
-            'terceiroInicio'=> ($request->duracaoAtividade >= 3) ? ['required','time'] : [''],
-            'quartoInicio'  => ($request->duracaoAtividade >= 4) ? ['required','time'] : [''],
-            'quintoInicio'  => ($request->duracaoAtividade >= 5) ? ['required','time'] : [''],
-            'sextoInicio'   => ($request->duracaoAtividade >= 6) ? ['required','time'] : [''],
-            'setimoInicio'  => ($request->duracaoAtividade == 7) ? ['required','time'] : [''],
-            'fim'           => ($request->duracaoAtividade >= 1) ? ['required','time'] : [''],
-            'segundoFim'    => ($request->duracaoAtividade >= 2) ? ['required','time'] : [''],
-            'terceiroFim'   => ($request->duracaoAtividade >= 3) ? ['required','time'] : [''],
-            'quartoFim'     => ($request->duracaoAtividade >= 4) ? ['required','time'] : [''],
-            'quintoFim'     => ($request->duracaoAtividade >= 5) ? ['required','time'] : [''],
-            'sextoFim'      => ($request->duracaoAtividade >= 6) ? ['required','time'] : [''],
-            'setimoFim'     => ($request->duracaoAtividade == 7) ? ['required','time'] : [''],
+            'inicio'        => ($request->input("duraçãoDaAtividade") >= 1) ? ['required','time'] : [''],
+            'segundoInicio' => ($request->input("duraçãoDaAtividade") >= 2) ? ['required','time'] : [''],
+            'terceiroInicio'=> ($request->input("duraçãoDaAtividade") >= 3) ? ['required','time'] : [''],
+            'quartoInicio'  => ($request->input("duraçãoDaAtividade") >= 4) ? ['required','time'] : [''],
+            'quintoInicio'  => ($request->input("duraçãoDaAtividade") >= 5) ? ['required','time'] : [''],
+            'sextoInicio'   => ($request->input("duraçãoDaAtividade") >= 6) ? ['required','time'] : [''],
+            'setimoInicio'  => ($request->input("duraçãoDaAtividade") == 7) ? ['required','time'] : [''],
+            'fim'           => ($request->input("duraçãoDaAtividade") >= 1) ? ['required','time'] : [''],
+            'segundoFim'    => ($request->input("duraçãoDaAtividade") >= 2) ? ['required','time'] : [''],
+            'terceiroFim'   => ($request->input("duraçãoDaAtividade") >= 3) ? ['required','time'] : [''],
+            'quartoFim'     => ($request->input("duraçãoDaAtividade") >= 4) ? ['required','time'] : [''],
+            'quintoFim'     => ($request->input("duraçãoDaAtividade") >= 5) ? ['required','time'] : [''],
+            'sextoFim'      => ($request->input("duraçãoDaAtividade") >= 6) ? ['required','time'] : [''],
+            'setimoFim'     => ($request->input("duraçãoDaAtividade") == 7) ? ['required','time'] : [''],
         ]);
 
         if ($request->inicio != null && strtotime($request->inicio) > strtotime($request->fim)) {
@@ -141,17 +141,17 @@ class AtividadeController extends Controller
         $atividade = new Atividade();
         $atividade->eventoId                    = $request->eventoId;
         $atividade->tipo_id                     = $request->tipo; 
-        $atividade->titulo                      = $request->titulo;
+        $atividade->titulo                      = $request->input("título");
         $atividade->vagas                       = $request->vagas;
         $atividade->valor                       = $request->valor;
-        $atividade->descricao                   = $request->descricao;
+        $atividade->descricao                   = $request->input("descrição");
         $atividade->local                       = $request->local;
         $atividade->palavras_chave              = $request->palavrasChaves;
         $atividade->carga_horaria               = $request->carga_horaria;
         $atividade->visibilidade_participante   = true;
         $atividade->save();
 
-        if ($request->duracaoDaAtividade >= 1) {
+        if ($request->input("duraçãoDaAtividade") >= 1) {
             $dataAtividade = new DatasAtividade();
             $dataAtividade->data            = $request->primeiroDia;
             $dataAtividade->hora_inicio     = $request->inicio;
@@ -159,7 +159,7 @@ class AtividadeController extends Controller
             $dataAtividade->atividade_id    = $atividade->id;
             $dataAtividade->save();
         }
-        if ($request->duracaoDaAtividade >= 2) {
+        if ($request->input("duraçãoDaAtividade") >= 2) {
             $dataAtividade = new DatasAtividade();
             $dataAtividade->data            = $request->segundoDia;
             $dataAtividade->hora_inicio     = $request->segundoInicio;
@@ -167,7 +167,7 @@ class AtividadeController extends Controller
             $dataAtividade->atividade_id    = $atividade->id;
             $dataAtividade->save();
         }
-        if ($request->duracaoDaAtividade >= 3) {
+        if ($request->input("duraçãoDaAtividade") >= 3) {
             $dataAtividade = new DatasAtividade();
             $dataAtividade->data            = $request->terceiroDia;
             $dataAtividade->hora_inicio     = $request->terceiroInicio;
@@ -175,7 +175,7 @@ class AtividadeController extends Controller
             $dataAtividade->atividade_id    = $atividade->id;
             $dataAtividade->save();
         }
-        if ($request->duracaoDaAtividade >= 4) {
+        if ($request->input("duraçãoDaAtividade") >= 4) {
             $dataAtividade = new DatasAtividade();
             $dataAtividade->data            = $request->quartoDia;
             $dataAtividade->hora_inicio     = $request->quartoInicio;
@@ -183,7 +183,7 @@ class AtividadeController extends Controller
             $dataAtividade->atividade_id    = $atividade->id;
             $dataAtividade->save();
         }
-        if ($request->duracaoDaAtividade >= 5) {
+        if ($request->input("duraçãoDaAtividade") >= 5) {
             $dataAtividade = new DatasAtividade();
             $dataAtividade->data            = $request->quintoDia;
             $dataAtividade->hora_inicio     = $request->quintoInicio;
@@ -191,7 +191,7 @@ class AtividadeController extends Controller
             $dataAtividade->atividade_id    = $atividade->id;
             $dataAtividade->save();
         }
-        if ($request->duracaoDaAtividade >= 6) {
+        if ($request->input("duraçãoDaAtividade") >= 6) {
             $dataAtividade = new DatasAtividade();
             $dataAtividade->data            = $request->sextoDia;
             $dataAtividade->hora_inicio     = $request->sextoInicio;
@@ -199,7 +199,7 @@ class AtividadeController extends Controller
             $dataAtividade->atividade_id    = $atividade->id;
             $dataAtividade->save();
         }
-        if ($request->duracaoDaAtividade == 7) {
+        if ($request->input("duraçãoDaAtividade") == 7) {
             $dataAtividade = new DatasAtividade();
             $dataAtividade->data            = $request->setimoDia;
             $dataAtividade->hora_inicio     = $request->setimoInicio;

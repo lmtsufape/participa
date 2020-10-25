@@ -26,8 +26,8 @@ class Evento extends Model
       return $this->hasMany('App\Atividade', 'eventoId');
   }
 
-  public function area(){
-      return $this->hasOne('App\Area', 'eventoId');
+  public function areas(){
+      return $this->hasMany('App\Area', 'eventoId');
   }
 
   public function coordenador(){
@@ -39,12 +39,30 @@ class Evento extends Model
       return $this->belongsTo('App\CoordComissaoCientifica');
   }
 
-  public function revisors(){
-      return $this->belongsToMany('App\Revisor', 'evento_revisor', 'evento_id', 'revisor_id');
+  // public function revisors(){
+  //     return $this->belongsToMany('App\Revisor', 'evento_revisor', 'evento_id', 'revisor_id');
+  // }
+
+  public function revisors() {
+    return $this->hasMany('App\Revisor', 'evento_id');
   }
 
   function usuariosDaComissao(){
     return $this->belongsToMany('App\User','comissao_eventos','evento_id','user_id');
   }  
 
+  function formEvento() {
+    return $this->hasOne('App\FormEvento', 'eventoId');
+  }
+
+  function formSubTrab() {
+    return $this->hasOne('App\FormSubmTraba', 'eventoId');
+  }
+
+  function trabalhos() {
+    return $this->hasMany('App\Trabalho', 'eventoId');
+  }
+  // public function revisores(){
+  //   return $this->belongsToMany('App\Revisor', 'evento_revisors', 'evento_id', 'revisor_id')->withPivot('convite_aceito')->withTimestamps();
+  // }
 }

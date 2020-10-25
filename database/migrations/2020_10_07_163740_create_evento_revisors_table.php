@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRevisorTrabalho extends Migration
+class CreateEventoRevisorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,15 @@ class CreateRevisorTrabalho extends Migration
      */
     public function up()
     {
-        Schema::create('revisor_trabalho', function (Blueprint $table) {
+        Schema::create('evento_revisors', function (Blueprint $table) {
             $table->bigIncrements('id');
-
-            $table->unsignedBigInteger('revisor_id');
-            $table->foreign('revisor_id')->references('id')->on('revisors');
-
-            $table->unsignedBigInteger('trabalho_id');
-            $table->foreign('trabalho_id')->references('id')->on('eventos');
-
+            $table->boolean('convite_aceito')->nullable();
+            $table->bigInteger('evento_id')->nullable();
+            $table->bigInteger('revisor_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('evento_id')->references('id')->on('eventos');
+            $table->foreign('revisor_id')->references('id')->on('revisors');
         });
     }
 
@@ -33,6 +32,6 @@ class CreateRevisorTrabalho extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('revisor_trabalho');
+        Schema::dropIfExists('evento_revisors');
     }
 }

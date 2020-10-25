@@ -46,11 +46,15 @@ class Trabalho extends Model
       return $this->hasMany('App\Parecer', 'trabalhoId');
   }
 
-  public function atribuicao(){
-      return $this->hasMany('App\Atribuicao', 'trabalhoId');
+  public function atribuicoes(){
+      return $this->belongsToMany('App\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
   }
 
   public function evento(){
       return $this->belongsTo('App\Evento', 'eventoId');
+  }
+
+  public function avaliacoes() {
+    return $this->hasMany('App\Avaliacao', 'trabalho_id');
   }
 }

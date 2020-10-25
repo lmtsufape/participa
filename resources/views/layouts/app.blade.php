@@ -106,7 +106,7 @@
                                     </a>
                                     @if (isset(Auth::user()->revisor))
                                         {{-- Rota - Area de Revisores --}}
-                                        <a class="dropdown-item" href="{{ route('avaliar.trabalhos') }}">
+                                        <a class="dropdown-item" href="{{ route('revisor.index') }}">
                                             <img src="{{asset('img/icons/revisor.png')}}" alt="">
                                             {{ __('Área do Revisor') }}
                                         </a>
@@ -135,6 +135,14 @@
                                         <a class="dropdown-item" href="{{ route('home.organizadora') }}">
                                             <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                             {{ __('Área da Comissão Organizadora') }}
+                                        </a>
+                                    @endif
+
+                                    @if (isset(Auth::user()->membroComissaoEvento))
+                                        {{-- Rota - Area da Comissao --}}
+                                        <a class="dropdown-item" href="{{ route('home.membro') }}">
+                                            <img src="{{asset('img/icons/comissao.png')}}" alt="">
+                                            {{ __('Área do Membro da Comissão') }}
                                         </a>
                                     @endif
 

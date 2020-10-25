@@ -36,7 +36,7 @@
                                   <td style="text-align:center">{{$revisor->correcoesEmAndamento}}</td>
                                   <td style="text-align:center">{{$revisor->trabalhosCorrigidos}}</td>
                                   <td style="text-align:center">
-                                    <a href="#" data-toggle="modal" data-target="#modalRevisor">
+                                    <a href="#" data-toggle="modal" data-target="#modalRevisor{{$revisor->id}}">
                                       <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                                     </a>
                                   </td>
@@ -70,71 +70,69 @@
             </div>
         </div>
     </div>
+    @foreach($revisores as $revisor)
+      <!-- Modal Revisor -->
+      <div class="modal fade" id="modalRevisor{{$revisor->id}}" tabindex="-1" role="dialog" aria-labelledby="modalRevisor{{$revisor->id}}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">Revisor</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row justify-content-center">
+                <div class="col-sm-6">
+                  <label for="">Nome</label>
+                  <h5>{{$revisor->user->name}}</h5>
+                </div>
+                <div class="col-sm-6">
+                  <label for="">E-mail</label>
+                  <h5>{{$revisor->user->email}}</h5>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-sm-6">
+                  <label for="">Área</label>
+                  <h5>{{$revisor->area->nome}}</h5>
+                </div>
+                <div class="col-sm-6">
+                  <label for="">Instituição</label>
+                  <h5>{{$revisor->user->instituicao}}</h5>
+                </div>
+              </div>
 
-    <!-- Modal Revisor -->
-    <div class="modal fade" id="modalRevisor" tabindex="-1" role="dialog" aria-labelledby="modalRevisor" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalCenterTitle">Revisor</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+              <div class="row justify-content-center" style="margin-top:20px">
+                <div class="col-sm-12">
+                  <h4>Trabalhos</h4>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-sm-12">
+                  <table class="table table-hover table-responsive-lg table-sm">
+                      <thead>
+                        <tr>
+                          <th scope="col">Título</th>
+                          <th scope="col">Status</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @foreach ($revisor->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
+                          <tr>
+                            <td>{{$trabalho->titulo}}</td>
+                            <td>{{$trabalho->avaliado}}</td>
+                          </tr>
+                        @endforeach
+                      </tbody>
+                    </table>
+                </div>
+              </div>
+              </div>
           </div>
-          <div class="modal-body">
-            <div class="row justify-content-center">
-              <div class="col-sm-6">
-                <label for="">Nome</label>
-                <h5>Nome do Revisor</h5>
-              </div>
-              <div class="col-sm-6">
-                <label for="">E-mail</label>
-                <h5>E-mail do Revisor</h5>
-              </div>
-            </div>
-            <div class="row justify-content-center">
-              <div class="col-sm-6">
-                <label for="">Área</label>
-                <h5>Área do Revisor</h5>
-              </div>
-              <div class="col-sm-6">
-                <label for="">Instituição</label>
-                <h5>Instituição do Revisor</h5>
-              </div>
-            </div>
-
-            <div class="row justify-content-center" style="margin-top:20px">
-              <div class="col-sm-12">
-                <h4>Trabalhos</h4>
-              </div>
-            </div>
-            <div class="row justify-content-center">
-              <div class="col-sm-12">
-                <table class="table table-hover table-responsive-lg table-sm">
-                    <thead>
-                      <tr>
-                        <th scope="col">Título</th>
-                        <th scope="col">Status</th>
-
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Título do trabalho</td>
-                        <td>Status do trabalho</td>
-
-                      </tr>
-                    </tbody>
-                  </table>
-              </div>
-            </div>
-            </div>
-          <!-- <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-            <button type="button" class="btn btn-primary">Salvar</button>
-          </div> -->
         </div>
       </div>
-    </div>
+    @endforeach
 
 @endsection
