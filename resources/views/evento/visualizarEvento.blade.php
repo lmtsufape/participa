@@ -208,8 +208,8 @@
         </div>
     </div>
 
-    {{-- @if ($etiquetas->modsubmissao == true) --}}
-      {{-- <div class="row margin">
+    @if ($etiquetas->modsubmissao == true)
+      <div class="row margin">
         <div class="col-sm-12 info-evento">
             <h4>{{$etiquetas->etiquetasubmissoes}}:</h4>
             @foreach ($modalidades as $modalidade)
@@ -272,10 +272,10 @@
             <br>
             @endforeach
         </div>
-      </div> --}}
-    {{-- @else
+      </div>
+    @else
     
-    @endif --}}
+    @endif
 
     <div class="row margin">
         <div class="col-sm-12 info-evento">
@@ -446,7 +446,7 @@
     <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 
         <div class="col-md-6 botao-form-left" style="">
-            <a class="btn btn-secondary botao-form" href="{{route('cancelarCadastro')}}" style="width:100%">Voltar</a>
+            <a class="btn btn-secondary botao-form" href="{{route('cancelarCadastro')}}" style="width:100%">Voltar {{ $evento->inicioSubmissao ?? "false" }}  </a>
         </div>
 
         @if($evento->inicioSubmissao <= $mytime)
