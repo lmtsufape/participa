@@ -39,7 +39,6 @@
           <tbody>
             @php $i = 0; @endphp
             @foreach($trabalhos as $trabalho)
-
             <tr>
               <td>{{$trabalho->id}}</td>
               <td>{{$trabalho->area->nome}}</td>
@@ -71,7 +70,7 @@
           </tbody>
         </table>
       </div>
-
+      
     </div>
 
 </div>

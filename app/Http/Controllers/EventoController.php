@@ -238,7 +238,7 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
         // dd($request);
         $areas = Area::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
 
         return view('coordenador.modalidade.cadastrarModalidade', [
                                                     'evento'                  => $evento,
@@ -253,7 +253,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
 
@@ -271,7 +271,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
 
         return view('coordenador.modalidade.cadastrarCriterio', [
                                                     'evento'                  => $evento,
@@ -285,7 +285,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
@@ -519,7 +519,7 @@ class EventoController extends Controller
         $trabalhosIdCoautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->select('trabalhoId')->get();
         $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
         $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
         $atividades = Atividade::where('eventoId', $id)->get();
         $primeiraAtividade = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
       
@@ -729,7 +729,7 @@ class EventoController extends Controller
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
         $revisores = Revisor::where('evento_id', $evento->id)->get();
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
         // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();

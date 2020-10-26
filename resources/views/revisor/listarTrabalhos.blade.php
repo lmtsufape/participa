@@ -17,15 +17,15 @@
     @endif
 
     {{-- Tabela Trabalhos --}}
-    @foreach ($trabalhosPorArea as $trabalhosDaArea)
-      @if ($trabalhosDaArea != null && count($trabalhosDaArea) > 0)
+    @foreach ($trabalhosPorRevisor as $trabalhosDoRevisor)
+      @if ($trabalhosDoRevisor != null && count($trabalhosDoRevisor) > 0)
         <div class="row justify-content-center" style="width: 100%;">
           <div class="col-sm-12">
               <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Trabalhos da área de {{$trabalhosDaArea[0]->area->nome}}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Que tem como modalidade {{$trabalhosDaArea[0]->modalidade->nome}} 
-                      <a href="#" data-toggle="modal" data-target="#modalRegrasModalidade{{$trabalhosDaArea[0]->modalidade->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Visualizar regras da modalidade" width="15px" title="Visualizar regras da modalidade"></a>
+                    <h5 class="card-title">Trabalhos da área de {{$trabalhosDoRevisor[0]->area->nome}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Que tem como modalidade {{$trabalhosDoRevisor[0]->modalidade->nome}} 
+                      <a href="#" data-toggle="modal" data-target="#modalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Visualizar regras da modalidade" width="15px" title="Visualizar regras da modalidade"></a>
                     </h6>
                     <p class="card-text">
                       <div class="col-sm-12">
@@ -40,7 +40,7 @@
                             <th scope="col">Avaliar</th>
                           </tr>
                         </thead>
-                        @foreach($trabalhosDaArea as $trabalho)
+                        @foreach($trabalhosDoRevisor as $trabalho)
                             <tr>
                               <td>{{$trabalho->id}}</td>
                               <td>{{$trabalho->titulo}}</td>
@@ -86,14 +86,14 @@
     @endforeach
 
 
-    @foreach ($trabalhosPorArea as $trabalhosDaArea)
+    @foreach ($trabalhosPorRevisor as $trabalhosDoRevisor)
       <!-- Modal regras da Modalidade-->
-      @if($trabalhosDaArea != null && count($trabalhosDaArea) > 0)
-        <div class="modal fade" id="modalRegrasModalidade{{$trabalhosDaArea[0]->modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#labelModalRegrasModalidade{{$trabalhosDaArea[0]->modalidade->id}}" aria-hidden="true">
+      @if($trabalhosDoRevisor != null && count($trabalhosDoRevisor) > 0)
+        <div class="modal fade" id="modalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#labelModalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="resumoModalLongTitle">Regras da modalidade {{$trabalhosDaArea[0]->modalidade->nome}} </h5>
+                <h5 class="modal-title" id="resumoModalLongTitle">Regras da modalidade {{$trabalhosDoRevisor[0]->modalidade->nome}} </h5>
               </div>
               <div class="modal-body" name="resumoTrabalhoModal" id="resumoTrabalhoModal">
                 <div class="container">
@@ -101,13 +101,13 @@
                     <div class="col-sm-12">
                       <strong>Periodo de avaliação</strong>
                       <p id="periodo">
-                        De {{date('d/m/Y',strtotime($trabalhosDaArea[0]->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDaArea[0]->modalidade->fimRevisao))}}
+                        De {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->fimRevisao))}}
                       </p>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-sm-12">
-                      @if ($trabalhosDaArea[0]->modalidade->arquivo != null && $trabalhosDaArea[0]->modalidade->arquivo == true)
+                      @if ($trabalhosDoRevisor[0]->modalidade->arquivo != null && $trabalhosDoRevisor[0]->modalidade->arquivo == true)
                         <strong>Forma de avaliação</strong>
                         <p id="formaDeAvaliacao">
                           Avaliação por arquivo submetido
@@ -122,25 +122,25 @@
                   </div>
                   <div class="row">
                     <div class="col-sm-12">
-                      @if ($trabalhosDaArea[0]->modalidade->caracteres)
+                      @if ($trabalhosDoRevisor[0]->modalidade->caracteres)
                         <strong>Limite por quantidade caracteres</strong>
                         <p>
-                          Minimo: {{number_format($trabalhosDaArea[0]->modalidade->mincaracteres, 0, ',', '.')}}<br>
-                          Máximo: {{number_format($trabalhosDaArea[0]->modalidade->maxcaracteres, 0, ',', '.')}}
+                          Minimo: {{number_format($trabalhosDoRevisor[0]->modalidade->mincaracteres, 0, ',', '.')}}<br>
+                          Máximo: {{number_format($trabalhosDoRevisor[0]->modalidade->maxcaracteres, 0, ',', '.')}}
                         </p>
-                      @elseif ($trabalhosDaArea[0]->modalidade->palavras)
+                      @elseif ($trabalhosDoRevisor[0]->modalidade->palavras)
                         <strong>Limite por quantidade palavras</strong>
                         <p>
-                          Minimo: {{number_format($trabalhosDaArea[0]->modalidade->minpalavras, 0, ',', '.')}}<br>
-                          Máximo: {{number_format($trabalhosDaArea[0]->modalidade->maxpalavras, 0, ',', '.')}}
+                          Minimo: {{number_format($trabalhosDoRevisor[0]->modalidade->minpalavras, 0, ',', '.')}}<br>
+                          Máximo: {{number_format($trabalhosDoRevisor[0]->modalidade->maxpalavras, 0, ',', '.')}}
                         </p>
                       @endif
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-sm-12">
-                      @if ($trabalhosDaArea[0]->modalidade->regra != null)
-                        <a href="{{route('modalidade.regras.download', ['id' => $trabalhosDaArea[0]->modalidade->id])}}">Arquivo de regras extras</a>
+                      @if ($trabalhosDoRevisor[0]->modalidade->regra != null)
+                        <a href="{{route('modalidade.regras.download', ['id' => $trabalhosDoRevisor[0]->modalidade->id])}}">Arquivo de regras extras</a>
                       @endif
                     </div>
                   </div>
@@ -155,8 +155,8 @@
       @endif
     @endforeach
 
-    @foreach ($trabalhosPorArea as $trabalhosDaArea)
-      @foreach($trabalhosDaArea as $trabalho)
+    @foreach ($trabalhosPorRevisor as $trabalhosDoRevisor)
+      @foreach($trabalhosDoRevisor as $trabalho)
         <!-- Modal Nota -->
         <div class="modal fade" id="modalAvaliarTrabalho{{$trabalho->id}}" tabindex="-1" role="dialog" aria-labelledby="labelModalAvaliarTrabalho{{$trabalho->id}}" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
