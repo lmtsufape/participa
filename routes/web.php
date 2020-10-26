@@ -41,13 +41,12 @@ Log::info('redirect - verify');
 
 Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('atividades.json');
 
-Route::group(['middleware' => ['auth', 'verified']], function(){
+Route::get('/perfil','UserController@perfil')->name('perfil')->middleware('auth');
+Route::post('/perfil/editar','UserController@editarPerfil')->name('perfil.update')->middleware('auth');
+
+Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Log::info('redirect - routes');
   Route::get('/', 'HomeController@index')->name('home.user');
-  Route::get('/perfil','UserController@perfil')->name('perfil');
-  Route::post('/perfil/editar','UserController@editarPerfil')->name('perfil.update');
-
-
   // rotas do administrador
   Route::get('admin/home', 'AdministradorController@index')->name('admin.home');
   Route::get('admin/editais', 'AdministradorController@editais')->name('admin.editais');
@@ -142,7 +141,7 @@ Route::group(['middleware' => ['auth', 'verified']], function(){
   Route::post(  '/revisor/emailTodos',    'RevisorController@enviarEmailTodosRevisores')->name('revisor.emailTodos');
   Route::get(  '/revisores-por-area/{id}','RevisorController@revisoresPorAreaAjax'     )->name('revisores.area');
   //AreaModalidade
-  Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
+  // Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
   Route::get('{id}/modalidade-arquivo-regras',  'ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
   //Trabalho
   Route::get(   '/trabalho/submeter/{id}/{idModalidade}','TrabalhoController@index'    )->name('trabalho.index');

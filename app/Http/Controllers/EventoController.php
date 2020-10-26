@@ -162,7 +162,7 @@ class EventoController extends Controller
      
 
         $areas = Area::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
 
 
         return view('coordenador.revisores.cadastrarRevisores', [
@@ -255,7 +255,7 @@ class EventoController extends Controller
         
         $modalidades = Modalidade::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
-        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+        // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
 
 
         return view('coordenador.modalidade.listarModalidade', [
@@ -730,7 +730,7 @@ class EventoController extends Controller
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
         $revisores = Revisor::where('evento_id', $evento->id)->get();
         $modalidades = Modalidade::where('eventoId', $evento->id)->get();
-        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+        // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
@@ -765,7 +765,7 @@ class EventoController extends Controller
                                                     'revs'                    => $revs,
                                                     'users'                   => $users,
                                                     'modalidades'             => $modalidades,
-                                                    'areaModalidades'         => $areaModalidades,
+                                                    // 'areaModalidades'         => $areaModalidades,
                                                     'trabalhos'               => $trabalhos,
                                                     'trabalhosEnviados'       => $trabalhosEnviados,
                                                     'trabalhosAvaliados'      => $trabalhosAvaliados,

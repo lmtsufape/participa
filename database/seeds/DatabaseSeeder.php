@@ -126,15 +126,16 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         }
 
         DB::table('modalidades')->insert([
-          'nome' => 'Resumo',
+          'nome'        => 'Resumo',
+          'evento_id'   => 1,
         ]);
 
-        for($i = 0; $i < sizeof($areasEventoZoo); $i++){
-          DB::table('area_modalidades')->insert([
-            'areaId'       => $i + 1,
-            'modalidadeId' => 1,
-          ]);
-        }
+        // for($i = 0; $i < sizeof($areasEventoZoo); $i++){
+        //   DB::table('area_modalidades')->insert([
+        //     'areaId'       => $i + 1,
+        //     'modalidadeId' => 1,
+        //   ]);
+        // }
 
 
         for($i = 0; $i < 40; $i++){
