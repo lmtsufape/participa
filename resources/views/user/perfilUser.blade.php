@@ -285,6 +285,8 @@
 
         </div>
 
+        
+
         <div class="row">
             @if ($user->membroComissaoEvento != null && count($user->membroComissaoEvento) > 0)
                 <div class="col-md-4">
@@ -317,6 +319,50 @@
 
         </div>
 
+        {{-- @if(isset(Auth::user()->revisor))
+        <div class="row subtitulo" style="margin-top:20px">
+            <div class="col-sm-12">
+                <p>Informações do perfil de revisor</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label for="area" class="col-form-label">{{ __('Primeira área do conhecimento') }}</label>
+                <select class="form-control @error('primeiraArea') is-invalid @enderror" name="primeiraArea" id="area">
+                    @foreach ($areas as $area)
+                        @if (Auth::user()->revisor->areaId == $area->id)
+                            <option value="{{$area->id}}" selected>{{$area->nome}}</option>
+                        @else 
+                            <option value="{{$area->id}}">{{$area->nome}}</option>
+                        @endif    
+                    @endforeach
+
+                    @error('primeiraArea')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </select>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="area" class="col-form-label">{{ __('Segunda área do conhecimento') }}</label>
+                <select class="form-control @error('segundaArea') is-invalid @enderror" name="segundaArea" id="area">
+                    <option value="" selected>-- Alternativa de área --</option>
+                    @foreach ($areas as $area)
+                        <option value="{{$area->id}}">{{$area->nome}}</option>
+                    @endforeach
+
+                    @error('segundaArea')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </select>
+            </div>
+        </div>
+        @endif --}}
+        
         <div class="row subtitulo" style="margin-top:20px">
             <div class="col-sm-12">
                 <p>Endereço</p>

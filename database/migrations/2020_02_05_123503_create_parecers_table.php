@@ -17,6 +17,7 @@ class CreateParecersTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('resultado');
+            $table->text('justificativa')->nullable();
 
             $table->integer('revisorId');
             $table->integer('trabalhoId');

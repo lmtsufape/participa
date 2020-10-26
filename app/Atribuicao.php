@@ -3,9 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Atribuicao extends Model
+class Atribuicao extends Pivot
 {
   use SoftDeletes;
   /**
@@ -13,15 +14,16 @@ class Atribuicao extends Model
    *
    * @var array
    */
-  protected $fillable = [
-      'confirmacao', 'parecer','revisorId', 'trabalhoId',
-  ];
+  public $incrementing = true;
+//   protected $fillable = [
+//       'confirmacao', 'parecer','revisorId', 'trabalhoId',
+//   ];
 
-  public function revisor(){
-      return $this->belongsTo('App\Revisor', 'revisorId');
-  }
+//   public function revisor(){
+//       return $this->belongsTo('App\Revisor', 'revisorId');
+//   }
 
-  public function trabalho(){
-      return $this->belongsTo('App\Trabalho', 'trabalhoId');
-  }
+//   public function trabalho(){
+//       return $this->belongsTo('App\Trabalho', 'trabalhoId');
+//   }
 }

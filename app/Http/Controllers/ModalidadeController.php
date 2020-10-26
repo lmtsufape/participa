@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 // use Illuminate\Http\File;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
+use App\Evento;
 
 class ModalidadeController extends Controller
 {
@@ -53,14 +54,15 @@ class ModalidadeController extends Controller
         $mytime = Carbon::now('America/Recife');
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
-
+        $evento = Evento::find($request->eventoId);
+        // dd($request->eventoId);
         $validatedData = $request->validate([
 
-            'inicioSubmissao'   => ['nullable', 'date'],
-            'fimSubmissao'      => ['nullable', 'date'],
-            'inicioRevisao'     => ['nullable', 'date'],
-            'fimRevisao'        => ['nullable', 'date'],
-            'inicioResultado'   => ['nullable', 'date'],
+            'inícioDaSubmissão' => ['required', 'date'],
+            'fimDaSubmissão'    => ['required', 'date', 'after:inícioDaSubmissão'],
+            'inícioDaRevisão'   => ['required', 'date', 'after:inícioDaSubmissão'],
+            'fimDaRevisão'      => ['required', 'date', 'after:inícioDaRevisão'],
+            'inícioDoResultado' => ['required', 'date', 'after:fimDaRevisão'],
             'mincaracteres'     => ['nullable', 'integer'],
             'maxcaracteres'     => ['nullable', 'integer'],
             'minpalavras'       => ['nullable', 'integer'],
@@ -106,29 +108,28 @@ class ModalidadeController extends Controller
         }
 
         // Campo TEXTO boolean removido? 
-        $modalidade = Modalidade::create([
-            'nome'              => $request->nomeModalidade,
-            'inicioSubmissao'   => $request->inicioSubmissao,
-            'fimSubmissao'      => $request->fimSubmissao,
-            'inicioRevisao'     => $request->inicioRevisao,
-            'fimRevisao'        => $request->fimRevisao,
-            'inicioResultado'   => $request->inicioResultado,
-            // 'texto'             => $texto,
-            'arquivo'           => $request->arquivo,
-            'caracteres'        => $caracteres,
-            'palavras'          => $palavras,
-            'mincaracteres'     => $request->mincaracteres,
-            'maxcaracteres'     => $request->maxcaracteres,
-            'minpalavras'       => $request->minpalavras,
-            'maxpalavras'       => $request->maxpalavras,
-            'pdf'               => $request->pdf,
-            'jpg'               => $request->jpg,
-            'jpeg'              => $request->jpeg,
-            'png'               => $request->png,
-            'docx'              => $request->docx,
-            'odt'               => $request->odt,
-            'eventoId'          => $request->eventoId,
-        ]);
+        $modalidade = new Modalidade();
+        $modalidade->nome               = $request->nomeModalidade;
+        $modalidade->inicioSubmissao    = $request->input("inícioDaSubmissão");
+        $modalidade->fimSubmissao       = $request->input("fimDaSubmissão");
+        $modalidade->inicioRevisao      = $request->input("inícioDaRevisão");
+        $modalidade->fimRevisao         = $request->input("fimDaRevisão");
+        $modalidade->inicioResultado    = $request->input("inícioDoResultado");
+        $modalidade->arquivo            = $request->arquivo;
+        $modalidade->caracteres         = $caracteres;
+        $modalidade->palavras           = $palavras;
+        $modalidade->mincaracteres      = $request->mincaracteres;
+        $modalidade->maxcaracteres      = $request->maxcaracteres;
+        $modalidade->minpalavras        = $request->minpalavras;
+        $modalidade->maxpalavras        = $request->maxpalavras;
+        $modalidade->pdf                = $request->pdf;
+        $modalidade->jpg                = $request->jpg;
+        $modalidade->jpeg               = $request->jpeg;
+        $modalidade->png                = $request->png;
+        $modalidade->docx               = $request->docx;
+        $modalidade->odt                = $request->odt;
+        $modalidade->evento_id          = $request->eventoId;
+        $modalidade->save();
 
         if(isset($request->arquivoRegras)){
             $fileRegras = $request->arquivoRegras;
@@ -152,7 +153,7 @@ class ModalidadeController extends Controller
         
         $modalidade->save();
 
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+        return redirect()->back()->with(['mensagem' => 'Modalidade cadastrada com sucesso!']);
     }
 
     /**
@@ -336,5 +337,10 @@ class ModalidadeController extends Controller
     public function destroy(Modalidade $modalidade)
     {
         //
+    }
+
+    public function downloadRegras($id) {
+        $modalidade = Modalidade::find($id);
+        return Storage::download($modalidade->regra);
     }
 }

@@ -40,8 +40,8 @@
                 <td>{{$trabalho->id}}</td>
                 <td>{{$trabalho->area->nome}}</td>
                 <td>
-                    @foreach($trabalho->atribuicao as $atribuicao)
-                    {{$atribuicao->revisor->user->email}},
+                    @foreach($trabalho->atribuicoes as $revisor)
+                        {{$revisor->user->email}},
                     @endforeach
                 </td>
                 <td style="text-align:center">
@@ -49,7 +49,7 @@
                     @foreach($trabalho->arquivo as $key)
                     @php
                     if($key->versaoFinal == true){
-                    $arquivo = $key->nome;
+                        $arquivo = $key->nome;
                     }
                     @endphp
                     @endforeach

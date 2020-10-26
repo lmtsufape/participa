@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAtribuicaosTable extends Migration
+class CreateAvaliacaosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class CreateAtribuicaosTable extends Migration
      */
     public function up()
     {
-        Schema::create('atribuicaos', function (Blueprint $table) {
+        Schema::create('avaliacaos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
-            $table->softDeletes();
-            $table->boolean('confirmacao');
-            $table->string('parecer');
-
+            $table->bigInteger('opcao_criterio_id');
             $table->bigInteger('revisor_id');
             $table->bigInteger('trabalho_id');
+            $table->timestamps();
+
+            $table->foreign('opcao_criterio_id')->references('id')->on('opcoes_criterios');
+            $table->foreign('revisor_id')->references('id')->on('revisors');
+            $table->foreign('trabalho_id')->references('id')->on('trabalhos');
         });
     }
 
@@ -32,6 +33,6 @@ class CreateAtribuicaosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('atribuicaos');
+        Schema::dropIfExists('avaliacaos');
     }
 }

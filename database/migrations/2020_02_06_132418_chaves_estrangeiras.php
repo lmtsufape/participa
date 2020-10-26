@@ -22,12 +22,16 @@ class ChavesEstrangeiras extends Migration
 
       //------------------------------------------------------------------------
 
-      Schema::table('area_modalidades', function (Blueprint $table) {
-          $table->foreign('areaId')->references('id')->on('areas');
-      });
-      Schema::table('area_modalidades', function (Blueprint $table) {
-          $table->foreign('modalidadeId')->references('id')->on('modalidades');
-      });
+    //   Schema::table('area_modalidades', function (Blueprint $table) {
+    //       $table->foreign('areaId')->references('id')->on('areas')->onDelete('cascade');
+    //   });
+    //   Schema::table('area_modalidades', function (Blueprint $table) {
+    //       $table->foreign('modalidadeId')->references('id')->on('modalidades')->onDelete('cascade');
+    //   });
+
+        Schema::table('modalidades', function(Blueprint $table) {
+            $table->foreign('evento_id')->references('id')->on('eventos')->onDelete('cascade');
+        });
 
       //------------------------------------------------------------------------
 
@@ -44,10 +48,10 @@ class ChavesEstrangeiras extends Migration
       //------------------------------------------------------------------------
 
       Schema::table('atribuicaos', function (Blueprint $table) {
-          $table->foreign('trabalhoId')->references('id')->on('trabalhos');
+          $table->foreign('trabalho_id')->references('id')->on('trabalhos');
       });
       Schema::table('atribuicaos', function (Blueprint $table) {
-          $table->foreign('revisorId')->references('id')->on('revisors');
+          $table->foreign('revisor_id')->references('id')->on('revisors');
       });
 
       //------------------------------------------------------------------------
@@ -56,7 +60,7 @@ class ChavesEstrangeiras extends Migration
           $table->foreign('trabalhoId')->references('id')->on('trabalhos');
       });
       Schema::table('coautors', function (Blueprint $table) {
-          $table->foreign('user_id')->references('id')->on('users');
+          $table->foreign('autorId')->references('id')->on('users');
       });
 
       //------------------------------------------------------------------------
@@ -128,11 +132,14 @@ class ChavesEstrangeiras extends Migration
           $table->foreign('user_id')->references('id')->on('users');
       });
       Schema::table('revisors', function (Blueprint $table) {
-          $table->foreign('eventoId')->references('id')->on('eventos');
-      });
-      Schema::table('revisors', function (Blueprint $table) {
           $table->foreign('areaId')->references('id')->on('areas');
       });
+      Schema::table('revisors', function (Blueprint $table) {
+        $table->foreign('evento_id')->references('id')->on('eventos');
+      });
+    //   Schema::table('revisors', function (Blueprint $table) {
+    //     $table->foreign('area_alternativa_id')->references('id')->on('areas');
+    //   });
       Schema::table('eventos',function (Blueprint $table){
         $table->foreign('coord_comissao_cientifica_id')->references('id')->on('users');
       });

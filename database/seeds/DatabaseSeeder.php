@@ -87,7 +87,6 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'etiquetamoduloinscricao'        => 'Inscrições',
           'etiquetamoduloprogramacao'      => 'Programação',
           'etiquetamoduloorganizacao'      => 'Organização',
-          
         ]);
 
         DB::table('form_subm_trabas')->insert([
@@ -127,15 +126,16 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         }
 
         DB::table('modalidades')->insert([
-          'nome' => 'Resumo',
+          'nome'        => 'Resumo',
+          'evento_id'   => 1,
         ]);
 
-        for($i = 0; $i < sizeof($areasEventoZoo); $i++){
-          DB::table('area_modalidades')->insert([
-            'areaId'       => $i + 1,
-            'modalidadeId' => 1,
-          ]);
-        }
+        // for($i = 0; $i < sizeof($areasEventoZoo); $i++){
+        //   DB::table('area_modalidades')->insert([
+        //     'areaId'       => $i + 1,
+        //     'modalidadeId' => 1,
+        //   ]);
+        // }
 
 
         for($i = 0; $i < 40; $i++){
@@ -249,12 +249,12 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         $this->call(ParticipanteSeed::class);
         $this->call(CoordEventoSeed::class);
 
-        $user = App\User::find(1);
-        $coordCC = App\User::find(4);
-        $evento = App\Evento::find(1);
-        $coordComissaoCientifica = App\CoordComissaoCientifica::find(1);
-        $user->coordEvento->evento()->save($evento);
-        $coordCC->coordComissaoCientifica->eventos()->save($evento);
+        // $user = App\User::find(1);
+        // $coordCC = App\User::find(4);
+        // $evento = App\Evento::find(1);
+        // $coordComissaoCientifica = App\CoordComissaoCientifica::find(1);
+        // $user->coordEvento->evento()->save($evento);
+        // $coordCC->coordComissaoCientifica->eventos()->save($evento);
         
 
     }

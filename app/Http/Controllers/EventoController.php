@@ -55,11 +55,17 @@ class EventoController extends Controller
         
 
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $numeroRevisores = Revisor::where('evento_id', $evento->id)->count();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
-        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+
+        $trabalhosAvaliados = 0;
+        foreach ($trabalhosId as $trabalho) {
+          $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
+        }
+        
         $numeroComissao = count($evento->usuariosDaComissao);
 
 
@@ -91,18 +97,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
 
-        
-
-        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
-        // dd($ComissaoEventos);
-        $ids = [];
-        foreach($ComissaoEvento as $ce){
-          array_push($ids,$ce->userId);
-        }
-        $users = User::find($ids);
-
         $users = $evento->usuariosDaComissao;
-
 
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
@@ -167,7 +162,7 @@ class EventoController extends Controller
      
 
         $areas = Area::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
 
 
         return view('coordenador.revisores.cadastrarRevisores', [
@@ -184,14 +179,13 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
 
         $this->authorize('isCoordenadorOrComissao', $evento);
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
+        $revisores = Revisor::where('evento_id', $evento->id)->get();
+        $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
 
         return view('coordenador.revisores.listarRevisores', [
                                                     'evento'                  => $evento,
                                                     'revisores'               => $revisores,
                                                     'revs'                    => $revs,
-
                                                   ]);
 
     }
@@ -200,7 +194,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->evento_id);
         
-        $usuarios = User::doesntHave('administradors')->paginate(10);
+        $usuarios = User::doesntHave('administradors')->get();
 
         return view('coordenador.revisores.listarUsuarios', compact('usuarios', 'evento'));
 
@@ -242,9 +236,9 @@ class EventoController extends Controller
     public function cadastrarModalidade(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        
+        // dd($request);
         $areas = Area::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
 
         return view('coordenador.modalidade.cadastrarModalidade', [
                                                     'evento'                  => $evento,
@@ -259,9 +253,9 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
-        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+        // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
 
 
         return view('coordenador.modalidade.listarModalidade', [
@@ -277,7 +271,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
 
         return view('coordenador.modalidade.cadastrarCriterio', [
                                                     'evento'                  => $evento,
@@ -291,7 +285,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
@@ -331,7 +325,7 @@ class EventoController extends Controller
             }
           }
         }
-
+        // dd($request);
         return view('coordenador.evento.editarEtiqueta', [
                                                     'evento'                  => $evento,
                                                     'etiquetas'               => $etiquetas,
@@ -393,33 +387,13 @@ class EventoController extends Controller
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
 
-        // dd($request);
-        // validar datas nulas antes, pois pode gerar um bug
-
-        if(
-          $request->dataInicio == null      ||
-          $request->dataFim == null
-          // $request->inicioSubmissao == null ||
-          // $request->fimSubmissao == null    ||
-          // $request->inicioRevisao == null   ||
-          // $request->fimRevisao == null      ||
-          // $request->inicioResultado == null ||
-          // $request->fimResultado == null
-        ){
+        if($request->dataInicio == null || $request->dataFim == null){
           $validatedData = $request->validate([
             'nome'                => ['required', 'string'],
-            // 'numeroParticipantes' => ['required', 'integer', 'gt:0'],
             'descricao'           => ['required', 'string'],
             'tipo'                => ['required', 'string'],
             'dataInicio'          => ['required', 'date','after:'. $yesterday],
             'dataFim'             => ['required', 'date'],
-            // 'inicioSubmissao'     => ['required', 'date'],
-            // 'fimSubmissao'        => ['required', 'date'],
-            // 'inicioRevisao'       => ['required', 'date'],
-            // 'fimRevisao'          => ['required', 'date'],
-            // 'inicioResultado'     => ['required', 'date'],
-            // 'fimResultado'        => ['required', 'date'],
-            // 'valorTaxa'           => ['required', 'integer'],
             'fotoEvento'          => ['file', 'mimes:png'],
           ]);
         }
@@ -428,18 +402,10 @@ class EventoController extends Controller
 
         $validatedData = $request->validate([
           'nome'                => ['required', 'string'],
-          // 'numeroParticipantes' => ['required', 'integer', 'gt:0'],
           'descricao'           => ['required', 'string'],
           'tipo'                => ['required', 'string'],
           'dataInicio'          => ['required', 'date', 'after:' . $yesterday],
           'dataFim'             => ['required', 'date', 'after:' . $request->dataInicio],
-          // 'inicioSubmissao'     => ['required', 'date', 'after:' . $yesterday],
-          // 'fimSubmissao'        => ['required', 'date', 'after:' . $request->inicioSubmissao],
-          // 'inicioRevisao'       => ['required', 'date', 'after:' . $yesterday],
-          // 'fimRevisao'          => ['required', 'date', 'after:' . $request->inicioRevisao],
-          // 'inicioResultado'     => ['required', 'date', 'after:' . $yesterday],
-          // 'fimResultado'        => ['required', 'date', 'after:' . $request->inicioResultado],
-          // 'valorTaxa'           => ['required', 'integer'],
           'fotoEvento'          => ['file', 'mimes:png'],
         ]);
 
@@ -465,24 +431,15 @@ class EventoController extends Controller
 
         $evento = Evento::create([
           'nome'                => $request->nome,
-          // 'numeroParticipantes' => $request->numeroParticipantes,
           'descricao'           => $request->descricao,
           'tipo'                => $request->tipo,
           'dataInicio'          => $request->dataInicio,
           'dataFim'             => $request->dataFim,
-          // 'inicioSubmissao'     => $request->inicioSubmissao,
-          // 'fimSubmissao'        => $request->fimSubmissao,
-          // 'inicioRevisao'       => $request->inicioRevisao,
-          // 'fimRevisao'          => $request->fimRevisao,
-          // 'inicioResultado'     => $request->inicioResultado,
-          // 'fimResultado'        => $request->fimResultado,
-          // 'possuiTaxa'          => $request->possuiTaxa,
-          // 'valorTaxa'           => $request->valorTaxa,
           'enderecoId'          => $endereco->id,
           'coordenadorId'       => Auth::user()->id,
         ]);
-        $user = Auth::user();
-        $user->evento()->save($evento);
+        // $user = Auth::user();
+        // $user->evento()->save($evento);
 
         //$user->save();
         // se o evento tem foto
@@ -495,13 +452,6 @@ class EventoController extends Controller
           $evento->fotoEvento = 'eventos/' . $evento->id . $nome;
           $evento->save();
         }
-
-        // se vou me tornar coordenador do Evento
-
-        // if($request->isCoordenador == true){
-        //   $evento->coordenadorId = Auth::user()->id;
-        //   $evento->save();
-        // }
 
         $evento->coordenadorId = Auth::user()->id;
         $evento->publicado = false;
@@ -569,7 +519,7 @@ class EventoController extends Controller
         $trabalhosIdCoautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->select('trabalhoId')->get();
         $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
         $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
         $atividades = Atividade::where('eventoId', $id)->get();
         $primeiraAtividade = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
       
@@ -747,13 +697,23 @@ class EventoController extends Controller
     {
         $evento = Evento::find($id);
         $this->authorize('isCoordenador', $evento);
-        // dd($id);
-        $endereco = Endereco::find($evento->enderecoId);
-        $formEvento = FormEvento::where('eventoId', $id)->first();
-        $formSubTraba = FormSubmTraba::where('eventoId', $id)->first();
-        $formEvento->delete();
-        $formSubTraba->delete();
+        
+        // dd($evento->endereco);
+        $evento->formEvento->delete();
+        $evento->formSubTrab->delete();
+        $endereco = $evento->endereco;
+        
+        if ($evento->areas != null) {
+          foreach ($evento->areas as $area) {
+            $area->delete();
+          }
+        }
+        foreach ($evento->atividade as $atividade) {
+          $atividade->delete();
+        }
+        
         $evento->delete();
+        
         $endereco->delete();
 
         return redirect()->back();
@@ -768,19 +728,22 @@ class EventoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::where('eventoId', $evento->id)->get();
-        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+        $revisores = Revisor::where('evento_id', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
+        // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
-        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+        $trabalhosAvaliados = 0;
+        foreach ($trabalhosId as $trabalho) {
+          $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
+        }
 
-        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $numeroRevisores = Revisor::where('evento_id', $evento->id)->count();
         $numeroComissao = count($evento->usuariosDaComissao);
         // $atribuicoesProcessando
         // dd($trabalhosEnviados);
-        $revs = Revisor::where('eventoId', $evento->id)->with('user')->get();
+        $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
@@ -802,7 +765,7 @@ class EventoController extends Controller
                                                     'revs'                    => $revs,
                                                     'users'                   => $users,
                                                     'modalidades'             => $modalidades,
-                                                    'areaModalidades'         => $areaModalidades,
+                                                    // 'areaModalidades'         => $areaModalidades,
                                                     'trabalhos'               => $trabalhos,
                                                     'trabalhosEnviados'       => $trabalhosEnviados,
                                                     'trabalhosAvaliados'      => $trabalhosAvaliados,

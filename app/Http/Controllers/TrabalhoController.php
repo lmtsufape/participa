@@ -8,6 +8,7 @@ use App\Evento;
 use App\User;
 use App\AreaModalidade;
 use App\Area;
+use App\Avaliacao;
 use App\Arquivoextra;
 use App\Revisor;
 use App\Modalidade;
@@ -16,6 +17,7 @@ use App\Arquivo;
 use App\FormTipoSubm;
 use App\FormSubmTraba;
 use App\RegraSubmis;
+use App\Parecer;
 use App\ComissaoEvento;
 use App\TemplateSubmis;
 use Carbon\Carbon;
@@ -42,7 +44,7 @@ class TrabalhoController extends Controller
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         // $revisores = Revisor::where('eventoId', $evento->id)->get();
         // $modalidades = Modalidade::all();        
-        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();        
+        // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();        
         // $areasEnomes = Area::wherein('id', $areasId)->get();
         $modalidadesIDeNome = [];
         foreach ($areaModalidades as $key) {
@@ -181,7 +183,7 @@ class TrabalhoController extends Controller
       
       $autor = Auth::user();
       $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->count();
-      $areaModalidade = AreaModalidade::where('areaId', $request->areaId)->where('modalidadeId', $request->modalidadeId)->first();
+      // $areaModalidade = AreaModalidade::where('areaId', $request->araeaId)->where('modalidadeId', $request->modalidadeId)->first();
       Log::debug('Numero de trabalhos' . $evento);
       if($trabalhosDoAutor >= $evento->numMaxTrabalhos){
         return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.']);
@@ -218,8 +220,8 @@ class TrabalhoController extends Controller
       $trabalho = Trabalho::create([
         'titulo' => $request->nomeTrabalho,
         'resumo' => $request->resumo,
-        'modalidadeId'  => $areaModalidade->modalidade->id,
-        'areaId'  => $areaModalidade->area->id,
+        'modalidadeId'  => $request->modalidadeId,
+        'areaId'  => $request->areaId,
         'autorId' => $autor->id,
         'eventoId'  => $evento->id,
         'avaliado' => 'nao',
@@ -456,23 +458,24 @@ class TrabalhoController extends Controller
       ]);
 
       $trabalho = Trabalho::find($request->trabalhoId);
-      $revisores = Atribuicao::where('trabalhoId', $request->trabalhoId)->get();
+      $revisores = $trabalho->atribuicoes;
       $revisoresAux = [];
       foreach ($revisores as $key) {
-        if($key->revisor->user->name != null){
+        if($key->user->name != null){
           array_push($revisoresAux, [
-            'id' => $key->revisor->id,
-            'nomeOuEmail'  => $key->revisor->user->name
+            'id' => $key->id,
+            'nomeOuEmail'  => $key->user->name
           ]);
         }
         else{
           array_push($revisoresAux, [
-            'id' => $key->revisor->id,
-            'nomeOuEmail'  => $key->revisor->user->email
+            'id' => $key->id,
+            'nomeOuEmail'  => $key->user->email
           ]);
         }
       }
-      $revisoresDisponeis = Revisor::where('eventoId', $trabalho->eventoId)->where('areaId', $trabalho->areaId)->get();
+      $evento = Evento::find($trabalho->eventoId);
+      $revisoresDisponeis = $evento->revisores()->where('areaId', $trabalho->areaId)->get();
       $revisoresAux1 = [];
       foreach ($revisoresDisponeis as $key) {
         //verificar se ja é um revisor deste trabalhos
@@ -541,10 +544,96 @@ class TrabalhoController extends Controller
     public function resultados($id) {
       $evento = Evento::find($id);
       $trabalhos = Trabalho::where('eventoId', $id)->get();
-      $areas = Area::where('eventoId', $evento->id)->get();
+      $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
 
       return view('coordenador.trabalhos.resultados')->with(['trabalhos' => $trabalhos,
                                                              'evento' => $evento,
                                                              'areas' => $areas]);
+    }
+    
+    public function pesquisaAjax(Request $request) {
+      if ($request->areaId != null) {
+        $area_id = $request->areaId;
+      } else {
+        $area_id = 1;
+      }
+
+      if ($request->texto != null) {
+        $texto = $request->texto;
+      } else {
+        $texto = "";
+      }
+
+      $trabalhos = Trabalho::where([['areaId', $area_id], ['titulo', 'ilike', '%'. $texto .'%']])->get();
+
+      $trabalhoJson = collect();
+
+      foreach ($trabalhos as $trab) {
+        $trabalho = [
+          'id'          => $trab->id,
+          'titulo'      => $trab->titulo,
+          'nome'        => $trab->autor->name,
+          'area'        => $trab->area->nome,
+          'modalidade'   => $trab->modalidade->nome,
+        ];
+        $trabalhoJson->push($trabalho);
+      }
+
+      return response()->json($trabalhoJson);
+    }
+
+    public function avaliarTrabalho(Request $request, $trabalho_id) {
+      // dd($request);
+      $exibirValidacao = $request->validate([
+        'avaliar_trabalho_id' => 'required',
+        'modalidade_id'       => 'required',
+        'area_id'             => 'required',
+        'evento_id'           => 'required',
+      ]);
+      
+      $modalidade = Modalidade::find($request->modalidade_id);
+      $revisor = Revisor::where([['user_id', auth()->user()->id], ['modalidadeId', $request->modalidade_id], ['areaId', $request->area_id], ['evento_id', $request->evento_id]])->first();
+      $trabalho = Trabalho::find($trabalho_id);
+
+      // dd($revisor);
+      foreach ($modalidade->criterios as $criterio) {
+        $validarCriterio = $request->validate([
+          'criterio_'.$criterio->id => 'required',
+        ]);
+      }
+      
+      $validarParecer = $request->validate([
+        'parecer_final' => 'required',
+        'justificativa' => 'required',
+      ]);
+
+      foreach ($modalidade->criterios as $criterio) {
+        $avaliacao = new Avaliacao();
+        $avaliacao->revisor_id          = $revisor->id;
+        $avaliacao->opcao_criterio_id   = $request->input("criterio_".$criterio->id);
+        $avaliacao->trabalho_id         = $trabalho_id;
+        $avaliacao->save();
+      }
+
+      // Atualizando tabelas
+      $atribuicao = $trabalho->atribuicoes()->updateExistingPivot($revisor->id, ['confirmacao'=>true,'parecer'=>'dado']);  
+      $trabalho->avaliado = "Avaliado";
+      $trabalho->update();
+      
+      //Atualizando os status do revisor
+      $revisor = $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first();
+      $revisor->trabalhosCorrigidos++;
+      $revisor->correcoesEmAndamento--;
+      $revisor->update();
+
+      // Salvando parecer final
+      $parecer = new Parecer();
+      $parecer->resultado     = $request->parecer_final;
+      $parecer->justificativa = $request->justificativa;
+      $parecer->revisorId     = $revisor->id;
+      $parecer->trabalhoId    = $trabalho->id;
+      $parecer->save();
+
+      return redirect()->back()->with(['mensagem' => 'Avaliação salva']);
     }
 }

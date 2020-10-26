@@ -1,6 +1,11 @@
 @extends('coordenador.detalhesEvento')
 
 @section('menu')
+    <div>
+      @error('excluirAtividade')  
+        @include('componentes.mensagens')
+      @enderror
+    </div>
     <div id="divListarAreas" style="display: block">
         <div class="row">
             <div class="col-sm-12">
@@ -30,30 +35,10 @@
                                   <th scope="row">{{$area->id}}</th>
                                   <td>{{$area->nome}}</td>
                                   <td style="text-align:center">
-                                    <!-- Modal de exclusão da área -->
-                                    <div class="modal fade" id="#modalExcluirArea{{$area->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
-                                      <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                          <div class="modal-header">
-                                            <h5 class="modal-title" id="#label">Confirmação</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                              <span aria-hidden="true">&times;</span>
-                                            </button>
-                                          </div>
-                                          <div class="modal-body">
-                                            Tem certeza de deseja excluir essa área?
-                                          </div>
-                                          <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                            
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <form method="POST" action="{{route('area.destroy',$area->id)}}">
+                                    <form id="formExcluirArea{{$area->id}}" method="POST" action="{{route('area.destroy',$area->id)}}">
                                       {{ csrf_field() }}
                                       {{ method_field('DELETE') }}
-                                      <button type="submit" class="dropdown-item" data-toggle="modal" data-target="#modalExcluirArea{{$area->id}}">
+                                      <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalExcluirArea{{$area->id}}">
                                         <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt="">
                                       </button>
                                     </form>
@@ -71,5 +56,27 @@
         </div>
     </div>
 
+    @foreach($areas as $area)
+      <!-- Modal de exclusão da área -->
+      <div class="modal fade" id="modalExcluirArea{{$area->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="#label">Confirmação</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Tem certeza de deseja excluir essa área?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+              <button type="submit" class="btn btn-primary" form="formExcluirArea{{$area->id}}">Sim</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    @endforeach
 
 @endsection

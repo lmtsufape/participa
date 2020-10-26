@@ -138,7 +138,8 @@
                                                         <img src="{{asset('img/icons/edit-regular.svg')}}" class="icon-card" alt="">
                                                         Editar
                                                     </a>
-                                                    <form method="POST" action="{{route('evento.deletar',$evento->id)}}">
+                                                    @if ($evento->trabalhos == null && count($evento->trabalhos) == 0) 
+                                                      <form method="POST" action="{{route('evento.deletar',$evento->id)}}">
                                                         {{ csrf_field() }}
                                                         {{ method_field('DELETE') }}
                                                         <button type="submit" class="dropdown-item">
@@ -146,7 +147,8 @@
                                                             Deletar
                                                         </button>
 
-                                                    </form>
+                                                      </form>
+                                                    @endif
                                                 </div>
                                             </div>
                                         @endcan

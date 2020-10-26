@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEventoRevisor extends Migration
+class CreateOpcoesCriteriosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreateEventoRevisor extends Migration
      */
     public function up()
     {
-        Schema::create('evento_revisor', function (Blueprint $table) {
+        Schema::create('opcoes_criterios', function (Blueprint $table) {
             $table->bigIncrements('id');
-
-            $table->unsignedBigInteger('revisor_id');
-            $table->foreign('revisor_id')->references('id')->on('revisors');
-
-            $table->unsignedBigInteger('evento_id');
-            $table->foreign('evento_id')->references('id')->on('eventos');
-
+            $table->string('nome_opcao');
+            $table->bigInteger('criterio_id');
+            $table->double('valor_real');
             $table->timestamps();
+
+            $table->foreign('criterio_id')->references('id')->on('criterios');
         });
     }
 
@@ -33,6 +31,6 @@ class CreateEventoRevisor extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('evento_revisor');
+        Schema::dropIfExists('opcoes_criterios');
     }
 }

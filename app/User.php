@@ -50,9 +50,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Parecer', 'revisorId');
     }
 
-    public function atribuicao(){
-        return $this->hasMany('App\Atribuicao', 'revisorId');
-    }
+    // public function atribuicao(){
+    //     return $this->hasMany('App\Atribuicao', 'revisorId');
+    // }
 
     public function pertence(){
         return $this->hasMany('App\Pertence', 'revisorId');
@@ -77,7 +77,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function coautor(){
-        return $this->hasOne('App\Coautor');
+        return $this->hasOne('App\Coautor', 'autorId');
     }
 
     public function revisor(){

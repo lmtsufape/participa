@@ -8,8 +8,9 @@ use App\Evento;
 class CoordEventoController extends Controller
 {
 	public function index()
-	{
-		return view('coordenador.index');
+	{	
+		$eventos = Evento::all();
+		return view('coordenador.index', ['eventos'=>$eventos]);
 	}
 
     public function listaEventos()
