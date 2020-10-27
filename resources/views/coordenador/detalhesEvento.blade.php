@@ -226,14 +226,6 @@
     </div>
   @endif
     {{-- {{ $evento->id ?? '' }} --}}
-
-    @yield('menu')
-
-    @hasSection ('script')
-        @yield('script')
-    @endif
-
-
     <div>
         @error('comparacaocaracteres')
           @include('componentes.mensagens')
@@ -264,8 +256,12 @@
           @include('componentes.mensagens')
         @enderror
     </div>
+    
+    @yield('menu')
 
-
+    @hasSection ('script')
+        @yield('script')
+    @endif
 
 </div>
 <input type="hidden" name="trabalhoIdAjax" value="1" id="trabalhoIdAjax">
