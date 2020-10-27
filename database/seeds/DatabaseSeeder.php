@@ -249,6 +249,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         $this->call(ParticipanteSeed::class);
         $this->call(CoordEventoSeed::class);
 
+
         // $user = App\User::find(1);
         // $coordCC = App\User::find(4);
         // $evento = App\Evento::find(1);
