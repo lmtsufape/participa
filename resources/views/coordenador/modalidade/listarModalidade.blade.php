@@ -1,6 +1,9 @@
 @extends('coordenador.detalhesEvento')
 
 @section('menu')
+    @error('excluirModalidade')  
+        @include('componentes.mensagens')
+    @enderror
     <div id="divListarModalidades" class="modalidades" style="display: block">
         <div class="row">
             <div class="col-sm-12">
@@ -20,7 +23,8 @@
                             <thead>
                             <tr>
                                 <th scope="col">Nome</th>
-                                <th scope="col">Editar</th>
+                                <th scope="col" style="text-align:center">Editar</th>
+                                <th scope="col" style="text-align:center">Excluir</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -30,10 +34,11 @@
                                     <td style="text-align:center">
                                         <a href="#" data-toggle="modal" data-target="#modalEditarModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
                                     </td>
+                                    <td style="text-align:center">
+                                        <a href="" data-toggle="modal" data-target="#modalExcluirModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a>
+                                    </td>
                                 </tr>
                                 @endforeach
-
-
                             </tbody>
                         </table>
                       </p>
@@ -84,7 +89,33 @@
 
 
         @foreach ($modalidades as $modalidade)
-        <!-- Modal -->
+        <!-- Modal excluir modalida -->
+
+        <!-- Modal de exclusão da área -->
+        <div class="modal fade" id="modalExcluirModalidade{{$modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="#label">Confirmação</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <form action="{{route('modalidade.destroy', ['id' => $modalidade->id])}}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        Tem certeza de deseja excluir essa modalidade?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                        <button type="submit" class="btn btn-primary">Sim</button>
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
+
+        <!-- Modal editar modalidade -->
             <div class="modal fade" id="modalEditarModalidade{{$modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="modalEditarModalidade" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">

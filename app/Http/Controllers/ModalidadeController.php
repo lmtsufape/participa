@@ -334,9 +334,21 @@ class ModalidadeController extends Controller
      * @param  \App\Modalidade  $modalidade
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Modalidade $modalidade)
+    public function destroy($id)
     {
-        //
+        $modalidade = Modalidade::find($id);
+
+        if (count($modalidade->revisores) > 0) {
+            return redirect()->back()->withErrors(['excluirModalidade' => 'Não é possível excluir, existem revisores ligados a essa modalidade.']);
+        }
+
+        if (count($modalidade->trabalho) > 0) {
+            return redirect()->back()->withErrors(['excluirModalidade' => 'Não é possível excluir, existem trabalhos submetidos ligados a essa modalidade.']);
+        }
+
+        $modalidade->delete();
+
+        return redirect()->back()->with(['mensagem' => 'Modalidade excluida com sucesso!']);
     }
 
     public function downloadRegras($id) {

@@ -130,6 +130,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get(  '/evento/desabilitar/{id}', 'EventoController@desabilitar'             )->name('evento.desabilitar');
   //Modalidade
   Route::post(  '/modalidade/criar',      'ModalidadeController@store'                 )->name('modalidade.store');
+  Route::post(  '/modalidade/{id}/delete',  'ModalidadeController@destroy'             )->name('modalidade.destroy');
   //Area
   Route::post(  '/area/criar',            'AreaController@store'                       )->name('area.store');
   Route::delete(  '/area/deletar/{id}',   'AreaController@destroy'                     )->name('area.destroy');
