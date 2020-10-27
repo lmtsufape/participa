@@ -287,9 +287,31 @@
                 alert("Escolha uma modalidade");
             }
         });
-
-        
     });
+
+    function exibirLimite(id, input) {
+        var caracteres = document.getElementById('caracteres' + id);
+        var palavras = document.getElementById('palavras' + id);
+        if (input.value == "caracteres") {
+            caracteres.style.display    = "block";
+            palavras.style.display      = "none";
+        } else {
+            caracteres.style.display    = "none";
+            palavras.style.display      = "block";
+        }
+    }
+
+    function exibirTiposArquivo(id, input) {
+        var tiposDeArquivo = document.getElementsByClassName('tiposDeArquivos' + id);
+        // console.log(tiposDeArquivo);
+        if (input.checked) {
+            tiposDeArquivo[0].style.display = "block";
+            tiposDeArquivo[1].style.display = "block";
+        } else {
+            tiposDeArquivo[0].style.display = "none";
+            tiposDeArquivo[1].style.display = "none";  
+        }
+    }
 
     $(document).ready(function($){
         $('.cep').mask('00000-000');
@@ -1409,6 +1431,13 @@
         })
     }
   </script>
+  @if(old('modalidadeEditId') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarModalidade{{old('modalidadeEditId')}}").modal('show');
+        });
+    </script>
+  @endif
   @if(old('idAtividade') != null)
     <script>
         $(document).ready(function() {

@@ -143,6 +143,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   //AreaModalidade
   // Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
   Route::get('{id}/modalidade-arquivo-regras',  'ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
+  Route::get('{id}/modalidade-template',      'ModalidadeController@downloadTemplate'  )->name('modalidade.template.download');
   //Trabalho
   Route::get(   '/trabalho/submeter/{id}/{idModalidade}','TrabalhoController@index'    )->name('trabalho.index');
   Route::post(  '/trabalho/novaVersao',   'TrabalhoController@novaVersao'              )->name('trabalho.novaVersao');
