@@ -44,7 +44,7 @@ class TrabalhoController extends Controller
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         // $revisores = Revisor::where('eventoId', $evento->id)->get();
         // $modalidades = Modalidade::all();        
-        $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();        
+        // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();        
         // $areasEnomes = Area::wherein('id', $areasId)->get();
         $modalidadesIDeNome = [];
         foreach ($areaModalidades as $key) {
@@ -183,7 +183,7 @@ class TrabalhoController extends Controller
       
       $autor = Auth::user();
       $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->count();
-      $areaModalidade = AreaModalidade::where('areaId', $request->areaId)->where('modalidadeId', $request->modalidadeId)->first();
+      // $areaModalidade = AreaModalidade::where('areaId', $request->araeaId)->where('modalidadeId', $request->modalidadeId)->first();
       Log::debug('Numero de trabalhos' . $evento);
       if($trabalhosDoAutor >= $evento->numMaxTrabalhos){
         return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.']);
@@ -220,8 +220,8 @@ class TrabalhoController extends Controller
       $trabalho = Trabalho::create([
         'titulo' => $request->nomeTrabalho,
         'resumo' => $request->resumo,
-        'modalidadeId'  => $areaModalidade->modalidade->id,
-        'areaId'  => $areaModalidade->area->id,
+        'modalidadeId'  => $request->modalidadeId,
+        'areaId'  => $request->areaId,
         'autorId' => $autor->id,
         'eventoId'  => $evento->id,
         'avaliado' => 'nao',

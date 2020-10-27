@@ -264,7 +264,7 @@
                     </div>
                     </div>
             </div>
-            <div class="col-sm-6">
+            {{-- <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Áreas por Modalidade</h5>
@@ -318,8 +318,8 @@
                         </form>
 
                     </div>
-                </div>{{-- End card--}}
-            </div>
+                </div>
+            </div> --}}
         </div>{{-- end row card --}}
     </div>
 

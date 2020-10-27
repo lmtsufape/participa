@@ -55,7 +55,7 @@ class ModalidadeController extends Controller
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
         $evento = Evento::find($request->eventoId);
-
+        // dd($request->eventoId);
         $validatedData = $request->validate([
 
             'inícioDaSubmissão' => ['required', 'date'],
@@ -108,29 +108,28 @@ class ModalidadeController extends Controller
         }
 
         // Campo TEXTO boolean removido? 
-        $modalidade = Modalidade::create([
-            'nome'              => $request->nomeModalidade,
-            'inicioSubmissao'   => $request->input("inícioDaSubmissão"),
-            'fimSubmissao'      => $request->input("fimDaSubmissão"),
-            'inicioRevisao'     => $request->input("inícioDaRevisão"),
-            'fimRevisao'        => $request->input("fimDaRevisão"),
-            'inicioResultado'   => $request->input("inícioDoResultado"),
-            // 'texto'             => $texto,
-            'arquivo'           => $request->arquivo,
-            'caracteres'        => $caracteres,
-            'palavras'          => $palavras,
-            'mincaracteres'     => $request->mincaracteres,
-            'maxcaracteres'     => $request->maxcaracteres,
-            'minpalavras'       => $request->minpalavras,
-            'maxpalavras'       => $request->maxpalavras,
-            'pdf'               => $request->pdf,
-            'jpg'               => $request->jpg,
-            'jpeg'              => $request->jpeg,
-            'png'               => $request->png,
-            'docx'              => $request->docx,
-            'odt'               => $request->odt,
-            'eventoId'          => $request->eventoId,
-        ]);
+        $modalidade = new Modalidade();
+        $modalidade->nome               = $request->nomeModalidade;
+        $modalidade->inicioSubmissao    = $request->input("inícioDaSubmissão");
+        $modalidade->fimSubmissao       = $request->input("fimDaSubmissão");
+        $modalidade->inicioRevisao      = $request->input("inícioDaRevisão");
+        $modalidade->fimRevisao         = $request->input("fimDaRevisão");
+        $modalidade->inicioResultado    = $request->input("inícioDoResultado");
+        $modalidade->arquivo            = $request->arquivo;
+        $modalidade->caracteres         = $caracteres;
+        $modalidade->palavras           = $palavras;
+        $modalidade->mincaracteres      = $request->mincaracteres;
+        $modalidade->maxcaracteres      = $request->maxcaracteres;
+        $modalidade->minpalavras        = $request->minpalavras;
+        $modalidade->maxpalavras        = $request->maxpalavras;
+        $modalidade->pdf                = $request->pdf;
+        $modalidade->jpg                = $request->jpg;
+        $modalidade->jpeg               = $request->jpeg;
+        $modalidade->png                = $request->png;
+        $modalidade->docx               = $request->docx;
+        $modalidade->odt                = $request->odt;
+        $modalidade->evento_id          = $request->eventoId;
+        $modalidade->save();
 
         if(isset($request->arquivoRegras)){
             $fileRegras = $request->arquivoRegras;

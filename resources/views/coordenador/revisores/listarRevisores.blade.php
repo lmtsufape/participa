@@ -22,6 +22,7 @@
                               <tr>
                                 <th scope="col">Nome</th>
                                 <th scope="col">Área</th>
+                                <th scope="col">Modalidade</th>
                                 <th scope="col" style="text-align:center">Em Andamento</th>
                                 <th scope="col" style="text-align:center">Finalizados</th>
                                 <th scope="col" style="text-align:center">Visualizar</th>
@@ -33,6 +34,7 @@
                                 <tr>
                                   <td>{{$revisor->user->email}}</td>
                                   <td>{{$revisor->area->nome}}</td>
+                                  <td>{{$revisor->modalidade->nome}}</td>
                                   <td style="text-align:center">{{$revisor->correcoesEmAndamento}}</td>
                                   <td style="text-align:center">{{$revisor->trabalhosCorrigidos}}</td>
                                   <td style="text-align:center">

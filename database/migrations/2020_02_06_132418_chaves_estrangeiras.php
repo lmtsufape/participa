@@ -22,12 +22,16 @@ class ChavesEstrangeiras extends Migration
 
       //------------------------------------------------------------------------
 
-      Schema::table('area_modalidades', function (Blueprint $table) {
-          $table->foreign('areaId')->references('id')->on('areas')->onDelete('cascade');
-      });
-      Schema::table('area_modalidades', function (Blueprint $table) {
-          $table->foreign('modalidadeId')->references('id')->on('modalidades')->onDelete('cascade');
-      });
+    //   Schema::table('area_modalidades', function (Blueprint $table) {
+    //       $table->foreign('areaId')->references('id')->on('areas')->onDelete('cascade');
+    //   });
+    //   Schema::table('area_modalidades', function (Blueprint $table) {
+    //       $table->foreign('modalidadeId')->references('id')->on('modalidades')->onDelete('cascade');
+    //   });
+
+        Schema::table('modalidades', function(Blueprint $table) {
+            $table->foreign('evento_id')->references('id')->on('eventos')->onDelete('cascade');
+        });
 
       //------------------------------------------------------------------------
 
