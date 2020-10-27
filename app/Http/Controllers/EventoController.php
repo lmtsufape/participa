@@ -437,6 +437,7 @@ class EventoController extends Controller
           'dataFim'             => $request->dataFim,
           'enderecoId'          => $endereco->id,
           'coordenadorId'       => Auth::user()->id,
+          'deletado'            => false,
         ]);
         // $user = Auth::user();
         // $user->evento()->save($evento);
@@ -696,27 +697,11 @@ class EventoController extends Controller
     public function destroy($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenador', $evento);
-        
-        // dd($evento->endereco);
-        $evento->formEvento->delete();
-        $evento->formSubTrab->delete();
-        $endereco = $evento->endereco;
-        
-        if ($evento->areas != null) {
-          foreach ($evento->areas as $area) {
-            $area->delete();
-          }
-        }
-        foreach ($evento->atividade as $atividade) {
-          $atividade->delete();
-        }
-        
-        $evento->delete();
-        
-        $endereco->delete();
+        // dd($evento);
+        $evento->deletado = true;
+        $evento->update();
 
-        return redirect()->back();
+        return redirect()->back()->with(['mensagem' => 'Evento deletado com sucesso']);
     }
 
     public function detalhes(Request $request){
