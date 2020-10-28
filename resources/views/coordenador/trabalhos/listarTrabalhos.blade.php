@@ -79,9 +79,9 @@
 <div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Trabalho</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <div class="modal-header" style="background-color: #114048ff; color: white;">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Distrbuir trabalhos automaticamente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -138,9 +138,9 @@
   <div class="modal fade" id="modalTrabalho{{$trabalho->id}}" tabindex="-1" role="dialog" aria-labelledby="labelModalTrabalho{{$trabalho->id}}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header" style="background-color: #114048ff; color: white;">
           <h5 class="modal-title" id="exampleModalCenterTitle">Trabalho</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>

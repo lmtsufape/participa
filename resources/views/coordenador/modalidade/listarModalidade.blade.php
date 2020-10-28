@@ -95,9 +95,9 @@
         <div class="modal fade" id="modalExcluirModalidade{{$modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
             <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title" id="#label">Confirmação</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"> 
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
@@ -119,9 +119,9 @@
             <div class="modal fade" id="modalEditarModalidade{{$modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="modalEditarModalidade" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header" style="background-color: #114048ff; color: white;">
                     <h5 class="modal-title" id="exampleModalLongTitle">Editar {{$modalidade->nome}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     </div>

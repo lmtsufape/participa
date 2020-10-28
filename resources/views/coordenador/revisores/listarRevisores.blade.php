@@ -77,9 +77,9 @@
       <div class="modal fade" id="modalRevisor{{$revisor->id}}" tabindex="-1" role="dialog" aria-labelledby="modalRevisor{{$revisor->id}}" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalCenterTitle">Revisor</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+              <h5 class="modal-title" id="exampleModalCenterTitle">Visualizar revisor</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -112,7 +112,8 @@
               </div>
               <div class="row justify-content-center">
                 <div class="col-sm-12">
-                  <table class="table table-hover table-responsive-lg table-sm">
+                  @if (count($revisor->trabalhosAtribuidos) > 0)
+                    <table class="table table-hover table-responsive-lg table-sm">
                       <thead>
                         <tr>
                           <th scope="col">Título</th>
@@ -129,6 +130,9 @@
                         @endforeach
                       </tbody>
                     </table>
+                  @else 
+                    <h5>Nenhum trabalho atríbuido</h5>
+                  @endif
                 </div>
               </div>
               </div>
