@@ -38,9 +38,9 @@
                                     <form id="formExcluirArea{{$area->id}}" method="POST" action="{{route('area.destroy',$area->id)}}">
                                       {{ csrf_field() }}
                                       {{ method_field('DELETE') }}
-                                      <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalExcluirArea{{$area->id}}">
+                                      <a href="#" data-toggle="modal" data-target="#modalExcluirArea{{$area->id}}">
                                         <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt="">
-                                      </button>
+                                      </a>
                                     </form>
                                   </td>
                                 </tr>
