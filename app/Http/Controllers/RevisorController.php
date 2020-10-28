@@ -151,9 +151,19 @@ class RevisorController extends Controller
      * @param  \App\Revisor  $revisor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Revisor $revisor)
+    public function destroy($id)
     {
-        //
+      $revisor = Revisor::find($id);
+
+      if (count($revisor->trabalhosAtribuidos) > 0) {
+        return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há trabalhos atribuídos para o mesmo.']);
+      }
+      if (count($revisor->avaliacoes) > 0) {
+        return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há avaliações do mesmo.']);
+      }
+
+      $revisor->delete();
+      return redirect()->back()->with(['mensagem' => 'Revisor removido com sucesso!']);
     }
 
     public function numeroDeRevisoresAjax(Request $request){
