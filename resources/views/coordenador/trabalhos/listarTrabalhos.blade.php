@@ -51,9 +51,9 @@
                     {{$revisor->user->email}}.
                   @endforeach
                 @elseif (count($trabalho->atribuicoes) > 1 && count($trabalho->atribuicoes) <= 2)
-                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[0]->user->email}}.
+                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[1]->user->email}}.
                 @elseif(count($trabalho->atribuicoes) > 2)
-                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[0]->user->email}}, ...
+                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[1]->user->email}}, ...
                 @endif
               </td>
               <td style="text-align:center">
