@@ -17,7 +17,15 @@
             </div>
         </div>
     </div>
-
+    @if(session('mensagem'))
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 5px;">
+                <div class="alert alert-success">
+                    <p>{{session('mensagem')}}</p>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="row">
 
         @foreach ($eventos as $evento)
@@ -52,14 +60,13 @@
                                                                 <img src="{{asset('img/icons/edit-regular.svg')}}" class="icon-card" alt="">
                                                                 Editar
                                                             </a>
-                                                            <form method="POST" action="{{route('evento.deletar',$evento->id)}}">
+                                                            <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
                                                                 {{ csrf_field() }}
                                                                 {{ method_field('DELETE') }}
-                                                                <button type="submit" class="dropdown-item">
+                                                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
                                                                     <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt="">
                                                                     Deletar
-                                                                </button>
-
+                                                                </a>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -91,6 +98,27 @@
                         </div>
 
                     </div>
+                    <!-- Modal de exclusão do evento -->
+                    <div class="modal fade" id="modalExcluirEvento{{$evento->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #114048ff; color: white;">
+                            <h5 class="modal-title" id="#label">Confirmação</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                                <div class="modal-body">
+                                    Tem certeza de deseja excluir esse evento?
+                                </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                                <button type="submit" class="btn btn-primary" form="formExcluirEvento{{$evento->id}}">Sim</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- fim do modal -->
                 @endcan
             @endif
         @endforeach
