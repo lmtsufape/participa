@@ -574,7 +574,8 @@ class TrabalhoController extends Controller
           'titulo'      => $trab->titulo,
           'nome'        => $trab->autor->name,
           'area'        => $trab->area->nome,
-          'modalidade'   => $trab->modalidade->nome,
+          'modalidade'  => $trab->modalidade->nome,
+          'rota_download' => !(empty($trab->arquivo->nome)) ? route('downloadTrabalho', ['id' => $trab->id]) : '#',
         ];
         $trabalhoJson->push($trabalho);
       }
