@@ -512,7 +512,7 @@ class TrabalhoController extends Controller
     //função para download do arquivo do trabalho
     public function downloadArquivo($id) {
       $trabalho = Trabalho::find($id);
-      $revisor = Revisor::where([['eventoId', '=', $trabalho->eventoId], ['user_id', '=', auth()->user()->id]])->first();
+      $revisor = Revisor::where([['evento_id', '=', $trabalho->eventoId], ['user_id', '=', auth()->user()->id]])->first();
       $user = User::find(auth()->user()->id);
 
       /*
