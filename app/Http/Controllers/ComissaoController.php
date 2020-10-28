@@ -91,6 +91,11 @@ class ComissaoController extends Controller
             'password' => bcrypt($passwordTemporario),
             'usuarioTemp' => true,
           ]);
+        } else {            
+            $usuarioDaComissa = $evento->usuariosDaComissao()->where('user_id', $user->id)->first();
+            if ($usuarioDaComissa != null) {
+                return redirect()->back()->withErrors(['cadastrarComissao' => 'Esse usuário já é membro da comissão.'])->withInput($validationData);
+            }
         }
 
         // dd($user->id);

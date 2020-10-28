@@ -3,6 +3,9 @@
 @section('menu')
     {{-- Comissão --}}
     <div id="divCadastrarComissao" class="comissao" style="display: block">
+        @error ('cadastrarComissao')
+            @include('componentes.mensagens')
+        @enderror
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Cadastrar Comissão</h1>
