@@ -64,7 +64,6 @@ class RevisorController extends Controller
     {
         $validatedData = $request->validate([
           'emailRevisor'       => ['required', 'string', 'email', 'max:255'],
-          // 'nomeRevisor'        => 'required|string|max:255',
           'areaRevisor'        => ['required', 'integer'],
           'modalidadeRevisor'  => ['required', 'integer'],
         ]);
@@ -78,7 +77,6 @@ class RevisorController extends Controller
           
           $usuario = new User();
           $usuario->email       = $request->emailRevisor;
-          // $usuario->name        = $request->nomeRevisor;
           $usuario->password    = bcrypt($passwordTemporario);
           $usuario->usuarioTemp = true;
           $usuario->save();
@@ -105,7 +103,7 @@ class RevisorController extends Controller
             $revisor->evento_id             = $evento->id;
             $revisor->save();
           } else {
-            return redirect()->back()->withErrors(['cadastrarRevisor' => 'Esse revisor já está cadastrado para o evento.']);
+            return redirect()->back()->withErrors(['cadastrarRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
           }
         }        
         
