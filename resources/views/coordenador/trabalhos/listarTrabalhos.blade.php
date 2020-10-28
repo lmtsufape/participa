@@ -57,15 +57,15 @@
                 @endif
               </td>
               <td style="text-align:center">
-                @php $arquivo = ""; $i++; @endphp
+                {{-- @php $arquivo = ""; $i++; @endphp
                 @foreach($trabalho->arquivo as $key)
                 @php
                 if($key->versaoFinal == true){
                   $arquivo = $key->nome;
                 }
                 @endphp
-                @endforeach
-                @if (!(empty($trabalho->arquivo->items)))
+                @endforeach --}}
+                @if (!(empty($trabalho->arquivo->nome)))
                     <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                 @endif
               </td>

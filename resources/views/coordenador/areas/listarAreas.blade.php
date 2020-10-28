@@ -68,7 +68,7 @@
               </button>
             </div>
             <div class="modal-body">
-              Tem certeza de deseja excluir essa área?
+              Tem certeza que deseja excluir essa área?
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>

@@ -104,7 +104,7 @@
                 <form action="{{route('modalidade.destroy', ['id' => $modalidade->id])}}" method="POST">
                     @csrf
                     <div class="modal-body">
-                        Tem certeza de deseja excluir essa modalidade?
+                        Tem certeza que deseja excluir essa modalidade?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
