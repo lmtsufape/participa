@@ -4,7 +4,9 @@
 
     <!-- Revisores -->
     <div id="divCadastrarRevisores" style="display: block">
-
+        @error('cadastrarRevisor')
+            @include('componentes.mensagens')
+        @enderror
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Cadastrar Revisores</h1>
@@ -34,7 +36,7 @@
                                     </div> --}}
                                     <div class="col-sm-4">
                                         <label for="emailRevisor" class="col-form-label">{{ __('Email do Revisor') }}</label>
-                                        <input id="emailRevisor" type="text" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{ old('emailRevisor') }}" required autocomplete="emailRevisor" autofocus>
+                                        <input id="emailRevisor" type="text" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{old('emailRevisor')}}" required autocomplete="emailRevisor" autofocus>
 
                                         @error('emailRevisor')
                                         <span class="invalid-feedback" role="alert">

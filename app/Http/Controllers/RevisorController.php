@@ -94,14 +94,19 @@ class RevisorController extends Controller
           $revisor->save();
 
         } else {
-          $revisor = new Revisor();
-          $revisor->trabalhosCorrigidos   = 0;
-          $revisor->correcoesEmAndamento  = 0;
-          $revisor->user_id               = $usuario->id;
-          $revisor->areaId                = $request->areaRevisor;
-          $revisor->modalidadeId          = $request->modalidadeRevisor;
-          $revisor->evento_id             = $evento->id;
-          $revisor->save();
+          $revisor = Revisor::where([['user_id', $usuario->id], ['areaId', $request->areaRevisor], ['modalidadeId', $request->modalidadeRevisor]])->first();
+          if ($revisor == null) {
+            $revisor = new Revisor();
+            $revisor->trabalhosCorrigidos   = 0;
+            $revisor->correcoesEmAndamento  = 0;
+            $revisor->user_id               = $usuario->id;
+            $revisor->areaId                = $request->areaRevisor;
+            $revisor->modalidadeId          = $request->modalidadeRevisor;
+            $revisor->evento_id             = $evento->id;
+            $revisor->save();
+          } else {
+            return redirect()->back()->withErrors(['cadastrarRevisor' => 'Esse revisor já está cadastrado para o evento.']);
+          }
         }        
         
 
