@@ -171,8 +171,12 @@ class ComissaoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $evento = Evento::find($request->evento_id);
+        
+        $evento->usuariosDaComissao()->detach($id);
+
+        return redirect()->back()->with(['mensagem' => 'Membro da comissão removido com sucesso!']);
     }
 }

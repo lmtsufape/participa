@@ -22,10 +22,32 @@
                                     <th>Celular</th>
                                     <th>E-mail</th>
                                     <th>Direção</th>
+                                    <th style="text-align:center">Remover</th>
                                 </th>
                             </thead>
                                 @if ($users != null)
                                   @foreach ($users as $user)
+                                  <!-- Modal de exclusão do evento -->
+                                    <div class="modal fade" id="modalRemoverComissao{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                          <div class="modal-header" style="background-color: #114048ff; color: white;">
+                                          <h5 class="modal-title" id="#label">Confirmação</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                          </div>
+                                              <div class="modal-body">
+                                                  Tem certeza que deseja remover esse membro da comissão do evento?
+                                              </div>
+                                          <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                                              <button type="submit" class="btn btn-primary" form="removerComissao{{$user->id}}">Sim</button>
+                                          </div>
+                                      </div>
+                                      </div>
+                                    </div>
+                                  <!-- fim do modal -->
                                   <tbody>
 
                                       <th>
@@ -34,17 +56,39 @@
                                           <td>{{$user->especProfissional}}</td>
                                           <td>{{$user->celular}}</td>
                                           <td>{{$user->email}}</td>
+                                          <td>
                                           @if ($evento->coordComissaoId == $user->id)
-                                            <td>Coordenador</td>
+                                            Coordenador
                                           @endif
+                                          </td>
+                                          <td style="text-align:center">
+                                            <form id="removerComissao{{$user->id}}" action="{{route('remover.comissao', ['id' => $user->id])}}" method="POST">
+                                              @csrf
+                                              <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                                              <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
+                                                <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
+                                              </a>
+                                            </form>
+                                          </td>
                                         @else
                                           <td>Usuário temporário - Sem nome</td>
                                           <td>Usuário temporário - Sem Especialidade</td>
                                           <td>Usuário temporário - Sem Celular</td>
                                           <td>{{$user->email}}</td>
+                                          <td>
                                           @if ($evento->coordComissaoId == $user->id)
-                                            <td>Coordenador</td>
+                                            Coordenador
                                           @endif
+                                          </td>
+                                          <td style="text-align:center">
+                                            <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao', ['id' => $user->id])}}" method="POST">
+                                              @csrf
+                                              <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                                              <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
+                                                <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
+                                              </a>
+                                            </form>
+                                          </td>
                                         @endif
                                       </th>
                                   </tbody>
