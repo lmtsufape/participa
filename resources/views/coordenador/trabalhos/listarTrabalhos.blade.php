@@ -44,9 +44,17 @@
               <td>{{$trabalho->area->nome}}</td>
               <td>{{$trabalho->modalidade->nome}}</td>
               <td>
-                @foreach($trabalho->atribuicoes as $revisor)
-                  {{$revisor->user->email}},
-                @endforeach
+                @if (count($trabalho->atribuicoes) == 0)
+                  Nenhum revisor atribuído
+                @elseif (count($trabalho->atribuicoes) == 1)
+                  @foreach($trabalho->atribuicoes as $revisor)
+                    {{$revisor->user->email}}.
+                  @endforeach
+                @elseif (count($trabalho->atribuicoes) > 1 && count($trabalho->atribuicoes) <= 2)
+                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[0]->user->email}}.
+                @elseif(count($trabalho->atribuicoes) > 2)
+                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[0]->user->email}}, ...
+                @endif
               </td>
               <td style="text-align:center">
                 @php $arquivo = ""; $i++; @endphp
