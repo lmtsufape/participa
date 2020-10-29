@@ -145,15 +145,13 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         
-        $areas = Area::where('eventoId', $evento->id)->get();
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
 
         return view('coordenador.areas.listarAreas', [
                                                     'evento'                  => $evento,
                                                     'areas'                   => $areas,
 
                                                   ]);
-
     }
 
     public function cadastrarRevisores(Request $request)
