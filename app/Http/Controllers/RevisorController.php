@@ -261,6 +261,7 @@ class RevisorController extends Controller
 
     public function trabalhosDoEvento($id) {
       $evento = Evento::find($id);
+      $this->authorize('isRevisor', $evento);
       $revisores = Revisor::where([['user_id', auth()->user()->id],['evento_id', $id]])->get();
       $trabalhos = collect();
       foreach ($revisores as $revisor) {
