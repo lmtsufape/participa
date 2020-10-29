@@ -543,6 +543,8 @@ class TrabalhoController extends Controller
 
     public function resultados($id) {
       $evento = Evento::find($id);
+      $this->authorize('isCoordenadorOrComissao', $evento);
+
       $trabalhos = Trabalho::where('eventoId', $id)->orderBy('titulo')->get();
       $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
 
