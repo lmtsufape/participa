@@ -30,7 +30,7 @@
 
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
-                @can('isPublishOrIsCoordenador', $evento)
+                @can('isCoordenador', $evento)
                     <div class="card" style="width: 18rem;">
                         @if(isset($evento->fotoEvento))
                         <img src="{{asset('storage/' . $evento->fotoEvento)}}" class="card-img-top" alt="...">
@@ -46,7 +46,7 @@
                                                 {{$evento->nome}}
                                                 {{-- @if(Auth()->user()->revisor->eventos->contains($evento)) --}}
                                                     <div class="btn-group dropright dropdown-options">
-                                                        @can('isCoordenador', $evento)
+                                                        
                                                         <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
                                                                 <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
@@ -70,7 +70,6 @@
                                                                 </a>
                                                             </form>
                                                         </div>
-                                                        @endcan
                                                     </div>
                                                 {{-- @endif --}}
                                             </div>
