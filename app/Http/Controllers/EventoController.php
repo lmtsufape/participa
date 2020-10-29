@@ -100,8 +100,8 @@ class EventoController extends Controller
         $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->get();
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
-        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('id')->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
+        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('titulo')->get();
 
         return view('coordenador.trabalhos.listarTrabalhos', [
                                                     'evento'            => $evento,

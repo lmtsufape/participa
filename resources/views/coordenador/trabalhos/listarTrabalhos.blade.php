@@ -28,7 +28,7 @@
         <table class="table table-hover table-responsive-lg table-sm">
           <thead>
             <tr>
-              <th scope="col">ID</th>
+              <th scope="col">Título</th>
               <th scope="col">Área</th>
               <th scope="col">Modalidade</th>
               <th scope="col">Revisores</th>
@@ -40,7 +40,7 @@
             @php $i = 0; @endphp
             @foreach($trabalhos as $trabalho)
             <tr>
-              <td>{{$trabalho->id}}</td>
+              <td>{{$trabalho->titulo}}</td>
               <td>{{$trabalho->area->nome}}</td>
               <td>{{$trabalho->modalidade->nome}}</td>
               <td>
