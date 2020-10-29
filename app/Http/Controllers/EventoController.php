@@ -251,7 +251,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         
-        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
 
