@@ -134,6 +134,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   //Area
   Route::post(  '/area/criar',            'AreaController@store'                       )->name('area.store');
   Route::delete(  '/area/deletar/{id}',   'AreaController@destroy'                     )->name('area.destroy');
+  Route::post(    '/area/editar/{id}',    'AreaController@update',                     )->name('area.update');
   //Revisores
   Route::post(  '/revisor/criar',         'RevisorController@store'                    )->name('revisor.store');
   Route::get(   '/revisor/listarTrabalhos','RevisorController@indexListarTrabalhos'    )->name('revisor.listarTrabalhos');

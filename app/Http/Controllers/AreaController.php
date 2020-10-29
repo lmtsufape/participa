@@ -76,9 +76,18 @@ class AreaController extends Controller
      * @param  \App\Area  $area
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Area $area)
+    public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'nome_da_área' => 'required',
+        ]);
+
+        $area = Area::find($id);
+
+        $area->nome = $request->input('nome_da_área');
+        $area->update();
+
+        return redirect()->back()->with(['mensagem' => 'Área atualizada com sucesso!']);
     }
 
     /**

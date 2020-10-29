@@ -1442,6 +1442,13 @@
         })
     }
   </script>
+  @if(old('editarAreaId') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarArea{{old('editarAreaId')}}").modal('show');
+        })
+    </script>
+  @endif
   @if(old('modalidadeEditId') != null) 
     <script>
         $(document).ready(function() {

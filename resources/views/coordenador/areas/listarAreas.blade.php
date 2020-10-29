@@ -26,6 +26,7 @@
                               <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Nome</th>
+                                <th scope="col" style="text-align:center">Editar</th>
                                 <th scope="col" style="text-align:center">Remover</th>
                               </tr>
                             </thead>
@@ -34,6 +35,9 @@
                                 <tr>
                                   <th scope="row">{{$area->id}}</th>
                                   <td>{{$area->nome}}</td>
+                                  <td style="text-align:center">
+                                    <a href="#" data-toggle="modal" data-target="#modalEditarArea{{$area->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                  </td>
                                   <td style="text-align:center">
                                     <form id="formExcluirArea{{$area->id}}" method="POST" action="{{route('area.destroy',$area->id)}}">
                                       {{ csrf_field() }}
@@ -57,6 +61,41 @@
     </div>
 
     @foreach($areas as $area)
+      <!-- Modal de editar área -->
+      <div class="modal fade" id="modalEditarArea{{$area->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+              <h5 class="modal-title" id="#label">Editar área {{$area->nome}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form id="formEditarArea{{$area->id}}" action="{{route('area.update', ['id' => $area->id])}}" method="POST">
+                @csrf
+                <input type="hidden" name="editarAreaId" value="{{$area->id}}">
+                <div class="container">
+                  <div class="row form-group">
+                    <div class="col-sm-12" style="margin-top: 20px; margin-bottom: 20px;">
+                      <label for="nome_da_área">Nome</label>
+                      <input id="nome_da_área" type="text" class="form-control apenasLetras @error('nome_da_área') is-invalid @enderror" name="nome_da_área" value="@if(old('nome_da_área') != null){{old('nome_da_área')}}@else{{$area->nome}}@endif">
+    
+                      @error('nome_da_área')
+                      <span class="invalid-feedback" role="alert">
+                          <strong>{{ $message }}</strong>
+                      </span>
+                      @enderror
+                    </div>
+                  </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" form="formEditarArea{{$area->id}}">Atualizar</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Modal de exclusão da área -->
       <div class="modal fade" id="modalExcluirArea{{$area->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
         <div class="modal-dialog" role="document">
