@@ -283,14 +283,14 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         
-        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
         // Criterios por modalidades
         $criteriosModalidade = [];
         foreach ($modalidades as $indice) {
-          $criterios = Criterio::where("modalidadeId", $indice->id)->get();
+          $criterios = Criterio::where("modalidadeId", $indice->id)->orderBy('nome')->get();
           for ($i=0; $i < count($criterios); $i++) {
             if (!in_array($criterios[$i],$criteriosModalidade)) {
               array_push($criteriosModalidade, $criterios[$i]);
