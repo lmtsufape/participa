@@ -543,7 +543,7 @@ class TrabalhoController extends Controller
 
     public function resultados($id) {
       $evento = Evento::find($id);
-      $trabalhos = Trabalho::where('eventoId', $id)->get();
+      $trabalhos = Trabalho::where('eventoId', $id)->orderBy('titulo')->get();
       $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
 
       return view('coordenador.trabalhos.resultados')->with(['trabalhos' => $trabalhos,
@@ -564,7 +564,7 @@ class TrabalhoController extends Controller
         $texto = "";
       }
 
-      $trabalhos = Trabalho::where([['areaId', $area_id], ['titulo', 'ilike', '%'. $texto .'%']])->get();
+      $trabalhos = Trabalho::where([['areaId', $area_id], ['titulo', 'ilike', '%'. $texto .'%']])->orderBy('titulo')->get();
 
       $trabalhoJson = collect();
 
