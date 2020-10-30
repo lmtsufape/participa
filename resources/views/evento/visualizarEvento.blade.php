@@ -446,7 +446,7 @@
     <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 
         <div class="col-md-6 botao-form-left" style="">
-            <a class="btn btn-secondary botao-form" href="{{route('cancelarCadastro')}}" style="width:100%">Voltar {{ $evento->inicioSubmissao ?? "false" }}  </a>
+            <a class="btn btn-secondary botao-form" href="{{route('cancelarCadastro')}}" style="width:100%">Voltar</a>
         </div>
 
         @if($evento->inicioSubmissao <= $mytime)
