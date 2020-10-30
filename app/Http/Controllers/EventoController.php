@@ -101,7 +101,7 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrComissao', $evento);
         $users = $evento->usuariosDaComissao;
 
-        $areas = Area::where('eventoId', $evento->id)->get();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
         $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('titulo')->get();
 
