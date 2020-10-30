@@ -325,7 +325,7 @@ class ModalidadeController extends Controller
         
         $modalidadeEdit->save();
 
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+        return redirect()->back()->with(['mensagem' => 'Modalidade salva com sucesso!']);
     }
 
     /**

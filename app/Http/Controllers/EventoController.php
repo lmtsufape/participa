@@ -774,9 +774,9 @@ class EventoController extends Controller
 
       $evento->numMaxTrabalhos = $request->trabalhosPorAutor;
       $evento->numMaxCoautores = $request->numCoautor;
-      $evento->save();
+      $evento->update();
 
-      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      return redirect()->back()->with(['mensagem' => 'Restrições de submissão salvas com sucesso!']);
     }
 
     public function setResumo(Request $request){

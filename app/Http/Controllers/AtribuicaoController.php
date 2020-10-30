@@ -177,7 +177,7 @@ class AtribuicaoController extends Controller
         }
       }
 
-      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      return redirect()->back()->with(['mensagem' => 'Trabalhos da área ' . $area->nome . ' distribuidos!']);
     }
 
     public function distribuicaoManual(Request $request){

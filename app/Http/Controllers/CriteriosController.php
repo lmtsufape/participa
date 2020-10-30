@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Criterio;
+use App\Modalidade;
 use App\OpcoesCriterio;
 
 class CriteriosController extends Controller
@@ -53,8 +54,8 @@ class CriteriosController extends Controller
                 $c++;
             }
         }
-
-        return redirect()->route('coord.detalhesEvento', ["eventoId" => $request->eventoId]);
+        $modalidade = Modalidade::find($request->modalidade);
+        return redirect()->back()->with(['mensagem' => 'Critério salvo para a modalidade ' . $modalidade->nome . '.']);
     }
 
     public function update(Request $request, $id)
@@ -79,7 +80,7 @@ class CriteriosController extends Controller
 
         $criterio->update();
 
-        return redirect()->route('coord.detalhesEvento', ["eventoId" => $request->eventoId]);
+        return redirect()->back()->with(['mensagem' => 'Critério salvo com sucesso!']);
     }
     public function findCriterio(Request $request)
     {
@@ -96,6 +97,6 @@ class CriteriosController extends Controller
 
         $criterio->delete();
 
-        return redirect()->route('coord.detalhesEvento', ["eventoId" => $evento_id]);
+        return redirect()->back()->with(['mensagem' => 'Critério deletado com sucesso!']);
     }
 }

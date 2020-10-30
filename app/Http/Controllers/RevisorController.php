@@ -106,9 +106,8 @@ class RevisorController extends Controller
             return redirect()->back()->withErrors(['cadastrarRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
           }
         }        
-        
-
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      
+        return redirect()->back()->with(['mensagem' => 'Revisor cadastrado com sucesso!']);
     }
 
     /**
@@ -186,7 +185,7 @@ class RevisorController extends Controller
         Mail::to($user->email)
             ->send(new EmailLembrete($user, $subject));
 
-        return redirect()->back();
+        return redirect()->back()->with(['mensagem' => 'E-mail de lembrete de revisão enviado para ' . $user->email . '.']);
     }
     public function enviarEmailTodosRevisores(Request $request){
         $subject = "Lembrete ";
@@ -199,7 +198,7 @@ class RevisorController extends Controller
             ->send(new EmailLembrete($user, $subject));                
         }
 
-        return redirect()->back();
+        return redirect()->back()->with(['mensagem' => 'E-mails de lembrete enviados!']);
     }
 
     public function listarRevisores($id) {

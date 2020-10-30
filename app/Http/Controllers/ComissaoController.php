@@ -112,7 +112,7 @@ class ComissaoController extends Controller
         $revisores = $evento->revisores;
         $users = $evento->usuariosDaComissao;
 
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+        return redirect()->back()->with(['mensagem' => 'Membro da comissão cadastrado com sucesso!']);
     }
 
 
@@ -121,7 +121,7 @@ class ComissaoController extends Controller
 
 
         $evento = Evento::find($request->input('eventoId'));
-        $evento->coordComissaoId = $request->input('coordComissaoId');
+        $evento->coord_comissao_cientifica_id = $request->input('coordComissaoId');
         $evento->save();
 
         $areas = Area::where('eventoId', $evento->id)->get();
@@ -134,7 +134,7 @@ class ComissaoController extends Controller
         //                                                 'revisores' => $revisores,
         //                                                 'users'     => $users,
         //                                             ]);
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+        return redirect()->back()->with(['mensagem' => 'Coordenador da comissão científica salvo com sucesso!']);
     }
 
     public function show($id)

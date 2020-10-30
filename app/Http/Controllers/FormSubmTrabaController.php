@@ -117,7 +117,7 @@ class FormSubmTrabaController extends Controller
         
         $formevento->save();
         
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $id, 'ordem' => $ordem]);
+        return redirect()->back()->with(['mensagem' => 'Formulário de submissão do trabalho salvo com sucesso!']);
     }
 
 }

@@ -57,12 +57,12 @@
                                           <td>{{$user->celular}}</td>
                                           <td>{{$user->email}}</td>
                                           <td>
-                                          @if ($evento->coordComissaoId == $user->id)
+                                          @if ($evento->coord_comissao_cientifica_id == $user->id)
                                             Coordenador
                                           @endif
                                           </td>
                                           <td style="text-align:center">
-                                            <form id="removerComissao{{$user->id}}" action="{{route('remover.comissao', ['id' => $user->id])}}" method="POST">
+                                            <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao', ['id' => $user->id])}}" method="POST">
                                               @csrf
                                               <input type="hidden" name="evento_id" value="{{$evento->id}}">
                                               <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
@@ -76,7 +76,7 @@
                                           <td>Usuário temporário - Sem Celular</td>
                                           <td>{{$user->email}}</td>
                                           <td>
-                                          @if ($evento->coordComissaoId == $user->id)
+                                          @if ($evento->coord_comissao_cientifica_id == $user->id)
                                             Coordenador
                                           @endif
                                           </td>
