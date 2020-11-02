@@ -181,7 +181,7 @@
                         <label for="modalidade">Modalidade:</label>
                         <p id="modalidade">{{$trabalho->modalidade->nome}}</p>
                         <a href="#" class="card-link" data-toggle="modal" data-target="#modalResultados{{$trabalho->id}}">Resultado</a>
-                        @if (!(empty($trabalho->arquivo->items)))
+                        @if (!(empty($trabalho->arquivo->nome)))
                             <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" class="card-link">Baixar</a>
                         @endif
                     </div>

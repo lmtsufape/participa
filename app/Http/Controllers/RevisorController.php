@@ -64,7 +64,6 @@ class RevisorController extends Controller
     {
         $validatedData = $request->validate([
           'emailRevisor'       => ['required', 'string', 'email', 'max:255'],
-          // 'nomeRevisor'        => 'required|string|max:255',
           'areaRevisor'        => ['required', 'integer'],
           'modalidadeRevisor'  => ['required', 'integer'],
         ]);
@@ -78,7 +77,6 @@ class RevisorController extends Controller
           
           $usuario = new User();
           $usuario->email       = $request->emailRevisor;
-          // $usuario->name        = $request->nomeRevisor;
           $usuario->password    = bcrypt($passwordTemporario);
           $usuario->usuarioTemp = true;
           $usuario->save();
@@ -94,18 +92,22 @@ class RevisorController extends Controller
           $revisor->save();
 
         } else {
-          $revisor = new Revisor();
-          $revisor->trabalhosCorrigidos   = 0;
-          $revisor->correcoesEmAndamento  = 0;
-          $revisor->user_id               = $usuario->id;
-          $revisor->areaId                = $request->areaRevisor;
-          $revisor->modalidadeId          = $request->modalidadeRevisor;
-          $revisor->evento_id             = $evento->id;
-          $revisor->save();
+          $revisor = Revisor::where([['user_id', $usuario->id], ['areaId', $request->areaRevisor], ['modalidadeId', $request->modalidadeRevisor]])->first();
+          if ($revisor == null) {
+            $revisor = new Revisor();
+            $revisor->trabalhosCorrigidos   = 0;
+            $revisor->correcoesEmAndamento  = 0;
+            $revisor->user_id               = $usuario->id;
+            $revisor->areaId                = $request->areaRevisor;
+            $revisor->modalidadeId          = $request->modalidadeRevisor;
+            $revisor->evento_id             = $evento->id;
+            $revisor->save();
+          } else {
+            return redirect()->back()->withErrors(['cadastrarRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
+          }
         }        
-        
-
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      
+        return redirect()->back()->with(['mensagem' => 'Revisor cadastrado com sucesso!']);
     }
 
     /**
@@ -148,9 +150,19 @@ class RevisorController extends Controller
      * @param  \App\Revisor  $revisor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Revisor $revisor)
+    public function destroy($id)
     {
-        //
+      $revisor = Revisor::find($id);
+
+      if (count($revisor->trabalhosAtribuidos) > 0) {
+        return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há trabalhos atribuídos para o mesmo.']);
+      }
+      if (count($revisor->avaliacoes) > 0) {
+        return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há avaliações do mesmo.']);
+      }
+
+      $revisor->delete();
+      return redirect()->back()->with(['mensagem' => 'Revisor removido com sucesso!']);
     }
 
     public function numeroDeRevisoresAjax(Request $request){
@@ -173,7 +185,7 @@ class RevisorController extends Controller
         Mail::to($user->email)
             ->send(new EmailLembrete($user, $subject));
 
-        return redirect()->back();
+        return redirect()->back()->with(['mensagem' => 'E-mail de lembrete de revisão enviado para ' . $user->email . '.']);
     }
     public function enviarEmailTodosRevisores(Request $request){
         $subject = "Lembrete ";
@@ -186,7 +198,7 @@ class RevisorController extends Controller
             ->send(new EmailLembrete($user, $subject));                
         }
 
-        return redirect()->back();
+        return redirect()->back()->with(['mensagem' => 'E-mails de lembrete enviados!']);
     }
 
     public function listarRevisores($id) {
@@ -248,6 +260,7 @@ class RevisorController extends Controller
 
     public function trabalhosDoEvento($id) {
       $evento = Evento::find($id);
+      $this->authorize('isRevisor', $evento);
       $revisores = Revisor::where([['user_id', auth()->user()->id],['evento_id', $id]])->get();
       $trabalhos = collect();
       foreach ($revisores as $revisor) {

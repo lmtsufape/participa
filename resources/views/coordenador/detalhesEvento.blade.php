@@ -226,14 +226,6 @@
     </div>
   @endif
     {{-- {{ $evento->id ?? '' }} --}}
-
-    @yield('menu')
-
-    @hasSection ('script')
-        @yield('script')
-    @endif
-
-
     <div>
         @error('comparacaocaracteres')
           @include('componentes.mensagens')
@@ -264,8 +256,12 @@
           @include('componentes.mensagens')
         @enderror
     </div>
+    
+    @yield('menu')
 
-
+    @hasSection ('script')
+        @yield('script')
+    @endif
 
 </div>
 <input type="hidden" name="trabalhoIdAjax" value="1" id="trabalhoIdAjax">
@@ -287,9 +283,31 @@
                 alert("Escolha uma modalidade");
             }
         });
-
-        
     });
+
+    function exibirLimite(id, input) {
+        var caracteres = document.getElementById('caracteres' + id);
+        var palavras = document.getElementById('palavras' + id);
+        if (input.value == "caracteres") {
+            caracteres.style.display    = "block";
+            palavras.style.display      = "none";
+        } else {
+            caracteres.style.display    = "none";
+            palavras.style.display      = "block";
+        }
+    }
+
+    function exibirTiposArquivo(id, input) {
+        var tiposDeArquivo = document.getElementsByClassName('tiposDeArquivos' + id);
+        // console.log(tiposDeArquivo);
+        if (input.checked) {
+            tiposDeArquivo[0].style.display = "block";
+            tiposDeArquivo[1].style.display = "block";
+        } else {
+            tiposDeArquivo[0].style.display = "none";
+            tiposDeArquivo[1].style.display = "none";  
+        }
+    }
 
     $(document).ready(function($){
         $('.cep').mask('00000-000');
@@ -1390,7 +1408,8 @@
                     $('#cards_com_trabalhos').html("");
                     var cards = "";
                     $.each(result, function(i, obj) {
-                        cards +=    "<div class='card bg-light mb-3' style='width: 20rem;'>"+
+                        if (obj.rota_download != '#') {
+                            cards +=    "<div class='card bg-light mb-3' style='width: 20rem;'>"+
                                         "<div class='card-body'>" +
                                             "<h5 class='card-title'>" + obj.titulo +"</h5>" +
                                             "<h6 class='card-subtitle mb-2 text-muted'>" + obj.nome + "</h6>" +
@@ -1399,9 +1418,23 @@
                                             "<label for='modalidade'>Modalidade:</label>" +
                                             "<p id='modalidade'>"+ obj.modalidade +"</p>" +
                                             "<a href='#' class='card-link' data-toggle='modal' data-target='#modalResultados"+ obj.id +"'>Resultado</a>" +
-                                            "<a href='#' class='card-link'>Baixar</a>" +
+                                            "<a href='"+obj.rota_download+"' class='card-link'>Baixar</a>" +    
                                         "</div>" +
                                     "</div>";
+                        } else {
+                            cards +=    "<div class='card bg-light mb-3' style='width: 20rem;'>"+
+                                        "<div class='card-body'>" +
+                                            "<h5 class='card-title'>" + obj.titulo +"</h5>" +
+                                            "<h6 class='card-subtitle mb-2 text-muted'>" + obj.nome + "</h6>" +
+                                            "<label for='area'>Área:</label>" +
+                                            "<p id='area'>" + obj.area +"</p>" +
+                                            "<label for='modalidade'>Modalidade:</label>" +
+                                            "<p id='modalidade'>"+ obj.modalidade +"</p>" +
+                                            "<a href='#' class='card-link' data-toggle='modal' data-target='#modalResultados"+ obj.id +"'>Resultado</a>" +
+                                        "</div>" +
+                                    "</div>";
+                        }
+                        
                     })
                     $('#cards_com_trabalhos').html(cards);
                 }
@@ -1409,6 +1442,20 @@
         })
     }
   </script>
+  @if(old('editarAreaId') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarArea{{old('editarAreaId')}}").modal('show');
+        })
+    </script>
+  @endif
+  @if(old('modalidadeEditId') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarModalidade{{old('modalidadeEditId')}}").modal('show');
+        });
+    </script>
+  @endif
   @if(old('idAtividade') != null)
     <script>
         $(document).ready(function() {

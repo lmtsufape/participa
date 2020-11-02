@@ -43,7 +43,7 @@ class HomeController extends Controller
             return view('coordenador.index', ['eventos' => $eventos]);
 
           }else if($user->revisor != null){   
-            $eventos = $user->revisor->evento;        
+            $eventos = Evento::all();      
             return view('coordenador.index', ['eventos' => $eventos]);
 
           }else if($user->coautor != null){
@@ -51,7 +51,7 @@ class HomeController extends Controller
             return view('coordenador.index', compact('eventos'));
             
           }else if($user->coordEvento != null){
-            $eventos = $user->coordEvento->evento;            
+            $eventos = $user->coordEvento->evento;          
             return view('coordenador.index', compact('eventos'));
             
           }else if($user->participante != null){

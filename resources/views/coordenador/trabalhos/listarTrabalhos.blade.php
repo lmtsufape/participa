@@ -28,7 +28,7 @@
         <table class="table table-hover table-responsive-lg table-sm">
           <thead>
             <tr>
-              <th scope="col">ID</th>
+              <th scope="col">Título</th>
               <th scope="col">Área</th>
               <th scope="col">Modalidade</th>
               <th scope="col">Revisores</th>
@@ -40,24 +40,32 @@
             @php $i = 0; @endphp
             @foreach($trabalhos as $trabalho)
             <tr>
-              <td>{{$trabalho->id}}</td>
+              <td>{{$trabalho->titulo}}</td>
               <td>{{$trabalho->area->nome}}</td>
               <td>{{$trabalho->modalidade->nome}}</td>
               <td>
-                @foreach($trabalho->atribuicoes as $revisor)
-                  {{$revisor->user->email}},
-                @endforeach
+                @if (count($trabalho->atribuicoes) == 0)
+                  Nenhum revisor atribuído
+                @elseif (count($trabalho->atribuicoes) == 1)
+                  @foreach($trabalho->atribuicoes as $revisor)
+                    {{$revisor->user->email}}.
+                  @endforeach
+                @elseif (count($trabalho->atribuicoes) > 1 && count($trabalho->atribuicoes) <= 2)
+                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[1]->user->email}}.
+                @elseif(count($trabalho->atribuicoes) > 2)
+                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[1]->user->email}}, ...
+                @endif
               </td>
               <td style="text-align:center">
-                @php $arquivo = ""; $i++; @endphp
+                {{-- @php $arquivo = ""; $i++; @endphp
                 @foreach($trabalho->arquivo as $key)
                 @php
                 if($key->versaoFinal == true){
                   $arquivo = $key->nome;
                 }
                 @endphp
-                @endforeach
-                @if (!(empty($trabalho->arquivo->items)))
+                @endforeach --}}
+                @if (!(empty($trabalho->arquivo->nome)))
                     <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                 @endif
               </td>
@@ -79,9 +87,9 @@
 <div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Trabalho</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <div class="modal-header" style="background-color: #114048ff; color: white;">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Distrbuir trabalhos automaticamente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -138,9 +146,9 @@
   <div class="modal fade" id="modalTrabalho{{$trabalho->id}}" tabindex="-1" role="dialog" aria-labelledby="labelModalTrabalho{{$trabalho->id}}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header" style="background-color: #114048ff; color: white;">
           <h5 class="modal-title" id="exampleModalCenterTitle">Trabalho</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>

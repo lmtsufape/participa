@@ -63,7 +63,7 @@ class FormEventoController extends Controller
         
         $formevento->save();
 
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $id]);
+        return redirect()->back()->with(['mensagem' => 'Etiquetas salvas com sucesso!']);
     }
 
     public function exibirModulo(Request $request, $id) {
@@ -94,6 +94,6 @@ class FormEventoController extends Controller
         $evento->update();
         $formevento->save();
 
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $id]);
+        return redirect()->back()->with(['mensagem' => 'Módulos em uso salvos com sucesso!']);
     }
 }

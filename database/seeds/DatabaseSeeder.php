@@ -70,6 +70,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'enderecoId'=>2,
           'coordenadorId'=>1,
           'publicado'=>true,
+          'deletado'=>false,
         ]);
         // $user_id = DB::table('eventos')->where('nome','II CONGRESSO REGIONAL DE ZOOTECNIA')->pluck('id');
         

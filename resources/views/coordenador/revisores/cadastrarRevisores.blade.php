@@ -4,7 +4,9 @@
 
     <!-- Revisores -->
     <div id="divCadastrarRevisores" style="display: block">
-
+        @error('cadastrarRevisor')
+            @include('componentes.mensagens')
+        @enderror
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Cadastrar Revisores</h1>
@@ -34,7 +36,7 @@
                                     </div> --}}
                                     <div class="col-sm-4">
                                         <label for="emailRevisor" class="col-form-label">{{ __('Email do Revisor') }}</label>
-                                        <input id="emailRevisor" type="text" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{ old('emailRevisor') }}" required autocomplete="emailRevisor" autofocus>
+                                        <input id="emailRevisor" type="email" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{old('emailRevisor')}}" required autocomplete="emailRevisor" autofocus>
 
                                         @error('emailRevisor')
                                         <span class="invalid-feedback" role="alert">
@@ -47,7 +49,11 @@
                                         <select class="form-control @error('areaRevisor') is-invalid @enderror" id="areaRevisor" name="areaRevisor" required>
                                             <option value="" disabled selected hidden>-- Área --</option>
                                             @foreach($areas as $area)
-                                            <option value="{{$area->id}}">{{$area->nome}}</option>
+                                                @if (old('areaRevisor') != null)
+                                                    <option value="{{$area->id}}" @if(old('areaRevisor') == $area->id) selected @endif>{{$area->nome}}</option>
+                                                @else 
+                                                    <option value="{{$area->id}}">{{$area->nome}}</option>
+                                                @endif
                                             @endforeach
                                         </select>
 
@@ -62,7 +68,11 @@
                                         <select class="form-control @error('modalidadeRevisor') is-invalid @enderror" id="modalidadeRevisor" name="modalidadeRevisor" required>
                                             <option value="" disabled selected hidden>-- Modalidade --</option>
                                             @foreach($modalidades as $modalidade)
-                                            <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
+                                                @if (old('modalidadeRevisor') != null)    
+                                                    <option value="{{$modalidade->id}}" @if(old('modalidadeRevisor') == $modalidade->id) selected @endif>{{$modalidade->nome}}</option>
+                                                @else 
+                                                    <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
+                                                @endif
                                             @endforeach
                                         </select>
 

@@ -18,7 +18,7 @@ class CreateCriteriosTable extends Migration
             $table->string('nome');
             $table->bigInteger('peso');
             $table->bigInteger("modalidadeId");
-            $table->foreign("modalidadeId")->references("id")->on("modalidades");
+            $table->foreign("modalidadeId")->references("id")->on("modalidades")->onDelete('cascade');
             $table->timestamps();
         });
     }

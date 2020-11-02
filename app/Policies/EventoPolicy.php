@@ -38,6 +38,17 @@ class EventoPolicy
       return $user->id === $evento->coordenador->id || !(is_null($membro));
     }
 
+    public function isRevisor(User $user, Evento $evento) {
+      $autorizado = false;
+      $revisoresDoEvento = $evento->revisors;
+      foreach ($user->revisor as $revisor) {
+        if ($revisoresDoEvento->contains($revisor)) {
+          $autorizado = true;
+        }
+      }
+      return $autorizado;
+    }
+
     public function isRevisorComAtribuicao(User $user) {
       if ($user->revisor->trabalhosAtribuidos != null && count($user->revisor->trabalhosAtribuidos) > 0) {
         return true;

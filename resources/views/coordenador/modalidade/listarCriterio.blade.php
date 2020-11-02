@@ -58,9 +58,9 @@
         <div class="modal fade" tabindex="-1" id="modalEditarCriterio{{$criterio->id}}" aria-labelledby="modalEditarCriterio{{$criterio->id}}" role="dialog">
             <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title">Editar {{$criterio->nome}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
@@ -118,9 +118,9 @@
         <div class="modal fade" tabindex="-1" id="modalExcluirCriterio{{$criterio->id}}" aria-labelledby="modalExcluirCriterio{{$criterio->id}}" role="dialog">
             <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title">Confirmação</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>

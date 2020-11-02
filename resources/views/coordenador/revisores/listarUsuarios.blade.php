@@ -108,9 +108,9 @@
               <div class="modal fade" id="modal{{ $usuario->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header" style="background-color: #114048ff; color: white;">
                       <h5 class="modal-title" id="exampleModalLabel">{{ $usuario->name }}</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>

@@ -20,7 +20,7 @@ class CreateOpcoesCriteriosTable extends Migration
             $table->double('valor_real');
             $table->timestamps();
 
-            $table->foreign('criterio_id')->references('id')->on('criterios');
+            $table->foreign('criterio_id')->references('id')->on('criterios')->onDelete('cascade');
         });
     }
 

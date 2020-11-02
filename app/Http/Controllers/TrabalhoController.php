@@ -512,7 +512,7 @@ class TrabalhoController extends Controller
     //função para download do arquivo do trabalho
     public function downloadArquivo($id) {
       $trabalho = Trabalho::find($id);
-      $revisor = Revisor::where([['eventoId', '=', $trabalho->eventoId], ['user_id', '=', auth()->user()->id]])->first();
+      $revisor = Revisor::where([['evento_id', '=', $trabalho->eventoId], ['user_id', '=', auth()->user()->id]])->first();
       $user = User::find(auth()->user()->id);
 
       /*
@@ -543,7 +543,9 @@ class TrabalhoController extends Controller
 
     public function resultados($id) {
       $evento = Evento::find($id);
-      $trabalhos = Trabalho::where('eventoId', $id)->get();
+      $this->authorize('isCoordenadorOrComissao', $evento);
+
+      $trabalhos = Trabalho::where('eventoId', $id)->orderBy('titulo')->get();
       $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
 
       return view('coordenador.trabalhos.resultados')->with(['trabalhos' => $trabalhos,
@@ -564,7 +566,7 @@ class TrabalhoController extends Controller
         $texto = "";
       }
 
-      $trabalhos = Trabalho::where([['areaId', $area_id], ['titulo', 'ilike', '%'. $texto .'%']])->get();
+      $trabalhos = Trabalho::where([['areaId', $area_id], ['titulo', 'ilike', '%'. $texto .'%']])->orderBy('titulo')->get();
 
       $trabalhoJson = collect();
 
@@ -574,7 +576,8 @@ class TrabalhoController extends Controller
           'titulo'      => $trab->titulo,
           'nome'        => $trab->autor->name,
           'area'        => $trab->area->nome,
-          'modalidade'   => $trab->modalidade->nome,
+          'modalidade'  => $trab->modalidade->nome,
+          'rota_download' => !(empty($trab->arquivo->nome)) ? route('downloadTrabalho', ['id' => $trab->id]) : '#',
         ];
         $trabalhoJson->push($trabalho);
       }

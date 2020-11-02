@@ -91,6 +91,11 @@ class ComissaoController extends Controller
             'password' => bcrypt($passwordTemporario),
             'usuarioTemp' => true,
           ]);
+        } else {            
+            $usuarioDaComissa = $evento->usuariosDaComissao()->where('user_id', $user->id)->first();
+            if ($usuarioDaComissa != null) {
+                return redirect()->back()->withErrors(['cadastrarComissao' => 'Esse usuário já é membro da comissão.'])->withInput($validationData);
+            }
         }
 
         // dd($user->id);
@@ -107,7 +112,7 @@ class ComissaoController extends Controller
         $revisores = $evento->revisores;
         $users = $evento->usuariosDaComissao;
 
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+        return redirect()->back()->with(['mensagem' => 'Membro da comissão cadastrado com sucesso!']);
     }
 
 
@@ -116,7 +121,7 @@ class ComissaoController extends Controller
 
 
         $evento = Evento::find($request->input('eventoId'));
-        $evento->coordComissaoId = $request->input('coordComissaoId');
+        $evento->coord_comissao_cientifica_id = $request->input('coordComissaoId');
         $evento->save();
 
         $areas = Area::where('eventoId', $evento->id)->get();
@@ -129,7 +134,7 @@ class ComissaoController extends Controller
         //                                                 'revisores' => $revisores,
         //                                                 'users'     => $users,
         //                                             ]);
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+        return redirect()->back()->with(['mensagem' => 'Coordenador da comissão científica salvo com sucesso!']);
     }
 
     public function show($id)
@@ -166,8 +171,12 @@ class ComissaoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $evento = Evento::find($request->evento_id);
+        
+        $evento->usuariosDaComissao()->detach($id);
+
+        return redirect()->back()->with(['mensagem' => 'Membro da comissão removido com sucesso!']);
     }
 }

@@ -87,7 +87,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
       Route::get('comissao/cadastrarComissao', 'EventoController@cadastrarComissao')->name('cadastrarComissao');
       Route::get('comissao/definirCoordComissao', 'EventoController@definirCoordComissao')->name('definirCoordComissao');
       Route::get('comissao/listarComissao', 'EventoController@listarComissao')->name('listarComissao');
-
+      Route::post('remover/comissao/{id}',  'ComissaoController@destroy'      )->name('remover.comissao');
       Route::get('modalidade/cadastrarModalidade', 'EventoController@cadastrarModalidade')->name('cadastrarModalidade');
       Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');
       Route::get('modalidade/cadastrarCriterio', 'EventoController@cadastrarCriterio')->name('cadastrarCriterio');
@@ -130,9 +130,11 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get(  '/evento/desabilitar/{id}', 'EventoController@desabilitar'             )->name('evento.desabilitar');
   //Modalidade
   Route::post(  '/modalidade/criar',      'ModalidadeController@store'                 )->name('modalidade.store');
+  Route::post(  '/modalidade/{id}/delete',  'ModalidadeController@destroy'             )->name('modalidade.destroy');
   //Area
   Route::post(  '/area/criar',            'AreaController@store'                       )->name('area.store');
   Route::delete(  '/area/deletar/{id}',   'AreaController@destroy'                     )->name('area.destroy');
+  Route::post(    '/area/editar/{id}',    'AreaController@update',                     )->name('area.update');
   //Revisores
   Route::post(  '/revisor/criar',         'RevisorController@store'                    )->name('revisor.store');
   Route::get(   '/revisor/listarTrabalhos','RevisorController@indexListarTrabalhos'    )->name('revisor.listarTrabalhos');
@@ -140,9 +142,11 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get(  '{id}/revisor/convite',    'RevisorController@conviteParaEvento'        )->name('revisor.convite.evento');
   Route::post(  '/revisor/emailTodos',    'RevisorController@enviarEmailTodosRevisores')->name('revisor.emailTodos');
   Route::get(  '/revisores-por-area/{id}','RevisorController@revisoresPorAreaAjax'     )->name('revisores.area');
+  Route::post(  '/remover/revisor/{id}',  'RevisorController@destroy'           )->name('remover.revisor');
   //AreaModalidade
   // Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
   Route::get('{id}/modalidade-arquivo-regras',  'ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
+  Route::get('{id}/modalidade-template',      'ModalidadeController@downloadTemplate'  )->name('modalidade.template.download');
   //Trabalho
   Route::get(   '/trabalho/submeter/{id}/{idModalidade}','TrabalhoController@index'    )->name('trabalho.index');
   Route::post(  '/trabalho/novaVersao',   'TrabalhoController@novaVersao'              )->name('trabalho.novaVersao');
@@ -191,4 +195,4 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('verified', 'isTemp');;
