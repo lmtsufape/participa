@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAreaModalidadesTable extends Migration
+class CreateOpcoesCriteriosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateAreaModalidadesTable extends Migration
      */
     public function up()
     {
-        Schema::create('area_modalidades', function (Blueprint $table) {
+        Schema::create('opcoes_criterios', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('nome_opcao');
+            $table->bigInteger('criterio_id');
+            $table->double('valor_real');
             $table->timestamps();
 
-            $table->integer('areaId');
-            $table->integer('modalidadeId');
+            $table->foreign('criterio_id')->references('id')->on('criterios')->onDelete('cascade');
         });
     }
 
@@ -29,6 +31,6 @@ class CreateAreaModalidadesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('area_modalidades');
+        Schema::dropIfExists('opcoes_criterios');
     }
 }

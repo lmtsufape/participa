@@ -23,7 +23,7 @@ class Trabalho extends Model
   }
 
   public function arquivo(){
-      return $this->hasMany('App\Arquivo', 'trabalhoId');
+      return $this->hasOne('App\Arquivo', 'trabalhoId');
   }
 
   public function modalidade(){
@@ -42,15 +42,19 @@ class Trabalho extends Model
       return $this->hasMany('App\Coautor', 'trabalhoId');
   }
 
-  public function parecer(){
+  public function pareceres(){
       return $this->hasMany('App\Parecer', 'trabalhoId');
   }
 
-  public function atribuicao(){
-      return $this->hasMany('App\Atribuicao', 'trabalhoId');
+  public function atribuicoes(){
+      return $this->belongsToMany('App\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
   }
 
   public function evento(){
       return $this->belongsTo('App\Evento', 'eventoId');
+  }
+
+  public function avaliacoes() {
+    return $this->hasMany('App\Avaliacao', 'trabalho_id');
   }
 }

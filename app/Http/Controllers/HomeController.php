@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Auth;
+use App\Evento;
 
 class HomeController extends Controller
 {
@@ -15,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth']);
+        $this->middleware('auth');
     }
 
     /**
@@ -24,37 +24,42 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {        
-        $eventos = \App\Evento::all();        
-        
-          if(Auth::user()->administradors != null){            
-            return view('administrador.index');
+    {   
+        $user = Auth::user();
+        if($user->administradors != null){    
+            $eventos = Evento::all();        
+            return view('administrador.index', ['eventos' => $eventos]);
 
-          }else if(Auth::user()->coordComissaoCientifica != null){            
-            return view('coordComissaoCientifica.index');
+          }else if($user->coordComissaoCientifica != null){ 
+            $eventos = $user->coordComissaoCientifica->eventos;           
+            return view('coordenador.index', ['eventos' => $eventos]);
 
-          }else if(Auth::user()->coordComissaoOrganizadora != null){            
-            return view('coordComissaoOrganizadora.index');
+          }else if($user->coordComissaoOrganizadora != null){ 
+            $eventos = $user->coordComissaoOrganizadora->eventos;   
+            return view('coordenador.index', ['eventos' => $eventos]);
 
-          }else if(Auth::user()->membroComissao != null){            
-            return view('membroComissao.index');
+          }else if($user->membroComissao != null){    
+            $eventos = $user->membroComissao->eventos;        
+            return view('coordenador.index', ['eventos' => $eventos]);
 
-          }else if(Auth::user()->revisor != null){            
-            return view('revisor.index');
+          }else if($user->revisor != null){   
+            $eventos = Evento::all();      
+            return view('coordenador.index', ['eventos' => $eventos]);
 
-          }else if(Auth::user()->coautor != null){            
-            return view('coautor.index');
+          }else if($user->coautor != null){
+            $eventos = $user->coautor->eventos;            
+            return view('coordenador.index', compact('eventos'));
+            
+          }else if($user->coordEvento != null){
+            $eventos = $user->coordEvento->evento;          
+            return view('coordenador.index', compact('eventos'));
+            
+          }else if($user->participante != null){
+            $eventos = Evento::all();            
+            return view('coordenador.index', compact('eventos'));
             
           }else {
             return view('home');
           } 
-              
     }
-
-    public function downloadArquivo(Request $request){
-        if (Storage::disk()->exists('app/'.$request->file)) {
-            return response()->download(storage_path('app/'.$request->file));
-        }
-        return abort(404);
-  	}
 }

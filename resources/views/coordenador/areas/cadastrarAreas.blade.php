@@ -23,7 +23,7 @@
                                 <div class="row justify-content-center">
                                     <div class="col-sm-12">
                                         <label for="nome" class="col-form-label">{{ __('Nome da Área') }}</label>
-                                        <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
+                                        <input id="nome" type="text" class="form-control apenasLetras @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
 
                                         @error('nome')
                                         <span class="invalid-feedback" role="alert">

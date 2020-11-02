@@ -14,7 +14,7 @@
                     <div class="card-body">
                       <h5 class="card-title">Novo Critério</h5>
                       <h6 class="card-subtitle mb-2 text-muted">Cadastre um novo critério por modalidade</h6>
-                      <form action="{{route('cadastrar.criterio')}}" method="POST">
+                      <form id="formCadastrarCriterio" action="{{route('cadastrar.criterio')}}" method="POST">
                         @csrf
                         <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
                         <p class="card-text">
@@ -24,7 +24,7 @@
                                     <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidade">
                                         <option value="" disabled selected hidden>-- Modalidade --</option>
                                         @foreach($modalidades as $modalidade)
-                                        <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
+                                            <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
                                         @endforeach
                                     </select>
 
@@ -46,7 +46,7 @@
                         </p>
                         <div class="row justify-content-center">
                             <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary" style="width:100%">
+                                <button type="button" class="btn btn-primary" style="width:100%" onclick="cadastrarCriterio()">
                                     {{ __('Finalizar') }}
                                 </button>
                             </div>

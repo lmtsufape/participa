@@ -20,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name', 'email', 'password', 'cpf', 'instituicao', 'celular',
         'especProfissional', 'enderecoId',
-        'usuarioTemp',
+        'usuarioTemp', 'user_id'
     ];
 
     /**
@@ -45,17 +45,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Trabalho', 'autorId');
     }
 
-    public function coautor(){
-        return $this->hasMany('App\Coautor', 'autorId');
-    }
 
     public function parecer(){
         return $this->hasMany('App\Parecer', 'revisorId');
     }
 
-    public function atribuicao(){
-        return $this->hasMany('App\Atribuicao', 'revisorId');
-    }
+    // public function atribuicao(){
+    //     return $this->hasMany('App\Atribuicao', 'revisorId');
+    // }
 
     public function pertence(){
         return $this->hasMany('App\Pertence', 'revisorId');
@@ -73,12 +70,22 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo('App\Endereco', 'enderecoId');
     }
 
-    public function evento(){
-        return $this->hasMany('App\Evento', 'coordenadorId');
+    
+
+    public function comissaoEvento(){
+        return $this->hasMany('App\ComissaoEvento');
+    }
+
+    public function coautor(){
+        return $this->hasOne('App\Coautor', 'autorId');
     }
 
     public function revisor(){
-        return $this->hasOne('App\Revisor');
+        return $this->hasMany('App\Revisor');
+    }
+
+    public function participante(){
+        return $this->hasOne('App\Participante');
     }
 
     public function administradors(){
@@ -93,8 +100,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne('App\CoordComissaoOrganizadora');
     }
 
-    public function membroComissao(){
-        return $this->hasOne('App\MembroComissao');
+    function membroComissaoEvento(){
+        return $this->belongsToMany('App\Evento','comissao_eventos','user_id','evento_id');
+    }
+    
+    public function coordEvento(){
+        return $this->hasOne('App\CoordenadorEvento');
     }
 
     public function sendPasswordResetNotification($token){

@@ -15,13 +15,15 @@ class CreateEventosTable extends Migration
     {
         Schema::create('eventos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
             $table->string('nome')->nullable();
             // $table->integer('numeroParticipantes');
             $table->string('descricao')->nullable();
             $table->string('tipo')->nullable();
             $table->date('dataInicio')->nullable();
             $table->date('dataFim')->nullable();
+
+            $table->boolean('exibir_calendario_programacao')->nullable();
+            $table->string('pdf_programacao')->nullable();
             
             $table->integer('numMaxTrabalhos')->nullable();
             $table->integer('numMaxCoautores')->nullable();
@@ -30,9 +32,12 @@ class CreateEventosTable extends Migration
             $table->string('fotoEvento')->nullable();
             $table->boolean('publicado')->nullable();
 
-            $table->integer('coordComissaoId')->nullable();
+            $table->integer('coord_comissao_cientifica_id')->nullable();
             $table->integer('enderecoId')->nullable();
             $table->integer('coordenadorId')->nullable();
+            $table->boolean('deletado')->nullable();;
+
+            $table->timestamps();
         });
     }
 

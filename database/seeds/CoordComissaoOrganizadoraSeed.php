@@ -15,6 +15,7 @@ class CoordComissaoOrganizadoraSeed extends Seeder
 
 		DB::table('coord_comissao_organizadoras')->insert([
 		'user_id' => $user_id[0],
+        'eventos_id' => 1,
 		]);
     }
 }

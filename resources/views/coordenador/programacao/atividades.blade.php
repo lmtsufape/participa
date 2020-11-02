@@ -498,9 +498,9 @@
                             <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                             <div class="col-sm-6">
                                 <label for="titulo">Titulo*:</label>
-                                <input class="form-control @error('titulo') is-invalid @enderror" type="text" name="titulo" id="titulo" value="{{ old('titulo')}}" placeholder="Nova atividade">
+                                <input class="form-control apenasLetras @error('título') is-invalid @enderror" type="text" name="título" id="titulo" value="{{ old('título')}}" placeholder="Nova atividade">
                                 
-                                @error('titulo')
+                                @error('título')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -529,7 +529,7 @@
                             <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
                                 <div class="col-sm-12">
                                     <label for="nomeTipo">Nome*:</label>
-                                    <input class="form-control" type="text" name="nomeNovoTipo" id="nomeTipo" placeholder="Nome do novo tipo">
+                                    <input class="form-control apenasLetras" type="text" name="nomeNovoTipo" id="nomeTipo" placeholder="Nome do novo tipo">
                                 </div>
                                 <div class="col-sm-12">
                                     <button id="submitNovoTipoAtividade" type="button" class="btn btn-primary" onclick="salvarTipoAtividadeAjax()">Salvar</button>
@@ -541,9 +541,9 @@
                         <div class="row form-group">
                             <div class="col-sm-12">
                                 <label for="descricao">Descricao*:</label>
-                                <textarea class="form-control @error('descricao') is-invalid @enderror" rows="5" name="descricao" id="descricao" placeholder="Descreva em detalhes sua atividade">{{ old('descricao') }}</textarea>
+                                <textarea class="form-control @error('descrição') is-invalid @enderror" rows="5" name="descrição" id="descricao" placeholder="Descreva em detalhes sua atividade">{{ old('descrição') }}</textarea>
                                 
-                                @error('descricao')
+                                @error('descrição')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -554,17 +554,17 @@
                         <div class="row form-group">
                             <div class="col-sm-6">
                                 <label for="duracaoAtividade">Duração*:</label>
-                                <select class="form-control  @error('duracaoDaAtividade') is-invalid @enderror" name="duracaoDaAtividade" id="duracaoAtividade" onchange="exibirDias(0)">
+                                <select class="form-control  @error('duraçãoDaAtividade') is-invalid @enderror" name="duraçãoDaAtividade" id="duracaoAtividade" onchange="exibirDias(0)">
                                     <option value="" selected disabled>-- Duração --</option>
-                                    <option value="1" @if(old('duracaoDaAtividade') == "1") selected @endif >Um dia</option>
-                                    <option value="2" @if(old('duracaoDaAtividade') == "2") selected @endif>Dois dia</option>
-                                    <option value="3" @if(old('duracaoDaAtividade') == "3") selected @endif>Três dia</option>
-                                    <option value="4" @if(old('duracaoDaAtividade') == "4") selected @endif>Quatro dia</option>
-                                    <option value="5" @if(old('duracaoDaAtividade') == "5") selected @endif>Cinco dia</option>
-                                    <option value="6" @if(old('duracaoDaAtividade') == "6") selected @endif>Seis dia</option>
-                                    <option value="7" @if(old('duracaoDaAtividade') == "7") selected @endif>Sete dia</option>
+                                    <option value="1" @if(old('duraçãoDaAtividade') == "1") selected @endif>Um dia</option>
+                                    <option value="2" @if(old('duraçãoDaAtividade') == "2") selected @endif>Dois dia</option>
+                                    <option value="3" @if(old('duraçãoDaAtividade') == "3") selected @endif>Três dia</option>
+                                    <option value="4" @if(old('duraçãoDaAtividade') == "4") selected @endif>Quatro dia</option>
+                                    <option value="5" @if(old('duraçãoDaAtividade') == "5") selected @endif>Cinco dia</option>
+                                    <option value="6" @if(old('duraçãoDaAtividade') == "6") selected @endif>Seis dia</option>
+                                    <option value="7" @if(old('duraçãoDaAtividade') == "7") selected @endif>Sete dia</option>
                                 <select>
-                                @error('duracaoDaAtividade')
+                                @error('duraçãoDaAtividade')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -846,7 +846,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="palavrasChaves">Palavras-chave:</label>
-                                    <input class="form-control" type="text" name="palavrasChaves" id="palavrasChaves"  placeholder='Palavras que ajudam na busca, separe-as por ","'  value="{{ old('palavrasChaves') }}">   
+                                    <input class="form-control apenasLetras" type="text" name="palavrasChaves" id="palavrasChaves"  placeholder='Palavras que ajudam na busca, separe-as por ","'  value="{{ old('palavrasChaves') }}">   
                                 </div>
                             </div>
                             <hr>
@@ -857,7 +857,7 @@
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <label for="nome">Nome:</label>
-                                                <input class="form-control @error('nomeDoConvidado[]') is-invalid @enderror" type="text" name="nomeDoConvidado[]" id="nome"  value="{{ old('nomeDoConvidado[]') }}" placeholder="Nome do convidado">
+                                                <input class="form-control apenasLetras @error('nomeDoConvidado[]') is-invalid @enderror" type="text" name="nomeDoConvidado[]" id="nome"  value="{{ old('nomeDoConvidado[]') }}" placeholder="Nome do convidado">
 
                                                 @error('nomeDoConvidado[]')
                                                 <span class="invalid-feedback" role="alert">
@@ -867,7 +867,7 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label for="email">E-mail:</label>
-                                                <input class="form-control @error('emailDoConvidado[]') is-invalid @enderror" type="text" name="emailDoConvidado[]" id="email" value="{{ old('emailDoConvidado[]') }}" placeholder="E-mail do convidado">
+                                                <input class="form-control @error('emailDoConvidado[]') is-invalid @enderror" type="email" name="emailDoConvidado[]" id="email" value="{{ old('emailDoConvidado[]') }}" placeholder="E-mail do convidado">
                                                 
                                                 @error('emailDoConvidado[]')
                                                 <span class="invalid-feedback" role="alert">
@@ -895,7 +895,7 @@
                                             </div>
                                             <div id="divOutraFuncao" class="col-sm-6" @if (old('outra[]') != null) style="display: block;" @else style="display: none;" @endif>
                                                 <label for="Outra">Qual?</label>
-                                                <input type="text" class="form-control @error('outra[]') is-invalid @enderror" name="outra[]" id="outraFuncao">
+                                                <input type="text" class="form-control apenasLetras @error('outra[]') is-invalid @enderror" name="outra[]" id="outraFuncao">
                                                 
                                                 @error('outra[]')
                                                 <span class="invalid-feedback" role="alert">
@@ -959,6 +959,40 @@
         </div>
     </div>
 @endforeach
+
+<!-- Modal para adicionar o pdf com a programação -->
+<div class="modal fade" id="modalAdicionarPdf" tabindex="-1" role="dialog" aria-labelledby="modalAdicionarPdfLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #114048ff; color: white;">
+        <h5 class="modal-title" id="modalAdicionarPdfLabel">Adicionar PDF com a programação</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <form method="POST" action="{{ route('coord.evento.pdf.programacao', ['id' => $evento->id]) }}" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row form-group">
+                        <div class="col-sm-12">
+                            <label for="pdf_programacao">Arquivo com a programação:</label>
+                            <input type="file" name="pdf_programacao" id="pdf_programacao" >
+                            <br>
+                            <small>Para mudar o arquivo presente enviar um novo*</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>
+
 <div id="divListarComissao" class="comissao" style="display: block">
     <div class="row">
         <div class="col-sm-12">
@@ -981,10 +1015,18 @@
                 <div class="card-body">
                     <h5 class="card-title">Atividades</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Atividades que seu evento irá realizar.</h6>
-                    <div class="rightButton">
-                       <button data-toggle="modal" data-target="#modalCriarAtividade" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px;">+ Criar atividade</button>
-                    </div>
                     <small>Clique em uma atividade para editar</small>
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <button id="adicionarPdf" data-toggle="modal" data-target="#modalAdicionarPdf" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; left: 120px;">+ PDF com as atividades</button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button id="criarAtividade" data-toggle="modal" data-target="#modalCriarAtividade" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; margin-left: 20px;">+ Criar atividade</button>
+                            </div>
+                        </div>
+                    </div>
                     <p class="card-text">  
                     <table class="table table-hover table-responsive-lg table-sm" style="position: relative; top: -22px;">
                         <thead>

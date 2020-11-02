@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\User;
 use App\Evento;
 use App\ComissaoEvento;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EventoPolicy
@@ -33,7 +34,25 @@ class EventoPolicy
     }
 
     public function isCoordenadorOrComissao(User $user, Evento $evento) {
-      $comissao = ComissaoEvento::where([['eventosId', $evento->id], ['userId', $user->id]])->first();
-      return $user->id === $evento->coordenador->id || !(is_null($comissao));
+      $membro = $evento->usuariosDaComissao()->where([['user_id', $user->id], ['evento_id', $evento->id]])->first();
+      return $user->id === $evento->coordenador->id || !(is_null($membro));
+    }
+
+    public function isRevisor(User $user, Evento $evento) {
+      $autorizado = false;
+      $revisoresDoEvento = $evento->revisors;
+      foreach ($user->revisor as $revisor) {
+        if ($revisoresDoEvento->contains($revisor)) {
+          $autorizado = true;
+        }
+      }
+      return $autorizado;
+    }
+
+    public function isRevisorComAtribuicao(User $user) {
+      if ($user->revisor->trabalhosAtribuidos != null && count($user->revisor->trabalhosAtribuidos) > 0) {
+        return true;
+      }
+      return false;
     }
 }

@@ -32,6 +32,6 @@ class Area extends Model
   }
 
   public function revisor(){
-      return $this->hasMany('App\User', 'eventoId');
+      return $this->hasMany('App\Revisor', 'areaId');
   }
 }

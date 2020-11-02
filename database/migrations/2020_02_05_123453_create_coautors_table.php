@@ -16,10 +16,13 @@ class CreateCoautorsTable extends Migration
         Schema::create('coautors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->string('ordem');
+            $table->string('ordem')->nullable();
 
-            $table->integer('autorId');
-            $table->integer('trabalhoId');
+            $table->unsignedBigInteger('eventos_id');
+            $table->foreign('eventos_id')->references('id')->on('eventos');
+            
+            $table->unsignedBigInteger('autorId');                       
+            $table->integer('trabalhoId')->nullable();
         });
     }
 

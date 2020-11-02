@@ -395,3 +395,43 @@ body{
     padding: 0px;
     margin-top: 20px;
 }
+
+.resultado_card h5 {
+    font-weight: bolder;
+}
+
+.resultado_card label {
+    font-weight: bolder;
+}
+
+.resultado_card #resumo {
+    text-align: justify;
+}
+
+.divError {
+    border: #114048ff solid 25px;
+    border-radius: 20px 80px;
+    padding: 50px;
+}
+
+.conteudoCentralizado {
+    text-align: center; 
+    position: relative; 
+    top: 150px;
+    background-color: white;
+}
+
+.links a {
+    color: rgb(83, 83, 83);
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.links a:hover {
+    color:#114048ff;
+    text-decoration: none;
+}
+
+.font-25 {
+    font-size: 25px;
+}

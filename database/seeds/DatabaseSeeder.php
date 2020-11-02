@@ -42,19 +42,19 @@ class DatabaseSeeder extends Seeder
           'email_verified_at' => '2020-02-15',
         ]);
 
-        DB::table('users')->insert([  //
-          'name' => 'Felipe',
-          'email' => 'felipeaquac@yahoo.com.br',
-          'password' => bcrypt('guedes80'),
-          'cpf' => '999.999.999-99',
-          'instituicao'     => 'UFAPE',
-          'celular'    => '(99) 99999-9999',
-          'especProfissional' => ' ',
-          'enderecoId' => 1,
-          'email_verified_at' => '2020-02-15',
-        ]);
+        // DB::table('users')->insert([  //
+        //   'name' => 'Felipe',
+        //   'email' => 'felipeaquac@yahoo.com.br',
+        //   'password' => bcrypt('guedes80'),
+        //   'cpf' => '999.999.999-99',
+        //   'instituicao'     => 'UFAPE',
+        //   'celular'    => '(99) 99999-9999',
+        //   'especProfissional' => ' ',
+        //   'enderecoId' => 1,
+        //   'email_verified_at' => '2020-02-15',
+        // ]);
 
-        DB::table('eventos')->insert([
+        $evento = DB::table('eventos')->insert([
           'nome'=>'II CONGRESSO REGIONAL DE ZOOTECNIA',
           // 'numeroParticipantes'=>60,
           'descricao'=>'Cada autor inscrito poderá submeter até dois (2) resumos;
@@ -70,7 +70,10 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'enderecoId'=>2,
           'coordenadorId'=>1,
           'publicado'=>true,
+          'deletado'=>false,
         ]);
+        // $user_id = DB::table('eventos')->where('nome','II CONGRESSO REGIONAL DE ZOOTECNIA')->pluck('id');
+        
 
         DB::table('form_eventos')->insert([
           'eventoId'                       => 1,
@@ -85,7 +88,6 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'etiquetamoduloinscricao'        => 'Inscrições',
           'etiquetamoduloprogramacao'      => 'Programação',
           'etiquetamoduloorganizacao'      => 'Organização',
-          
         ]);
 
         DB::table('form_subm_trabas')->insert([
@@ -125,15 +127,16 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         }
 
         DB::table('modalidades')->insert([
-          'nome' => 'Resumo',
+          'nome'        => 'Resumo',
+          'evento_id'   => 1,
         ]);
 
-        for($i = 0; $i < sizeof($areasEventoZoo); $i++){
-          DB::table('area_modalidades')->insert([
-            'areaId'       => $i + 1,
-            'modalidadeId' => 1,
-          ]);
-        }
+        // for($i = 0; $i < sizeof($areasEventoZoo); $i++){
+        //   DB::table('area_modalidades')->insert([
+        //     'areaId'       => $i + 1,
+        //     'modalidadeId' => 1,
+        //   ]);
+        // }
 
 
         for($i = 0; $i < 40; $i++){
@@ -187,17 +190,17 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
 
         }
 
-        DB::table('users')->insert([  //
-          'name' => 'eu',
-          'email' => 'asd@asd',
-          'password' => bcrypt('12345678'),
-          'cpf' => 123132131,
-          'instituicao'     => 'd',
-          'celular'    => 2,
-          'especProfissional' => 'e',
-          'email_verified_at' => '2020-02-15',
-          'enderecoId' => 1,
-        ]);
+        // DB::table('users')->insert([  //
+        //   'name' => 'eu',
+        //   'email' => 'asd@asd',
+        //   'password' => bcrypt('12345678'),
+        //   'cpf' => 123132131,
+        //   'instituicao'     => 'd',
+        //   'celular'    => 2,
+        //   'especProfissional' => 'e',
+        //   'email_verified_at' => '2020-02-15',
+        //   'enderecoId' => 1,
+        // ]);
 
 
         DB::table('tipo_atividades')->insert([  //
@@ -244,8 +247,16 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         $this->call(AdministradorSeed::class);
         $this->call(CoordComissaoCientificaSeed::class);
         $this->call(CoordComissaoOrganizadoraSeed::class);
-        $this->call(MembroComissaoSeed::class);
         $this->call(ParticipanteSeed::class);
+        $this->call(CoordEventoSeed::class);
+
+
+        // $user = App\User::find(1);
+        // $coordCC = App\User::find(4);
+        // $evento = App\Evento::find(1);
+        // $coordComissaoCientifica = App\CoordComissaoCientifica::find(1);
+        // $user->coordEvento->evento()->save($evento);
+        // $coordCC->coordComissaoCientifica->eventos()->save($evento);
         
 
     }

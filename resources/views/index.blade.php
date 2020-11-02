@@ -108,7 +108,7 @@
 
       <div class="row">
         @foreach ($eventos as $evento)
-          @if($evento->publicado) 
+          @if($evento->publicado && $evento->deletado == false) 
             <div class="card" style="width: 18rem;">
                 @if(isset($evento->fotoEvento))
                   <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
@@ -139,13 +139,12 @@
                                                         Editar
                                                     </a>
                                                     <form method="POST" action="{{route('evento.deletar',$evento->id)}}">
-                                                        {{ csrf_field() }}
-                                                        {{ method_field('DELETE') }}
-                                                        <button type="submit" class="dropdown-item">
-                                                            <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt="">
-                                                            Deletar
-                                                        </button>
-
+                                                      {{ csrf_field() }}
+                                                      {{ method_field('DELETE') }}
+                                                      <button type="submit" class="dropdown-item">
+                                                          <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt="">
+                                                          Deletar
+                                                      </button>
                                                     </form>
                                                 </div>
                                             </div>

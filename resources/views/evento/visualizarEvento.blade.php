@@ -208,8 +208,8 @@
         </div>
     </div>
 
-    {{-- @if ($etiquetas->modsubmissao == true) --}}
-      {{-- <div class="row margin">
+    @if ($etiquetas->modsubmissao == true)
+      <div class="row margin">
         <div class="col-sm-12 info-evento">
             <h4>{{$etiquetas->etiquetasubmissoes}}:</h4>
             @foreach ($modalidades as $modalidade)
@@ -272,10 +272,10 @@
             <br>
             @endforeach
         </div>
-      </div> --}}
-    {{-- @else
+      </div>
+    @else
     
-    @endif --}}
+    @endif
 
     <div class="row margin">
         <div class="col-sm-12 info-evento">
@@ -306,14 +306,20 @@
             <h4>{{$etiquetas->etiquetamoduloprogramacao}}:</h4>
             <p>
                 {{-- LOCAL DA PROGRAMAÇÃO --}}
-                @if ($atividades != null && count($atividades) > 0) 
-                  <div id="wrap">
-                    <div id='calendar-wrap' style="width: 750px; height: 850px;">
-                      <div id='calendar'></div>
+                @if (!($evento->exibir_calendario_programacao) && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null) 
+                  <iframe src="{{asset('storage/' . $evento->pdf_programacao)}}" width="1000" height="500" style="border: none;"></iframe>
+                @elseif ($evento->exibir_calendario_programacao && $etiquetas->modprogramacao == true)
+                  @if ($atividades != null && count($atividades) > 0) 
+                    <div id="wrap">
+                      <div id='calendar-wrap' style="width: 750px; height: 850px;">
+                        <div id='calendar'></div>
+                      </div>
                     </div>
-                  </div>
-                @else 
-                  Nenhuma atividade programada
+                  @else 
+                    Nenhuma atividade programada
+                  @endif
+                @else
+                    Nenhuma atividade programada
                 @endif
             </p>
         </div>
@@ -463,7 +469,7 @@
     document.getElementById('trabalhoNovaVersaoId').value = x;
   }
 </script>
-  @if ($dataInicial != "")
+  @if ($dataInicial != "" && $evento->exibir_calendario_programacao)
     <script>
       document.addEventListener('DOMContentLoaded', function() {
 

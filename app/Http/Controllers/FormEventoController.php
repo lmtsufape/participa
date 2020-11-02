@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\FormEvento;
+use App\Evento;
 
 class FormEventoController extends Controller
 {
@@ -62,18 +63,26 @@ class FormEventoController extends Controller
         
         $formevento->save();
 
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $id]);
+        return redirect()->back()->with(['mensagem' => 'Etiquetas salvas com sucesso!']);
     }
 
     public function exibirModulo(Request $request, $id) {
         
         $formevento = FormEvento::where('eventoId',$id)->first();
-        
+        $evento = Evento::find($id);
+        // dd($evento);
         if(isset($request->modinscricao)){
             $formevento->modinscricao       = $request->modinscricao;
         }
         if(isset($request->modprogramacao)){
             $formevento->modprogramacao       = $request->modprogramacao;
+            if ($request->exibir_pdf != null && $request->exibir_pdf == "on") {
+                $evento->exibir_calendario_programacao = false;
+            } 
+
+            if ($request->exibir_calendario != null && $request->exibir_calendario == "on") {
+                $evento->exibir_calendario_programacao = true;
+            } 
         }
         if(isset($request->modorganizacao)){
             $formevento->modorganizacao       = $request->modorganizacao;
@@ -82,8 +91,9 @@ class FormEventoController extends Controller
             $formevento->modsubmissao       = $request->modsubmissao;
         }
 
+        $evento->update();
         $formevento->save();
 
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $id]);
+        return redirect()->back()->with(['mensagem' => 'Módulos em uso salvos com sucesso!']);
     }
 }

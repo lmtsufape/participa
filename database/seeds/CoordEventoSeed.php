@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class MembroComissaoSeed extends Seeder
+class CoordEventoSeed extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,9 +11,9 @@ class MembroComissaoSeed extends Seeder
      */
     public function run()
     {
-        $user_id = DB::table('users')->where('name','MembroComissao')->pluck('id');
+        $user_id = DB::table('users')->where('name','coord')->pluck('id');
 
-		DB::table('membro_comissaos')->insert([
+		DB::table('coordenador_eventos')->insert([
 		'user_id' => $user_id[0],
 		]);
     }

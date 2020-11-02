@@ -3,6 +3,9 @@
 @section('menu')
     {{-- Comissão --}}
     <div id="divCadastrarComissao" class="comissao" style="display: block">
+        @error ('cadastrarComissao')
+            @include('componentes.mensagens')
+        @enderror
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Cadastrar Comissão</h1>
@@ -21,7 +24,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
                                     <label for="emailMembroComissao" class="control-label">E-mail do novo membro</label>
-                                    <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail">
+                                    <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail" required>
                                     @error('emailMembroComissao')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

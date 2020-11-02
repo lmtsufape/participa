@@ -5,43 +5,52 @@
     <div class="sidebar">
         <h2>{{{$evento->nome}}}</h2>
         <ul>
-            @can('isCoordenador', $evento)
+            {{-- @can('isCoordenador', $evento) --}}
                 <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
                     <li>
                         <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
                     </li>
                 </a>
-            @endcan
-            @can('isCoordenador', $evento)
+
+            {{-- @endcan --}}
+            {{-- @can('isCoordenador', $evento) --}}
+
+
             <a id="trabalhos">
                 <li>
                     <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Submissões</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
 
                 <div id="dropdownTrabalhos"  @if(request()->is('coord/evento/trabalhos*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                    <a id="submissoesTrabalhos" href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
-                        <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Tipo</h5>
-                        </li>
-                    </a>
-                    <a id="listarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
-                        <li>
-                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Avaliação</h5>
-                        </li>
-                    </a>
-                    <a id="submissoesTrabalhos" href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
-                        <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Resultado</h5>
-                        </li>
-                    </a>
-                    <a id="listarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
-                        <li>
-                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5>
-                        </li>
-                    </a>
+                    @can('isCoordenadorOrComissao', $evento)
+                        <a id="submissoesTrabalhos" href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
+                            <li>
+                                <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Tipo</h5>
+                            </li>
+                        </a>
+                        <a id="resultadosTrabalhos" href="{{ route('coord.resultados', ['id' => $evento->id]) }}">
+                            <li>
+                                <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Resultado</h5>
+                            </li>
+                        </a>
+                        <a id="listarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
+                            <li>
+                                <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5>
+                            </li>
+                        </a>
+                    @endcan
+                    @can('isRevisorComAtribuicao')
+                        <a id="avaliarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
+                            <li>
+                                <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Avaliação</h5>
+                            </li>
+                        </a>
+                    @endcan
                 </div>
             </a>
-            @endcan
+
+            {{-- @endcan --}}
+
             <a id="areas">
                 
                 <li>
@@ -61,7 +70,9 @@
                 </div>
 
             </a>
-            @can('isCoordenador', $evento)
+
+            {{-- @can('isCoordenador', $evento) --}}
+
             <a id="revisores">
                 <li>
                     <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Revisores</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -72,14 +83,24 @@
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar Revisores</h5>
                         </li>
                     </a>
+                    {{-- <a id="adicionarRevisores" href="{{ route('coord.adicionarRevisores', ['id' => $evento->id]) }}">
+                        <li>
+                            <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Adicionar Revisores</h5>
+                        </li>
+                    </a> --}}
                     <a id="listarRevisores" href="{{ route('coord.listarRevisores', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Revisores</h5>
                         </li>
                     </a>
+                    <a id="listarUsuarios" href="{{ route('coord.listarUsuarios', ['evento_id' => $evento->id]) }}">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Usuários</h5>
+                        </li>
+                    </a>
                 </div>
             </a>
-            @endcan
+            {{-- @endcan --}}
             <a id="comissao" >
                 <li>
                     <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -90,13 +111,13 @@
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar Comissão</h5>
                         </li>
                     </a>
-                    @can('isCoordenador', $evento)
+                    {{-- @can('isCoordenador', $evento) --}}
                     <a id="definirCoordComissao" href="{{ route('coord.definirCoordComissao', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/crown-solid.svg')}}" alt=""><h5> Definir Coordenador</h5>
                         </li>
                     </a>
-                    @endif
+                    {{-- @endif --}}
                     <a id="listarComissao" href="{{ route('coord.listarComissao', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Comissão</h5>
@@ -131,22 +152,22 @@
                     </a>
                 </div>
             </a>
-            @can('isCoordenador', $evento)
+            {{-- @can('isCoordenador', $evento) --}}
             <a id="programacao">
                 <li>
                     <img src="{{asset('img/icons/slideshow.svg')}}" alt=""><h5>Programação</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
-                <div id="dropdownProgramacao" @if(request()->is('coord/evento/modalidade*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                <div id="dropdownProgramacao" @if(request()->is('coord/evento/atividade*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                     <a id="cadastrarModalidade" href="{{ route('coord.atividades', ['id' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Atividades</h5>
                         </li>
                     </a> 
-                    <a id="cadastrarModalidade" href="{{ route('coord.cadastrarModalidade', ['id' => $evento->id]) }}">
+                    {{-- <a id="cadastrarModalidade" href="{{ route('coord.cadastrarModalidade', ['id' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Palestrantes</h5>
                         </li>
-                    </a>                       
+                    </a>                        --}}
                 </div>
             </a>
 
@@ -186,7 +207,7 @@
                   </a>
               </div>
             </a>
-            @endcan
+            {{-- @endcan --}}
         </ul>
     </div>
 
@@ -205,14 +226,6 @@
     </div>
   @endif
     {{-- {{ $evento->id ?? '' }} --}}
-
-    @yield('menu')
-
-    @hasSection ('script')
-        @yield('script')
-    @endif
-
-
     <div>
         @error('comparacaocaracteres')
           @include('componentes.mensagens')
@@ -243,8 +256,12 @@
           @include('componentes.mensagens')
         @enderror
     </div>
+    
+    @yield('menu')
 
-
+    @hasSection ('script')
+        @yield('script')
+    @endif
 
 </div>
 <input type="hidden" name="trabalhoIdAjax" value="1" id="trabalhoIdAjax">
@@ -254,13 +271,53 @@
 @endsection
 @section('javascript')
   <script type="text/javascript" >
-
     // Adicionar novo criterio
-    $(function(){
+    var contadorOpcoes = 0;
+    $(document).ready(function(){
         $('#addCriterio').click(function(){
-            linha = montarLinhaInput();
-            $('#criterios').append(linha);
+            if ($('#modalidade').val() != null) {
+                linha = montarLinhaInput();
+                $('#criterios').append(linha);
+                contadorOpcoes++;
+            } else {
+                alert("Escolha uma modalidade");
+            }
         });
+    });
+
+    function exibirLimite(id, input) {
+        var caracteres = document.getElementById('caracteres' + id);
+        var palavras = document.getElementById('palavras' + id);
+        if (input.value == "caracteres") {
+            caracteres.style.display    = "block";
+            palavras.style.display      = "none";
+        } else {
+            caracteres.style.display    = "none";
+            palavras.style.display      = "block";
+        }
+    }
+
+    function exibirTiposArquivo(id, input) {
+        var tiposDeArquivo = document.getElementsByClassName('tiposDeArquivos' + id);
+        // console.log(tiposDeArquivo);
+        if (input.checked) {
+            tiposDeArquivo[0].style.display = "block";
+            tiposDeArquivo[1].style.display = "block";
+        } else {
+            tiposDeArquivo[0].style.display = "none";
+            tiposDeArquivo[1].style.display = "none";  
+        }
+    }
+
+    $(document).ready(function($){
+        $('.cep').mask('00000-000');
+        $(".apenasLetras").mask("#", {
+            maxlength: false,
+            translation: {
+                '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
+            }
+        });
+        $('.numero').mask('0000000');
     });
 
     // Remover Criterio
@@ -271,21 +328,61 @@
 
     // Montar div para novo criterio
     function montarLinhaInput(){
-        return  "<div class="+"row"+">"+
+        return  "<div class="+"row"+" style='position:relative; top:10px;'>"+
                     "<div class="+"col-sm-6"+">"+
                         "<label>Nome</label>"+
-                        "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'nomeCriterio[]'+" placeholder="+"Nome"+" required>"+
+                        "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'nomeCriterio'+contadorOpcoes+" placeholder="+"Nome"+" required>"+
                     "</div>"+
                     "<div class="+"col-sm-5"+">"+
                         "<label>Peso</label>"+
-                        "<input"+" type="+'number'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'pesoCriterio[]'+" placeholder="+"Peso"+" required>"+
+                        "<input"+" type="+'number'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'pesoCriterio'+contadorOpcoes+" placeholder="+"Peso"+" required>"+
                     "</div>"+
                     "<div class="+"col-sm-1"+">"+
                         "<a href="+"#"+" class="+"delete"+">"+
-                        "<img src="+"/img/icons/lixo.png"+" style="+"width:25px;margin-top:35px"+">"+
+                            "<img src="+"/img/icons/lixo.png"+" style="+"width:25px;margin-top:35px"+">"+
                         "</a>"+
                     "</div>"+
+                    "<div class='container'>" +
+                        "<div class='row'>" +
+                            "<div class='col-sm-12'>" +
+                                "<h6>Opções para avaliar<img src='{{asset('/img/icons/interrogacao.png')}}' width='15px' style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Essas opções serão exibidas ao revisor na hora da avaliação do trabalho'></h6>" +
+                            "</div>" +
+                            "<div class='col-sm-7'>" +
+                                "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'opcaoCriterio_'+contadorOpcoes+'[]'+" placeholder="+"Opção"+" required>"+
+                            "</div>" +
+                            "<div class='col-sm-4'>" +
+                                "<input"+" type="+'number'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'valor_real_opcao_'+contadorOpcoes+'[]'+" placeholder="+"Valor entre 0 a 10"+" required min='0.00' onchange='validandoValorReal(this)'>"+
+                            "</div>" +
+                            "<div class='col-sm-1'>" +
+                                "<a href="+"#"+" onclick="+"addOpcaoCriterio(this,"+contadorOpcoes+")"+">"+
+                                    "<img src="+"{{ asset('/img/icons/plus-square-solid_black.svg')}}"+" style="+"width:25px;margin-top:5px"+">"+
+                                "</a>" +
+                            "</div>" +
+                        "</div>" +
+                        "<hr>" +
+                    "</div>" +
                 "</div>";
+    }
+
+    function validandoValorReal(input) {
+        // console.log(input);
+        if (input.value > 10 || input.value < 0) {
+            alert("O valor da opção deve estar entre 0 e 10");
+            input.value = 0;
+        } 
+    }
+    function montarLinhaOpcaoCriterio(idName) {
+        return  "<div class='col-sm-7'>" +
+                    "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'opcaoCriterio_'+idName+'[]'+" placeholder="+"Opção"+" required>"+
+                "</div>" +
+                "<div class='col-sm-4'>" +
+                    "<input"+" type="+'number'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'valor_real_opcao_'+idName+'[]'+" placeholder="+"Valor entre 0 a 10"+" required min='0.0' onchange='validandoValorReal(this)'>"+
+                "</div>";
+    }
+
+    function addOpcaoCriterio(elem, idName){
+        linhaDeOpcaoCriterio = montarLinhaOpcaoCriterio(idName);
+        $(elem).closest('.row').append(linhaDeOpcaoCriterio);
     }
 
     // Função para retornar campos de edição de etiquetas para submissão de trabalhos ao default.
@@ -715,8 +812,16 @@
     });
   });
 
+    function cadastrarCriterio() {
+        var form = document.getElementById('formCadastrarCriterio');
+        var modalidade = document.getElementById('modalidade');
 
-
+        if (modalidade.value != "") {
+            form.submit();
+        } else {
+            alert("Escolha uma modalidade");
+        }
+    }
 
     function myFunction(item, index) {
       // document.getElementById("demo").innerHTML += index + ":" + item + "<br>";
@@ -1014,6 +1119,17 @@
                 document.getElementById('formNovaFuncaoDeConvidado').style.display = "block";
             }
         });
+
+        
+    });
+    
+    $(document).ready(function($){
+        $(".apenasLetras").mask("#", {
+            maxlength: false,
+            translation: {
+                '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
+            }
+        });
     });
 
     //Função para adicionar o conteudo de um novo convidado
@@ -1027,11 +1143,11 @@
                         "<div class='row'>" +
                             "<div class='col-sm-6'>" +
                                 "<label for='nome'>Nome:</label>" +
-                                "<input class='form-control' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
+                                "<input class='form-control apenasLetras' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
                             "</div>" +
                             "<div class='col-sm-6'>" + 
                                 "<label for='email'>E-mail:</label>" +
-                                "<input class='form-control' type='text' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
+                                "<input class='form-control' type='email' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
                             "</div>" +
                         "</div>" +
                         "<div class='row'>" +
@@ -1047,7 +1163,7 @@
                             "</div>" +
                             "<div id='divOutraFuncao"+contadorConvidados+"' class='col-sm-4' style='display: none;'>" +
                                 "<label for='Outra'>Qual?</label>"+
-                                "<input type='text' class='form-control' name='outra[]' id='outraFuncao'>"+
+                                "<input type='text' class='form-control apenasLetras' name='outra[]' id='outraFuncao'>"+
                             "</div>"+
                             "<div class='col-sm-4'>" + 
                                 "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
@@ -1065,11 +1181,11 @@
                             "<input type='hidden' name='idConvidado[]' value='0'>" +
                             "<div class='col-sm-6'>" +
                                 "<label for='nome'>Nome:</label>" +
-                                "<input class='form-control' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
+                                "<input class='form-control apenasLetras' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
                             "</div>" +
                             "<div class='col-sm-6'>" + 
                                 "<label for='email'>E-mail:</label>" +
-                                "<input class='form-control' type='text' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
+                                "<input class='form-control' type='email' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
                             "</div>" +
                         "</div>" +
                         "<div class='row'>" +
@@ -1085,7 +1201,7 @@
                             "</div>" +
                             "<div id='divOutraFuncao"+contadorConvidados+"' class='col-sm-4' style='display: none;'>" +
                                 "<label for='Outra'>Qual?</label>"+
-                                "<input type='text' class='form-control' name='outra[]' id='outraFuncao'>"+
+                                "<input type='text' class='form-control apenasLetras' name='outra[]' id='outraFuncao'>"+
                             "</div>"+
                             "<div class='col-sm-4'>" + 
                                 "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
@@ -1199,14 +1315,158 @@
         //     }
         // }
     }
+
+    // Funções da aba de etiquetas
+    $(document).ready(function(){
+        $('#exibir_calendario').click(function() {
+            if (this.checked) {
+                document.getElementById('exibir_pdf').checked = false;
+            } 
+        });
+
+        $('#exibir_pdf').click(function() {
+            if (this.checked) {
+                document.getElementById('exibir_calendario').checked = false;
+            } 
+        });
+    });
+
+    function revisoresPorArea() {
+        var idArea = document.getElementById('area_revisores').value;
+        $.ajaxSetup({
+            headers: {
+                // 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        jQuery.ajax({
+            url: "/revisores-por-area/" + idArea,
+            method: 'get',
+            success: function(result){
+                if (result != null) {
+                    $('#revisores_cadastrados').html("");
+                    var table = "<thead>" +
+                          "<tr>" +
+                            "<th scope='col'>Nome</th>" +
+                            "<th scope='col'>Área</th>" +
+                            "<th scope='col' style='text-align:center'>Em Andamento</th>" +
+                            "<th scope='col' style='text-align:center'>Finalizados</th>" +
+                            "<th scope='col' style='text-align:center'>Visualizar</th>" +
+                            "<th scope='col' style='text-align:center'>Lembrar</th>" +
+                          "</tr>" +
+                        "</thead>" +
+                        "<tbody>";
+                    $.each(result, function(i, obj) {
+                        table += "<tr>" +
+                                "<td>"+ obj.email +"</td>"+
+                                "<td>"+ obj.area +"</td>" +
+                                "<td style='text-align:center'>"+ obj.emAndamento +"</td>" +
+                                "<td style='text-align:center'>"+ obj.concluido +"</td>" +
+                                "<td style='text-align:center'>" +
+                                  "<a href='#' data-toggle='modal' data-target='#modalRevisor'"+obj.id+">" +
+                                    "<img src='{{asset('img/icons/eye-regular.svg')}}' style='width:20px'>" +
+                                  "</a>" +
+                                "</td>" +
+                                "<td style='text-align:center'>" +
+                                    "<form action='{{route('revisor.convite.evento', ['id' => $evento->id])}}' method='get' >" +
+                                        "<input type='hidden' name='id' value='"+obj.id+"'>" +
+                                        "<button class='btn btn-primary btn-sm' type='submit'>" +
+                                            "Enviar convite" +
+                                        "</button>" +
+                                    "</form>" +
+                                "</td>" +
+                              "</tr>";
+                    })
+                    table += "</tbody>"
+                    $('#revisores_cadastrados').html(table);
+                }
+            }
+        });
+    }
+
+    function pesquisaResultadoTrabalho() {
+        var idArea = document.getElementById('area_trabalho_pesquisa').value;
+        var pesquisaTexto = document.getElementById('pesquisaTexto').value;
+        $.ajaxSetup({
+            headers: {
+                // 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        jQuery.ajax({
+            url: "{{ route('trabalho.pesquisa.ajax') }}",
+            method: 'get',
+            data: {
+                areaId: idArea,
+                texto: pesquisaTexto,
+            },
+            success: function(result){
+                console.log(result);
+                if (result != null) {
+                    $('#cards_com_trabalhos').html("");
+                    var cards = "";
+                    $.each(result, function(i, obj) {
+                        if (obj.rota_download != '#') {
+                            cards +=    "<div class='card bg-light mb-3' style='width: 20rem;'>"+
+                                        "<div class='card-body'>" +
+                                            "<h5 class='card-title'>" + obj.titulo +"</h5>" +
+                                            "<h6 class='card-subtitle mb-2 text-muted'>" + obj.nome + "</h6>" +
+                                            "<label for='area'>Área:</label>" +
+                                            "<p id='area'>" + obj.area +"</p>" +
+                                            "<label for='modalidade'>Modalidade:</label>" +
+                                            "<p id='modalidade'>"+ obj.modalidade +"</p>" +
+                                            "<a href='#' class='card-link' data-toggle='modal' data-target='#modalResultados"+ obj.id +"'>Resultado</a>" +
+                                            "<a href='"+obj.rota_download+"' class='card-link'>Baixar</a>" +    
+                                        "</div>" +
+                                    "</div>";
+                        } else {
+                            cards +=    "<div class='card bg-light mb-3' style='width: 20rem;'>"+
+                                        "<div class='card-body'>" +
+                                            "<h5 class='card-title'>" + obj.titulo +"</h5>" +
+                                            "<h6 class='card-subtitle mb-2 text-muted'>" + obj.nome + "</h6>" +
+                                            "<label for='area'>Área:</label>" +
+                                            "<p id='area'>" + obj.area +"</p>" +
+                                            "<label for='modalidade'>Modalidade:</label>" +
+                                            "<p id='modalidade'>"+ obj.modalidade +"</p>" +
+                                            "<a href='#' class='card-link' data-toggle='modal' data-target='#modalResultados"+ obj.id +"'>Resultado</a>" +
+                                        "</div>" +
+                                    "</div>";
+                        }
+                        
+                    })
+                    $('#cards_com_trabalhos').html(cards);
+                }
+            }
+        })
+    }
   </script>
-
-    
-
+  @if(old('editarAreaId') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarArea{{old('editarAreaId')}}").modal('show');
+        })
+    </script>
+  @endif
+  @if(old('modalidadeEditId') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarModalidade{{old('modalidadeEditId')}}").modal('show');
+        });
+    </script>
+  @endif
   @if(old('idAtividade') != null)
     <script>
         $(document).ready(function() {
             $('#modalAtividadeEdit{{old('idAtividade')}}').modal('show');
+        });
+    </script>
+  @endif
+  @if (old('distribuirTrabalhosAutomaticamente') != null) 
+    <script>
+        $(document).ready(function() {
+            $('#modalDistribuicaoAutomatica').modal('show');
         });
     </script>
   @endif
@@ -1273,4 +1533,16 @@
                     document.getElementById('dia7').style.display = "none";
                     break;
                 case '7':
-                    document.getElementById(
+                document.getElementById('dia1').style.display = "block";
+                    document.getElementById('dia2').style.display = "block";
+                    document.getElementById('dia3').style.display = "block";
+                    document.getElementById('dia4').style.display = "block";
+                    document.getElementById('dia5').style.display = "block";
+                    document.getElementById('dia6').style.display = "block";
+                    document.getElementById('dia7').style.display = "block";
+                    break;
+            }
+        });
+    </script>
+  @endif
+@endsection

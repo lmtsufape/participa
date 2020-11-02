@@ -44,14 +44,17 @@ class ComissaoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
-        $numeroRevisores = Revisor::where('eventoId', $evento->id)->count();
+        $revisores = Revisor::where('evento_id', $evento->id)->get();
+        $numeroRevisores = count($revisores);
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
-        $trabalhosAvaliados = Atribuicao::whereIn('trabalhoId', $trabalhosId)->where('parecer', '!=', 'processando')->count();
+        $trabalhosAvaliados = 0;
+        foreach ($trabalhosId as $trabalho) {
+          $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
+        }
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
-        $numeroComissao = ComissaoEvento::where('eventosId',$evento->id)->count();
+        $numeroComissao = count($evento->usuariosDaComissao);
 
 
 
@@ -73,10 +76,10 @@ class ComissaoController extends Controller
      */
     public function store(Request $request)
     {
-        $validationData = $this->validate($request,[
-            'emailMembroComissao'=>'required|string|email',
+        $validationData = $request->validate([
+            'emailMembroComissao' => 'required|string|email',
             // 'especProfissional'=>'required|string',
-            ]);
+        ]);
 
         $user = User::where('email',$request->input('emailMembroComissao'))->first();
         $evento = Evento::find($request->eventoId);
@@ -88,28 +91,28 @@ class ComissaoController extends Controller
             'password' => bcrypt($passwordTemporario),
             'usuarioTemp' => true,
           ]);
+        } else {            
+            $usuarioDaComissa = $evento->usuariosDaComissao()->where('user_id', $user->id)->first();
+            if ($usuarioDaComissa != null) {
+                return redirect()->back()->withErrors(['cadastrarComissao' => 'Esse usuário já é membro da comissão.'])->withInput($validationData);
+            }
         }
 
         // dd($user->id);
-        $comissaoEventos = new ComissaoEvento();
+        $evento->usuariosDaComissao()->save($user);
 
-        $comissaoEventos->eventosId = $request->input('eventoId');
-        $comissaoEventos->userId = $user->id;
-        // $comissaoEventos->especProfissional = $request->input('especProfissional');
-        $comissaoEventos->save();
+        // $comissaoEventos->eventosId = $request->input('eventoId');
+        // $comissaoEventos->userId = $user->id;
+        // // $comissaoEventos->especProfissional = $request->input('especProfissional');
+        // $comissaoEventos->save();
 
 
         $evento = Evento::find($request->input('eventoId'));
-        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
         $areas = Area::where('eventoId', $evento->id)->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
-        // dd($ComissaoEventos);
-        $ids = [];
-        foreach($ComissaoEvento as $ce){
-          array_push($ids,$ce->userId);
-        }
-        $users = User::find($ids);
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+        $revisores = $evento->revisores;
+        $users = $evento->usuariosDaComissao;
+
+        return redirect()->back()->with(['mensagem' => 'Membro da comissão cadastrado com sucesso!']);
     }
 
 
@@ -118,25 +121,20 @@ class ComissaoController extends Controller
 
 
         $evento = Evento::find($request->input('eventoId'));
-        $evento->coordComissaoId = $request->input('coordComissaoId');
+        $evento->coord_comissao_cientifica_id = $request->input('coordComissaoId');
         $evento->save();
 
-        $ComissaoEvento = ComissaoEvento::where('eventosId',$evento->id)->get();
         $areas = Area::where('eventoId', $evento->id)->get();
-        $revisores = Revisor::where('eventoId', $evento->id)->get();
+        $revisores = $evento->revisores;
         // dd($ComissaoEventos);
-        $ids = [];
-        foreach($ComissaoEvento as $ce){
-          array_push($ids,$ce->userId);
-        }
-        $users = User::find($ids);
+        $users = $evento->usuariosDaComissao;
         // return view('coordenador.detalhesEvento', [
         //                                                 'evento'    => $evento,
         //                                                 'areas'     => $areas,
         //                                                 'revisores' => $revisores,
         //                                                 'users'     => $users,
         //                                             ]);
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+        return redirect()->back()->with(['mensagem' => 'Coordenador da comissão científica salvo com sucesso!']);
     }
 
     public function show($id)
@@ -173,8 +171,12 @@ class ComissaoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $evento = Evento::find($request->evento_id);
+        
+        $evento->usuariosDaComissao()->detach($id);
+
+        return redirect()->back()->with(['mensagem' => 'Membro da comissão removido com sucesso!']);
     }
 }

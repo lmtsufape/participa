@@ -36,7 +36,7 @@ class AreaController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-          'nome'  =>  'required|alpha',
+          'nome'  =>  'required|string',
         ]);
 
         Area::create([
@@ -44,7 +44,7 @@ class AreaController extends Controller
           'eventoId'  => $request->eventoId,
         ]);
 
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+        return redirect()->back()->with(['mensagem' => 'Área cadastrada com sucesso!']);
     }
 
     /**
@@ -76,9 +76,18 @@ class AreaController extends Controller
      * @param  \App\Area  $area
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Area $area)
+    public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'nome_da_área' => 'required',
+        ]);
+
+        $area = Area::find($id);
+
+        $area->nome = $request->input('nome_da_área');
+        $area->update();
+
+        return redirect()->back()->with(['mensagem' => 'Área atualizada com sucesso!']);
     }
 
     /**
@@ -90,10 +99,17 @@ class AreaController extends Controller
     public function destroy($id)
     {
 
-        /* !!!  EM CONSTRUÇÃO, CONTINUAR APÓS AS ALTERAÇÕES NO BANCO DE DADOS  !!! */
+        $area = Area::find($id);
+        
+        if (count($area->revisor) > 0) {
+            return redirect()->back()->withErrors(['excluirAtividade' => 'Não é possível excluir, existem revisores ligados a essa área.']);
+        }
+        if (count($area->trabalho) > 0) {
+            return redirect()->back()->withErrors(['excluirAtividade' => 'Não é possível excluir, existem trabalhos ligados a essa área.']);
+        }
 
-        // $area = Area::find($id);
-        // // dd($area->modalidades);
-        // $area->delete();
+        $area->delete();
+
+        return redirect()->back()->with(['mensagem' => 'Área excluida com sucesso!']);
     }
 }

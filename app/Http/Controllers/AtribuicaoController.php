@@ -42,20 +42,17 @@ class AtribuicaoController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-          'revisorId'      => ['required', 'integer',],
-          'trabalhoId'     => ['required', 'integer'],
-        ]);
+      $validatedData = $request->validate([
+        'revisorId'      => ['required', 'integer',],
+        'trabalhoId'     => ['required', 'integer'],
+      ]);
 
-        $atribuicao = Atribuicao::create([
-          'confirmacao' => false,
-          'parecer'     => 'processando',
-          'revisorId'   => $request->revisorId,
-          'trabalhoId'  => $request->trabalhoId,
-        ]);
+      $revisor = Revisor::find($request->revisorId);
+      $trabalho = Trabalho::find($request->trabalhoId);
 
-        return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando']);
 
+      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
     /**
@@ -64,7 +61,7 @@ class AtribuicaoController extends Controller
      * @param  \App\Atribuicao  $atribuicao
      * @return \Illuminate\Http\Response
      */
-    public function show(Atribuicao $atribuicao)
+    public function show()
     {
         //
     }
@@ -75,7 +72,7 @@ class AtribuicaoController extends Controller
      * @param  \App\Atribuicao  $atribuicao
      * @return \Illuminate\Http\Response
      */
-    public function edit(Atribuicao $atribuicao)
+    public function edit()
     {
         //
     }
@@ -87,7 +84,7 @@ class AtribuicaoController extends Controller
      * @param  \App\Atribuicao  $atribuicao
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Atribuicao $atribuicao)
+    public function update(Request $request)
     {
         //
     }
@@ -98,13 +95,13 @@ class AtribuicaoController extends Controller
      * @param  \App\Atribuicao  $atribuicao
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Atribuicao $atribuicao)
+    public function destroy()
     {
         //
     }
 
     public function distribuicaoAutomatica(Request $request){
-      $this->authorize('isCoordenador', $evento);
+      $this->authorize('isCoordenadorOrComissao', $evento);
 
       $validatedData = $request->validate([
         'eventoId' => ['required', 'integer'],
@@ -122,12 +119,7 @@ class AtribuicaoController extends Controller
         $numRevisores = count($revisoresArea);
         $i = 0;
         foreach ($trabalhosArea as $trabalho) {
-          $atribuicao = Atribuicao::create([
-            'confirmacao' => false,
-            'parecer'     => 'processando',
-            'revisorId'   => $revisoresArea[$i]->id,
-            'trabalhoId'  => $trabalho->id,
-          ]);
+          $revisoresArea[$i]->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando']);
           $i++;
           if($i == $numRevisores){
             $i = 0;
@@ -141,16 +133,16 @@ class AtribuicaoController extends Controller
     public function distribuicaoPorArea(Request $request){
       $validatedData = $request->validate([
         'eventoId'                     => ['required', 'integer'],
-        'areaId'                       => ['required', 'integer', 'min:1'],
+        'área'                       => ['required', 'integer', 'min:1'],
         'numeroDeRevisoresPorTrabalho' => ['required', 'integer']
       ]);
 
       $evento = Evento::find($request->eventoId);
-      $this->authorize('isCoordenador', $evento);
+      $this->authorize('isCoordenadorOrComissao', $evento);
 
 
       $evento = Evento::find($request->eventoId);
-      $area = Area::find($request->areaId);
+      $area = Area::find($request->input('área'));
       $revisores = Revisor::where('areaId', $area->id)->get();
       $trabalhos = Trabalho::where('areaId', $area->id)->get();
       $trabalhosArea = Trabalho::where('areaId', $area->id)->get();
@@ -160,8 +152,8 @@ class AtribuicaoController extends Controller
       foreach ($trabalhosArea as $trabalho) {
         for($j = 0; $j < $request->numeroDeRevisoresPorTrabalho; $j++){
           //checar se ja existe atribuicao para esse revisor se sim entao vai pro proximo
-          $atribuicao = Atribuicao::where('revisorId', $revisoresArea[$i]->id)->where('trabalhoId', $trabalho->id)->first();
-          if($atribuicao != null){
+          $atribuicao = $revisoresArea[$i]->trabalhosAtribuidos()->where('trabalho_id', $trabalho->id)->get();
+          if($atribuicao != null && count($atribuicao) > 0){
             $i++;
             if($i == $numRevisores){
               $i = 0;
@@ -169,12 +161,7 @@ class AtribuicaoController extends Controller
             continue;
           }
           // atribui para um revisor
-          $atribuicao = Atribuicao::create([
-            'confirmacao' => false,
-            'parecer'     => 'processando',
-            'revisorId'   => $revisoresArea[$i]->id,
-            'trabalhoId'  => $trabalho->id,
-          ]);
+          $revisoresArea[$i]->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando']);
           $aux = Revisor::find($revisoresArea[$i]->id);
           $aux->correcoesEmAndamento = $aux->correcoesEmAndamento + 1;
           $aux->save();
@@ -190,7 +177,7 @@ class AtribuicaoController extends Controller
         }
       }
 
-      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      return redirect()->back()->with(['mensagem' => 'Trabalhos da área ' . $area->nome . ' distribuidos!']);
     }
 
     public function distribuicaoManual(Request $request){
@@ -199,22 +186,16 @@ class AtribuicaoController extends Controller
         'trabalhoId'=> ['required', 'integer'],
         'revisorId' => ['required', 'integer']
       ]);
-
+        
       $evento = Evento::find($request->eventoId);
       $this->authorize('isCoordenador', $evento);
-
-      $atribuicao = Atribuicao::create([
-        'confirmacao' => false,
-        'parecer'     => 'processando',
-        'revisorId'   => $request->revisorId,
-        'trabalhoId'  => $request->trabalhoId
-      ]);
 
       $trabalho = Trabalho::find($request->trabalhoId);
       $trabalho->avaliado = 'processando';
       $trabalho->save();
 
       $revisor = Revisor::find($request->revisorId);
+      $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando']);
       $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
       $revisor->save();
 
@@ -222,36 +203,30 @@ class AtribuicaoController extends Controller
       $informacoes = $trabalho->titulo;
       Mail::to($revisor->user->email)
             ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
-
-      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      
+      $mensagem = $trabalho->titulo . ' atribuido ao revisor ' . $revisor->user->name . ' com sucesso!';
+      return redirect()->back()->with(['mensagem' => $mensagem]);
     }
 
-    public function deletePorRevisores(Request $request){
+    public function deletePorRevisores(Request $request, $id){
+      // dd($id);
       $validatedData = $request->validate([
-        'eventoId'    => ['required', 'integer'],
-        'trabalhoId'  => ['required', 'integer'],
-        'revisores.*' => ['required', 'integer']
+        'eventoId'      => ['required', 'integer'],
+        'trabalho_id'   => ['required', 'integer'],
       ]);
 
       $evento = Evento::find($request->eventoId);
       $this->authorize('isCoordenador', $evento);
 
-      foreach ($request->revisores as $key) {
-        $atribuicao = Atribuicao::where('trabalhoId', $request->trabalhoId)->where('revisorId', $key)->first();
-        if($atribuicao != null){
-          $atribuicao->delete();
+      $revisor = Revisor::find($id);
+      $revisor->correcoesEmAndamento -= 1; 
+      $revisor->update();
 
-          $trabalho = Trabalho::find($request->trabalhoId);
-          $trabalho->avaliado = 'nao';
-          $trabalho->save();
+      $trabalho = Trabalho::find($request->trabalho_id);
+      $trabalho->atribuicoes()->detach($id);
 
-          $revisor = Revisor::find($key);
-          $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento - 1;
-          $revisor->save();
-        }
+      $mensagem = $trabalho->titulo . ' foi retirado de ' . $revisor->user->name . ' com sucesso!';
 
-      }
-
-      return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
+      return redirect()->back()->with(['mensagem' => $mensagem]);
     }
 }

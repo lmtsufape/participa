@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Area;
 use App\User;
 use App\Endereco;
 use App\Trabalho;
 use App\Coautor;
+use App\ComissaoEvento;
 
 class UserController extends Controller
 {
@@ -16,7 +18,8 @@ class UserController extends Controller
     function perfil(){
         $user = User::find(Auth::user()->id);
         $end = $user->endereco;
-        return view('user.perfilUser',['user'=>$user,'end'=>$end]);
+        $areas = Area::orderBy('nome')->get();
+        return view('user.perfilUser',['user'=>$user,'end'=>$end,'areas'=>$areas]);
     }
     function editarPerfil(Request $request){
         // dd($request->name);
@@ -27,14 +30,15 @@ class UserController extends Controller
                 'cpf' => 'required|cpf|unique:users',
                 'celular' => 'required|string|telefone',
                 'instituicao' => 'required|string| max:255',
-                // 'especProfissional' => 'nullable|string',
+                'especialidade' => 'nullable|string',
                 'rua' => 'required|string|max:255',
                 'numero' => 'required|string',
                 'bairro' => 'required|string|max:255',
                 'cidade' => 'required|string|max:255',
                 'uf' => 'required|string',
                 'cep' => 'required|string',
-                'password' => 'required|string|min:8|confirmed'
+                'password' => 'required|string|min:8|confirmed',
+                // 'primeiraArea' => 'required|string',
             ]);
 
             // criar endereço
@@ -55,10 +59,21 @@ class UserController extends Controller
             $user->celular = $request->input('celular');
             $user->instituicao = $request->input('instituicao');
             $user->password = bcrypt($request->password);
-            // $user->especProfissional = $request->input('especProfissional');
+            if ($request->input('especialidade') != null) {
+                $user->especProfissional = $request->input('especialidade');
+            }
             $user->usuarioTemp = null;
             $user->enderecoId = $end->id;
             $user->save();
+
+            // if ($user->revisor != null) {
+            //     $revisor = $user->revisor;
+            //     $revisor->areaId = $request->primeiraArea;
+            //     if ($request->segundaArea != null) {
+            //         $revisor->area_alternativa_id = $request->segundaArea;
+            //     }
+            //     $revisor->save();
+            // }
 
             return redirect(route('home'));
             

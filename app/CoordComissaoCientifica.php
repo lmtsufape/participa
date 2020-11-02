@@ -6,7 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class CoordComissaoCientifica extends Model
 {
+
+	protected $fillable = [
+        'user_id'
+    ];
+	
     public function user(){
         return $this->belongsTo('App\User');
+    }
+
+    public function eventos(){
+        return $this->hasMany('App\Evento');
     }
 }

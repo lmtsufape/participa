@@ -17,13 +17,16 @@ class CreateRevisorsTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->date('prazo')->nullable();
-            $table->integer('trabalhosCorrigidos');
-            $table->integer('correcoesEmAndamento');
+            $table->integer('trabalhosCorrigidos')->nullable();
+            $table->integer('correcoesEmAndamento')->nullable();
 
-            $table->integer('user_id');
-            $table->integer('areaId');
-            $table->integer('modalidadeId');
-            $table->integer('eventoId');
+            // $table->unsignedBigInteger('eventos_id')->nullable();
+            // $table->foreign('eventos_id')->references('id')->on('eventos');
+            $table->unsignedBigInteger('user_id');
+            $table->bigInteger('areaId')->nullable();
+            // $table->bigInteger('area_alternativa_id')->nullable();
+            $table->integer('modalidadeId')->nullable();
+            $table->integer('evento_id')->nullable();
         });
     }
 
