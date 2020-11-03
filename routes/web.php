@@ -18,7 +18,7 @@ Route::get('/index', function () {
     $eventos = Evento::all();
     // dd($eventos);
     return view('index',['eventos'=>$eventos]);
-})->name('index')->middleware('verified', 'isTemp');
+})->name('index');
 
 Route::get('/home', 'EventoController@index')->name('home')->middleware('verified', 'isTemp');
 

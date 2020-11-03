@@ -569,7 +569,7 @@ class EventoController extends Controller
         $formSubTraba = FormSubmTraba::all();
         $atividades = Atividade::where([['eventoId', $id], ['visibilidade_participante', true]])->get();
         $primeiraAtividade = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where([['eventoId', '=', $id], ['visibilidade_participante', '=', true]])->first();
-
+        $modalidades = Modalidade::where('evento_id', $id)->get();
         $mytime = Carbon::now('America/Recife');
         // dd(false);
 
@@ -588,6 +588,7 @@ class EventoController extends Controller
                                                 'formSubTraba'        => $formSubTraba,
                                                 'atividades'          => $atividades,
                                                 'dataInicial'         => $primeiraAtividade,
+                                                'modalidades'         => $modalidades,
                                                ]);
     }
 

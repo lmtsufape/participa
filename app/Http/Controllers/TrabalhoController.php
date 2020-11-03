@@ -40,18 +40,18 @@ class TrabalhoController extends Controller
     public function index($id, $idModalidade)
     {
         $evento = Evento::find($id);
-        // $areas = Area::where('eventoId', $evento->id)->get();
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
+        // $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         // $revisores = Revisor::where('eventoId', $evento->id)->get();
         // $modalidades = Modalidade::all();        
         // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();        
         // $areasEnomes = Area::wherein('id', $areasId)->get();
-        $modalidadesIDeNome = [];
-        foreach ($areaModalidades as $key) {
-          array_push($modalidadesIDeNome,['areaId' => $key->area->id,
-                                          'modalidadeId' => $key->modalidade->id,
-                                          'modalidadeNome' => $key->modalidade->nome]);
-        }
+        // $modalidadesIDeNome = [];
+        // foreach ($areaModalidades as $key) {
+        //   array_push($modalidadesIDeNome,['areaId' => $key->area->id,
+        //                                   'modalidadeId' => $key->modalidade->id,
+        //                                   'modalidadeNome' => $key->modalidade->nome]);
+        // }
 
         // $trabalhos = Trabalho::where('autorId', Auth::user()->id)->whereIn('areaId', $areasId)->get();
         
@@ -61,29 +61,30 @@ class TrabalhoController extends Controller
 
         // Pegando apenas as areas que possuem relação com a modalidade selecionada
         // ao clciar no botão "submeter trabalho".
-        $areaPorModalidade = AreaModalidade::where('modalidadeId', $idModalidade)->select('areaId')->get();
-        $areasEspecificas = Area::wherein('id', $areaPorModalidade)->get();
+        // $areaPorModalidade = AreaModalidade::where('modalidadeId', $idModalidade)->select('areaId')->get();
+        // $areasEspecificas = Area::wherein('id', $areaPorModalidade)->get();
 
         $formSubTraba = FormSubmTraba::where('eventoId', $evento->id)->first();
 
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
-
+        $ordemCampos = explode(",", $formSubTraba->ordemCampos);
         $modalidade = Modalidade::find($idModalidade);
         // dd($formSubTraba);
         return view('evento.submeterTrabalho',[
                                               'evento'                 => $evento,
-                                              // 'areas'                  => $areas,
+                                              'areas'                  => $areas,
                                               // 'revisores'              => $revisores,
                                               // 'modalidades'            => $modalidades,
                                               // 'areaModalidades'        => $areaModalidades,
                                               // 'trabalhos'              => $trabalhos,
                                               // 'areasEnomes'            => $areasEnomes,
-                                              'modalidadesIDeNome'     => $modalidadesIDeNome,
+                                              // 'modalidadesIDeNome'     => $modalidadesIDeNome,
                                               // 'regrasubarq'            => $formtiposubmissao,
-                                              'areasEspecificas'       => $areasEspecificas,
+                                              // 'areasEspecificas'       => $areasEspecificas,
                                               // 'modalidadeEspecifica'   => $idModalidade,
                                               'formSubTraba'           => $formSubTraba,
+                                              'ordemCampos'            => $ordemCampos,
                                               'regras'                 => $regra,
                                               'templates'              => $template,
                                               'modalidade'             => $modalidade,

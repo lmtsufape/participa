@@ -27,9 +27,6 @@
                             @include('componentes.mensagens')
                           @enderror
                         </div>
-                        <?php
-                          $ordemCampos = explode(",", $formSubTraba->ordemCampos);
-                        ?>
                         @foreach ($ordemCampos as $indice)
                           @if ($indice == "etiquetatitulotrabalho")
                             <div class="row justify-content-center">
@@ -107,7 +104,7 @@
                                           <option value="{{$area->id}}">{{$area->nome}}</option>
                                         @endforeach --}}
                                         {{-- Apenas um teste abaixo --}}
-                                        @foreach($areasEspecificas as $area)
+                                        @foreach($areas as $area)
                                           <option value="{{$area->id}}">{{$area->nome}}</option>
                                         @endforeach
                                     </select>
@@ -411,7 +408,7 @@
 @section('javascript')
 <script type="text/javascript">
 
-  var modalidades = JSON.parse('<?php echo json_encode($modalidadesIDeNome) ?>');
+  // 
 
   $(document).ready(function(){
     $('.char-count').keyup(function() {
