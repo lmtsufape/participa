@@ -105,7 +105,7 @@
                 <li>
                     <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão Cientifica</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
-                <div id="dropdownComissao" @if(request()->is('coord/evento/comissao*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                <div id="dropdownComissao" @if(request()->is('coord/evento/comissaoCientifica*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                     <a id="cadastrarComissao" href="{{ route('coord.cadastrarComissao', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar membro</h5>
@@ -129,20 +129,20 @@
                 <li>
                     <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão Organizadora</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
-                <div id="dropdownComissaoOrganizadora" @if(false) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                    <a id="cadastrarComissaoOrganizadora" href="{{route('comissao.organizadora.create', ['id' => $evento->id])}}">
+                <div id="dropdownComissaoOrganizadora" @if(request()->is('coord/evento/comissaoOrganizadora*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                    <a id="cadastrarComissaoOrganizadora" href="{{route('coord.comissao.organizadora.create', ['id' => $evento->id])}}">
                         <li>
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar membro</h5>
                         </li>
                     </a>
                     {{-- @can('isCoordenador', $evento) --}}
-                    <a id="definirCoordComissaoOrganizadora" href="{{route('definir.coordComissaoOrganizadora', ['id' => $evento])}}">
+                    <a id="definirCoordComissaoOrganizadora" href="{{route('coord.definir.coordComissaoOrganizadora', ['id' => $evento])}}">
                         <li>
                             <img src="{{asset('img/icons/crown-solid.svg')}}" alt=""><h5> Definir Coordenador</h5>
                         </li>
                     </a>
                     {{-- @endif --}}
-                    <a id="listarComissaoOrganizadora" href="{{route('listar.comissaoOrganizadora', ['id' => $evento])}}">
+                    <a id="listarComissaoOrganizadora" href="{{route('coord.listar.comissaoOrganizadora', ['id' => $evento])}}">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Comissão</h5>
                         </li>

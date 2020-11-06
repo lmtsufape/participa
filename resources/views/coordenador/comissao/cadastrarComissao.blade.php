@@ -8,7 +8,7 @@
         @enderror
         <div class="row">
             <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Cadastrar Comissão</h1>
+                <h1 class="titulo-detalhes">Cadastrar Membro da Comissão Científica</h1>
             </div>
         </div>
         <div class="row justify-content-center">

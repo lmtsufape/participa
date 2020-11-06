@@ -61,9 +61,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::post('comissaoCientifica/novoUsuario', 'CoordComissaoCientificaController@novoUsuario')->name('cientifica.novoUsuario');
   // rotas do Comissao Organizadora
   Route::get('/home/comissaoOrganizadora', 'CoordComissaoOrganizadoraController@index')->name('home.organizadora');
-  Route::get('comissaoOrganizadora/{id}/cadastrar', 'ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
-  Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
-  Route::get('comissaoOrganizadora/{id}/listar', 'ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
+  
   // rotas do Coordenador de evento
   Route::get('/home/coord', 'CoordEventoController@index')->name('coord.index');
   Route::get('/home/coord/eventos', 'CoordEventoController@listaEventos')->name('coord.eventos');
@@ -86,9 +84,13 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
       // Route::get('revisores/{id}/disponiveis', 'RevisorController@listarRevisores')->name('adicionarRevisores');
 
-      Route::get('comissao/cadastrarComissao', 'EventoController@cadastrarComissao')->name('cadastrarComissao');
-      Route::get('comissao/definirCoordComissao', 'EventoController@definirCoordComissao')->name('definirCoordComissao');
-      Route::get('comissao/listarComissao', 'EventoController@listarComissao')->name('listarComissao');
+      Route::get('comissaoCientifica/cadastrarComissao', 'EventoController@cadastrarComissao')->name('cadastrarComissao');
+      Route::get('comissaoCientifica/definirCoordComissao', 'EventoController@definirCoordComissao')->name('definirCoordComissao');
+      Route::get('comissaoCientifica/listarComissao', 'EventoController@listarComissao')->name('listarComissao');
+      Route::get('comissaoOrganizadora/{id}/cadastrar', 'ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
+      Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
+      Route::get('comissaoOrganizadora/{id}/listar', 'ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
+      
       Route::post('remover/comissao/{id}',  'ComissaoController@destroy'      )->name('remover.comissao');
       Route::get('modalidade/cadastrarModalidade', 'EventoController@cadastrarModalidade')->name('cadastrarModalidade');
       Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');

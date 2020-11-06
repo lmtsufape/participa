@@ -4,7 +4,7 @@
     <div id="divListarComissao" class="comissao" style="display: block">
         <div class="row">
             <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Listar Comissão</h1>
+                <h1 class="titulo-detalhes">Listar Comissão Científica</h1>
             </div>
         </div>
         <div class="row">
