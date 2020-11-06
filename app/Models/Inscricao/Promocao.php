@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\inscricao;
+namespace App\Models\Inscricao;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +15,7 @@ class Promocao extends Model
     }
 
     public function lotes() {
-        return $this->hasMany('App\Models\inscricao\Lote', 'promocao_id');
+        return $this->hasMany('App\Models\Inscricao\Lote', 'promocao_id');
     }
 
     public function atividades() {

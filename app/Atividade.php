@@ -34,6 +34,6 @@ class Atividade extends Model
   }
 
   public function promocoes() {
-    return $this->belongsToMany('App\Models\inscricao\Promocao', 'atividades_promocaos', 'atividade_id', 'promocao_id');
+    return $this->belongsToMany('App\Models\Inscricao\Promocao', 'atividades_promocaos', 'atividade_id', 'promocao_id');
   }
 }

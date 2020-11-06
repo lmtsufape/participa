@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\inscricao;
+namespace App\Models\Inscricao;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +11,6 @@ class Lote extends Model
     ];
 
     public function promocao() {
-        return $this->belongsTo('App\Models\inscricao\Promocao', 'promocao_id');
+        return $this->belongsTo('App\Models\Inscricao\Promocao', 'promocao_id');
     }
 }

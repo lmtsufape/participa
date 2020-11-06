@@ -181,17 +181,17 @@
                 <li>
                     <img src="{{asset('img/icons/slideshow.svg')}}" alt=""><h5>Programação</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
-                <div id="dropdownProgramacao" @if(request()->is('coord/evento/atividade*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                <div id="dropdownProgramacao" @if(request()->is('coord/evento/atividade*') || request()->is('inscricoes*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                     <a id="cadastrarModalidade" href="{{ route('coord.atividades', ['id' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Atividades</h5>
                         </li>
                     </a> 
-                    {{-- <a id="cadastrarModalidade" href="{{ route('coord.cadastrarModalidade', ['id' => $evento->id]) }}">
+                    <a id="cadastrarModalidade" href="{{ route('inscricoes', ['id' => $evento->id]) }}">
                         <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Palestrantes</h5>
+                            <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5>
                         </li>
-                    </a>                        --}}
+                    </a>                       
                 </div>
             </a>
 

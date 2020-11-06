@@ -197,6 +197,9 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::post(  '/criterio/{id}/atualizar', 'CriteriosController@update'                )->name('atualizar.criterio');
   Route::get(   '/{evento_id}/criterio/{id}/deletar',   'CriteriosController@destroy'               )->name('criterio.destroy');
   Route::get(   '/encontrarCriterio', 'CriteriosController@findCriterio'                )->name('encontrar.criterio');
+
+  // ROTAS DO MODULO DE INSCRIÇÃO
+  Route::get('inscricoes/evento-{id}/index',    'Inscricao\InscricaoController@index'   )->name('inscricoes');
 });
 
 Auth::routes();

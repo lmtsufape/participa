@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\inscricao;
+namespace App\Models\Inscricao;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;

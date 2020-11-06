@@ -68,7 +68,7 @@ class Evento extends Model
   }
 
   public function promocoes() {
-    return $this->hasMany('App\Models\inscricao\Promocao', 'evento_id');
+    return $this->hasMany('App\Models\Inscricao\Promocao', 'evento_id');
   }
   // public function revisores(){
   //   return $this->belongsToMany('App\Revisor', 'evento_revisors', 'evento_id', 'revisor_id')->withPivot('convite_aceito')->withTimestamps();
