@@ -101,7 +101,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     function membroComissaoEvento(){
-        return $this->belongsToMany('App\Evento','comissao_eventos','user_id','evento_id');
+        return $this->belongsToMany('App\Evento','comissao_cientifica_eventos','user_id','evento_id');
     }
     
     public function coordEvento(){
@@ -112,4 +112,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new recuperacaoSenha($token));
     }
 
+    public function membroComissaoOrgaEvento() {
+        return $this->belongsToMany('App\Evento', 'comissao_organizadora_eventos', 'user_id', 'evento_id');
+    }
 }

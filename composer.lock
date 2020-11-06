@@ -234,16 +234,16 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "2.1.22",
+            "version": "2.1.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "68e418ec08fbfc6f58f6fd2eea70ca8efc8cc7d5"
+                "reference": "5fa792ad1853ae2bc60528dd3e5cbf4542d3c1df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/68e418ec08fbfc6f58f6fd2eea70ca8efc8cc7d5",
-                "reference": "68e418ec08fbfc6f58f6fd2eea70ca8efc8cc7d5",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/5fa792ad1853ae2bc60528dd3e5cbf4542d3c1df",
+                "reference": "5fa792ad1853ae2bc60528dd3e5cbf4542d3c1df",
                 "shasum": ""
             },
             "require": {
@@ -288,7 +288,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2020-09-26T15:48:38+00:00"
+            "time": "2020-10-31T20:37:35+00:00"
         },
         {
             "name": "fideloper/proxy",
@@ -587,16 +587,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v6.20.1",
+            "version": "v6.20.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "2be93171bfd2685f7b127a24d54e389db509c16e"
+                "reference": "41915424bbd0939048e9b2d3701568dc2bc98790"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/2be93171bfd2685f7b127a24d54e389db509c16e",
-                "reference": "2be93171bfd2685f7b127a24d54e389db509c16e",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/41915424bbd0939048e9b2d3701568dc2bc98790",
+                "reference": "41915424bbd0939048e9b2d3701568dc2bc98790",
                 "shasum": ""
             },
             "require": {
@@ -732,7 +732,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-10-29T15:23:54+00:00"
+            "time": "2020-10-29T18:56:44+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -854,16 +854,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "1.5.6",
+            "version": "1.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "a56e91e0fa1f6d0049153a9c34f63488f6b7ce61"
+                "reference": "11df9b36fd4f1d2b727a73bf14931d81373b9a54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/a56e91e0fa1f6d0049153a9c34f63488f6b7ce61",
-                "reference": "a56e91e0fa1f6d0049153a9c34f63488f6b7ce61",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/11df9b36fd4f1d2b727a73bf14931d81373b9a54",
+                "reference": "11df9b36fd4f1d2b727a73bf14931d81373b9a54",
                 "shasum": ""
             },
             "require": {
@@ -919,7 +919,7 @@
                 "md",
                 "parser"
             ],
-            "time": "2020-10-17T21:33:03+00:00"
+            "time": "2020-10-31T13:49:32+00:00"
         },
         {
             "name": "league/flysystem",
@@ -3689,16 +3689,16 @@
         },
         {
             "name": "facade/ignition",
-            "version": "1.16.3",
+            "version": "1.16.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facade/ignition.git",
-                "reference": "19674150bb46a4de0ba138c747f538fe7be11dbc"
+                "reference": "1da1705e7f6b24ed45af05461463228da424e14f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facade/ignition/zipball/19674150bb46a4de0ba138c747f538fe7be11dbc",
-                "reference": "19674150bb46a4de0ba138c747f538fe7be11dbc",
+                "url": "https://api.github.com/repos/facade/ignition/zipball/1da1705e7f6b24ed45af05461463228da424e14f",
+                "reference": "1da1705e7f6b24ed45af05461463228da424e14f",
                 "shasum": ""
             },
             "require": {
@@ -3709,14 +3709,13 @@
                 "filp/whoops": "^2.4",
                 "illuminate/support": "~5.5.0 || ~5.6.0 || ~5.7.0 || ~5.8.0 || ^6.0",
                 "monolog/monolog": "^1.12 || ^2.0",
-                "php": "^7.1",
+                "php": "^7.1|^8.0",
                 "scrivo/highlight.php": "^9.15",
                 "symfony/console": "^3.4 || ^4.0",
                 "symfony/var-dumper": "^3.4 || ^4.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.14",
-                "mockery/mockery": "^1.2",
+                "mockery/mockery": "~1.3.3|^1.4.2",
                 "orchestra/testbench": "^3.5 || ^3.6 || ^3.7 || ^3.8 || ^4.0"
             },
             "suggest": {
@@ -3756,7 +3755,7 @@
                 "laravel",
                 "page"
             ],
-            "time": "2020-07-13T15:54:05+00:00"
+            "time": "2020-10-30T13:40:01+00:00"
         },
         {
             "name": "facade/ignition-contracts",
@@ -3809,16 +3808,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.9.0",
+            "version": "2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "2ec31f3adc54c71a59c5e3c2143d7a0e2f8899f8"
+                "reference": "307fb34a5ab697461ec4c9db865b20ff2fd40771"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/2ec31f3adc54c71a59c5e3c2143d7a0e2f8899f8",
-                "reference": "2ec31f3adc54c71a59c5e3c2143d7a0e2f8899f8",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/307fb34a5ab697461ec4c9db865b20ff2fd40771",
+                "reference": "307fb34a5ab697461ec4c9db865b20ff2fd40771",
                 "shasum": ""
             },
             "require": {
@@ -3866,7 +3865,7 @@
                 "throwable",
                 "whoops"
             ],
-            "time": "2020-10-20T12:00:00+00:00"
+            "time": "2020-11-01T12:00:00+00:00"
         },
         {
             "name": "fzaninotto/faker",
@@ -3916,6 +3915,7 @@
                 "faker",
                 "fixtures"
             ],
+            "abandoned": true,
             "time": "2019-12-12T13:22:17+00:00"
         },
         {
@@ -4882,16 +4882,16 @@
         },
         {
             "name": "scrivo/highlight.php",
-            "version": "v9.18.1.3",
+            "version": "v9.18.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/scrivo/highlight.php.git",
-                "reference": "6a1699707b099081f20a488ac1f92d682181018c"
+                "reference": "ee8007a215a27cb9c078e0328fb5de901d74ef9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/6a1699707b099081f20a488ac1f92d682181018c",
-                "reference": "6a1699707b099081f20a488ac1f92d682181018c",
+                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/ee8007a215a27cb9c078e0328fb5de901d74ef9b",
+                "reference": "ee8007a215a27cb9c078e0328fb5de901d74ef9b",
                 "shasum": ""
             },
             "require": {
@@ -4947,7 +4947,7 @@
                 "highlight.php",
                 "syntax"
             ],
-            "time": "2020-10-16T07:43:22+00:00"
+            "time": "2020-11-01T04:06:53+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
