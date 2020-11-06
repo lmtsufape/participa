@@ -122,4 +122,17 @@ class ComissaoOrganizadoraController extends Controller
         return view('coordenador.comissaoOrganizadora.definirCoordComissao', ['evento' => $evento,
                                                                               'users' => $usuariosDaComissao]);
     }
+
+    public function salvarCoordenador(Request $request) {
+        $evento = Evento::find($request->eventoId);
+
+        $validationData = $request->validate([
+            'coordComissaoId' => 'required',
+        ]);
+
+        $evento->coord_comissao_organizadora_id = $request->coordComissaoId;
+        $evento->update();
+
+        return redirect()->back()->with(['mensagem' => 'Coordenador da comissão organizadora salvo com sucesso!']);
+    }
 }

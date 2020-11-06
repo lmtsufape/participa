@@ -14,7 +14,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Coordenador da Comissão</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Selecione um coordenador para comissão do seu evento</h6>
-                        <form id="formCoordComissao" action="{{route('cadastrar.coordComissao')}}" method="POST">
+                        <form id="formCoordComissao" action="{{route('comissaoOrganizadora.salvaCoordenador')}}" method="POST">
                             @csrf
                             <p class="card-text">
                                     <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">

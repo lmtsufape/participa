@@ -57,7 +57,7 @@
                                           <td>{{$user->celular}}</td>
                                           <td>{{$user->email}}</td>
                                           <td>
-                                          @if ($evento->coord_comissao_cientifica_id == $user->id)
+                                          @if ($evento->coord_comissao_organizadora_id == $user->id)
                                             Coordenador
                                           @endif
                                           </td>
@@ -76,7 +76,7 @@
                                           <td>Usuário temporário - Sem Celular</td>
                                           <td>{{$user->email}}</td>
                                           <td>
-                                          @if ($evento->coord_comissao_cientifica_id == $user->id)
+                                          @if ($evento->coord_comissao_organizadora_id == $user->id)
                                             Coordenador
                                           @endif
                                           </td>
