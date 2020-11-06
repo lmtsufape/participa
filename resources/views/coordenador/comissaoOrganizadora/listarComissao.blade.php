@@ -38,7 +38,7 @@
                                           </button>
                                           </div>
                                               <div class="modal-body">
-                                                  Tem certeza que deseja remover esse membro da comissão do evento?
+                                                  Tem certeza que deseja remover esse membro da comissão organizadora do evento?
                                               </div>
                                           <div class="modal-footer">
                                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
@@ -62,7 +62,7 @@
                                           @endif
                                           </td>
                                           <td style="text-align:center">
-                                            <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao', ['id' => $user->id])}}" method="POST">
+                                            <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao.organizadora', ['id' => $user->id])}}" method="POST">
                                               @csrf
                                               <input type="hidden" name="evento_id" value="{{$evento->id}}">
                                               <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
@@ -81,7 +81,7 @@
                                           @endif
                                           </td>
                                           <td style="text-align:center">
-                                            <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao', ['id' => $user->id])}}" method="POST">
+                                            <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao.organizadora', ['id' => $user->id])}}" method="POST">
                                               @csrf
                                               <input type="hidden" name="evento_id" value="{{$evento->id}}">
                                               <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">

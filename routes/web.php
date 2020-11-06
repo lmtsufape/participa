@@ -91,7 +91,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
       Route::get('comissaoOrganizadora/{id}/cadastrar', 'ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
       Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
       Route::get('comissaoOrganizadora/{id}/listar', 'ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
-      
+      Route::post('remover/comissaoOrganizadora/{id}', 'ComissaoOrganizadoraController@destroy')->name('remover.comissao.organizadora');
+
       Route::post('remover/comissao/{id}',  'ComissaoController@destroy'      )->name('remover.comissao');
       Route::get('modalidade/cadastrarModalidade', 'EventoController@cadastrarModalidade')->name('cadastrarModalidade');
       Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');
