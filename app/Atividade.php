@@ -32,4 +32,8 @@ class Atividade extends Model
   public function datasAtividade() {
     return $this->hasMany('App\DatasAtividade', 'atividade_id');
   }
+
+  public function promocoes() {
+    return $this->belongsToMany('App\Models\inscricao\Promocao', 'atividades_promocaos', 'atividade_id', 'promocao_id');
+  }
 }
