@@ -59,9 +59,11 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('comissaoCientifica/areas', 'CoordComissaoCientificaController@index')->name('cientifica.areas');
   Route::post('comissaoCientifica/permissoes', 'CoordComissaoCientificaController@permissoes')->name('cientifica.permissoes');
   Route::post('comissaoCientifica/novoUsuario', 'CoordComissaoCientificaController@novoUsuario')->name('cientifica.novoUsuario');
-
   // rotas do Comissao Organizadora
   Route::get('/home/comissaoOrganizadora', 'CoordComissaoOrganizadoraController@index')->name('home.organizadora');
+  Route::get('comissaoOrganizadora/{id}/cadastrar', 'ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
+  Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
+  Route::get('comissaoOrganizadora/{id}/listar', 'ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
   // rotas do Coordenador de evento
   Route::get('/home/coord', 'CoordEventoController@index')->name('coord.index');
   Route::get('/home/coord/eventos', 'CoordEventoController@listaEventos')->name('coord.eventos');

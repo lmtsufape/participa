@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Evento;
 
 class ComissaoOrganizadoraController extends Controller
 {
@@ -11,9 +12,13 @@ class ComissaoOrganizadoraController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        //
+        $evento = Evento::find($id);
+
+        $usuariosDaComissao = $evento->usuariosDaComissaoOrganizadora;
+        return view('coordenador.comissaoOrganizadora.listarComissao', ['evento' => $evento,
+                                                                        'users' => $usuariosDaComissao]);
     }
 
     /**
@@ -21,9 +26,10 @@ class ComissaoOrganizadoraController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+        $evento = Evento::find($id);
+        return view('coordenador.comissaoOrganizadora.cadastrarComissao', ['evento' => $evento]);
     }
 
     /**
@@ -80,5 +86,12 @@ class ComissaoOrganizadoraController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function definirCoordenador($id) {
+        $evento = Evento::find($id);
+        $usuariosDaComissao = $evento->usuariosDaComissaoOrganizadora;
+        return view('coordenador.comissaoOrganizadora.definirCoordComissao', ['evento' => $evento,
+                                                                              'users' => $usuariosDaComissao]);
     }
 }
