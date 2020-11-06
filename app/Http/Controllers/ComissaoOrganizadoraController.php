@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Evento;
+use App\User;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Mail\EmailParaUsuarioNaoCadastrado;
 
 class ComissaoOrganizadoraController extends Controller
 {
@@ -40,7 +44,31 @@ class ComissaoOrganizadoraController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $validationData = $request->validate([
+            'emailMembroComissao' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->emailMembroComissao)->first();
+        // dd($user);
+        if ($user == null) {
+            $passwordTemporario = Str::random(8);
+            Mail::to($request->emailMembroComissao)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Comissao Organizadora', $evento->nome, $passwordTemporario));
+            $user = User::create([
+                'email' => $request->emailMembroComissao,
+                'password' => bcrypt($passwordTemporario),
+                'usuarioTemp' => true,
+            ]);
+        } else {            
+            $usuarioDaComissao = $evento->usuariosDaComissaoOrganizadora()->where('user_id', $user->id)->first();
+            if ($usuarioDaComissao != null) {
+                return redirect()->back()->withErrors(['cadastrarComissao' => 'Esse usuário já é membro da comissão organizadora.'])->withInput($validationData);
+            }
+        }
+
+        $evento->usuariosDaComissaoOrganizadora()->save($user);
+
+        return redirect()->back()->with(['mensagem' => 'Membro da comissão organizadora cadastrado com sucesso!']);
     }
 
     /**
