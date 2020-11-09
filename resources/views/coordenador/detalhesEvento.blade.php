@@ -307,6 +307,7 @@
                 alert("Escolha uma modalidade");
             }
         });
+        $('#li_promocoes').click();
     });
 
     function exibirLimite(id, input) {
@@ -1467,6 +1468,19 @@
                 }
             }
         })
+    }
+
+    // Funções de inscrições
+    function ativarLink(elemento) {
+        elemento.children[0].click();
+
+        if (elemento == document.getElementById("li_promocoes")) {
+            elemento.className = "aba ativado";
+            document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
+        } else if (elemento == document.getElementById("li_cuponsDeDesconto")) {
+            elemento.className = "aba ativado";
+            document.getElementById("li_promocoes").className = "aba aba-tab";
+        }
     }
   </script>
   @if(old('editarAreaId') != null) 

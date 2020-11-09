@@ -444,3 +444,52 @@ body{
 .font-25 {
     font-size: 25px;
 }
+
+.aba {
+    border-top: solid #114048ff 1px;
+    border-left: solid #114048ff 1px;
+    border-right: solid #114048ff 1px;
+    border-radius: 7px 7px 0px 0px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 7px;
+}
+
+.aba-tab {
+    color: #114048ff;
+}
+
+.aba-tab:hover {
+    text-decoration: none;
+    background-color: rgb(25, 92, 104);
+    color: white;
+}
+
+.aba-tab:hover a {
+    color: white;
+}
+
+.ativado {
+    text-decoration: none;
+    background-color: rgb(25, 92, 104);
+    color: white;
+}
+
+.aba-tab a {
+    color: rgb(25, 92, 104);
+    text-decoration: none;
+}
+
+.aba-tab a:hover {
+    color:white;
+}
+
+.ativado {
+    background-color: rgb(25, 92, 104);
+    color: white;
+}
+
+.ativado a {
+    text-decoration: none;
+    color: white;
+}

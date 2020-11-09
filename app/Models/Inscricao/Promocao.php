@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Promocao extends Model
 {
     protected $fillable = [
-        'evento_id', 'valor'
+        'evento_id', 'valor', 'identificador', 'descricao'
     ];
 
     public function evento() {
