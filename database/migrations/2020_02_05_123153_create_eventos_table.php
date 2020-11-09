@@ -33,6 +33,7 @@ class CreateEventosTable extends Migration
             $table->boolean('publicado')->nullable();
 
             $table->integer('coord_comissao_cientifica_id')->nullable();
+            $table->integer('coord_comissao_organizadora_id')->nullable();
             $table->integer('enderecoId')->nullable();
             $table->integer('coordenadorId')->nullable();
             $table->boolean('deletado')->nullable();;
