@@ -90,6 +90,18 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'dataDeInício.*' => [
+            'required'  => 'O campo data de início é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.'
+        ],
+        'dataDeFim.*' => [
+            'required' => 'O campo data de fim é obrigatório.',
+            'date'     => 'O campo deve ter uma data válida.',
+            'after'    => 'A data informada deve ser depois da data de início.'
+        ],
+        'disponibilidade.*' => [
+            'required' => 'O campo disponibilidade é obrigatório.'
+        ]
     ],
     /*
     |--------------------------------------------------------------------------

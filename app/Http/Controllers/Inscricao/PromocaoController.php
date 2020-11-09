@@ -4,25 +4,17 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Evento;
-use App\Models\Inscricao\Promocao;
-use App\Atividade;
 
-class InscricaoController extends Controller
+class PromocaoController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
-        $evento = Evento::find($id);
-        $promocoes = Promocao::where('evento_id', $id)->get();
-        $atividades = Atividade::where('eventoId', $id)->get();
-        return view('coordenador.programacao.inscricoes', ['evento' => $evento,
-                                                           'promocoes' => $promocoes,
-                                                           'atividades' => $atividades]);
+        //
     }
 
     /**
@@ -43,7 +35,18 @@ class InscricaoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validadeData = $request->validate([
+            'novaPromocao'      => 'required',
+            'identificador'     => 'required',
+            'valor'             => 'required',
+            'descrição'         => 'nullable|max:1000',
+            'dataDeInício.*'    => 'required|date',
+            'dataDeFim.*'       => 'required|date|after:dataDeInício.*',
+            'disponibilidade.*' => 'required',
+            'atividades*'       => 'nullable',    
+        ]);
+        
+        dd($request);
     }
 
     /**

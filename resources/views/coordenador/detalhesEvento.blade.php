@@ -1482,7 +1482,40 @@
             document.getElementById("li_promocoes").className = "aba aba-tab";
         }
     }
+
+    function adicionarLoteAhPromocao() {
+        $('#lotes').append(
+            "<div class='row'>" +
+                "<div class='col-sm-4'>" +
+                    "<label for='dataDeInicio'>Data de início</label>" +
+                    "<input id='dataDeInicio' name='dataDeInício[]' class='form-control' type='date'>" +
+                "</div>" +
+                "<div class='col-sm-4'>" +
+                    "<label for='dataDeFim'>Data de fim</label>" +
+                    "<input id='dataDeFim' name='dataDeFim[]' class='form-control' type='date'>" +
+                "</div>" +
+                "<div class='col-sm-3'>" + 
+                    "<label for='quantidade'>Disponibilidade</label>" +
+                    "<input id='quantidade' name='disponibilidade[]' class='form-control' type='number' placeholder='10'>" +
+                "</div>" +
+                "<div class='col-sm-1'>" +
+                    "<a href='#' title='Remover lote' onclick='removerLoteDaPromocao(this)'><img src='{{asset('img/icons/lixo.png')}}' width='35px' style='position: relative; top: 32px;'></a>" +
+                "</div>" +
+            "</div>"
+        );
+    }
+
+    function removerLoteDaPromocao(elemento) {
+        elemento.parentElement.parentElement.remove();
+    }
   </script>
+  @if (old('novaPromocao') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalCriarPromocao").modal('show');
+        })
+    </script>
+  @endif
   @if(old('editarAreaId') != null) 
     <script>
         $(document).ready(function() {

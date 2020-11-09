@@ -25,7 +25,7 @@
                                         <div class="col-sm-6">
                                             <h5 class="card-title">Promoções</h5>
                                             <h6 class="card-subtitle mb-2 text-muted">Promoções ou pacotes que o evento pode oferecer.</h6>
-                                            <small>Clique em uma promoção para editar</small>
+                                            {{-- <small>Clique em uma promoção para editar</small> --}}
                                         </div>
                                         <div class="col-sm-6">
                                             <button id="criarPromocao" data-toggle="modal" data-target="#modalCriarPromocao" class="btn btn-primary float-md-right">+ Criar promoção</button>
@@ -37,14 +37,14 @@
                                         <thead>
                                             <th>
                                                 <th>Identificador</th>
+                                                <th>Quantidade total/aplicada</th>
                                                 <th>Valor pago/recebido</th>
                                                 <th>Visualizar</th>
                                                 <th>Excluir</th>
                                             </th>
                                         </thead>
-                                        {{-- @foreach ($atividades as $atv)
-                                        
-                                            <tbody>
+                                        @foreach ($promocoes as $promocao)
+                                            {{-- <tbody>
                                                 <th>
                                                     <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->titulo}}</td>
                                                     <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->tipoAtividade->descricao}}</td>
@@ -55,8 +55,8 @@
                                                     <td><input id="checkbox_{{$atv->id}}" type="checkbox" @if($atv->visibilidade_participante) checked @endif onclick="setVisibilidadeAtv({{$atv->id}})"></td>
                                                     <td data-toggle="modal" data-target="#modalExcluirAtividade{{$atv->id}}"><button style="border: none; background-color: rgba(255, 255, 255, 0);"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></button></td>
                                                 </th>
-                                            </tbody>
-                                        @endforeach --}}
+                                            </tbody> --}}
+                                        @endforeach
                                     </table>
                                 </p>
                             </div>
@@ -115,6 +115,202 @@
                     </div>
                 </div>
             </p>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade modal-example-lg" id="modalCriarPromocao" tabindex="-1" role="dialog" aria-labelledby="modalCriarPromocaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #114048ff; color: white;">
+          <h5 class="modal-title" id="modalCriarPromocaoLabel">Criar promoção</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="formCriarPromocao" action="{{route('promocao.store')}}" method="POST">
+                @csrf
+                <input type="hidden" name="novaPromocao" id="" value="0">
+                <div class="container form-group">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <label for="identificador">Identificador*</label>
+                            <input id="identificador" name="identificador" class="form-control apenasLetras @error('identificador') is-invalid @enderror" type="text" placeholder="Pacote padrão" value="{{old('identificador')}}">
+                            
+                            @error('identificador')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="valor">Valor da promoção*</label>
+                            <input id="valor" name="valor" class="form-control @error('valor') is-invalid @enderror" type="number" placeholder="0 para promoção grátis" value="{{old('valor')}}">
+                        
+                            @error('valor')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="descricao">Descrição</label>
+                            <textarea class="form-control @error('descrição') is-invalid @enderror" name="descrição" id="descricao" cols="30" rows="3" placeholder="Pacote padrão para estudantes"></textarea>
+                            
+                            @error('descrição')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <hr>
+                            <h5>Lotes</h5>
+                        </div>
+                    </div>
+                    {{-- {{dd(old('dataDeInício'))}} --}}
+                    <div id="lotes">
+                        @if (old('dataDeInício') != null || old('dataDeFim') != null || old('disponibilidade') != null)
+                            @foreach (old('dataDeInício') as $key => $dataInicio)
+                                @if ($key == 0)
+                                    <div class="row">
+                                        <div class="col-sm-4"> 
+                                            <label for="dataDeInicio">Data de início*</label>
+                                            <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.*') is-invalid @enderror" type="date" value="{{old('dataDeInício.*')}}">
+                                            
+                                            @error('dataDeInício.*')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-4"> 
+                                            <label for="dataDeFim">Data de fim*</label>
+                                            <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.*') is-invalid @enderror" type="date" value="{{old('dataDeFim.*')}}">
+                                        
+                                            @error('dataDeFim.*')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-3"> 
+                                            <label for="quantidade">Disponibilidade*</label>
+                                            <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.*') is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.*')}}">
+                                        
+                                            @error('disponibilidade.*')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao()"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                        </div>
+                                    </div>
+                                @else 
+                                    <div class="row">
+                                        <div class="col-sm-4"> 
+                                            <label for="dataDeInicio">Data de início*</label>
+                                            <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.*') is-invalid @enderror" type="date" value="{{old('dataDeInício.*')}}">
+                                            
+                                            @error('dataDeInício.*')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-4"> 
+                                            <label for="dataDeFim">Data de fim*</label>
+                                            <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.*') is-invalid @enderror" type="date" value="{{old('dataDeFim.*')}}">
+                                        
+                                            @error('dataDeFim.*')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-3"> 
+                                            <label for="quantidade">Disponibilidade*</label>
+                                            <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.*') is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.*')}}">
+                                        
+                                            @error('disponibilidade.*')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <a href="#" title="Remover lote" onclick="removerLoteDaPromocao(this)"><img src="{{asset('img/icons/lixo.png')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        @else 
+                            <div class="row">
+                                <div class="col-sm-4"> 
+                                    <label for="dataDeInicio">Data de início*</label>
+                                    <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.*') is-invalid @enderror" type="date">
+                                    
+                                    @error('dataDeInício.*')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-4"> 
+                                    <label for="dataDeFim">Data de fim*</label>
+                                    <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.*') is-invalid @enderror" type="date">
+                                
+                                    @error('dataDeFim.*')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-3"> 
+                                    <label for="quantidade">Disponibilidade*</label>
+                                    <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.*') is-invalid @enderror" type="number" placeholder="10">
+                                
+                                    @error('disponibilidade.*')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-1">
+                                    <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao()"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <hr>
+                            <h5>Atividades inclusas na promoção</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @foreach ($atividades as $atv)
+                            <div class="col-sm-3">
+                                <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades[]">
+                                <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
+                            </div>
+                        @endforeach
+                    </div>
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" form="formCriarPromocao">Salvar</button>
+        </div>
+      </div>
     </div>
 </div>
 @endsection
