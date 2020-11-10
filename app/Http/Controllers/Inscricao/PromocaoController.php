@@ -115,6 +115,29 @@ class PromocaoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $promocao = Promocao::find($id);
+        
+        // Lembrar de atualizar essa função para checar se a promoção
+        // já foi aplicada em alguma inscrição
+        $atividades = $promocao->atividades;
+        
+
+        foreach ($atividades as $atv) {
+            if(!$promocao->atividades()->detach($atv->id)) {
+                abort(500);
+            }
+        }
+
+        foreach ($promocao->lotes as $lote) {
+            if (!$lote->delete()) {
+                abort(500);
+            }
+        }
+
+        if(!$promocao->delete()) {
+            abort(500);
+        }
+
+        return redirect()->back()->with(['mensagem' => 'Promoção deletada com sucesso!']);
     }
 }

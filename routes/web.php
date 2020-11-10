@@ -201,6 +201,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   // ROTAS DO MODULO DE INSCRIÇÃO
   Route::get('inscricoes/evento-{id}/index',    'Inscricao\InscricaoController@index'   )->name('inscricoes');
   Route::post('inscricoes/criar-promocao',      'Inscricao\PromocaoController@store'    )->name('promocao.store');
+  Route::post('inscricoes/destroy/{id}-promocao','Inscricao\PromocaoController@destroy' )->name('promocao.destroy');
 });
 
 Auth::routes();

@@ -321,106 +321,132 @@
     </div>
 </div>
 {{-- Fim do modal criar promoção --}}
-{{-- Modal visualizar promocao --}}
+
 @foreach ($promocoes as $promocao)
-<div class="modal fade modal-example-lg" id="modalPromocaoEdit{{$promocao->id}}" tabindex="-1" role="dialog" aria-labelledby="modalPromocaoEdit{{$promocao->id}}Label" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header" style="background-color: #114048ff; color: white;">
-          <h5 class="modal-title" id="modalPromocaoEdit{{$promocao->id}}Label">{{$promocao->identificador}}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h5>Valor que o inscrito irá pagar</h5>
-                        @if ($promocao->valor == null || $promocao->valor <= 0)
-                            <p>A promoção é gratuita</p>
-                        @else
-                            <p>R$ {{number_format($promocao->valor, 2,',','.')}}</p>
-                        @endif
-                    </div>
-                    <div class="col-sm-6">
-                        <h5>Valor recebido</h5>
-                        @if ($promocao->valor == null || $promocao->valor <= 0)
-                            <p>A promoção é gratuita</p>
-                        @else
-                            <p>R$ {{number_format($promocao->valor - $promocao->valor * 0.10, 2,',','.')}}*<br><span style="font-size: 10px;">*Taxa de 10%</span></p>
-                        @endif
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h5>Descrição</h5>
-                        <textarea class="form-control" id="" disabled>{{$promocao->descricao}}</textarea>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <hr>
-                        <h4>Lotes</h4>
-                    </div>
-                </div>
-                <div class="row">
-                    @foreach ($promocao->lotes as $lote)
-                        <div class="col-sm-3">
-                            <h5>Data início</h5>
-                            <p>
-                                {{date('d/m/Y',strtotime($lote->inicio_validade))}}
-                            </p>
+{{-- Modal visualizar promocao --}}
+    <div class="modal fade modal-example-lg" id="modalPromocaoEdit{{$promocao->id}}" tabindex="-1" role="dialog" aria-labelledby="modalPromocaoEdit{{$promocao->id}}Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalPromocaoEdit{{$promocao->id}}Label">{{$promocao->identificador}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h5>Valor que o inscrito irá pagar</h5>
+                            @if ($promocao->valor == null || $promocao->valor <= 0)
+                                <p>A promoção é gratuita</p>
+                            @else
+                                <p>R$ {{number_format($promocao->valor, 2,',','.')}}</p>
+                            @endif
                         </div>
-                        <div class="col-sm-3">
-                            <h5>Data final</h5>
-                            <p>
-                                {{date('d/m/Y',strtotime($lote->fim_validade))}}
-                            </p>
+                        <div class="col-sm-6">
+                            <h5>Valor recebido</h5>
+                            @if ($promocao->valor == null || $promocao->valor <= 0)
+                                <p>A promoção é gratuita</p>
+                            @else
+                                <p>R$ {{number_format($promocao->valor - $promocao->valor * 0.10, 2,',','.')}}*<br><span style="font-size: 10px;">*Taxa de 10%</span></p>
+                            @endif
                         </div>
-                        <div class="col-sm-5">
-                            <h5>Quantidade disponivel/aplicada</h5>
-                            <p>
-                                {{$lote->quantidade_de_aplicacoes}}/Pendencia para programar
-                            </p>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <hr>
-                        <h4>Atividades inclusas na promoção</h4>
                     </div>
-                </div>
-                <div class="row">
-                    <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
-                        <thead>
-                            <th>
-                                <th>Título</th>
-                                <th>Local</th>
-                                <th>Valor original</th>
-                            </th>
-                        </thead>
-                        @foreach ($promocao->atividades()->orderBy('titulo')->get() as $atv)
-                            <tbody>
-                                <th>
-                                    <td>{{$atv->titulo}}</td>
-                                    <td>{{$atv->local}}</td>
-                                    @if ($atv->valor == null || $atv->valor <= 0)
-                                        <th>Grátis</th>
-                                    @else 
-                                        <th>R$ {{number_format($atv->valor, 2,',','.')}}</th>
-                                    @endif
-                                </th>
-                            </tbody>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h5>Descrição</h5>
+                            <textarea class="form-control" id="" disabled>{{$promocao->descricao}}</textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <hr>
+                            <h4>Lotes</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @foreach ($promocao->lotes as $lote)
+                            <div class="col-sm-3">
+                                <h5>Data início</h5>
+                                <p>
+                                    {{date('d/m/Y',strtotime($lote->inicio_validade))}}
+                                </p>
+                            </div>
+                            <div class="col-sm-3">
+                                <h5>Data final</h5>
+                                <p>
+                                    {{date('d/m/Y',strtotime($lote->fim_validade))}}
+                                </p>
+                            </div>
+                            <div class="col-sm-5">
+                                <h5>Quantidade disponivel/aplicada</h5>
+                                <p>
+                                    {{$lote->quantidade_de_aplicacoes}}/Pendencia para programar
+                                </p>
+                            </div>
                         @endforeach
-                    </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <hr>
+                            <h4>Atividades inclusas na promoção</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
+                            <thead>
+                                <th>
+                                    <th>Título</th>
+                                    <th>Local</th>
+                                    <th>Valor original</th>
+                                </th>
+                            </thead>
+                            @foreach ($promocao->atividades()->orderBy('titulo')->get() as $atv)
+                                <tbody>
+                                    <th>
+                                        <td>{{$atv->titulo}}</td>
+                                        <td>{{$atv->local}}</td>
+                                        @if ($atv->valor == null || $atv->valor <= 0)
+                                            <th>Grátis</th>
+                                        @else 
+                                            <th>R$ {{number_format($atv->valor, 2,',','.')}}</th>
+                                        @endif
+                                    </th>
+                                </tbody>
+                            @endforeach
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-      </div>
-    </div>
-</div>    
-@endforeach
+        </div>
+    </div>    
 {{-- Fim modal visualizar promocao --}}
+{{-- Modal de confirmação para deletar a promoção --}}
+    <div class="modal fade" id="modalPromocaoDelete{{$promocao->id}}" tabindex="-1" role="dialog" aria-labelledby="modalPromocaoDelete{{$promocao->id}}Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalPromocaoDelete{{$promocao->id}}Label">Confirmação</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="formDeletarPromocao{{$promocao->id}}" action="{{route('promocao.destroy', ['id' => $promocao->id])}}" method="POST">
+                    @csrf
+                    Tem certeza que deseja excluir essa promoção?
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                <button type="submit" class="btn btn-primary" form="formDeletarPromocao{{$promocao->id}}">Sim</button>
+            </div>
+        </div>
+        </div>
+    </div>
+{{-- Fim do modal de confirmação --}}
+@endforeach
+
 @endsection
