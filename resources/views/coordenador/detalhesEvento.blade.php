@@ -307,7 +307,7 @@
                 alert("Escolha uma modalidade");
             }
         });
-        $('#li_promocoes').click();
+        $('#li_cuponsDeDesconto').click();
     });
 
     function exibirLimite(id, input) {

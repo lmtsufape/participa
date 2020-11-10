@@ -4,28 +4,17 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Evento;
-use App\Models\Inscricao\Promocao;
-use App\Atividade;
-use App\Models\Inscricao\CupomDeDesconto;
 
-class InscricaoController extends Controller
+class CupomDeDescontoController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
-        $evento = Evento::find($id);
-        $promocoes = Promocao::where('evento_id', $id)->get();
-        $atividades = Atividade::where('eventoId', $id)->get();
-        $cuponsDeDescontro = CupomDeDesconto::where('evento_id', $id)->get();
-        return view('coordenador.programacao.inscricoes', ['evento' => $evento,
-                                                           'promocoes' => $promocoes,
-                                                           'atividades' => $atividades,
-                                                           'cupons' => $cuponsDeDescontro]);
+        //
     }
 
     /**

@@ -2,11 +2,6 @@
 
 @section('menu')
 <div id="divInscricoes" class="comissao" style="display: block">
-    {{-- <div class="row">
-        <div class="col-sm-12">
-            <h1 class="titulo-detalhes">Inscrições</h1>
-        </div>
-    </div> --}}
     <ul class="nav nav-tabs">
         <li id="li_promocoes" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#promocoes" style="text-decoration: none;">Promoções</a></li>
         <li id="li_cuponsDeDesconto" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#cuponsDeDesconto" style="text-decoration: none;">Cupons de desconto</a></li>
@@ -14,7 +9,6 @@
     
     <div class="tab-content">
         <div id="promocoes" class="tab-pane fade in active">
-            {{-- <h3>Promoções</h3> --}}
             <p>
                 <div class="row">
                     <div class="col-sm-12">
@@ -67,7 +61,6 @@
             </p>
         </div>
         <div id="cuponsDeDesconto" class="tab-pane fade">
-            {{-- <h3>Cupons de desconto</h3> --}}
             <p>
                 <div class="row">
                     <div class="col-sm-12">
@@ -90,25 +83,24 @@
                                         <th>
                                             <th>Identificador</th>
                                             <th>Valor descontado</th>
-                                            <th>Detalhes</th>
+                                            <th>Quantidade disponível/aplicada</th>
+                                            <th>Início</th>
+                                            <th>Fim</th>
                                             <th>Excluir</th>
                                         </th>
                                     </thead>
-                                    {{-- @foreach ($atividades as $atv)
-                                    
+                                    @foreach ($cupons as $cupom)
                                         <tbody>
                                             <th>
-                                                <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->titulo}}</td>
-                                                <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->tipoAtividade->descricao}}</td>
-                                                <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">@if(empty($atv->vagas)) Ilimitado @else {{$atv->vagas}} @endif</td>
-                                                <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">@if(empty($atv->valor)) Grátis @else R$ {{$atv->valor}},00 @endif</td>
-                                                <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->local}}</td>
-                                                <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">@if(empty($atv->carga_horaria)) Nenhuma @else {{$atv->carga_horaria}} @endif</td>
-                                                <td><input id="checkbox_{{$atv->id}}" type="checkbox" @if($atv->visibilidade_participante) checked @endif onclick="setVisibilidadeAtv({{$atv->id}})"></td>
-                                                <td data-toggle="modal" data-target="#modalExcluirAtividade{{$atv->id}}"><button style="border: none; background-color: rgba(255, 255, 255, 0);"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></button></td>
+                                                <td>{{$cupom->identificador}}</td>
+                                                <td>{{$cupom->valor}}</td>
+                                                <td>{{$cupom->quantidade_aplicacao}}</td>
+                                                <td>{{$cupom->inicio}}</td>
+                                                <td>{{$cupom->fim}}</td>
+                                                <td><a href="#"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
                                             </th>
                                         </tbody>
-                                    @endforeach --}}
+                                    @endforeach
                                 </table>
                             </p>
                             </div>
@@ -380,7 +372,7 @@
                                 </p>
                             </div>
                             <div class="col-sm-5">
-                                <h5>Quantidade disponivel/aplicada</h5>
+                                <h5>Quantidade disponível/aplicada</h5>
                                 <p>
                                     {{$lote->quantidade_de_aplicacoes}}/Pendencia para programar
                                 </p>
