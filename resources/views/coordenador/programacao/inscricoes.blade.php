@@ -132,6 +132,7 @@
             <form id="formCriarPromocao" action="{{route('promocao.store')}}" method="POST">
                 @csrf
                 <input type="hidden" name="novaPromocao" id="" value="0">
+                <input type="hidden" name="evento_id" value="{{$evento->id}}">
                 <div class="container form-group">
                     <div class="row">
                         <div class="col-sm-8">
@@ -158,7 +159,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label for="descricao">Descrição</label>
-                            <textarea class="form-control @error('descrição') is-invalid @enderror" name="descrição" id="descricao" cols="30" rows="3" placeholder="Pacote padrão para estudantes"></textarea>
+                            <textarea class="form-control @error('descrição') is-invalid @enderror" name="descrição" id="descricao" cols="30" rows="3" placeholder="Pacote padrão para estudantes">{{old('descrição')}}</textarea>
                             
                             @error('descrição')
                             <span class="invalid-feedback" role="alert">
@@ -181,9 +182,9 @@
                                     <div class="row">
                                         <div class="col-sm-4"> 
                                             <label for="dataDeInicio">Data de início*</label>
-                                            <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.*') is-invalid @enderror" type="date" value="{{old('dataDeInício.*')}}">
+                                            <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeInício.'.$key)}}">
                                             
-                                            @error('dataDeInício.*')
+                                            @error('dataDeInício.'.$key)
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -191,9 +192,9 @@
                                         </div>
                                         <div class="col-sm-4"> 
                                             <label for="dataDeFim">Data de fim*</label>
-                                            <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.*') is-invalid @enderror" type="date" value="{{old('dataDeFim.*')}}">
+                                            <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeFim.'.$key)}}">
                                         
-                                            @error('dataDeFim.*')
+                                            @error('dataDeFim.'.$key)
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -201,9 +202,9 @@
                                         </div>
                                         <div class="col-sm-3"> 
                                             <label for="quantidade">Disponibilidade*</label>
-                                            <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.*') is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.*')}}">
+                                            <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.'.$key) is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.'.$key)}}">
                                         
-                                            @error('disponibilidade.*')
+                                            @error('disponibilidade.'.$key)
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -217,9 +218,9 @@
                                     <div class="row">
                                         <div class="col-sm-4"> 
                                             <label for="dataDeInicio">Data de início*</label>
-                                            <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.*') is-invalid @enderror" type="date" value="{{old('dataDeInício.*')}}">
+                                            <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeInício.'.$key)}}">
                                             
-                                            @error('dataDeInício.*')
+                                            @error('dataDeInício.'.$key)
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -227,9 +228,9 @@
                                         </div>
                                         <div class="col-sm-4"> 
                                             <label for="dataDeFim">Data de fim*</label>
-                                            <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.*') is-invalid @enderror" type="date" value="{{old('dataDeFim.*')}}">
+                                            <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeFim.'.$key)}}">
                                         
-                                            @error('dataDeFim.*')
+                                            @error('dataDeFim.'.$key)
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -237,9 +238,9 @@
                                         </div>
                                         <div class="col-sm-3"> 
                                             <label for="quantidade">Disponibilidade*</label>
-                                            <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.*') is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.*')}}">
+                                            <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.'.$key) is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.'.$key)}}">
                                         
-                                            @error('disponibilidade.*')
+                                            @error('disponibilidade.'.$key)
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -298,8 +299,13 @@
                     <div class="row">
                         @foreach ($atividades as $atv)
                             <div class="col-sm-3">
-                                <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades[]">
-                                <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
+                                @if (old('atividades') != null && in_array($atv->id, old('atividades'))) 
+                                    <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades[]" checked>
+                                    <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
+                                @else 
+                                    <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades[]">
+                                    <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
+                                @endif
                             </div>
                         @endforeach
                     </div>

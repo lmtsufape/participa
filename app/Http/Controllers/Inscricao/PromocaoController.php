@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Inscricao\Promocao;
+use App\Models\Inscricao\Lote;
 
 class PromocaoController extends Controller
 {
@@ -34,7 +36,7 @@ class PromocaoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
         $validadeData = $request->validate([
             'novaPromocao'      => 'required',
             'identificador'     => 'required',
@@ -43,10 +45,32 @@ class PromocaoController extends Controller
             'dataDeInício.*'    => 'required|date',
             'dataDeFim.*'       => 'required|date|after:dataDeInício.*',
             'disponibilidade.*' => 'required',
-            'atividades*'       => 'nullable',    
+            'atividades.*'      => 'nullable',    
         ]);
         
-        dd($request);
+        $promocao = new Promocao();
+        $promocao->identificador = $request->identificador;
+        $promocao->evento_id     = $request->evento_id;
+        $promocao->descricao     = $request->input('descrição'); 
+        $promocao->valor         = $request->valor;
+        $promocao->save();
+
+        foreach ($request->input('dataDeInício') as $key => $lote) {
+            $lote = new Lote();
+            $lote->promocao_id              = $promocao->id;
+            $lote->inicio_validade          = $request->input('dataDeInício.'.$key);
+            $lote->fim_validade             = $request->input('dataDeFim.'.$key);
+            $lote->quantidade_de_aplicacoes = $request->input('disponibilidade.'.$key);
+            $lote->save();
+        }
+
+        if ($request->input('atividades') != null) {
+            foreach ($request->input('atividades') as $id) {
+                $promocao->atividades()->attach($id);
+            }
+        }
+
+        return redirect()->back()->with(['mensagem' => 'Promoção salva com sucesso!']);
     }
 
     /**
