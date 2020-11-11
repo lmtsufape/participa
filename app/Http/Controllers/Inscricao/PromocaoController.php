@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Inscricao\Promocao;
 use App\Models\Inscricao\Lote;
+use App\Evento;
 
 class PromocaoController extends Controller
 {
