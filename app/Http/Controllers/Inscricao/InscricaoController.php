@@ -19,6 +19,8 @@ class InscricaoController extends Controller
     public function index($id)
     {
         $evento = Evento::find($id);
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        
         $promocoes = Promocao::where('evento_id', $id)->get();
         $atividades = Atividade::where('eventoId', $id)->get();
         $cuponsDeDescontro = CupomDeDesconto::where('evento_id', $id)->get();

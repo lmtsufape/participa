@@ -55,4 +55,11 @@ class EventoPolicy
       }
       return false;
     }
+
+    public function isCoordenadorOrComissaoOrganizadora(User $user, Evento $evento) {
+      if ($evento->coordenadorId == $user->id || $user->id == $evento->coord_comissao_organizadora_id || $evento->usuariosDaComissaoOrganizadora()->where('user_id', $user->id)->first() != null) {
+        return true;
+      } 
+      return false;
+    }
 }
