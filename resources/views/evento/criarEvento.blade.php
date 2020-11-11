@@ -15,7 +15,7 @@
         </div>
         {{-- nome | Participantes | Tipo--}}
         <div class="row justify-content-center">
-            <div class="col-sm-9">
+            <div class="col-sm-6">
                 <label for="nome" class="col-form-label">{{ __('Nome') }}</label>
                 <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
 
@@ -57,6 +57,17 @@
                 </select>
 
                 @error('tipo')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+
+            <div class="col-sm-3">
+                <label for="tipo" class="col-form-label">{{ __('Valor da taxa de inscrição') }}</label>
+                <input class="form-control @error('valorTaxa') is-invalid @enderror" type="number" name="valorTaxa" id="valorTaxa" placeholder="0 para evento gratuito" value={{old('valorTaxa')}} required>
+
+                @error('valorTaxa')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>

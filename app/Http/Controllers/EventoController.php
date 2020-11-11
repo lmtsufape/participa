@@ -395,6 +395,7 @@ class EventoController extends Controller
             'dataInicio'          => ['required', 'date','after:'. $yesterday],
             'dataFim'             => ['required', 'date'],
             'fotoEvento'          => ['file', 'mimes:png'],
+            'valorTaxa'           => ['required'],
           ]);
         }
 
@@ -438,6 +439,7 @@ class EventoController extends Controller
           'enderecoId'          => $endereco->id,
           'coordenadorId'       => Auth::user()->id,
           'deletado'            => false,
+          'valorTaxa'           => $request->valorTaxa,
         ]);
         // $user = Auth::user();
         // $user->evento()->save($evento);
@@ -630,6 +632,7 @@ class EventoController extends Controller
             'dataInicio'          => ['required', 'date', 'after_or_equal:'. $evento->dataInicio],
             'dataFim'             => ['required', 'date', 'after:'. $request->dataInicio],
             'fotoEvento'          => ['file', 'mimes:png'],
+            'valorTaxa'           => ['required'],
           ]);
         }
 
@@ -662,6 +665,7 @@ class EventoController extends Controller
         $evento->tipo                 = $request->tipo;
         $evento->dataInicio           = $request->dataInicio;
         $evento->dataFim              = $request->dataFim;
+        $evento->valorTaxa            = $request->valorTaxa;
         $evento->enderecoId           = $endereco->id;
 
         // se a foto for diferente de nula apaga a foto existente e salva a nova
