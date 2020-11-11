@@ -35,9 +35,11 @@ class InscricaoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+        $evento = Evento::find($id);
+
+        return view('evento.nova_inscricao', ['evento' => $evento]);
     }
 
     /**
