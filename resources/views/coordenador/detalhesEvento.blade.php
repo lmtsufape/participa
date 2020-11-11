@@ -307,7 +307,7 @@
                 alert("Escolha uma modalidade");
             }
         });
-        $('#li_cuponsDeDesconto').click();
+        $('#li_promocoes').click();
     });
 
     function exibirLimite(id, input) {
@@ -1508,7 +1508,31 @@
     function removerLoteDaPromocao(elemento) {
         elemento.parentElement.parentElement.remove();
     }
+
+    function alterarPlaceHolderDoNumero(elemento) {
+        var input = document.getElementById('valorCupom')
+        if (elemento.value == "real") {
+            input.placeholder = "R$ 10,00"
+        } else if (elemento.value == "porcentagem") {
+            input.placeholder = "10%"
+        }
+    }
+
+    function deixarMaiusculo(e) {
+        var inicioCursor = e.target.selectionStart;
+        var fimCursor = e.target.selectionEnd;
+        e.target.value = e.target.value.toUpperCase();
+        e.target.selectionStart = inicioCursor;
+        e.target.selectionEnd = fimCursor;
+    }
   </script>
+  @if (old('criarCupom') != null)
+    <script>
+        $(document).ready(function() {
+            $("#modalCriarCupom").modal('show');
+        })
+    </script>
+  @endif
   @if (old('novaPromocao') != null) 
     <script>
         $(document).ready(function() {

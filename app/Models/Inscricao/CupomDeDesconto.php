@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CupomDeDesconto extends Model
 {
     protected $fillable = [
-        'identificador', 'valor', 'quantidade_aplicacao', 'inicio', 'fim', 'evento_id'
+        'identificador', 'valor', 'porcentagem', 'quantidade_aplicacao', 'inicio', 'fim', 'evento_id'
     ];
 
     public function evento() {

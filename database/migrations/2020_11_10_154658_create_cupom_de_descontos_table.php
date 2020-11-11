@@ -17,6 +17,7 @@ class CreateCupomDeDescontosTable extends Migration
             $table->bigIncrements('id');
             $table->string('identificador');
             $table->float('valor');
+            $table->boolean('porcentagem');
             $table->integer('quantidade_aplicacao');
             $table->date('inicio');
             $table->date('fim');
