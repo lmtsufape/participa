@@ -491,6 +491,7 @@
             input.className = "form-control",
             document.getElementById('retorno200').style.display = "none";
             document.getElementById('retorno404').style.display = "none";
+            document.getElementById('retorno419').style.display = "none";
         } else {
             $.ajax({
                 url: "{{route('checar.cupom')}}",

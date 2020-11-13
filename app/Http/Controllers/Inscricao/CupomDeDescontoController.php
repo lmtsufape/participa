@@ -124,9 +124,8 @@ class CupomDeDescontoController extends Controller
         if ($request->nome != null && $request->evento_id != null) {
             $cupom = CupomDeDesconto::where([['evento_id', $request->evento_id], ['identificador', $request->nome]])->first();
             $agora = Carbon::now('America/Recife');
-            dd($cupom);
             if ($cupom != null) {
-                if ($agora < Carbon\Carbon::parse($cupom->inicio) || $agora > Carbon\Carbon::parse($cupom->fim)) {
+                if ($agora < Carbon::parse($cupom->inicio) || $agora > Carbon::parse($cupom->fim)) {
                     return response()->json("expirado.", 419);
                 } else {
                     return response()->json("OK.", 200);
