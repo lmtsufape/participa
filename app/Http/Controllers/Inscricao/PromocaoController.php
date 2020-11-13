@@ -144,4 +144,30 @@ class PromocaoController extends Controller
 
         return redirect()->back()->with(['mensagem' => 'Promoção deletada com sucesso!']);
     }
+
+    public function atividades(Request $request) {
+        if ($request->id != null) {
+            $promocao = Promocao::find($request->id);
+            $promo = ['promocao_id' => $promocao->id, 'valorPromo' => $promocao->valor, 'descricao' => $promocao->descricao];
+
+            $atividades = collect();
+
+            $atividades->push($promo);
+            foreach ($promocao->atividades as $atv) {
+                $atividade = [
+                    'id'        => $atv->id,
+                    'titulo'    => $atv->titulo,
+                    'tipo'      => $atv->tipoAtividade->descricao,
+                    'valor'     => $atv->valor,
+                    'local'     => $atv->local,
+                    'descricao' => $atv->descricao,
+                ];
+                $atividades->push($atividade);
+            }
+
+            return response()->json($atividades);
+        } else {
+            return abort(404);
+        }
+    }
 }

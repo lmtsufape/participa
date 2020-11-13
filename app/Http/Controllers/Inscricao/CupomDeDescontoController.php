@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inscricao;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Evento;
+use Carbon\Carbon;
 use App\Models\Inscricao\CupomDeDesconto;
 
 class CupomDeDescontoController extends Controller
@@ -116,5 +117,24 @@ class CupomDeDescontoController extends Controller
         $cupom->delete();
         
         return redirect()->back()->with(['mensagem' => 'Cupom excluido com sucesso!']);
+    }
+
+    public function checar(Request $request)
+    {
+        if ($request->nome != null && $request->evento_id != null) {
+            $cupom = CupomDeDesconto::where([['evento_id', $request->evento_id], ['identificador', $request->nome]])->first();
+            $agora = Carbon::now('America/Recife');
+            dd($cupom);
+            if ($cupom != null) {
+                if ($agora < Carbon\Carbon::parse($cupom->inicio) || $agora > Carbon\Carbon::parse($cupom->fim)) {
+                    return response()->json("expirado.", 419);
+                } else {
+                    return response()->json("OK.", 200);
+                }
+            } else {
+                return response()->json("Cupom inválido.", 404);
+            }
+        }
+        return abort(404);
     }
 }
