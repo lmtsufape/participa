@@ -444,15 +444,18 @@ class EventoController extends Controller
 
         //$user->save();
         // se o evento tem foto
-
-        if($request->fotoEvento != null){
-          $file = $request->fotoEvento;
-          $path = 'public/eventos/' . $evento->id;
-          $nome = '/logo.png';
-          Storage::putFileAs($path, $file, $nome);
-          $evento->fotoEvento = 'eventos/' . $evento->id . $nome;
-          $evento->save();
-        }
+        $evento->fotoEvento = $this->uploadFile($request);
+        $evento->save();
+        // if($request->fotoEvento != null){
+        //     $path = $request->file('fotoEvento')->storeAs(
+        //         'logos', '/eventos/' .$evento->id . ".png"
+        //     );
+        //     $evento->fotoEvento = 
+            
+        //     //         $file = $request->fotoEvento;
+        //     // $path = 'public/eventos/' . $evento->id;          
+        //     // $path = Storage::putFileAs($path, $file, $evento->id . ".png");
+        // }
 
         $evento->coordenadorId = Auth::user()->id;
         $evento->publicado = false;
@@ -500,6 +503,27 @@ class EventoController extends Controller
         ]);
 
         return redirect()->route('coord.home');
+    }
+
+    public function uploadFile($request){
+
+        if($request->hasFile('fotoEvento')){
+            $image          = $request->file('fotoEvento');
+            return $image->store('public');
+            // $filename       = $image->getClientOriginalName();
+            // $destination    = storage_path('app/public');
+
+            // if($image->move($destination, $filename)){
+            //     // dd();
+            //     return $destination .'/' .$filename ;
+            // }
+
+            //Outra abordagem de upload de imagem
+            //return $image->store('public');
+            //return $image->storeAs('public', $filename);
+        }
+        return null;
+
     }
 
     /**
