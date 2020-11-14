@@ -15,7 +15,7 @@ class Evento extends Model
       'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim',
       'possuiTaxa', 'valorTaxa', 'fotoEvento',
       'enderecoId', 'coordenadorId',
-      'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo',
+      'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo', 'coord_comissao_organizadora_id'
   ];
 
   public function endereco(){
@@ -48,7 +48,7 @@ class Evento extends Model
   }
 
   function usuariosDaComissao(){
-    return $this->belongsToMany('App\User','comissao_eventos','evento_id','user_id');
+    return $this->belongsToMany('App\User','comissao_cientifica_eventos','evento_id','user_id');
   }  
 
   function formEvento() {
@@ -62,6 +62,19 @@ class Evento extends Model
   function trabalhos() {
     return $this->hasMany('App\Trabalho', 'eventoId');
   }
+
+  public function usuariosDaComissaoOrganizadora() {
+    return $this->belongsToMany('App\User', 'comissao_organizadora_eventos', 'evento_id', 'user_id');
+  }
+
+  public function promocoes() {
+    return $this->hasMany('App\Models\Inscricao\Promocao', 'evento_id');
+  }
+
+  public function cuponsDeDesconto() {
+    return $this->hasMany('App\Models\Inscricao\CupomDeDesconto', 'evento_id');
+  }
+  
   // public function revisores(){
   //   return $this->belongsToMany('App\Revisor', 'evento_revisors', 'evento_id', 'revisor_id')->withPivot('convite_aceito')->withTimestamps();
   // }

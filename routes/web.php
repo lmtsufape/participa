@@ -18,7 +18,7 @@ Route::get('/index', function () {
     $eventos = Evento::all();
     // dd($eventos);
     return view('index',['eventos'=>$eventos]);
-})->name('index')->middleware('verified', 'isTemp');
+})->name('index');
 
 Route::get('/home', 'EventoController@index')->name('home')->middleware('verified', 'isTemp');
 
@@ -59,9 +59,10 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('comissaoCientifica/areas', 'CoordComissaoCientificaController@index')->name('cientifica.areas');
   Route::post('comissaoCientifica/permissoes', 'CoordComissaoCientificaController@permissoes')->name('cientifica.permissoes');
   Route::post('comissaoCientifica/novoUsuario', 'CoordComissaoCientificaController@novoUsuario')->name('cientifica.novoUsuario');
-
   // rotas do Comissao Organizadora
   Route::get('/home/comissaoOrganizadora', 'CoordComissaoOrganizadoraController@index')->name('home.organizadora');
+  Route::post('comissaoOrganizadora/novoUsuario', 'ComissaoOrganizadoraController@store')->name('cadastrar.comissaoOrganizadora');
+  Route::post('comissaoOrganizadora/salvar-coordenador', 'ComissaoOrganizadoraController@salvarCoordenador')->name('comissaoOrganizadora.salvaCoordenador');
   // rotas do Coordenador de evento
   Route::get('/home/coord', 'CoordEventoController@index')->name('coord.index');
   Route::get('/home/coord/eventos', 'CoordEventoController@listaEventos')->name('coord.eventos');
@@ -84,9 +85,14 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
       // Route::get('revisores/{id}/disponiveis', 'RevisorController@listarRevisores')->name('adicionarRevisores');
 
-      Route::get('comissao/cadastrarComissao', 'EventoController@cadastrarComissao')->name('cadastrarComissao');
-      Route::get('comissao/definirCoordComissao', 'EventoController@definirCoordComissao')->name('definirCoordComissao');
-      Route::get('comissao/listarComissao', 'EventoController@listarComissao')->name('listarComissao');
+      Route::get('comissaoCientifica/cadastrarComissao', 'EventoController@cadastrarComissao')->name('cadastrarComissao');
+      Route::get('comissaoCientifica/definirCoordComissao', 'EventoController@definirCoordComissao')->name('definirCoordComissao');
+      Route::get('comissaoCientifica/listarComissao', 'EventoController@listarComissao')->name('listarComissao');
+      Route::get('comissaoOrganizadora/{id}/cadastrar', 'ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
+      Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
+      Route::get('comissaoOrganizadora/{id}/listar', 'ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
+      Route::post('remover/comissaoOrganizadora/{id}', 'ComissaoOrganizadoraController@destroy')->name('remover.comissao.organizadora');
+
       Route::post('remover/comissao/{id}',  'ComissaoController@destroy'      )->name('remover.comissao');
       Route::get('modalidade/cadastrarModalidade', 'EventoController@cadastrarModalidade')->name('cadastrarModalidade');
       Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');
@@ -191,6 +197,18 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::post(  '/criterio/{id}/atualizar', 'CriteriosController@update'                )->name('atualizar.criterio');
   Route::get(   '/{evento_id}/criterio/{id}/deletar',   'CriteriosController@destroy'               )->name('criterio.destroy');
   Route::get(   '/encontrarCriterio', 'CriteriosController@findCriterio'                )->name('encontrar.criterio');
+
+  // ROTAS DO MODULO DE INSCRIÇÃO
+  Route::get('{id}/inscricoes/nova-inscricao',  'Inscricao\InscricaoController@create')->name('inscricao.create');
+  Route::get('inscricoes/atividades-da-promocao','Inscricao\PromocaoController@atividades')->name('promocao.atividades');
+  Route::get('inscricoes/checar-cupom',          'Inscricao\CupomDeDescontoController@checar')->name('checar.cupom');
+
+  Route::get('inscricoes/evento-{id}/index',    'Inscricao\InscricaoController@index'   )->name('inscricoes');
+  Route::post('inscricoes/criar-promocao',      'Inscricao\PromocaoController@store'    )->name('promocao.store');
+  Route::post('inscricoes/destroy/{id}-promocao','Inscricao\PromocaoController@destroy' )->name('promocao.destroy');
+
+  Route::post('inscricoes/criar-cupom',         'Inscricao\CupomDeDescontoController@store')->name('cupom.store');
+  Route::get('inscricoes/destroy/{id}-cupom',  'Inscricao\CupomDeDescontoController@destroy')->name('cupom.destroy');
 });
 
 Auth::routes();

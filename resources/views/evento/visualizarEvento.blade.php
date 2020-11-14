@@ -234,9 +234,9 @@
                 Resultado: {{date('d/m/Y',strtotime($modalidade->inicioResultado))}}
               </p>
               @endif
-
-              @if($modalidade->inicioSubmissao <= $mytime)
-                @if($mytime < $modalidade->fimSubmissao)
+              
+              @if(Carbon\Carbon::parse($modalidade->inicioSubmissao) <= $mytime)
+                @if($mytime <= Carbon\Carbon::parse($modalidade->fimSubmissao . " 23:59:59.999"))
                   @if ($modalidade->arquivo == true)
                     @if(isset($modalidade->regra))
                       <div style="margin-top: 20px; margin-bottom: 10px;">
@@ -293,7 +293,7 @@
         <div class="col-sm-12 info-evento">
             <h4>{{$etiquetas->etiquetamoduloinscricao}}:</h4>
             <p>
-                LOCAL DA INSCRIÇÃO!!!
+                <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a>
             </p>
         </div>
       </div>

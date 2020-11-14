@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateComissaoEventosTable extends Migration
+class CreatePromocaosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,15 @@ class CreateComissaoEventosTable extends Migration
      */
     public function up()
     {
-        Schema::create('comissao_cientifica_eventos', function (Blueprint $table) {
+        Schema::create('promocaos', function (Blueprint $table) {
             $table->bigIncrements('id');
-
-            $table->unsignedBigInteger('evento_id');
-            $table->foreign('evento_id')->references('id')->on('eventos');
-
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-
+            $table->bigInteger('evento_id');
+            $table->string('identificador');
+            $table->text('descricao');
+            $table->float('valor');
             $table->timestamps();
+
+            $table->foreign('evento_id')->references('id')->on('eventos');
         });
     }
 
@@ -33,6 +32,6 @@ class CreateComissaoEventosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comissao_cientifica_eventos');
+        Schema::dropIfExists('promocaos');
     }
 }

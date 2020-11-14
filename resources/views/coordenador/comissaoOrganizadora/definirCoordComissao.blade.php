@@ -2,10 +2,10 @@
 
 @section('menu')
 
-    <div id="divDefinirCoordComissao" class="comissao" style="display: block">
+    <div id="divDefinirCoordComissaoOrganizadora" class="comissao" style="display: block">
         <div class="row">
             <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Definir Coordenador da Comissão Científica</h1>
+                <h1 class="titulo-detalhes">Definir Coordenador da Comissão Organizadora</h1>
             </div>
         </div>
         <div class="row justify-content-center">
@@ -14,7 +14,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Coordenador da Comissão</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Selecione um coordenador para comissão do seu evento</h6>
-                        <form id="formCoordComissao" action="{{route('cadastrar.coordComissao')}}" method="POST">
+                        <form id="formCoordComissao" action="{{route('comissaoOrganizadora.salvaCoordenador')}}" method="POST">
                             @csrf
                             <p class="card-text">
                                     <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
