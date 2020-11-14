@@ -103,12 +103,12 @@
             {{-- @endcan --}}
             <a id="comissao" >
                 <li>
-                    <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                    <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão Cientifica</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
-                <div id="dropdownComissao" @if(request()->is('coord/evento/comissao*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                <div id="dropdownComissao" @if(request()->is('coord/evento/comissaoCientifica*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                     <a id="cadastrarComissao" href="{{ route('coord.cadastrarComissao', ['eventoId' => $evento->id]) }}">
                         <li>
-                            <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar Comissão</h5>
+                            <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar membro</h5>
                         </li>
                     </a>
                     {{-- @can('isCoordenador', $evento) --}}
@@ -119,6 +119,30 @@
                     </a>
                     {{-- @endif --}}
                     <a id="listarComissao" href="{{ route('coord.listarComissao', ['eventoId' => $evento->id]) }}">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Comissão</h5>
+                        </li>
+                    </a>
+                </div>
+            </a>
+            <a id="comissaoOrganizadora" >
+                <li>
+                    <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão Organizadora</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                </li>
+                <div id="dropdownComissaoOrganizadora" @if(request()->is('coord/evento/comissaoOrganizadora*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                    <a id="cadastrarComissaoOrganizadora" href="{{route('coord.comissao.organizadora.create', ['id' => $evento->id])}}">
+                        <li>
+                            <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar membro</h5>
+                        </li>
+                    </a>
+                    {{-- @can('isCoordenador', $evento) --}}
+                    <a id="definirCoordComissaoOrganizadora" href="{{route('coord.definir.coordComissaoOrganizadora', ['id' => $evento])}}">
+                        <li>
+                            <img src="{{asset('img/icons/crown-solid.svg')}}" alt=""><h5> Definir Coordenador</h5>
+                        </li>
+                    </a>
+                    {{-- @endif --}}
+                    <a id="listarComissaoOrganizadora" href="{{route('coord.listar.comissaoOrganizadora', ['id' => $evento])}}">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Comissão</h5>
                         </li>
@@ -157,17 +181,17 @@
                 <li>
                     <img src="{{asset('img/icons/slideshow.svg')}}" alt=""><h5>Programação</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
-                <div id="dropdownProgramacao" @if(request()->is('coord/evento/atividade*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                <div id="dropdownProgramacao" @if(request()->is('coord/evento/atividade*') || request()->is('inscricoes*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                     <a id="cadastrarModalidade" href="{{ route('coord.atividades', ['id' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Atividades</h5>
                         </li>
                     </a> 
-                    {{-- <a id="cadastrarModalidade" href="{{ route('coord.cadastrarModalidade', ['id' => $evento->id]) }}">
+                    <a id="cadastrarModalidade" href="{{ route('inscricoes', ['id' => $evento->id]) }}">
                         <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Palestrantes</h5>
+                            <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5>
                         </li>
-                    </a>                        --}}
+                    </a>                       
                 </div>
             </a>
 
@@ -283,6 +307,7 @@
                 alert("Escolha uma modalidade");
             }
         });
+        $('#li_promocoes').click();
     });
 
     function exibirLimite(id, input) {
@@ -634,6 +659,9 @@
     });
     $('#comissao').click(function(){
             $('#dropdownComissao').slideToggle(200);
+    });
+    $('#comissaoOrganizadora').click(function(){
+            $('#dropdownComissaoOrganizadora').slideToggle(200);
     });
     $('#modalidades').click(function(){
             $('#dropdownModalidades').slideToggle(200);
@@ -1441,7 +1469,77 @@
             }
         })
     }
+
+    // Funções de inscrições
+    function ativarLink(elemento) {
+        elemento.children[0].click();
+
+        if (elemento == document.getElementById("li_promocoes")) {
+            elemento.className = "aba ativado";
+            document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
+        } else if (elemento == document.getElementById("li_cuponsDeDesconto")) {
+            elemento.className = "aba ativado";
+            document.getElementById("li_promocoes").className = "aba aba-tab";
+        }
+    }
+
+    function adicionarLoteAhPromocao() {
+        $('#lotes').append(
+            "<div class='row'>" +
+                "<div class='col-sm-4'>" +
+                    "<label for='dataDeInicio'>Data de início</label>" +
+                    "<input id='dataDeInicio' name='dataDeInício[]' class='form-control' type='date'>" +
+                "</div>" +
+                "<div class='col-sm-4'>" +
+                    "<label for='dataDeFim'>Data de fim</label>" +
+                    "<input id='dataDeFim' name='dataDeFim[]' class='form-control' type='date'>" +
+                "</div>" +
+                "<div class='col-sm-3'>" + 
+                    "<label for='quantidade'>Disponibilidade</label>" +
+                    "<input id='quantidade' name='disponibilidade[]' class='form-control' type='number' placeholder='10'>" +
+                "</div>" +
+                "<div class='col-sm-1'>" +
+                    "<a href='#' title='Remover lote' onclick='removerLoteDaPromocao(this)'><img src='{{asset('img/icons/lixo.png')}}' width='35px' style='position: relative; top: 32px;'></a>" +
+                "</div>" +
+            "</div>"
+        );
+    }
+
+    function removerLoteDaPromocao(elemento) {
+        elemento.parentElement.parentElement.remove();
+    }
+
+    function alterarPlaceHolderDoNumero(elemento) {
+        var input = document.getElementById('valorCupom')
+        if (elemento.value == "real") {
+            input.placeholder = "R$ 10,00"
+        } else if (elemento.value == "porcentagem") {
+            input.placeholder = "10%"
+        }
+    }
+
+    function deixarMaiusculo(e) {
+        var inicioCursor = e.target.selectionStart;
+        var fimCursor = e.target.selectionEnd;
+        e.target.value = e.target.value.toUpperCase();
+        e.target.selectionStart = inicioCursor;
+        e.target.selectionEnd = fimCursor;
+    }
   </script>
+  @if (old('criarCupom') != null)
+    <script>
+        $(document).ready(function() {
+            $("#modalCriarCupom").modal('show');
+        })
+    </script>
+  @endif
+  @if (old('novaPromocao') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalCriarPromocao").modal('show');
+        })
+    </script>
+  @endif
   @if(old('editarAreaId') != null) 
     <script>
         $(document).ready(function() {

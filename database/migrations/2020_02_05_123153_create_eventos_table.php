@@ -28,11 +28,12 @@ class CreateEventosTable extends Migration
             $table->integer('numMaxTrabalhos')->nullable();
             $table->integer('numMaxCoautores')->nullable();
             // $table->boolean('possuiTaxa');
-            // $table->double('valorTaxa');
+            $table->double('valorTaxa');
             $table->string('fotoEvento')->nullable();
             $table->boolean('publicado')->nullable();
 
             $table->integer('coord_comissao_cientifica_id')->nullable();
+            $table->integer('coord_comissao_organizadora_id')->nullable();
             $table->integer('enderecoId')->nullable();
             $table->integer('coordenadorId')->nullable();
             $table->boolean('deletado')->nullable();;

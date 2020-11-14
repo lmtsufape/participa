@@ -133,7 +133,7 @@ body{
 .wrapper .sidebar{
     padding: 30px 0;
     position: fixed;
-    width: 200px;
+    width: 270px;
     height: 100%;
     background-color: #071b1eff;
     color: #fff;
@@ -200,6 +200,12 @@ body{
 #dropdownComissao h5{
     font-size: 11px;
 }
+#dropdownComissaoOrganizadora{
+    display: none;
+}
+#dropdownComissaoOrganizadora h5{
+    font-size: 11px;
+}
 #dropdownModalidades{
     display: none;
 }
@@ -249,9 +255,9 @@ body{
 .main_content{
 
     /* height: 100vh; */
-    width: 100% - 200px;
+    width: 100% - 270px;
     margin-top: 50px;
-    margin-left: 200px;
+    margin-left: 270px;
     padding: 20px;
     /* background-color: rgba(0, 0, 0, 0.19); */
 }
@@ -332,6 +338,9 @@ body{
 #divListarModalidades{display: none;}
 #divListarTrabalhos{display: none;}
 #divDefinirSubmissoes{display: none;}
+#divCadastrarComissaoOrganizadora{display: none;}
+#divDefinirCoordComissaoOrganizadora{display: none;}
+#divListarComissaoOrganizadora{display: none;}
 @media screen and (max-width: 576px){
     .wrapper .sidebar{
         margin-top: 30px;
@@ -354,7 +363,7 @@ body{
         transition: 0.2s;
     }
     .main_content{
-        margin-left: 60px;
+        margin-left: 130px;
     }
     .banner-evento{
         height: 27vh;
@@ -434,4 +443,53 @@ body{
 
 .font-25 {
     font-size: 25px;
+}
+
+.aba {
+    border-top: solid #114048ff 1px;
+    border-left: solid #114048ff 1px;
+    border-right: solid #114048ff 1px;
+    border-radius: 7px 7px 0px 0px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 7px;
+}
+
+.aba-tab {
+    color: #114048ff;
+}
+
+.aba-tab:hover {
+    text-decoration: none;
+    background-color: rgb(25, 92, 104);
+    color: white;
+}
+
+.aba-tab:hover a {
+    color: white;
+}
+
+.ativado {
+    text-decoration: none;
+    background-color: rgb(25, 92, 104);
+    color: white;
+}
+
+.aba-tab a {
+    color: rgb(25, 92, 104);
+    text-decoration: none;
+}
+
+.aba-tab a:hover {
+    color:white;
+}
+
+.ativado {
+    background-color: rgb(25, 92, 104);
+    color: white;
+}
+
+.ativado a {
+    text-decoration: none;
+    color: white;
 }
