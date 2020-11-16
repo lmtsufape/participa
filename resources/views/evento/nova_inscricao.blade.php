@@ -8,7 +8,14 @@
             <h1>Nova inscrição para {{$evento->nome}}</h1>
         </div>
     </div>
-    <form action="" method="GET">
+    @error('atvIguais')
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                @include('componentes.mensagens')
+            </div>
+        </div>
+    @enderror
+    <form action="{{route('inscricao.checar', ['id' => $evento->id])}}" method="GET">
         <div id="formulario">
             <div class="row form-group">
                 <div class="col-sm-8">
@@ -16,13 +23,13 @@
                     <select name="promocao" id="promocao" class="form-control" style="position: relative; left: 50px;" onchange="carregarAtividadesDaPromocao(this)">
                         <option value="" disabled selected>-- Escolha uma promoção --</option>
                         @foreach ($evento->promocoes as $promocao)
-                            <option value="{{$promocao->id}}">{{$promocao->identificador}}</option>
+                            <option value="{{$promocao->id}}" @if(old('promocao') == $promocao->id) selected @endif>{{$promocao->identificador}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-sm-3" style="position: relative; left: 50px;">
                     <h4 for="cupomDesconto">Cupom de desconto</h4>
-                    <input oninput="deixarMaiusculo(event)" id="cupomDesconto" type="text" class="form-control" name="cupomDesconto" placeholder="VALE10" onchange="checarCupom(this)">
+                    <input oninput="deixarMaiusculo(event)" id="cupomDesconto" type="text" class="form-control" placeholder="VALE10" onchange="checarCupom(this)" value="{{old('cupom')}}">
                 
                     <div id="retorno200" class="valid-feedback" style="display: none;">
                        Cupom valido!
@@ -40,7 +47,9 @@
             </div>
             <div class="row form-group">
                 <div id="descricaoPromo" class="col-sm-11" style="left: 50px;">
-    
+                    @if (old('descricaoPromo') != null)
+                        <textarea id='descricaoPromo' class='form-control' name='descricaoPromo' readonly>{{old('descricaoPromo')}}</textarea>
+                    @endif
                 </div>
             </div>
             <div class="row form-group">
@@ -52,7 +61,23 @@
                             </div>
                         </div>
                         <div id="atividadesPromocionais" class="row">
-                            <span id="padraoPromocional" style="margin: 57px;">Nenhuma atividade adicionada para essa promoção.</span>
+                            <span id="padraoPromocional" style="margin: 57px;  @if(old('atividadesPromo') != null)display: none; @endif">Nenhuma atividade adicionada para essa promoção.</span>
+                            @if (old('atividadesPromo') != null)
+                                @foreach (old('atividadesPromo') as $key => $idAtv)
+                                    <div id="atvPromocao{{$idAtv}}" class="col-sm-3 atvAdicionais">
+                                        <input type="hidden" id="atvPromocaoInput{{old('atividadesPromo.'.$key)}}" name="atividadesPromo[]" value="{{old('atividadesPromo.'.$key)}}">
+                                        <div class="card" style="width: 16rem;">
+                                            <div class="card-body">
+                                                <h4 class="card-title">{{App\Atividade::find(old('atividadesPromo.'.$key))->titulo}}</h4>
+                                                <h5 class="card-subtitle mb-2 text-muted">{{App\Atividade::find(old('atividadesPromo.'.$key))->tipoAtividade->descricao}}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">{{App\Atividade::find(old('atividadesPromo.'.$key))->local}}</h6>
+                                                <p class="card-text">{{App\Atividade::find(old('atividadesPromo.'.$key))->descricao}}</p>
+                                                <a href='#' class='card-link' data-toggle='modal' data-target='#modalDetalheAtividade{{old('atividadesPromo.'.$key)}}'>Detalhes</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -85,15 +110,28 @@
                 </div>
                 <div class="col-sm-6" style="text-align: right; position: relative; right: 50px;">
                     <h5>Total</h5>
-                    @if ($evento->valorTaxa <= 0)
-                        <p>
-                            Gratuita <input type="hidden" name="valorTotal" id="valorTotal" value="0">
-                        </p>
+                    @if (old('valorTotal') != null)
+                        @if (old('valorTotal') == 0)
+                            <p>
+                                Gratuita <input type="hidden" name="valorTotal" id="valorTotal" value="0">
+                            </p>
+                        @else 
+                            <p>
+                                <span id="spanValorTotal">R$ {{number_format(old('valorTotal'), 2,',','.')}}</span>
+                                <input type="hidden" name="valorTotal" id="valorTotal" value="{{old('valorTotal')}}">
+                            </p>
+                        @endif
                     @else 
-                        <p>
-                            <span id="spanValorTotal">R$ {{number_format($evento->valorTaxa, 2,',','.')}}</span>
-                            <input type="hidden" name="valorTotal" id="valorTotal" value="{{$evento->valorTaxa}}">
-                        </p>
+                        @if ($evento->valorTaxa <= 0)
+                            <p>
+                                Gratuita <input type="hidden" name="valorTotal" id="valorTotal" value="0">
+                            </p>
+                        @else 
+                            <p>
+                                <span id="spanValorTotal">R$ {{number_format($evento->valorTaxa, 2,',','.')}}</span>
+                                <input type="hidden" name="valorTotal" id="valorTotal" value="{{$evento->valorTaxa}}">
+                            </p>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -289,6 +327,12 @@
 @endsection
 @section('javascript')
 <script type="text/javascript">
+    @if (old('valorTotal') != null) 
+        $(document).ready(function() {
+            var select = document.getElementById('promocao');
+            carregarAtividadesDaPromocao(select);
+        });
+    @endif
     function adicionarAtividadeAhInscricao(id) {
         var divAtividadesInscricao = document.getElementById('atividadesAdicionadas');
         var atividade = document.getElementById('atv'+id);
@@ -412,7 +456,7 @@
                             } else {
                                 html += "<input type='hidden' name='valorPromocao' id='valorPromocao' value='"+0+"'>";
                             }
-                            descricao += "<textarea class='form-control' disabled>"+obj.descricao+"</textarea>";
+                            descricao += "<textarea id='descricaoPromo' name='descricaoPromo' class='form-control' readonly>"+obj.descricao+"</textarea>";
                         } else if (i > 0) {
                             html += "<div id='atvPromocao"+obj.id+"' class='col-sm-3'>" +
                                         "<input type='hidden' id='atvPromocaoInput"+obj.id+"' name='atividadesPromo[]' value='"+obj.id+"'>" +
@@ -442,7 +486,7 @@
                             html += "<input type='hidden' name='valorPromocao' id='valorPromocao' value='"+0+"'>";
                         }
                         html += "<span id='padraoPromocional' style='margin: 57px;'>Nenhuma atividade adicionada para essa promoção.</span>";
-                        descricao += "<textarea class='form-control' disabled>"+obj.descricao+"</textarea>";
+                        descricao += "<textarea id='descricaoPromo' name='descricaoPromo' class='form-control' readonly>"+obj.descricao+"</textarea>";
                     })
                     $('#atividadesPromocionais').html("");
                     $('#atividadesPromocionais').append(html);
@@ -460,6 +504,7 @@
 
             for (var c = 0; c < atividadesAdicionais.length; c++) {
                 if (c > 0) {
+                    console.log(atividadesAdicionais.children[c]);
                     if (atividadesAdicionais.children[c].children[1].value != "Grátis") {
                         valorTotal += parseFloat(atividadesAdicionais.children[c].children[1].value);
                     }
@@ -475,7 +520,7 @@
                 $('#spanValorTotal').append("Gratuita");
                 document.getElementById('valorTotal').value = 0;
             }
-        },100);
+        },1000);
     }
 
     function deixarMaiusculo(e) {

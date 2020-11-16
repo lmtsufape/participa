@@ -97,4 +97,54 @@ class InscricaoController extends Controller
     {
         //
     }
+
+    public function checarDados(Request $request, $id) {
+        // dd($request);
+
+        $validatorData = $request->validate([
+            'promocao'          => 'nullable',
+            'valorTotal'        => 'required',
+            'atividades'        => 'nullable',
+            'cupom'             => 'nullable',
+            'atividadesPromo'   => 'nullable',
+            'valorPromocao'     => 'nullable',
+            'descricaoPromo'    => 'nullable',
+        ]);
+
+        $evento = Evento::find($id);
+        $valorDaInscricao = $request->valorTotal;
+        $promocao = null;
+        $atividades = null;
+        $cupom = CupomDeDesconto::where([['evento_id', $evento->id],['identificador', '=', $request->cupom]])->first();
+
+        if ($request->cupom != null) {
+            if ($cupom != null && $cupom->porcentagem) {
+                $valorDaInscricao = $valorDaInscricao - $valorDaInscricao * ($cupom->valor / 100);
+            } else {
+                $valorDaInscricao -= $cupom->valor;
+            }
+        }
+        
+        if ($request->promocao != null) {
+            $promocao = Promocao::find($request->promocao);
+        }
+
+        if ($request->atividades != null) {
+            if ($promocao->atividades != null) {
+                $idsAtvsPromo = $promocao->atividades()->select('atividades.id')->get();
+                foreach ($request->atividades as $atv) {
+                    if ($idsAtvsPromo->contains($atv)) {
+                        return redirect()->back()->withErrors(['atvIguais' => "Existem atividades adicionais que já estão presentes na promoção. Logo foram removidas."])->withInput($validatorData);
+                    }
+                }
+            }
+            $atividades = Atividade::whereIn('id', $request->atividades)->get();
+        }
+
+        return view('evento.revisar_inscricao', ['evento'       => $evento,
+                                                             'valor'        => $valorDaInscricao,
+                                                             'promocao'     => $promocao,
+                                                             'atividades'   => $atividades,
+                                                             'cupom'        => $cupom]);
+    }
 }
