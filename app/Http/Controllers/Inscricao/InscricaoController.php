@@ -39,7 +39,12 @@ class InscricaoController extends Controller
     {
         $evento = Evento::find($id);
 
-        return view('evento.nova_inscricao', ['evento' => $evento]);
+        return view('evento.nova_inscricao', ['evento'              => $evento,
+                                              'eventoVoltar'        => null,
+                                              'valorTotalVoltar'    => null,
+                                              'promocaoVoltar'      => null,
+                                              'atividadesVoltar'    => null,
+                                              'cupomVoltar'         => null]);
     }
 
     /**
@@ -151,8 +156,32 @@ class InscricaoController extends Controller
     }
 
     public function voltarTela(Request $request, $id) {
-        dd($id);
+        // dd($request);
 
+        $evento = Evento::find($request->evento_id);
+        $valorTotal = $request->valorTotal;
+        $promocao = null;
+        $atividades = null;
+        $cupom = null;
+
+        if ($request->promocao_id != null) {
+            $promocao = Promocao::find($request->promocao_id);             
+        }
+
+        if ($request->atividades != null && count($request->atividades) > 0) {
+            $atividades = Atividade::whereIn('id', $request->atividades)->get();
+        }
+
+        if ($request->cupom != null) {
+            $cupom = CupomDeDesconto::find($request->cupom);
+        }
+
+        return view('evento.nova_inscricao', ['evento'              => $evento,
+                                              'eventoVoltar'        => $evento,
+                                              'valorTotalVoltar'    => $valorTotal,
+                                              'promocaoVoltar'      => $promocao,
+                                              'atividadesVoltar'    => $atividades,
+                                              'cupomVoltar'         => $cupom]);
     }
 
     public function confirmar(Request $request, $id) {
