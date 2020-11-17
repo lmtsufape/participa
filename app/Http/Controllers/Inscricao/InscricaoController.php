@@ -115,13 +115,14 @@ class InscricaoController extends Controller
         $valorDaInscricao = $request->valorTotal;
         $promocao = null;
         $atividades = null;
+        $valorComDesconto = null;
         $cupom = CupomDeDesconto::where([['evento_id', $evento->id],['identificador', '=', $request->cupom]])->first();
 
         if ($request->cupom != null) {
             if ($cupom != null && $cupom->porcentagem) {
-                $valorDaInscricao = $valorDaInscricao - $valorDaInscricao * ($cupom->valor / 100);
+                $valorComDesconto = $valorDaInscricao - $valorDaInscricao * ($cupom->valor / 100);
             } else {
-                $valorDaInscricao -= $cupom->valor;
+                $valorComDesconto -= $cupom->valor;
             }
         }
         
@@ -141,10 +142,20 @@ class InscricaoController extends Controller
             $atividades = Atividade::whereIn('id', $request->atividades)->get();
         }
 
-        return view('evento.revisar_inscricao', ['evento'       => $evento,
-                                                             'valor'        => $valorDaInscricao,
-                                                             'promocao'     => $promocao,
-                                                             'atividades'   => $atividades,
-                                                             'cupom'        => $cupom]);
+        return view('evento.revisar_inscricao', ['evento'           => $evento,
+                                                'valor'             => $valorDaInscricao,
+                                                'promocao'          => $promocao,
+                                                'atividades'        => $atividades,
+                                                'cupom'             => $cupom,
+                                                'valorComDesconto'  => $valorComDesconto]);
+    }
+
+    public function voltarTela(Request $request, $id) {
+        dd($id);
+
+    }
+
+    public function confirmar(Request $request, $id) {
+        dd($request);
     }
 }

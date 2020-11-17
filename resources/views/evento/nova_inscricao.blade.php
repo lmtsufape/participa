@@ -137,7 +137,7 @@
             </div>
             <div class="row" style="position: relative; left: 50px; margin-top:70px; margin-bottom:50px;">
                 <div class="col-sm-5" style="top:5px;">
-                    <button type="button" class="btn btn-secondary" style="width: 100%; padding: 25px;">Voltar</button>
+                <a href="{{route('evento.visualizar', ['id' => $evento->id])}}" class="btn btn-secondary" style="width: 100%; padding: 25px;">Voltar</a>
                 </div>
                 <div class="col-sm-6">
                     <button type="submit" class="btn btn-primary" style="width: 100%; padding: 30px;">Avançar</button>
