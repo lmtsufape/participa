@@ -9,6 +9,7 @@ use App\Models\Inscricao\Promocao;
 use App\Atividade;
 use App\Models\Inscricao\CupomDeDesconto;
 use App\Models\Inscricao\CategoriaParticipante;
+use App\Models\Inscricao\CampoFormulario;
 
 class InscricaoController extends Controller
 {
@@ -26,11 +27,14 @@ class InscricaoController extends Controller
         $atividades = Atividade::where('eventoId', $id)->get();
         $cuponsDeDescontro = CupomDeDesconto::where('evento_id', $id)->get();
         $categoriasParticipante = CategoriaParticipante::where('evento_id', $id)->get();
+        $camposDoFormulario = CampoFormulario::where('evento_id', $id)->get();
+
         return view('coordenador.programacao.inscricoes', ['evento'     => $evento,
                                                            'promocoes'  => $promocoes,
                                                            'atividades' => $atividades,
                                                            'cupons'     => $cuponsDeDescontro,
-                                                           'categorias' => $categoriasParticipante,]);
+                                                           'categorias' => $categoriasParticipante,
+                                                           'campos'     => $camposDoFormulario,]);
     }
 
     /**

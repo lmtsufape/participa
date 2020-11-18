@@ -230,61 +230,29 @@
                                 <p class="card-text">  
                                     <div class="container">
                                         <div class="row" style="position: relative; right: 25px;">
-                                            <div class="col-sm-3">
-                                                <div class="card" style="width: 15rem;">
-                                                    <div class="card-body">
-                                                      <h5 class="card-title">Card title</h5>
-                                                      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                                      
-                                                      <a href="#" class="card-link">Card link</a>
-                                                      <a href="#" class="card-link">Another link</a>
+                                            @if ($campos != null && count($campos) > 0)
+                                                @foreach ($campos as $campo)
+                                                    <div class="col-sm-3">
+                                                        <div class="card" style="width: 15rem;">
+                                                            <div class="card-body">
+                                                            <h5 class="card-title">{{$campo->titulo}}</h5>
+                                                            @if ($campo->obrigatorio)
+                                                                <h6 class="card-subtitle mb-2 text-muted">Obrigatório</h6>
+                                                            @else
+                                                                <h6 class="card-subtitle mb-2 text-muted">Opcional</h6>
+                                                            @endif
+                                                            
+                                                            <a href="#" class="card-link">Excluir</a>
+                                                            <a href="#" class="card-link">Editar</a>
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                @endforeach 
+                                            @else
+                                                <div class="col-sm-12" style="position: relative; left: 25px;">
+                                                    Nenhum campo extra salvo.
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="card" style="width: 15rem;">
-                                                    <div class="card-body">
-                                                      <h5 class="card-title">Card title</h5>
-                                                      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                                      
-                                                      <a href="#" class="card-link">Card link</a>
-                                                      <a href="#" class="card-link">Another link</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="card" style="width: 15rem;">
-                                                    <div class="card-body">
-                                                      <h5 class="card-title">Card title</h5>
-                                                      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                                      
-                                                      <a href="#" class="card-link">Card link</a>
-                                                      <a href="#" class="card-link">Another link</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="card" style="width: 15rem;">
-                                                    <div class="card-body">
-                                                      <h5 class="card-title">Card title</h5>
-                                                      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                                      
-                                                      <a href="#" class="card-link">Card link</a>
-                                                      <a href="#" class="card-link">Another link</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="card" style="width: 15rem;">
-                                                    <div class="card-body">
-                                                      <h5 class="card-title">Card title</h5>
-                                                      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                                      
-                                                      <a href="#" class="card-link">Card link</a>
-                                                      <a href="#" class="card-link">Another link</a>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </p>
