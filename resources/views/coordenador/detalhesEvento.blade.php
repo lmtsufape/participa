@@ -316,7 +316,7 @@
         @elseif (old('novaPromocao') != null)
             $('#li_promocoes').click();
         @else
-            $('#li_promocoes').click();
+            $('#li_categoria_participante').click();
         @endif
         
     });

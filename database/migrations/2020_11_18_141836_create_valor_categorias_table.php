@@ -17,12 +17,12 @@ class CreateValorCategoriasTable extends Migration
             $table->bigIncrements('id');
             $table->boolean('porcentagem');
             $table->float('valor');
+            $table->date('inicio_prazo');
+            $table->date('fim_prazo');
             $table->bigInteger('categoria_participante_id');
-            $table->bigInteger('lote_id');
             $table->timestamps();
 
             $table->foreign('categoria_participante_id')->references('id')->on('categoria_participantes');
-            $table->foreign('lote_id')->references('id')->on('lotes');
         });
     }
 

@@ -140,7 +140,7 @@
             </p>
         </div>
         <div id="categoriaParticipante" class="tab-pane fade in active">
-            {{-- <p>
+            <p>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="card" style="width: 100%; right: 30px;">
@@ -179,7 +179,7 @@
                                         </tbody>
 
                                         {{-- Modal excluir cupom --}}
-                                            {{-- <div class="modal fade" id="modalExcluirCupom{{$cupom->id}}" tabindex="-1" role="dialog" aria-labelledby="modalExcluirCupom{{$cupom->id}}Label" aria-hidden="true">
+                                            <div class="modal fade" id="modalExcluirCupom{{$cupom->id}}" tabindex="-1" role="dialog" aria-labelledby="modalExcluirCupom{{$cupom->id}}Label" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header" style="background-color: #114048ff; color: white;">
@@ -201,14 +201,14 @@
                                                 </div>
                                             </div>
                                         {{-- Fim modal excluir cupom --}}
-                                    {{-- @endforeach 
+                                    @endforeach 
                                 </table>
                             </p>
                             </div>
                         </div>
                     </div>
-                </div> --}}
-            {{-- </p> --}} 
+                </div>
+            </p> 
         </div>
         <div id="formularioInscricao" class="tab-pane fade">
             <p>
@@ -693,7 +693,7 @@
 {{-- Fim do modal criar cupom --}}
 
 {{-- Modal criar categoria --}}
-    {{-- <div class="modal fade" id="modalCriarCategoria" tabindex="-1" role="dialog" aria-labelledby="modalCriarCategoriaLabel" aria-hidden="true">
+    <div class="modal fade" id="modalCriarCategoria" tabindex="-1" role="dialog" aria-labelledby="modalCriarCategoriaLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
@@ -735,6 +735,6 @@
             </div>
         </div>
         </div>
-    </div> --}}
+    </div>
 {{-- Fim modal criar categoria --}}
 @endsection
