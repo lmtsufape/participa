@@ -19,42 +19,42 @@ class Trabalho extends Model
   ];
 
   public function recurso(){
-      return $this->hasMany('App\Recurso', 'trabalhoId');
+      return $this->hasMany('App\Models\Submissao\Recurso', 'trabalhoId');
   }
 
   public function arquivo(){
-      return $this->hasOne('App\Arquivo', 'trabalhoId');
+      return $this->hasOne('App\Models\Submissao\Arquivo', 'trabalhoId');
   }
 
   public function modalidade(){
-      return $this->belongsTo('App\Modalidade', 'modalidadeId');
+      return $this->belongsTo('App\Models\Submissao\Modalidade', 'modalidadeId');
   }
 
   public function area(){
-      return $this->belongsTo('App\Area', 'areaId');
+      return $this->belongsTo('App\Models\Submissao\Area', 'areaId');
   }
 
   public function autor(){
-      return $this->belongsTo('App\User', 'autorId');
+      return $this->belongsTo('App\Models\Users\User', 'autorId');
   }
 
   public function coautor(){
-      return $this->hasMany('App\Coautor', 'trabalhoId');
+      return $this->hasMany('App\Models\Users\Coautor', 'trabalhoId');
   }
 
   public function pareceres(){
-      return $this->hasMany('App\Parecer', 'trabalhoId');
+      return $this->hasMany('App\Models\Submissao\Parecer', 'trabalhoId');
   }
 
   public function atribuicoes(){
-      return $this->belongsToMany('App\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
+      return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
   }
 
   public function evento(){
-      return $this->belongsTo('App\Evento', 'eventoId');
+      return $this->belongsTo('App\Models\Submissao\Evento', 'eventoId');
   }
 
   public function avaliacoes() {
-    return $this->hasMany('App\Avaliacao', 'trabalho_id');
+    return $this->hasMany('App\Models\Submissao\Avaliacao', 'trabalho_id');
   }
 }

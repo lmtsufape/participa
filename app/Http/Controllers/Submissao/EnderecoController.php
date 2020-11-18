@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Submissao;
 
 use App\Submissao\Endereco;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class EnderecoController extends Controller
 {

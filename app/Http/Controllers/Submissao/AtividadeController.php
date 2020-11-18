@@ -13,6 +13,7 @@ use App\Mail\ConvidadoAtividade\EmailDesconvidandoAtividade;
 use App\Mail\ConvidadoAtividade\EmailAtualizandoConvidadoAtividade;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class AtividadeController extends Controller
 {

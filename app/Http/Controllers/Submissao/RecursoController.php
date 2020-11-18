@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Submissao;
 
 use App\Models\Submissao\Recurso;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class RecursoController extends Controller
 {

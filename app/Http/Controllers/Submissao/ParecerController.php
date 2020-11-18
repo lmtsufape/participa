@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Submissao;
 
 use App\Models\Submissao\Parecer;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ParecerController extends Controller
 {

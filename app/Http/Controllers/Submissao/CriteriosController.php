@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Submissao\Criterio;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\OpcoesCriterio;
+use App\Http\Controllers\Controller;
 
 class CriteriosController extends Controller
 {

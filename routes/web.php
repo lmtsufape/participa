@@ -13,13 +13,6 @@
 use Illuminate\Support\Facades\Log;
 use App\Models\Submissao\Evento;
 
-
-
-
-
-
-
-
 Route::get('/index', function () {
     $eventos = Evento::all();
     // dd($eventos);
@@ -44,19 +37,18 @@ Route::get('/#', function () {
 
 
 Auth::routes(['verify' => true]);
-Log::info('redirect - verify');
 // Route::get('/fullCalendar', function() {
 //   return view('fullCalendar.test');
 // });
 
 Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('atividades.json');
 
-Route::get('/perfil','UserController@perfil')->name('perfil')->middleware('auth');
-Route::post('/perfil/editar','UserController@editarPerfil')->name('perfil.update')->middleware('auth');
+Route::get('/perfil','Users\UserController@perfil')->name('perfil')->middleware('auth');
+Route::post('/perfil/editar','Users\UserController@editarPerfil')->name('perfil.update')->middleware('auth');
 
 Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
-  Log::info('redirect - routes');
   Route::get('/', 'HomeController@index')->name('home.user');
+
   Route::namespace('Users')->group(function () {
     // rotas do administrador
     Route::get('admin/home', 'AdministradorController@index')->name('admin.home');
@@ -103,20 +95,10 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
         Route::get('comissaoCientifica/cadastrarComissao', 'EventoController@cadastrarComissao')->name('cadastrarComissao');
         Route::get('comissaoCientifica/definirCoordComissao', 'EventoController@definirCoordComissao')->name('definirCoordComissao');
         Route::get('comissaoCientifica/listarComissao', 'EventoController@listarComissao')->name('listarComissao');
-    });
-        Route::get('comissaoOrganizadora/{id}/cadastrar', 'ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
-        Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
-        Route::get('comissaoOrganizadora/{id}/listar', 'ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
-        Route::post('remover/comissaoOrganizadora/{id}', 'ComissaoOrganizadoraController@destroy')->name('remover.comissao.organizadora');
-        Route::post('remover/comissao/{id}',  'ComissaoController@destroy'      )->name('remover.comissao');
         Route::get('modalidade/cadastrarModalidade', 'EventoController@cadastrarModalidade')->name('cadastrarModalidade');
         Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');
         Route::get('modalidade/cadastrarCriterio', 'EventoController@cadastrarCriterio')->name('cadastrarCriterio');
         Route::get('modalidade/listarCriterios', 'EventoController@listarCriterios')->name('listarCriterios');
-
-        Route::get('eventos/editarEtiqueta', 'EventoController@editarEtiqueta')->name('editarEtiqueta');
-        Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
-
         Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');
         // Atenção se mudar url da rota abaixo mudar função setVisibilidadeAtv na view detalhesEvento.blade.php
         Route::post('atividades/{id}/visibilidade', 'AtividadeController@setVisibilidadeAjax')->name('atividades.visibilidade');
@@ -125,6 +107,12 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
         Route::post('atividade/{id}/excluir', 'AtividadeController@destroy')->name('atividade.destroy');
         Route::post('{id}/atividade/salvar-pdf-programacao', 'EventoController@pdfProgramacao')->name('evento.pdf.programacao');
         Route::get('tipo-de-atividade/new/{nome}', 'TipoAtividadeController@storeAjax')->name('tipo.store.ajax');
+        Route::get('eventos/editarEtiqueta', 'EventoController@editarEtiqueta')->name('editarEtiqueta');
+        Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
+    });
+        
+
+
         //Evento
         Route::get(   '/evento/criar',          'EventoController@create'                    )->name('evento.criar');
         Route::post(  '/evento/criar',          'EventoController@store'                     )->name('evento.criar');
@@ -216,6 +204,16 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
     Route::get('/area/revisores/trabalhos/area/{area_id}/modalidade/{modalidade_id}', 'RevisorController@indexListarTrabalhos')->name('avaliar.listar.trabalhos.filtro');
     Route::get('/area/revisores/{id}/trabalhos',  'RevisorController@trabalhosDoEvento' )->name('revisor.trabalhos.evento');
     Route::get('/area/revisores',        'RevisorController@index'                      )->name('revisor.index');
+
+    Route::name('coord.')->group(function () {
+        Route::get('comissaoOrganizadora/{id}/cadastrar', 'ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
+        Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
+        Route::get('comissaoOrganizadora/{id}/listar', 'ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
+        Route::post('remover/comissaoOrganizadora/{id}', 'ComissaoOrganizadoraController@destroy')->name('remover.comissao.organizadora');
+        Route::post('remover/comissao/{id}',  'ComissaoController@destroy'      )->name('remover.comissao');
+        
+    });
+
 
   });
 

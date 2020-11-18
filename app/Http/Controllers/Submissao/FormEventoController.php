@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Submissao;
 use Illuminate\Http\Request;
 use App\Models\Submissao\FormEvento;
 use App\Models\Submissao\Evento;
+use App\Http\Controllers\Controller;
 
 class FormEventoController extends Controller
 {

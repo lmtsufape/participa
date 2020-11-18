@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Models\Submissao\Evento;
+use App\Http\Controllers\Controller;
 
 class ModalidadeController extends Controller
 {

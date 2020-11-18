@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Users;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Submissao\Area;
-use App\Users\User;
-use App\Submissao\Endereco;
-use App\Submissao\Trabalho;
-use App\Users\Coautor;
-use App\Users\ComissaoEvento;
+use App\Models\Submissao\Area;
+use App\Models\Users\User;
+use App\Models\Submissao\Endereco;
+use App\Models\Submissao\Trabalho;
+use App\Models\Users\Coautor;
+use App\Models\Users\ComissaoEvento;
 use App\Http\Controllers\Controller;
 
 class UserController extends Controller

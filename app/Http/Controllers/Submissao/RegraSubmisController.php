@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Submissao;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class RegraSubmisController extends Controller
 {

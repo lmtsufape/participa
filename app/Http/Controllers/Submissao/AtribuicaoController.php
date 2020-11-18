@@ -11,6 +11,7 @@ use App\Models\Submissao\Trabalho;
 use App\Models\Submissao\Area;
 use App\Mail\EmailLembrete;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Controller;
 
 class AtribuicaoController extends Controller
 {
