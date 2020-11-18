@@ -5,6 +5,7 @@
     <ul class="nav nav-tabs">
         <li id="li_promocoes" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#promocoes" style="text-decoration: none;">Promoções</a></li>
         <li id="li_cuponsDeDesconto" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#cuponsDeDesconto" style="text-decoration: none;">Cupons de desconto</a></li>
+        <li id="li_categoria_participante" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#categoriaParticipante" style="text-decoration: none;">Catagorias de participantes</a></li>
     </ul>
     
     <div class="tab-content">
@@ -73,7 +74,7 @@
                                             <h6 class="card-subtitle mb-2 text-muted">Cupons que podem ser aplicados na hora da inscrição.</h6> 
                                         </div>
                                         <div class="col-sm-6">
-                                            <button id="criarAtividade" data-toggle="modal" data-target="#modalCriarCupom" class="btn btn-primary float-md-right">+ Criar cupom</button>
+                                            <button id="criarCupom" data-toggle="modal" data-target="#modalCriarCupom" class="btn btn-primary float-md-right">+ Criar cupom</button>
                                         </div>
                                     </div>
                                 </div>
@@ -98,7 +99,7 @@
                                                 @else
                                                     <td>R$ {{number_format($cupom->valor, 2,',','.')}}</td>
                                                 @endif
-                                                <td>{{$cupom->quantidade_aplicacao}} / precisa ser programada</td>
+                                                <td>@if($cupom->quantidade_aplicacao == -1) Ilimitado @else {{$cupom->quantidade_aplicacao}} @endif / precisa ser programada</td>
                                                 <td>{{date('d/m/Y',strtotime($cupom->inicio))}}</td>
                                                 <td>{{date('d/m/Y',strtotime($cupom->fim))}}</td>
                                                 <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalExcluirCupom{{$cupom->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
@@ -136,6 +137,78 @@
                     </div>
                 </div>
             </p>
+        </div>
+        <div id="categoriaParticipante" class="tab-pane fade in active">
+            {{-- <p>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card" style="width: 100%; right: 30px;">
+                            <div class="card-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h5 class="card-title">Categorias de participantes</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">Categorias dos participantes que seu evento irá receber.</h6> 
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button id="criarCategoria" data-toggle="modal" data-target="#modalCriarCategoria" class="btn btn-primary float-md-right">+ Criar categoria</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="card-text">  
+                                <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
+                                    <thead>
+                                        <th>
+                                            <th>Nome</th>
+                                            <th>Quantidade inscrita</th>
+                                            <th>Valor arrecadado</th>
+                                            <th>Detalhes</th>
+                                            <th style="text-align:center">Excluir</th>
+                                        </th>
+                                    </thead>
+                                    @foreach ($categorias as $categoria)
+                                        <tbody>
+                                            <th>
+                                                <td>{{$cupom->identificador}}</td>
+                                                <td>Falta implementar</td>
+                                                <td>Falta implementar</td>
+                                                <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalDetalhesCategoria{{$categoria->id}}" ><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a></td>
+                                                <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalExcluirCategoria{{$categoria->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
+                                            </th>
+                                        </tbody>
+
+                                        {{-- Modal excluir cupom --}}
+                                            {{-- <div class="modal fade" id="modalExcluirCupom{{$cupom->id}}" tabindex="-1" role="dialog" aria-labelledby="modalExcluirCupom{{$cupom->id}}Label" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="background-color: #114048ff; color: white;">
+                                                    <h5 class="modal-title" id="modalExcluirCupom{{$cupom->id}}Label">Confirmação</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="formDeletarCupom{{$cupom->id}}" action="{{route('cupom.destroy', ['id' => $cupom->id])}}" method="GET">
+                                                            Tem certeza que deseja excluir esse cupom?
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                                                        <button type="submit" class="btn btn-primary" form="formDeletarCupom{{$cupom->id}}">Sim</button>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        {{-- Fim modal excluir cupom --}}
+                                    {{-- @endforeach 
+                                </table>
+                            </p>
+                            </div>
+                        </div>
+                    </div>
+                </div> --}}
+            {{-- </p> --}} 
+        </div>
     </div>
 </div>
 
@@ -296,7 +369,7 @@
                                     @enderror
                                 </div>
                                 <div class="col-sm-3"> 
-                                    <label for="quantidade">Disponibilidade*</label>
+                                    <label for="quantidade">Disponibilidade* <img src="{{asset('img/icons/interrogacao.png')}}" alt="" width="15px;" style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Coloque 0 para a disponibilidade ser ilimitada.'></label>
                                     <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.*') is-invalid @enderror" type="number" placeholder="10">
                                 
                                     @error('disponibilidade.*')
@@ -496,7 +569,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-4"> 
-                                <label for="quantidadeCupom">Disponibilidade*</label>
+                                <label for="quantidadeCupom">Disponibilidade* <img src="{{asset('img/icons/interrogacao.png')}}" alt="" width="15px;" style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Coloque 0 para a disponibilidade ser ilimitada.'></label>
                                 <input id="quantidadeCupom" name="quantidade" class="form-control  @error('quantidade') is-invalid @enderror" type="number" placeholder="10" value="{{old('quantidade')}}">
                             
                                 @error('quantidade')
@@ -566,4 +639,49 @@
     </div>
 {{-- Fim do modal criar cupom --}}
 
+{{-- Modal criar categoria --}}
+    {{-- <div class="modal fade" id="modalCriarCategoria" tabindex="-1" role="dialog" aria-labelledby="modalCriarCategoriaLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalCriarCategoriaLabel">Criar categoria</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="formCriarCupom" action="{{route('cupom.store')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="evento_id" id="" value="{{$evento->id}}">
+                    <input type="hidden" name="criarCategoria" id="" value="0">
+                    <div class="container">
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                <label for="nome">Nome*</label>
+                                <input id="nome" name="nome" type="text" class="form-control @error('nome') is-invalid @enderror" value="{{old('nome')}}">
+                            
+                                @error('nome')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div id="" class="row form-group">
+                            
+                        </div>
+                        <div class="row form-group">
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" form="formCriarCupom">Salvar</button>
+            </div>
+        </div>
+        </div>
+    </div> --}}
+{{-- Fim modal criar categoria --}}
 @endsection

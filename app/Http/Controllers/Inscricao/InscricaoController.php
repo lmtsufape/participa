@@ -8,6 +8,7 @@ use App\Evento;
 use App\Models\Inscricao\Promocao;
 use App\Atividade;
 use App\Models\Inscricao\CupomDeDesconto;
+use App\Models\Inscricao\CategoriaParticipante;
 
 class InscricaoController extends Controller
 {
@@ -24,10 +25,12 @@ class InscricaoController extends Controller
         $promocoes = Promocao::where('evento_id', $id)->get();
         $atividades = Atividade::where('eventoId', $id)->get();
         $cuponsDeDescontro = CupomDeDesconto::where('evento_id', $id)->get();
-        return view('coordenador.programacao.inscricoes', ['evento' => $evento,
-                                                           'promocoes' => $promocoes,
+        $categoriasParticipante = CategoriaParticipante::where('evento_id', $id)->get();
+        return view('coordenador.programacao.inscricoes', ['evento'     => $evento,
+                                                           'promocoes'  => $promocoes,
                                                            'atividades' => $atividades,
-                                                           'cupons' => $cuponsDeDescontro]);
+                                                           'cupons'     => $cuponsDeDescontro,
+                                                           'categorias' => $categoriasParticipante,]);
     }
 
     /**
