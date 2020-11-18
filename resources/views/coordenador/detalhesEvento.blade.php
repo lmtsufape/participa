@@ -311,6 +311,8 @@
             $('#li_cuponsDeDesconto').click();
         @elseif (old('criarCategoria') != null)
             $('#li_categoria_participante').click();
+        @elseif (old('novoCampoFormulario') != null)
+            $('#li_formulari_inscricao').click();
         @elseif (old('novaPromocao') != null)
             $('#li_promocoes').click();
         @else
@@ -1487,14 +1489,22 @@
             elemento.className = "aba ativado";
             document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
             document.getElementById("li_categoria_participante").className = "aba aba-tab";
+            document.getElementById('li_formulari_inscricao').className = "aba aba-tab";
         } else if (elemento == document.getElementById("li_cuponsDeDesconto")) {
             elemento.className = "aba ativado";
             document.getElementById("li_promocoes").className = "aba aba-tab";
             document.getElementById("li_categoria_participante").className = "aba aba-tab";
+            document.getElementById('li_formulari_inscricao').className = "aba aba-tab";
         } else if (elemento == document.getElementById("li_categoria_participante")) {
             elemento.className = "aba ativado";
             document.getElementById("li_promocoes").className = "aba aba-tab";
             document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
+            document.getElementById('li_formulari_inscricao').className = "aba aba-tab";
+        } else if (elemento == document.getElementById('li_formulari_inscricao')) {
+            elemento.className = "aba ativado";
+            document.getElementById("li_promocoes").className = "aba aba-tab";
+            document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
+            document.getElementById("li_categoria_participante").className = "aba aba-tab";
         }
     }
 

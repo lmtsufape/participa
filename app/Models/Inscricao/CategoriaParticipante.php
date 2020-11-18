@@ -18,4 +18,8 @@ class CategoriaParticipante extends Model
         return $this->hasMany('App\Models\Inscricao\ValorCategoria', 'categoria_participante_id');
     }
 
+    public function camposNecessarios() {
+        return $this->belongsToMany('App\Models\Inscricao\CampoFormulario', 'campo_necessarios', 'categoria_participante_id', 'campo_formulario_id');
+    }
+
 }

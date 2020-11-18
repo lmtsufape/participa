@@ -6,6 +6,7 @@
         <li id="li_promocoes" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#promocoes" style="text-decoration: none;">Promoções</a></li>
         <li id="li_cuponsDeDesconto" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#cuponsDeDesconto" style="text-decoration: none;">Cupons de desconto</a></li>
         <li id="li_categoria_participante" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#categoriaParticipante" style="text-decoration: none;">Catagorias de participantes</a></li>
+        <li id="li_formulari_inscricao" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#formularioInscricao" style="text-decoration: none;">Formulario de inscrição</a></li>
     </ul>
     
     <div class="tab-content">
@@ -208,6 +209,90 @@
                     </div>
                 </div> --}}
             {{-- </p> --}} 
+        </div>
+        <div id="formularioInscricao" class="tab-pane fade">
+            <p>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card" style="width: 100%; right: 30px;">
+                            <div class="card-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h5 class="card-title">Campos do formulário</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">Campos que o formulário de inscrição vai ter.</h6> 
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button id="novoCampo" data-toggle="modal" data-target="#modalNovoCampo" class="btn btn-primary float-md-right">+ Novo campo</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="card-text">  
+                                    <div class="container">
+                                        <div class="row" style="position: relative; right: 25px;">
+                                            <div class="col-sm-3">
+                                                <div class="card" style="width: 15rem;">
+                                                    <div class="card-body">
+                                                      <h5 class="card-title">Card title</h5>
+                                                      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                                      
+                                                      <a href="#" class="card-link">Card link</a>
+                                                      <a href="#" class="card-link">Another link</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="card" style="width: 15rem;">
+                                                    <div class="card-body">
+                                                      <h5 class="card-title">Card title</h5>
+                                                      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                                      
+                                                      <a href="#" class="card-link">Card link</a>
+                                                      <a href="#" class="card-link">Another link</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="card" style="width: 15rem;">
+                                                    <div class="card-body">
+                                                      <h5 class="card-title">Card title</h5>
+                                                      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                                      
+                                                      <a href="#" class="card-link">Card link</a>
+                                                      <a href="#" class="card-link">Another link</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="card" style="width: 15rem;">
+                                                    <div class="card-body">
+                                                      <h5 class="card-title">Card title</h5>
+                                                      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                                      
+                                                      <a href="#" class="card-link">Card link</a>
+                                                      <a href="#" class="card-link">Another link</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="card" style="width: 15rem;">
+                                                    <div class="card-body">
+                                                      <h5 class="card-title">Card title</h5>
+                                                      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                                      
+                                                      <a href="#" class="card-link">Card link</a>
+                                                      <a href="#" class="card-link">Another link</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p>
         </div>
     </div>
 </div>
