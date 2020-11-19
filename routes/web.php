@@ -214,6 +214,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('inscricoes/destroy/{id}-cupom',  'Inscricao\CupomDeDescontoController@destroy')->name('cupom.destroy');
 
   Route::post('inscricoes/criar-categoria-participante', 'Inscricao\CategoriaController@store')->name('categoria.participante.store');
+  Route::get('{id}/inscricoes/excluir-categoria',    'Inscricao\CategoriaController@destroy')->name('categoria.destroy');
 });
 
 Auth::routes();

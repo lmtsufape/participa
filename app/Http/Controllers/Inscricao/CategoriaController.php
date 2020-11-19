@@ -116,6 +116,16 @@ class CategoriaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // LEMBRETE
+        //checar se está aplicado em alguma inscrição futuramente
+        $categoria = CategoriaParticipante::find($id);
+
+        foreach ($categoria->valores as $valor) {
+            $valor->delete();
+        }
+
+        $categoria->delete();
+
+        return redirect()->back()->with(['mensagem' => 'Categoria excluida com sucesso!']);
     }
 }

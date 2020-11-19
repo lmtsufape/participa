@@ -178,28 +178,28 @@
                                             </th>
                                         </tbody>
 
-                                        {{-- Modal excluir cupom --}}
-                                            {{-- <div class="modal fade" id="modalExcluirCupom{{$cupom->id}}" tabindex="-1" role="dialog" aria-labelledby="modalExcluirCupom{{$cupom->id}}Label" aria-hidden="true">
+                                        {{-- Modal excluir categoria --}}
+                                            <div class="modal fade" id="modalExcluirCategoria{{$categoria->id}}" tabindex="-1" role="dialog" aria-labelledby="modalExcluirCategoria{{$categoria->id}}Label" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header" style="background-color: #114048ff; color: white;">
-                                                    <h5 class="modal-title" id="modalExcluirCupom{{$cupom->id}}Label">Confirmação</h5>
+                                                    <h5 class="modal-title" id="modalExcluirCategoria{{$categoria->id}}Label">Confirmação</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form id="formDeletarCupom{{$cupom->id}}" action="{{route('cupom.destroy', ['id' => $cupom->id])}}" method="GET">
-                                                            Tem certeza que deseja excluir esse cupom?
+                                                        <form id="formDeletarCategoria{{$categoria->id}}" action="{{route('categoria.destroy', ['id' => $categoria->id])}}" method="GET">
+                                                            Tem certeza que deseja excluir essa categoria?
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                                                        <button type="submit" class="btn btn-primary" form="formDeletarCupom{{$cupom->id}}">Sim</button>
+                                                        <button type="submit" class="btn btn-primary" form="formDeletarCategoria{{$categoria->id}}">Sim</button>
                                                     </div>
                                                 </div>
                                                 </div>
-                                            </div> --}}
+                                            </div>
                                         {{-- Fim modal excluir cupom --}}
                                     @endforeach 
                                 </table>
