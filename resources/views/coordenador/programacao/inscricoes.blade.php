@@ -178,6 +178,68 @@
                                             </th>
                                         </tbody>
 
+                                        {{-- Modal detalhes categoria --}}
+                                            <div class="modal fade" id="modalDetalhesCategoria{{$categoria->id}}" tabindex="-1" role="dialog" aria-labelledby="modalDetalhesCategoria{{$categoria->id}}Label" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="background-color: #114048ff; color: white;">
+                                                    <h5 class="modal-title" id="modalDetalhesCategoria{{$categoria->id}}Label">Detalhes</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <label for="nome">Categoria</label>
+                                                                    <input type="text" id="nome" class="form-control" value="{{$categoria->nome}}" disabled>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="valorTotal">Valor pago</label>
+                                                                    <input type="text" id="valorTotal" class="form-control" value="R$ {{number_format($categoria->valor_total, 2,',','.')}}" disabled>
+                                                                </div>
+                                                            </div>
+                                                            @if ($categoria->valores != null && count($categoria->valores) > 0)
+                                                                <div class="row">
+                                                                    <div class="col-sm-12">
+                                                                        <hr>
+                                                                        <h4>Periodos com desconto</h4>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-sm-6">
+                                                                        Periodo
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        Desconto / Valor
+                                                                    </div>
+                                                                </div>
+                                                                @foreach ($categoria->valores as $valor)
+                                                                <p>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                            De {{date('d/m/Y',strtotime($valor->inicio_prazo))}} até {{date('d/m/Y',strtotime($valor->fim_prazo))}}
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                            @if ($valor->porcentagem)
+                                                                                R$ {{number_format($categoria->valor_total * ($valor->valor / 100), 2,',','.')}} / R$ {{number_format($categoria->valor_total - $categoria->valor_total * ($valor->valor / 100), 2,',','.')}}
+                                                                                <br><small>Desconto de {{$valor->valor}}% do valor total</small>
+                                                                            @else   
+                                                                                R$ {{number_format($valor->valor, 2,',','.')}} / R$ {{number_format($categoria->valor_total - $valor->valor, 2,',','.')}}
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </p>
+                                                                @endforeach
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        {{-- Fim modal detalhes categoria --}}
+
                                         {{-- Modal excluir categoria --}}
                                             <div class="modal fade" id="modalExcluirCategoria{{$categoria->id}}" tabindex="-1" role="dialog" aria-labelledby="modalExcluirCategoria{{$categoria->id}}Label" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
