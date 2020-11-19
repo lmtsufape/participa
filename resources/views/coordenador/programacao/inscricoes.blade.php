@@ -711,7 +711,7 @@
                         <div class="row form-group">
                             <div class="col-sm-6">
                                 <label for="nome">Nome*</label>
-                                <input id="nome" name="nome" type="text" class="form-control @error('nome') is-invalid @enderror" value="{{old('nome')}}" placeholder="Estudante">
+                                <input id="nome" name="nome" type="text" class="form-control apenasLetras @error('nome') is-invalid @enderror" value="{{old('nome')}}" placeholder="Estudante">
                             
                                 @error('nome')
                                 <span class="invalid-feedback" role="alert">
@@ -731,7 +731,127 @@
                             </div>
                         </div>
                         <div id="periodosCategoria">
-                            
+                            @if (old('criarCategoria') != null && old('tipo_valor') != null)
+                            @foreach (old('tipo_valor') as $i => $item)
+                                @if ($i == 0)
+                                    <div id='tituloDePeriodo' class='row form-group'>
+                                        <div class='col-sm-12'>
+                                            <hr>
+                                            <h4>Periodos de desconto</h4>
+                                        </div>
+                                    </div>
+                                    <div class='peridodoDesconto'>
+                                        <div class='row form-group'>
+                                            <div class='col-sm-4'>
+                                                <label for=''>Valor do desconto*</label>
+                                                <br>
+                                                <select class='form-control @error('tipo_valor.'.$i) is-invalid @enderror' name='tipo_valor[]' required>
+                                                    <option value='' disabled selected>-- Escolha o tipo de valor --</option>
+                                                    <option value='porcentagem' @if(old('tipo_valor.'.$i) == "porcentagem") selected @endif>Porcentagem</option>
+                                                    <option value='real' @if(old('tipo_valor.'.$i) == "real") selected @endif>Real</option>
+                                                </select>
+
+                                                @error('tipo_valor.'.$i)
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <div class='col-sm-6'>
+                                                <label for="valorDesconto">Valor</label>
+                                                <input id='valorDesconto' name='valorDesconto[]' type='number' class='form-control real @error('valorDesconto.'.$i) is-invalid @enderror' placeholder='' value='{{old('valorDesconto.'.$i)}}' required>
+                                            
+                                                @error('valorDesconto.'.$i)
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class='row form-group'>
+                                            <div class='col-sm-5'> 
+                                                <label for='inicio'>Data de início*</label> 
+                                                <input id='inicio' name='inícioDesconto[]' class='form-control @error('inícioDesconto.'.$i) is-invalid @enderror' type='date' value='{{old('inícioDesconto.'.$i)}}' required>
+                                                @error('inícioDesconto.'.$i)
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+
+                                            <div class='col-sm-5'>
+                                                <label for='fim'>Data de fim*</label>
+                                                <input id='fim' name='fimDesconto[]' class='form-control @error('fimDesconto.'.$i) is-invalid @enderror' type='date' value='{{old('fimDesconto.'.$i)}}' required>
+                                                @error('fimDesconto.'.$i)
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            
+                                            <div class='col-sm-2' style='position: relative; top: 35px;'>
+                                                <a type='button' onclick='removerPeriodoDesconto(this)'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else 
+                                    <div class='peridodoDesconto'>
+                                        <div class='row form-group'>
+                                            <div class='col-sm-4'>
+                                                <label for=''>Valor do desconto*</label>
+                                                <br>
+                                                <select class='form-control @error('tipo_valor.'.$i) is-invalid @enderror' name='tipo_valor[]' required>
+                                                    <option value='' disabled selected>-- Escolha o tipo de valor --</option>
+                                                    <option value='porcentagem' @if(old('tipo_valor.'.$i) == "porcentagem") selected @endif>Porcentagem</option>
+                                                    <option value='real' @if(old('tipo_valor.'.$i) == "real") selected @endif>Real</option>
+                                                </select>
+
+                                                @error('tipo_valor.'.$i)
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <div class='col-sm-6'>
+                                                <label for="valorDesconto">Valor</label>
+                                                <input id='valorDesconto' name='valorDesconto[]' type='number' class='form-control real @error('valorDesconto.'.$i) is-invalid @enderror' placeholder='' value='{{old('valorDesconto.'.$i)}}' required>
+                                            
+                                                @error('valorDesconto.'.$i)
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class='row form-group'>
+                                            <div class='col-sm-5'> 
+                                                <label for='inicio'>Data de início*</label> 
+                                                <input id='inicio' name='inícioDesconto[]' class='form-control @error('inícioDesconto.'.$i) is-invalid @enderror' type='date' value='{{old('inícioDesconto.'.$i)}}' required>
+                                                @error('inícioDesconto.'.$i)
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+
+                                            <div class='col-sm-5'>
+                                                <label for='fim'>Data de fim*</label>
+                                                <input id='fim' name='fimDesconto[]' class='form-control @error('fimDesconto.'.$i) is-invalid @enderror' type='date' value='{{old('fimDesconto.'.$i)}}' required>
+                                                @error('fimDesconto.'.$i)
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            
+                                            <div class='col-sm-2' style='position: relative; top: 35px;'>
+                                                <a type='button' onclick='removerPeriodoDesconto(this)'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                            @endif
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-12 justify-content-center">
