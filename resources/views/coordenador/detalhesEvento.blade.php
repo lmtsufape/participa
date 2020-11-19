@@ -1550,6 +1550,59 @@
         e.target.selectionStart = inicioCursor;
         e.target.selectionEnd = fimCursor;
     }
+
+    var quantidadeDePeriodos = 0;
+    function adicionarPeriodoCategoria() {
+        var html = "";
+        
+        if (quantidadeDePeriodos == 0) {
+            html += "<div id='tituloDePeriodo' class='row form-group'>" +
+                        "<div class='col-sm-12'>" +
+                            "<hr>" +
+                            "<h4>Periodos de desconto</h4>" +
+                        "</div>" +
+                    "</div>";
+        }
+        html += "<div class='peridodoDesconto'>" +
+                    "<div class='row form-group'>" +
+                        "<div class='col-sm-4'>" +
+                            "<label for=''>Valor do desconto*</label>" +
+                            "<br>" +
+                            "<input id='porcetagem' type='radio' name='tipo_valor[]' value='porcentagem' onchange='alterarPlaceHolderDoNumero(this)' required >" +
+                            "<label for='porcetagem'>Porcentagem</label><br>" +
+                            "<input id='real' type='radio' name='tipo_valor[]' value='real' onchange='alterarPlaceHolderDoNumero(this)' required>" +
+                            "<label for='real'>Real</label>" +
+                        "</div>" +
+                        "<div class='col-sm-6' style='position: relative; top: 45px;'>" +
+                            "<input id='valorCupom' name='valor[]' type='number' class='form-control real @error('number') is-invalid @enderror' placeholder='' value='' required>" +
+                        "</div>" +
+                    "</div>" +
+                    "<div class='row form-group'>" +
+                        "<div class='col-sm-5'> " +
+                            "<label for='inicio'>Data de início*</label>" + 
+                            "<input id='inicio' name='início[]' class='form-control' type='date' value='' required>" +
+                        "</div>" +
+                        "<div class='col-sm-5'>" +
+                            "<label for='fim'>Data de fim*</label>" +
+                            "<input id='fim' name='fim[]' class='form-control' type='date' value='' required>" +
+                        "</div>" +
+                        "<div class='col-sm-2' style='position: relative; top: 35px;'>" +
+                            "<a type='button' onclick='removerPeriodoDesconto(this)'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>" +
+                        "</div>" +
+                    "</div>"+ 
+                "</div>";
+        quantidadeDePeriodos++;
+        $('#periodosCategoria').append(html);
+    }
+
+    function removerPeriodoDesconto(button) {
+        quantidadeDePeriodos--;
+        button.parentElement.parentElement.parentElement.remove();
+        if (quantidadeDePeriodos == 0) {
+            document.getElementById('tituloDePeriodo').remove();
+        }
+    }
+
   </script>
   @if (old('criarCupom') != null)
     <script>        

@@ -16,6 +16,7 @@ class CreateCategoriaParticipantesTable extends Migration
         Schema::create('categoria_participantes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nome');
+            $table->float('valor_total');
             $table->bigInteger('evento_id');
             $table->timestamps();
 

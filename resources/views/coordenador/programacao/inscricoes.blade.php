@@ -694,7 +694,7 @@
 
 {{-- Modal criar categoria --}}
     <div class="modal fade" id="modalCriarCategoria" tabindex="-1" role="dialog" aria-labelledby="modalCriarCategoriaLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
             <h5 class="modal-title" id="modalCriarCategoriaLabel">Criar categoria</h5>
@@ -703,15 +703,15 @@
             </button>
             </div>
             <div class="modal-body">
-                <form id="formCriarCupom" action="{{route('cupom.store')}}" method="POST">
+                <form id="formCriarCategoria" action="{{route('categoria.participante.store')}}" method="POST">
                     @csrf
                     <input type="hidden" name="evento_id" id="" value="{{$evento->id}}">
                     <input type="hidden" name="criarCategoria" id="" value="0">
                     <div class="container">
                         <div class="row form-group">
-                            <div class="col-sm-12">
+                            <div class="col-sm-6">
                                 <label for="nome">Nome*</label>
-                                <input id="nome" name="nome" type="text" class="form-control @error('nome') is-invalid @enderror" value="{{old('nome')}}">
+                                <input id="nome" name="nome" type="text" class="form-control @error('nome') is-invalid @enderror" value="{{old('nome')}}" placeholder="Estudante">
                             
                                 @error('nome')
                                 <span class="invalid-feedback" role="alert">
@@ -719,19 +719,31 @@
                                 </span>
                                 @enderror
                             </div>
+                            <div class="col-sm-6">
+                                <label for="valor_total">Valor da inscrição*</label>
+                                <input id="valor_total" name="valor_total" type="text" class="form-control @error('valor_total') is-invalid @enderror" value="{{old('valor_total')}}" placeholder="R$ 50,00">
+                            
+                                @error('valor_total')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
-                        <div id="" class="row form-group">
+                        <div id="periodosCategoria">
                             
                         </div>
                         <div class="row form-group">
-
+                            <div class="col-sm-12 justify-content-center">
+                                <button type="button" class="btn btn-primary" style="width: 100%;" onclick="adicionarPeriodoCategoria()">Adicionar periodo antecipado</button>
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary" form="formCriarCupom">Salvar</button>
+                <button type="submit" class="btn btn-primary" form="formCriarCategoria">Salvar</button>
             </div>
         </div>
         </div>
