@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Inscricao\CategoriaParticipante;
+use App\Models\Inscricao\ValorCategoria;
+use App\Evento;
 
 class CategoriaController extends Controller
 {
@@ -36,6 +39,7 @@ class CategoriaController extends Controller
     public function store(Request $request)
     {
         // dd($request);
+        $evento = Evento::find($request->evento_id);
         $validateData = $request->validate([
             'nome'                  => 'required',
             'valor_total'           => 'required',
@@ -44,6 +48,30 @@ class CategoriaController extends Controller
             'inícioDesconto.*'      => 'required_with:tipo_valor.*|date',
             'fimDesconto.*'         => 'required_with:tipo_valor.*|date|after:inícioDesconto.*',
         ]);
+
+        $categoria = new CategoriaParticipante();
+        $categoria->evento_id   = $evento->id;
+        $categoria->nome        = $request->nome;
+        $categoria->valor_total = $request->valor_total;
+        $categoria->save();
+
+        if ($request->tipo_valor != null) {
+            foreach ($request->tipo_valor as $key => $tipo_valor) {
+                $valor = new ValorCategoria();
+                if ($request->tipo_valor[$key] == "porcentagem") {
+                    $valor->porcentagem = true;
+                } else {
+                    $valor->porcentagem = false;
+                }
+                $valor->valor                     = $request->valorDesconto[$key];
+                $valor->inicio_prazo              = $request->input('inícioDesconto')[$key];
+                $valor->fim_prazo                 = $request->fimDesconto[$key];
+                $valor->categoria_participante_id = $categoria->id;
+                $valor->save();
+            }
+        }
+
+        return redirect()->back()->with(['mensagem' => 'Categoria criada com sucesso!']);
     }
 
     /**

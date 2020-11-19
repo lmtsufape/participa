@@ -163,14 +163,14 @@
                                             <th>Nome</th>
                                             <th>Quantidade inscrita</th>
                                             <th>Valor arrecadado</th>
-                                            <th>Detalhes</th>
+                                            <th style="text-align:center">Detalhes</th>
                                             <th style="text-align:center">Excluir</th>
                                         </th>
                                     </thead>
                                     @foreach ($categorias as $categoria)
                                         <tbody>
                                             <th>
-                                                <td>{{$cupom->identificador}}</td>
+                                                <td>{{$categoria->nome}}</td>
                                                 <td>Falta implementar</td>
                                                 <td>Falta implementar</td>
                                                 <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalDetalhesCategoria{{$categoria->id}}" ><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a></td>
@@ -179,7 +179,7 @@
                                         </tbody>
 
                                         {{-- Modal excluir cupom --}}
-                                            <div class="modal fade" id="modalExcluirCupom{{$cupom->id}}" tabindex="-1" role="dialog" aria-labelledby="modalExcluirCupom{{$cupom->id}}Label" aria-hidden="true">
+                                            {{-- <div class="modal fade" id="modalExcluirCupom{{$cupom->id}}" tabindex="-1" role="dialog" aria-labelledby="modalExcluirCupom{{$cupom->id}}Label" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header" style="background-color: #114048ff; color: white;">
@@ -199,7 +199,7 @@
                                                     </div>
                                                 </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         {{-- Fim modal excluir cupom --}}
                                     @endforeach 
                                 </table>
