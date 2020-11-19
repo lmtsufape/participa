@@ -28,44 +28,44 @@ class HomeController extends Controller
         $user = Auth::user();
         if($user->administradors != null){    
             $eventos = Evento::all(); 
-            dd('adm');       
+            // dd('adm');       
             return view('administrador.index', ['eventos' => $eventos]);
 
           }else if($user->coordComissaoCientifica != null){ 
             $eventos = $user->coordComissaoCientifica->eventos; 
-            dd('CCC');          
+            // dd('CCC');          
             return view('coordenador.index', ['eventos' => $eventos]);
 
           }else if($user->coordComissaoOrganizadora != null){ 
             $eventos = $user->coordComissaoOrganizadora->eventos;
-            dd('CCO');   
+            // dd('CCO');   
             return view('coordenador.index', ['eventos' => $eventos]);
 
           }else if($user->membroComissao != null){    
             $eventos = $user->membroComissao->eventos;
-            dd('MC');        
+            // dd('MC');        
             return view('coordenador.index', ['eventos' => $eventos]);
 
           }else if($user->revisor != null){   
             $eventos = Evento::all();  
-            dd('R');    
+            // dd('R');    
             return view('coordenador.index', ['eventos' => $eventos]);
 
           }else if($user->coautor != null){
             $eventos = $user->coautor->eventos;            
-            dd('CA');
+            // dd('CA');
             return view('coordenador.index', compact('eventos'));
             
           }else if($user->coordEvento != null){
             // $eventos = $user->coordEvento->evento;  
             $eventos = Evento::all(); 
-            dd('CE');     
+            // dd('CE');     
             return view('coordenador.index', compact('eventos'));
             
           }else if($user->participante != null){
 
             $eventos = Evento::all();  
-            dd('P');          
+            // dd('P');          
             return view('coordenador.index', compact('eventos'));
             
           }else {
