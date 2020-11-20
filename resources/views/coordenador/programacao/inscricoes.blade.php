@@ -6,7 +6,7 @@
         <li id="li_promocoes" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#promocoes" style="text-decoration: none;">Promoções</a></li>
         <li id="li_cuponsDeDesconto" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#cuponsDeDesconto" style="text-decoration: none;">Cupons de desconto</a></li>
         <li id="li_categoria_participante" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#categoriaParticipante" style="text-decoration: none;">Catagorias de participantes</a></li>
-        <li id="li_formulari_inscricao" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#formularioInscricao" style="text-decoration: none;">Formulario de inscrição</a></li>
+        <li id="li_formulario_inscricao" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#formularioInscricao" style="text-decoration: none;">Formulario de inscrição</a></li>
     </ul>
     
     <div class="tab-content">
@@ -272,7 +272,7 @@
                 </div>
             </p> 
         </div>
-        <div id="formularioInscricao" class="tab-pane fade">
+        <div id="formularioInscricao" class="tab-pane fade in active">
             <p>
                 <div class="row">
                     <div class="col-sm-12">
@@ -285,7 +285,7 @@
                                             <h6 class="card-subtitle mb-2 text-muted">Campos que o formulário de inscrição vai ter.</h6> 
                                         </div>
                                         <div class="col-sm-6">
-                                            <button id="novoCampo" data-toggle="modal" data-target="#modalNovoCampo" class="btn btn-primary float-md-right">+ Novo campo</button>
+                                            <button id="criarCampo" data-toggle="modal" data-target="#modalCriarCampo" class="btn btn-primary float-md-right">+ Novo campo</button>
                                         </div>
                                     </div>
                                 </div>
@@ -931,4 +931,169 @@
         </div>
     </div>
 {{-- Fim modal criar categoria --}}
+{{-- Modal criar campo --}}
+<div class="modal fade" id="modalCriarCampo" tabindex="-1" role="dialog" aria-labelledby="modalCriarCampoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #114048ff; color: white;">
+        <h5 class="modal-title" id="modalCriarCampoLabel">Novo campo do formulario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <form id="formCriarCategoria" action="{{route('categoria.participante.store')}}" method="POST">
+                @csrf
+                <input type="hidden" name="evento_id" id="" value="{{$evento->id}}">
+                <input type="hidden" name="criarCampo" id="" value="0">
+                <input type="hidden" id="tipo_campo" name="tipo_campo" value="">
+                
+                <div class="container">
+                    <div id="escolherInput">
+                        <p>
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('email')">E-mail</button>
+                                </div>
+                            </div>
+                        </p>
+                        <p>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('text')">Texto</button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('file')">Arquivo</button>
+                                </div>
+                            </div>
+                        </p>
+                        <p>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('date')">Data</button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('endereco')">Endereço</button>
+                                </div>
+                            </div>
+                        </p>
+                        <p>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('cpf')">CPF</button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('contato')">Contato</button>
+                                </div>
+                            </div>
+                        </p>
+                    </div>
+                    <div id="preencherDados" style="display: none;">
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                <label for="titulo_do_campo">Titulo do campo*</label>
+                                <input type="text" id="titulo_do_campo" name="titulo_do_campo" value="" class="form-control apenasLetras" required>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                <input type="checkbox" id="campo_obrigatorio" name="campo_obrigatório" value="" class="">
+                                <label for="campo_obrigatorio">Campo obrigatório</label>
+                            </div>
+                            <div class="col-sm-12">
+                                <input type="checkbox" id="para_totas" name="para_totas" value="" class="" checked onchange="mostrarCheckBoxCategoria(this)">
+                                <label for="para_totas">Necessário para todas as categorias de participante</label>
+                            </div>
+                            <div id="checkboxCategoria" style="display: none;">
+                                @foreach ($categorias as $categoria)
+                                    <div class="col-sm-12">
+                                        <input type="checkbox" id="categoria" name="categoria[]" value="" class="">
+                                        <label for="categoria">{{$categoria->nome}}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <hr>
+                                <h4>Exemplo</h4>
+                                <label id="labelCampoExemplo" for="campoExemplo"></label>
+                                <p><input type="" class="" id="campoExemplo" style="display: block"></p>
+                                <p><input type="text" class="form-control" id="campoExemploCpf" style="display: none;"></p>
+                                <p><input type="text" class="form-control" id="campoExemploNumero" style="display: none;"></p>
+                            </div>
+                        </div>
+                        <div id="divEnderecoExemplo" style="display: none;">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="cep">CEP</label>
+                                    <input onblur="pesquisacep(this.value);" type="text" class="form-control" id="cep" placeholder="00000-000">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="bairro">Bairro</label>
+                                    <input type="text" class="form-control" id="bairro" placeholder="Centro">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="rua">Rua</label>
+                                    <input type="text" class="form-control" id="rua" placeholder="Av. 15 de Novembro">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="cidade">Cidade</label>
+                                    <input type="text" class="form-control" id="cidade" placeholder="Recife">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="uf">UF</label>
+                                    <select class="form-control" id="uf">
+                                        <option value="" disabled selected hidden>-- UF --</option>
+                                        <option value="AC">AC</option>
+                                        <option value="AL">AL</option>
+                                        <option value="AP">AP</option>
+                                        <option value="AM">AM</option>
+                                        <option value="BA">BA</option>
+                                        <option value="CE">CE</option>
+                                        <option value="DF">DF</option>
+                                        <option value="ES">ES</option>
+                                        <option value="GO">GO</option>
+                                        <option value="MA">MA</option>
+                                        <option value="MT">MT</option>
+                                        <option value="MS">MS</option>
+                                        <option value="MG">MG</option>
+                                        <option value="PA">PA</option>
+                                        <option value="PB">PB</option>
+                                        <option value="PR">PR</option>
+                                        <option value="PE">PE</option>
+                                        <option value="PI">PI</option>
+                                        <option value="RJ">RJ</option>
+                                        <option value="RN">RN</option>
+                                        <option value="RS">RS</option>
+                                        <option value="RO">RO</option>
+                                        <option value="RR">RR</option>
+                                        <option value="SC">SC</option>
+                                        <option value="SP">SP</option>
+                                        <option value="SE">SE</option>
+                                        <option value="TO">TO</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="numero">Número</label>
+                                    <input type="number" class="form-control" id="numero" placeholder="10">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="botoesDeSubmissao" class="modal-footer" style="display: none;">
+            <button type="button" class="btn btn-secondary" onclick="voltarBotoes()">Voltar</button>
+            <button type="submit" class="btn btn-primary" form="formCriarCategoria">Salvar</button>
+        </div>
+    </div>
+    </div>
+</div>
+{{-- Fim do modal criar campo --}}
 @endsection

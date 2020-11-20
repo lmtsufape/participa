@@ -493,3 +493,7 @@ body{
     text-decoration: none;
     color: white;
 }
+
+.largura-maxima {
+    width: 100%;
+}

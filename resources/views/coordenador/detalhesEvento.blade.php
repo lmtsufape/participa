@@ -297,7 +297,7 @@
   <script type="text/javascript" >
     // Adicionar novo criterio
     var contadorOpcoes = 0;
-    $(document).ready(function(){
+    $(document).ready(function($){
         $('#addCriterio').click(function(){
             if ($('#modalidade').val() != null) {
                 linha = montarLinhaInput();
@@ -307,17 +307,32 @@
                 alert("Escolha uma modalidade");
             }
         });
+
+        $('#cep').mask('00000-000');
+        $('#campoExemploCpf').mask('000.000.000-00');
+
+        var SPMaskBehavior = function (val) {
+            return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+        },
+        spOptions = {
+            onKeyPress: function(val, e, field, options) {
+            field.mask(SPMaskBehavior.apply({}, arguments), options);
+            }
+        };
+
+        $('#campoExemploNumero').mask(SPMaskBehavior, spOptions);
+
         @if (old('criarCupom') != null) 
             $('#li_cuponsDeDesconto').click();
         @elseif (old('criarCategoria') != null)
             $('#li_categoria_participante').click();
         @elseif (old('novoCampoFormulario') != null)
-            $('#li_formulari_inscricao').click();
+            $('#li_formulario_inscricao').click();
         @elseif (old('novaPromocao') != null)
             $('#li_promocoes').click();
         @else
-            $('#li_categoria_participante').click();
-        @endif
+            $('#li_formulario_inscricao').click();
+        @endif 
         
     });
 
@@ -1489,18 +1504,18 @@
             elemento.className = "aba ativado";
             document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
             document.getElementById("li_categoria_participante").className = "aba aba-tab";
-            document.getElementById('li_formulari_inscricao').className = "aba aba-tab";
+            document.getElementById('li_formulario_inscricao').className = "aba aba-tab";
         } else if (elemento == document.getElementById("li_cuponsDeDesconto")) {
             elemento.className = "aba ativado";
             document.getElementById("li_promocoes").className = "aba aba-tab";
             document.getElementById("li_categoria_participante").className = "aba aba-tab";
-            document.getElementById('li_formulari_inscricao').className = "aba aba-tab";
+            document.getElementById('li_formulario_inscricao').className = "aba aba-tab";
         } else if (elemento == document.getElementById("li_categoria_participante")) {
             elemento.className = "aba ativado";
             document.getElementById("li_promocoes").className = "aba aba-tab";
             document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
-            document.getElementById('li_formulari_inscricao').className = "aba aba-tab";
-        } else if (elemento == document.getElementById('li_formulari_inscricao')) {
+            document.getElementById('li_formulario_inscricao').className = "aba aba-tab";
+        } else if (elemento == document.getElementById('li_formulario_inscricao')) {
             elemento.className = "aba ativado";
             document.getElementById("li_promocoes").className = "aba aba-tab";
             document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
@@ -1603,6 +1618,240 @@
         if (quantidadeDePeriodos == 0) {
             document.getElementById('tituloDePeriodo').remove();
         }
+    }
+
+    function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+    function pesquisacep(valor) {
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    }
+
+    function mostrarCampos(tipoCampo) {
+        var botoes = document.getElementById('escolherInput');
+        var inputs = document.getElementById('preencherDados');
+        var botoesSubmissao = document.getElementById('botoesDeSubmissao');
+        var inputTipoCampo = document.getElementById('tipo_campo');
+        var campoExemplo = document.getElementById('campoExemplo');
+        var tituloDoCampo = document.getElementById('titulo_do_campo');
+        var campoExemploCpf = document.getElementById('campoExemploCpf');
+        var campoExemploNumero = document.getElementById('campoExemploNumero');
+        var divEnderecoExemplo = document.getElementById('divEnderecoExemplo');
+
+        botoes.style.display = "none";
+        inputs.style.display = "block";
+        botoesSubmissao.style.display = "block";
+        
+        switch (tipoCampo) {
+            case 'file': 
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Comprovante de matrícula");
+                campoExemplo.type = tipoCampo;
+                campoExemplo.className = "";
+                campoExemploCpf.style.display = "none";
+                campoExemplo.style.display = "block";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.placeholder = "Comprovante de matrícula";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Comprovante de matrícula");
+                    }
+                });
+                break;
+            case 'date':
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Data de nascimento");
+                campoExemplo.type = tipoCampo;
+                campoExemplo.style.display = "block";
+                campoExemplo.className = "form-control";
+                campoExemploCpf.style.display = "none";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.placeholder = "Data de nascimento";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Data de nascimento");
+                    }
+                });
+                break;
+            case 'email': 
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("E-mail para contato");
+                campoExemplo.type = tipoCampo;
+                campoExemplo.style.display = "block";
+                campoExemploCpf.style.display = "none";
+                campoExemplo.className = "form-control";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.placeholder = "E-mail para contato";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("E-mail para contato");
+                    }
+                });
+                break;
+            case 'text':
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Por que quer participar?");
+                campoExemplo.style.display = "block";
+                campoExemplo.type = tipoCampo;
+                campoExemploCpf.style.display = "none";
+                campoExemplo.className = "form-control";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.placeholder = "Por que quer participar?";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Por que quer participar?");
+                    }
+                });
+                break;
+            case 'cpf':
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Seu CPF");
+                campoExemplo.style.display = "none";
+                campoExemploCpf.style.display = "block";
+                tituloDoCampo.placeholder = "Seu CPF";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "none";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Seu CPF");
+                    }
+                });
+                break;
+            case 'contato':
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Seu celular");
+                campoExemplo.style.display = "none";
+                campoExemploCpf.style.display = "none";
+                tituloDoCampo.placeholder = "Seu celular";
+                campoExemploNumero.style.display = "block";
+                divEnderecoExemplo.style.display = "none";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Seu celular");
+                    }
+                });
+                break;
+            case 'endereco':
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Endereço residencial");
+                campoExemplo.style.display = "none";
+                campoExemploCpf.style.display = "none";
+                tituloDoCampo.placeholder = "Endereço residencial";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "block";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Endereço residencial");
+                    }
+                });
+                break;
+        }
+    }
+
+    function voltarBotoes() {
+        var botoes = document.getElementById('escolherInput');
+        var inputs = document.getElementById('preencherDados');
+        var botoesSubmissao = document.getElementById('botoesDeSubmissao');
+
+        botoes.style.display = "block";
+        inputs.style.display = "none";
+        botoesSubmissao.style.display = "none";
+    }
+
+    function mostrarCheckBoxCategoria(input) {
+        if (input.checked) {
+            document.getElementById('checkboxCategoria').style.display = "none";
+        } else {
+            document.getElementById('checkboxCategoria').style.display = "block";
+        }
+        
     }
 
   </script>
