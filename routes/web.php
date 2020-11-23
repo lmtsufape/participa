@@ -206,6 +206,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('{id}/inscricoes/nova-inscricao/voltar', 'Inscricao\InscricaoController@voltarTela')->name('inscricao.voltar');
   Route::post('{id}/inscricoes/confirmar-inscricao',  'Inscricao\InscricaoController@confirmar')->name('inscricao.confirmar');
   Route::post('/inscricoes/salvar-campo-formulario', 'Inscricao\CampoFormularioController@store')->name('campo.formulario.store');
+  Route::post('/inscricoes/campo-excluir/{id}',             'Inscricao\CampoFormularioController@destroy')->name('campo.destroy');
 
   Route::get('inscricoes/evento-{id}/index',    'Inscricao\InscricaoController@index'   )->name('inscricoes');
   Route::post('inscricoes/criar-promocao',      'Inscricao\PromocaoController@store'    )->name('promocao.store');
@@ -216,7 +217,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
   Route::post('inscricoes/criar-categoria-participante', 'Inscricao\CategoriaController@store')->name('categoria.participante.store');
   Route::get('{id}/inscricoes/excluir-categoria',    'Inscricao\CategoriaController@destroy')->name('categoria.destroy');
-  Route::get('/{id}', 'Inscricao\CampoFormularioController@show');
+  
 });
 
 Auth::routes();

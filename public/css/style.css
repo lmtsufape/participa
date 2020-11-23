@@ -497,3 +497,44 @@ body{
 .largura-maxima {
     width: 100%;
 }
+
+.button-a {
+    position: relative;
+    text-decoration: none;
+    top: 10px;
+    color: black;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: solid 1px black;
+    border-radius: 5px;
+    -webkit-transition:background 0.3s ease-out;
+    -moz-transition:background 0.3s ease-out;
+    -o-transition:background 0.3s ease-out;
+    -ms-transition:background 0.3s ease-out;
+}
+
+.button-a:hover {
+    color: white;
+    filter:alpha(opacity=100);
+    -moz-opacity:1;
+    opacity:1;
+}
+
+.btn-excluir {
+    border-color: red;
+    color: red;
+}
+
+.btn-excluir:hover {
+    background-color: red;
+}
+
+.btn-editar {
+    border-color: #114048ff;
+    color: #114048ff;
+}
+
+.btn-editar:hover {
+    background-color: #114048ff;
+}

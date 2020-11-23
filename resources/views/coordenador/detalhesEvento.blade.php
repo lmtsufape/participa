@@ -331,7 +331,7 @@
         @elseif (old('novaPromocao') != null)
             $('#li_promocoes').click();
         @else
-            $('#li_formulario_inscricao').click();
+            $('#li_promocoes').click();
         @endif 
         
     });

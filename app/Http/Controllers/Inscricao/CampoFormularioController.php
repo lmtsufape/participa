@@ -122,6 +122,15 @@ class CampoFormularioController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Checar erros futuros após a criação da inscrição
+        $campo = CampoFormulario::find($id);
+
+        foreach ($campo->categorias as $categoria) {
+            $campo->categorias()->detach($categoria->id);
+        }
+
+        $campo->delete();
+
+        return redirect()->back()->with(['mensagem' => 'Campo extra deletado com sucesso!']);
     }
 }

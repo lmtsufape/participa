@@ -295,7 +295,7 @@
                                             @if ($campos != null && count($campos) > 0)
                                                 @foreach ($campos as $campo)
                                                     <div class="col-sm-3">
-                                                        <div class="card" style="width: 15rem;">
+                                                        <div class="card" style="width: 15rem; height: 10rem;">
                                                             <div class="card-body">
                                                             <h5 class="card-title">{{$campo->titulo}}</h5>
                                                             @if ($campo->obrigatorio)
@@ -304,11 +304,13 @@
                                                                 <h6 class="card-subtitle mb-2 text-muted">Opcional</h6>
                                                             @endif
                                                             
-                                                            <a href="#" class="card-link">Excluir</a>
-                                                            <a href="#" class="card-link">Editar</a>
+                                                            <a href="#" class="card-link button-a btn-excluir" data-toggle="modal" data-target="#modalCampoDelete{{$campo->id}}">Excluir</a>
+                                                            <a href="#" class="card-link button-a btn-editar">Editar</a>
                                                             </div>
                                                         </div>
                                                     </div>
+
+
                                                 @endforeach 
                                             @else
                                                 <div class="col-sm-12" style="position: relative; left: 25px;">
@@ -1118,4 +1120,31 @@
     </div>
 </div>
 {{-- Fim do modal criar campo --}}
+
+@foreach ($campos as $campo)
+    {{-- modal excluir campo --}}
+    <div class="modal fade" id="modalCampoDelete{{$campo->id}}" tabindex="-1" role="dialog" aria-labelledby="modalCampoDelete{{$campo->id}}Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalCampoDelete{{$campo->id}}Label">Confirmação</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="formDeletarCampo{{$campo->id}}" action="{{route('campo.destroy', ['id' => $campo->id])}}" method="POST">
+                    @csrf
+                    Tem certeza que deseja excluir esse campo?
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                <button type="submit" class="btn btn-primary" form="formDeletarCampo{{$campo->id}}">Sim</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    {{-- fim modal excluir campo --}}
+@endforeach
 @endsection
