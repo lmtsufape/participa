@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Inscricao\CampoFormulario;
+use App\Evento;
+use App\Models\Inscricao\CategoriaParticipante;
 
 class CampoFormularioController extends Controller
 {
@@ -35,7 +38,8 @@ class CampoFormularioController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $evento = Evento::find($request->evento_id);
+
         $validateData = $request->validate([
             'criarCampo'      => 'required',
             'titulo_do_campo' => 'required',
@@ -46,6 +50,34 @@ class CampoFormularioController extends Controller
         if ($request->para_todas == null && $request->categoria == null) {
             return redirect()->back()->withErrors(['erroCategoria' => 'Escolha a categoria que o campo será exibido.'])->withInput($validateData);
         }
+
+        $campo = new CampoFormulario();
+
+        $campo->titulo      = $request->titulo_do_campo;
+        $campo->tipo        = $request->tipo_campo;
+        $campo->evento_id   = $evento->id;
+
+        if ($request->input("campo_obrigatório") == "on") {
+            $campo->obrigatorio = true;
+        } else {
+            $campo->obrigatorio = false;
+        }
+        
+        $campo->save();
+        
+        if ($request->para_todas == "on") {
+            $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
+
+            foreach ($categorias as $categoria) {
+                $campo->categorias()->attach($categoria->id);
+            }
+        } else if ($request->categoria != null) {
+            foreach ($request->categoria as $categoria) {
+                $campo->categorias()->attach($categoria);
+            }
+        }
+
+        return redirect()->back()->with(['mensagem' => 'Campo salvo com sucesso.']);
     }
 
     /**

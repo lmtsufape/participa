@@ -216,6 +216,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
   Route::post('inscricoes/criar-categoria-participante', 'Inscricao\CategoriaController@store')->name('categoria.participante.store');
   Route::get('{id}/inscricoes/excluir-categoria',    'Inscricao\CategoriaController@destroy')->name('categoria.destroy');
+  Route::get('/{id}', 'Inscricao\CampoFormularioController@show');
 });
 
 Auth::routes();
