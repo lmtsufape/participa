@@ -326,7 +326,9 @@
             $('#li_cuponsDeDesconto').click();
         @elseif (old('criarCategoria') != null)
             $('#li_categoria_participante').click();
-        @elseif (old('novoCampoFormulario') != null)
+        @elseif (old('criarCampo') != null)
+            $('#li_formulario_inscricao').click();
+        @elseif (old('campo_id') != null)
             $('#li_formulario_inscricao').click();
         @elseif (old('novaPromocao') != null)
             $('#li_promocoes').click();
@@ -1852,16 +1854,30 @@
         botoesSubmissao.style.display = "none";
     }
 
-    function mostrarCheckBoxCategoria(input) {
-        if (input.checked) {
-            document.getElementById('checkboxCategoria').style.display = "none";
+    function mostrarCheckBoxCategoria(input, id) {
+        if (id == 0) {
+            if (input.checked) {
+                document.getElementById('checkboxCategoria').style.display = "none";
+            } else {
+                document.getElementById('checkboxCategoria').style.display = "block";
+            }
         } else {
-            document.getElementById('checkboxCategoria').style.display = "block";
-        }
-        
+            if (input.checked) {
+                document.getElementById('checkboxCategoria'+id).style.display = "none";
+            } else {
+                document.getElementById('checkboxCategoria'+id).style.display = "block";
+            }
+        }       
     }
 
   </script>
+  @if (old('campo_id') != null)
+    <script>
+        $(document).ready(function() {
+            $("#modalCampoEdit"+"{{old('campo_id')}}").modal('show');
+        });
+    </script>
+  @endif
   @if (old('criarCampo') != null) 
     <script>
         $(document).ready(function() {

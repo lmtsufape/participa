@@ -295,7 +295,7 @@
                                             @if ($campos != null && count($campos) > 0)
                                                 @foreach ($campos as $campo)
                                                     <div class="col-sm-3">
-                                                        <div class="card" style="width: 15rem; height: 10rem;">
+                                                        <div class="card" style="width: 15rem; height: 11rem;">
                                                             <div class="card-body">
                                                             <h5 class="card-title">{{$campo->titulo}}</h5>
                                                             @if ($campo->obrigatorio)
@@ -303,14 +303,26 @@
                                                             @else
                                                                 <h6 class="card-subtitle mb-2 text-muted">Opcional</h6>
                                                             @endif
-                                                            
+                                                            @if ($campo->tipo == "text") 
+                                                                <h6 class="card-subtitle mb-2 text-muted">Campo de texto</h6>
+                                                            @elseif ($campo->tipo == "email") 
+                                                                <h6 class="card-subtitle mb-2 text-muted">E-mail</h6>
+                                                            @elseif ($campo->tipo == "date")
+                                                                <h6 class="card-subtitle mb-2 text-muted">Calendario</h6>
+                                                            @elseif ($campo->tipo == "file")
+                                                                <h6 class="card-subtitle mb-2 text-muted">Submeter um arquivo</h6>
+                                                            @elseif ($campo->tipo == "endereco")
+                                                                <h6 class="card-subtitle mb-2 text-muted">Campos de endereço</h6>
+                                                            @elseif ($campo->tipo == "contato")
+                                                                <h6 class="card-subtitle mb-2 text-muted">Contato</h6>
+                                                            @elseif ($campo->tipo == "cpf")
+                                                                <h6 class="card-subtitle mb-2 text-muted">Campo de CPF</h6>
+                                                            @endif
                                                             <a href="#" class="card-link button-a btn-excluir" data-toggle="modal" data-target="#modalCampoDelete{{$campo->id}}">Excluir</a>
-                                                            <a href="#" class="card-link button-a btn-editar">Editar</a>
+                                                            <a href="#" class="card-link button-a btn-editar" data-toggle="modal" data-target="#modalCampoEdit{{$campo->id}}">Editar</a>
                                                             </div>
                                                         </div>
                                                     </div>
-
-
                                                 @endforeach 
                                             @else
                                                 <div class="col-sm-12" style="position: relative; left: 25px;">
@@ -1015,7 +1027,7 @@
                                     @enderror
                                 </div>
                                 <div class="col-sm-12">
-                                    <input type="checkbox" id="para_todas" name="para_todas" @if (old('para_todas') == "on") checked @elseif(old('criarCampo') == null) checked @endif onchange="mostrarCheckBoxCategoria(this)">
+                                    <input type="checkbox" id="para_todas" name="para_todas" @if (old('para_todas') == "on") checked @elseif(old('criarCampo') == null) checked @endif onchange="mostrarCheckBoxCategoria(this, 0)">
                                     <label for="para_todas">Necessário para todas as categorias de participante</label>
 
                                     @error('para_todas')
@@ -1146,5 +1158,78 @@
         </div>
     </div>
     {{-- fim modal excluir campo --}}
+    {{-- modal editar campo --}}
+    <div class="modal fade" id="modalCampoEdit{{$campo->id}}" tabindex="-1" role="dialog" aria-labelledby="modalCampoEdit{{$campo->id}}Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalCampoEdit{{$campo->id}}Label">Editar campo {{$campo->titulo}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditCampo{{$campo->id}}" action="{{route('campo.edit', ['id' => $campo->id])}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                    <input type="hidden" name="campo_id" value="{{$campo->id}}">
+                    <div class="container">
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                <label for="titulo_do_campo{{$campo->id}}">Titulo do campo*</label>
+                                <input type="text" id="titulo_do_campo{{$campo->id}}" name="titulo_do_campo" class="form-control @error('titulo_do_campo') is-invalid @enderror" required value="@if(old('titulo_do_campo') != null){{old('titulo_do_campo')}}@else{{$campo->titulo}}@endif">
+                            
+                                @error('titulo_do_campo')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                <input type="checkbox" id="campo_obrigatorio{{$campo->id}}" name="campo_obrigatório" @if (old('campo_obrigatorio') != null) checked @elseif($campo->obrigatorio) checked @endif>
+                                <label for="campo_obrigatorio{{$campo->id}}">Campo obrigatório</label>
+    
+                                @error('campo_obrigatório')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-12">
+                                <input type="checkbox" id="para_todas{{$campo->id}}" name="para_todas" @if (old('para_todas') == "on") checked @elseif($categorias->diff($campo->categorias)->isEmpty() && old('campo_id') == null) checked @endif onchange="mostrarCheckBoxCategoria(this, {{$campo->id}})">
+                                <label for="para_todas{{$campo->id}}">Necessário para todas as categorias de participante</label>
+    
+                                @error('para_todas')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div id="checkboxCategoria{{$campo->id}}" @if (old('para_todas') == null && old('campo_id') == $campo->id || $categorias->diff($campo->categorias)->isEmpty() == false) style="display: block;" @elseif($categorias->diff($campo->categorias)->isEmpty()) style="display: none;" @endif>
+                                @foreach ($categorias as $categoria)
+                                    <div class="col-sm-12">
+                                        <input type="checkbox" id="categoria{{$campo->id}}" name="categoria[]" value="{{$categoria->id}}" @if (old('categoria') != null && in_array($categoria->id, old('categoria'))) checked @elseif($campo->categorias->contains($categoria) && old('campo_id') == null) checked @endif>
+                                        <label for="categoria{{$campo->id}}">{{$categoria->nome}}</label>
+                                    </div>
+                                @endforeach
+    
+                                @error('erroCategoriaEdit'.$campo->id)
+                                    @include('componentes.mensagens')
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" form="formEditCampo{{$campo->id}}">Salvar</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    {{-- fim modal editar campo --}}
 @endforeach
 @endsection

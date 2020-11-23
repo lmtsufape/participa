@@ -77,7 +77,7 @@ class CampoFormularioController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Campo salvo com sucesso.']);
+        return redirect()->back()->with(['mensagem' => 'Campo salvo com sucesso!']);
     }
 
     /**
@@ -111,7 +111,47 @@ class CampoFormularioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $evento = Evento::find($request->evento_id);
+
+        $validateData = $request->validate([
+            'campo_id'        => 'required',
+            'titulo_do_campo' => 'required',
+            'categoria'       => 'nullable',
+            'categoria.*'     => 'nullable',
+        ]);
+
+        if ($request->para_todas == null && $request->categoria == null) {
+            return redirect()->back()->withErrors(['erroCategoriaEdit'.$id => 'Escolha a categoria que o campo será exibido.'])->withInput($validateData);
+        }
+
+        $campo = CampoFormulario::find($id);
+
+        foreach ($campo->categorias as $categoria) {
+            $campo->categorias()->detach($categoria->id);
+        }
+
+        $campo->titulo      = $request->titulo_do_campo;
+        if ($request->input("campo_obrigatório") == "on") {
+            $campo->obrigatorio = true;
+        } else {
+            $campo->obrigatorio = false;
+        }
+        
+        $campo->update();
+
+        if ($request->para_todas == "on") {
+            $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
+
+            foreach ($categorias as $categoria) {
+                $campo->categorias()->attach($categoria->id);
+            }
+        } else if ($request->categoria != null) {
+            foreach ($request->categoria as $categoria) {
+                $campo->categorias()->attach($categoria);
+            }
+        }
+
+        return redirect()->back()->with(['mensagem' => 'Campo atualizado com sucesso!']);
     }
 
     /**
