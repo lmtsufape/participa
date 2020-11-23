@@ -942,7 +942,7 @@
         </button>
         </div>
         <div class="modal-body">
-            <form id="formCriarCategoria" action="{{route('categoria.participante.store')}}" method="POST">
+            <form id="formCriarCampo" action="{{route('campo.formulario.store')}}" method="POST">
                 @csrf
                 <input type="hidden" name="evento_id" id="" value="{{$evento->id}}">
                 <input type="hidden" name="criarCampo" id="" value="0">
@@ -953,37 +953,37 @@
                         <p>
                             <div class="row justify-content-center">
                                 <div class="col-sm-6">
-                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('email')">E-mail</button>
+                                    <button id="btn-tipo-email" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('email')">E-mail</button>
                                 </div>
                             </div>
                         </p>
                         <p>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('text')">Texto</button>
+                                    <button id="btn-tipo-text" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('text')">Texto</button>
                                 </div>
                                 <div class="col-sm-6">
-                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('file')">Arquivo</button>
-                                </div>
-                            </div>
-                        </p>
-                        <p>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('date')">Data</button>
-                                </div>
-                                <div class="col-sm-6">
-                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('endereco')">Endereço</button>
+                                    <button id="btn-tipo-file" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('file')">Arquivo</button>
                                 </div>
                             </div>
                         </p>
                         <p>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('cpf')">CPF</button>
+                                    <button id="btn-tipo-date" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('date')">Data</button>
                                 </div>
                                 <div class="col-sm-6">
-                                    <button type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('contato')">Contato</button>
+                                    <button id="btn-tipo-endereco" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('endereco')">Endereço</button>
+                                </div>
+                            </div>
+                        </p>
+                        <p>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <button id="btn-tipo-date" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('cpf')">CPF</button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button id="btn-tipo-contato" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('contato')">Contato</button>
                                 </div>
                             </div>
                         </p>
@@ -992,25 +992,47 @@
                         <div class="row form-group">
                             <div class="col-sm-12">
                                 <label for="titulo_do_campo">Titulo do campo*</label>
-                                <input type="text" id="titulo_do_campo" name="titulo_do_campo" value="" class="form-control apenasLetras" required>
+                                <input type="text" id="titulo_do_campo" name="titulo_do_campo" class="form-control @error('titulo_do_campo') is-invalid @enderror" required value="{{old('titulo_do_campo')}}">
+                            
+                                @error('titulo_do_campo')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                <input type="checkbox" id="campo_obrigatorio" name="campo_obrigatório" value="" class="">
+                                <input type="checkbox" id="campo_obrigatorio" name="campo_obrigatório" @if (old('campo_obrigatorio') != null) checked @endif>
                                 <label for="campo_obrigatorio">Campo obrigatório</label>
+
+                                @error('campo_obrigatório')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                             <div class="col-sm-12">
-                                <input type="checkbox" id="para_totas" name="para_totas" value="" class="" checked onchange="mostrarCheckBoxCategoria(this)">
-                                <label for="para_totas">Necessário para todas as categorias de participante</label>
+                                <input type="checkbox" id="para_todas" name="para_todas" @if (old('para_todas') == "on") checked @elseif(old('criarCampo') == null) checked @endif onchange="mostrarCheckBoxCategoria(this)">
+                                <label for="para_todas">Necessário para todas as categorias de participante</label>
+
+                                @error('para_todas')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
-                            <div id="checkboxCategoria" style="display: none;">
+                            <div id="checkboxCategoria" @if (old('para_todas') == null && old('criarCampo') != null) style="display: block;" @else style="display: none;" @endif>
                                 @foreach ($categorias as $categoria)
                                     <div class="col-sm-12">
-                                        <input type="checkbox" id="categoria" name="categoria[]" value="" class="">
+                                        <input type="checkbox" id="categoria" name="categoria[]" value="{{$categoria->id}}">
                                         <label for="categoria">{{$categoria->nome}}</label>
                                     </div>
                                 @endforeach
+
+                                @error('erroCategoria')
+                                    @include('componentes.mensagens')
+                                @enderror
                             </div>
                         </div>
                         <div class="row">
@@ -1090,7 +1112,7 @@
         </div>
         <div id="botoesDeSubmissao" class="modal-footer" style="display: none;">
             <button type="button" class="btn btn-secondary" onclick="voltarBotoes()">Voltar</button>
-            <button type="submit" class="btn btn-primary" form="formCriarCategoria">Salvar</button>
+            <button type="submit" class="btn btn-primary" form="formCriarCampo">Salvar</button>
         </div>
     </div>
     </div>

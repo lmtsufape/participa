@@ -1702,6 +1702,7 @@
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Comprovante de matrícula";
+                tituloDoCampo.value = "";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1723,6 +1724,7 @@
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Data de nascimento";
+                tituloDoCampo.value = "";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1744,6 +1746,7 @@
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "E-mail para contato";
+                tituloDoCampo.value = "";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1765,6 +1768,7 @@
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Por que quer participar?";
+                tituloDoCampo.value = "";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1784,6 +1788,7 @@
                 tituloDoCampo.placeholder = "Seu CPF";
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.value = "";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1803,6 +1808,7 @@
                 tituloDoCampo.placeholder = "Seu celular";
                 campoExemploNumero.style.display = "block";
                 divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.value = "";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1822,6 +1828,7 @@
                 tituloDoCampo.placeholder = "Endereço residencial";
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "block";
+                tituloDoCampo.value = "";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1855,6 +1862,37 @@
     }
 
   </script>
+  @if (old('criarCampo') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalCriarCampo").modal('show');
+
+            switch ("{{old('tipo_campo')}}") {
+                case 'email':
+                    $("#btn-tipo-email").click();
+                    break;
+                case 'text':
+                    $("#btn-tipo-text").click();
+                    break;
+                case 'file': 
+                    $("#btn-tipo-file").click();
+                    break;
+                case 'date': 
+                    $("#btn-tipo-date").click();
+                    break;
+                case 'endereco':
+                    $("#btn-tipo-endereco").click();
+                    break;
+                case 'cpf': 
+                    $("#btn-tipo-cpf").click();
+                    break; 
+                case 'contato':
+                    $("#btn-tipo-contato").click();
+                    break;
+            }
+        })
+    </script>
+  @endif
   @if (old('criarCategoria') != null)
     <script>
         $(document).ready(function() {

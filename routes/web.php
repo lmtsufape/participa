@@ -205,6 +205,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('{id}/inscricoes/nova-inscricao/checar', 'Inscricao\InscricaoController@checarDados')->name('inscricao.checar');
   Route::get('{id}/inscricoes/nova-inscricao/voltar', 'Inscricao\InscricaoController@voltarTela')->name('inscricao.voltar');
   Route::post('{id}/inscricoes/confirmar-inscricao',  'Inscricao\InscricaoController@confirmar')->name('inscricao.confirmar');
+  Route::post('/inscricoes/salvar-campo-formulario', 'Inscricao\CampoFormularioController@store')->name('campo.formulario.store');
 
   Route::get('inscricoes/evento-{id}/index',    'Inscricao\InscricaoController@index'   )->name('inscricoes');
   Route::post('inscricoes/criar-promocao',      'Inscricao\PromocaoController@store'    )->name('promocao.store');
