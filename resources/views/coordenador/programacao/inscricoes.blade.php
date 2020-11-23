@@ -139,7 +139,7 @@
                 </div>
             </p>
         </div>
-        <div id="categoriaParticipante" class="tab-pane fade in active">
+        <div id="categoriaParticipante" class="tab-pane fade">
             <p>
                 <div class="row">
                     <div class="col-sm-12">
@@ -272,7 +272,7 @@
                 </div>
             </p> 
         </div>
-        <div id="formularioInscricao" class="tab-pane fade in active">
+        <div id="formularioInscricao" class="tab-pane fade">
             <p>
                 <div class="row">
                     <div class="col-sm-12">
@@ -330,206 +330,206 @@
 </div>
 
 <!-- Modal criar promocao -->
-<div class="modal fade modal-example-lg" id="modalCriarPromocao" tabindex="-1" role="dialog" aria-labelledby="modalCriarPromocaoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header" style="background-color: #114048ff; color: white;">
-          <h5 class="modal-title" id="modalCriarPromocaoLabel">Criar promoção</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form id="formCriarPromocao" action="{{route('promocao.store')}}" method="POST">
-                @csrf
-                <input type="hidden" name="novaPromocao" id="" value="0">
-                <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                <div class="container form-group">
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <label for="identificador">Identificador*</label>
-                            <input id="identificador" name="identificador" class="form-control apenasLetras @error('identificador') is-invalid @enderror" type="text" placeholder="Pacote padrão" value="{{old('identificador')}}">
+    <div class="modal fade modal-example-lg" id="modalCriarPromocao" tabindex="-1" role="dialog" aria-labelledby="modalCriarPromocaoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalCriarPromocaoLabel">Criar promoção</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="formCriarPromocao" action="{{route('promocao.store')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="novaPromocao" id="" value="0">
+                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                    <div class="container form-group">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <label for="identificador">Identificador*</label>
+                                <input id="identificador" name="identificador" class="form-control apenasLetras @error('identificador') is-invalid @enderror" type="text" placeholder="Pacote padrão" value="{{old('identificador')}}">
+                                
+                                @error('identificador')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="valor">Valor da promoção*</label>
+                                <input id="valor" name="valor" class="form-control @error('valor') is-invalid @enderror" type="number" placeholder="0 para promoção grátis" value="{{old('valor')}}">
                             
-                            @error('identificador')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
+                                @error('valor')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="col-sm-4">
-                            <label for="valor">Valor da promoção*</label>
-                            <input id="valor" name="valor" class="form-control @error('valor') is-invalid @enderror" type="number" placeholder="0 para promoção grátis" value="{{old('valor')}}">
-                        
-                            @error('valor')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="descricao">Descrição</label>
+                                <textarea class="form-control @error('descrição') is-invalid @enderror" name="descrição" id="descricao" cols="30" rows="3" placeholder="Pacote padrão para estudantes">{{old('descrição')}}</textarea>
+                                
+                                @error('descrição')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label for="descricao">Descrição</label>
-                            <textarea class="form-control @error('descrição') is-invalid @enderror" name="descrição" id="descricao" cols="30" rows="3" placeholder="Pacote padrão para estudantes">{{old('descrição')}}</textarea>
-                            
-                            @error('descrição')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <hr>
+                                <h5>Lotes</h5>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <hr>
-                            <h5>Lotes</h5>
-                        </div>
-                    </div>
-                    {{-- {{dd(old('dataDeInício'))}} --}}
-                    <div id="lotes">
-                        @if (old('dataDeInício') != null || old('dataDeFim') != null || old('disponibilidade') != null)
-                            @foreach (old('dataDeInício') as $key => $dataInicio)
-                                @if ($key == 0)
-                                    <div class="row">
-                                        <div class="col-sm-4"> 
-                                            <label for="dataDeInicio">Data de início*</label>
-                                            <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeInício.'.$key)}}">
+                        {{-- {{dd(old('dataDeInício'))}} --}}
+                        <div id="lotes">
+                            @if (old('dataDeInício') != null || old('dataDeFim') != null || old('disponibilidade') != null)
+                                @foreach (old('dataDeInício') as $key => $dataInicio)
+                                    @if ($key == 0)
+                                        <div class="row">
+                                            <div class="col-sm-4"> 
+                                                <label for="dataDeInicio">Data de início*</label>
+                                                <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeInício.'.$key)}}">
+                                                
+                                                @error('dataDeInício.'.$key)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-4"> 
+                                                <label for="dataDeFim">Data de fim*</label>
+                                                <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeFim.'.$key)}}">
                                             
-                                            @error('dataDeInício.'.$key)
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm-4"> 
-                                            <label for="dataDeFim">Data de fim*</label>
-                                            <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeFim.'.$key)}}">
-                                        
-                                            @error('dataDeFim.'.$key)
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm-3"> 
-                                            <label for="quantidade">Disponibilidade*</label>
-                                            <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.'.$key) is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.'.$key)}}">
-                                        
-                                            @error('disponibilidade.'.$key)
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm-1">
-                                            <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao()"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
-                                        </div>
-                                    </div>
-                                @else 
-                                    <div class="row">
-                                        <div class="col-sm-4"> 
-                                            <label for="dataDeInicio">Data de início*</label>
-                                            <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeInício.'.$key)}}">
+                                                @error('dataDeFim.'.$key)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-3"> 
+                                                <label for="quantidade">Disponibilidade*</label>
+                                                <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.'.$key) is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.'.$key)}}">
                                             
-                                            @error('dataDeInício.'.$key)
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                                @error('disponibilidade.'.$key)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao()"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-4"> 
-                                            <label for="dataDeFim">Data de fim*</label>
-                                            <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeFim.'.$key)}}">
+                                    @else 
+                                        <div class="row">
+                                            <div class="col-sm-4"> 
+                                                <label for="dataDeInicio">Data de início*</label>
+                                                <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeInício.'.$key)}}">
+                                                
+                                                @error('dataDeInício.'.$key)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-4"> 
+                                                <label for="dataDeFim">Data de fim*</label>
+                                                <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeFim.'.$key)}}">
+                                            
+                                                @error('dataDeFim.'.$key)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-3"> 
+                                                <label for="quantidade">Disponibilidade*</label>
+                                                <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.'.$key) is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.'.$key)}}">
+                                            
+                                                @error('disponibilidade.'.$key)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <a href="#" title="Remover lote" onclick="removerLoteDaPromocao(this)"><img src="{{asset('img/icons/lixo.png')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @else 
+                                <div class="row">
+                                    <div class="col-sm-4"> 
+                                        <label for="dataDeInicio">Data de início*</label>
+                                        <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.*') is-invalid @enderror" type="date">
                                         
-                                            @error('dataDeFim.'.$key)
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm-3"> 
-                                            <label for="quantidade">Disponibilidade*</label>
-                                            <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.'.$key) is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.'.$key)}}">
-                                        
-                                            @error('disponibilidade.'.$key)
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm-1">
-                                            <a href="#" title="Remover lote" onclick="removerLoteDaPromocao(this)"><img src="{{asset('img/icons/lixo.png')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
-                                        </div>
+                                        @error('dataDeInício.*')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
                                     </div>
-                                @endif
-                            @endforeach
-                        @else 
-                            <div class="row">
-                                <div class="col-sm-4"> 
-                                    <label for="dataDeInicio">Data de início*</label>
-                                    <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.*') is-invalid @enderror" type="date">
+                                    <div class="col-sm-4"> 
+                                        <label for="dataDeFim">Data de fim*</label>
+                                        <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.*') is-invalid @enderror" type="date">
                                     
-                                    @error('dataDeInício.*')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                        @error('dataDeFim.*')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-3"> 
+                                        <label for="quantidade">Disponibilidade* <img src="{{asset('img/icons/interrogacao.png')}}" alt="" width="15px;" style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Coloque 0 para a disponibilidade ser ilimitada.'></label>
+                                        <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.*') is-invalid @enderror" type="number" placeholder="10">
+                                    
+                                        @error('disponibilidade.*')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao()"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                    </div>
                                 </div>
-                                <div class="col-sm-4"> 
-                                    <label for="dataDeFim">Data de fim*</label>
-                                    <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.*') is-invalid @enderror" type="date">
-                                
-                                    @error('dataDeFim.*')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                <div class="col-sm-3"> 
-                                    <label for="quantidade">Disponibilidade* <img src="{{asset('img/icons/interrogacao.png')}}" alt="" width="15px;" style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Coloque 0 para a disponibilidade ser ilimitada.'></label>
-                                    <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.*') is-invalid @enderror" type="number" placeholder="10">
-                                
-                                    @error('disponibilidade.*')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                <div class="col-sm-1">
-                                    <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao()"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
-                                </div>
+                            @endif
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <hr>
+                                <h5>Atividades inclusas na promoção</h5>
                             </div>
-                        @endif
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <hr>
-                            <h5>Atividades inclusas na promoção</h5>
+                        </div>
+                        <div class="row">
+                            @foreach ($atividades as $atv)
+                                <div class="col-sm-3">
+                                    @if (old('atividades') != null && in_array($atv->id, old('atividades'))) 
+                                        <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades[]" checked>
+                                        <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
+                                    @else 
+                                        <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades[]">
+                                        <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
+                                    @endif
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                    <div class="row">
-                        @foreach ($atividades as $atv)
-                            <div class="col-sm-3">
-                                @if (old('atividades') != null && in_array($atv->id, old('atividades'))) 
-                                    <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades[]" checked>
-                                    <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
-                                @else 
-                                    <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades[]">
-                                    <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
-                                @endif
-                            </div>
-                        @endforeach
-                    </div>
-                  </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" form="formCriarPromocao">Salvar</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary" form="formCriarPromocao">Salvar</button>
         </div>
-      </div>
     </div>
-</div>
 {{-- Fim do modal criar promoção --}}
 
 @foreach ($promocoes as $promocao)
@@ -934,191 +934,191 @@
     </div>
 {{-- Fim modal criar categoria --}}
 {{-- Modal criar campo --}}
-<div class="modal fade" id="modalCriarCampo" tabindex="-1" role="dialog" aria-labelledby="modalCriarCampoLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header" style="background-color: #114048ff; color: white;">
-        <h5 class="modal-title" id="modalCriarCampoLabel">Novo campo do formulario</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
-        <div class="modal-body">
-            <form id="formCriarCampo" action="{{route('campo.formulario.store')}}" method="POST">
-                @csrf
-                <input type="hidden" name="evento_id" id="" value="{{$evento->id}}">
-                <input type="hidden" name="criarCampo" id="" value="0">
-                <input type="hidden" id="tipo_campo" name="tipo_campo" value="">
-                
-                <div class="container">
-                    <div id="escolherInput">
-                        <p>
-                            <div class="row justify-content-center">
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-email" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('email')">E-mail</button>
-                                </div>
-                            </div>
-                        </p>
-                        <p>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-text" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('text')">Texto</button>
-                                </div>
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-file" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('file')">Arquivo</button>
-                                </div>
-                            </div>
-                        </p>
-                        <p>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-date" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('date')">Data</button>
-                                </div>
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-endereco" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('endereco')">Endereço</button>
-                                </div>
-                            </div>
-                        </p>
-                        <p>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-date" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('cpf')">CPF</button>
-                                </div>
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-contato" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('contato')">Contato</button>
-                                </div>
-                            </div>
-                        </p>
-                    </div>
-                    <div id="preencherDados" style="display: none;">
-                        <div class="row form-group">
-                            <div class="col-sm-12">
-                                <label for="titulo_do_campo">Titulo do campo*</label>
-                                <input type="text" id="titulo_do_campo" name="titulo_do_campo" class="form-control @error('titulo_do_campo') is-invalid @enderror" required value="{{old('titulo_do_campo')}}">
-                            
-                                @error('titulo_do_campo')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-sm-12">
-                                <input type="checkbox" id="campo_obrigatorio" name="campo_obrigatório" @if (old('campo_obrigatorio') != null) checked @endif>
-                                <label for="campo_obrigatorio">Campo obrigatório</label>
-
-                                @error('campo_obrigatório')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="col-sm-12">
-                                <input type="checkbox" id="para_todas" name="para_todas" @if (old('para_todas') == "on") checked @elseif(old('criarCampo') == null) checked @endif onchange="mostrarCheckBoxCategoria(this)">
-                                <label for="para_todas">Necessário para todas as categorias de participante</label>
-
-                                @error('para_todas')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div id="checkboxCategoria" @if (old('para_todas') == null && old('criarCampo') != null) style="display: block;" @else style="display: none;" @endif>
-                                @foreach ($categorias as $categoria)
-                                    <div class="col-sm-12">
-                                        <input type="checkbox" id="categoria" name="categoria[]" value="{{$categoria->id}}">
-                                        <label for="categoria">{{$categoria->nome}}</label>
+    <div class="modal fade" id="modalCriarCampo" tabindex="-1" role="dialog" aria-labelledby="modalCriarCampoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalCriarCampoLabel">Novo campo do formulario</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="formCriarCampo" action="{{route('campo.formulario.store')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="evento_id" id="" value="{{$evento->id}}">
+                    <input type="hidden" name="criarCampo" id="" value="0">
+                    <input type="hidden" id="tipo_campo" name="tipo_campo" value="">
+                    
+                    <div class="container">
+                        <div id="escolherInput">
+                            <p>
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-6">
+                                        <button id="btn-tipo-email" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('email')">E-mail</button>
                                     </div>
-                                @endforeach
-
-                                @error('erroCategoria')
-                                    @include('componentes.mensagens')
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <hr>
-                                <h4>Exemplo</h4>
-                                <label id="labelCampoExemplo" for="campoExemplo"></label>
-                                <p><input type="" class="" id="campoExemplo" style="display: block"></p>
-                                <p><input type="text" class="form-control" id="campoExemploCpf" style="display: none;"></p>
-                                <p><input type="text" class="form-control" id="campoExemploNumero" style="display: none;"></p>
-                            </div>
-                        </div>
-                        <div id="divEnderecoExemplo" style="display: none;">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label for="cep">CEP</label>
-                                    <input onblur="pesquisacep(this.value);" type="text" class="form-control" id="cep" placeholder="00000-000">
                                 </div>
-                                <div class="col-sm-6">
-                                    <label for="bairro">Bairro</label>
-                                    <input type="text" class="form-control" id="bairro" placeholder="Centro">
+                            </p>
+                            <p>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <button id="btn-tipo-text" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('text')">Texto</button>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <button id="btn-tipo-file" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('file')">Arquivo</button>
+                                    </div>
+                                </div>
+                            </p>
+                            <p>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <button id="btn-tipo-date" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('date')">Data</button>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <button id="btn-tipo-endereco" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('endereco')">Endereço</button>
+                                    </div>
+                                </div>
+                            </p>
+                            <p>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <button id="btn-tipo-date" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('cpf')">CPF</button>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <button id="btn-tipo-contato" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('contato')">Contato</button>
+                                    </div>
+                                </div>
+                            </p>
+                        </div>
+                        <div id="preencherDados" style="display: none;">
+                            <div class="row form-group">
+                                <div class="col-sm-12">
+                                    <label for="titulo_do_campo">Titulo do campo*</label>
+                                    <input type="text" id="titulo_do_campo" name="titulo_do_campo" class="form-control @error('titulo_do_campo') is-invalid @enderror" required value="{{old('titulo_do_campo')}}">
+                                
+                                    @error('titulo_do_campo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-sm-12">
+                                    <input type="checkbox" id="campo_obrigatorio" name="campo_obrigatório" @if (old('campo_obrigatorio') != null) checked @endif>
+                                    <label for="campo_obrigatorio">Campo obrigatório</label>
+
+                                    @error('campo_obrigatório')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-12">
+                                    <input type="checkbox" id="para_todas" name="para_todas" @if (old('para_todas') == "on") checked @elseif(old('criarCampo') == null) checked @endif onchange="mostrarCheckBoxCategoria(this)">
+                                    <label for="para_todas">Necessário para todas as categorias de participante</label>
+
+                                    @error('para_todas')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div id="checkboxCategoria" @if (old('para_todas') == null && old('criarCampo') != null) style="display: block;" @else style="display: none;" @endif>
+                                    @foreach ($categorias as $categoria)
+                                        <div class="col-sm-12">
+                                            <input type="checkbox" id="categoria" name="categoria[]" value="{{$categoria->id}}">
+                                            <label for="categoria">{{$categoria->nome}}</label>
+                                        </div>
+                                    @endforeach
+
+                                    @error('erroCategoria')
+                                        @include('componentes.mensagens')
+                                    @enderror
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label for="rua">Rua</label>
-                                    <input type="text" class="form-control" id="rua" placeholder="Av. 15 de Novembro">
+                                    <hr>
+                                    <h4>Exemplo</h4>
+                                    <label id="labelCampoExemplo" for="campoExemplo"></label>
+                                    <p><input type="" class="" id="campoExemplo" style="display: block"></p>
+                                    <p><input type="text" class="form-control" id="campoExemploCpf" style="display: none;"></p>
+                                    <p><input type="text" class="form-control" id="campoExemploNumero" style="display: none;"></p>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label for="cidade">Cidade</label>
-                                    <input type="text" class="form-control" id="cidade" placeholder="Recife">
+                            <div id="divEnderecoExemplo" style="display: none;">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label for="cep">CEP</label>
+                                        <input onblur="pesquisacep(this.value);" type="text" class="form-control" id="cep" placeholder="00000-000">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="bairro">Bairro</label>
+                                        <input type="text" class="form-control" id="bairro" placeholder="Centro">
+                                    </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    <label for="uf">UF</label>
-                                    <select class="form-control" id="uf">
-                                        <option value="" disabled selected hidden>-- UF --</option>
-                                        <option value="AC">AC</option>
-                                        <option value="AL">AL</option>
-                                        <option value="AP">AP</option>
-                                        <option value="AM">AM</option>
-                                        <option value="BA">BA</option>
-                                        <option value="CE">CE</option>
-                                        <option value="DF">DF</option>
-                                        <option value="ES">ES</option>
-                                        <option value="GO">GO</option>
-                                        <option value="MA">MA</option>
-                                        <option value="MT">MT</option>
-                                        <option value="MS">MS</option>
-                                        <option value="MG">MG</option>
-                                        <option value="PA">PA</option>
-                                        <option value="PB">PB</option>
-                                        <option value="PR">PR</option>
-                                        <option value="PE">PE</option>
-                                        <option value="PI">PI</option>
-                                        <option value="RJ">RJ</option>
-                                        <option value="RN">RN</option>
-                                        <option value="RS">RS</option>
-                                        <option value="RO">RO</option>
-                                        <option value="RR">RR</option>
-                                        <option value="SC">SC</option>
-                                        <option value="SP">SP</option>
-                                        <option value="SE">SE</option>
-                                        <option value="TO">TO</option>
-                                    </select>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label for="rua">Rua</label>
+                                        <input type="text" class="form-control" id="rua" placeholder="Av. 15 de Novembro">
+                                    </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    <label for="numero">Número</label>
-                                    <input type="number" class="form-control" id="numero" placeholder="10">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label for="cidade">Cidade</label>
+                                        <input type="text" class="form-control" id="cidade" placeholder="Recife">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label for="uf">UF</label>
+                                        <select class="form-control" id="uf">
+                                            <option value="" disabled selected hidden>-- UF --</option>
+                                            <option value="AC">AC</option>
+                                            <option value="AL">AL</option>
+                                            <option value="AP">AP</option>
+                                            <option value="AM">AM</option>
+                                            <option value="BA">BA</option>
+                                            <option value="CE">CE</option>
+                                            <option value="DF">DF</option>
+                                            <option value="ES">ES</option>
+                                            <option value="GO">GO</option>
+                                            <option value="MA">MA</option>
+                                            <option value="MT">MT</option>
+                                            <option value="MS">MS</option>
+                                            <option value="MG">MG</option>
+                                            <option value="PA">PA</option>
+                                            <option value="PB">PB</option>
+                                            <option value="PR">PR</option>
+                                            <option value="PE">PE</option>
+                                            <option value="PI">PI</option>
+                                            <option value="RJ">RJ</option>
+                                            <option value="RN">RN</option>
+                                            <option value="RS">RS</option>
+                                            <option value="RO">RO</option>
+                                            <option value="RR">RR</option>
+                                            <option value="SC">SC</option>
+                                            <option value="SP">SP</option>
+                                            <option value="SE">SE</option>
+                                            <option value="TO">TO</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label for="numero">Número</label>
+                                        <input type="number" class="form-control" id="numero" placeholder="10">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div id="botoesDeSubmissao" class="modal-footer" style="display: none;">
+                <button type="button" class="btn btn-secondary" onclick="voltarBotoes()">Voltar</button>
+                <button type="submit" class="btn btn-primary" form="formCriarCampo">Salvar</button>
+            </div>
         </div>
-        <div id="botoesDeSubmissao" class="modal-footer" style="display: none;">
-            <button type="button" class="btn btn-secondary" onclick="voltarBotoes()">Voltar</button>
-            <button type="submit" class="btn btn-primary" form="formCriarCampo">Salvar</button>
         </div>
     </div>
-    </div>
-</div>
 {{-- Fim do modal criar campo --}}
 
 @foreach ($campos as $campo)
