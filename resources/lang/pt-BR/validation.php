@@ -101,6 +101,18 @@ return [
         ],
         'disponibilidade.*' => [
             'required' => 'O campo disponibilidade é obrigatório.'
+        ],
+        'valorDesconto' => [
+            'required' => 'O campo valor é obrigatório.'
+        ],
+        'inícioDesconto.*' => [
+            'required'  => 'O campo início é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+        ],
+        'fimDesconto.*' => [
+            'required'  => 'O campo início é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+            'after'     => 'A data informada deve ser depois da data de início.'
         ]
     ],
     /*

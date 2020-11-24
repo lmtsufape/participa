@@ -78,4 +78,12 @@ class Evento extends Model
   // public function revisores(){
   //   return $this->belongsToMany('App\Revisor', 'evento_revisors', 'evento_id', 'revisor_id')->withPivot('convite_aceito')->withTimestamps();
   // }
+
+  public function categoriasParticipantes() {
+    return $this->hasMany('App\Models\Inscricao\CategoriaParticipante', 'evento_id');
+  }
+
+  public function camposFormulario() {
+    return $this->hasMany('App\Models\Inscricao\CampoFormulario', 'evento_id');
+  }
 }

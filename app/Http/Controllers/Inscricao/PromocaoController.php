@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Inscricao\Promocao;
 use App\Models\Inscricao\Lote;
-use App\Evento;
+use App\Models\Inscricao\CategoriaParticipante;
+use App\Models\Submissao\Evento;
 
 class PromocaoController extends Controller
 {
@@ -39,18 +40,24 @@ class PromocaoController extends Controller
     public function store(Request $request)
     {   
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        // $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
 
         $validadeData = $request->validate([
-            'novaPromocao'      => 'required',
-            'identificador'     => 'required',
-            'valor'             => 'required',
-            'descrição'         => 'nullable|max:1000',
-            'dataDeInício.*'    => 'required|date',
-            'dataDeFim.*'       => 'required|date|after:dataDeInício.*',
-            'disponibilidade.*' => 'required',
-            'atividades.*'      => 'nullable',    
+            'novaPromocao'          => 'required',
+            'identificador'         => 'required',
+            'valor'                 => 'required',
+            'descrição'             => 'nullable|max:1000',
+            'dataDeInício.*'        => 'required|date',
+            'dataDeFim.*'           => 'required|date|after:dataDeInício.*',
+            'disponibilidade.*'     => 'required',
+            'atividades.*'          => 'nullable', 
+            'para_todas_categorias' => 'nullable', 
+            'categorias.*'          => 'nullable',  
         ]);
+
+        if ($request->para_todas_categorias == null && $request->categorias == null) {
+            return redirect()->back()->withErrors(['errorCategorias' => 'Seleciona as categorias que o pacote será exibido.'])->withInput($validadeData);
+        }
         
         $promocao = new Promocao();
         $promocao->identificador = $request->identificador;
@@ -58,6 +65,18 @@ class PromocaoController extends Controller
         $promocao->descricao     = $request->input('descrição'); 
         $promocao->valor         = $request->valor;
         $promocao->save();
+
+        if ($request->para_todas_categorias == "on") {
+            $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
+
+            foreach ($categorias as $categoria) {
+                $promocao->categorias()->attach($categoria->id);
+            }
+        } else if ($request->categorias != null && count($request->categorias) > 0) {
+            foreach ($request->categorias as $categoria) {
+                $promocao->categorias()->attach($categoria);
+            }
+        }
 
         foreach ($request->input('dataDeInício') as $key => $lote) {
             $lote = new Lote();
@@ -74,7 +93,7 @@ class PromocaoController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Promoção salva com sucesso!']);
+        return redirect()->back()->with(['mensagem' => 'Pacote salvo com sucesso!']);
     }
 
     /**
@@ -120,11 +139,16 @@ class PromocaoController extends Controller
     public function destroy($id)
     {
         $promocao = Promocao::find($id);
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $promocao->evento);
+        // $this->authorize('isCoordenadorOrComissaoOrganizadora', $promocao->evento);
         // Lembrar de atualizar essa função para checar se a promoção
         // já foi aplicada em alguma inscrição
         $atividades = $promocao->atividades;
         
+        foreach ($promocao->categorias as $categoria) {
+            if(!$promocao->categorias()->detach($categoria->id)) {
+                abort(500);
+            }
+        }
 
         foreach ($atividades as $atv) {
             if(!$promocao->atividades()->detach($atv->id)) {

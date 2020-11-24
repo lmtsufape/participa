@@ -23,11 +23,11 @@ class EventoPolicy
     }
 
     public function isCoordenador(User $user, Evento $evento){
-      return $user->id === $evento->coordenador->id;
+      return $user->id === $evento->coordenadorId;
     }
 
     public function isPublishOrIsCoordenador(User $user, Evento $evento) {
-      if ($user->id === $evento->coordenador->id || $evento->publicado) {
+      if ($user->id === $evento->coordenadorId || $evento->publicado) {
         return true;
       }
       return false;
@@ -35,7 +35,7 @@ class EventoPolicy
 
     public function isCoordenadorOrComissao(User $user, Evento $evento) {
       $membro = $evento->usuariosDaComissao()->where([['user_id', $user->id], ['evento_id', $evento->id]])->first();
-      return $user->id === $evento->coordenador->id || !(is_null($membro));
+      return $user->id === $evento->coordenadorId || !(is_null($membro));
     }
 
     public function isRevisor(User $user, Evento $evento) {

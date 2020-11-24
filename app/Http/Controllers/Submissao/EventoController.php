@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Submissao;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Evento;
-use App\Users\Coautor;
+use App\Models\Users\Coautor;
 use App\Models\Submissao\Criterio;
 use App\Models\Users\Revisor;
 use App\Models\Submissao\Atribuicao;
@@ -86,7 +86,7 @@ class EventoController extends Controller
     public function definirSubmissoes(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrComissao', Auth::user(),$evento);
 
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
