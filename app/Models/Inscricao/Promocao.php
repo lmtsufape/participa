@@ -21,4 +21,8 @@ class Promocao extends Model
     public function atividades() {
         return $this->belongsToMany('App\Atividade', 'atividades_promocaos', 'promocao_id', 'atividade_id');
     }
+
+    public function categorias() {
+        return $this->belongsToMany('App\Models\Inscricao\CategoriaParticipante', 'exibir_promocaos', 'promocao_id', 'categoria_participante_id');
+    }
 }

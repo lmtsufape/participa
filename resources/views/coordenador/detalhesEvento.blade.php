@@ -1551,6 +1551,14 @@
         elemento.parentElement.parentElement.remove();
     }
 
+    function mostrarCategorias(input) {
+        if (input.checked) {
+            document.getElementById('categoriasPromocao').style.display = "none";
+        } else {
+            document.getElementById('categoriasPromocao').style.display = "block";
+        }
+    }
+
     function alterarPlaceHolderDoNumero(elemento) {
         var input = document.getElementById('valorCupom')
         if (elemento.value == "real") {

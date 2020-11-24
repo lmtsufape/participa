@@ -22,4 +22,7 @@ class CategoriaParticipante extends Model
         return $this->belongsToMany('App\Models\Inscricao\CampoFormulario', 'campo_necessarios', 'categoria_participante_id', 'campo_formulario_id');
     }
 
+    public function promocoes() {
+        return $this->belongsToMany('App\Models\Inscricao\Promocao', 'exibir_promocaos', 'categoria_participante_id', 'promocao_id');
+    }
 }
