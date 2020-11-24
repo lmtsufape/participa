@@ -30,7 +30,7 @@
 
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
-                @can('isCoordenador', $evento)
+                {{-- @can('isCoordenador', $evento) --}}
                     <div class="card" style="width: 18rem;">
                         @if(isset($evento->fotoEvento))
                         <img src="{{asset('storage/' . $evento->fotoEvento)}}" class="card-img-top" alt="...">
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                     <!-- fim do modal -->
-                @endcan
+                {{-- @endcan --}}
             @endif
         @endforeach
     </div>
