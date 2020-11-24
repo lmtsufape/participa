@@ -144,6 +144,11 @@ class PromocaoController extends Controller
         // já foi aplicada em alguma inscrição
         $atividades = $promocao->atividades;
         
+        foreach ($promocao->categorias as $categoria) {
+            if(!$promocao->categorias()->detach($categoria->id)) {
+                abort(500);
+            }
+        }
 
         foreach ($atividades as $atv) {
             if(!$promocao->atividades()->detach($atv->id)) {
