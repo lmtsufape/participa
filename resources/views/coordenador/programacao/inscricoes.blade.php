@@ -600,7 +600,7 @@
                         <div class="col-sm-6">
                             <h5>Valor que o inscrito irá pagar</h5>
                             @if ($promocao->valor == null || $promocao->valor <= 0)
-                                <p>A promoção é gratuita</p>
+                                <p>O pacote é gratuito</p>
                             @else
                                 <p>R$ {{number_format($promocao->valor, 2,',','.')}}</p>
                             @endif
@@ -608,7 +608,7 @@
                         <div class="col-sm-6">
                             <h5>Valor recebido</h5>
                             @if ($promocao->valor == null || $promocao->valor <= 0)
-                                <p>A promoção é gratuita</p>
+                                <p>O pacote é gratuito</p>
                             @else
                                 <p>R$ {{number_format($promocao->valor - $promocao->valor * 0.10, 2,',','.')}}*<br><span style="font-size: 10px;">*Taxa de 10%</span></p>
                             @endif
@@ -619,6 +619,19 @@
                             <h5>Descrição</h5>
                             <textarea class="form-control" id="" disabled>{{$promocao->descricao}}</textarea>
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <hr>
+                            <h4>Pacote válido para as categorias</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @foreach ($promocao->categorias as $categoria)
+                            <div class="col-sm-3">
+                                <strong>{{$categoria->nome}}</strong>
+                            </div>
+                        @endforeach
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
@@ -651,7 +664,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <hr>
-                            <h4>Atividades inclusas na promoção</h4>
+                            <h4>Atividades inclusas no pacote</h4>
                         </div>
                     </div>
                     <div class="row">
