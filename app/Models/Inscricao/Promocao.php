@@ -11,7 +11,7 @@ class Promocao extends Model
     ];
 
     public function evento() {
-        return $this->belongsTo('App\Evento', 'evento_id');
+        return $this->belongsTo('App\Models\Submissao\Evento', 'evento_id');
     }
 
     public function lotes() {
@@ -19,7 +19,7 @@ class Promocao extends Model
     }
 
     public function atividades() {
-        return $this->belongsToMany('App\Atividade', 'atividades_promocaos', 'promocao_id', 'atividade_id');
+        return $this->belongsToMany('App\Models\Submissao\Atividade', 'atividades_promocaos', 'promocao_id', 'atividade_id');
     }
 
     public function categorias() {

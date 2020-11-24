@@ -11,7 +11,7 @@ class CampoFormulario extends Model
     ];
 
     public function evento() {
-        return $this->belongsTo('App\Evento', 'evento_id');
+        return $this->belongsTo('App\Models\Submissao\Evento', 'evento_id');
     }
 
     public function categorias() {

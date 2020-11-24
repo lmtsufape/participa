@@ -22,7 +22,7 @@
                 </li>
 
                 <div id="dropdownTrabalhos"  @if(request()->is('coord/evento/trabalhos*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                    @can('isCoordenadorOrComissao', $evento)
+                    {{-- @can('isCoordenadorOrComissao', $evento) --}}
                         <a id="submissoesTrabalhos" href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
                             <li>
                                 <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Tipo</h5>
@@ -38,14 +38,14 @@
                                 <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5>
                             </li>
                         </a>
-                    @endcan
-                    @can('isRevisorComAtribuicao')
+                    {{-- @endcan --}}
+                    {{-- @can('isRevisorComAtribuicao') --}}
                         <a id="avaliarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
                             <li>
                                 <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Avaliação</h5>
                             </li>
                         </a>
-                    @endcan
+                    {{-- @endcan --}}
                 </div>
             </a>
 

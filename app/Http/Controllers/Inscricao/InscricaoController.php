@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Evento;
+use App\Models\Submissao\Evento;
 use App\Models\Inscricao\Promocao;
-use App\Atividade;
+use App\Models\Submissao\Atividade;
 use App\Models\Inscricao\CupomDeDesconto;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\CampoFormulario;
@@ -21,7 +21,7 @@ class InscricaoController extends Controller
     public function index($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        // $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
         
         $promocoes = Promocao::where('evento_id', $id)->get();
         $atividades = Atividade::where('eventoId', $id)->get();

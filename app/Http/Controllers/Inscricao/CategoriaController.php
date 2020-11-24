@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\ValorCategoria;
-use App\Evento;
+use App\Models\Submissao\Evento;
 
 class CategoriaController extends Controller
 {

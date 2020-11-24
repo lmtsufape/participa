@@ -68,10 +68,10 @@
                                         <input type="hidden" id="atvPromocaoInput{{old('atividadesPromo.'.$key)}}" name="atividadesPromo[]" value="{{old('atividadesPromo.'.$key)}}">
                                         <div class="card" style="width: 16rem;">
                                             <div class="card-body">
-                                                <h4 class="card-title">{{App\Atividade::find(old('atividadesPromo.'.$key))->titulo}}</h4>
-                                                <h5 class="card-subtitle mb-2 text-muted">{{App\Atividade::find(old('atividadesPromo.'.$key))->tipoAtividade->descricao}}</h5>
-                                                <h6 class="card-subtitle mb-2 text-muted">{{App\Atividade::find(old('atividadesPromo.'.$key))->local}}</h6>
-                                                <p class="card-text">{{App\Atividade::find(old('atividadesPromo.'.$key))->descricao}}</p>
+                                                <h4 class="card-title">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->titulo}}</h4>
+                                                <h5 class="card-subtitle mb-2 text-muted">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->tipoAtividade->descricao}}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->local}}</h6>
+                                                <p class="card-text">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->descricao}}</p>
                                                 <a href='#' class='card-link' data-toggle='modal' data-target='#modalDetalheAtividade{{old('atividadesPromo.'.$key)}}'>Detalhes</a>
                                             </div>
                                         </div>

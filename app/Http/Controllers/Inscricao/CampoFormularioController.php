@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Inscricao;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Inscricao\CampoFormulario;
-use App\Evento;
+use App\Models\Submissao\Evento;
 use App\Models\Inscricao\CategoriaParticipante;
 
 class CampoFormularioController extends Controller
