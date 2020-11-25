@@ -1603,7 +1603,9 @@
                     "</div>";
             }
         }
-        html += "<div class='peridodoDesconto'>" +
+        
+        if (id == 0) {
+            html += "<div class='peridodoDesconto'>" +
                     "<div class='row form-group'>" +
                         "<div class='col-sm-4'>" +
                             "<label for='tipo_valor'>Valor do desconto*</label>" +
@@ -1633,7 +1635,39 @@
                         "</div>" +
                     "</div>"+ 
                 "</div>";
-        
+        } else {
+            html += "<div class='peridodoDesconto'>" +
+                    "<div class='row form-group'>" +
+                        "<div class='col-sm-4'>" +
+                            "<label for='tipo_valor'>Valor do desconto*</label>" +
+                            "<br>" +
+                            "<select class='form-control' name='tipo_valor_"+id+"[]' required>" +
+                                "<option value='' disabled selected>-- Escolha o tipo de valor --</option>" +
+                                "<option value='porcentagem'>Porcentagem</option>" +
+                                "<option value='real'>Real</option>" +
+                            "</select>" +
+                        "</div>" +
+                        "<div class='col-sm-6'>" +
+                            "<label for='valorDesconto'>Valor</label>" +
+                            "<input id='valorDesconto' name='valorDesconto_"+id+"[]' type='number' class='form-control real @error('number') is-invalid @enderror' placeholder='' value='' required>" +
+                        "</div>" +
+                    "</div>" +
+                    "<div class='row form-group'>" +
+                        "<div class='col-sm-5'> " +
+                            "<label for='inicio'>Data de início*</label>" + 
+                            "<input id='inicio' name='inícioDesconto_"+id+"[]' class='form-control' type='date' value='' required>" +
+                        "</div>" +
+                        "<div class='col-sm-5'>" +
+                            "<label for='fim'>Data de fim*</label>" +
+                            "<input id='fim' name='fimDesconto_"+id+"[]' class='form-control' type='date' value='' required>" +
+                        "</div>" +
+                        "<div class='col-sm-2' style='position: relative; top: 35px;'>" +
+                            "<a type='button' onclick='removerPeriodoDesconto(this,"+id+")'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>" +
+                        "</div>" +
+                    "</div>"+ 
+                "</div>";
+        }
+
         if (id == 0) {
             $('#periodosCategoria').append(html);
         } else {
@@ -1942,6 +1976,13 @@
                     $("#btn-tipo-contato").click();
                     break;
             }
+        })
+    </script>
+  @endif
+  @if (old('editarCategoria') != null)
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarCategoria"+"{{old('editarCategoria')}}").modal('show');
         })
     </script>
   @endif

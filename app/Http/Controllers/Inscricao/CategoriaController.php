@@ -105,7 +105,44 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request);
+        // dd($request);
+        $categoria = CategoriaParticipante::find($id);
+        
+        $validateData = $request->validate([
+            'editarCategoria'                       => 'required',
+            'nome_'.$categoria->id                  => 'required',
+            'valor_total_'.$categoria->id           => 'required',
+            'tipo_valor_'.$categoria->id.'.*'       => 'nullable',
+            'valorDesconto_'.$categoria->id.'.*'    => 'required_with:tipo_valor_'.$categoria->id.'.*',
+            'inícioDesconto_'.$categoria->id.'.*'   => 'required_with:tipo_valor_'.$categoria->id.'.*|date',
+            'fimDesconto_'.$categoria->id.'.*'      => 'required_with:tipo_valor_'.$categoria->id.'.*|date|after:inícioDesconto_'.$categoria->id.'.*',
+        ]);
+
+        foreach ($categoria->valores as $valor) {
+            $valor->delete();
+        }
+
+        $categoria->nome        = $request->input('nome_'.$categoria->id);
+        $categoria->valor_total = $request->input('valor_total_'.$categoria->id);
+        $categoria->update();
+        
+        if ($request->input('tipo_valor_'.$categoria->id) != null) {
+            foreach ($request->input('tipo_valor_'.$categoria->id) as $key => $tipo_valor) {
+                $valor = new ValorCategoria();
+                if ($request->input('tipo_valor_'.$categoria->id)[$key] == "porcentagem") {
+                    $valor->porcentagem = true;
+                } else {
+                    $valor->porcentagem = false;
+                }
+                $valor->valor                     = $request->input('valorDesconto_'.$categoria->id)[$key];
+                $valor->inicio_prazo              = $request->input('inícioDesconto_'.$categoria->id)[$key];
+                $valor->fim_prazo                 = $request->input('fimDesconto_'.$categoria->id)[$key];
+                $valor->categoria_participante_id = $categoria->id;
+                $valor->save();
+            }
+        }
+
+        return redirect()->back()->with(['mensagem' => 'Categoria de participante atualizada com sucesso!']);
     }
 
     /**
