@@ -150,6 +150,7 @@
                                         <div class="col-sm-6">
                                             <h5 class="card-title">Categorias de participantes</h5>
                                             <h6 class="card-subtitle mb-2 text-muted">Categorias dos participantes que seu evento irá receber.</h6> 
+                                            <small>Para editar clique em uma das categorias.</small>
                                         </div>
                                         <div class="col-sm-6">
                                             <button id="criarCategoria" data-toggle="modal" data-target="#modalCriarCategoria" class="btn btn-primary float-md-right">+ Criar categoria</button>
@@ -170,9 +171,9 @@
                                     @foreach ($categorias as $categoria)
                                         <tbody>
                                             <th>
-                                                <td>{{$categoria->nome}}</td>
-                                                <td>Falta implementar</td>
-                                                <td>Falta implementar</td>
+                                                <td data-toggle="modal" data-target="#modalEditarCategoria{{$categoria->id}}">{{$categoria->nome}}</td>
+                                                <td data-toggle="modal" data-target="#modalEditarCategoria{{$categoria->id}}">Falta implementar</td>
+                                                <td data-toggle="modal" data-target="#modalEditarCategoria{{$categoria->id}}">Falta implementar</td>
                                                 <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalDetalhesCategoria{{$categoria->id}}" ><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a></td>
                                                 <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalExcluirCategoria{{$categoria->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
                                             </th>
@@ -918,7 +919,7 @@
                                             </div>
                                             
                                             <div class='col-sm-2' style='position: relative; top: 35px;'>
-                                                <a type='button' onclick='removerPeriodoDesconto(this)'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
+                                                <a type='button' onclick='removerPeriodoDesconto(this,0)'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
                                             </div>
                                         </div>
                                     </div>
@@ -973,7 +974,7 @@
                                             </div>
                                             
                                             <div class='col-sm-2' style='position: relative; top: 35px;'>
-                                                <a type='button' onclick='removerPeriodoDesconto(this)'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
+                                                <a type='button' onclick='removerPeriodoDesconto(this,0)'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
                                             </div>
                                         </div>
                                     </div>
@@ -983,7 +984,7 @@
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-12 justify-content-center">
-                                <button type="button" class="btn btn-primary" style="width: 100%;" onclick="adicionarPeriodoCategoria()">Adicionar periodo antecipado</button>
+                                <button type="button" class="btn btn-primary" style="width: 100%;" onclick="adicionarPeriodoCategoria(0)">Adicionar periodo antecipado</button>
                             </div>
                         </div>
                     </div>
@@ -997,6 +998,171 @@
         </div>
     </div>
 {{-- Fim modal criar categoria --}}
+@foreach ($categorias as $categoria)
+<div class="modal fade" id="modalEditarCategoria{{$categoria->id}}" tabindex="-1" role="dialog" aria-labelledby="modalEditarCategoria{{$categoria->id}}Label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #114048ff; color: white;">
+        <h5 class="modal-title" id="modalEditarCategoria{{$categoria->id}}Label">Editar categoria {{$categoria->nome}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <form id="formEditarCategoria" action="{{route('categoria.participante.update', ['id' => $categoria->id])}}" method="POST">
+                @csrf
+                <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                <input type="hidden" name="editarCategoria" value="{{$categoria->id}}">
+                <div class="container">
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <label for="nome{{$categoria->id}}">Nome*</label>
+                            <input id="nome{{$categoria->id}}" name="nome_{{$categoria->id}}" type="text" class="form-control apenasLetras @error('nome_'.$categoria->id) is-invalid @enderror" value="@if(old("nome_".$categoria->id) != null){{old("nome_".$categoria->id)}}@else{{$categoria->nome}}@endif">
+                        
+                            @error("nome_".$categoria->id)
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="valor_total{{$categoria->id}}">Valor da inscrição*</label>
+                            <input id="valor_total{{$categoria->id}}" name="valor_total_{{$categoria->id}}" type="text" class="form-control @error('valor_total_'.$categoria->id) is-invalid @enderror" value="@if(old('valor_total_'.$categoria->id) != null){{old('valor_total_'.$categoria->id)}}@else{{$categoria->valor_total}}@endif" placeholder="R$ 50,00">
+                        
+                            @error('valor_total_'.$categoria->id)
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div id="periodosCategoria{{$categoria->id}}">
+                        @if (old('editarCategoria') != null && old('tipo_valor_'.$categoria->id) != null)
+                        @foreach (old('tipo_valor_'.$categoria->id) as $i => $item)
+                            @if ($i == 0)
+                                <div id='tituloDePeriodo{{$categoria->id}}' class='row form-group'>
+                                    <div class='col-sm-12'>
+                                        <hr>
+                                        <h4>Periodos de desconto</h4>
+                                    </div>
+                                </div>
+                            @endif
+                            <div class='peridodoDesconto'>
+                                <div class='row form-group'>
+                                    <div class='col-sm-4'>
+                                        <label for=''>Valor do desconto*</label>
+                                        <br>
+                                        <select class='form-control @error('tipo_valor.'.$i) is-invalid @enderror' name='tipo_valor_{{$categoria->id}}[]' required>
+                                            <option value='' disabled selected>-- Escolha o tipo de valor --</option>
+                                            <option value='porcentagem' @if(old('tipo_valor_'.$categoria->id.'.'.$i) == "porcentagem") selected @endif>Porcentagem</option>
+                                            <option value='real' @if(old('tipo_valor_'.$categoria->id.'.'.$i) == "real") selected @endif>Real</option>
+                                        </select>
+
+                                        @error('tipo_valor_'.$categoria->id.'.'.$i)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class='col-sm-6'>
+                                        <label for="valorDesconto_{{$i}}">Valor</label>
+                                        <input id='valorDesconto_{{$i}}' name='valorDesconto_{{$categoria->id}}[]' type='number' class='form-control real @error('valorDesconto_'.$categoria->id.'.'.$i) is-invalid @enderror' placeholder='' value='{{old('valorDesconto_'.$categoria->id.'.'.$i)}}' required>
+                                    
+                                        @error('valorDesconto_'.$categoria->id.'.'.$i)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class='row form-group'>
+                                    <div class='col-sm-5'> 
+                                        <label for='inicio_{{$i}}'>Data de início*</label> 
+                                        <input id='inicio_{{$i}}' name='inícioDesconto_{{$categoria->id}}[]' class='form-control @error('inícioDesconto_'.$categoria->id.'.'.$i) is-invalid @enderror' type='date' value='{{old('inícioDesconto_'.$categoria->id.'.'.$i)}}' required>
+                                        @error('inícioDesconto_'.$categoria->id.'.'.$i)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class='col-sm-5'>
+                                        <label for='fim_{{$i}}'>Data de fim*</label>
+                                        <input id='fim_{{$i}}' name='fimDesconto_{{$categoria->id}}[]' class='form-control @error('fimDesconto_'.$categoria->id.'.'.$i) is-invalid @enderror' type='date' value='{{old('fimDesconto_'.$categoria->id.'.'.$i)}}' required>
+                                        @error('fimDesconto_'.$categoria->id.'.'.$i)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    
+                                    <div class='col-sm-2' style='position: relative; top: 35px;'>
+                                        <a type='button' onclick='removerPeriodoDesconto(this,{{$categoria->id}})'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                        @else 
+                        @foreach ($categoria->valores as $i => $valor)
+                            @if ($i == 0)
+                                <div id='tituloDePeriodo{{$categoria->id}}' class='row form-group'>
+                                    <div class='col-sm-12'>
+                                        <hr>
+                                        <h4>Periodos de desconto</h4>
+                                    </div>
+                                </div>
+                            @endif
+                            <div class='peridodoDesconto'>
+                                <div class='row form-group'>
+                                    <div class='col-sm-4'>
+                                        <label for=''>Valor do desconto*</label>
+                                        <br>
+                                        <select class='form-control @error('tipo_valor.'.$i) is-invalid @enderror' name='tipo_valor_{{$categoria->id}}[]' required>
+                                            <option value='' disabled selected>-- Escolha o tipo de valor --</option>
+                                            <option value='porcentagem' @if($valor->porcentagem == true) selected @endif>Porcentagem</option>
+                                            <option value='real' @if($valor->porcentagem == false) selected @endif>Real</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-sm-6'>
+                                        <label for="valorDesconto{{$valor->id}}">Valor</label>
+                                        <input id='valorDesconto{{$valor->id}}' name='valorDesconto_{{$categoria->id}}[]' type='number' class='form-control real' placeholder='' value='{{$valor->valor}}' required>
+                                    </div>
+                                </div>
+                                <div class='row form-group'>
+                                    <div class='col-sm-5'> 
+                                        <label for='inicio{{$valor->id}}'>Data de início*</label> 
+                                        <input id='inicio{{$valor->id}}' name='inícioDesconto_{{$categoria->id}}[]' class='form-control' type='date' value='{{$valor->inicio_prazo}}' required>
+                                    </div>
+
+                                    <div class='col-sm-5'>
+                                        <label for='fim{{$valor->id}}'>Data de fim*</label>
+                                        <input id='fim{{$valor->id}}' name='fimDesconto_{{$categoria->id}}[]' class='form-control' type='date' value='{{$valor->fim_prazo}}' required>
+                                    </div>
+                                    
+                                    <div class='col-sm-2' style='position: relative; top: 35px;'>
+                                        <a type='button' onclick='removerPeriodoDesconto(this,{{$categoria->id}})'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                        @endif
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-12 justify-content-center">
+                            <button type="button" class="btn btn-primary" style="width: 100%;" onclick="adicionarPeriodoCategoria({{$categoria->id}})">Adicionar periodo antecipado</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" form="formEditarCategoria">Atualizar</button>
+        </div>
+    </div>
+    </div>
+</div>
+@endforeach
 {{-- Modal criar campo --}}
     <div class="modal fade" id="modalCriarCampo" tabindex="-1" role="dialog" aria-labelledby="modalCriarCampoLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

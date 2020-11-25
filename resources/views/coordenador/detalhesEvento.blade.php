@@ -1576,17 +1576,32 @@
         e.target.selectionEnd = fimCursor;
     }
 
-    var quantidadeDePeriodos = 0;
-    function adicionarPeriodoCategoria() {
+    function adicionarPeriodoCategoria(id) {
         var html = "";
-        
+        var quantidadeDePeriodos = 0;
+
+        if (id == 0) {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria').children.length;
+        } else {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria'+id).children.length;
+        }
+
         if (quantidadeDePeriodos == 0) {
-            html += "<div id='tituloDePeriodo' class='row form-group'>" +
+            if (id == 0) {
+                html += "<div id='tituloDePeriodo' class='row form-group'>" +
                         "<div class='col-sm-12'>" +
                             "<hr>" +
                             "<h4>Periodos de desconto</h4>" +
                         "</div>" +
                     "</div>";
+            } else {
+                html += "<div id='tituloDePeriodo"+id+"' class='row form-group'>" +
+                        "<div class='col-sm-12'>" +
+                            "<hr>" +
+                            "<h4>Periodos de desconto</h4>" +
+                        "</div>" +
+                    "</div>";
+            }
         }
         html += "<div class='peridodoDesconto'>" +
                     "<div class='row form-group'>" +
@@ -1614,19 +1629,32 @@
                             "<input id='fim' name='fimDesconto[]' class='form-control' type='date' value='' required>" +
                         "</div>" +
                         "<div class='col-sm-2' style='position: relative; top: 35px;'>" +
-                            "<a type='button' onclick='removerPeriodoDesconto(this)'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>" +
+                            "<a type='button' onclick='removerPeriodoDesconto(this,"+id+")'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>" +
                         "</div>" +
                     "</div>"+ 
                 "</div>";
-        quantidadeDePeriodos++;
-        $('#periodosCategoria').append(html);
+        
+        if (id == 0) {
+            $('#periodosCategoria').append(html);
+        } else {
+            $('#periodosCategoria'+id).append(html);
+        }
     }
 
-    function removerPeriodoDesconto(button) {
-        quantidadeDePeriodos--;
+    function removerPeriodoDesconto(button, id) {
+        var quantidadeDePeriodos = 0;
+        if (id == 0) {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria').children.length;
+        } else {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria'+id).children.length;
+        }
         button.parentElement.parentElement.parentElement.remove();
-        if (quantidadeDePeriodos == 0) {
-            document.getElementById('tituloDePeriodo').remove();
+        if (quantidadeDePeriodos == 2) {
+            if (id == 0) {
+                document.getElementById('tituloDePeriodo').remove();
+            } else {
+                document.getElementById('tituloDePeriodo'+id).remove();
+            }
         }
     }
 
