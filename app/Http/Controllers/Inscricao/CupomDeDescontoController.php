@@ -39,7 +39,7 @@ class CupomDeDescontoController extends Controller
     public function store(Request $request)
     {   
         $evento = Evento::find($request->evento_id);
-        // $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
         $validadeData = $request->validate([
             'criarCupom'    => 'required',
             'identificador' => 'required',
@@ -121,7 +121,7 @@ class CupomDeDescontoController extends Controller
     {
         $cupom = CupomDeDesconto::find($id);
 
-        // $this->authorize('isCoordenadorOrComissaoOrganizadora', $cupom->evento);
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $cupom->evento);
         // Checar se o cupom foi aplicado em alguma inscrição antes de excluir
         $cupom->delete();
         

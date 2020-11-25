@@ -40,7 +40,7 @@ class PromocaoController extends Controller
     public function store(Request $request)
     {   
         $evento = Evento::find($request->evento_id);
-        // $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
 
         $validadeData = $request->validate([
             'novaPromocao'          => 'required',
@@ -139,7 +139,7 @@ class PromocaoController extends Controller
     public function destroy($id)
     {
         $promocao = Promocao::find($id);
-        // $this->authorize('isCoordenadorOrComissaoOrganizadora', $promocao->evento);
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $promocao->evento);
         // Lembrar de atualizar essa função para checar se a promoção
         // já foi aplicada em alguma inscrição
         $atividades = $promocao->atividades;
