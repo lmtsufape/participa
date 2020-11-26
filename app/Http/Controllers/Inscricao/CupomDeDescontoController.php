@@ -131,6 +131,21 @@ class CupomDeDescontoController extends Controller
         } else {
             $cupom->quantidade_aplicacao = $request->input('quantidade_cupom_'.$cupom->id);
         }
+
+        $cupom->identificador         = $request->input('identificador_cupom_'.$cupom->id);
+        $cupom->valor                 = $request->input('valor_cupom_'.$cupom->id);
+        $cupom->inicio                = $request->input('início_cupom_'.$cupom->id);
+        $cupom->fim                   = $request->input('fim_cupom_'.$cupom->id);
+
+        if ($request->input('tipo_valor_cupom_'.$cupom->id) == "porcentagem") {
+            $cupom->porcentagem = true;
+        } else {
+            $cupom->porcentagem = false;
+        }
+
+        $cupom->update();
+
+        return redirect()->back()->with(['mensagem' => 'Cupom atualizado com sucesso!']);
     }
 
     /**
