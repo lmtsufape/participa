@@ -1525,37 +1525,67 @@
         }
     }
 
-    function adicionarLoteAhPromocao() {
-        $('#lotes').append(
-            "<div class='row'>" +
-                "<div class='col-sm-4'>" +
-                    "<label for='dataDeInicio'>Data de início</label>" +
-                    "<input id='dataDeInicio' name='dataDeInício[]' class='form-control' type='date'>" +
-                "</div>" +
-                "<div class='col-sm-4'>" +
-                    "<label for='dataDeFim'>Data de fim</label>" +
-                    "<input id='dataDeFim' name='dataDeFim[]' class='form-control' type='date'>" +
-                "</div>" +
-                "<div class='col-sm-3'>" + 
-                    "<label for='quantidade'>Disponibilidade</label>" +
-                    "<input id='quantidade' name='disponibilidade[]' class='form-control' type='number' placeholder='10'>" +
-                "</div>" +
-                "<div class='col-sm-1'>" +
-                    "<a href='#' title='Remover lote' onclick='removerLoteDaPromocao(this)'><img src='{{asset('img/icons/lixo.png')}}' width='35px' style='position: relative; top: 32px;'></a>" +
-                "</div>" +
-            "</div>"
-        );
+    function adicionarLoteAhPromocao(id) {
+        if (id == 0) {
+            $('#lotes').append(
+                "<div class='row'>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeInicio'>Data de início</label>" +
+                        "<input id='dataDeInicio' name='dataDeInício[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeFim'>Data de fim</label>" +
+                        "<input id='dataDeFim' name='dataDeFim[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-3'>" + 
+                        "<label for='quantidade'>Disponibilidade</label>" +
+                        "<input id='quantidade' name='disponibilidade[]' class='form-control' type='number' placeholder='10'>" +
+                    "</div>" +
+                    "<div class='col-sm-1'>" +
+                        "<a href='#' title='Remover lote' onclick='removerLoteDaPromocao(this)'><img src='{{asset('img/icons/lixo.png')}}' width='35px' style='position: relative; top: 32px;'></a>" +
+                    "</div>" +
+                "</div>"
+            );
+        } else {
+            $('#lotes'+id).append(
+                "<div class='row'>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeInicio'>Data de início</label>" +
+                        "<input id='dataDeInicio' name='dataDeInício[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeFim'>Data de fim</label>" +
+                        "<input id='dataDeFim' name='dataDeFim[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-3'>" + 
+                        "<label for='quantidade'>Disponibilidade</label>" +
+                        "<input id='quantidade' name='disponibilidade[]' class='form-control' type='number' placeholder='10'>" +
+                    "</div>" +
+                    "<div class='col-sm-1'>" +
+                        "<a href='#' title='Remover lote' onclick='removerLoteDaPromocao(this)'><img src='{{asset('img/icons/lixo.png')}}' width='35px' style='position: relative; top: 32px;'></a>" +
+                    "</div>" +
+                "</div>"
+            );
+        }
     }
 
     function removerLoteDaPromocao(elemento) {
         elemento.parentElement.parentElement.remove();
     }
 
-    function mostrarCategorias(input) {
-        if (input.checked) {
-            document.getElementById('categoriasPromocao').style.display = "none";
+    function mostrarCategorias(input, id) {
+        if (id == 0) {
+            if (input.checked) {
+                document.getElementById('categoriasPromocao').style.display = "none";
+            } else {
+                document.getElementById('categoriasPromocao').style.display = "block";
+            }
         } else {
-            document.getElementById('categoriasPromocao').style.display = "block";
+            if (input.checked) {
+                document.getElementById('categoriasPromocao'+id).style.display = "none";
+            } else {
+                document.getElementById('categoriasPromocao'+id).style.display = "block";
+            }
         }
     }
 
@@ -1976,6 +2006,13 @@
                     $("#btn-tipo-contato").click();
                     break;
             }
+        })
+    </script>
+  @endif
+  @if (old('editarPromocao') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalPromocaoEdit"+"{{old('editarPromocao')}}").modal('show');
         })
     </script>
   @endif

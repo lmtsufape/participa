@@ -21,7 +21,7 @@
                                         <div class="col-sm-6">
                                             <h5 class="card-title">Pacotes</h5>
                                             <h6 class="card-subtitle mb-2 text-muted">Pacotes que o evento pode oferecer para as categorias de participante.</h6>
-                                            {{-- <small>Clique em uma promoção para editar</small> --}}
+                                            <small>Para editar clique em um pacote.</small>
                                         </div>
                                         <div class="col-sm-6">
                                             <button id="criarPromocao" data-toggle="modal" data-target="#modalCriarPromocao" class="btn btn-primary float-md-right">+ Criar pacote</button>
@@ -42,14 +42,14 @@
                                         @foreach ($promocoes as $promocao)
                                             <tbody>
                                                 <th>
-                                                    <td>{{$promocao->identificador}}</td>
-                                                    <td>Pendencia para programar</td>
+                                                    <td data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}">{{$promocao->identificador}}</td>
+                                                    <td data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}">Pendencia para programar</td>
                                                     @if ($promocao->valor == null || $promocao->valor <= 0)
-                                                        <td>Grátis</td>
+                                                        <td data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}">Grátis</td>
                                                     @else 
-                                                        <td>R$ {{number_format($promocao->valor, 2,',','.')}} / R$ {{number_format($promocao->valor - $promocao->valor * 0.10, 2,',','.')}}</td>
+                                                        <td data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}">R$ {{number_format($promocao->valor, 2,',','.')}} / R$ {{number_format($promocao->valor - $promocao->valor * 0.10, 2,',','.')}}</td>
                                                     @endif
-                                                    <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}" ><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a></td>
+                                                    <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalPromocaoShow{{$promocao->id}}" ><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a></td>
                                                     <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalPromocaoDelete{{$promocao->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
                                                 </th>
                                             </tbody>
@@ -509,7 +509,7 @@
                                         @enderror
                                     </div>
                                     <div class="col-sm-1">
-                                        <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao()"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                        <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao(0)"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
                                     </div>
                                 </div>
                             @endif
@@ -549,7 +549,7 @@
                         <div class="row">
                             @if (count($categorias) > 0)
                                 <div class="col-sm-12">
-                                    <input id="para_todas_categorias" type="checkbox" name="para_todas_categorias" @if(old('para_todas_categorias') == "on") checked @endif onclick="mostrarCategorias(this)">
+                                    <input id="para_todas_categorias" type="checkbox" name="para_todas_categorias" @if(old('para_todas_categorias') == "on") checked @endif onclick="mostrarCategorias(this,0)">
                                     <label for="para_todas_categorias">Para todas categorias</label>
                                 </div>
                             @else
@@ -585,12 +585,212 @@
 {{-- Fim do modal criar promoção --}}
 
 @foreach ($promocoes as $promocao)
-{{-- Modal visualizar promocao --}}
+{{-- Modal editar pacote --}}
     <div class="modal fade modal-example-lg" id="modalPromocaoEdit{{$promocao->id}}" tabindex="-1" role="dialog" aria-labelledby="modalPromocaoEdit{{$promocao->id}}Label" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
-            <h5 class="modal-title" id="modalPromocaoEdit{{$promocao->id}}Label">{{$promocao->identificador}}</h5>
+            <h5 class="modal-title" id="modalPromocaoEdit{{$promocao->id}}Label">Editar pacote - {{$promocao->identificador}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditarPromocao{{$promocao->id}}" action="{{route('promocao.update', ['id'=> $promocao->id])}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="editarPromocao" id="" value="{{$promocao->id}}">
+                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                    <div class="container form-group">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <label for="identificador_{{$promocao->id}}">Identificador*</label>
+                                <input id="identificador_{{$promocao->id}}" name="identificador_{{$promocao->id}}" class="form-control apenasLetras @error('identificador_'.$promocao->id) is-invalid @enderror" type="text" placeholder="Pacote padrão" value="@if(old('identificador_'.$promocao->id)!=null){{old('identificador_'.$promocao->id)}}@else{{$promocao->identificador}}@endif">
+                                
+                                @error('identificador_'.$promocao->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="valor_{{$promocao->id}}">Valor da promoção*</label>
+                                <input id="valor_{{$promocao->id}}" name="valor_{{$promocao->id}}" class="form-control @error('valor_'.$promocao->id) is-invalid @enderror" type="number" placeholder="0 para pacote grátis" value="@if(old('valor_'.$promocao->id) != null){{old('valor_'.$promocao->id)}}@else{{$promocao->valor}}@endif">
+                            
+                                @error('valor_'.$promocao->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="descricao_{{$promocao->id}}">Descrição</label>
+                                <textarea class="form-control @error('descrição_'.$promocao->id) is-invalid @enderror" name="descrição_{{$promocao->id}}" id="descricao" placeholder="Pacote padrão para estudantes">@if(old('descrição_'.$promocao->id)){{old('descrição_'.$promocao->id)}}@else{{$promocao->descricao}}@endif</textarea>
+                                
+                                @error('descrição_'.$promocao->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <hr>
+                                <h5>Lotes</h5>
+                            </div>
+                        </div>
+                        {{-- {{dd(old('dataDeInício'))}} --}}
+                        <div id="lotes{{$promocao->id}}">
+                            @if (old('dataDeInício') != null || old('dataDeFim') != null || old('disponibilidade') != null)
+                                @foreach (old('dataDeInício') as $key => $dataInicio)
+                                    <div class="row">
+                                        <div class="col-sm-4"> 
+                                            <label for="dataDeInicio">Data de início*</label>
+                                            <input id="dataDeInicio" name="dataDeInício_{{$promocao->id}}[]" class="form-control @error('dataDeInício_'.$promocao->id.'.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeInício_'.$promocao->id.'.'.$key)}}">
+                                            
+                                            @error('dataDeInício_'.$promocao->id.'.'.$key)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-4"> 
+                                            <label for="dataDeFim">Data de fim*</label>
+                                            <input id="dataDeFim" name="dataDeFim_{{$promocao->id}}[]" class="form-control @error('dataDeFim_'.$promocao->id.'.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeFim_'.$promocao->id.'.'.$key)}}">
+                                        
+                                            @error('dataDeFim_'.$promocao->id.'.'.$key)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-3"> 
+                                            <label for="quantidade">Disponibilidade*</label>
+                                            <input id="quantidade" name="disponibilidade_{{$promocao->id}}[]" class="form-control  @error('disponibilidade_'.$promocao->id.'.'.$key) is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade_'.$promocao->id.'.'.$key)}}">
+                                        
+                                            @error('disponibilidade_'.$promocao->id.'.'.$key)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-1">
+                                            @if ($key == 0)
+                                                <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao({{$promocao->id}})"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                            @else
+                                                <a href="#" title="Remover lote" onclick="removerLoteDaPromocao(this)"><img src="{{asset('img/icons/lixo.png')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else 
+                                @foreach ($promocao->lotes as $key => $lote)
+                                    <div class="row">
+                                        <div class="col-sm-4"> 
+                                            <label for="dataDeInicio{{$lote->id}}">Data de início*</label>
+                                            <input id="dataDeInicio{{$lote->id}}" name="dataDeInício_{{$promocao->id}}[]" class="form-control" type="date" value="{{$lote->inicio_validade}}">
+                                        </div>
+                                        <div class="col-sm-4"> 
+                                            <label for="dataDeFim{{$lote->id}}">Data de fim*</label>
+                                            <input id="dataDeFim{{$lote->id}}" name="dataDeFim_{{$promocao->id}}[]" class="form-control" type="date" value="{{$lote->fim_validade}}">
+                                        </div>
+                                        <div class="col-sm-3"> 
+                                            <label for="quantidade{{$lote->id}}">Disponibilidade* <img src="{{asset('img/icons/interrogacao.png')}}" alt="" width="15px;" style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Coloque 0 para a disponibilidade ser ilimitada.'></label>
+                                            <input id="quantidade{{$lote->id}}" name="disponibilidade_{{$promocao->id}}[]" class="form-control" type="number" placeholder="10" value="{{$lote->quantidade_de_aplicacoes}}">
+                                        </div>
+                                        <div class="col-sm-1">
+                                            @if ($key == 0)
+                                                <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao({{$promocao->id}})"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                            @else 
+                                                <a href="#" title="Remover lote" onclick="removerLoteDaPromocao(this)"><img src="{{asset('img/icons/lixo.png')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <hr>
+                                <h5>Atividades inclusas na promoção</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            @foreach ($atividades as $atv)
+                                <div class="col-sm-3">
+                                    @if (old('atividades') != null && in_array($atv->id, old('atividades'))) 
+                                        <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades_{{$promocao->id}}[]" checked>
+                                        <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
+                                    @elseif ($promocao->atividades != null && $promocao->atividades->contains($atv)) 
+                                        <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades_{{$promocao->id}}[]" checked>
+                                        <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
+                                    @else 
+                                        <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades_{{$promocao->id}}[]">
+                                        <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <hr>
+                                <h5>Categorias de participante que o pacote será exibido</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                @error('errorCategorias_'.$promocao->id)
+                                    @include('componentes.mensagens')
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row">
+                            @if (count($categorias) > 0)
+                                <div class="col-sm-12">
+                                    <input id="para_todas_categorias" type="checkbox" name="para_todas_categorias" @if(old('para_todas_categorias') == "on") @elseif($promocao->categorias->diff($categorias)->isEmpty()) checked @endif onclick="mostrarCategorias(this,{{$promocao->id}})">
+                                    <label for="para_todas_categorias">Para todas categorias</label>
+                                </div>
+                            @else
+                                <div class="col-sm-12">
+                                    Nenhuma categoria cadastrada.
+                                </div>
+                            @endif
+                        </div>
+                        <div id="categoriasPromocao{{$promocao->id}}" class="row" style="display:@if($promocao->categorias->diff($categorias)->isEmpty()) none;@else block;@endif">
+                            @foreach ($categorias as $categoria)
+                                <div class="col-sm-3">
+                                    @if (old('categorias') != null && in_array($categoria->id, old('categorias'))) 
+                                        <input id="atividade_{{$categoria->id}}" type="checkbox" value="{{$categoria->id}}" name="categorias_{{$promocao->id}}[]" checked>
+                                        <label for="atividade_{{$categoria->id}}">{{$categoria->nome}}</label>
+                                    @elseif ($promocao->categorias != null && $promocao->categorias->contains($categoria))
+                                        <input id="atividade_{{$categoria->id}}" type="checkbox" value="{{$categoria->id}}" name="categorias_{{$promocao->id}}[]" checked>
+                                        <label for="atividade_{{$categoria->id}}">{{$categoria->nome}}</label>
+                                    @else 
+                                        <input id="atividade_{{$categoria->id}}" type="checkbox" value="{{$categoria->id}}" name="categorias_{{$promocao->id}}[]">
+                                        <label for="atividade_{{$categoria->id}}">{{$categoria->nome}}</label>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" form="formEditarPromocao{{$promocao->id}}">Atualizar</button>
+            </div>
+        </div>
+        </div>
+    </div> 
+{{-- Fim do modal editar pacote --}}
+{{-- Modal visualizar promocao --}}
+    <div class="modal fade modal-example-lg" id="modalPromocaoShow{{$promocao->id}}" tabindex="-1" role="dialog" aria-labelledby="modalPromocaoShow{{$promocao->id}}Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalPromocaoShow{{$promocao->id}}Label">{{$promocao->identificador}}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                 <span aria-hidden="true">&times;</span>
             </button>

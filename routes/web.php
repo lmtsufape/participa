@@ -219,6 +219,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
   Route::get('inscricoes/evento-{id}/index',    'Inscricao\InscricaoController@index'   )->name('inscricoes');
   Route::post('inscricoes/criar-promocao',      'Inscricao\PromocaoController@store'    )->name('promocao.store');
+  Route::post('inscricoes/{id}/editar-promocao', 'Inscricao\PromocaoController@update')->name('promocao.update');
   Route::post('inscricoes/destroy/{id}-promocao','Inscricao\PromocaoController@destroy' )->name('promocao.destroy');
 
   Route::post('inscricoes/criar-cupom',         'Inscricao\CupomDeDescontoController@store')->name('cupom.store');
