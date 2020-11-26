@@ -293,7 +293,7 @@
         <div class="col-sm-12 info-evento">
             <h4>{{$etiquetas->etiquetamoduloinscricao}}:</h4>
             <p>
-                LOCAL DA INSCRIÇÃO!!!
+                <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a>
             </p>
         </div>
       </div>

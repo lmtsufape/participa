@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Evento;
-use App\ComissaoEvento;
+use App\Models\Users\User;
+use App\Models\Submissao\Evento;
+use App\Models\Submissao\ComissaoEvento;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -23,11 +23,11 @@ class EventoPolicy
     }
 
     public function isCoordenador(User $user, Evento $evento){
-      return $user->id === $evento->coordenador->id;
+      return $user->id === $evento->coordenadorId;
     }
 
     public function isPublishOrIsCoordenador(User $user, Evento $evento) {
-      if ($user->id === $evento->coordenador->id || $evento->publicado) {
+      if ($user->id === $evento->coordenadorId || $evento->publicado) {
         return true;
       }
       return false;
@@ -35,7 +35,7 @@ class EventoPolicy
 
     public function isCoordenadorOrComissao(User $user, Evento $evento) {
       $membro = $evento->usuariosDaComissao()->where([['user_id', $user->id], ['evento_id', $evento->id]])->first();
-      return $user->id === $evento->coordenador->id || !(is_null($membro));
+      return $user->id === $evento->coordenadorId || !(is_null($membro));
     }
 
     public function isRevisor(User $user, Evento $evento) {
@@ -53,6 +53,13 @@ class EventoPolicy
       if ($user->revisor->trabalhosAtribuidos != null && count($user->revisor->trabalhosAtribuidos) > 0) {
         return true;
       }
+      return false;
+    }
+
+    public function isCoordenadorOrComissaoOrganizadora(User $user, Evento $evento) {
+      if ($evento->coordenadorId == $user->id || $user->id == $evento->coord_comissao_organizadora_id || $evento->usuariosDaComissaoOrganizadora()->where('user_id', $user->id)->first() != null) {
+        return true;
+      } 
       return false;
     }
 }
