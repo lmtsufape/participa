@@ -86,7 +86,7 @@ class EventoController extends Controller
     public function definirSubmissoes(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', Auth::user(),$evento);
+        $this->authorize('isCoordenadorOrComissao', $evento);
 
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();

@@ -5,15 +5,15 @@
     <div class="sidebar">
         <h2>{{{$evento->nome}}}</h2>
         <ul>
-            {{-- @can('isCoordenador', $evento) --}}
+            @can('isCoordenador', $evento)
                 <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
                     <li>
                         <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
                     </li>
                 </a>
 
-            {{-- @endcan --}}
-            {{-- @can('isCoordenador', $evento) --}}
+            @endcan
+            @can('isCoordenador', $evento)
 
 
             <a id="trabalhos">
@@ -22,7 +22,7 @@
                 </li>
 
                 <div id="dropdownTrabalhos"  @if(request()->is('coord/evento/trabalhos*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                    {{-- @can('isCoordenadorOrComissao', $evento) --}}
+                    @can('isCoordenadorOrComissao', $evento)
                         <a id="submissoesTrabalhos" href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
                             <li>
                                 <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Tipo</h5>
@@ -38,18 +38,18 @@
                                 <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5>
                             </li>
                         </a>
-                    {{-- @endcan --}}
-                    {{-- @can('isRevisorComAtribuicao') --}}
+                    @endcan
+                    @can('isRevisorComAtribuicao')
                         <a id="avaliarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
                             <li>
                                 <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Avaliação</h5>
                             </li>
                         </a>
-                    {{-- @endcan --}}
+                    @endcan
                 </div>
             </a>
 
-            {{-- @endcan --}}
+            @endcan
 
             <a id="areas">
                 
@@ -333,7 +333,7 @@
         @elseif (old('novaPromocao') != null)
             $('#li_promocoes').click();
         @else
-            $('#li_promocoes').click();
+            $('#li_categoria_participante').click();
         @endif 
         
     });
@@ -1576,19 +1576,36 @@
         e.target.selectionEnd = fimCursor;
     }
 
-    var quantidadeDePeriodos = 0;
-    function adicionarPeriodoCategoria() {
+    function adicionarPeriodoCategoria(id) {
         var html = "";
-        
+        var quantidadeDePeriodos = 0;
+
+        if (id == 0) {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria').children.length;
+        } else {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria'+id).children.length;
+        }
+
         if (quantidadeDePeriodos == 0) {
-            html += "<div id='tituloDePeriodo' class='row form-group'>" +
+            if (id == 0) {
+                html += "<div id='tituloDePeriodo' class='row form-group'>" +
                         "<div class='col-sm-12'>" +
                             "<hr>" +
                             "<h4>Periodos de desconto</h4>" +
                         "</div>" +
                     "</div>";
+            } else {
+                html += "<div id='tituloDePeriodo"+id+"' class='row form-group'>" +
+                        "<div class='col-sm-12'>" +
+                            "<hr>" +
+                            "<h4>Periodos de desconto</h4>" +
+                        "</div>" +
+                    "</div>";
+            }
         }
-        html += "<div class='peridodoDesconto'>" +
+        
+        if (id == 0) {
+            html += "<div class='peridodoDesconto'>" +
                     "<div class='row form-group'>" +
                         "<div class='col-sm-4'>" +
                             "<label for='tipo_valor'>Valor do desconto*</label>" +
@@ -1614,19 +1631,64 @@
                             "<input id='fim' name='fimDesconto[]' class='form-control' type='date' value='' required>" +
                         "</div>" +
                         "<div class='col-sm-2' style='position: relative; top: 35px;'>" +
-                            "<a type='button' onclick='removerPeriodoDesconto(this)'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>" +
+                            "<a type='button' onclick='removerPeriodoDesconto(this,"+id+")'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>" +
                         "</div>" +
                     "</div>"+ 
                 "</div>";
-        quantidadeDePeriodos++;
-        $('#periodosCategoria').append(html);
+        } else {
+            html += "<div class='peridodoDesconto'>" +
+                    "<div class='row form-group'>" +
+                        "<div class='col-sm-4'>" +
+                            "<label for='tipo_valor'>Valor do desconto*</label>" +
+                            "<br>" +
+                            "<select class='form-control' name='tipo_valor_"+id+"[]' required>" +
+                                "<option value='' disabled selected>-- Escolha o tipo de valor --</option>" +
+                                "<option value='porcentagem'>Porcentagem</option>" +
+                                "<option value='real'>Real</option>" +
+                            "</select>" +
+                        "</div>" +
+                        "<div class='col-sm-6'>" +
+                            "<label for='valorDesconto'>Valor</label>" +
+                            "<input id='valorDesconto' name='valorDesconto_"+id+"[]' type='number' class='form-control real @error('number') is-invalid @enderror' placeholder='' value='' required>" +
+                        "</div>" +
+                    "</div>" +
+                    "<div class='row form-group'>" +
+                        "<div class='col-sm-5'> " +
+                            "<label for='inicio'>Data de início*</label>" + 
+                            "<input id='inicio' name='inícioDesconto_"+id+"[]' class='form-control' type='date' value='' required>" +
+                        "</div>" +
+                        "<div class='col-sm-5'>" +
+                            "<label for='fim'>Data de fim*</label>" +
+                            "<input id='fim' name='fimDesconto_"+id+"[]' class='form-control' type='date' value='' required>" +
+                        "</div>" +
+                        "<div class='col-sm-2' style='position: relative; top: 35px;'>" +
+                            "<a type='button' onclick='removerPeriodoDesconto(this,"+id+")'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>" +
+                        "</div>" +
+                    "</div>"+ 
+                "</div>";
+        }
+
+        if (id == 0) {
+            $('#periodosCategoria').append(html);
+        } else {
+            $('#periodosCategoria'+id).append(html);
+        }
     }
 
-    function removerPeriodoDesconto(button) {
-        quantidadeDePeriodos--;
+    function removerPeriodoDesconto(button, id) {
+        var quantidadeDePeriodos = 0;
+        if (id == 0) {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria').children.length;
+        } else {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria'+id).children.length;
+        }
         button.parentElement.parentElement.parentElement.remove();
-        if (quantidadeDePeriodos == 0) {
-            document.getElementById('tituloDePeriodo').remove();
+        if (quantidadeDePeriodos == 2) {
+            if (id == 0) {
+                document.getElementById('tituloDePeriodo').remove();
+            } else {
+                document.getElementById('tituloDePeriodo'+id).remove();
+            }
         }
     }
 
@@ -1914,6 +1976,13 @@
                     $("#btn-tipo-contato").click();
                     break;
             }
+        })
+    </script>
+  @endif
+  @if (old('editarCategoria') != null)
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarCategoria"+"{{old('editarCategoria')}}").modal('show');
         })
     </script>
   @endif
