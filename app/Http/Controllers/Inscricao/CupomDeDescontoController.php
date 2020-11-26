@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Evento;
+use App\Models\Submissao\Evento;
 use Carbon\Carbon;
 use App\Models\Inscricao\CupomDeDesconto;
 
@@ -41,6 +41,7 @@ class CupomDeDescontoController extends Controller
         $evento = Evento::find($request->evento_id);
         $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
         $validadeData = $request->validate([
+            'criarCupom'    => 'required',
             'identificador' => 'required',
             'quantidade'    => 'required',
             'tipo_valor'    => 'required',
@@ -53,7 +54,15 @@ class CupomDeDescontoController extends Controller
         $cupomDeDesconto->evento_id             = $evento->id;
         $cupomDeDesconto->identificador         = $request->identificador;
         $cupomDeDesconto->valor                 = $request->valor;
-        $cupomDeDesconto->quantidade_aplicacao  = $request->quantidade;
+
+        if ($request->quantidade == 0) {
+            $cupomDeDesconto->quantidade_aplicacao  = -1;
+        } else if ($request->quantidade < 0) {
+            return redirect()->back()->withErrors(['criarCupom' => '0','quantidade' => 'Digite um valor positivo.'])->withInput($validadeData);
+        } else {
+            $cupomDeDesconto->quantidade_aplicacao = $request->quantidade;
+        }
+
         $cupomDeDesconto->inicio                = $request->input('início');
         $cupomDeDesconto->fim                   =$request->fim;
 

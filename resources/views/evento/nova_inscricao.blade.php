@@ -68,10 +68,10 @@
                                         <input type="hidden" id="atvPromocaoInput{{old('atividadesPromo.'.$key)}}" name="atividadesPromo[]" value="{{old('atividadesPromo.'.$key)}}">
                                         <div class="card" style="width: 16rem;">
                                             <div class="card-body">
-                                                <h4 class="card-title">{{App\Atividade::find(old('atividadesPromo.'.$key))->titulo}}</h4>
-                                                <h5 class="card-subtitle mb-2 text-muted">{{App\Atividade::find(old('atividadesPromo.'.$key))->tipoAtividade->descricao}}</h5>
-                                                <h6 class="card-subtitle mb-2 text-muted">{{App\Atividade::find(old('atividadesPromo.'.$key))->local}}</h6>
-                                                <p class="card-text">{{App\Atividade::find(old('atividadesPromo.'.$key))->descricao}}</p>
+                                                <h4 class="card-title">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->titulo}}</h4>
+                                                <h5 class="card-subtitle mb-2 text-muted">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->tipoAtividade->descricao}}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->local}}</h6>
+                                                <p class="card-text">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->descricao}}</p>
                                                 <a href='#' class='card-link' data-toggle='modal' data-target='#modalDetalheAtividade{{old('atividadesPromo.'.$key)}}'>Detalhes</a>
                                             </div>
                                         </div>
@@ -137,7 +137,7 @@
             </div>
             <div class="row" style="position: relative; left: 50px; margin-top:70px; margin-bottom:50px;">
                 <div class="col-sm-5" style="top:5px;">
-                    <button type="button" class="btn btn-secondary" style="width: 100%; padding: 25px;">Voltar</button>
+                <a href="{{route('evento.visualizar', ['id' => $evento->id])}}" class="btn btn-secondary" style="width: 100%; padding: 25px;">Voltar</a>
                 </div>
                 <div class="col-sm-6">
                     <button type="submit" class="btn btn-primary" style="width: 100%; padding: 30px;">Avançar</button>

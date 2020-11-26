@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Evento;
+use App\Models\Submissao\Evento;
 use App\Models\Inscricao\Promocao;
-use App\Atividade;
+use App\Models\Submissao\Atividade;
 use App\Models\Inscricao\CupomDeDesconto;
+use App\Models\Inscricao\CategoriaParticipante;
+use App\Models\Inscricao\CampoFormulario;
 
 class InscricaoController extends Controller
 {
@@ -24,10 +26,15 @@ class InscricaoController extends Controller
         $promocoes = Promocao::where('evento_id', $id)->get();
         $atividades = Atividade::where('eventoId', $id)->get();
         $cuponsDeDescontro = CupomDeDesconto::where('evento_id', $id)->get();
-        return view('coordenador.programacao.inscricoes', ['evento' => $evento,
-                                                           'promocoes' => $promocoes,
+        $categoriasParticipante = CategoriaParticipante::where('evento_id', $id)->get();
+        $camposDoFormulario = CampoFormulario::where('evento_id', $id)->get();
+
+        return view('coordenador.programacao.inscricoes', ['evento'     => $evento,
+                                                           'promocoes'  => $promocoes,
                                                            'atividades' => $atividades,
-                                                           'cupons' => $cuponsDeDescontro]);
+                                                           'cupons'     => $cuponsDeDescontro,
+                                                           'categorias' => $categoriasParticipante,
+                                                           'campos'     => $camposDoFormulario,]);
     }
 
     /**
@@ -39,7 +46,12 @@ class InscricaoController extends Controller
     {
         $evento = Evento::find($id);
 
-        return view('evento.nova_inscricao', ['evento' => $evento]);
+        return view('evento.nova_inscricao', ['evento'              => $evento,
+                                              'eventoVoltar'        => null,
+                                              'valorTotalVoltar'    => null,
+                                              'promocaoVoltar'      => null,
+                                              'atividadesVoltar'    => null,
+                                              'cupomVoltar'         => null]);
     }
 
     /**
@@ -115,13 +127,14 @@ class InscricaoController extends Controller
         $valorDaInscricao = $request->valorTotal;
         $promocao = null;
         $atividades = null;
+        $valorComDesconto = null;
         $cupom = CupomDeDesconto::where([['evento_id', $evento->id],['identificador', '=', $request->cupom]])->first();
 
         if ($request->cupom != null) {
             if ($cupom != null && $cupom->porcentagem) {
-                $valorDaInscricao = $valorDaInscricao - $valorDaInscricao * ($cupom->valor / 100);
+                $valorComDesconto = $valorDaInscricao - $valorDaInscricao * ($cupom->valor / 100);
             } else {
-                $valorDaInscricao -= $cupom->valor;
+                $valorComDesconto -= $cupom->valor;
             }
         }
         
@@ -141,10 +154,44 @@ class InscricaoController extends Controller
             $atividades = Atividade::whereIn('id', $request->atividades)->get();
         }
 
-        return view('evento.revisar_inscricao', ['evento'       => $evento,
-                                                             'valor'        => $valorDaInscricao,
-                                                             'promocao'     => $promocao,
-                                                             'atividades'   => $atividades,
-                                                             'cupom'        => $cupom]);
+        return view('evento.revisar_inscricao', ['evento'           => $evento,
+                                                'valor'             => $valorDaInscricao,
+                                                'promocao'          => $promocao,
+                                                'atividades'        => $atividades,
+                                                'cupom'             => $cupom,
+                                                'valorComDesconto'  => $valorComDesconto]);
+    }
+
+    public function voltarTela(Request $request, $id) {
+        // dd($request);
+
+        $evento = Evento::find($request->evento_id);
+        $valorTotal = $request->valorTotal;
+        $promocao = null;
+        $atividades = null;
+        $cupom = null;
+
+        if ($request->promocao_id != null) {
+            $promocao = Promocao::find($request->promocao_id);             
+        }
+
+        if ($request->atividades != null && count($request->atividades) > 0) {
+            $atividades = Atividade::whereIn('id', $request->atividades)->get();
+        }
+
+        if ($request->cupom != null) {
+            $cupom = CupomDeDesconto::find($request->cupom);
+        }
+
+        return view('evento.nova_inscricao', ['evento'              => $evento,
+                                              'eventoVoltar'        => $evento,
+                                              'valorTotalVoltar'    => $valorTotal,
+                                              'promocaoVoltar'      => $promocao,
+                                              'atividadesVoltar'    => $atividades,
+                                              'cupomVoltar'         => $cupom]);
+    }
+
+    public function confirmar(Request $request, $id) {
+        dd($request);
     }
 }

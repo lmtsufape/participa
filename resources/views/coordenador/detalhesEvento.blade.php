@@ -5,15 +5,15 @@
     <div class="sidebar">
         <h2>{{{$evento->nome}}}</h2>
         <ul>
-            {{-- @can('isCoordenador', $evento) --}}
+            @can('isCoordenador', $evento)
                 <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
                     <li>
                         <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
                     </li>
                 </a>
 
-            {{-- @endcan --}}
-            {{-- @can('isCoordenador', $evento) --}}
+            @endcan
+            @can('isCoordenador', $evento)
 
 
             <a id="trabalhos">
@@ -49,7 +49,7 @@
                 </div>
             </a>
 
-            {{-- @endcan --}}
+            @endcan
 
             <a id="areas">
                 
@@ -297,7 +297,7 @@
   <script type="text/javascript" >
     // Adicionar novo criterio
     var contadorOpcoes = 0;
-    $(document).ready(function(){
+    $(document).ready(function($){
         $('#addCriterio').click(function(){
             if ($('#modalidade').val() != null) {
                 linha = montarLinhaInput();
@@ -307,7 +307,35 @@
                 alert("Escolha uma modalidade");
             }
         });
-        $('#li_promocoes').click();
+
+        $('#cep').mask('00000-000');
+        $('#campoExemploCpf').mask('000.000.000-00');
+
+        var SPMaskBehavior = function (val) {
+            return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+        },
+        spOptions = {
+            onKeyPress: function(val, e, field, options) {
+            field.mask(SPMaskBehavior.apply({}, arguments), options);
+            }
+        };
+
+        $('#campoExemploNumero').mask(SPMaskBehavior, spOptions);
+
+        @if (old('criarCupom') != null) 
+            $('#li_cuponsDeDesconto').click();
+        @elseif (old('criarCategoria') != null)
+            $('#li_categoria_participante').click();
+        @elseif (old('criarCampo') != null)
+            $('#li_formulario_inscricao').click();
+        @elseif (old('campo_id') != null)
+            $('#li_formulario_inscricao').click();
+        @elseif (old('novaPromocao') != null)
+            $('#li_promocoes').click();
+        @else
+            $('#li_categoria_participante').click();
+        @endif 
+        
     });
 
     function exibirLimite(id, input) {
@@ -1477,9 +1505,23 @@
         if (elemento == document.getElementById("li_promocoes")) {
             elemento.className = "aba ativado";
             document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
+            document.getElementById("li_categoria_participante").className = "aba aba-tab";
+            document.getElementById('li_formulario_inscricao').className = "aba aba-tab";
         } else if (elemento == document.getElementById("li_cuponsDeDesconto")) {
             elemento.className = "aba ativado";
             document.getElementById("li_promocoes").className = "aba aba-tab";
+            document.getElementById("li_categoria_participante").className = "aba aba-tab";
+            document.getElementById('li_formulario_inscricao').className = "aba aba-tab";
+        } else if (elemento == document.getElementById("li_categoria_participante")) {
+            elemento.className = "aba ativado";
+            document.getElementById("li_promocoes").className = "aba aba-tab";
+            document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
+            document.getElementById('li_formulario_inscricao').className = "aba aba-tab";
+        } else if (elemento == document.getElementById('li_formulario_inscricao')) {
+            elemento.className = "aba ativado";
+            document.getElementById("li_promocoes").className = "aba aba-tab";
+            document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
+            document.getElementById("li_categoria_participante").className = "aba aba-tab";
         }
     }
 
@@ -1509,6 +1551,14 @@
         elemento.parentElement.parentElement.remove();
     }
 
+    function mostrarCategorias(input) {
+        if (input.checked) {
+            document.getElementById('categoriasPromocao').style.display = "none";
+        } else {
+            document.getElementById('categoriasPromocao').style.display = "block";
+        }
+    }
+
     function alterarPlaceHolderDoNumero(elemento) {
         var input = document.getElementById('valorCupom')
         if (elemento.value == "real") {
@@ -1525,9 +1575,426 @@
         e.target.selectionStart = inicioCursor;
         e.target.selectionEnd = fimCursor;
     }
+
+    function adicionarPeriodoCategoria(id) {
+        var html = "";
+        var quantidadeDePeriodos = 0;
+
+        if (id == 0) {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria').children.length;
+        } else {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria'+id).children.length;
+        }
+
+        if (quantidadeDePeriodos == 0) {
+            if (id == 0) {
+                html += "<div id='tituloDePeriodo' class='row form-group'>" +
+                        "<div class='col-sm-12'>" +
+                            "<hr>" +
+                            "<h4>Periodos de desconto</h4>" +
+                        "</div>" +
+                    "</div>";
+            } else {
+                html += "<div id='tituloDePeriodo"+id+"' class='row form-group'>" +
+                        "<div class='col-sm-12'>" +
+                            "<hr>" +
+                            "<h4>Periodos de desconto</h4>" +
+                        "</div>" +
+                    "</div>";
+            }
+        }
+        
+        if (id == 0) {
+            html += "<div class='peridodoDesconto'>" +
+                    "<div class='row form-group'>" +
+                        "<div class='col-sm-4'>" +
+                            "<label for='tipo_valor'>Valor do desconto*</label>" +
+                            "<br>" +
+                            "<select class='form-control' name='tipo_valor[]' required>" +
+                                "<option value='' disabled selected>-- Escolha o tipo de valor --</option>" +
+                                "<option value='porcentagem'>Porcentagem</option>" +
+                                "<option value='real'>Real</option>" +
+                            "</select>" +
+                        "</div>" +
+                        "<div class='col-sm-6'>" +
+                            "<label for='valorDesconto'>Valor</label>" +
+                            "<input id='valorDesconto' name='valorDesconto[]' type='number' class='form-control real @error('number') is-invalid @enderror' placeholder='' value='' required>" +
+                        "</div>" +
+                    "</div>" +
+                    "<div class='row form-group'>" +
+                        "<div class='col-sm-5'> " +
+                            "<label for='inicio'>Data de início*</label>" + 
+                            "<input id='inicio' name='inícioDesconto[]' class='form-control' type='date' value='' required>" +
+                        "</div>" +
+                        "<div class='col-sm-5'>" +
+                            "<label for='fim'>Data de fim*</label>" +
+                            "<input id='fim' name='fimDesconto[]' class='form-control' type='date' value='' required>" +
+                        "</div>" +
+                        "<div class='col-sm-2' style='position: relative; top: 35px;'>" +
+                            "<a type='button' onclick='removerPeriodoDesconto(this,"+id+")'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>" +
+                        "</div>" +
+                    "</div>"+ 
+                "</div>";
+        } else {
+            html += "<div class='peridodoDesconto'>" +
+                    "<div class='row form-group'>" +
+                        "<div class='col-sm-4'>" +
+                            "<label for='tipo_valor'>Valor do desconto*</label>" +
+                            "<br>" +
+                            "<select class='form-control' name='tipo_valor_"+id+"[]' required>" +
+                                "<option value='' disabled selected>-- Escolha o tipo de valor --</option>" +
+                                "<option value='porcentagem'>Porcentagem</option>" +
+                                "<option value='real'>Real</option>" +
+                            "</select>" +
+                        "</div>" +
+                        "<div class='col-sm-6'>" +
+                            "<label for='valorDesconto'>Valor</label>" +
+                            "<input id='valorDesconto' name='valorDesconto_"+id+"[]' type='number' class='form-control real @error('number') is-invalid @enderror' placeholder='' value='' required>" +
+                        "</div>" +
+                    "</div>" +
+                    "<div class='row form-group'>" +
+                        "<div class='col-sm-5'> " +
+                            "<label for='inicio'>Data de início*</label>" + 
+                            "<input id='inicio' name='inícioDesconto_"+id+"[]' class='form-control' type='date' value='' required>" +
+                        "</div>" +
+                        "<div class='col-sm-5'>" +
+                            "<label for='fim'>Data de fim*</label>" +
+                            "<input id='fim' name='fimDesconto_"+id+"[]' class='form-control' type='date' value='' required>" +
+                        "</div>" +
+                        "<div class='col-sm-2' style='position: relative; top: 35px;'>" +
+                            "<a type='button' onclick='removerPeriodoDesconto(this,"+id+")'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>" +
+                        "</div>" +
+                    "</div>"+ 
+                "</div>";
+        }
+
+        if (id == 0) {
+            $('#periodosCategoria').append(html);
+        } else {
+            $('#periodosCategoria'+id).append(html);
+        }
+    }
+
+    function removerPeriodoDesconto(button, id) {
+        var quantidadeDePeriodos = 0;
+        if (id == 0) {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria').children.length;
+        } else {
+            quantidadeDePeriodos = document.getElementById('periodosCategoria'+id).children.length;
+        }
+        button.parentElement.parentElement.parentElement.remove();
+        if (quantidadeDePeriodos == 2) {
+            if (id == 0) {
+                document.getElementById('tituloDePeriodo').remove();
+            } else {
+                document.getElementById('tituloDePeriodo'+id).remove();
+            }
+        }
+    }
+
+    function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+    function pesquisacep(valor) {
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    }
+
+    function mostrarCampos(tipoCampo) {
+        var botoes = document.getElementById('escolherInput');
+        var inputs = document.getElementById('preencherDados');
+        var botoesSubmissao = document.getElementById('botoesDeSubmissao');
+        var inputTipoCampo = document.getElementById('tipo_campo');
+        var campoExemplo = document.getElementById('campoExemplo');
+        var tituloDoCampo = document.getElementById('titulo_do_campo');
+        var campoExemploCpf = document.getElementById('campoExemploCpf');
+        var campoExemploNumero = document.getElementById('campoExemploNumero');
+        var divEnderecoExemplo = document.getElementById('divEnderecoExemplo');
+
+        botoes.style.display = "none";
+        inputs.style.display = "block";
+        botoesSubmissao.style.display = "block";
+        
+        switch (tipoCampo) {
+            case 'file': 
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Comprovante de matrícula");
+                campoExemplo.type = tipoCampo;
+                campoExemplo.className = "";
+                campoExemploCpf.style.display = "none";
+                campoExemplo.style.display = "block";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.placeholder = "Comprovante de matrícula";
+                tituloDoCampo.value = "";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Comprovante de matrícula");
+                    }
+                });
+                break;
+            case 'date':
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Data de nascimento");
+                campoExemplo.type = tipoCampo;
+                campoExemplo.style.display = "block";
+                campoExemplo.className = "form-control";
+                campoExemploCpf.style.display = "none";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.placeholder = "Data de nascimento";
+                tituloDoCampo.value = "";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Data de nascimento");
+                    }
+                });
+                break;
+            case 'email': 
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("E-mail para contato");
+                campoExemplo.type = tipoCampo;
+                campoExemplo.style.display = "block";
+                campoExemploCpf.style.display = "none";
+                campoExemplo.className = "form-control";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.placeholder = "E-mail para contato";
+                tituloDoCampo.value = "";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("E-mail para contato");
+                    }
+                });
+                break;
+            case 'text':
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Por que quer participar?");
+                campoExemplo.style.display = "block";
+                campoExemplo.type = tipoCampo;
+                campoExemploCpf.style.display = "none";
+                campoExemplo.className = "form-control";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.placeholder = "Por que quer participar?";
+                tituloDoCampo.value = "";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Por que quer participar?");
+                    }
+                });
+                break;
+            case 'cpf':
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Seu CPF");
+                campoExemplo.style.display = "none";
+                campoExemploCpf.style.display = "block";
+                tituloDoCampo.placeholder = "Seu CPF";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.value = "";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Seu CPF");
+                    }
+                });
+                break;
+            case 'contato':
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Seu celular");
+                campoExemplo.style.display = "none";
+                campoExemploCpf.style.display = "none";
+                tituloDoCampo.placeholder = "Seu celular";
+                campoExemploNumero.style.display = "block";
+                divEnderecoExemplo.style.display = "none";
+                tituloDoCampo.value = "";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Seu celular");
+                    }
+                });
+                break;
+            case 'endereco':
+                inputTipoCampo.value = tipoCampo;
+                $('#labelCampoExemplo').html("");
+                $('#labelCampoExemplo').append("Endereço residencial");
+                campoExemplo.style.display = "none";
+                campoExemploCpf.style.display = "none";
+                tituloDoCampo.placeholder = "Endereço residencial";
+                campoExemploNumero.style.display = "none";
+                divEnderecoExemplo.style.display = "block";
+                tituloDoCampo.value = "";
+                $('#titulo_do_campo').on('keyup', function(e) {
+                    if ($(this).val() != "") {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append($(this).val());
+                    } else {
+                        $('#labelCampoExemplo').html("");
+                        $('#labelCampoExemplo').append("Endereço residencial");
+                    }
+                });
+                break;
+        }
+    }
+
+    function voltarBotoes() {
+        var botoes = document.getElementById('escolherInput');
+        var inputs = document.getElementById('preencherDados');
+        var botoesSubmissao = document.getElementById('botoesDeSubmissao');
+
+        botoes.style.display = "block";
+        inputs.style.display = "none";
+        botoesSubmissao.style.display = "none";
+    }
+
+    function mostrarCheckBoxCategoria(input, id) {
+        if (id == 0) {
+            if (input.checked) {
+                document.getElementById('checkboxCategoria').style.display = "none";
+            } else {
+                document.getElementById('checkboxCategoria').style.display = "block";
+            }
+        } else {
+            if (input.checked) {
+                document.getElementById('checkboxCategoria'+id).style.display = "none";
+            } else {
+                document.getElementById('checkboxCategoria'+id).style.display = "block";
+            }
+        }       
+    }
+
   </script>
-  @if (old('criarCupom') != null)
+  @if (old('campo_id') != null)
     <script>
+        $(document).ready(function() {
+            $("#modalCampoEdit"+"{{old('campo_id')}}").modal('show');
+        });
+    </script>
+  @endif
+  @if (old('criarCampo') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalCriarCampo").modal('show');
+
+            switch ("{{old('tipo_campo')}}") {
+                case 'email':
+                    $("#btn-tipo-email").click();
+                    break;
+                case 'text':
+                    $("#btn-tipo-text").click();
+                    break;
+                case 'file': 
+                    $("#btn-tipo-file").click();
+                    break;
+                case 'date': 
+                    $("#btn-tipo-date").click();
+                    break;
+                case 'endereco':
+                    $("#btn-tipo-endereco").click();
+                    break;
+                case 'cpf': 
+                    $("#btn-tipo-cpf").click();
+                    break; 
+                case 'contato':
+                    $("#btn-tipo-contato").click();
+                    break;
+            }
+        })
+    </script>
+  @endif
+  @if (old('editarCategoria') != null)
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarCategoria"+"{{old('editarCategoria')}}").modal('show');
+        })
+    </script>
+  @endif
+  @if (old('criarCategoria') != null)
+    <script>
+        $(document).ready(function() {
+            $("#modalCriarCategoria").modal('show');
+        })
+    </script>
+  @endif
+  @if (old('criarCupom') != null)
+    <script>        
         $(document).ready(function() {
             $("#modalCriarCupom").modal('show');
         })
