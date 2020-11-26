@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\Users\User;
 use App\Models\Submissao\Evento;
-use App\Models\Submissao\ComissaoEvento;
+use App\Models\Users\ComissaoEvento;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
