@@ -322,7 +322,7 @@
 
         $('#campoExemploNumero').mask(SPMaskBehavior, spOptions);
 
-        @if (old('criarCupom') != null) 
+        @if (old('criarCupom') != null || old('editarCupom') != null) 
             $('#li_cuponsDeDesconto').click();
         @elseif (old('criarCategoria') != null || old('editarCategoria') != null)
             $('#li_categoria_participante').click();
@@ -1589,8 +1589,13 @@
         }
     }
 
-    function alterarPlaceHolderDoNumero(elemento) {
-        var input = document.getElementById('valorCupom')
+    function alterarPlaceHolderDoNumero(elemento, id) {
+        var input = null;
+        if (id == 0) {
+            input = document.getElementById('valorCupom');
+        } else {
+            input = document.getElementById('valorCupom'+id);
+        }
         if (elemento.value == "real") {
             input.placeholder = "R$ 10,00"
         } else if (elemento.value == "porcentagem") {
@@ -2006,6 +2011,13 @@
                     $("#btn-tipo-contato").click();
                     break;
             }
+        })
+    </script>
+  @endif
+  @if (old('editarCupom') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarCupom"+"{{old('editarCupom')}}").modal('show');
         })
     </script>
   @endif

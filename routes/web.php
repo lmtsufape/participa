@@ -223,6 +223,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::post('inscricoes/destroy/{id}-promocao','Inscricao\PromocaoController@destroy' )->name('promocao.destroy');
 
   Route::post('inscricoes/criar-cupom',         'Inscricao\CupomDeDescontoController@store')->name('cupom.store');
+  Route::post('inscricoes/editar-cupom/{id}',        'Inscricao\CupomDeDescontoController@update')->name('cupom.update');
   Route::get('inscricoes/destroy/{id}-cupom',  'Inscricao\CupomDeDescontoController@destroy')->name('cupom.destroy');
 
   Route::post('inscricoes/criar-categoria-participante', 'Inscricao\CategoriaController@store')->name('categoria.participante.store');

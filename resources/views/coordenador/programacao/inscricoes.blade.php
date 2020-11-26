@@ -73,6 +73,7 @@
                                         <div class="col-sm-6">
                                             <h5 class="card-title">Cupons de desconto</h5>
                                             <h6 class="card-subtitle mb-2 text-muted">Cupons que podem ser aplicados na hora da inscrição.</h6> 
+                                            <small>Para editar clique em um cupom.</small>
                                         </div>
                                         <div class="col-sm-6">
                                             <button id="criarCupom" data-toggle="modal" data-target="#modalCriarCupom" class="btn btn-primary float-md-right">+ Criar cupom</button>
@@ -94,19 +95,18 @@
                                     @foreach ($cupons as $cupom)
                                         <tbody>
                                             <th>
-                                                <td>{{$cupom->identificador}}</td>
+                                                <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">{{$cupom->identificador}}</td>
                                                 @if ($cupom->porcentagem) 
-                                                    <td>{{$cupom->valor}}% do valor da inscrição</td>
+                                                    <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">{{$cupom->valor}}% do valor da inscrição</td>
                                                 @else
-                                                    <td>R$ {{number_format($cupom->valor, 2,',','.')}}</td>
+                                                    <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">R$ {{number_format($cupom->valor, 2,',','.')}}</td>
                                                 @endif
-                                                <td>@if($cupom->quantidade_aplicacao == -1) Ilimitado @else {{$cupom->quantidade_aplicacao}} @endif / precisa ser programada</td>
-                                                <td>{{date('d/m/Y',strtotime($cupom->inicio))}}</td>
-                                                <td>{{date('d/m/Y',strtotime($cupom->fim))}}</td>
+                                                <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">@if($cupom->quantidade_aplicacao == -1) Ilimitado @else {{$cupom->quantidade_aplicacao}} @endif / precisa ser programada</td>
+                                                <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">{{date('d/m/Y',strtotime($cupom->inicio))}}</td>
+                                                <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">{{date('d/m/Y',strtotime($cupom->fim))}}</td>
                                                 <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalExcluirCupom{{$cupom->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
                                             </th>
                                         </tbody>
-
                                         {{-- Modal excluir cupom --}}
                                             <div class="modal fade" id="modalExcluirCupom{{$cupom->id}}" tabindex="-1" role="dialog" aria-labelledby="modalExcluirCupom{{$cupom->id}}Label" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
@@ -130,6 +130,7 @@
                                                 </div>
                                             </div>
                                         {{-- Fim modal excluir cupom --}}
+
                                     @endforeach
                                 </table>
                             </p>
@@ -150,7 +151,7 @@
                                         <div class="col-sm-6">
                                             <h5 class="card-title">Categorias de participantes</h5>
                                             <h6 class="card-subtitle mb-2 text-muted">Categorias dos participantes que seu evento irá receber.</h6> 
-                                            <small>Para editar clique em uma das categorias.</small>
+                                            <small>Para editar clique em uma categoria.</small>
                                         </div>
                                         <div class="col-sm-6">
                                             <button id="criarCategoria" data-toggle="modal" data-target="#modalCriarCategoria" class="btn btn-primary float-md-right">+ Criar categoria</button>
@@ -966,14 +967,14 @@
                                 <label for="">Valor do desconto*</label>
                                 <br>
                                 @if (old('tipo_valor') != null)
-                                    <input id="porcetagem" type="radio" name="tipo_valor" value="porcentagem" onchange="alterarPlaceHolderDoNumero(this)" required @if(old('tipo_valor') == "porcentagem") checked @endif>
+                                    <input id="porcetagem" type="radio" name="tipo_valor" value="porcentagem" onchange="alterarPlaceHolderDoNumero(this,0)" required @if(old('tipo_valor') == "porcentagem") checked @endif>
                                     <label for="porcetagem">Porcentagem</label><br>
-                                    <input id="real" type="radio" name="tipo_valor" value="real" onchange="alterarPlaceHolderDoNumero(this)" required @if(old('tipo_valor') == "real") checked @endif>
+                                    <input id="real" type="radio" name="tipo_valor" value="real" onchange="alterarPlaceHolderDoNumero(this,0)" required @if(old('tipo_valor') == "real") checked @endif>
                                     <label for="real">Real</label>
                                 @else 
-                                    <input id="porcetagem" type="radio" name="tipo_valor" value="porcentagem" onchange="alterarPlaceHolderDoNumero(this)" required >
+                                    <input id="porcetagem" type="radio" name="tipo_valor" value="porcentagem" onchange="alterarPlaceHolderDoNumero(this,0)" required >
                                     <label for="porcetagem">Porcentagem</label><br>
-                                    <input id="real" type="radio" name="tipo_valor" value="real" onchange="alterarPlaceHolderDoNumero(this)" required>
+                                    <input id="real" type="radio" name="tipo_valor" value="real" onchange="alterarPlaceHolderDoNumero(this,0)" required>
                                     <label for="real">Real</label>
                                 @endif
                             </div>
@@ -1020,6 +1021,105 @@
         </div>
     </div>
 {{-- Fim do modal criar cupom --}}
+@foreach ($cupons as $cupom)
+    {{-- Modal editar cupom --}}
+    <div class="modal fade" id="modalEditarCupom{{$cupom->id}}" tabindex="-1" role="dialog" aria-labelledby="modalEditarCupom{{$cupom->id}}Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalEditarCupom{{$cupom->id}}Label">Editar cupom - {{$cupom->identificador}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditarCupom{{$cupom->id}}" action="{{route('cupom.update', ['id' => $cupom->id])}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                    <input type="hidden" name="editarCupom" value="{{$cupom->id}}">
+                    <div class="container">
+                        <div class="row form-group">
+                            <div class="col-sm-8">
+                                <label for="identificadorCupom{{$cupom->id}}">Identificador*</label>
+                                <input id="identificadorCupom{{$cupom->id}}" name="identificador_cupom_{{$cupom->id}}" type="text" class="form-control @error('identificador_cupom_'.$cupom->id) is-invalid @enderror" value="@if(old('identificador_cupom_'.$cupom->id) != null){{old('identificador_cupom_'.$cupom->id)}}@else{{$cupom->identificador}}@endif" oninput="deixarMaiusculo(event)">
+                            
+                                @error('identificador_cupom_'.$cupom->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-4"> 
+                                <label for="quantidadeCupom{{$cupom->id}}">Disponibilidade* <img src="{{asset('img/icons/interrogacao.png')}}" alt="" width="15px;" style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Coloque 0 para a disponibilidade ser ilimitada.'></label>
+                                <input id="quantidadeCupom{{$cupom->id}}" name="quantidade_cupom_{{$cupom->id}}" class="form-control  @error('quantidade_cupom_'.$cupom->id) is-invalid @enderror" type="number" placeholder="10" value="@if(old('quantidade_cupom_'.$cupom->id) != null){{old('quantidade_cupom_'.$cupom->id)}}@elseif($cupom->quantidade_aplicacao == -1){{0}}@else{{$cupom->quantidade_aplicacao}}@endif">
+                            
+                                @error('quantidade_cupom_'.$cupom->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-4">
+                                <label for="">Valor do desconto*</label>
+                                <br>
+                                @if (old('tipo_valor') != null)
+                                    <input id="porcetagem{{$cupom->id}}" type="radio" name="tipo_valor_cupom_{{$cupom->id}}" value="porcentagem" onchange="alterarPlaceHolderDoNumero(this,{{$cupom->id}})" required @if(old('tipo_valor_cupom_'.$cupom->id) == "porcentagem") checked @endif>
+                                    <label for="porcetagem{{$cupom->id}}">Porcentagem</label><br>
+                                    <input id="real{{$cupom->id}}" type="radio" name="tipo_valor_cupom_{{$cupom->id}}" value="real" onchange="alterarPlaceHolderDoNumero(this,{{$cupom->id}})" required @if(old('tipo_valor_cupom_'.$cupom->id) == "real") checked @endif>
+                                    <label for="real{{$cupom->id}}">Real</label>
+                                @else 
+                                    <input id="porcetagem{{$cupom->id}}" type="radio" name="tipo_valor_cupom_{{$cupom->id}}" value="porcentagem" onchange="alterarPlaceHolderDoNumero(this,{{$cupom->id}})" required @if($cupom->porcentagem) checked @endif>
+                                    <label for="porcetagem{{$cupom->id}}">Porcentagem</label><br>
+                                    <input id="real{{$cupom->id}}" type="radio" name="tipo_valor_cupom_{{$cupom->id}}" value="real" onchange="alterarPlaceHolderDoNumero(this,{{$cupom->id}})" required @if($cupom->porcentagem == false) checked @endif>
+                                    <label for="real{{$cupom->id}}">Real</label>
+                                @endif
+                            </div>
+                            <div class="col-sm-8" style="position: relative; top: 45px;">
+                                <input id="valorCupom{{$cupom->id}}" name="valor_cupom_{{$cupom->id}}" type="number" class="form-control real @error('valor_cupom_'.$cupom->id) is-invalid @enderror" placeholder="" value="@if(old('valor_cupom_'.$cupom->id) != null){{old('valor_cupom_'.$cupom->id)}}@else{{$cupom->valor}}@endif">
+
+                                @error('valor_cupom_'.$cupom->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-6"> 
+                                <label for="inicio{{$cupom->id}}">Data de início*</label>
+                                <input id="inicio{{$cupom->id}}" name="início_cupom_{{$cupom->id}}" class="form-control @error('início_cupom_'.$cupom->id) is-invalid @enderror" type="date" value="@if(old('início_cupom_'.$cupom->id) != null){{old('início_cupom_'.$cupom->id)}}@else{{$cupom->inicio}}@endif">
+                                
+                                @error('início_cupom_'.$cupom->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-6"> 
+                                <label for="fim{{$cupom->id}}">Data de fim*</label>
+                                <input id="fim{{$cupom->id}}" name="fim_cupom_{{$cupom->id}}" class="form-control @error('fim_cupom_'.$cupom->id) is-invalid @enderror" type="date" value="@if(old('fim_cupom_'.$cupom->id) != null){{old('fim_cupom_'.$cupom->id)}}@else{{$cupom->fim}}@endif">
+                            
+                                @error('fim_cupom_'.$cupom->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" form="formEditarCupom{{$cupom->id}}">Atualizar</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    {{-- Fim modal editar cupom --}}
+@endforeach
 
 {{-- Modal criar categoria --}}
     <div class="modal fade" id="modalCriarCategoria" tabindex="-1" role="dialog" aria-labelledby="modalCriarCategoriaLabel" aria-hidden="true">

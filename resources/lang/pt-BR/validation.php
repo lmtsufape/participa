@@ -151,6 +151,30 @@ return [
         'disponibilidade_*'  => [
             'required' => 'O campo disponibilidade é obrigatório.'
         ],
+
+        //Editar cupom de desconto
+        'identificador_cupom_*' => [
+            'required'  => 'O campo identificador é obrigatório.',
+        ],
+        'quantidade_cupom_*'    => [
+            'required'  => 'O campo disponibilidade é obrigatório.',
+        ],
+        'tipo_valor_cupom_*'    => [
+            'required'  => 'O campo valor desconto é obrigatório.',
+        ],
+        'valor_cupom_*'         => [
+            'required'  => 'O campo é obrigatório.',
+        ],
+        'início_cupom_*'        => [
+            'required'  => 'O campo início é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+        ],
+        'fim_cupom_*'           => [
+            'required'  => 'O campo fim é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+            'after'     => 'A data informada deve ser depois do início.',
+        ]
+
     ],
     /*
     |--------------------------------------------------------------------------
