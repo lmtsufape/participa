@@ -127,7 +127,28 @@ class PromocaoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // dd($request);
+        $evento = Evento::find($request->evento_id);
+        $promocao = Promocao::find($id);
+
+        $validateData = $request->validate([
+            'editarPromocao'                        => 'required',
+            'identificador_'.$promocao->id          => 'required',
+            'valor_'.$promocao->id                  => 'required',
+            'descrição_'.$promocao->id              => 'nullable',
+            'dataDeInício_'.$promocao->id.'.*'      => 'required|date',
+            'dataDeFim_'.$promocao->id.'.*'         => 'required|date|after:dataDeInício_'.$promocao->id.'.*',
+            'disponibilidade_'.$promocao->id.'.*'   => 'required',
+            'atividades_'.$promocao->id.'.*'        => 'nullable',
+            'para_todas_categorias_'.$promocao->id  => 'nullable',
+            'categorias_'.$promocao->id.'.*'        => 'nullable',
+        ]);
+
+        if ($request->input('para_todas_categorias_'.$promocao->id) == null && $request->input('categorias_'.$promocao->id) == null) {
+            return redirect()->back()->withErrors(['errorCategorias_'.$promocao->id => 'Seleciona as categorias que o pacote será exibido.'])->withInput($validateData);
+        }
+
+
     }
 
     /**

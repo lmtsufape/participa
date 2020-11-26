@@ -130,7 +130,27 @@ return [
             'required'  => 'O campo início é obrigatório.',
             'date'      => 'O campo deve ter uma data válida.',
             'after'     => 'A data informada deve ser depois da data de início.'
-        ]
+        ],
+
+        // Editar pacote
+        'identificador_*'   => [
+            'required'  => 'O campo identificador é obrigatório.',
+        ],
+        'valor_*'           => [
+            'required' => 'O campo valor do pacote é obrigatório.',
+        ],
+        'dataDeInício_*'    => [
+            'required' => 'O campo data de início é obrigatório.',
+            'date'     => 'O campo deve ter uma data válida.',
+        ],
+        'dataDeFim_*'       => [
+            'required' => 'O campo data de fim é obrigatório.',
+            'date'     => 'O campo deve ter uma data válida.',
+            'after'    => 'A data informada deve ser depois da data de início.',
+        ],
+        'disponibilidade_*'  => [
+            'required' => 'O campo disponibilidade é obrigatório.'
+        ],
     ],
     /*
     |--------------------------------------------------------------------------

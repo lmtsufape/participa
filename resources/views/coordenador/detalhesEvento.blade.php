@@ -324,13 +324,13 @@
 
         @if (old('criarCupom') != null) 
             $('#li_cuponsDeDesconto').click();
-        @elseif (old('criarCategoria') != null)
+        @elseif (old('criarCategoria') != null || old('editarCategoria') != null)
             $('#li_categoria_participante').click();
         @elseif (old('criarCampo') != null)
             $('#li_formulario_inscricao').click();
         @elseif (old('campo_id') != null)
             $('#li_formulario_inscricao').click();
-        @elseif (old('novaPromocao') != null)
+        @elseif (old('novaPromocao') != null || old('editarPromocao') != null)
             $('#li_promocoes').click();
         @else
             $('#li_categoria_participante').click();

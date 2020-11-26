@@ -370,7 +370,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-4">
-                                <label for="valor">Valor da promoção*</label>
+                                <label for="valor">Valor do pacote*</label>
                                 <input id="valor" name="valor" class="form-control @error('valor') is-invalid @enderror" type="number" placeholder="0 para pacote grátis" value="{{old('valor')}}">
                             
                                 @error('valor')
@@ -613,7 +613,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-4">
-                                <label for="valor_{{$promocao->id}}">Valor da promoção*</label>
+                                <label for="valor_{{$promocao->id}}">Valor do pacote*</label>
                                 <input id="valor_{{$promocao->id}}" name="valor_{{$promocao->id}}" class="form-control @error('valor_'.$promocao->id) is-invalid @enderror" type="number" placeholder="0 para pacote grátis" value="@if(old('valor_'.$promocao->id) != null){{old('valor_'.$promocao->id)}}@else{{$promocao->valor}}@endif">
                             
                                 @error('valor_'.$promocao->id)
@@ -643,8 +643,8 @@
                         </div>
                         {{-- {{dd(old('dataDeInício'))}} --}}
                         <div id="lotes{{$promocao->id}}">
-                            @if (old('dataDeInício') != null || old('dataDeFim') != null || old('disponibilidade') != null)
-                                @foreach (old('dataDeInício') as $key => $dataInicio)
+                            @if (old('dataDeInício_'.$promocao->id) != null || old('dataDeFim_'.$promocao->id) != null || old('disponibilidade_'.$promocao->id) != null)
+                                @foreach (old('dataDeInício_'.$promocao->id) as $key => $dataInicio)
                                     <div class="row">
                                         <div class="col-sm-4"> 
                                             <label for="dataDeInicio">Data de início*</label>
@@ -749,8 +749,8 @@
                         <div class="row">
                             @if (count($categorias) > 0)
                                 <div class="col-sm-12">
-                                    <input id="para_todas_categorias" type="checkbox" name="para_todas_categorias" @if(old('para_todas_categorias') == "on") @elseif($promocao->categorias->diff($categorias)->isEmpty()) checked @endif onclick="mostrarCategorias(this,{{$promocao->id}})">
-                                    <label for="para_todas_categorias">Para todas categorias</label>
+                                    <input id="para_todas_categorias_{{$promocao->id}}" type="checkbox" name="para_todas_categorias_{{$promocao->id}}" @if(old('para_todas_categorias_'.$promocao->id) == "on") checked @elseif($promocao->categorias->diff($categorias)->isEmpty() && old('para_todas_categorias_'.$promocao->id) == null) checked @endif onclick="mostrarCategorias(this,{{$promocao->id}})">
+                                    <label for="para_todas_categorias_{{$promocao->id}}">Para todas categorias</label>
                                 </div>
                             @else
                                 <div class="col-sm-12">
