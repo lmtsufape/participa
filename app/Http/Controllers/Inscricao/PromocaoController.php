@@ -148,7 +148,52 @@ class PromocaoController extends Controller
             return redirect()->back()->withErrors(['errorCategorias_'.$promocao->id => 'Seleciona as categorias que o pacote será exibido.'])->withInput($validateData);
         }
 
+        // Excluindo relações atuais
 
+        foreach ($promocao->lotes as $lote) {
+            $lote->delete();
+        }
+        foreach ($promocao->atividades as $atv) {
+            $promocao->atividades()->detach($atv->id);
+        }
+        foreach ($promocao->categorias as $categoria) {
+            $promocao->categorias()->detach($categoria->id);
+        }
+
+        // Atualizando dados
+        $promocao->identificador    = $request->input('identificador_'.$promocao->id);
+        $promocao->descricao        = $request->input('descrição_'.$promocao->id); 
+        $promocao->valor            = $request->input('valor_'.$promocao->id);
+        $promocao->update();
+
+        if ($request->input('para_todas_categorias_'.$promocao->id) == "on") {
+            $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
+
+            foreach ($categorias as $categoria) {
+                $promocao->categorias()->attach($categoria->id);
+            }
+        } else if ($request->input('categorias_'.$promocao->id) != null && count($request->input('categorias_'.$promocao->id)) > 0) {
+            foreach ($request->input('categorias_'.$promocao->id) as $categoria) {
+                $promocao->categorias()->attach($categoria);
+            }
+        }
+
+        foreach ($request->input('dataDeInício_'.$promocao->id) as $key => $loteRequest) {
+            $lote = new Lote();
+            $lote->promocao_id              = $promocao->id;
+            $lote->inicio_validade          = $request->input('dataDeInício_'.$promocao->id.'.'.$key);
+            $lote->fim_validade             = $request->input('dataDeFim_'.$promocao->id.'.'.$key);
+            $lote->quantidade_de_aplicacoes = $request->input('disponibilidade_'.$promocao->id.'.'.$key);
+            $lote->save();
+        }
+
+        if ($request->input('atividades_'.$promocao->id) != null) {
+            foreach ($request->input('atividades_'.$promocao->id) as $id) {
+                $promocao->atividades()->attach($id);
+            }
+        }
+
+        return redirect()->back()->with(['mensagem' => 'Pacote atualizado com sucesso!']);
     }
 
     /**
