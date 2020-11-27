@@ -199,11 +199,11 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('/area/revisores',        'RevisorController@index'                      )->name('revisor.index');
 
   Route::name('coord.')->group(function () {
-    Route::get('comissaoOrganizadora/{id}/cadastrar', 'ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
-    Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
-    Route::get('comissaoOrganizadora/{id}/listar', 'ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
-    Route::post('remover/comissaoOrganizadora/{id}', 'ComissaoOrganizadoraController@destroy')->name('remover.comissao.organizadora');
-    Route::post('remover/comissao/{id}',  'ComissaoController@destroy'      )->name('remover.comissao');
+    Route::get('comissaoOrganizadora/{id}/cadastrar', 'Users\ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
+    Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'Users\ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
+    Route::get('comissaoOrganizadora/{id}/listar',    'Users\ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
+    Route::post('remover/comissaoOrganizadora/{id}',  'Users\ComissaoOrganizadoraController@destroy')->name('remover.comissao.organizadora');
+    Route::post('remover/comissao/{id}',              'Users\ComissaoController@destroy'      )->name('remover.comissao');
   });
   
   // ROTAS DO MODULO DE INSCRIÇÃO
