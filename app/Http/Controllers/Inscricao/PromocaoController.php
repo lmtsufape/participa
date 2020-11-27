@@ -49,16 +49,22 @@ class PromocaoController extends Controller
             'descrição'             => 'nullable|max:1000',
             'dataDeInício.*'        => 'required|date',
             'dataDeFim.*'           => 'required|date|after:dataDeInício.*',
-            'disponibilidade.*'     => 'required',
+            'disponibilidade.*'     => 'required|min:0',
             'atividades.*'          => 'nullable', 
             'para_todas_categorias' => 'nullable', 
             'categorias.*'          => 'nullable',  
         ]);
 
+        foreach ($request->disponibilidade as $i => $dis) {
+            if ($dis < 0) {
+                return redirect()->back()->withErrors(['disponibilidade.'.$i => 'Digite um valor positivo ou 0 para ilimitada.'])->withInput($validadeData);
+            }
+        }
+
         if ($request->para_todas_categorias == null && $request->categorias == null) {
             return redirect()->back()->withErrors(['errorCategorias' => 'Seleciona as categorias que o pacote será exibido.'])->withInput($validadeData);
         }
-        
+
         $promocao = new Promocao();
         $promocao->identificador = $request->identificador;
         $promocao->evento_id     = $request->evento_id;
@@ -83,7 +89,11 @@ class PromocaoController extends Controller
             $lote->promocao_id              = $promocao->id;
             $lote->inicio_validade          = $request->input('dataDeInício.'.$key);
             $lote->fim_validade             = $request->input('dataDeFim.'.$key);
-            $lote->quantidade_de_aplicacoes = $request->input('disponibilidade.'.$key);
+            if ($request->input('disponibilidade.'.$key) == 0) {
+                $lote->quantidade_de_aplicacoes = -1;
+            } else {
+                $lote->quantidade_de_aplicacoes = $request->input('disponibilidade.'.$key);
+            }
             $lote->save();
         }
 
@@ -144,6 +154,12 @@ class PromocaoController extends Controller
             'categorias_'.$promocao->id.'.*'        => 'nullable',
         ]);
 
+        foreach ($request->input('disponibilidade_'.$promocao->id) as $i => $disp) {
+            if ($disp < 0) {
+                return redirect()->back()->withErrors(['disponibilidade_'.$promocao->id.'.'.$i => 'Digite um valor positivo ou 0 para ilimitada.'])->withInput($validateData);
+            }
+        }
+
         if ($request->input('para_todas_categorias_'.$promocao->id) == null && $request->input('categorias_'.$promocao->id) == null) {
             return redirect()->back()->withErrors(['errorCategorias_'.$promocao->id => 'Seleciona as categorias que o pacote será exibido.'])->withInput($validateData);
         }
@@ -183,7 +199,11 @@ class PromocaoController extends Controller
             $lote->promocao_id              = $promocao->id;
             $lote->inicio_validade          = $request->input('dataDeInício_'.$promocao->id.'.'.$key);
             $lote->fim_validade             = $request->input('dataDeFim_'.$promocao->id.'.'.$key);
-            $lote->quantidade_de_aplicacoes = $request->input('disponibilidade_'.$promocao->id.'.'.$key);
+            if ($request->input('disponibilidade_'.$promocao->id.'.'.$key) == 0) {
+                $lote->quantidade_de_aplicacoes = -1;
+            } else {
+                $lote->quantidade_de_aplicacoes = $request->input('disponibilidade_'.$promocao->id.'.'.$key);
+            }
             $lote->save();
         }
 

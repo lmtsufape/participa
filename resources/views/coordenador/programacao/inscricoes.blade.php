@@ -436,7 +436,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-sm-1">
-                                                <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao()"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
+                                                <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao(0)"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
                                             </div>
                                         </div>
                                     @else 
@@ -802,7 +802,7 @@
                         <div class="col-sm-6">
                             <h5>Valor que o inscrito irá pagar</h5>
                             @if ($promocao->valor == null || $promocao->valor <= 0)
-                                <p>O pacote é gratuito</p>
+                                <p>O pacote é gratuito.</p>
                             @else
                                 <p>R$ {{number_format($promocao->valor, 2,',','.')}}</p>
                             @endif
@@ -810,7 +810,7 @@
                         <div class="col-sm-6">
                             <h5>Valor recebido</h5>
                             @if ($promocao->valor == null || $promocao->valor <= 0)
-                                <p>O pacote é gratuito</p>
+                                <p>O pacote é gratuito.</p>
                             @else
                                 <p>R$ {{number_format($promocao->valor - $promocao->valor * 0.10, 2,',','.')}}*<br><span style="font-size: 10px;">*Taxa de 10%</span></p>
                             @endif
@@ -856,9 +856,9 @@
                                 </p>
                             </div>
                             <div class="col-sm-5">
-                                <h5>Quantidade disponível/aplicada</h5>
+                                <h5>Quantidade disponível / aplicada</h5>
                                 <p>
-                                    {{$lote->quantidade_de_aplicacoes}}/Pendencia para programar
+                                    @if($lote->quantidade_de_aplicacoes == -1)Ilimitado @else{{$lote->quantidade_de_aplicacoes}} @endif/ Pendencia para programar
                                 </p>
                             </div>
                         @endforeach
@@ -869,30 +869,39 @@
                             <h4>Atividades inclusas no pacote</h4>
                         </div>
                     </div>
-                    <div class="row">
-                        <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
-                            <thead>
-                                <th>
-                                    <th>Título</th>
-                                    <th>Local</th>
-                                    <th>Valor original</th>
-                                </th>
-                            </thead>
-                            @foreach ($promocao->atividades()->orderBy('titulo')->get() as $atv)
-                                <tbody>
+                    @if ($promocao->atividades != null && count($promocao->atividades) > 0)
+                        <div class="row">
+                            <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
+                                <thead>
                                     <th>
-                                        <td>{{$atv->titulo}}</td>
-                                        <td>{{$atv->local}}</td>
-                                        @if ($atv->valor == null || $atv->valor <= 0)
-                                            <th>Grátis</th>
-                                        @else 
-                                            <th>R$ {{number_format($atv->valor, 2,',','.')}}</th>
-                                        @endif
+                                        <th>Título</th>
+                                        <th>Local</th>
+                                        <th>Valor original</th>
                                     </th>
-                                </tbody>
-                            @endforeach
-                        </table>
-                    </div>
+                                </thead>
+                                @foreach ($promocao->atividades()->orderBy('titulo')->get() as $atv)
+                                    <tbody>
+                                        <th>
+                                            <td>{{$atv->titulo}}</td>
+                                            <td>{{$atv->local}}</td>
+                                            @if ($atv->valor == null || $atv->valor <= 0)
+                                                <th>Grátis</th>
+                                            @else 
+                                                <th>R$ {{number_format($atv->valor, 2,',','.')}}</th>
+                                            @endif
+                                        </th>
+                                    </tbody>
+                                @endforeach
+                            </table>
+                        </div>
+                    @else 
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <strong>Nenhuma atividade inclusa.</strong>
+                            </div>
+                        </div>
+                    @endif
+                    
                 </div>
             </div>
         </div>
