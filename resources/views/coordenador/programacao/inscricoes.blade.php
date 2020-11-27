@@ -1580,13 +1580,15 @@
                                 <div class="col-sm-12">
                                     <hr>
                                     <h4>Exemplo</h4>
-                                    <label id="labelCampoExemplo" for="campoExemplo"></label>
-                                    <p><input type="" class="" id="campoExemplo" style="display: block"></p>
-                                    <p><input type="text" class="form-control" id="campoExemploCpf" style="display: none;"></p>
-                                    <p><input type="text" class="form-control" id="campoExemploNumero" style="display: none;"></p>
+                                    <div id="tituloExemplo" class="">
+                                        <label id="labelCampoExemplo" for="campoExemplo"></label>
+                                        <p><input type="" class="" id="campoExemplo" style="display: block"></p>
+                                        <p><input type="text" class="form-control" id="campoExemploCpf" style="display: none;"></p>
+                                        <p><input type="text" class="form-control" id="campoExemploNumero" style="display: none;"></p>
+                                    </div>
                                 </div>
                             </div>
-                            <div id="divEnderecoExemplo" style="display: none;">
+                            <div id="divEnderecoExemplo" class="" style="display: none;">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label for="cep">CEP</label>

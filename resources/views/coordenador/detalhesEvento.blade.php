@@ -1792,6 +1792,7 @@
         var campoExemploCpf = document.getElementById('campoExemploCpf');
         var campoExemploNumero = document.getElementById('campoExemploNumero');
         var divEnderecoExemplo = document.getElementById('divEnderecoExemplo');
+        var divTituloExemplo = document.getElementById('tituloExemplo');
 
         botoes.style.display = "none";
         inputs.style.display = "block";
@@ -1810,6 +1811,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Comprovante de matrícula";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1832,6 +1834,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Data de nascimento";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1854,6 +1857,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "E-mail para contato";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1876,6 +1880,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Por que quer participar?";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1896,6 +1901,7 @@
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1916,6 +1922,7 @@
                 campoExemploNumero.style.display = "block";
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1936,6 +1943,8 @@
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "block";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo-head";
+                divEnderecoExemplo.className = "campo-exemplo-body";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
