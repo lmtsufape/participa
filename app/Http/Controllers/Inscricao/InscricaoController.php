@@ -192,6 +192,10 @@ class InscricaoController extends Controller
     }
 
     public function confirmar(Request $request, $id) {
-        dd($request);
+
+        $evento = Evento::find($request->evento_id);
+
+
+        return view('coordenador.programacao.pagamento', compact('evento'));
     }
 }
