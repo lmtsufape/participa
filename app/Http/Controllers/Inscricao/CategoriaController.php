@@ -41,6 +41,7 @@ class CategoriaController extends Controller
         // dd($request);
         $evento = Evento::find($request->evento_id);
         $validateData = $request->validate([
+            'criarCategoria'        => 'required',
             'nome'                  => 'required',
             'valor_total'           => 'required',
             'tipo_valor.*'          => 'nullable',
@@ -48,6 +49,16 @@ class CategoriaController extends Controller
             'inícioDesconto.*'      => 'required_with:tipo_valor.*|date',
             'fimDesconto.*'         => 'required_with:tipo_valor.*|date|after:inícioDesconto.*',
         ]);
+
+        if ($request->valor_total < 0) {
+            return redirect()->back()->withErrors(['valor_total' => 'Digite um valor positivo ou 0 para gratuito.'])->withInput($validateData);
+        }
+        
+        foreach ($request->input('valorDesconto') as $i => $valor) {
+            if ($request->input('valorDesconto'.$i) <= 0) {
+                return redirect()->back()->withErrors(['valorDesconto.'.$i => 'Digite um valor positivo.'])->withInput($validateData);
+            }
+        }
 
         $categoria = new CategoriaParticipante();
         $categoria->evento_id   = $evento->id;
@@ -117,6 +128,16 @@ class CategoriaController extends Controller
             'inícioDesconto_'.$categoria->id.'.*'   => 'required_with:tipo_valor_'.$categoria->id.'.*|date',
             'fimDesconto_'.$categoria->id.'.*'      => 'required_with:tipo_valor_'.$categoria->id.'.*|date|after:inícioDesconto_'.$categoria->id.'.*',
         ]);
+
+        if ($request->input('valor_total_'.$categoria->id) < 0) {
+            return redirect()->back()->withErrors(['valor_total_'.$categoria->id => 'Digite um valor positivo ou 0 para gratuito.'])->withInput($validateData);
+        }
+
+        foreach ($request->input('valorDesconto_'.$categoria->id) as $i => $valor) {
+            if ($request->input('valorDesconto_'.$categoria->id.'.'.$i) <= 0) {
+                return redirect()->back()->withErrors(['valorDesconto_'.$categoria->id.'.'.$i => 'Digite um valor positivo.'])->withInput($validateData);
+            }
+        }
 
         foreach ($categoria->valores as $valor) {
             $valor->delete();
