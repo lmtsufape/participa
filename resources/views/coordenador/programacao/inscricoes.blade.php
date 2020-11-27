@@ -699,7 +699,7 @@
                                         </div>
                                         <div class="col-sm-3"> 
                                             <label for="quantidade{{$lote->id}}">Disponibilidade* <img src="{{asset('img/icons/interrogacao.png')}}" alt="" width="15px;" style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Coloque 0 para a disponibilidade ser ilimitada.'></label>
-                                            <input id="quantidade{{$lote->id}}" name="disponibilidade_{{$promocao->id}}[]" class="form-control" type="number" placeholder="10" value="{{$lote->quantidade_de_aplicacoes}}">
+                                            <input id="quantidade{{$lote->id}}" name="disponibilidade_{{$promocao->id}}[]" class="form-control" type="number" placeholder="10" value="@if($lote->quantidade_de_aplicacoes == -1){{0}}@else{{$lote->quantidade_de_aplicacoes}}@endif">
                                         </div>
                                         <div class="col-sm-1">
                                             @if ($key == 0)

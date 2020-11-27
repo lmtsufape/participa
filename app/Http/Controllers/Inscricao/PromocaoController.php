@@ -49,11 +49,15 @@ class PromocaoController extends Controller
             'descrição'             => 'nullable|max:1000',
             'dataDeInício.*'        => 'required|date',
             'dataDeFim.*'           => 'required|date|after:dataDeInício.*',
-            'disponibilidade.*'     => 'required|min:0',
+            'disponibilidade.*'     => 'required',
             'atividades.*'          => 'nullable', 
             'para_todas_categorias' => 'nullable', 
             'categorias.*'          => 'nullable',  
         ]);
+
+        if ($request->valor < 0) {
+            return redirect()->back()->withErrors(['valor' => 'Digite um valor positivo ou 0 para gratuito.'])->withInput($validadeData);
+        }
 
         foreach ($request->disponibilidade as $i => $dis) {
             if ($dis < 0) {
@@ -153,6 +157,10 @@ class PromocaoController extends Controller
             'para_todas_categorias_'.$promocao->id  => 'nullable',
             'categorias_'.$promocao->id.'.*'        => 'nullable',
         ]);
+
+        if ($request->input('valor_'.$promocao->id) < 0) {
+            return redirect()->back()->withErrors(['valor_'.$promocao->id => 'Digite um valor positivo ou 0 para gratuito.'])->withInput($validateData);
+        }
 
         foreach ($request->input('disponibilidade_'.$promocao->id) as $i => $disp) {
             if ($disp < 0) {
