@@ -42,13 +42,17 @@ class CupomDeDescontoController extends Controller
         $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
         $validadeData = $request->validate([
             'criarCupom'    => 'required',
-            'identificador' => 'required',
+            'identificador' => 'required|unique:cupom_de_descontos',
             'quantidade'    => 'required',
             'tipo_valor'    => 'required',
             'valor'         => 'required',
             'início'        => 'required|date',
             'fim'           => 'required|date|after:início',
         ]);
+
+        if ($request->valor <= 0) {
+            return redirect()->back()->withErrors(['valor' => 'Digite um valor positivo.'])->withInput($validadeData);
+        }
 
         $cupomDeDesconto = new CupomDeDesconto();
         $cupomDeDesconto->evento_id             = $evento->id;
@@ -58,13 +62,13 @@ class CupomDeDescontoController extends Controller
         if ($request->quantidade == 0) {
             $cupomDeDesconto->quantidade_aplicacao  = -1;
         } else if ($request->quantidade < 0) {
-            return redirect()->back()->withErrors(['criarCupom' => '0','quantidade' => 'Digite um valor positivo.'])->withInput($validadeData);
+            return redirect()->back()->withErrors(['quantidade' => 'Digite um valor positivo.'])->withInput($validadeData);
         } else {
             $cupomDeDesconto->quantidade_aplicacao = $request->quantidade;
         }
 
         $cupomDeDesconto->inicio                = $request->input('início');
-        $cupomDeDesconto->fim                   =$request->fim;
+        $cupomDeDesconto->fim                   = $request->fim;
 
         if ($request->tipo_valor == "porcentagem") {
             $cupomDeDesconto->porcentagem = true;

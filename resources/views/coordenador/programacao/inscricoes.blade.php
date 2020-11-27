@@ -988,9 +988,9 @@
                                 @endif
                             </div>
                             <div class="col-sm-8" style="position: relative; top: 45px;">
-                                <input id="valorCupom" name="valor" type="number" class="form-control real @error('number') is-invalid @enderror" placeholder="" value="{{old('valor')}}">
+                                <input id="valorCupom" name="valor" type="number" class="form-control real @error('valor') is-invalid @enderror" placeholder="" value="{{old('valor')}}">
 
-                                @error('number')
+                                @error('valor')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
