@@ -293,6 +293,11 @@
         <div class="col-sm-12 info-evento">
             <h4>{{$etiquetas->etiquetamoduloinscricao}}:</h4>
             <p>
+                {{-- @if ($isInscrito)
+                  Você já está inscrito nesse evento.
+                @else
+                  <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a>
+                @endif --}}
                 <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a>
             </p>
         </div>

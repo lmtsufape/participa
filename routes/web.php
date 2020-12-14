@@ -212,10 +212,16 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('inscricoes/checar-cupom',          'Inscricao\CupomDeDescontoController@checar')->name('checar.cupom');
   Route::get('{id}/inscricoes/nova-inscricao/checar', 'Inscricao\InscricaoController@checarDados')->name('inscricao.checar');
   Route::get('{id}/inscricoes/nova-inscricao/voltar', 'Inscricao\InscricaoController@voltarTela')->name('inscricao.voltar');
-  Route::post('{id}/inscricoes/confirmar-inscricao',  'Inscricao\InscricaoController@confirmar')->name('inscricao.confirmar');
   Route::post('/inscricoes/salvar-campo-formulario',  'Inscricao\CampoFormularioController@store')->name('campo.formulario.store');
   Route::post('/inscricoes/campo-excluir/{id}',       'Inscricao\CampoFormularioController@destroy')->name('campo.destroy');
-  Route::post('inscricoes/editar-campo/{id}',         'Inscricao\CampoFormularioController@update')->name('campo.edit'); 
+  Route::post('inscricoes/editar-campo/{id}',         'Inscricao\CampoFormularioController@update')->name('campo.edit');
+  // Checkout 
+  Route::prefix('checkout')->name('checkout.')->group(function(){
+    Route::post('/confirmar-inscricao/{id}',  'Inscricao\CheckoutController@index')->name('index');
+    Route::post('/proccess',  'Inscricao\CheckoutController@proccess')->name('proccess');
+    Route::get('/obrigado',  'Inscricao\CheckoutController@obrigado')->name('obrigado');
+
+  });
 
   Route::get('inscricoes/evento-{id}/index',    'Inscricao\InscricaoController@index'   )->name('inscricoes');
   Route::post('inscricoes/criar-promocao',      'Inscricao\PromocaoController@store'    )->name('promocao.store');

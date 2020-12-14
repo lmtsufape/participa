@@ -208,7 +208,7 @@
 
     </div>
     @hasSection ('javascript')
-    @yield('javascript')
+        @yield('javascript')
     @else
     @endif
 </body>
