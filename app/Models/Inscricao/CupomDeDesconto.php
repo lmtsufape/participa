@@ -13,4 +13,8 @@ class CupomDeDesconto extends Model
     public function evento() {
         return $this->belongsTo('App\Models\Submissao\Evento', 'evento_id');
     }
+
+    public function inscricaos() {
+        return $this->hasMany('App\Models\Inscricao\Inscricao');
+    }
 }

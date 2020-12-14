@@ -18,6 +18,7 @@ use App\Models\Submissao\FormEvento;
 use App\Models\Submissao\FormSubmTraba;
 use App\Models\Submissao\RegraSubmis;
 use App\Models\Submissao\TemplateSubmis;
+use App\Models\Inscricao\Inscricao;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -550,7 +551,10 @@ class EventoController extends Controller
         $modalidades = Modalidade::where('evento_id', $evento->id)->get();
         $atividades = Atividade::where('eventoId', $id)->get();
         $primeiraAtividade = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
-      
+
+        $isInscrito = Inscricao::where('user_id', Auth()->user()->id)->where('evento_id', $evento->id)->count();
+
+
         if($trabalhosCount != 0){
           $hasTrabalho = true;
           $hasFile = true;
@@ -581,6 +585,7 @@ class EventoController extends Controller
                                                 'formSubTraba'        => $formSubTraba,
                                                 'atividades'          => $atividades,
                                                 'dataInicial'         => $primeiraAtividade,
+                                                'isInscrito'          => $isInscrito,
                                                ]);
     }
 
