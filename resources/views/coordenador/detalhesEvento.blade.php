@@ -191,7 +191,12 @@
                         <li>
                             <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5>
                         </li>
-                    </a>                       
+                    </a>
+                    <a id="cadastrarModalidade" href="{{ route('checkout.pagamentos', ['id' => $evento->id]) }}">
+                        <li>
+                            <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Pagamentos</h5>
+                        </li>
+                    </a>                        
                 </div>
             </a>
 

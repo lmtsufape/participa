@@ -37,7 +37,8 @@ class CreditCard
 
 		// Set a reference code for this payment request. It is useful to identify this payment
 		// in future notifications.
-		$creditCard->setReference($this->reference);
+
+		$creditCard->setReference(base64_encode($this->reference));
 
 		// Set the currency
 		$creditCard->setCurrency("BRL");
@@ -45,7 +46,7 @@ class CreditCard
 		// Add an item for this payment request
 		$amount = number_format($this->cardInfo['valorTotal'], 2, '.', '');
 		$creditCard->addItems()->withParameters(
-		    $this->reference,
+		    base64_encode($this->reference),
 		    $this->item,
 		    1, 
 		    $amount

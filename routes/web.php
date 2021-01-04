@@ -221,7 +221,12 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
     Route::post('/proccess',  'Inscricao\CheckoutController@proccess')->name('proccess');
     Route::get('/obrigado',  'Inscricao\CheckoutController@obrigado')->name('obrigado');
 
+    Route::post('/notification', 'Inscricao\CheckoutController@notification')->name('notification');
+    Route::get('/{id}/pagamentos',    'Inscricao\CheckoutController@listarPagamentos'  )->name('pagamentos');
+    Route::get('/pag-boleto',  'Inscricao\CheckoutController@pagBoleto')->name('boleto');
+
   });
+  //Pagamentos
 
   Route::get('inscricoes/evento-{id}/index',    'Inscricao\InscricaoController@index'   )->name('inscricoes');
   Route::post('inscricoes/criar-promocao',      'Inscricao\PromocaoController@store'    )->name('promocao.store');

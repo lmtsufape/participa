@@ -4,8 +4,64 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "feff24058749a2ef301b462c4f681320",
+    "content-hash": "736f614a4d4f9a144d05f21a469db65b",
     "packages": [
+        {
+            "name": "artistas/laravel-pagseguro",
+            "version": "v1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/artistas/laravel-pagseguro.git",
+                "reference": "b77376fc7e1b2e18e1c81f3364b727f29e676b2c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/artistas/laravel-pagseguro/zipball/b77376fc7e1b2e18e1c81f3364b727f29e676b2c",
+                "reference": "b77376fc7e1b2e18e1c81f3364b727f29e676b2c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.2|^6.0",
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Artistas\\PagSeguro\\PagSeguroServiceProvider"
+                    ],
+                    "aliases": {
+                        "PagSeguro": "Artistas\\PagSeguro\\PagSeguroFacade",
+                        "PagSeguroRecorrente": "Artistas\\PagSeguro\\PagSeguroRecorrenteFacade",
+                        "PagSeguroBoleto": "Artistas\\PagSeguro\\PagSeguroBoletoFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Artistas\\PagSeguro\\": "src/Artistas/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fernando Henrique Bandeira",
+                    "email": "fernando.bandeira94@gmail.com"
+                }
+            ],
+            "description": "PagSeguro Checkout Transparente e Pagamento Recorrente(Assinaturas) no Laravel 5.*",
+            "keywords": [
+                "Pagseguro",
+                "assinaturas",
+                "laravel",
+                "recorrente",
+                "transparente"
+            ],
+            "time": "2019-09-22T23:31:39+00:00"
+        },
         {
             "name": "dnoegel/php-xdg-base-dir",
             "version": "v0.1.1",
@@ -4445,6 +4501,7 @@
                 "faker",
                 "fixtures"
             ],
+            "abandoned": true,
             "time": "2019-12-12T13:22:17+00:00"
         },
         {

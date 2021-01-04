@@ -13,6 +13,8 @@ use App\Models\Submissao\Atividade;
 use App\Models\Inscricao\CupomDeDesconto;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\CampoFormulario;
+use Ramsey\Uuid\Uuid;
+use PagSeguro; 
 
 // use Ramsey\Uuid\Uuid;
 
@@ -49,6 +51,36 @@ class CheckoutController extends Controller
     	return view('coordenador.programacao.obrigado');
     }
 
+    public function notifications()
+	{
+
+		try {
+			$notifications = new Notification();
+			$notifications = $notifications->getTransaction();
+			dd($notifications);
+			//Atualizar o pedido do usuario
+			$reference = base64_decode($notifications->getReference());
+			$pagamento = Pagamento::where('reference', $reference);
+			$pagamento->update([
+				'pagseguro_status' => $notifications->getStatus()
+			]);
+
+			//comentario sobre o pedido 
+			if($notifications->getStatus() == 3){
+				//Liberar o pedido do usuario..., atualizar o status do pedido para em separacao
+				//Notificar o usuario que o pedido foi pago
+				//Notificar a loja da confirmação dod pedio
+			}
+			return response()->json([], 204);
+			
+		} catch (Exception $e) {
+			$message = env('APP_DEBUG') ? $e->getMessage() : [];
+
+			return response()->json(['error' => $message], 500);
+		}
+
+	}
+
     public function proccess(Request $request)
     {	
     	
@@ -57,7 +89,7 @@ class CheckoutController extends Controller
     		$dataPost = $request->all();
 			$item = 'Inscricao';
 			$user = Auth()->user();
-			$reference = 'LIBPHP000001';
+			$reference = Uuid::uuid4();
 
 			$creditCardPayment = new CreditCard($user, $item, $dataPost, $reference);
 
@@ -127,4 +159,62 @@ class CheckoutController extends Controller
 
 		}
     }
+
+    public function listarPagamentos($id)
+    {
+    	$evento = Evento::find($id);
+
+    	$inscricaos = $evento->inscricaos;
+
+    	return view('coordenador.programacao.pagamentos', compact('evento','inscricaos'));
+
+    }
+
+    public function pagBoleto(Request $request)
+    {
+    	// dd($request->all());
+    	try {
+		    $user = Auth()->user();
+		    $pagseguro = PagSeguro::setReference('1')
+		    ->setSenderInfo([
+		       'senderName' => 'Gabriel Antonio da Silva', //Deve conter nome e sobrenome
+		       'senderPhone' => '(32) 1324-1421', //Código de área enviado junto com o telefone
+		       'senderEmail' => 'gabriel_antonio1996@outlook.com',
+		       'senderHash' => $request->hash,
+		       'senderCPF' => '82605287033' //Ou CPF se for Pessoa Física
+		    ])
+		    ->setShippingAddress([
+		       'shippingAddressStreet' => 'Av. Lions',
+		       'shippingAddressNumber' => '166',
+		       'shippingAddressDistrict' => 'Centro',
+		       'shippingAddressPostalCode' => '55325-000',
+		       'shippingAddressCity' => 'Garanhuns',
+		       'shippingAddressState' => 'PE'
+		     ])
+		     ->setItems([
+		      [
+		        'itemId' => '1',
+		        'itemDescription' => 'TEste',
+		        'itemAmount' => 10.00, //Valor unitário
+		        'itemQuantity' => '1', // Quantidade de itens
+		      ]
+		    ])
+		    ->send([
+		      'paymentMethod' => 'boleto'
+		    ]);
+
+		    return response()->json([
+		    	'data' => [
+		    		'pagseguro' => $pagseguro,
+		    	]
+		    ], 200);
+		}
+		catch(\Artistas\PagSeguro\PagSeguroException $e) {
+		     //codigo do erro
+		    dd($e->getMessage(), $e->getCode());
+		     //mensagem do erro
+		}
+    }
+
+
 }

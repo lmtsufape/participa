@@ -24,7 +24,7 @@ class Inscricao extends Model
     }
 
     public function pagamento() {
-        return $this->hasOne('App\Models\Inscricao\Pagamento', 'pagamento_id');
+        return $this->belongsTo('App\Models\Inscricao\Pagamento', 'pagamento_id');
     }
 
     public function cupomDesconto() {
