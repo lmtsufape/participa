@@ -172,16 +172,17 @@ class CheckoutController extends Controller
 
     public function pagBoleto(Request $request)
     {
-    	// dd($request->all());
+		// dd($request->valorTotal);
+		$user =  Auth()->user();
     	try {
 		    $user = Auth()->user();
 		    $pagseguro = PagSeguro::setReference('1')
 		    ->setSenderInfo([
-		       'senderName' => 'Gabriel Antonio da Silva', //Deve conter nome e sobrenome
-		       'senderPhone' => '(32) 1324-1421', //Código de área enviado junto com o telefone
-		       'senderEmail' => 'gabriel_antonio1996@outlook.com',
+		       'senderName' => $user->name, //Deve conter nome e sobrenome
+		       'senderPhone' => $user->celular, //Código de área enviado junto com o telefone
+		       'senderEmail' => $user->email,
 		       'senderHash' => $request->hash,
-		       'senderCPF' => '82605287033' //Ou CPF se for Pessoa Física
+		       'senderCPF' => $user->cpf //Ou CPF se for Pessoa Física
 		    ])
 		    ->setShippingAddress([
 		       'shippingAddressStreet' => 'Av. Lions',
@@ -194,8 +195,8 @@ class CheckoutController extends Controller
 		     ->setItems([
 		      [
 		        'itemId' => '1',
-		        'itemDescription' => 'TEste',
-		        'itemAmount' => 10.00, //Valor unitário
+		        'itemDescription' => 'Inscricao',
+		        'itemAmount' => $request->valorTotal, //Valor unitário
 		        'itemQuantity' => '1', // Quantidade de itens
 		      ]
 		    ])

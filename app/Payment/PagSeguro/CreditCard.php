@@ -28,7 +28,7 @@ class CreditCard
 	{
 		
 		
-
+		
     	//Instantiate a new direct payment request, using Credit Card
 		$creditCard = new \PagSeguro\Domains\Requests\DirectPayment\CreditCard();
 
@@ -55,6 +55,7 @@ class CreditCard
 		// Set your customer information.
 		// If you using SANDBOX you must use an email @sandbox.pagseguro.com.br
 		$user = $this->user;
+		
 		$email = env('PAGSEGURO_ENV') == 'sandbox' ? 'test@sandbox.pagseguro.com.br' : $user->email;
 
 		$creditCard->setSender()->setName($this->cardInfo['card_name']);
@@ -67,7 +68,7 @@ class CreditCard
 		#$user->cpf
 		$creditCard->setSender()->setDocument()->withParameters(
 		    'CPF',
-		    '70516476440'
+		    '66308622010'
 		);
 
 		$creditCard->setSender()->setHash($this->cardInfo['hash']);
@@ -119,12 +120,12 @@ class CreditCard
 
 		$creditCard->setHolder()->setDocument()->withParameters(
 		    'CPF',
-		    '70516476440'
+		    '66308622010'
 		);
 
 		// Set the Payment Mode for this payment request
 		$creditCard->setMode('DEFAULT');
-
+		
 		// Set a reference code for this payment request. It is useful to identify this payment
 		// in future notifications.
 

@@ -22,7 +22,7 @@
                 <div class="row">
                     <div class="col-md-12 form-group">
                         <label>Número do Cartão <span class="brand"></span></label>
-                        <input type="text" class="form-control" name="card_number" value="4111111111111111">
+                        <input type="text" class="form-control" name="card_number" value="411111111111111">
                         <input type="hidden" name="card_brand">
                     </div>
                 </div>

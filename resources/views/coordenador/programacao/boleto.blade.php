@@ -12,7 +12,7 @@
         <div class="col-md-6"> 
             <button onclick="sl();">GERAR BOLETO</button>
 
-            <a id="link" target="_blank" href="#" style="display: none">Boleto</a>
+            <a id="link" target="_blank" href="#" style="display: none">Clique aqui para abir o Boleto</a>
             
         </div>
     </div>
@@ -28,6 +28,7 @@
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script>
             function sl() {
+                let amountTransaction = '{{ $total }}';
                 let data = {
                     hash: PagSeguroDirectPayment.getSenderHash(),
                     user_id: '{{ $data['user_id'] }}',
@@ -35,6 +36,7 @@
                     promocao_id: '{{ $data['promocao_id'] ?? null }}',
                     metodo: '{{ $data['metodo'] }}',
                     cupom: '{{ $data['cupom'] ?? null }}',
+                    valorTotal: amountTransaction,
 
                     _token: '{{ csrf_token() }}'
                 };

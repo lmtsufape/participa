@@ -19,6 +19,7 @@ Route::get('/index', function () {
     return view('index',['eventos'=>$eventos]);
 })->name('index');
 
+Auth::routes(['verify' => true]);
 
 Route::get('/#', function () {
     if(Auth::check()){
