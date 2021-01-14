@@ -27,6 +27,7 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styleIndex.css') }}" rel="stylesheet">
     <link href='{{asset('fullcalendar-5.3.2/lib/main.css')}}' rel='stylesheet' />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     
     <?php
         use App\Revisor;
@@ -207,7 +208,7 @@
 
     </div>
     @hasSection ('javascript')
-    @yield('javascript')
+        @yield('javascript')
     @else
     @endif
 </body>

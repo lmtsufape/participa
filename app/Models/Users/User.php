@@ -115,4 +115,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function membroComissaoOrgaEvento() {
         return $this->belongsToMany('App\Models\Submissao\Evento', 'comissao_organizadora_eventos', 'user_id', 'evento_id');
     }
+
+    public function inscricaos() {
+        return $this->hasMany('App\Models\Inscricao\Inscricao');
+    }
 }

@@ -86,4 +86,10 @@ class Evento extends Model
   public function camposFormulario() {
     return $this->hasMany('App\Models\Inscricao\CampoFormulario', 'evento_id');
   }
+
+  public function inscricaos() {
+    return $this->hasMany('App\Models\Inscricao\Inscricao');
+  }
+
+
 }
