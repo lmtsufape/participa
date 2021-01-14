@@ -15,7 +15,7 @@ body{
     background-color: #114048ff;
     color: #fff;
     /* text-align: center; */
-    height: 45vh;
+    height: 550px;
     /* width: 100vw; */
 }
 .curved .text{
@@ -23,7 +23,7 @@ body{
     padding-left: 5%;
     padding-right: 5%;
     position: relative;
-    z-index: 100;
+    /* z-index: 100; */
 }
 .curved h1{
     font-size: 5rem;
@@ -35,18 +35,9 @@ body{
 }
 .curved svg{
     display: block;
-    margin-top: -100px;
+    /* margin-top: -100px; */
 }
-.curved img{
-    margin: 20% 10% 10% 0;
-    /* margin-top: 20%;
-    margin-bottom: 10%; */
-    width: 80%;
-    display: flex;
-    float: right;
-    position: relative;
-    z-index: 100;
-}
+
 .modulos{
   margin-top: -100px;
 }
@@ -126,12 +117,12 @@ body{
     width:20px;
   }
   .curved{
-    height: 100vh;
+    height: 550px;
   }
   .curved p{
       font-size: 1rem;
       text-align: justify;
-      padding: 10px;
+      /* padding: 10px; */
       /* margin-bottom: 5%; */
   }
   .modulos{
@@ -142,4 +133,142 @@ body{
       overflow-y: auto;
 
   }
+}
+
+.centralizado {
+  position: relative;
+  margin-top: 50px;
+  align-items: center;
+  align-content: center;
+  
+  /* background-color: white; */
+}
+
+.destaques h4 {
+  position: relative;
+  margin: 20px;
+}
+
+.centralizado .evento-atual {
+  background-color: white;
+  left: -15px;
+  border-radius: 0px 10px 10px 0px;
+  color: black;
+}
+
+.descricao-evento {
+  position: relative;
+  font-size: 14px;
+  padding: 30px;
+}
+
+.descricao-evento h4 {
+  font-weight: 600;
+}
+
+.descricao-evento a {
+  font-size: 18px;
+}
+
+.descricao-evento .location-pointer{
+  position: relative;
+  top: 8px;
+}
+
+.descricao-evento .location-pointer span {
+  position: relative;
+  left: 5px;
+  top: 3px;
+}
+
+.data-horario span {
+  position: relative;
+  top: 3px;
+}
+
+.descricao-evento .botao-inscricao {
+  position: relative;
+  top: 10px;
+  left: 30%;
+  border-radius: none;
+  background-image: linear-gradient( to right, rgb(0, 60, 255), rgb(85, 2, 180)); 
+}
+
+.descricao-evento .botao-inscricao:hover {
+  background-image: linear-gradient( to right, rgb(0, 36, 155), rgb(50, 1, 105)); 
+  transition: 0.3s;
+  border-radius: 5px;
+  box-shadow: 1px 3px 3px black;
+}
+
+.evento-image img {
+  height: 100%;
+  width: 100%;
+  border-radius: 10px 0px 0px 10px;
+}
+
+.carousel-inner {
+  border-radius: 10px;
+}
+
+.cor-aleatoria {
+  box-shadow: 1px 3px 3px rgb(32, 32, 32);
+}
+
+.pago {
+  background-image: linear-gradient( to right, red, rgb(230, 46, 0), rgb(255, 153, 0)); 
+  box-shadow: 1px 3px 3px rgb(32, 32, 32);
+}
+
+.gratuito {
+  background-image: linear-gradient( to right, rgb(40, 199, 0), rgb(0, 195, 65), rgb(0, 182, 112)); 
+  box-shadow: 1px 3px 3px rgb(32, 32, 32);
+}
+
+.carousel-indicators {
+  position: absolute;
+  right: 0;
+  bottom: -60px;
+  left: 0;
+  z-index: 15;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding-left: 0;
+  margin-right: 15%;
+  margin-left: 15%;
+  list-style: none;
+}
+
+.carousel-indicators li {
+  position: relative;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  width: 15px;
+  height: 15px;
+  margin-right: 7px;
+  margin-left: 7px;
+  text-indent: -999px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%;
+}
+
+.carousel-indicators .active {
+  background-color: rgb(253, 253, 253);
+  width: 18px;
+  height: 18px;
+}
+
+.carousel-control-prev-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+
+}
+
+.carousel-control-next-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+
 }

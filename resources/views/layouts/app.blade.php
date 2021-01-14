@@ -45,40 +45,45 @@
         {{-- Navbar --}}
         <nav class="navbar navbar-expand-md navbar-dark  shadow-sm">
             <div class="container">
-                @guest
-                    <a class="navbar-brand" href="{{route('index')}}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-                @else
-                    <a class="navbar-brand" href="{{route('index')}}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <a class="navbar-brand" href="{{route('index')}}">
+                            <img src="{{ asset('/img/logo.png') }}" alt="" style="height: 45px; width: 135px;">
+                        </a>
+                    </div>
+                    <div class="navbar-center">
+                        <a class="navbar-brand" href="#">
+                            <img src="{{asset('/img/icons/sun.png')}}" alt="" style="height: 40px; width: 45px;">
+                        </a>
+                    </div>
+                    <div class="navbar-center">
+                        <a class="navbar-brand tam-letra" href="#">
+                            +A
+                        </a>
+                    </div>
+                    <div class="navbar-center">
+                        <a class="navbar-brand tam-letra" href="#">
+                            -A
+                        </a>
+                    </div>
+                </div>
 
-                @endguest
-                
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-                        @guest
-                            <a  class="nav-link" href="{{ route('index') }}" >
-                                Home 
-                            </a>
-                        @else
-                            <a  class="nav-link" href="{{ route('home') }}" >
-                                Home 
-                            </a>
-
-                        @endguest
-                        
-                    </ul>
-
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                @guest
+                                    <a class="nav-link" href="{{ route('index') }}" >
+                                        Início 
+                                    </a>
+                                @else
+                                    <a class="nav-link" href="{{ route('home') }}" >
+                                        Início
+                                    </a>
+                                @endguest
+                        </div>
                         @guest
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>

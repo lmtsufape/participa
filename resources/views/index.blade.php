@@ -5,23 +5,292 @@
 <div class="content">
 
   {{-- Apresentação do sistema --}}
-   <div class="row justify-content-center curved" style="margin-bottom:-5px">
-    <div class=" col-sm-8 text">
-      <h1>Logo do Sistema</h1>
-      <p>
-        O "sistema de gestão de eventos científicos" é uma plataforma web desenvolvida como software livre pela
-        Universidade Federal do Agreste de Pernambuco que busca contribuir com instituições acadêmicas públicas
-        ou privadas que necessitem de uma ferramenta para viabilizar a gestão de todo o conjunto de atividades
-        ligadas a um evento científico, sejam elas inscrições para participação ou de trabalhos,
-        avaliação de trabalhos, certificação, entre outros.
-      </p>
+  <div class="row justify-content-center curved" style="margin-bottom:-5px">
+    <div class="col-sm-11 centralizado" >
+      <div class="destaques">
+        <h4>Destaques</h4>
+      </div>
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-7 evento-image">
+                  <img src="{{ asset('/img/banner-test.jpg') }}" class="d-block w-100" alt="...">
+                </div>
+                <div class="col-sm-5 evento-atual">
+                  <div class="container descricao-evento">
+                    <div class="row">
+                      <div class="col-sm-12" style="text-align: center;">
+                        <h4>Oficina do saber</h4>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row" style="text-align: justify;">
+                      <div class="col-sm-12">
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                      </div>
+                    </div>
+                    <div class="row" style="color:white;">
+                      <div class="col-sm-4">
+                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                      </div>
+                      <div class="col-sm-8">
+                        <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                      </div>
+                    </div>
+                    <div class="row data-horario">
+                      <div class="col-sm-4">
+                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> 12/02/2021 </span>
+                      </div>
+                      <div class="col-sm-8">
+                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
+                      </div>
+                    </div>
+                    <div class="row location-pointer">
+                      <div class="col-sm-12">
+                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span> Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE </span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-7 evento-image">
+                  <img src="{{ asset('/img/banner-test.jpg') }}" class="d-block w-100" alt="...">
+                </div>
+                <div class="col-sm-5 evento-atual" >
+                  <div class="container descricao-evento">
+                    <div class="row">
+                      <div class="col-sm-12" style="text-align: center;">
+                        <h4>Oficina do saber</h4>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row" style="text-align: justify;">
+                      <div class="col-sm-12">
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                      </div>
+                    </div>
+                    <div class="row" style="color:white;">
+                      <div class="col-sm-4">
+                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                      </div>
+                      <div class="col-sm-8">
+                        <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
+                      </div>
+                    </div>
+                    <div class="row data-horario">
+                      <div class="col-sm-4">
+                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> 12/02/2021 </span>
+                      </div>
+                      <div class="col-sm-8">
+                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
+                      </div>
+                    </div>
+                    <div class="row location-pointer">
+                      <div class="col-sm-12">
+                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span> Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE </span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-7 evento-image">
+                  <img src="{{ asset('/img/banner-test.jpg') }}" class="d-block w-100" alt="...">
+                </div>
+                <div class="col-sm-5 evento-atual">
+                  <div class="container descricao-evento">
+                    <div class="row">
+                      <div class="col-sm-12" style="text-align: center;">
+                        <h4>Oficina do saber</h4>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row" style="text-align: justify;">
+                      <div class="col-sm-12">
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                      </div>
+                    </div>
+                    <div class="row" style="color:white;">
+                      <div class="col-sm-4">
+                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                      </div>
+                      <div class="col-sm-8">
+                        <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                      </div>
+                    </div>
+                    <div class="row data-horario">
+                      <div class="col-sm-4">
+                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> 12/02/2021 </span>
+                      </div>
+                      <div class="col-sm-8">
+                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
+                      </div>
+                    </div>
+                    <div class="row location-pointer">
+                      <div class="col-sm-12">
+                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span> Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE </span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item ">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-7 evento-image">
+                  <img src="{{ asset('/img/banner-test.jpg') }}" class="d-block w-100" alt="...">
+                </div>
+                <div class="col-sm-5 evento-atual">
+                  <div class="container descricao-evento">
+                    <div class="row">
+                      <div class="col-sm-12" style="text-align: center;">
+                        <h4>Oficina do saber</h4>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row" style="text-align: justify;">
+                      <div class="col-sm-12">
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                      </div>
+                    </div>
+                    <div class="row" style="color:white;">
+                      <div class="col-sm-4">
+                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                      </div>
+                      <div class="col-sm-8">
+                        <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
+                      </div>
+                    </div>
+                    <div class="row data-horario">
+                      <div class="col-sm-4">
+                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> 12/02/2021 </span>
+                      </div>
+                      <div class="col-sm-8">
+                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
+                      </div>
+                    </div>
+                    <div class="row location-pointer">
+                      <div class="col-sm-12">
+                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span> Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE </span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-7 evento-image">
+                  <img src="{{ asset('/img/banner-test.jpg') }}" class="d-block w-100" alt="...">
+                </div>
+                <div class="col-sm-5 evento-atual">
+                  <div class="container descricao-evento">
+                    <div class="row">
+                      <div class="col-sm-12" style="text-align: center;">
+                        <h4>Oficina do saber</h4>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row" style="text-align: justify;">
+                      <div class="col-sm-12">
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                      </div>
+                    </div>
+                    <div class="row" style="color:white;">
+                      <div class="col-sm-4">
+                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                      </div>
+                      <div class="col-sm-8">
+                        <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                      </div>
+                    </div>
+                    <div class="row data-horario">
+                      <div class="col-sm-4">
+                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> 12/02/2021 </span>
+                      </div>
+                      <div class="col-sm-8">
+                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
+                      </div>
+                    </div>
+                    <div class="row location-pointer">
+                      <div class="col-sm-12">
+                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span> Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE </span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
     </div>
-    <div class="col-sm-4">
-      <img src="{{asset('img/pc.png')}}" alt="">
-    </div>
-
   </div>
-
 
   <div class="row justify-content-center" style="margin-bottom:5%">
     <div class="col-sm-12" style="padding:0">
@@ -364,6 +633,17 @@
   @endsection
 
 @section('javascript')
+  <script>
+    $(document).ready(function(){
+      $('.carousel').carousel({
+        interval: false
+      });
 
+      var botoes = document.getElementsByClassName('cor-aleatoria');
+      for (var i = 0; i < botoes.length; i++) {
+        botoes[i].style.backgroundColor = '#'+Math.floor(Math.random()*16777215).toString(16)+'c0';
+      }
+    });
 
+  </script> 
 @endsection
