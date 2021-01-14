@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Submissao;
 
-use App\Submissao\Endereco;
+use App\Models\Submissao\Endereco;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

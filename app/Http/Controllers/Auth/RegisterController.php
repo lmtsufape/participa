@@ -8,8 +8,9 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-use App\User;
-use App\Endereco;
+use App\Models\Users\User;
+use App\Models\Submissao\Endereco;
+
 class RegisterController extends Controller
 {
     /*
