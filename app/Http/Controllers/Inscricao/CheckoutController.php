@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
-use App\Payment\PagSeguro\CreditCard;
+use App\Payment\PagSeguro\CartaoCredito;
 use App\Payment\PagSeguro\Notification;
 use Illuminate\Http\Request;
 use App\Models\Submissao\Evento;
@@ -91,7 +91,7 @@ class CheckoutController extends Controller
 			$user = Auth()->user();
 			$reference = Uuid::uuid4();
 
-			$creditCardPayment = new CreditCard($user, $item, $dataPost, $reference);
+			$creditCardPayment = new CartaoCredito($user, $item, $dataPost, $reference);
 
 			$result = $creditCardPayment->doPayment();
 		    
@@ -175,14 +175,16 @@ class CheckoutController extends Controller
 		// dd($request->valorTotal);
 		$user =  Auth()->user();
     	try {
-		    $user = Auth()->user();
+			$user = Auth()->user();
+			$cpf =  str_replace(".", "", $user->cpf);
+			$cpf = str_replace("-", "", $cpf);
 		    $pagseguro = PagSeguro::setReference('1')
 		    ->setSenderInfo([
 		       'senderName' => $user->name, //Deve conter nome e sobrenome
 		       'senderPhone' => $user->celular, //Código de área enviado junto com o telefone
 		       'senderEmail' => $user->email,
 		       'senderHash' => $request->hash,
-		       'senderCPF' => $user->cpf //Ou CPF se for Pessoa Física
+		       'senderCPF' => $cpf //Ou CPF se for Pessoa Física
 		    ])
 		    ->setShippingAddress([
 		       'shippingAddressStreet' => 'Av. Lions',

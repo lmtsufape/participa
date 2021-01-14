@@ -45,12 +45,12 @@
                 
 
                 $.ajax({
-                    type: 'GET',
+                    type: 'post',
                     url: '{{ route("checkout.boleto") }}',
                     data: data,
                     dataType: 'json',
                     success: function(res){ 
-                    console.log(res.data.pagseguro);                       
+                        console.log(res.data.pagseguro);                       
                         document.getElementById('link').style.display="block";
                         document.getElementById('link').href =res.data.pagseguro.paymentLink;
                         

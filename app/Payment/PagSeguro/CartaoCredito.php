@@ -8,7 +8,7 @@ use App\Models\Users\ComissaoEvento;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class CreditCard
+class CartaoCredito
 {
 	private $user;
 	private $item;
@@ -25,9 +25,7 @@ class CreditCard
 	}
 
 	public function doPayment()
-	{
-		
-		
+	{	
 		
     	//Instantiate a new direct payment request, using Credit Card
 		$creditCard = new \PagSeguro\Domains\Requests\DirectPayment\CreditCard();
@@ -66,9 +64,11 @@ class CreditCard
 		    981216574
 		);
 		#$user->cpf
+		$cpf =  str_replace(".", "", $user->cpf);
+		$cpf = str_replace("-", "", $cpf);
 		$creditCard->setSender()->setDocument()->withParameters(
 		    'CPF',
-		    '66308622010'
+		    $cpf
 		);
 
 		$creditCard->setSender()->setHash($this->cardInfo['hash']);
@@ -120,7 +120,7 @@ class CreditCard
 
 		$creditCard->setHolder()->setDocument()->withParameters(
 		    'CPF',
-		    '66308622010'
+		    $cpf
 		);
 
 		// Set the Payment Mode for this payment request
@@ -128,7 +128,7 @@ class CreditCard
 		
 		// Set a reference code for this payment request. It is useful to identify this payment
 		// in future notifications.
-
+		
 		$result = $creditCard->register(
 	        \PagSeguro\Configuration\Configure::getAccountCredentials()
 	    );

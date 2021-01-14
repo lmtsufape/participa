@@ -181,7 +181,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
     });
   });
   // Visualizar trabalhos do usuário
-  Route::get('/user/trabalhos', 'UserController@meusTrabalhos')->name('user.meusTrabalhos');
+  Route::get('/user/trabalhos', 'Users\UserController@meusTrabalhos')->name('user.meusTrabalhos');
 
   // Cadastrar Comissão
   Route::post('/evento/cadastrarComissao','ComissaoController@store'                   )->name('cadastrar.comissao');
@@ -224,7 +224,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
     Route::post('/notification', 'Inscricao\CheckoutController@notification')->name('notification');
     Route::get('/{id}/pagamentos',    'Inscricao\CheckoutController@listarPagamentos'  )->name('pagamentos');
-    Route::get('/pag-boleto',  'Inscricao\CheckoutController@pagBoleto')->name('boleto');
+    Route::post('/pag-boleto',  'Inscricao\CheckoutController@pagBoleto')->name('boleto');
 
   });
   //Pagamentos
