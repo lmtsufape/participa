@@ -133,7 +133,7 @@
         <div class="row">
             <div class="@if($cupom != null) col-sm-3 @else col-sm-6 @endif">
                 <label for="metodo">Método de pagamento</label>
-                <select name="método" class="form-control" id="metodo" required>
+                <select name="metodo" class="form-control" id="metodo" required>
                     <option value="" selected disabled>-- Selecione o método --</option>
                     <option value="boleto">Boleto bancário</option>
                     <option value="cartao">Cartão de Crédito</option>
@@ -188,7 +188,7 @@
 
         function confirmarInscricao() {
             var form = document.getElementById('formConfirmarInscricao');
-            form.action = "{{route('inscricao.confirmar', ['id' => $evento->id])}}"
+            form.action = "{{route('checkout.index', ['id' => $evento->id])}}"
             form.method = "POST";
             form.submit();
         }

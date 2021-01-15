@@ -19,6 +19,7 @@ Route::get('/index', function () {
     return view('index',['eventos'=>$eventos]);
 })->name('index');
 
+Auth::routes(['verify' => true]);
 
 Route::get('/#', function () {
     if(Auth::check()){
@@ -180,7 +181,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
     });
   });
   // Visualizar trabalhos do usuário
-  Route::get('/user/trabalhos', 'UserController@meusTrabalhos')->name('user.meusTrabalhos');
+  Route::get('/user/trabalhos', 'Users\UserController@meusTrabalhos')->name('user.meusTrabalhos');
 
   // Cadastrar Comissão
   Route::post('/evento/cadastrarComissao','ComissaoController@store'                   )->name('cadastrar.comissao');
@@ -212,10 +213,21 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('inscricoes/checar-cupom',          'Inscricao\CupomDeDescontoController@checar')->name('checar.cupom');
   Route::get('{id}/inscricoes/nova-inscricao/checar', 'Inscricao\InscricaoController@checarDados')->name('inscricao.checar');
   Route::get('{id}/inscricoes/nova-inscricao/voltar', 'Inscricao\InscricaoController@voltarTela')->name('inscricao.voltar');
-  Route::post('{id}/inscricoes/confirmar-inscricao',  'Inscricao\InscricaoController@confirmar')->name('inscricao.confirmar');
   Route::post('/inscricoes/salvar-campo-formulario',  'Inscricao\CampoFormularioController@store')->name('campo.formulario.store');
   Route::post('/inscricoes/campo-excluir/{id}',       'Inscricao\CampoFormularioController@destroy')->name('campo.destroy');
-  Route::post('inscricoes/editar-campo/{id}',         'Inscricao\CampoFormularioController@update')->name('campo.edit'); 
+  Route::post('inscricoes/editar-campo/{id}',         'Inscricao\CampoFormularioController@update')->name('campo.edit');
+  // Checkout 
+  Route::prefix('checkout')->name('checkout.')->group(function(){
+    Route::post('/confirmar-inscricao/{id}',  'Inscricao\CheckoutController@index')->name('index');
+    Route::post('/proccess',  'Inscricao\CheckoutController@proccess')->name('proccess');
+    Route::get('/obrigado',  'Inscricao\CheckoutController@obrigado')->name('obrigado');
+
+    Route::post('/notification', 'Inscricao\CheckoutController@notification')->name('notification');
+    Route::get('/{id}/pagamentos',    'Inscricao\CheckoutController@listarPagamentos'  )->name('pagamentos');
+    Route::post('/pag-boleto',  'Inscricao\CheckoutController@pagBoleto')->name('boleto');
+
+  });
+  //Pagamentos
 
   Route::get('inscricoes/evento-{id}/index',    'Inscricao\InscricaoController@index'   )->name('inscricoes');
   Route::post('inscricoes/criar-promocao',      'Inscricao\PromocaoController@store'    )->name('promocao.store');
