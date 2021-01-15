@@ -302,6 +302,310 @@
     </div>
   </div>
 
+  <div id="proximos-eventos">
+    <div class="wrapper-barra-horizontal">
+      <div class="scroll-horizontal">
+        <h2>Proximos eventos</h2>
+        <div class="cards-wrapper">
+          {{-- <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a> --}}
+          <div class="card" style="width: 13rem;">
+              <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Oficina do saber</h5>
+                <br> 
+                <div class="container">
+                  <div class="row" style="position: relative; left: -15px;">
+                    <div class="col-sm-6">
+                      <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                    </div>
+                    <div class="col-sm-6">
+                      <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 data">
+                      <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
+                      <span>
+                        12/02/2021
+                      </span> 
+                    </div>
+                    <div class="col-sm-6 horario">
+                      <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
+                      <span> 
+                        14:30 
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row location-pointer-card">
+                    <div class="col-sm-1">
+                      <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
+                    </div>
+                    <div class="col-sm-11">
+                      <span> 
+                        Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="card" style="width: 13rem;">
+            <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Oficina do saber</h5>
+                <br> 
+                <div class="container">
+                  <div class="row" style="position: relative; left: -15px;">
+                    <div class="col-sm-6">
+                      <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                    </div>
+                    <div class="col-sm-6">
+                      <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 data">
+                      <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
+                      <span>
+                        12/02/2021
+                      </span> 
+                    </div>
+                    <div class="col-sm-6 horario">
+                      <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
+                      <span> 
+                        14:30 
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row location-pointer-card">
+                    <div class="col-sm-1">
+                      <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
+                    </div>
+                    <div class="col-sm-11">
+                      <span> 
+                        Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="card" style="width: 13rem;">
+            <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Oficina do saber</h5>
+                <br> 
+                <div class="container">
+                  <div class="row" style="position: relative; left: -15px;">
+                    <div class="col-sm-6">
+                      <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                    </div>
+                    <div class="col-sm-6">
+                      <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 data">
+                      <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
+                      <span>
+                        12/02/2021
+                      </span> 
+                    </div>
+                    <div class="col-sm-6 horario">
+                      <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
+                      <span> 
+                        14:30 
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row location-pointer-card">
+                    <div class="col-sm-1">
+                      <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
+                    </div>
+                    <div class="col-sm-11">
+                      <span> 
+                        Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="card" style="width: 13rem;">
+            <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Oficina do saber</h5>
+                <br> 
+                <div class="container">
+                  <div class="row" style="position: relative; left: -15px;">
+                    <div class="col-sm-6">
+                      <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                    </div>
+                    <div class="col-sm-6">
+                      <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 data">
+                      <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
+                      <span>
+                        12/02/2021
+                      </span> 
+                    </div>
+                    <div class="col-sm-6 horario">
+                      <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
+                      <span> 
+                        14:30 
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row location-pointer-card">
+                    <div class="col-sm-1">
+                      <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
+                    </div>
+                    <div class="col-sm-11">
+                      <span> 
+                        Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="card" style="width: 13rem;">
+            <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Oficina do saber</h5>
+                <br> 
+                <div class="container">
+                  <div class="row" style="position: relative; left: -15px;">
+                    <div class="col-sm-6">
+                      <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                    </div>
+                    <div class="col-sm-6">
+                      <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 data">
+                      <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
+                      <span>
+                        12/02/2021
+                      </span> 
+                    </div>
+                    <div class="col-sm-6 horario">
+                      <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
+                      <span> 
+                        14:30 
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row location-pointer-card">
+                    <div class="col-sm-1">
+                      <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
+                    </div>
+                    <div class="col-sm-11">
+                      <span> 
+                        Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="card" style="width: 13rem;">
+            <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Oficina do saber</h5>
+                <br> 
+                <div class="container">
+                  <div class="row" style="position: relative; left: -15px;">
+                    <div class="col-sm-6">
+                      <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                    </div>
+                    <div class="col-sm-6">
+                      <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 data">
+                      <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
+                      <span>
+                        12/02/2021
+                      </span> 
+                    </div>
+                    <div class="col-sm-6 horario">
+                      <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
+                      <span> 
+                        14:30 
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row location-pointer-card">
+                    <div class="col-sm-1">
+                      <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
+                    </div>
+                    <div class="col-sm-11">
+                      <span> 
+                        Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="card" style="width: 13rem;">
+            <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Oficina do saber</h5>
+                <br> 
+                <div class="container">
+                  <div class="row" style="position: relative; left: -15px;">
+                    <div class="col-sm-6">
+                      <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                    </div>
+                    <div class="col-sm-6">
+                      <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 data">
+                      <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
+                      <span>
+                        12/02/2021
+                      </span> 
+                    </div>
+                    <div class="col-sm-6 horario">
+                      <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
+                      <span> 
+                        14:30 
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row location-pointer-card">
+                    <div class="col-sm-1">
+                      <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
+                    </div>
+                    <div class="col-sm-11">
+                      <span> 
+                        Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="row justify-content-center modulos" style="padding:0 5% 0 5%">
     <div class="col-sm-4">
