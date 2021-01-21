@@ -43,7 +43,7 @@
     <meta name="token" content="{{ csrf_token() }}">
     <div id="app">
         {{-- Navbar --}}
-        <nav class="navbar navbar-expand-md navbar-dark  shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark shadow-sm">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-2">
@@ -85,16 +85,16 @@
                                 @endguest
                         </div>
                         @guest
+                            @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Cadastre seu evento') }}</a>
+                                    {{-- <a class="nav-link" data-toggle="modal" data-target="#modalCadastro">{{ __('Cadastro') }}</a> --}}
+                                </li>
+                            @endif
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 {{-- <a class="nav-link" data-toggle="modal" data-target="#modalLogin">{{ __('Login') }}</a> --}}
                             </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Cadastro') }}</a>
-                                    {{-- <a class="nav-link" data-toggle="modal" data-target="#modalCadastro">{{ __('Cadastro') }}</a> --}}
-                                </li>
-                            @endif
                         @else
 
                                 {{-- $ComissaoEvento = ComissaoEvento::where('user_id', Auth::user()->id)->first(); --}}

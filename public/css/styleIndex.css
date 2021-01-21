@@ -84,18 +84,19 @@ body{
   overflow-y: auto;
 }
 .footer{
-  background-color:black;
+  background-color:#114048ff;
   /* height: 90vh; */
-  padding:100px;
+  padding: 100px;
+  padding-top: 70px;
   color: white;
 }
 .footer .social{
-  width: 30px;
+  width: 50px;
   margin: 10px;
   transition: 0.5s;
 }
 .footer .social:hover{
-  width: 35px;
+  width: 65px;
   transition: 0.5s;
 }
 .footer .sobre a{
@@ -117,7 +118,7 @@ body{
     margin-bottom:30px;
   }
   .footer .social{
-    width:20px;
+    width:65px;
   }
   .curved{
     height: 550px;
@@ -278,6 +279,7 @@ body{
 
 .content{
   position: relative;
+  padding-bottom: 50px;
 }
 
 .wrapper-barra-horizontal { 
@@ -292,10 +294,10 @@ body{
   overflow: hidden;
 }
 
-#proximos-eventos h2 {
+.proximos-eventos h2 {
   position: relative;
   bottom: 40px;
-  left: 5%;
+  padding-left: 5%;
 }
 
 .wrapper-barra-horizontal .scroll-horizontal {
@@ -481,4 +483,46 @@ body{
 .modal-info-home #text-modal-home {
   font-size: 24px;
   text-align: justify;
+}
+
+#btn-mais-eventos {
+  margin: 20px;
+  position: relative;
+  top: -50px;
+  align-content: center;
+  text-align: center;
+  float: center;
+  transition: 0.2s;
+}
+
+#btn-mais-eventos button {
+  color: white;
+  font-weight: bolder;
+  font-size: 20px;
+  background-image: linear-gradient( to right, rgb(255, 187, 0),  rgb(226, 166, 0),  rgb(192, 141, 0)); 
+  box-shadow:1px 3px 3px 3px rgb(200, 200, 200);
+}
+
+#btn-mais-eventos button:hover {
+  background-image: linear-gradient( to right, rgb(255, 187, 0),  rgb(226, 166, 0),  rgb(192, 141, 0)); 
+  box-shadow: 1px 3px 3px 3px rgb(110, 110, 110);
+}
+
+.separador hr {
+  background-color: white;
+  height: 2px;
+  margin-bottom: 50px;
+}
+
+.footer .links-rodape a {
+  margin-left: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.footer .links-rodape a:hover {
+  margin-left: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  text-decoration-line: underline;
 }
