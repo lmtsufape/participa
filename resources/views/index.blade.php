@@ -1697,7 +1697,7 @@
 
       var botoes = document.getElementsByClassName('cor-aleatoria');
       for (var i = 0; i < botoes.length; i++) {
-        botoes[i].style.backgroundColor = '#'+Math.floor(Math.random()*16777215).toString(16)+'c0';
+        botoes[i].style.backgroundColor = '#'+Math.floor(Math.random()*16777215).toString(16);
       }
 
       var barras = document.getElementsByClassName('wrapper-barra-horizontal');
