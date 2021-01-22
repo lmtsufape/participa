@@ -36,7 +36,7 @@ Route::get('/#', function () {
   });
 
 
-Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('atividades.json');
+Route::get('/{id}/atividades', 'Submissao\AtividadeController@atividadesJson')->name('atividades.json');
 
 Route::get('/perfil','Users\UserController@perfil')->name('perfil')->middleware('auth');
 Route::post('/perfil/editar','Users\UserController@editarPerfil')->name('perfil.update')->middleware('auth');

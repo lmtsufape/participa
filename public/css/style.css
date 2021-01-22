@@ -279,22 +279,14 @@ body{
 
 /* EVENTO */
 .banner-evento{
-    width: 100vw;
-    height: 35vh;
-    border-image-slice: fill;
-    z-index: 0;
-    position: absolute;
-    top: 0;
-    overflow: hidden;
-    float: left;
-    padding: 0;
-    background-color:#071b1eff ;
-
+    min-width: 100%;
+    min-height: 425px;
+    background-color:#071b1eff;
 }
 .banner-evento img{
-    filter: blur(20px);
-    -webkit-filter: blur(20px);
     width: 100%;
+    min-height: 425px;
+    max-height: 425px;
 }
 .front-image-evento{
     margin-top: 25px;
@@ -318,6 +310,24 @@ body{
 }
 .info-evento p{
     font-size: 15px;
+}
+.info-evento {
+    text-align: left;
+}
+
+.info-evento .button-card-visualizar-evento {
+    text-align: center;
+    width: 100%;
+    background-color: rgb(0, 132, 255);
+}
+
+.info-evento .button-card-visualizar-evento:hover {
+    background-color: rgb(1, 195, 195);
+    box-shadow: 1px 3px 3px rgb(85, 85, 85);
+}
+
+.info-evento .titulo-modalidade {
+    color: rgb(0, 132, 255);
 }
 
 
@@ -364,9 +374,6 @@ body{
     }
     .main_content{
         margin-left: 130px;
-    }
-    .banner-evento{
-        height: 27vh;
     }
     .front-image-evento{
         margin: 35px 20px 35px 20px;
@@ -562,4 +569,47 @@ body{
     opacity:1;
     transition: 0.3s;
     box-shadow: 5px 5px 5px black;
+}
+
+.card-visualizar-evento {
+    position: relative;
+    margin-left: 15%;
+    text-align: center;
+}
+
+.card-visualizar-evento .card {
+    position: relative;
+    top: -200px;
+    border-radius: 15px;
+}
+
+.card-visualizar-evento .card p {
+    text-align: justify;
+    color: black;
+}
+
+.card-visualizar-evento .card .white-color {
+    color: white;
+    font-weight: bolder;
+    box-shadow: 1px 3px 3px rgb(151, 151, 151);
+}
+
+.card-visualizar-evento .card .data {
+    position: relative;
+    left: -35px;
+}
+
+.card-visualizar-evento .card .pago {
+    position: relative;
+    left: -80px;
+}
+
+.card-visualizar-evento .card .clock {
+    position: relative;
+    left: -130px;
+}
+
+.card-visualizar-evento .card hr {
+    margin-top: 25px;
+    margin-bottom: 25px;
 }
