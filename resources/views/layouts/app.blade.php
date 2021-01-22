@@ -208,7 +208,9 @@
         @endif
 
         {{-- <main class="container-fluid"> --}}
-        @yield('content')
+        <div>
+            @yield('content')
+        </div>
         {{-- </main> --}}
 
     </div>
