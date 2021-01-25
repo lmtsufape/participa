@@ -668,3 +668,11 @@ body{
     transition: 0.2s;
     box-shadow: 1px 5px 5px rgba(63, 63, 63, 0.596);
 }
+
+.invalid-feedback {
+    display: inline;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #dc3545;
+  }

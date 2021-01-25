@@ -130,12 +130,19 @@
                                     <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror" name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
                                 </div>
                                 <small style="position: relative; top: 5px;">Tamanho minimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
-                                @error('fotoEvento')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-7">
+
+                        </div>
+                        <div class="col-sm-5">
+                            @error('fotoEvento')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                            @enderror
                         </div>
                     </div>
                     <!-- Inicio e fim do evento -->

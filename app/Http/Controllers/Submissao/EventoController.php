@@ -388,7 +388,7 @@ class EventoController extends Controller
         $mytime = Carbon::now('America/Recife');
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
-
+        // dd($request);
         if($request->dataInicio == null || $request->dataFim == null){
           $validatedData = $request->validate([
             'nome'                => ['required', 'string'],
@@ -396,8 +396,8 @@ class EventoController extends Controller
             'tipo'                => ['required', 'string'],
             'dataInicio'          => ['required', 'date','after:'. $yesterday],
             'dataFim'             => ['required', 'date'],
-            'fotoEvento'          => ['file', 'mimes:png'],
-            'valorTaxa'           => ['required'],
+            'fotoEvento'          => ['file', 'mimes:png,jpg,jpeg', 'dimensions:min_width=1024,min_height=425'],
+            'recolhimendo'        => ['required'],
           ]);
         }
 
@@ -441,7 +441,7 @@ class EventoController extends Controller
           'enderecoId'          => $endereco->id,
           'coordenadorId'       => Auth::user()->id,
           'deletado'            => false,
-          'valorTaxa'           => $request->valorTaxa,
+          'recolhimendo'        => $request->recolhimendo,
         ]);
         // $user = Auth::user();
         // $user->evento()->save($evento);
@@ -467,8 +467,8 @@ class EventoController extends Controller
 
         $user = Auth::user();
         $subject = "Evento Criado";
-        Mail::to($user->email)
-            ->send(new EventoCriado($user, $subject));
+        // Mail::to($user->email)
+        //     ->send(new EventoCriado($user, $subject));
 
         // Passando dados default para a edição das etiquetas
         // dos campos do card de eventos.

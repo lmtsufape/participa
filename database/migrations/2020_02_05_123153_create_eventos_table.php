@@ -28,7 +28,7 @@ class CreateEventosTable extends Migration
             $table->integer('numMaxTrabalhos')->nullable();
             $table->integer('numMaxCoautores')->nullable();
             // $table->boolean('possuiTaxa');
-            $table->string('recolhimendo');
+            $table->string('recolhimendo')->nullable();
             $table->string('fotoEvento')->nullable();
             $table->boolean('publicado')->nullable();
 
