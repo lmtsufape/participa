@@ -66,7 +66,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'numMaxTrabalhos' => 2,
           'numMaxCoautores' => 5,
           // 'possuiTaxa'=>true,
-          'valorTaxa'=>10,
+          'recolhimendo'=>'pago',
           'enderecoId'=>2,
           'coordenadorId'=>1,
           'publicado'=>true,

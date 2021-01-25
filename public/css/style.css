@@ -102,7 +102,6 @@ body{
     margin:2% 0 2% 0;
     /* border-bottom: 2px solid #ccc; */
     font-size: 30px;
-    text-align: center;
     font-weight: bolder;
 }
 
@@ -650,4 +649,22 @@ body{
     background-color: rgb(0, 207, 0);
     color: white;
     box-shadow: 1px 3px 3px rgb(82, 82, 82);
+}
+
+.imagem-loader img {
+    cursor: pointer;
+    min-height: 195px;
+    min-width: 395px;
+    height: 195px;
+    width: 395px;
+    max-height: 195px;
+    max-width: 395px;
+    border-radius: 5px;
+    border: 1px solid rgba(92, 92, 92, 0.596);
+    box-shadow: 1px 5px 5px rgba(128, 128, 128, 0.596);
+}
+
+.imagem-loader img:hover {
+    transition: 0.2s;
+    box-shadow: 1px 5px 5px rgba(63, 63, 63, 0.596);
 }
