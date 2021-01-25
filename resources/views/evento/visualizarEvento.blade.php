@@ -148,7 +148,7 @@
           <div class="banner-evento">
               <img src="{{asset('img/colorscheme.png')}}" alt="">
           </div>
-          <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt="">
+          {{-- <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt=""> --}}
         @endif
     </div>
 </div>
