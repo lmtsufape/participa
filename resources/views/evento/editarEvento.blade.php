@@ -350,6 +350,19 @@
             }
         });
         $('#numero').mask('0000000000000');
+
+        $('#imagem-loader').click(function() {
+            $('#logo-input').click();
+            $('#logo-input').change(function() {
+                if (this.files && this.files[0]) {
+                    var file = new FileReader();
+                    file.onload = function(e) {
+                        document.getElementById("logo-preview").src = e.target.result;
+                    };       
+                    file.readAsDataURL(this.files[0]);
+                }
+            })
+        });
     });
 
     function limpa_formulário_cep() {
