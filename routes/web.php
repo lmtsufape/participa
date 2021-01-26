@@ -67,6 +67,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
     Route::get('/home/coord/eventos', 'CoordEventoController@listaEventos')->name('coord.eventos');
   });
 
+  Route::post('search/user', 'Users\UserController@searchUser')->name('search.user');
   
   // rotas de teste
   Route::namespace('Submissao')->group(function () {
@@ -76,7 +77,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
       Route::get('detalhes', 'EventoController@informacoes')->name('detalhesEvento');
       Route::get('informacoes', 'EventoController@informacoes')->name('informacoes');
       Route::get('trabalhos/definirSubmissoes', 'EventoController@definirSubmissoes')->name('definirSubmissoes');
-      Route::get('trabalhos/listarTrabalhos', 'EventoController@listarTrabalhos')->name('listarTrabalhos');
+      Route::get('trabalhos/listarTrabalhos/{column?}/{direction?}', 'EventoController@listarTrabalhos')->name('listarTrabalhos');
       Route::get('trabalhos/{id}/resultados', 'TrabalhoController@resultados')->name('resultados');
 
       Route::get('areas/cadastrarAreas', 'EventoController@cadastrarAreas')->name('cadastrarAreas');
@@ -179,6 +180,18 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
     Route::prefix('/comissao/cientifica/evento/')->name('comissao.cientifica.')->group(function(){
       Route::get('detalhes', 'ComissaoController@informacoes')->name('detalhesEvento');
     });
+
+    //Revisores
+    Route::post(  '/revisor/criar',         'RevisorController@store'                    )->name('revisor.store');
+    Route::get(   '/revisor/listarTrabalhos','RevisorController@indexListarTrabalhos'    )->name('revisor.listarTrabalhos');
+    Route::post(  '/revisor/email',         'RevisorController@enviarEmailRevisor'       )->name('revisor.email');
+    Route::get(  '{id}/revisor/convite',    'RevisorController@conviteParaEvento'        )->name('revisor.convite.evento');
+    Route::post(  '/revisor/emailTodos',    'RevisorController@enviarEmailTodosRevisores')->name('revisor.emailTodos');
+    Route::get(  '/revisores-por-area/{id}','RevisorController@revisoresPorAreaAjax'     )->name('revisores.area');
+    Route::post(  '/remover/revisor/{id}',  'RevisorController@destroy'                  )->name('remover.revisor');
+    Route::get('/area/revisores/trabalhos/area/{area_id}/modalidade/{modalidade_id}', 'RevisorController@indexListarTrabalhos')->name('avaliar.listar.trabalhos.filtro');
+    Route::get('/area/revisores/{id}/trabalhos',  'RevisorController@trabalhosDoEvento' )->name('revisor.trabalhos.evento');
+    Route::get('/area/revisores',        'RevisorController@index'                      )->name('revisor.index');
   });
   // Visualizar trabalhos do usuário
   Route::get('/user/trabalhos', 'Users\UserController@meusTrabalhos')->name('user.meusTrabalhos');
@@ -187,17 +200,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::post('/evento/cadastrarComissao','ComissaoController@store'                   )->name('cadastrar.comissao');
   Route::post('/evento/cadastrarCoordComissao','ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
 
-  //Revisores
-  Route::post(  '/revisor/criar',         'RevisorController@store'                    )->name('revisor.store');
-  Route::get(   '/revisor/listarTrabalhos','RevisorController@indexListarTrabalhos'    )->name('revisor.listarTrabalhos');
-  Route::post(  '/revisor/email',         'RevisorController@enviarEmailRevisor'       )->name('revisor.email');
-  Route::get(  '{id}/revisor/convite',    'RevisorController@conviteParaEvento'        )->name('revisor.convite.evento');
-  Route::post(  '/revisor/emailTodos',    'RevisorController@enviarEmailTodosRevisores')->name('revisor.emailTodos');
-  Route::get(  '/revisores-por-area/{id}','RevisorController@revisoresPorAreaAjax'     )->name('revisores.area');
-  Route::post(  '/remover/revisor/{id}',  'RevisorController@destroy'                  )->name('remover.revisor');
-  Route::get('/area/revisores/trabalhos/area/{area_id}/modalidade/{modalidade_id}', 'RevisorController@indexListarTrabalhos')->name('avaliar.listar.trabalhos.filtro');
-  Route::get('/area/revisores/{id}/trabalhos',  'RevisorController@trabalhosDoEvento' )->name('revisor.trabalhos.evento');
-  Route::get('/area/revisores',        'RevisorController@index'                      )->name('revisor.index');
+  
 
   Route::name('coord.')->group(function () {
     Route::get('comissaoOrganizadora/{id}/cadastrar', 'ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');

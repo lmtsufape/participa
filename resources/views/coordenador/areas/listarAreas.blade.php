@@ -14,11 +14,22 @@
         </div>
 
         <div class="row justify-content-center">
-            <div class="col-sm-8">
+            <div class="col-sm-12">
               
                 <div class="card">
                     <div class="card-body">
-                      <h5 class="card-title">Áreas</h5>
+                      <div class="row">
+                        <div class="col-md-10">
+                          <h5 class="card-title">Áreas</h5>
+                        </div>
+                        <div class="col-md-2">
+                          {{-- <a href="#" class="btn btn-primary">Cadastrar área</a> --}}
+                          @component('componentes.modal')
+                            
+                          @endcomponent
+                        </div>
+
+                      </div>
                       <h6 class="card-subtitle mb-2 text-muted">Áreas cadastradas no seu evento</h6>
                       <p class="card-text">
                         <table class="table table-hover table-responsive-lg table-sm">

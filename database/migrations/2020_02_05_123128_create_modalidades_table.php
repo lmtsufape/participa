@@ -17,11 +17,11 @@ class CreateModalidadesTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('nome');
-            $table->date('inicioSubmissao')->nullable();
-            $table->date('fimSubmissao')->nullable();
-            $table->date('inicioRevisao')->nullable();
-            $table->date('fimRevisao')->nullable();
-            $table->date('inicioResultado')->nullable();
+            $table->dateTimeTz('inicioSubmissao')->nullable();
+            $table->dateTimeTz('fimSubmissao')->nullable();
+            $table->dateTimeTz('inicioRevisao')->nullable();
+            $table->dateTimeTz('fimRevisao')->nullable();
+            $table->dateTimeTz('inicioResultado')->nullable();
 
             $table->boolean('texto')->nullable();
             $table->boolean('arquivo')->nullable();
@@ -40,6 +40,8 @@ class CreateModalidadesTable extends Migration
             $table->boolean('png')->nullable();
             $table->boolean('docx')->nullable();
             $table->boolean('odt')->nullable();
+            $table->boolean('zip')->nullable();
+            $table->boolean('svg')->nullable();
 
             $table->string('regra')->nullable();
             $table->string('template')->nullable();

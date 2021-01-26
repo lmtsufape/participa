@@ -183,7 +183,7 @@
     </div>
     <div class="row margin">
         <div class="col-sm-12">
-            <p>{{$evento->descricao}}</p>
+            <p>{!!$evento->descricao!!}</p>
         </div>
     </div>
 
@@ -217,26 +217,26 @@
               @if (isset($modalidade->inicioSubmissao))
                 <p>
                   <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                  Submissão: {{date('d/m/Y',strtotime($modalidade->inicioSubmissao))}} - {{date('d/m/Y',strtotime($modalidade->fimSubmissao))}}
+                  Submissão: {{date('d/m/Y H:i:s',strtotime($modalidade->inicioSubmissao))}} - {{date('d/m/Y H:i:s',strtotime($modalidade->fimSubmissao))}}
                 </p>
               @endif
 
               @if (isset($modalidade->inicioRevisao))
               <p>
                 <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                Revisão: {{date('d/m/Y',strtotime($modalidade->inicioRevisao))}} - {{date('d/m/Y',strtotime($modalidade->fimRevisao))}}
+                Revisão: {{date('d/m/Y H:i:s',strtotime($modalidade->inicioRevisao))}} - {{date('d/m/Y H:i:s',strtotime($modalidade->fimRevisao))}}
               </p>
               @endif
 
               @if (isset($modalidade->inicioResultado))
               <p>
                 <img class="" src="{{asset('img/icons/calendar-evento.svg')}}" alt="">
-                Resultado: {{date('d/m/Y',strtotime($modalidade->inicioResultado))}}
+                Resultado: {{date('d/m/Y H:i:s',strtotime($modalidade->inicioResultado))}}
               </p>
               @endif
               
               @if(Carbon\Carbon::parse($modalidade->inicioSubmissao) <= $mytime)
-                @if($mytime <= Carbon\Carbon::parse($modalidade->fimSubmissao . " 23:59:59.999"))
+                @if($mytime <= Carbon\Carbon::parse($modalidade->fimSubmissao ))
                   @if ($modalidade->arquivo == true)
                     @if(isset($modalidade->regra))
                       <div style="margin-top: 20px; margin-bottom: 10px;">

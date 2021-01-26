@@ -51,7 +51,7 @@ class ModalidadeController extends Controller
      */
     public function store(Request $request)
     {
-
+        // dd($request->all());
         $mytime = Carbon::now('America/Recife');
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
@@ -129,6 +129,8 @@ class ModalidadeController extends Controller
         $modalidade->png                = $request->png;
         $modalidade->docx               = $request->docx;
         $modalidade->odt                = $request->odt;
+        $modalidade->zip                = $request->zip;
+        $modalidade->svg                = $request->svg;
         $modalidade->evento_id          = $request->eventoId;
         $modalidade->save();
 
@@ -189,7 +191,7 @@ class ModalidadeController extends Controller
     public function update(Request $request)
     {
         $modalidadeEdit = Modalidade::find($request->modalidadeEditId);
-        // dd($request);
+        // dd($request->all());
         $validatedData = $request->validate([
 
             'nome'                   => ['required', 'string'],

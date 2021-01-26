@@ -14,7 +14,7 @@ class Modalidade extends Model
   protected $fillable = [
       'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao', 
       'inicioResultado', 'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres',
-      'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt',
+      'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg',
       'regra', 'template',
   ];
 

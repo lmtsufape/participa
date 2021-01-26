@@ -128,4 +128,16 @@ class UserController extends Controller
                                             'trabalhos'           => $trabalhos,
                                         ]);
     }
+
+    public function searchUser(Request $request)
+    {
+
+        $user = User::where('email', $request->email)->first('name');
+
+        return response()->json([
+            'user' => [
+                $user
+            ]
+        ]);
+    }
 }
