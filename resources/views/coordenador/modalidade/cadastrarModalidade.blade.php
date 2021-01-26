@@ -11,7 +11,7 @@
         </div>
         {{-- row card --}}
         <div class="row justify-content-center">
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Nova Modalidade</h5>
@@ -46,7 +46,7 @@
 
                             <div class="col-sm-6">
                                 <label for="inicioSubmissao" class="col-form-label">{{ __('Início da Submissão') }}</label>
-                                <input id="inicioSubmissao" type="date" class="form-control @error('inícioDaSubmissão') is-invalid @enderror" name="inícioDaSubmissão" value="{{ old('inícioDaSubmissão') }}" autocomplete="inicioSubmissao" autofocus>
+                                <input id="inicioSubmissao" type="datetime-local" class="form-control @error('inícioDaSubmissão') is-invalid @enderror" name="inícioDaSubmissão" value="{{ old('inícioDaSubmissão') }}" autocomplete="inicioSubmissao" autofocus>
 
                                 @error('inícioDaSubmissão')
                                 <span class="invalid-feedback" role="alert">
@@ -56,7 +56,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="fimSubmissao" class="col-form-label">{{ __('Fim da Submissão') }}</label>
-                                <input id="fimSubmissao" type="date" class="form-control @error('fimDaSubmissão') is-invalid @enderror" name="fimDaSubmissão" value="{{ old('fimDaSubmissão') }}" autocomplete="fimSubmissao" autofocus>
+                                <input id="fimSubmissao" type="datetime-local" class="form-control @error('fimDaSubmissão') is-invalid @enderror" name="fimDaSubmissão" value="{{ old('fimDaSubmissão') }}" autocomplete="fimSubmissao" autofocus>
 
                                 @error('fimDaSubmissão')
                                 <span class="invalid-feedback" role="alert">
@@ -72,7 +72,7 @@
 
                             <div class="col-sm-6">
                                 <label for="inicioRevisao" class="col-form-label">{{ __('Início da Revisão') }}</label>
-                                <input id="inicioRevisao" type="date" class="form-control @error('inícioDaRevisão') is-invalid @enderror" name="inícioDaRevisão" value="{{ old('inícioDaRevisão') }}" autocomplete="inicioRevisao" autofocus>
+                                <input id="inicioRevisao" type="datetime-local" class="form-control @error('inícioDaRevisão') is-invalid @enderror" name="inícioDaRevisão" value="{{ old('inícioDaRevisão') }}" autocomplete="inicioRevisao" autofocus>
 
                                 @error('inícioDaRevisão')
                                 <span class="invalid-feedback" role="alert">
@@ -82,7 +82,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="fimRevisao" class="col-form-label">{{ __('Fim da Revisão') }}</label>
-                                <input id="fimRevisao" type="date" class="form-control @error('fimDaRevisão') is-invalid @enderror" name="fimDaRevisão" value="{{ old('fimDaRevisão') }}" autocomplete="fimRevisao" autofocus>
+                                <input id="fimRevisao" type="datetime-local" class="form-control @error('fimDaRevisão') is-invalid @enderror" name="fimDaRevisão" value="{{ old('fimDaRevisão') }}" autocomplete="fimRevisao" autofocus>
 
                                 @error('fimDaRevisão')
                                 <span class="invalid-feedback" role="alert">
@@ -97,8 +97,8 @@
                         <div class="row">
 
                             <div class="col-sm-6">
-                                <label for="inicioResultado" class="col-form-label">{{ __('Início do Resultado') }}</label>
-                                <input id="inicioResultado" type="date" class="form-control @error('inícioDoResultado') is-invalid @enderror" name="inícioDoResultado" value="{{ old('inícioDoResultado') }}" autocomplete="inicioResultado" autofocus>
+                                <label for="inicioResultado" class="col-form-label">{{ __('Resultado') }}</label>
+                                <input id="inicioResultado" type="datetime-local" class="form-control @error('inícioDoResultado') is-invalid @enderror" name="inícioDoResultado" value="{{ old('inícioDoResultado') }}" autocomplete="inicioResultado" autofocus>
 
                                 @error('inícioDoResultado')
                                 <span class="invalid-feedback" role="alert">
@@ -220,6 +220,18 @@
                                         .odt
                                     </label>
                                 </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="zip">
+                                    <label class="form-check-label" for="defaultCheck1">
+                                        .zip
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="svg">
+                                    <label class="form-check-label" for="defaultCheck1">
+                                        .svg
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="row justify-content-center">
@@ -230,7 +242,7 @@
                               <div class="custom-file">
                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegras">
                               </div>
-                              <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
+                              <small>O arquivo selecionado deve ser no formato PDF de até 2 MB.</small>
                               @error('arquivoRegras')
                               <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                 <strong>{{ $message }}</strong>
@@ -244,7 +256,7 @@
                                 <div class="custom-file">
                                   <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates">
                                 </div>
-                                <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
+                                <small>O arquivo selecionado deve ser no formato PDF de até 2 MB.</small>
                                 @error('arquivoTemplates')
                                 <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                   <strong>{{ $message }}</strong>

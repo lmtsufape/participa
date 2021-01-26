@@ -97,16 +97,16 @@ class EventoController extends Controller
                                                   ]);
 
     }
-    public function listarTrabalhos(Request $request)
+    public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
-        $users = $evento->usuariosDaComissao;
+        // $this->authorize('isCoordenadorOrComissao', $evento);
+        // $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
-        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy('titulo')->get();
-
+        $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy($column, $direction)->get();
+        // dd($trabalhos);
         return view('coordenador.trabalhos.listarTrabalhos', [
                                                     'evento'            => $evento,
                                                     'areas'             => $areas,
@@ -421,6 +421,7 @@ class EventoController extends Controller
           'cidade'              => ['required', 'string'],
           'uf'                  => ['required', 'string'],
           'cep'                 => ['required', 'string'],
+          'complemento'         => ['required', 'string'],
         ]);
 
         $endereco = Endereco::create([
@@ -430,6 +431,7 @@ class EventoController extends Controller
           'cidade'              => $request->cidade,
           'uf'                  => $request->uf,
           'cep'                 => $request->cep,
+          'complemento'         => $request->complemento,
         ]);
 
         $evento = Evento::create([
@@ -514,17 +516,7 @@ class EventoController extends Controller
         if($request->hasFile('fotoEvento')){
             $image          = $request->file('fotoEvento');
             return $image->store('public');
-            // $filename       = $image->getClientOriginalName();
-            // $destination    = storage_path('app/public');
-
-            // if($image->move($destination, $filename)){
-            //     // dd();
-            //     return $destination .'/' .$filename ;
-            // }
-
-            //Outra abordagem de upload de imagem
-            //return $image->store('public');
-            //return $image->storeAs('public', $filename);
+            
         }
         return null;
 

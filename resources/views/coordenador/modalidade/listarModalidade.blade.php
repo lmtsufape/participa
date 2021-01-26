@@ -165,7 +165,7 @@
 
                                             <div class="col-sm-6">
                                                 <label for="inicioSubmissaoEdit" class="col-form-label">{{ __('Início da Submissão') }}</label>
-                                                <input id="inicioSubmissaoEdit" type="date" class="form-control @error('inícioSubmissão') is-invalid @enderror" name="inícioSubmissão" value="@if(old('inícioSubmissão')!=null){{old('inícioSubmissão')}}@else{{$modalidade->inicioSubmissao}}@endif" autocomplete="inícioSubmissão" autofocus>
+                                                <input id="inicioSubmissaoEdit" type="datetime-local" class="form-control @error('inícioSubmissão') is-invalid @enderror" name="inícioSubmissão" value="@if(old('inícioSubmissão')!=null){{old('inícioSubmissão')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioSubmissao))}}@endif" autocomplete="inícioSubmissão" autofocus>
 
                                                 @error('inícioSubmissão')
                                                 <span class="invalid-feedback" role="alert">
@@ -175,7 +175,7 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label for="fimSubmissaoEdit" class="col-form-label">{{ __('Fim da Submissão') }}</label>
-                                                <input id="fimSubmissaoEdit" type="date" class="form-control @error('fimSubmissão') is-invalid @enderror" name="fimSubmissão" value="@if(old('fimSubmissão')!=null){{old('fimSubmissão')}}@else{{$modalidade->fimSubmissao}}@endif" autocomplete="fimSubmissão" autofocus>
+                                                <input id="fimSubmissaoEdit" type="datetime-local" class="form-control @error('fimSubmissão') is-invalid @enderror" name="fimSubmissão" value="@if(old('fimSubmissão')!=null){{old('fimSubmissão')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimSubmissao))}}@endif" autocomplete="fimSubmissão" autofocus>
 
                                                 @error('fimSubmissão')
                                                 <span class="invalid-feedback" role="alert">
@@ -191,7 +191,7 @@
 
                                             <div class="col-sm-6">
                                                 <label for="inicioRevisaoEdit" class="col-form-label">{{ __('Início da Revisão') }}</label>
-                                                <input id="inicioRevisaoEdit" type="date" class="form-control @error('inícioRevisão') is-invalid @enderror" name="inícioRevisão" value="@if(old('inícioRevisão')!=null){{old('inícioRevisão')}}@else{{$modalidade->inicioRevisao}}@endif" autocomplete="inícioRevisão" autofocus>
+                                                <input id="inicioRevisaoEdit" type="datetime-local" class="form-control @error('inícioRevisão') is-invalid @enderror" name="inícioRevisão" value="@if(old('inícioRevisão')!=null){{old('inícioRevisão')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioRevisao))}}@endif" autocomplete="inícioRevisão" autofocus>
 
                                                 @error('inícioRevisão')
                                                 <span class="invalid-feedback" role="alert">
@@ -201,7 +201,7 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label for="fimRevisaoEdit" class="col-form-label">{{ __('Fim da Revisão') }}</label>
-                                                <input id="fimRevisaoEdit" type="date" class="form-control @error('fimRevisão') is-invalid @enderror" name="fimRevisão" value="@if(old('fimRevisão')!=null){{old('fimRevisão')}}@else{{$modalidade->fimRevisao}}@endif" autocomplete="fimRevisão" autofocus>
+                                                <input id="fimRevisaoEdit" type="datetime-local" class="form-control @error('fimRevisão') is-invalid @enderror" name="fimRevisão" value="@if(old('fimRevisão')!=null){{old('fimRevisão')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimRevisao))}}@endif" autocomplete="fimRevisão" autofocus>
 
                                                 @error('fimRevisão')
                                                 <span class="invalid-feedback" role="alert">
@@ -217,7 +217,7 @@
 
                                             <div class="col-sm-6">
                                                 <label for="inicioResultado" class="col-form-label">{{ __('Início do Resultado') }}</label>
-                                                <input id="inicioResultado" type="date" class="form-control @error('inicioResultado') is-invalid @enderror" name="inicioResultado" value="@if(old('inicioResultado')){{old('inicioResultado')}}@else{{$modalidade->inicioResultado}}@endif" autocomplete="inicioResultado" autofocus>
+                                                <input id="inicioResultado" type="datetime-local" class="form-control @error('inicioResultado') is-invalid @enderror" name="inicioResultado" value="@if(old('inicioResultado')){{old('inicioResultado')}}@else{{ date('Y-m-d\TH:i',strtotime($modalidade->inicioResultado))}}@endif" autocomplete="inicioResultado" autofocus>
 
                                                 @error('inicioResultado')
                                                 <span class="invalid-feedback" role="alert">

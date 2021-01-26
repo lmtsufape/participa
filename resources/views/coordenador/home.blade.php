@@ -34,7 +34,8 @@
                 @can('isPublishOrIsCoordenador', $evento)
                     <div class="card" style="width: 18rem;">
                         @if(isset($evento->fotoEvento))
-                        <img src="{{asset('storage/app/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
+                        
+                        <img src="{{Storage::url($evento->fotoEvento)}}" class="card-img-top" alt="...">
                         @else
                         <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                         @endif
