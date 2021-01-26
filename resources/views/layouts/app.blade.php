@@ -27,7 +27,22 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styleIndex.css') }}" rel="stylesheet">
     <link href='{{asset('fullcalendar-5.3.2/lib/main.css')}}' rel='stylesheet' />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <style>
+        .flexContainer { 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .item {
+            
+            margin-bottom: 4px;
+        }
+
+        
+    </style>
     
     <?php
         use App\Revisor;

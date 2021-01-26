@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
           'cidade' => 'c',
           'uf'     => 'd',
           'cep'    => 2,
+          'complemento' => 'complemento teste',
         ]);
 
         DB::table('enderecos')->insert([  // 1
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
           'cidade' => 'Garanhuns',
           'uf'     => 'PE',
           'cep'    => '55293-040',
+          'complemento'    => 'complemento teste',
         ]);
 
         DB::table('users')->insert([  //
@@ -250,15 +252,5 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         $this->call(ParticipanteSeed::class);
         $this->call(CoordEventoSeed::class);
         $this->call(TipoPagamentoSeed::class);
-
-
-        // $user = App\User::find(1);
-        // $coordCC = App\User::find(4);
-        // $evento = App\Evento::find(1);
-        // $coordComissaoCientifica = App\CoordComissaoCientifica::find(1);
-        // $user->coordEvento->evento()->save($evento);
-        // $coordCC->coordComissaoCientifica->eventos()->save($evento);
-        
-
     }
 }

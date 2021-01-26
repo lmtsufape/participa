@@ -4,7 +4,7 @@
 <div class="container content">
 
     <div class="row justify-content-center">
-        <div class="col-sm-8">
+        <div class="col-sm-10">
             <div class="card" style="margin-top:50px">
                 <div class="card-body">
                   <h2 class="card-title">{{$evento->nome}}</h2>
@@ -53,12 +53,11 @@
                             </div>
                           @endif
                           @if ($indice == "etiquetacoautortrabalho")
-                            <div class="row" style="margin-top:20px">
-                              <div class="col-sm-12">
-                                <div id="coautores">
-    
-                                </div>
-                                <a href="#" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">{{$formSubTraba->etiquetacoautortrabalho}}</a>
+                            <div class="flexContainer" style="margin-top:20px">
+                              <div class="col-sm-12">                                 
+                                  <div id="coautores" class="flexContainer " >
+                                  </div>
+                                <a href="#" onclick="addLinha(event)" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">{{$formSubTraba->etiquetacoautortrabalho}}</a>
                               </div>
                             </div>
                           @endif
@@ -133,7 +132,9 @@
                                     @if($modalidade->jpeg == true)jpeg - @endif
                                     @if($modalidade->png == true)png - @endif
                                     @if($modalidade->docx == true)docx - @endif
-                                    @if($modalidade->odt == true)odt @endif.</small>
+                                    @if($modalidade->odt == true)odt - @endif 
+                                    @if($modalidade->zip == true)zip  - @endif
+                                    @if($modalidade->svg == true)svg @endif.</small>
                                   @error('arquivo')
                                   <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                     <strong>{{ $message }}</strong>
@@ -442,24 +443,66 @@
     });
   });
 
-  // function getLength() {
-  //       getWord = document.getElementById( 'palavra' ).value,
-  //       num = document.getElementById( 'numpalavra' );
+  $(document).ready(function(){
+    function ordenar(event){
+      event.preventDefault();
+      console.log(event);
+    }
+  });
+
+  let order = 0;
+
+  function myFunction(event) {
+    event.preventDefault();
+    el = event.srcElement.id
+    // console.log( event.path['5'].childNodes)
+    arr = event.path['5'].childNodes;    
+    
+    if(el == "arrow-up"){      
+      number = event.path['4'].style.order;
+      if(number == 1) return
+
+      for (var i = 0; i < arr.length; i++) {
+        if(event.path['5'].childNodes[i].style['order'] == parseInt(event.path['4'].style.order, 10) - 1 ){
+          event.path['5'].childNodes[i].style['order'] = parseInt(event.path['5'].childNodes[i].style['order'], 10) + parseInt(1, 10);
+          
+          event.path['4'].style.order =  parseInt(event.path['4'].style.order, 10) - parseInt(1, 10);
+          
+          break;
+        }
+      }
+
+      
         
-  //       if ( getWord == '' ){
-  //         console.log("IF");
-  //         num.textContent = '0';
-  //       }
-  //       else if ( getWord.search( /\s[a-z0-9]+$/gi ) > -1 ) num.textContent = getWord.split( ' ' ).length;
-  //       else if ( getWord.search( /[^\s]$/ ) > -1 ) num.textContent = '1';
-  // }
+    }else if(el == "arrow-down"){
+      number = event.path['4'].style.order;
+      if(number == order) return
+      
+      for (var i = 0; i < arr.length; i++) {
+        if(event.path['5'].childNodes[i].style['order'] == parseInt(event.path['4'].style.order, 10) + 1 ){
+          event.path['5'].childNodes[i].style['order'] = parseInt(event.path['5'].childNodes[i].style['order'], 10) - parseInt(1, 10);
+          
+          event.path['4'].style.order =  parseInt(event.path['4'].style.order, 10) + parseInt(1, 10);
+          
+          break;
+        }
+      }
+
+    }
+  }
+
+
+  function addLinha(event){
+    event.preventDefault();
+    order += 1;
+      linha = montarLinhaInput(order);
+      $('#coautores').append(linha);
+  }
 
   $(function(){
     // Coautores
-    $('#addCoautor').click(function(){
-      linha = montarLinhaInput();
-      $('#coautores').append(linha);
-    });
+    
+    
 
     // Exibir modalidade de acordo com a área
     $("#area").change(function(){
@@ -471,7 +514,7 @@
   });
   // Remover Coautor
   $(document).on('click','.delete',function(){
-    $(this).closest('.row').remove();
+    $(this).closest('.item').remove();
           return false;
   });
 
@@ -485,23 +528,91 @@
       }
     }
   }
-  function montarLinhaInput(){
+  function montarLinhaInput(order){
 
-    return  "<div class="+"row"+">"+
-                "<div class="+"col-sm-6"+">"+
-                    "<label>Nome Completo</label>"+
-                    "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'nomeCoautor[]'+" placeholder="+"Nome"+" required>"+
-                "</div>"+
-                "<div class="+"col-sm-5"+">"+
-                    "<label>E-mail</label>"+
-                    "<input"+" type="+'email'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'emailCoautor[]'+" placeholder="+"E-mail"+" required>"+
-                "</div>"+
-                "<div class="+"col-sm-1"+">"+
-                    "<a href="+"#"+" class="+"delete"+">"+
-                      "<img src="+"/img/icons/user-times-solid.svg"+" style="+"width:25px;margin-top:35px"+">"+
-                    "</a>"+
-                "</div>"+
-            "</div>";
+    return `<div class="item card" id="${order}" style="order:${order}">
+              <div class="row card-body">
+                  <div class="col-sm-4">
+                      <label>E-mail</label>
+                      <input type="email" style="margin-bottom:10px" id="email${order}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" required>
+                  </div>
+                  <div class="col-sm-5">
+                      <label>Nome Completo</label>
+                      <input type="text" style="margin-bottom:10px" value="" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" required>
+                  </div>
+                  <div class="col-sm-3">
+                      <a href="#" class="delete pr-2">
+                        <img src="/img/icons/user-times-solid.svg" style="margin-bottom:15px;width:25px;">
+                      </a>
+                      <a href="#" onclick="myFunction(event)">
+                        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                      </a>
+                      <a href="#" onclick="myFunction(event)">
+                        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                      </a>
+                      
+                  </div>
+              </div>
+            </div>`;
+
+    // return  "<div class="+"row"+">"+
+    //             "<div class="+"col-sm-6"+">"+
+    //                 "<label>Nome Completo</label>"+
+    //                 "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'nomeCoautor[]'+" placeholder="+"Nome"+" required>"+
+    //             "</div>"+
+    //             "<div class="+"col-sm-5"+">"+
+    //                 "<label>E-mail</label>"+
+    //                 "<input"+" type="+'email'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+"  name="+'emailCoautor[]'+" placeholder="+"E-mail"+" required>"+
+    //             "</div>"+
+    //             "<div class="+"col-sm-1"+">"+
+    //                 "<a href="+"#"+" class="+"delete"+">"+
+    //                   "<img src="+"/img/icons/user-times-solid.svg"+" style="+"width:25px;margin-top:35px"+">"+
+    //                 "</a>"+
+    //             "</div>"+
+    //         "</div>";
   }
+</script>
+
+<script>
+
+  let digitarEmail = card => {
+    
+    let email = document.querySelector('#'+card.id);
+
+    email.addEventListener('keyup', function(event){
+      console.log(email)
+      
+        let data = {
+        email: email.value,
+        
+        _token: '{{csrf_token()}}'
+      };
+
+      $.ajax({
+          type: 'POST',
+          url: '{{ route("search.user") }}',
+          data: data,
+          dataType: 'json',
+          success: function(res){
+            console.log(event)
+            if(res.user[0] != null){
+              event.path[2].childNodes[3].childNodes[3].attributes[2].value = res.user[0]['name'];
+            }
+              
+          },
+          error: function(err){
+              console.log('err')
+              console.log(err)
+          }
+      });
+
+    });
+  }
+
+  
+  
+
+  
+
 </script>
 @endsection

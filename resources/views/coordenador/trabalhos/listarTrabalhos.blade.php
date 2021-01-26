@@ -5,21 +5,74 @@
     <div id="divListarTrabalhos" style="display: block">
 
         <div class="row titulo-detalhes">
-            <div class="col-sm-10">
+            <div class="col-sm-9">
                 <h1 class="">Trabalhos</h1>
+            </div>            
+            <div class="col-sm-3">
+              <form method="GET" action="{{route('distribuicao')}}">
+                <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
+                  {{ __('Distribuir Trabalhos') }}
+                </button>
+              </form>
             </div>
-
-            <form method="GET" action="{{route('distribuicao')}}">
-              <input type="hidden" name="eventoId" value="{{$evento->id}}">
-              <div class="row justify-content-center">
-                <div class="col-md-12">
-                  <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
-                    {{ __('Distribuir Trabalhos') }}
-                  </button>
+            {{-- <div class="col-sm-12">
+              <p>                
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  Ordenar por:
+                </button>
+              </p>
+              <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                  <div class="row">
+                    <div class="col-sm-2">
+                      <span>
+                        Nome
+                        <button class="btn btn-sm btn-primary">
+                          <i class="fas fa-arrow-alt-circle-up"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                          <i class="fas fa-arrow-alt-circle-down"></i>
+                        </button>
+                      </span>
+                    </div>
+                    <div class="col-sm-2">
+                      <span>
+                        Área
+                        <button class="btn btn-sm btn-primary">
+                          <i class="fas fa-arrow-alt-circle-up"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                          <i class="fas fa-arrow-alt-circle-down"></i>
+                        </button>
+                      </span>
+                    </div>
+                    <div class="col-sm-3">
+                      <span>
+                        Modalidade
+                        <button class="btn btn-sm btn-primary">
+                          <i class="fas fa-arrow-alt-circle-up"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                          <i class="fas fa-arrow-alt-circle-down"></i>
+                        </button>
+                      </span>
+                    </div>
+                    <div class="col-sm-3">
+                      <span>
+                        Revisores
+                        <button class="btn btn-sm btn-primary">
+                          <i class="fas fa-arrow-alt-circle-up"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                          <i class="fas fa-arrow-alt-circle-down"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </form>
-
+            </div> --}}
         </div>
 
     {{-- Tabela Trabalhos --}}
@@ -28,10 +81,42 @@
         <table class="table table-hover table-responsive-lg table-sm">
           <thead>
             <tr>
-              <th scope="col">Título</th>
-              <th scope="col">Área</th>
-              <th scope="col">Modalidade</th>
-              <th scope="col">Revisores</th>
+              <th scope="col">
+                Título
+                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc'])}}">
+                  <i class="fas fa-arrow-alt-circle-up"></i> 
+                </a>
+                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'desc'])}}">
+                  <i class="fas fa-arrow-alt-circle-down"></i>
+                </a>
+              </th>
+              <th scope="col">
+                Área
+                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'asc'])}}">
+                  <i class="fas fa-arrow-alt-circle-up"></i>
+                </a>
+                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
+                  <i class="fas fa-arrow-alt-circle-down"></i>
+                </a>
+              </th>
+              <th scope="col">
+                Modalidade
+                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'desc'])}}">
+                  <i class="fas fa-arrow-alt-circle-up"></i>
+                </a>
+                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'desc'])}}">
+                  <i class="fas fa-arrow-alt-circle-down"></i>
+                </a>
+              </th>
+              <th scope="col">
+                Revisores
+                {{-- <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
+                  <i class="fas fa-arrow-alt-circle-up"></i>
+                </a>
+                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
+                  <i class="fas fa-arrow-alt-circle-down"></i>
+                </a> --}}
+              </th>
               <th scope="col" style="text-align:center">Baixar</th>
               <th scope="col" style="text-align:center">Visualizar</th>
             </tr>
@@ -237,3 +322,4 @@
   </div>
 @endforeach
 @endsection
+

@@ -64,6 +64,7 @@ class RegisterController extends Controller
             'cidade'        => ['required','string','max:255'],
             'uf'            => ['required','string'],
             'cep'           => ['required','string'],
+            'complemento'   => ['required','string'],
         ]);
     }
 
@@ -84,6 +85,7 @@ class RegisterController extends Controller
         $end->cidade = $data['cidade'];
         $end->uf = $data['uf'];
         $end->cep = $data['cep'];
+        $end->complemento = $data['complemento'];
 
         $end->save();
         // dd($end)
