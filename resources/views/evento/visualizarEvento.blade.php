@@ -142,9 +142,9 @@
     <div class="row">
         @if(isset($evento->fotoEvento))
         <div class="banner-evento">
-            <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" alt="">
+            <img src="{{Storage::url($evento->fotoEvento)}}" alt="">
         </div>
-        <img class="front-image-evento" src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" alt="">
+        <img class="front-image-evento" src="{{Storage::url($evento->fotoEvento)}}" alt="">
         @else
         <div class="banner-evento">
             <img src="{{asset('img/colorscheme.png')}}" alt="">

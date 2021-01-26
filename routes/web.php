@@ -244,6 +244,6 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::post('{id}/inscricoes/atualizar-categoria', 'Inscricao\CategoriaController@update')->name('categoria.participante.update');
 });
 
-Auth::routes();
+// Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified', 'isTemp');
