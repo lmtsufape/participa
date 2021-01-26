@@ -10,7 +10,6 @@
             <div class="row">
                 <div class="col-sm-10">
                     <h1>Eventos Atuais</h1>
-                    <h2>testando</h2>
                 </div>
                 <div class="col-sm-2">
                     <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>

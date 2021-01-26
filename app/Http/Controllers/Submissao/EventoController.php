@@ -516,17 +516,7 @@ class EventoController extends Controller
         if($request->hasFile('fotoEvento')){
             $image          = $request->file('fotoEvento');
             return $image->store('public');
-            // $filename       = $image->getClientOriginalName();
-            // $destination    = storage_path('app/public');
-
-            // if($image->move($destination, $filename)){
-            //     // dd();
-            //     return $destination .'/' .$filename ;
-            // }
-
-            //Outra abordagem de upload de imagem
-            //return $image->store('public');
-            //return $image->storeAs('public', $filename);
+            
         }
         return null;
 
