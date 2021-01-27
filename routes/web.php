@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Submissao\Evento;
 
 Route::get('/index', function () {
-    $eventos = Evento::all();
+    $eventos = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->orderBy('dataInicio')->get();
     // dd($eventos);
     return view('index',['eventos'=>$eventos]);
 })->name('index');

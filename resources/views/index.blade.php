@@ -11,283 +11,152 @@
         <h4>Destaques</h4>
       </div>
       <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators">
-          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+        <ol class="carousel-indicators" @if(count($eventos) <= 1) style="display: none;"@endif>
+          @foreach ($eventos as $i => $evento) 
+            @if ($i == 0)
+              <li data-target="#carouselExampleIndicators" data-slide-to="{{$i}}" class="active"></li>
+            @else
+              <li data-target="#carouselExampleIndicators" data-slide-to="{{$i}}"></li>
+            @endif
+          @endforeach
         </ol>
         <div class="carousel-inner">
-          <div class="carousel-item active">
-            <div class="container">
-              <div class="row">
-                <div class="col-sm-7 evento-image">
-                  <img src="{{ asset('/img/banner-test.jpg') }}" class="d-block w-100" alt="...">
-                </div>
-                <div class="col-sm-5 evento-atual">
-                  <div class="container descricao-evento">
-                    <div class="row">
-                      <div class="col-sm-12" style="text-align: center;">
-                        <h4>Oficina do saber</h4>
+          @foreach ($eventos as $i => $evento) 
+          @if ($i == 0)
+            <div class="carousel-item active">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-7 evento-image">
+                    @if ($evento->fotoEvento != null) 
+                      <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="d-block w-100" alt="...">
+                    @else
+                      <img src="{{ asset('img/colorscheme.png') }}" class="d-block w-100" alt="...">
+                    @endif
+                  </div>
+                  <div class="col-sm-5 evento-atual">
+                    <div class="container descricao-evento">
+                      <div class="row">
+                        <div class="col-sm-12" style="text-align: center;">
+                          <h4>{{$evento->nome}}</h4>
+                        </div>
                       </div>
-                    </div>
-                    <br>
-                    <div class="row" style="text-align: justify;">
-                      <div class="col-sm-12">
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                      <br>
+                      <div class="row" style="text-align: justify;">
+                        <div class="col-sm-12">
+                          {{$evento->descricao}}
+                        </div>
                       </div>
-                    </div>
-                    <div class="row" style="color:white;">
-                      <div class="col-sm-4">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                      <div class="row" style="color:white;">
+                        <div class="col-sm-4">
+                          <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#{{$evento->tipo}}</a>
+                        </div>
+                        <div class="col-sm-8">
+                          @if ($evento->recolhimento == "pago")
+                            <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                          @else
+                            <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
+                          @endif
+                        </div>
                       </div>
-                      <div class="col-sm-8">
-                        <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                      <div class="row data-horario">
+                        <div class="col-sm-4">
+                          <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span>{{date('d/m/Y',strtotime($evento->dataInicio))}}</span>
+                        </div>
+                        <div class="col-sm-8">
+                          <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> Colocar a hora aqui </span>
+                        </div>
                       </div>
-                    </div>
-                    <div class="row data-horario">
-                      <div class="col-sm-4">
-                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> 12/02/2021 </span>
+                      <div class="row location-pointer">
+                        <div class="col-sm-12">
+                          <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span>{{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</span>
+                        </div>
                       </div>
-                      <div class="col-sm-8">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
-                      </div>
-                    </div>
-                    <div class="row location-pointer">
-                      <div class="col-sm-12">
-                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span> Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE </span>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          @if ($evento->formEvento->modinscricao == true)
+                            <a href="{{route('inscricao.create', ['id' => $evento->id])}}"><button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button></a>
+                          @endif
+                          </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="carousel-item">
-            <div class="container">
-              <div class="row">
-                <div class="col-sm-7 evento-image">
-                  <img src="{{ asset('/img/banner-test.jpg') }}" class="d-block w-100" alt="...">
-                </div>
-                <div class="col-sm-5 evento-atual" >
-                  <div class="container descricao-evento">
-                    <div class="row">
-                      <div class="col-sm-12" style="text-align: center;">
-                        <h4>Oficina do saber</h4>
+          @else
+            <div class="carousel-item">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-7 evento-image">
+                    @if ($evento->fotoEvento != null) 
+                      <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="d-block w-100" alt="...">
+                    @else
+                      <img src="{{ asset('img/colorscheme.png') }}" class="d-block w-100" alt="...">
+                    @endif
+                  </div>
+                  <div class="col-sm-5 evento-atual" >
+                    <div class="container descricao-evento">
+                      <div class="row">
+                        <div class="col-sm-12" style="text-align: center;">
+                          <h4>{{$evento->nome}}</h4>
+                        </div>
                       </div>
-                    </div>
-                    <br>
-                    <div class="row" style="text-align: justify;">
-                      <div class="col-sm-12">
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
+                      <br>
+                      <div class="row" style="text-align: justify;">
+                        <div class="col-sm-12">
+                          {{$evento->descricao}}
+                        </div>
                       </div>
-                    </div>
-                    <div class="row" style="color:white;">
-                      <div class="col-sm-4">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                      <div class="row" style="color:white;">
+                        <div class="col-sm-4">
+                          <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#{{$evento->tipo}}</a>
+                        </div>
+                        <div class="col-sm-8">
+                          @if ($evento->recolhimento == "pago")
+                            <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                          @else
+                            <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
+                          @endif
+                        </div>
                       </div>
-                      <div class="col-sm-8">
-                        <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
+                      <div class="row data-horario">
+                        <div class="col-sm-4">
+                          <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span>{{date('d/m/Y',strtotime($evento->dataInicio))}}</span>
+                        </div>
+                        <div class="col-sm-8">
+                          <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> Colocar a hora aqui </span>
+                        </div>
                       </div>
-                    </div>
-                    <div class="row data-horario">
-                      <div class="col-sm-4">
-                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> 12/02/2021 </span>
+                      <div class="row location-pointer">
+                        <div class="col-sm-12">
+                          <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span>{{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</span>
+                        </div>
                       </div>
-                      <div class="col-sm-8">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
-                      </div>
-                    </div>
-                    <div class="row location-pointer">
-                      <div class="col-sm-12">
-                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span> Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE </span>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          @if ($evento->formEvento->modinscricao == true)
+                            <a href="{{route('inscricao.create', ['id' => $evento->id])}}"><button id="btn-inscrever-{{$evento->id}}" class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button></a>
+                          @endif
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="carousel-item">
-            <div class="container">
-              <div class="row">
-                <div class="col-sm-7 evento-image">
-                  <img src="{{ asset('/img/banner-test.jpg') }}" class="d-block w-100" alt="...">
-                </div>
-                <div class="col-sm-5 evento-atual">
-                  <div class="container descricao-evento">
-                    <div class="row">
-                      <div class="col-sm-12" style="text-align: center;">
-                        <h4>Oficina do saber</h4>
-                      </div>
-                    </div>
-                    <br>
-                    <div class="row" style="text-align: justify;">
-                      <div class="col-sm-12">
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                      </div>
-                    </div>
-                    <div class="row" style="color:white;">
-                      <div class="col-sm-4">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
-                      </div>
-                      <div class="col-sm-8">
-                        <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
-                      </div>
-                    </div>
-                    <div class="row data-horario">
-                      <div class="col-sm-4">
-                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> 12/02/2021 </span>
-                      </div>
-                      <div class="col-sm-8">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
-                      </div>
-                    </div>
-                    <div class="row location-pointer">
-                      <div class="col-sm-12">
-                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span> Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE </span>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item ">
-            <div class="container">
-              <div class="row">
-                <div class="col-sm-7 evento-image">
-                  <img src="{{ asset('/img/banner-test.jpg') }}" class="d-block w-100" alt="...">
-                </div>
-                <div class="col-sm-5 evento-atual">
-                  <div class="container descricao-evento">
-                    <div class="row">
-                      <div class="col-sm-12" style="text-align: center;">
-                        <h4>Oficina do saber</h4>
-                      </div>
-                    </div>
-                    <br>
-                    <div class="row" style="text-align: justify;">
-                      <div class="col-sm-12">
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                      </div>
-                    </div>
-                    <div class="row" style="color:white;">
-                      <div class="col-sm-4">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
-                      </div>
-                      <div class="col-sm-8">
-                        <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
-                      </div>
-                    </div>
-                    <div class="row data-horario">
-                      <div class="col-sm-4">
-                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> 12/02/2021 </span>
-                      </div>
-                      <div class="col-sm-8">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
-                      </div>
-                    </div>
-                    <div class="row location-pointer">
-                      <div class="col-sm-12">
-                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span> Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE </span>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <div class="container">
-              <div class="row">
-                <div class="col-sm-7 evento-image">
-                  <img src="{{ asset('/img/banner-test.jpg') }}" class="d-block w-100" alt="...">
-                </div>
-                <div class="col-sm-5 evento-atual">
-                  <div class="container descricao-evento">
-                    <div class="row">
-                      <div class="col-sm-12" style="text-align: center;">
-                        <h4>Oficina do saber</h4>
-                      </div>
-                    </div>
-                    <br>
-                    <div class="row" style="text-align: justify;">
-                      <div class="col-sm-12">
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                        Oficina do saber será realizada entre os dias 12 e 14 de fevereiro, contamos com a presença de todos.
-                      </div>
-                    </div>
-                    <div class="row" style="color:white;">
-                      <div class="col-sm-4">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
-                      </div>
-                      <div class="col-sm-8">
-                        <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
-                      </div>
-                    </div>
-                    <div class="row data-horario">
-                      <div class="col-sm-4">
-                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> 12/02/2021 </span>
-                      </div>
-                      <div class="col-sm-8">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
-                      </div>
-                    </div>
-                    <div class="row location-pointer">
-                      <div class="col-sm-12">
-                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span> Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE </span>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          @endif
+          @endforeach
         </div>
-        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="sr-only">Next</span>
-        </a>
+        @if (count($eventos) > 1)
+          <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        @endif
       </div>
     </div>
   </div>
@@ -308,31 +177,42 @@
       <div class="wrapper-barra-horizontal">
         <div class="scroll-horizontal">
           <div class="cards-wrapper">
-            <div class="card" style="width: 13rem;">
-                <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
+            @foreach($eventos as $evento)
+              <div class="card" style="width: 13rem;">
+                @if ($evento->fotoEvento != null) 
+                  <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
+                @else
+                  <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
+                @endif
                 <div class="card-body">
-                  <h5 class="card-title">Oficina do saber 1</h5>
+                  <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
+                    <h6 class="card-title">{{$evento->nome}}</h6>
+                  </a>
                   <br> 
-                  <div class="container">
-                    <div class="row" style="position: relative; left: -15px;">
-                      <div class="col-sm-6">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
+                  <div class="container" style="position: relative; top: -25px;">
+                    <div class="tags-a row" style="position: relative; left: -15px;">
+                      <div class="col-sm-8">
+                        <a class="btn cor-aleatoria" style="pointer-events: none; width:110px;">#{{$evento->tipo}}</a>
                       </div>
-                      <div class="col-sm-6">
-                        <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                      <div class="col-sm-4">
+                        @if ($evento->recolhimento == "pago")
+                          <a class="btn pago" style="pointer-events: none; width: 50px; ">Pago</a>
+                        @else
+                          <a class="btn gratuito" style="pointer-events: none; width: 70px;">Gratuito</a>
+                        @endif
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-sm-6 data">
+                    <div class="row data-horario">
+                      <div class="col-sm-6">
                         <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
                         <span>
-                          12/02/2021
+                          {{date('d/m/Y',strtotime($evento->dataInicio))}}
                         </span> 
                       </div>
-                      <div class="col-sm-6 horario">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
+                      <div class="col-sm-6">
+                        <img src="{{ asset('/img/icons/clock.png') }}" alt=""> 
                         <span> 
-                          14:30 
+                          Horario 
                         </span>
                       </div>
                     </div>
@@ -342,259 +222,14 @@
                       </div>
                       <div class="col-sm-11">
                         <span> 
-                          Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
+                          {{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.
                         </span>
                       </div>
                     </div>
                   </div>
                 </div>
-            </div>
-            <div class="card" style="width: 13rem;">
-              <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
-                <div class="card-body">
-                  <h5 class="card-title">Oficina do saber 2</h5>
-                  <br> 
-                  <div class="container">
-                    <div class="row" style="position: relative; left: -15px;">
-                      <div class="col-sm-6">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
-                      </div>
-                      <div class="col-sm-6">
-                        <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-6 data">
-                        <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
-                        <span>
-                          12/02/2021
-                        </span> 
-                      </div>
-                      <div class="col-sm-6 horario">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
-                        <span> 
-                          14:30 
-                        </span>
-                      </div>
-                    </div>
-                    <div class="row location-pointer-card">
-                      <div class="col-sm-1">
-                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
-                      </div>
-                      <div class="col-sm-11">
-                        <span> 
-                          Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
-            <div class="card" style="width: 13rem;">
-              <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
-                <div class="card-body">
-                  <h5 class="card-title">Oficina do saber 3</h5>
-                  <br> 
-                  <div class="container">
-                    <div class="row" style="position: relative; left: -15px;">
-                      <div class="col-sm-6">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
-                      </div>
-                      <div class="col-sm-6">
-                        <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-6 data">
-                        <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
-                        <span>
-                          12/02/2021
-                        </span> 
-                      </div>
-                      <div class="col-sm-6 horario">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
-                        <span> 
-                          14:30 
-                        </span>
-                      </div>
-                    </div>
-                    <div class="row location-pointer-card">
-                      <div class="col-sm-1">
-                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
-                      </div>
-                      <div class="col-sm-11">
-                        <span> 
-                          Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
-            <div class="card" style="width: 13rem;">
-              <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
-                <div class="card-body">
-                  <h5 class="card-title">Oficina do saber 4</h5>
-                  <br> 
-                  <div class="container">
-                    <div class="row" style="position: relative; left: -15px;">
-                      <div class="col-sm-6">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
-                      </div>
-                      <div class="col-sm-6">
-                        <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-6 data">
-                        <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
-                        <span>
-                          12/02/2021
-                        </span> 
-                      </div>
-                      <div class="col-sm-6 horario">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
-                        <span> 
-                          14:30 
-                        </span>
-                      </div>
-                    </div>
-                    <div class="row location-pointer-card">
-                      <div class="col-sm-1">
-                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
-                      </div>
-                      <div class="col-sm-11">
-                        <span> 
-                          Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
-            <div class="card" style="width: 13rem;">
-              <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
-                <div class="card-body">
-                  <h5 class="card-title">Oficina do saber 5</h5>
-                  <br> 
-                  <div class="container">
-                    <div class="row" style="position: relative; left: -15px;">
-                      <div class="col-sm-6">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
-                      </div>
-                      <div class="col-sm-6">
-                        <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-6 data">
-                        <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
-                        <span>
-                          12/02/2021
-                        </span> 
-                      </div>
-                      <div class="col-sm-6 horario">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
-                        <span> 
-                          14:30 
-                        </span>
-                      </div>
-                    </div>
-                    <div class="row location-pointer-card">
-                      <div class="col-sm-1">
-                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
-                      </div>
-                      <div class="col-sm-11">
-                        <span> 
-                          Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
-            <div class="card" style="width: 13rem;">
-              <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
-                <div class="card-body">
-                  <h5 class="card-title">Oficina do saber 6</h5>
-                  <br> 
-                  <div class="container">
-                    <div class="row" style="position: relative; left: -15px;">
-                      <div class="col-sm-6">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
-                      </div>
-                      <div class="col-sm-6">
-                        <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-6 data">
-                        <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
-                        <span>
-                          12/02/2021
-                        </span> 
-                      </div>
-                      <div class="col-sm-6 horario">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
-                        <span> 
-                          14:30 
-                        </span>
-                      </div>
-                    </div>
-                    <div class="row location-pointer-card">
-                      <div class="col-sm-1">
-                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
-                      </div>
-                      <div class="col-sm-11">
-                        <span> 
-                          Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
-            <div class="card" style="width: 13rem;">
-              <img class="card-img-top" src="{{ asset('/img/banner-test.jpg') }}" alt="Card image cap">
-                <div class="card-body">
-                  <h5 class="card-title">Oficina do saber 7</h5>
-                  <br> 
-                  <div class="container">
-                    <div class="row" style="position: relative; left: -15px;">
-                      <div class="col-sm-6">
-                        <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#oficina</a>
-                      </div>
-                      <div class="col-sm-6">
-                        <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-6 data">
-                        <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
-                        <span>
-                          12/02/2021
-                        </span> 
-                      </div>
-                      <div class="col-sm-6 horario">
-                        <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt=""> 
-                        <span> 
-                          14:30 
-                        </span>
-                      </div>
-                    </div>
-                    <div class="row location-pointer-card">
-                      <div class="col-sm-1">
-                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
-                      </div>
-                      <div class="col-sm-11">
-                        <span> 
-                          Av. Bom Pastor, S/N, Boa Vista - Garanhuns - PE 
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
+              </div>
+            @endforeach
           </div>
         </div>
       </div>
@@ -1578,6 +1213,8 @@
       $('.carousel').carousel({
         interval: false
       });
+
+      
 
       $('#modalInfo').modal('show');
 
