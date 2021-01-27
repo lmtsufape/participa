@@ -34,7 +34,7 @@
                     {{-- nome | Tipo--}}
                     <div class="row justify-content-center">
                         <div class="col-sm-6">{{--Nome do evento--}}
-                            <label for="nome" class="col-form-label">{{ __('Nome') }}</label>
+                            <label for="nome" class="col-form-label">{{ __('Nome*') }}</label>
                             <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" @if(old('nome') != null) value="{{ old('nome') }}" @else value="{{$evento->nome}}" @endif required autocomplete="nome" autofocus>
 
                             @error('nome')
@@ -56,14 +56,14 @@
                         </div> --}}
                         {{-- Tipo do evento --}}
                         <div class="col-sm-3">
-                            <label for="tipo" class="col-form-label">{{ __('Tipo') }}</label>
+                            <label for="tipo" class="col-form-label">{{ __('Tipo*') }}</label>
                             <!-- <input value="{{$evento->tipo}}" id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" value="{{ old('tipo') }}" required autocomplete="tipo" autofocus> -->
                             <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" required>
                             @if (old('tipo') != null)
                                 <option @if(old('tipo') == "Congresso") selected @endif value="Congresso">Congresso</option>
                                 <option @if(old('tipo') == "Encontro") selected @endif value="Encontro">Encontro</option>
                                 <option @if(old('tipo') == "Seminário") selected @endif value="Seminário">Seminário</option>
-                                <option @if(old('tipo') == "Mesa-redonda") selected @endif value="Mesa-redonda">Mesa-redonda</option>
+                                <option @if(old('tipo') == "Mesa redonda") selected @endif value="Mesa redonda">Mesa redonda</option>
                                 <option @if(old('tipo') == "Simpósio") selected @endif value="Simpósio">Simpósio</option>
                                 <option @if(old('tipo') == "Painel") selected @endif value="Painel">Painel</option>
                                 <option @if(old('tipo') == "Fórum") selected @endif value="Fórum">Fórum</option>
@@ -73,11 +73,12 @@
                                 <option @if(old('tipo') == "Colóquio") selected @endif value="Colóquio">Colóquio</option>
                                 <option @if(old('tipo') == "Semana") selected @endif value="Semana">Semana</option>
                                 <option @if(old('tipo') == "Workshop") selected @endif value="Workshop">Workshop</option>
+                                <option @if(old('tipo') == "outro") selected @endif value="outro">Outro</option>
                             @else
                                 <option @if($evento->tipo == "Congresso") selected @endif value="Congresso">Congresso</option>
                                 <option @if($evento->tipo == "Encontro") selected @endif value="Encontro">Encontro</option>
                                 <option @if($evento->tipo == "Seminário") selected @endif value="Seminário">Seminário</option>
-                                <option @if($evento->tipo == "Mesa-redonda") selected @endif value="Mesa-redonda">Mesa-redonda</option>
+                                <option @if($evento->tipo == "Mesa redonda") selected @endif value="Mesa redonda">Mesa redonda</option>
                                 <option @if($evento->tipo == "Simpósio") selected @endif value="Simpósio">Simpósio</option>
                                 <option @if($evento->tipo == "Painel") selected @endif value="Painel">Painel</option>
                                 <option @if($evento->tipo == "Fórum") selected @endif value="Fórum">Fórum</option>
@@ -87,6 +88,7 @@
                                 <option @if($evento->tipo == "Colóquio") selected @endif value="Colóquio">Colóquio</option>
                                 <option @if($evento->tipo == "Semana") selected @endif value="Semana">Semana</option>
                                 <option @if($evento->tipo == "Workshop") selected @endif value="Workshop">Workshop</option>
+                                <option @if($evento->tipo == "outro") selected @endif value="outro">Outro</option>
                             @endif
                             </select>
                             @error('tipo')
@@ -96,7 +98,7 @@
                             @enderror
                         </div>{{-- Tipo do evento --}}
                         <div class="col-sm-3">
-                            <label for="recolhimento" class="col-form-label">{{ __('Recolhimento') }}</label>
+                            <label for="recolhimento" class="col-form-label">{{ __('Recolhimento*') }}</label>
                             <select name="recolhimento" id="recolhimento" class="form-control @error('recolhimento') is-invalid @enderror">
                                 @if (old('recolhimento') != null)
                                     <option @if(old('recolhimento') == "apoiado") selected @endif value="apoiado">Apoiado</option>
@@ -121,7 +123,7 @@
                     <div class="row justify-content-center">
                         <div class="col-sm-7">
                             <div class="form-group">
-                                <label for="exampleFormControlTextarea1">Descrição</label>
+                                <label for="exampleFormControlTextarea1">Descrição*</label>
                                 <textarea class="form-control @error('descricao') is-invalid @enderror" id="descricao" name="descricao" rows="8">@if(old('descricao') != null) {{ old('descricao') }} @else {{$evento->descricao}} @endif</textarea>
                                 @error('descricao')
                                     <span class="invalid-feedback" role="alert">
@@ -162,7 +164,7 @@
                     <div class="row">
                     {{-- Início do Evento --}}
                     <div class="col-sm-3">
-                        <label for="dataInicio" class="col-form-label">{{ __('Início') }}</label>
+                        <label for="dataInicio" class="col-form-label">{{ __('Início*') }}</label>
                         <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror" name="dataInicio" @if(old('dataInicio') != null) value="{{ old('dataInicio') }}" @else value="{{$evento->dataInicio}}" @endif required autocomplete="dataInicio" autofocus>
 
                         @error('dataInicio')
@@ -173,7 +175,7 @@
                     </div>{{--End Início do Evento --}}
                     {{-- Fim do Evento --}}
                     <div class="col-sm-3">
-                        <label for="dataFim" class="col-form-label">{{ __('Fim') }}</label>
+                        <label for="dataFim" class="col-form-label">{{ __('Fim*') }}</label>
                         <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror" name="dataFim" @if(old('dataFim') != null) value="{{ old('dataFim') }}" @else value="{{$evento->dataFim}}" @endif required autocomplete="dataFim" autofocus>
 
                         @error('dataFim')
@@ -203,7 +205,7 @@
                             @enderror
                         </div>
                         <div class="col-sm-6">
-                            <label for="rua" class="col-form-label">{{ __('Rua') }}</label>
+                            <label for="rua" class="col-form-label">{{ __('Rua*') }}</label>
                             <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" @if(old('rua') != null) value="{{ old('rua') }}" @else value="{{$endereco->rua}}" @endif required autocomplete="rua" autofocus>
 
                             @error('rua')
@@ -213,7 +215,7 @@
                             @enderror
                         </div>
                         <div class="col-sm-2">
-                            <label for="numero" class="col-form-label">{{ __('Número') }}</label>
+                            <label for="numero" class="col-form-label">{{ __('Número*') }}</label>
                             <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$endereco->numero}}" @endif required autocomplete="numero" autofocus>
 
                             @error('numero')
@@ -227,8 +229,8 @@
                     </div>{{--end Rua | Número | Bairro --}}
 
                     <div class="row justify-content-center">
-                        <div class="col-sm-4">
-                            <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
+                        <div class="col-sm-3">
+                            <label for="bairro" class="col-form-label">{{ __('Bairro*') }}</label>
                             <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" @if(old('bairro') != null) value="{{ old('bairro') }}" @else value="{{$endereco->bairro}}" @endif required autocomplete="bairro" autofocus>
 
                             @error('bairro')
@@ -237,8 +239,8 @@
                             </span>
                             @enderror
                         </div>
-                        <div class="col-sm-4">
-                            <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
+                        <div class="col-sm-3">
+                            <label for="cidade" class="col-form-label">{{ __('Cidade*') }}</label>
                             <input id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" @if(old('cidade') != null) value="{{ old('cidade') }}" @else value="{{$endereco->cidade}}" @endif required autocomplete="cidade" autofocus>
 
                             @error('cidade')
@@ -248,7 +250,17 @@
                             @enderror
                         </div>
                         <div class="col-sm-4">
-                            <label for="uf" class="col-form-label">{{ __('UF') }}</label>
+                            <label for="complemento" class="col-form-label">{{ __('Complemento*') }}</label>
+                            <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="@if(old('complemento') != null){{old('complemento')}}@else{{$evento->endereco->complemento}}@endif" required autocomplete="complemento" autofocus>
+            
+                            @error('complemento')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="uf" class="col-form-label">{{ __('UF*') }}</label>
                             {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
                             <select value="{{$endereco->uf}}" class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                                 @if(old('uf') != null)

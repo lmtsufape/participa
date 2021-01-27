@@ -15,8 +15,9 @@ use App\Models\Submissao\Evento;
 
 Route::get('/index', function () {
     $eventos = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->orderBy('dataInicio')->get();
-    // dd($eventos);
-    return view('index',['eventos'=>$eventos]);
+    $tiposEvento = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->selectRaw('DISTINCT tipo')->get();
+    // dd($tiposEvento);
+    return view('index',['eventos'=>$eventos, 'tipos' => $tiposEvento]);
 })->name('index');
 
 Auth::routes(['verify' => true]);

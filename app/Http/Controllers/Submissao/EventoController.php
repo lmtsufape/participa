@@ -410,6 +410,7 @@ class EventoController extends Controller
           'dataInicio'          => ['required', 'date', 'after:' . $yesterday],
           'dataFim'             => ['required', 'date', 'after:' . $request->dataInicio],
           'fotoEvento'          => ['file', 'mimes:png'],
+          'recolhimento'        => ['required'],
         ]);
 
         // validar endereco
@@ -679,6 +680,7 @@ class EventoController extends Controller
           'cidade'              => ['required', 'string'],
           'uf'                  => ['required', 'string'],
           'cep'                 => ['required', 'string'],
+          'complemento'         => ['required', 'string'],
         ]);
 
         $endereco = Endereco::find($evento->enderecoId);
@@ -711,6 +713,7 @@ class EventoController extends Controller
         $endereco->cidade             = $request->cidade;
         $endereco->uf                 = $request->uf;
         $endereco->cep                = $request->cep;
+        $endereco->complemento        = $request->complemento;
         $endereco->save();
 
         // $eventos = Evento::all();
