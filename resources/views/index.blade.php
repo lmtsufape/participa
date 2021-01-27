@@ -28,9 +28,9 @@
                 <div class="row">
                   <div class="col-sm-7 evento-image">
                     @if ($evento->fotoEvento != null) 
-                      <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="d-block w-100" alt="...">
+                      <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="d-block w-100" alt="..." style="height: 450px;">
                     @else
-                      <img src="{{ asset('img/colorscheme.png') }}" class="d-block w-100" alt="...">
+                      <img src="{{ asset('img/colorscheme.png') }}" class="d-block w-100" alt="..." style="height: 450px;">
                     @endif
                   </div>
                   <div class="col-sm-5 evento-atual">
@@ -47,14 +47,14 @@
                         </div>
                       </div>
                       <div class="row" style="color:white;">
-                        <div class="col-sm-4">
-                          <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#{{$evento->tipo}}</a>
+                        <div class="col-sm-6">
+                          <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%; ">#{{$evento->tipo}}</a>
                         </div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                           @if ($evento->recolhimento == "pago")
-                            <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                            <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Pago</a>
                           @else
-                            <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
+                            <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Gratuito</a>
                           @endif
                         </div>
                       </div>
@@ -89,9 +89,9 @@
                 <div class="row">
                   <div class="col-sm-7 evento-image">
                     @if ($evento->fotoEvento != null) 
-                      <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="d-block w-100" alt="...">
+                      <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="d-block w-100" alt="..." style="height: 450px;">
                     @else
-                      <img src="{{ asset('img/colorscheme.png') }}" class="d-block w-100" alt="...">
+                      <img src="{{ asset('img/colorscheme.png') }}" class="d-block w-100" alt="..." style="height: 450px;">
                     @endif
                   </div>
                   <div class="col-sm-5 evento-atual" >
@@ -108,14 +108,14 @@
                         </div>
                       </div>
                       <div class="row" style="color:white;">
-                        <div class="col-sm-4">
-                          <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#{{$evento->tipo}}</a>
+                        <div class="col-sm-6">
+                          <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">#{{$evento->tipo}}</a>
                         </div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                           @if ($evento->recolhimento == "pago")
-                            <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
+                            <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Pago</a>
                           @else
-                            <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Gratuito</a>
+                            <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Gratuito</a>
                           @endif
                         </div>
                       </div>

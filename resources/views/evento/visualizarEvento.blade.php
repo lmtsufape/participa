@@ -201,16 +201,20 @@
         <div class="row">
           <div class="col-sm-6">
             <div class="container">
-              <div class="row margin">
+              <div class="row">
                 <div class="col-sm-6">
-                  <p>
-                    <a class="btn cor-aleatoria white-color" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">#{{$evento->tipo}}</a>
-                  </p>
+                    <p>
+                      <a class="btn cor-aleatoria white-color" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 80%;">#{{$evento->tipo}}</a>
+                    </p>
                 </div>
                 <div class="col-sm-6">
-                  <p>
-                    <a class="btn pago white-color" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px;">Pago</a>
-                  </p>
+                    <p>
+                      @if($evento->recolhimento == "pago")
+                        <a class="btn pago white-color" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 60%; left: -20px;">Pago</a>
+                      @else 
+                        <a class="btn gratuito white-color" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 70%;">Gratuito</a>
+                      @endif
+                    </p>
                 </div>
               </div>
               <div class="row" style="color:white;">
