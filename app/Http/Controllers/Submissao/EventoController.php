@@ -388,7 +388,7 @@ class EventoController extends Controller
         $mytime = Carbon::now('America/Recife');
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
-
+        // dd($request);
         if($request->dataInicio == null || $request->dataFim == null){
           $validatedData = $request->validate([
             'nome'                => ['required', 'string'],
@@ -396,8 +396,8 @@ class EventoController extends Controller
             'tipo'                => ['required', 'string'],
             'dataInicio'          => ['required', 'date','after:'. $yesterday],
             'dataFim'             => ['required', 'date'],
-            'fotoEvento'          => ['file', 'mimes:png'],
-            'valorTaxa'           => ['required'],
+            'fotoEvento'          => ['file', 'mimes:png,jpg,jpeg', 'dimensions:min_width=1024,min_height=425'],
+            'recolhimento'        => ['required'],
           ]);
         }
 
@@ -434,23 +434,25 @@ class EventoController extends Controller
           'complemento'         => $request->complemento,
         ]);
 
-        $evento = Evento::create([
-          'nome'                => $request->nome,
-          'descricao'           => $request->descricao,
-          'tipo'                => $request->tipo,
-          'dataInicio'          => $request->dataInicio,
-          'dataFim'             => $request->dataFim,
-          'enderecoId'          => $endereco->id,
-          'coordenadorId'       => Auth::user()->id,
-          'deletado'            => false,
-          'valorTaxa'           => $request->valorTaxa,
-        ]);
+        $evento = new Evento();
+        $evento->nome                 = $request->nome;
+        $evento->descricao            = $request->descricao;
+        $evento->tipo                 = $request->tipo;
+        $evento->dataInicio           = $request->dataInicio;
+        $evento->dataFim              = $request->dataFim;
+        $evento->enderecoId           = $endereco->id;
+        $evento->coordenadorId        = Auth::user()->id;
+        $evento->deletado             = false;
+        $evento->recolhimento         = $request->recolhimento;
+        
         // $user = Auth::user();
         // $user->evento()->save($evento);
 
         //$user->save();
         // se o evento tem foto
-        $evento->fotoEvento = $this->uploadFile($request);
+        
+        $evento->save();
+        $evento->fotoEvento = $this->uploadFile($request, $evento);
         $evento->save();
         // if($request->fotoEvento != null){
         //     $path = $request->file('fotoEvento')->storeAs(
@@ -469,8 +471,8 @@ class EventoController extends Controller
 
         $user = Auth::user();
         $subject = "Evento Criado";
-        Mail::to($user->email)
-            ->send(new EventoCriado($user, $subject));
+        // Mail::to($user->email)
+        //     ->send(new EventoCriado($user, $subject));
 
         // Passando dados default para a edição das etiquetas
         // dos campos do card de eventos.
@@ -511,15 +513,14 @@ class EventoController extends Controller
         return redirect()->route('coord.home');
     }
 
-    public function uploadFile($request){
-
-        if($request->hasFile('fotoEvento')){
-            $image          = $request->file('fotoEvento');
-            return $image->store('public');
-            
-        }
-        return null;
-
+    public function uploadFile($request,$evento){
+      if($request->hasFile('fotoEvento')){
+        $image = $request->file('fotoEvento');
+        $path = 'public/eventos/' . $evento->id;          
+        $path = Storage::putFileAs($path, $image,"logo.png");
+        return $path;
+      }
+      return null;
     }
 
     /**
@@ -654,7 +655,7 @@ class EventoController extends Controller
             'dataInicio'          => ['required', 'date', 'after_or_equal:'. $evento->dataInicio],
             'dataFim'             => ['required', 'date', 'after:'. $request->dataInicio],
             'fotoEvento'          => ['file', 'mimes:png'],
-            'valorTaxa'           => ['required'],
+            'recolhimento'           => ['required'],
           ]);
         }
 
@@ -687,7 +688,7 @@ class EventoController extends Controller
         $evento->tipo                 = $request->tipo;
         $evento->dataInicio           = $request->dataInicio;
         $evento->dataFim              = $request->dataFim;
-        $evento->valorTaxa            = $request->valorTaxa;
+        $evento->recolhimento         = $request->recolhimento;
         $evento->enderecoId           = $endereco->id;
 
         // se a foto for diferente de nula apaga a foto existente e salva a nova
@@ -701,6 +702,7 @@ class EventoController extends Controller
           Storage::putFileAs($path, $file, $nome);
           $evento->fotoEvento = 'eventos/' . $evento->id . $nome;
         }
+        
         $evento->save();
 
         $endereco->rua                = $request->rua;

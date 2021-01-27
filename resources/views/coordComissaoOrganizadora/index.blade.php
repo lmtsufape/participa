@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container">
+<div class="container"  style="position: relative; top: 65px;">
 
     <h2 style="margin-top: 100px; ">{{ Auth()->user()->name }} - Perfil: Coord. Comissão Organizadora</h2>
 

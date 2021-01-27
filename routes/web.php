@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Submissao\Evento;
 
 Route::get('/index', function () {
-    $eventos = Evento::all();
+    $eventos = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->orderBy('dataInicio')->get();
     // dd($eventos);
     return view('index',['eventos'=>$eventos]);
 })->name('index');
@@ -37,7 +37,7 @@ Route::get('/#', function () {
   });
 
 
-Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('atividades.json');
+Route::get('/{id}/atividades', 'Submissao\AtividadeController@atividadesJson')->name('atividades.json');
 
 Route::get('/perfil','Users\UserController@perfil')->name('perfil')->middleware('auth');
 Route::post('/perfil/editar','Users\UserController@editarPerfil')->name('perfil.update')->middleware('auth');
