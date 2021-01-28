@@ -238,24 +238,23 @@
             <input id="input-change-mode" type="checkbox">
         </div>
         <script>
+            if (localStorage.getItem('dark-mode') == "active") {
+                document.getElementById('img-change-mode').src = "{{asset('/img/icons/sun.png')}}"
+                document.documentElement.classList.toggle('dark-mode')
+            } 
+
             $(document).ready(function () {
                 $('#change-mode').click(function () {
-                    console.log(document.documentElement.classList.toggle('dark-mode'))
+                    document.documentElement.classList.toggle('dark-mode')
                     if (document.getElementById('img-change-mode').src == "{{asset('/img/icons/mom.png')}}") {
                         document.getElementById('img-change-mode').src = "{{asset('/img/icons/sun.png')}}"
+                        localStorage.setItem('dark-mode', "active");
                     } else {
                         document.getElementById('img-change-mode').src = "{{asset('/img/icons/mom.png')}}"
+                        localStorage.setItem('dark-mode', "no-active");
                     }
                 })
             })
-            
-            // const changeMode = document.querySelector('#input-change-mode')
-
-            // // ao clicar mudaremos as cores
-            // nightMode.addEventListener('click', () => {
-            //     // adiciona a classe `night-mode` ao html
-                
-            // })
         </script> 
     </body>
 </html>

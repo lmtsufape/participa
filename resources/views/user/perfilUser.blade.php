@@ -18,7 +18,7 @@
     </div>
 </div>
 <div class="card-perfil justify-content-center">
-    <div class="card" style="width: 80%;">
+    <div class="card card-change-mode" style="width: 80%;">
         <div class="card-body">
             @if(Auth()->user()->usuarioTemp == null)
                 <div class="container">
