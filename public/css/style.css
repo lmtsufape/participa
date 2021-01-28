@@ -555,7 +555,7 @@ body{
 
 .navbar-center {
     position: relative;
-    left: 110%;
+    left: 50%;
 }
 
 .tam-letra {
@@ -670,4 +670,4 @@ body{
     margin-top: 0.25rem;
     font-size: 80%;
     color: #dc3545;
-  }
+}

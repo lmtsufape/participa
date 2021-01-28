@@ -76,7 +76,7 @@
         </div>
 
     {{-- Tabela Trabalhos --}}
-    <div class="row">
+    <div class="row table-trabalhos">
       <div class="col-sm-12">
         <table class="table table-hover table-responsive-lg table-sm">
           <thead>

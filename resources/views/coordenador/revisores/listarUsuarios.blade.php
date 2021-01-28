@@ -4,7 +4,7 @@
 
 <div id="divListarRevisores" style="display: block">
 
-  <div class="container">
+  <div class="container div-listar-usuarios">
     <div class="row">
         <div class="col-sm-12">
             <h1 class="titulo-detalhes">Lista de Usuários</h1>
