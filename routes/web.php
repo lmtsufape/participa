@@ -13,12 +13,7 @@
 use Illuminate\Support\Facades\Log;
 use App\Models\Submissao\Evento;
 
-Route::get('/index', function () {
-    $eventos = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->orderBy('dataInicio')->get();
-    $tiposEvento = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->selectRaw('DISTINCT tipo')->get();
-    // dd($tiposEvento);
-    return view('index',['eventos'=>$eventos, 'tipos' => $tiposEvento]);
-})->name('index');
+Route::get('/index', 'HomeController@home')->name('index');
 
 Auth::routes(['verify' => true]);
 
