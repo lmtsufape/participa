@@ -59,7 +59,7 @@
         <meta name="token" content="{{ csrf_token() }}">
         <div id="app">
             {{-- Navbar --}}
-            <nav class="navbar navbar-expand-md navbar-dark shadow-sm">
+            <nav class="navbar navbar-expand-md navbar-dark shadow-sm acessibilidade">
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-6">
@@ -73,12 +73,12 @@
                             </a>
                         </div>
                         <div class="col-sm-2 navbar-center clicavel">
-                            <a class="navbar-brand tam-letra">
+                            <a id="font-size-plus" class="navbar-brand tam-letra">
                                 +A
                             </a>
                         </div>
                         <div class="col-sm-2 navbar-center clicavel">
-                            <a class="navbar-brand tam-letra">
+                            <a id="font-size-min" class="navbar-brand tam-letra">
                                 -A
                             </a>
                         </div>
@@ -253,6 +253,28 @@
                         document.getElementById('img-change-mode').src = "{{asset('/img/icons/mom.png')}}"
                         localStorage.setItem('dark-mode', "no-active");
                     }
+                })
+
+                $('#font-size-plus').click(function() {
+                    var elemento = $(".acessibilidade");
+                    var fonte = parseInt(elemento.css('font-size'));
+
+                    var body = $("body");
+                    const fonteNormal = parseInt(body.css('font-size'));
+                    fonte++;
+
+                    elemento.css("fontSize", fonte);
+                })
+
+                $('#font-size-min').click(function() {
+                    var elemento = $(".acessibilidade");
+                    var fonte = parseInt(elemento.css('font-size'));
+
+                    var body = $("body");
+                    const fonteNormal = parseInt(body.css('font-size'));
+                    fonte--;
+
+                    elemento.css("fontSize", fonte);
                 })
             })
         </script> 

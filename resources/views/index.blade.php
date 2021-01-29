@@ -37,44 +37,44 @@
                     <div class="container descricao-evento">
                       <div class="row">
                         <div class="col-sm-12" style="text-align: center;">
-                          <h4>{{$evento->nome}}</h4>
+                          <h4 class="acessibilidade">{{$evento->nome}}</h4>
                         </div>
                       </div>
                       <br>
-                      <div class="row" style="text-align: justify;">
+                      <div class="row acessibilidade" style="text-align: justify;">
                         <div class="col-sm-12">
                           {{$evento->descricao}}
                         </div>
                       </div>
                       <div class="row" style="color:white;">
                         <div class="col-sm-6">
-                          <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%; ">#{{$evento->tipo}}</a>
+                          <a class="btn cor-aleatoria acessibilidade" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%; ">#{{$evento->tipo}}</a>
                         </div>
                         <div class="col-sm-6">
                           @if ($evento->recolhimento == "pago")
-                            <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Pago</a>
+                            <a class="btn pago acessibilidade" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Pago</a>
                           @else
-                            <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Gratuito</a>
+                            <a class="btn gratuito acessibilidade" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Gratuito</a>
                           @endif
                         </div>
                       </div>
                       <div class="row data-horario">
-                        <div class="col-sm-4">
-                          <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span>{{date('d/m/Y',strtotime($evento->dataInicio))}}</span>
+                        <div class="col-sm-6">
+                          <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span class="acessibilidade">{{date('d/m/Y',strtotime($evento->dataInicio))}}</span>
                         </div>
-                        <div class="col-sm-8">
-                          <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> Colocar a hora aqui </span>
+                        <div class="col-sm-6">
+                          <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span class="acessibilidade"> Colocar a hora aqui </span>
                         </div>
                       </div>
                       <div class="row location-pointer">
                         <div class="col-sm-12">
-                          <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span>{{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</span>
+                          <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span class="acessibilidade">{{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</span>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-sm-12">
                           @if ($evento->formEvento->modinscricao == true)
-                            <a href="{{route('inscricao.create', ['id' => $evento->id])}}"><button class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button></a>
+                            <a href="{{route('inscricao.create', ['id' => $evento->id])}}"><button class="btn botao-inscricao acessibilidade" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button></a>
                           @endif
                           </div>
                       </div>
@@ -98,44 +98,44 @@
                     <div class="container descricao-evento">
                       <div class="row">
                         <div class="col-sm-12" style="text-align: center;">
-                          <h4>{{$evento->nome}}</h4>
+                          <h4 class="acessibilidade">{{$evento->nome}}</h4>
                         </div>
                       </div>
                       <br>
                       <div class="row" style="text-align: justify;">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12 acessibilidade">
                           {{$evento->descricao}}
                         </div>
                       </div>
                       <div class="row" style="color:white;">
                         <div class="col-sm-6">
-                          <a class="btn cor-aleatoria" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">#{{$evento->tipo}}</a>
+                          <a class="btn cor-aleatoria acessibilidade" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">#{{$evento->tipo}}</a>
                         </div>
                         <div class="col-sm-6">
                           @if ($evento->recolhimento == "pago")
-                            <a class="btn pago" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Pago</a>
+                            <a class="btn pago acessibilidade" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Pago</a>
                           @else
-                            <a class="btn gratuito" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Gratuito</a>
+                            <a class="btn gratuito acessibilidade" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 100%;">Gratuito</a>
                           @endif
                         </div>
                       </div>
                       <div class="row data-horario">
                         <div class="col-sm-4">
-                          <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span>{{date('d/m/Y',strtotime($evento->dataInicio))}}</span>
+                          <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span class="acessibilidade">{{date('d/m/Y',strtotime($evento->dataInicio))}}</span>
                         </div>
                         <div class="col-sm-8">
-                          <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> Colocar a hora aqui </span>
+                          <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span class="acessibilidade"> Colocar a hora aqui </span>
                         </div>
                       </div>
                       <div class="row location-pointer">
                         <div class="col-sm-12">
-                          <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span>{{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</span>
+                          <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> <span class="acessibilidade">{{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</span>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-sm-12">
                           @if ($evento->formEvento->modinscricao == true)
-                            <a href="{{route('inscricao.create', ['id' => $evento->id])}}"><button id="btn-inscrever-{{$evento->id}}" class="btn botao-inscricao" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button></a>
+                            <a href="{{route('inscricao.create', ['id' => $evento->id])}}"><button id="btn-inscrever-{{$evento->id}}" class="btn botao-inscricao acessibilidade" style="color: white; margin-top: 10px; margin-bottom: 15px; margin-right: 10px;">Faça a sua inscrição</button></a>
                           @endif
                         </div>
                       </div>
@@ -178,7 +178,7 @@
         <div class="scroll-horizontal">
           <div class="cards-wrapper">
             @foreach($eventos as $evento)
-              <div class="card" style="width: 13rem;">
+              <div class="card acessibilidade" style="width: 13rem;">
                 @if ($evento->fotoEvento != null) 
                   <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
                 @else
@@ -186,7 +186,7 @@
                 @endif
                 <div class="card-body">
                   <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
-                    <h6 class="card-title">{{$evento->nome}}</h6>
+                    <h6 class="card-title acessibilidade">{{$evento->nome}}</h6>
                   </a>
                   <br> 
                   <div class="container" style="position: relative; top: -25px;">
