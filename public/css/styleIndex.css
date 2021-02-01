@@ -558,3 +558,16 @@ body{
   cursor: pointer;
   text-decoration-line: underline;
 }
+
+.nenhum-evento {
+  height: 400px;
+  width: 100%;
+  background-color: white;
+  border-radius: 10px;
+  color: black;
+  text-align: center;
+  font-size: 50px;
+  font-weight: bolder;
+  text-decoration: underline;
+  text-decoration-color: #114048ff;
+}
