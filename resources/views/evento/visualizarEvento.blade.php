@@ -262,9 +262,9 @@
                             Resultado: {{date('d/m/Y',strtotime($modalidade->inicioResultado))}}
                           </p>
                           @endif
-                          
+                          {{-- {{dd(Carbon\Carbon::parse($modalidade->inicioSubmissao))}} --}}
                           @if(Carbon\Carbon::parse($modalidade->inicioSubmissao) <= $mytime)
-                            @if($mytime <= Carbon\Carbon::parse($modalidade->fimSubmissao . " 23:59:59.999"))
+                            @if($mytime <= Carbon\Carbon::parse($modalidade->fimSubmissao))
                               @if ($modalidade->arquivo == true)
                                 @if(isset($modalidade->regra))
                                   <div style="margin-top: 20px; margin-bottom: 10px;">
@@ -343,7 +343,7 @@
                 <p>
                     {{-- LOCAL DA PROGRAMAÇÃO --}}
                     @if (!($evento->exibir_calendario_programacao) && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null) 
-                      <iframe src="{{asset('storage/' . $evento->pdf_programacao)}}" width="1000" height="500" style="border: none;"></iframe>
+                      <iframe src="{{asset('storage/' . $evento->pdf_programacao)}}" width="100%" height="500" style="border: none;"></iframe>
                     @elseif ($evento->exibir_calendario_programacao && $etiquetas->modprogramacao == true)
                       @if ($atividades != null && count($atividades) > 0) 
                         <div id="wrap">
