@@ -671,3 +671,91 @@ body{
     font-size: 80%;
     color: #dc3545;
 }
+
+.btn-buscar-evento {
+    width: 150px;
+    font-weight: bolder;
+    background-image: linear-gradient( to right, red, rgb(230, 46, 0), rgb(255, 153, 0) ); 
+    border-radius: 10px;
+    color: white;
+}
+
+.btn-buscar-evento:hover {
+    transition: 0.3s;
+    color: white;
+    box-shadow: 5px 5px 5px black;
+}
+
+.card-busca-livre-evento {
+    margin: 0;
+    margin-top: 20px;
+    width: 100%;
+    height: 250px;
+    border-radius: 5px;
+}
+
+.card-busca-livre-evento img {
+    position: relative;
+    border-radius: 5px 0px 0px 5px;
+    bottom: 1px;
+    right: 1px;
+    width: 445px;
+    height: 250px;
+    max-width: 445px;
+    min-width: 445px;
+}
+
+.card-busca-livre-evento .calendario-img img {
+    position: relative;
+    bottom: 0;
+    right: 0;
+    width: 23px;
+    height: 25px;
+    margin: 10px;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 23px;
+    min-width: 23px;
+}
+.card-busca-livre-evento .relogio-img img {
+    position: relative;
+    bottom: 0;
+    right: 0;
+    width: 25px;
+    margin: 10px;
+    margin-right: 0;
+    height: auto;
+    max-width: 25px;
+    min-width: 25px;
+}
+
+.card-busca-livre-evento .ponto-de-localizacao-img {
+    position: relative;
+    bottom: 0;
+    right: 0;
+    left: -15px;
+    margin: 10px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.card-busca-livre-evento .ponto-de-localizacao-img img {
+    width: 23px;
+    height: auto;
+    max-width: 23px;
+    min-width: 23px;
+}
+
+.card-busca-livre-evento .botao-inscricao {
+    position: relative;
+    border-radius: none;
+    background-image: linear-gradient( to right, rgb(0, 60, 255), rgb(85, 2, 180)); 
+    box-shadow: 1px 3px 3px rgb(32, 32, 32);
+}
+
+.card-busca-livre-evento .botao-inscricao:hover {
+    background-image: linear-gradient( to right, rgb(0, 36, 155), rgb(50, 1, 105)); 
+    transition: 0.3s;
+    border-radius: 5px;
+    box-shadow: 1px 3px 3px black;
+}

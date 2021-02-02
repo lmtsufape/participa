@@ -91,3 +91,7 @@ body {
 .dark-mode {
   transition: 1s;
 }
+
+.dark-mode #form-buscar-eventos {
+  color: white;
+}

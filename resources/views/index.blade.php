@@ -445,7 +445,7 @@
 
   <div id="btn-mais-eventos" class="row justify-content-center" style="margin-bottom:-5px">
     <div class="col-sm-12">
-      <button class="btn">+ Ver Todos os Eventos</button>
+      <button class="btn" onclick="window.location='{{route('busca.eventos')}}'">+ Ver Todos os Eventos</button>
     </div>
   </div>
 </div>

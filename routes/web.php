@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Submissao\Evento;
 
 Route::get('/index', 'HomeController@home')->name('index');
+Route::get('/evento/busca', 'Submissao\EventoController@buscaLivre')->name('busca.eventos');
+Route::get('/evento/buscar-livre', 'Submissao\EventoController@buscaLivreAjax')->name('busca.livre.ajax');
 
 Auth::routes(['verify' => true]);
 
