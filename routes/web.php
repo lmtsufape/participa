@@ -203,9 +203,9 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::name('coord.')->group(function () {
     Route::get('comissaoOrganizadora/{id}/cadastrar', 'Users\ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
     Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'Users\ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
-    Route::get('comissaoOrganizadora/{id}/listar', 'Users\ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
-    Route::post('remover/comissaoOrganizadora/{id}', 'Users\ComissaoOrganizadoraController@destroy')->name('remover.comissao.organizadora');
-    Route::post('remover/comissao/{id}',  'Users\ComissaoController@destroy'      )->name('remover.comissao');
+    Route::get('comissaoOrganizadora/{id}/listar',    'Users\ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
+    Route::post('remover/comissaoOrganizadora/{id}',  'Users\ComissaoOrganizadoraController@destroy')->name('remover.comissao.organizadora');
+    Route::post('remover/comissao/{id}',              'Users\ComissaoController@destroy'      )->name('remover.comissao');
   });
   
   // ROTAS DO MODULO DE INSCRIÇÃO
@@ -232,9 +232,11 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
   Route::get('inscricoes/evento-{id}/index',    'Inscricao\InscricaoController@index'   )->name('inscricoes');
   Route::post('inscricoes/criar-promocao',      'Inscricao\PromocaoController@store'    )->name('promocao.store');
+  Route::post('inscricoes/{id}/editar-promocao', 'Inscricao\PromocaoController@update')->name('promocao.update');
   Route::post('inscricoes/destroy/{id}-promocao','Inscricao\PromocaoController@destroy' )->name('promocao.destroy');
 
   Route::post('inscricoes/criar-cupom',         'Inscricao\CupomDeDescontoController@store')->name('cupom.store');
+  Route::post('inscricoes/editar-cupom/{id}',        'Inscricao\CupomDeDescontoController@update')->name('cupom.update');
   Route::get('inscricoes/destroy/{id}-cupom',  'Inscricao\CupomDeDescontoController@destroy')->name('cupom.destroy');
 
   Route::post('inscricoes/criar-categoria-participante', 'Inscricao\CategoriaController@store')->name('categoria.participante.store');

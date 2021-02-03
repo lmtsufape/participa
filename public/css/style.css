@@ -759,3 +759,24 @@ body{
     border-radius: 5px;
     box-shadow: 1px 3px 3px black;
 }
+.campo-exemplo {
+    padding: 10px;
+    background-color: rgba(240, 240, 240, 0.794);
+    border: solid rgb(212, 212, 212)  1px;
+}
+
+.campo-exemplo-head {
+    padding: 10px;
+    background-color: rgba(240, 240, 240, 0.794);
+    border-top: solid rgb(212, 212, 212)  1px;
+    border-left: solid rgb(212, 212, 212) 1px;
+    border-right: solid rgb(212, 212, 212) 1px;
+}
+
+.campo-exemplo-body {
+    padding: 10px;
+    background-color: rgba(240, 240, 240, 0.794);
+    border-left: solid rgb(212, 212, 212) 1px;
+    border-right: solid rgb(212, 212, 212) 1px;
+    border-bottom: solid rgb(212, 212, 212) 1px;
+}

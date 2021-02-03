@@ -324,15 +324,15 @@
 
         $('#campoExemploNumero').mask(SPMaskBehavior, spOptions);
 
-        @if (old('criarCupom') != null) 
+        @if (old('criarCupom') != null || old('editarCupom') != null) 
             $('#li_cuponsDeDesconto').click();
-        @elseif (old('criarCategoria') != null)
+        @elseif (old('criarCategoria') != null || old('editarCategoria') != null)
             $('#li_categoria_participante').click();
         @elseif (old('criarCampo') != null)
             $('#li_formulario_inscricao').click();
         @elseif (old('campo_id') != null)
             $('#li_formulario_inscricao').click();
-        @elseif (old('novaPromocao') != null)
+        @elseif (old('novaPromocao') != null || old('editarPromocao') != null)
             $('#li_promocoes').click();
         @else
             $('#li_categoria_participante').click();
@@ -1527,42 +1527,77 @@
         }
     }
 
-    function adicionarLoteAhPromocao() {
-        $('#lotes').append(
-            "<div class='row' style='margin-top:10px;'>" +
-                "<div class='col-sm-4'>" +
-                    "<label for='dataDeInicio'>Data de início</label>" +
-                    "<input id='dataDeInicio' name='dataDeInício[]' class='form-control' type='date'>" +
-                "</div>" +
-                "<div class='col-sm-4'>" +
-                    "<label for='dataDeFim'>Data de fim</label>" +
-                    "<input id='dataDeFim' name='dataDeFim[]' class='form-control' type='date'>" +
-                "</div>" +
-                "<div class='col-sm-3'>" + 
-                    "<label for='quantidade'>Disponibilidade</label>" +
-                    "<input id='quantidade' name='disponibilidade[]' class='form-control' type='number' placeholder='10'>" +
-                "</div>" +
-                "<div class='col-sm-1'>" +
-                    "<a href='#' title='Remover lote' onclick='removerLoteDaPromocao(this)'><img src='{{asset('img/icons/lixo.png')}}' width='35px' style='position: relative; top: 32px;'></a>" +
-                "</div>" +
-            "</div>"
-        );
+    function adicionarLoteAhPromocao(id) {
+        if (id == 0) {
+            $('#lotes').append(
+                "<div class='row'>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeInicio'>Data de início</label>" +
+                        "<input id='dataDeInicio' name='dataDeInício[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeFim'>Data de fim</label>" +
+                        "<input id='dataDeFim' name='dataDeFim[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-3'>" + 
+                        "<label for='quantidade'>Disponibilidade</label>" +
+                        "<input id='quantidade' name='disponibilidade[]' class='form-control' type='number' placeholder='10'>" +
+                    "</div>" +
+                    "<div class='col-sm-1'>" +
+                        "<a href='#' title='Remover lote' onclick='removerLoteDaPromocao(this)'><img src='{{asset('img/icons/lixo.png')}}' width='35px' style='position: relative; top: 32px;'></a>" +
+                    "</div>" +
+                "</div>"
+            );
+        } else {
+            $('#lotes'+id).append(
+                "<div class='row'>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeInicio'>Data de início</label>" +
+                        "<input id='dataDeInicio' name='dataDeInício_"+id+"[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeFim'>Data de fim</label>" +
+                        "<input id='dataDeFim' name='dataDeFim_"+id+"[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-3'>" + 
+                        "<label for='quantidade'>Disponibilidade</label>" +
+                        "<input id='quantidade' name='disponibilidade_"+id+"[]' class='form-control' type='number' placeholder='10'>" +
+                    "</div>" +
+                    "<div class='col-sm-1'>" +
+                        "<a href='#' title='Remover lote' onclick='removerLoteDaPromocao(this)'><img src='{{asset('img/icons/lixo.png')}}' width='35px' style='position: relative; top: 32px;'></a>" +
+                    "</div>" +
+                "</div>"
+            );
+        }
     }
 
     function removerLoteDaPromocao(elemento) {
         elemento.parentElement.parentElement.remove();
     }
 
-    function mostrarCategorias(input) {
-        if (input.checked) {
-            document.getElementById('categoriasPromocao').style.display = "none";
+    function mostrarCategorias(input, id) {
+        if (id == 0) {
+            if (input.checked) {
+                document.getElementById('categoriasPromocao').style.display = "none";
+            } else {
+                document.getElementById('categoriasPromocao').style.display = "block";
+            }
         } else {
-            document.getElementById('categoriasPromocao').style.display = "block";
+            if (input.checked) {
+                document.getElementById('categoriasPromocao'+id).style.display = "none";
+            } else {
+                document.getElementById('categoriasPromocao'+id).style.display = "block";
+            }
         }
     }
 
-    function alterarPlaceHolderDoNumero(elemento) {
-        var input = document.getElementById('valorCupom')
+    function alterarPlaceHolderDoNumero(elemento, id) {
+        var input = null;
+        if (id == 0) {
+            input = document.getElementById('valorCupom');
+        } else {
+            input = document.getElementById('valorCupom'+id);
+        }
         if (elemento.value == "real") {
             input.placeholder = "R$ 10,00"
         } else if (elemento.value == "porcentagem") {
@@ -1759,6 +1794,7 @@
         var campoExemploCpf = document.getElementById('campoExemploCpf');
         var campoExemploNumero = document.getElementById('campoExemploNumero');
         var divEnderecoExemplo = document.getElementById('divEnderecoExemplo');
+        var divTituloExemplo = document.getElementById('tituloExemplo');
 
         botoes.style.display = "none";
         inputs.style.display = "block";
@@ -1777,6 +1813,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Comprovante de matrícula";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1799,6 +1836,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Data de nascimento";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1821,6 +1859,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "E-mail para contato";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1843,6 +1882,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Por que quer participar?";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1863,6 +1903,7 @@
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1883,6 +1924,7 @@
                 campoExemploNumero.style.display = "block";
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1903,6 +1945,8 @@
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "block";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo-head";
+                divEnderecoExemplo.className = "campo-exemplo-body";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1978,6 +2022,20 @@
                     $("#btn-tipo-contato").click();
                     break;
             }
+        })
+    </script>
+  @endif
+  @if (old('editarCupom') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarCupom"+"{{old('editarCupom')}}").modal('show');
+        })
+    </script>
+  @endif
+  @if (old('editarPromocao') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalPromocaoEdit"+"{{old('editarPromocao')}}").modal('show');
         })
     </script>
   @endif
