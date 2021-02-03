@@ -370,7 +370,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-4">
-                                <label for="valor">Valor da promoção*</label>
+                                <label for="valor">Valor do pacote*</label>
                                 <input id="valor" name="valor" class="form-control @error('valor') is-invalid @enderror" type="number" placeholder="0 para pacote grátis" value="{{old('valor')}}">
                             
                                 @error('valor')
@@ -380,7 +380,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style='margin-top:10px;'>
                             <div class="col-sm-12">
                                 <label for="descricao">Descrição</label>
                                 <textarea class="form-control @error('descrição') is-invalid @enderror" name="descrição" id="descricao" cols="30" rows="3" placeholder="Pacote padrão para estudantes">{{old('descrição')}}</textarea>
@@ -517,7 +517,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <hr>
-                                <h5>Atividades inclusas na promoção</h5>
+                                <h5>Atividades inclusas no pacote</h5>
                             </div>
                         </div>
                         <div class="row">
@@ -711,7 +711,7 @@
             <div class="modal-body">
                 <form id="formDeletarPromocao{{$promocao->id}}" action="{{route('promocao.destroy', ['id' => $promocao->id])}}" method="POST">
                     @csrf
-                    Tem certeza que deseja excluir essa promoção?
+                    Tem certeza que deseja excluir esse pacote?
                 </form>
             </div>
             <div class="modal-footer">

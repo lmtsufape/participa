@@ -1020,7 +1020,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-sm-9">
-                                <button id="adicionarPdf" data-toggle="modal" data-target="#modalAdicionarPdf" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; left: 120px;">+ PDF com as atividades</button>
+                                <button id="adicionarPdf" data-toggle="modal" data-target="#modalAdicionarPdf" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; left: 100px;">+ PDF com as atividades</button>
                             </div>
                             <div class="col-sm-3">
                                 <button id="criarAtividade" data-toggle="modal" data-target="#modalCriarAtividade" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; margin-left: 20px;">+ Criar atividade</button>

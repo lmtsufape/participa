@@ -1529,7 +1529,7 @@
 
     function adicionarLoteAhPromocao() {
         $('#lotes').append(
-            "<div class='row'>" +
+            "<div class='row' style='margin-top:10px;'>" +
                 "<div class='col-sm-4'>" +
                     "<label for='dataDeInicio'>Data de início</label>" +
                     "<input id='dataDeInicio' name='dataDeInício[]' class='form-control' type='date'>" +
