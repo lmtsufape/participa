@@ -240,7 +240,7 @@
 @endsection
 @section('content')
 
-<div class="main_content">
+<div class="main_content" style="position: relative; top: 15px;">
   {{-- mensagem de confimação --}}
   @if(session('mensagem'))
     <div class="col-md-12" style="margin-top: 5px;">
@@ -281,7 +281,9 @@
         @enderror
     </div>
     
-    @yield('menu')
+    <div style="position: relative; top: 15px;">
+        @yield('menu')
+    </div>
 
     @hasSection ('script')
         @yield('script')

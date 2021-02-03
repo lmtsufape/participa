@@ -511,7 +511,7 @@ class EventoController extends Controller
           'eventoId'                       => $evento->id,
         ]);
 
-        return redirect()->route('coord.home');
+        return redirect()->route('home');
     }
 
     public function uploadFile($request,$evento){
