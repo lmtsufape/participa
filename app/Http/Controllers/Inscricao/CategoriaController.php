@@ -55,7 +55,7 @@ class CategoriaController extends Controller
         }
         
         foreach ($request->input('valorDesconto') as $i => $valor) {
-            if ($request->input('valorDesconto'.$i) <= 0) {
+            if ($valor <= 0) {
                 return redirect()->back()->withErrors(['valorDesconto.'.$i => 'Digite um valor positivo.'])->withInput($validateData);
             }
         }
