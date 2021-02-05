@@ -780,3 +780,18 @@ body{
     border-right: solid rgb(212, 212, 212) 1px;
     border-bottom: solid rgb(212, 212, 212) 1px;
 }
+
+.card-inscricao-evento {
+    position: relative;
+    margin-left: 15%;
+}
+
+.card-inscricao-evento #card-inscricao {
+    position: relative;
+    top: -200px;
+    border-radius: 15px;
+}
+
+.card-inscricao-evento .titulo-detalhes {
+    text-align: center;
+}

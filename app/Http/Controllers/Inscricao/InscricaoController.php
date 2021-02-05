@@ -45,7 +45,7 @@ class InscricaoController extends Controller
     public function create($id)
     {
         $evento = Evento::find($id);
-
+        
         return view('evento.nova_inscricao', ['evento'              => $evento,
                                               'eventoVoltar'        => null,
                                               'valorTotalVoltar'    => null,
