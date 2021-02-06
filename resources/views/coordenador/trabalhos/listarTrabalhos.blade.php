@@ -5,14 +5,22 @@
     <div id="divListarTrabalhos" style="display: block">
 
         <div class="row titulo-detalhes">
-            <div class="col-sm-9">
+            <div class="col-sm-6">
                 <h1 class="">Trabalhos</h1>
             </div>            
             <div class="col-sm-3">
               <form method="GET" action="{{route('distribuicao')}}">
                 <input type="hidden" name="eventoId" value="{{$evento->id}}">
                 <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
-                  {{ __('Distribuir Trabalhos') }}
+                  {{ __('Distribuir trabalhos') }}
+                </button>
+              </form>
+            </div>
+            <div class="col-sm-3">
+              <form method="GET" action="{{route('distribuicao')}}">
+                <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
+                  {{ __('Distribuir em lote') }}
                 </button>
               </form>
             </div>
@@ -81,6 +89,7 @@
         <table class="table table-hover table-responsive-lg table-sm">
           <thead>
             <tr>
+              <th scope="col" style="text-align:center">Check</th>
               <th scope="col">
                 Título
                 <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc'])}}">
@@ -117,14 +126,19 @@
                   <i class="fas fa-arrow-alt-circle-down"></i>
                 </a> --}}
               </th>
-              <th scope="col" style="text-align:center">Baixar</th>
-              <th scope="col" style="text-align:center">Visualizar</th>
+              <th scope="col" style="text-align:center">Atribuir</th>
             </tr>
           </thead>
           <tbody>
             @php $i = 0; @endphp
             @foreach($trabalhos as $trabalho)
             <tr>
+              <td style="text-align:center">
+                <form action="{{route('atribuicao.check')}}" method="post">
+                  @csrf
+                  <input type="checkbox" aria-label="Checkbox for following text input" name="id" value="{{$trabalho->titulo}}">
+                </form>
+              </td>
               <td>{{$trabalho->titulo}}</td>
               <td>{{$trabalho->area->nome}}</td>
               <td>{{$trabalho->modalidade->nome}}</td>
@@ -132,30 +146,15 @@
                 @if (count($trabalho->atribuicoes) == 0)
                   Nenhum revisor atribuído
                 @elseif (count($trabalho->atribuicoes) == 1)
-                  @foreach($trabalho->atribuicoes as $revisor)
-                    {{$revisor->user->email}}.
-                  @endforeach
-                @elseif (count($trabalho->atribuicoes) > 1 && count($trabalho->atribuicoes) <= 2)
-                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[1]->user->email}}.
-                @elseif(count($trabalho->atribuicoes) > 2)
-                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[1]->user->email}}, ...
+                  {{count($trabalho->atribuicoes)}}
                 @endif
               </td>
+              
               <td style="text-align:center">
-                {{-- @php $arquivo = ""; $i++; @endphp
-                @foreach($trabalho->arquivo as $key)
-                @php
-                if($key->versaoFinal == true){
-                  $arquivo = $key->nome;
-                }
-                @endphp
-                @endforeach --}}
-                @if (!(empty($trabalho->arquivo->nome)))
-                    <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
-                @endif
-              </td>
-              <td style="text-align:center">
-                <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
+                <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}">
+                  <i class="fas fa-file-alt"></i>
+                </a>
+                
               </td>
 
             </tr>

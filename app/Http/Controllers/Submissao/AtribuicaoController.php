@@ -230,4 +230,11 @@ class AtribuicaoController extends Controller
 
       return redirect()->back()->with(['mensagem' => $mensagem]);
     }
+
+    public function atribuirCheck(Request $request)
+    {
+      dd($request->all());
+    }
+
+    
 }
