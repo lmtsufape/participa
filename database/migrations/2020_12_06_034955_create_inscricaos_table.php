@@ -15,7 +15,7 @@ class CreateInscricaosTable extends Migration
     {
         Schema::create('inscricaos', function (Blueprint $table) {
             $table->bigIncrements('id');
-
+            $table->boolean("finalizada");
             $table->timestamps();
 
             $table->bigInteger("user_id")->nullable();

@@ -8,7 +8,7 @@ class Inscricao extends Model
 {
 
     protected $fillable = [
-        'user_id', 'evento_id', 'pagamento_id', 'promocao_id', 'promocao_id', 'cupom_desconto_id'
+        'user_id', 'evento_id', 'pagamento_id', 'promocao_id', 'cupom_desconto_id'
     ];
 
     public function evento() {
@@ -29,5 +29,9 @@ class Inscricao extends Model
 
     public function cupomDesconto() {
         return $this->belongsTo('App\Models\Inscricao\CupomDeDesconto', 'cupom_desconto_id');
+    }
+
+    public function camposPreenchidos() {
+        return $this->belongsToMany('App\Models\Inscricao\CampoFormulario', 'valor_campo_extras', 'inscricao_id', 'campo_formulario_id');
     }
 }

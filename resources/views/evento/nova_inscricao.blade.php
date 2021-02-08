@@ -34,7 +34,8 @@
                 @enderror
                 <br>
 
-                <form id="form-inscricao" action="{{route('inscricao.checar', ['id' => $evento->id])}}" method="GET" enctype="multipart/form-data">
+                <form id="form-inscricao" action="{{route('inscricao.checar', ['id' => $evento->id])}}" method="POST" enctype="multipart/form-data">
+                    @csrf
                     <div id="formulario">
                         <div class="row form-group">
                             <div class="col-sm-12">
@@ -49,7 +50,7 @@
                             </div>
                         </div>
                         @foreach($evento->categoriasParticipantes as $categoria)
-                            <div class="campos-extras" id="campos-extras-{{$categoria->id}}" style="display: none;">
+                            <div class="campos-extras" id="campos-extras-{{$categoria->id}}"  @if(old('categoria') == $categoria->id)style="display: block;"@else style="display: none;" @endif>
                                 <div class="row form-group">
                                     @foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo)
                                         @if($campo->tipo == "endereco")
@@ -57,96 +58,174 @@
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <label for="endereco-cep-{{$campo->id}}">CEP</label>
-                                                        <input id="endereco-cep-{{$campo->id}}" name="endereco-cep-{{$campo->id}}" onblur="pesquisacep(this.value, '{{$campo->id}}');" type="text" class="form-control cep" placeholder="00000-000" @if($campo->obrigatorio) required @endif>
+                                                        <input id="endereco-cep-{{$campo->id}}" name="endereco-cep-{{$campo->id}}" onblur="pesquisacep(this.value, '{{$campo->id}}');" type="text" class="form-control cep @error('endereco-cep-'.$campo->id) is-invalid @enderror" placeholder="00000-000" @if($campo->obrigatorio) required @endif value="@if(old('endereco-cep-'.$campo->id) != null){{old('endereco-cep-'.$campo->id)}}@endif">
+                                                    
+                                                        @error('endereco-cep-'.$campo->id)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <label for="endereco-bairro-{{$campo->id}}">Bairro</label>
-                                                        <input type="text" class="form-control" id="endereco-bairro-{{$campo->id}}" name="endereco-bairro-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif>
+                                                        <input type="text" class="form-control @error('endereco-bairro-'.$campo->id) is-invalid @enderror" id="endereco-bairro-{{$campo->id}}" name="endereco-bairro-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-bairro-'.$campo->id) != null){{old('endereco-bairro-'.$campo->id)}}@endif">
+                                                    
+                                                        @error('endereco-bairro-'.$campo->id)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                                 <div class="row" style="margin-top: 10px;">
                                                     <div class="col-sm-9">
                                                         <label for="endereco-rua-{{$campo->id}}">Rua</label>
-                                                        <input type="text" class="form-control" id="endereco-rua-{{$campo->id}}" name="endereco-rua-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif>
+                                                        <input type="text" class="form-control @error('endereco-rua-'.$campo->id) is-invalid @enderror" id="endereco-rua-{{$campo->id}}" name="endereco-rua-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-rua-'.$campo->id) != null){{old('endereco-rua-'.$campo->id)}}@endif">
+                                                    
+                                                        @error('endereco-rua-'.$campo->id)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
                                                     </div>
                                                     <div class="col-sm-3">
                                                         <label for="endereco-complemento-{{$campo->id}}">Complemento</label>
-                                                        <input type="text" class="form-control" id="endereco-complemento-{{$campo->id}}" name="endereco-complemento-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif>
+                                                        <input type="text" class="form-control @error('endereco-complemento-'.$campo->id) is-invalid @enderror" id="endereco-complemento-{{$campo->id}}" name="endereco-complemento-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-complemento-'.$campo->id) != null){{old('endereco-complemento-'.$campo->id)}}@endif">
+                                                    
+                                                        @error('endereco-complemento-'.$campo->id)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                                 <div class="row" style="margin-top: 10px;">
                                                     <div class="col-sm-6">
                                                         <label for="endereco-cidade-{{$campo->id}}">Cidade</label>
-                                                        <input type="text" class="form-control" id="endereco-cidade-{{$campo->id}}" name="endereco-cidade-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif>
+                                                        <input type="text" class="form-control @error('endereco-cidade-'.$campo->id) is-invalid @enderror" id="endereco-cidade-{{$campo->id}}" name="endereco-cidade-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-cidade-'.$campo->id) != null){{old('endereco-cidade-'.$campo->id)}}@endif">
+                                                    
+                                                        @error('endereco-cidade-'.$campo->id)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
                                                     </div>
                                                     <div class="col-sm-3">
                                                         <label for="endereco-uf-{{$campo->id}}">UF</label>
-                                                        <select class="form-control" id="endereco-uf-{{$campo->id}}" name="endereco-uf-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
+                                                        <select class="form-control @error('endereco-uf-'.$campo->id) is-invalid @enderror" id="endereco-uf-{{$campo->id}}" name="endereco-uf-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
                                                             <option value="" disabled selected hidden>-- UF --</option>
-                                                            <option value="AC">AC</option>
-                                                            <option value="AL">AL</option>
-                                                            <option value="AP">AP</option>
-                                                            <option value="AM">AM</option>
-                                                            <option value="BA">BA</option>
-                                                            <option value="CE">CE</option>
-                                                            <option value="DF">DF</option>
-                                                            <option value="ES">ES</option>
-                                                            <option value="GO">GO</option>
-                                                            <option value="MA">MA</option>
-                                                            <option value="MT">MT</option>
-                                                            <option value="MS">MS</option>
-                                                            <option value="MG">MG</option>
-                                                            <option value="PA">PA</option>
-                                                            <option value="PB">PB</option>
-                                                            <option value="PR">PR</option>
-                                                            <option value="PE">PE</option>
-                                                            <option value="PI">PI</option>
-                                                            <option value="RJ">RJ</option>
-                                                            <option value="RN">RN</option>
-                                                            <option value="RS">RS</option>
-                                                            <option value="RO">RO</option>
-                                                            <option value="RR">RR</option>
-                                                            <option value="SC">SC</option>
-                                                            <option value="SP">SP</option>
-                                                            <option value="SE">SE</option>
-                                                            <option value="TO">TO</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "AC") selected @endif value="AC">AC</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "AL") selected @endif value="AL">AL</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "AP") selected @endif value="AP">AP</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "AM") selected @endif value="AM">AM</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "BA") selected @endif value="BA">BA</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "CE") selected @endif value="CE">CE</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "DF") selected @endif value="DF">DF</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "ES") selected @endif value="ES">ES</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "GO") selected @endif value="GO">GO</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "MA") selected @endif value="MA">MA</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "MT") selected @endif value="MT">MT</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "MS") selected @endif value="MS">MS</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "MG") selected @endif value="MG">MG</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "PA") selected @endif value="PA">PA</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "PB") selected @endif value="PB">PB</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "PR") selected @endif value="PR">PR</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "PE") selected @endif value="PE">PE</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "PI") selected @endif value="PI">PI</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "RJ") selected @endif value="RJ">RJ</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "RN") selected @endif value="RN">RN</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "RS") selected @endif value="RS">RS</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "RO") selected @endif value="RO">RO</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "RR") selected @endif value="RR">RR</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "SC") selected @endif value="SC">SC</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "SP") selected @endif value="SP">SP</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "SE") selected @endif value="SE">SE</option>
+                                                            <option @if(old('endereco-uf-'.$campo->id) == "TO") selected @endif value="TO">TO</option>
                                                         </select>
+
+                                                        @error('endereco-uf-'.$campo->id)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
                                                     </div>
                                                     <div class="col-sm-3">
                                                         <label for="endereco-numero-{{$campo->id}}">Número</label>
-                                                        <input type="number" class="form-control numero" id="endereco-numero-{{$campo->id}}" name="endereco-numero-{{$campo->id}}" placeholder="10" @if($campo->obrigatorio) required @endif>
+                                                        <input type="number" class="form-control numero @error('endereco-numero-'.$campo->id) is-invalid @enderror" id="endereco-numero-{{$campo->id}}" name="endereco-numero-{{$campo->id}}" placeholder="10" @if($campo->obrigatorio) required @endif value="@if(old('endereco-numero-'.$campo->id) != null){{old('endereco-numero-'.$campo->id)}}@endif">
+                                                        
+                                                        @error('endereco-numero-'.$campo->id)
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                             </div>
                                         @elseif($campo->tipo == "date") 
                                             <div class="col-sm-4" style="margin-top:10px;">
                                                 <label for="date-{{$campo->id}}">{{$campo->titulo}}</label>
-                                                <input class="form-control" type="date" name="date-{{$campo->id}}" id="date-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
+                                                <input class="form-control @error('date-'.$campo->id) is-invalid @enderror" type="date" name="date-{{$campo->id}}" id="date-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('date-'.$campo->id) != null){{old('date-'.$campo->id)}}@endif">
+                                            
+                                                @error('date-'.$campo->id)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
                                             </div>
                                         @elseif($campo->tipo == "email")
                                             <div class="col-sm-4" style="margin-top:10px;">
                                                 <label for="email-{{$campo->id}}">{{$campo->titulo}}</label>
-                                                <input class="form-control" type="email" name="email-{{$campo->id}}" id="email-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
+                                                <input class="form-control @error('email-'.$campo->id) is-invalid @enderror" type="email" name="email-{{$campo->id}}" id="email-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('email-'.$campo->id) != null){{old('email-'.$campo->id)}}@endif">
+                                            
+                                                @error('email-'.$campo->id)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
                                             </div>
                                         @elseif($campo->tipo == "text")
                                             <div class="col-sm-4" style="margin-top:10px;">
                                                 <label for="text-{{$campo->id}}">{{$campo->titulo}}</label>
-                                                <input class="form-control" type="text" name="text-{{$campo->id}}" id="text-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
+                                                <input class="form-control @error('text-'.$campo->id) is-invalid @enderror" type="text" name="text-{{$campo->id}}" id="text-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('text-'.$campo->id) != null){{old('text-'.$campo->id)}}@endif">
+                                            
+                                                @error('text-'.$campo->id)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
                                             </div>
                                         @elseif($campo->tipo == "cpf")
                                             <div class="col-sm-4"  style="margin-top:10px;">
                                                 <label for="cpf-{{$campo->id}}">{{$campo->titulo}}</label>
-                                                <input id="cpf-{{$campo->id}}" type="text" class="form-control cpf" name="cpf-{{$campo->id}}" autocomplete="cpf" autofocus  @if($campo->obrigatorio) required @endif>
+                                                <input id="cpf-{{$campo->id}}" type="text" class="form-control cpf @error('cpf-'.$campo->id) is-invalid @enderror" name="cpf-{{$campo->id}}" autocomplete="cpf" autofocus  @if($campo->obrigatorio) required @endif value="@if(old('cpf-'.$campo->id) != null){{old('cpf-'.$campo->id)}}@endif">
+                                            
+                                                @error('cpf-'.$campo->id)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
                                             </div>
                                         @elseif($campo->tipo == "contato")
                                             <div class="col-sm-4" style="margin-top:10px;">
                                                 <label for="contato-{{$campo->id}}">{{$campo->titulo}}</label>
-                                                <input id="contato-{{$campo->id}}" type="text" class="form-control celular" name="contato-{{$campo->id}}" autocomplete="contato" autofocus  @if($campo->obrigatorio) required @endif>
+                                                <input id="contato-{{$campo->id}}" type="text" class="form-control celular @error('contato-'.$campo->id) is-invalid @enderror" name="contato-{{$campo->id}}" autocomplete="contato" autofocus  @if($campo->obrigatorio) required @endif value="@if(old('contato-'.$campo->id) != null){{old('contato-'.$campo->id)}}@endif">
+                                            
+                                                @error('contato-'.$campo->id)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
                                             </div>
                                         @elseif($campo->tipo == "file")
                                             <div class="col-sm-12"  style="margin-top:10px;">
-                                                <label for="file-{{$campo->id}}">{{$campo->titulo}}</label><br>
-                                                <input type="file" name="file-{{$campo->id}}" id="file-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
+                                                <label for="file-{{$campo->id}}" class="">{{$campo->titulo}}</label><br>
+                                                <input type="file" id="file-{{$campo->id}}" class="form-control-file  @error('file-'.$campo->id) is-invalid @enderror" name="file-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
+                                                <br>
+                                                @error('file-'.$campo->id)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
                                             </div>
                                         @endif
                                     @endforeach
@@ -155,7 +234,7 @@
                         @endforeach
                         
                         @foreach($evento->categoriasParticipantes as $categoria)
-                            <div id="extra-form-pkt-atv-{{$categoria->id}}" class="extra-form-pkt-atv" style="display: none;">
+                            <div id="extra-form-pkt-atv-{{$categoria->id}}" class="extra-form-pkt-atv" @if(old('categoria') == $categoria->id)style="display: block;"@else style="display: none;" @endif>
                                 <div class="row form-group">
                                     <div class="col-sm-9">
                                         @if ($categoria->promocoes()->count() > 0)

@@ -212,7 +212,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('{id}/inscricoes/nova-inscricao',  'Inscricao\InscricaoController@create')->name('inscricao.create');
   Route::get('inscricoes/atividades-da-promocao','Inscricao\PromocaoController@atividades')->name('promocao.atividades');
   Route::get('inscricoes/checar-cupom',          'Inscricao\CupomDeDescontoController@checar')->name('checar.cupom');
-  Route::get('{id}/inscricoes/nova-inscricao/checar', 'Inscricao\InscricaoController@checarDados')->name('inscricao.checar');
+  Route::post('{id}/inscricoes/nova-inscricao/checar', 'Inscricao\InscricaoController@checarDados')->name('inscricao.checar');
   Route::get('{id}/inscricoes/nova-inscricao/voltar', 'Inscricao\InscricaoController@voltarTela')->name('inscricao.voltar');
   Route::post('/inscricoes/salvar-campo-formulario',  'Inscricao\CampoFormularioController@store')->name('campo.formulario.store');
   Route::post('/inscricoes/campo-excluir/{id}',       'Inscricao\CampoFormularioController@destroy')->name('campo.destroy');
