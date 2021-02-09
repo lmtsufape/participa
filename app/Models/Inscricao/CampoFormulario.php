@@ -19,6 +19,6 @@ class CampoFormulario extends Model
     }
 
     public function inscricoesFeitas() {
-        return $this->belongsToMany('App\Models\Inscricao\Inscricao', 'valor_campo_extras', 'campo_formulario_id', 'inscricao_id');
+        return $this->belongsToMany('App\Models\Inscricao\Inscricao', 'valor_campo_extras', 'campo_formulario_id', 'inscricao_id')->withPivot('valor');
     }
 }

@@ -166,8 +166,12 @@ class InscricaoController extends Controller
         $inscricao = new Inscricao();
         $inscricao->user_id = auth()->user()->id;
         $inscricao->evento_id = $evento->id;
-        $inscricao->promocao_id = $promocao->id;
-        $inscricao->cupom_desconto_id = $cupom->id;
+        if ($promocao != null) {
+            $inscricao->promocao_id = $promocao->id;
+        }
+        if ($cupom != null) {
+            $inscricao->cupom_desconto_id = $cupom->id;
+        }
         $inscricao->pagamento_id = null;
         $inscricao->finalizada = false;
         $inscricao->save();
@@ -179,7 +183,8 @@ class InscricaoController extends Controller
                                                 'promocao'          => $promocao,
                                                 'atividades'        => $atividades,
                                                 'cupom'             => $cupom,
-                                                'valorComDesconto'  => $valorComDesconto]);
+                                                'valorComDesconto'  => $valorComDesconto,
+                                                'inscricao'         => $inscricao]);
     }
 
     public function voltarTela(Request $request, $id) {
@@ -304,5 +309,14 @@ class InscricaoController extends Controller
                 $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('contato-'.$campo->id)]);
             }
         }
+    }
+
+    public function downloadFileCampoExtra($idInscricao, $idCampo) {
+        $inscricao = Inscricao::find($idInscricao);
+        $caminho = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $idCampo)->first()->pivot->valor;
+        if (Storage::disk()->exists($caminho)) {
+            return Storage::download($caminho);
+        }
+        return abort(404);
     }
 }
