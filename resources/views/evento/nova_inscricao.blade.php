@@ -337,7 +337,8 @@
                                 @if (old('valorTotal') != null)
                                     @if (old('valorTotal') == 0)
                                         <p>
-                                            Gratuita <input type="hidden" name="valorTotal" id="valorTotal" value="0">
+                                            <span id="spanValorTotal">Gratuita</span>
+                                            <input type="hidden" name="valorTotal" id="valorTotal" value="0">
                                         </p>
                                     @else 
                                         <p>
@@ -348,7 +349,8 @@
                                 @else 
                                     @if ($evento->valorTaxa <= 0)
                                         <p>
-                                            Gratuita <input type="hidden" name="valorTotal" id="valorTotal" value="0">
+                                            <span id="spanValorTotal">Gratuita</span>
+                                            <input type="hidden" name="valorTotal" id="valorTotal" value="0">
                                         </p>
                                     @else 
                                         <p>
@@ -560,7 +562,6 @@
         $(document).ready(function() {
             var select = document.getElementById('promocao');
             carregarAtividadesDoPacote(select);
-
         });
     @endif
 
@@ -756,7 +757,7 @@
                     }
                 }
             }
-
+            // alert(valorTotal);
             if (valorTotal > 0) {
                 $('#spanValorTotal').html("");
                 $('#spanValorTotal').append(valorTotal.toLocaleString("pt-BR", { style: "currency" , currency:"BRL"}));

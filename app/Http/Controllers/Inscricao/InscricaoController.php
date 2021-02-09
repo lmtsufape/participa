@@ -129,9 +129,8 @@ class InscricaoController extends Controller
         
         $categoria = CategoriaParticipante::find($request->categoria);
         // dd($categoria->camposNecessarios()->orderBy('tipo')->get());
-        $this->validarCamposExtras($request, $categoria);
+        $validatorData = $this->validarCamposExtras($request, $categoria, $validatorData);
         
-
         $evento = Evento::find($id);
         $valorDaInscricao = $request->valorTotal;
         $promocao = null;
@@ -156,7 +155,7 @@ class InscricaoController extends Controller
                 $idsAtvsPromo = $promocao->atividades()->select('atividades.id')->get();
                 foreach ($request->atividades as $atv) {
                     if ($idsAtvsPromo->contains($atv)) {
-                        return redirect()->back()->withErrors(['atvIguais' => "Existem atividades adicionais que já estão presentes na promoção. Logo foram removidas."])->withInput($validatorData);
+                        return redirect()->back()->withErrors(['atvIguais' => "Existem atividades adicionais que já estão presentes no pacote. Logo foram removidas."])->withInput($validatorData);
                     }
                 }
             }
@@ -224,28 +223,32 @@ class InscricaoController extends Controller
         return view('coordenador.programacao.pagamento', compact('evento'));
     }
 
-    public function validarCamposExtras(Request $request, $categoria) {
+    public function validarCamposExtras(Request $request, $categoria, $validate) {
         foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo) {
             switch ($campo->tipo) {
                 case "email": 
                     $validatorData = $request->validate([
                         'email-'.$campo->id => $campo->obrigatorio ? 'required|string|email' : 'nullable|string|email',
                     ]);
+                    $validate = array_merge($validate, $validatorData);
                     break;
                 case "text":
                     $validatorData = $request->validate([
                         'text-'.$campo->id => $campo->obrigatorio ? 'required|string' : 'nullable|string',
                     ]);
+                    $validate = array_merge($validate, $validatorData);
                     break;
                 case "file":
                     $validatorData = $request->validate([
                         'file-'.$campo->id => $campo->obrigatorio ? 'required|file|mimes:pdf|max:2000' : 'nullable|file|mimes:pdf|max:2000',
                     ]);
+                    $validate = array_merge($validate, $validatorData);
                     break;
                 case "date":
                     $validatorData = $request->validate([
                         'date-'.$campo->id => $campo->obrigatorio ? 'required|date' : 'nullable|date',
                     ]);
+                    $validate = array_merge($validate, $validatorData);
                     break;
                 case "endereco":
                     $validatorData = $request->validate([
@@ -257,19 +260,23 @@ class InscricaoController extends Controller
                         'endereco-uf-'.$campo->id           => $campo->obrigatorio ? 'required' : 'nullable',
                         'endereco-numero-'.$campo->id       => $campo->obrigatorio ? 'required' : 'nullable',
                     ]);
+                    $validate = array_merge($validate, $validatorData);
                     break;
                 case "cpf":
                     $validatorData = $request->validate([
                         'cpf-'.$campo->id => $campo->obrigatorio ? 'required|cpf' : 'nullable|cpf',
                     ]);
+                    $validate = array_merge($validate, $validatorData);
                     break;
                 case "contato":
                     $validatorData = $request->validate([
                         'contato-'.$campo->id => $campo->obrigatorio ? 'required|telefone' : 'nullable|telefone',
                     ]);
+                    $validate = array_merge($validate, $validatorData);
                     break;
             }
         }
+        return $validate;
     }
 
     public function salvarCamposExtras($inscricao, Request $request, $categoria) {
