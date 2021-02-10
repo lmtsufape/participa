@@ -283,7 +283,7 @@
     <script type="text/javascript">
         function voltarTela() {
             var form = document.getElementById('formConfirmarInscricao');
-            form.action = "{{route('inscricao.voltar', ['id' => $evento->id])}}";
+            form.action = "{{route('inscricao.voltar', ['id' => $inscricao->id])}}";
             form.method = "GET";
             form.submit();
         }

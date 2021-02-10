@@ -24,6 +24,9 @@ class CreateInscricaosTable extends Migration
             $table->bigInteger("evento_id")->nullable();
             $table->foreign("evento_id")->references("id")->on("eventos");
 
+            $table->bigInteger("categoria_participante_id");
+            $table->foreign("categoria_participante_id")->references("id")->on("categoria_participantes");
+            
             $table->bigInteger("pagamento_id")->nullable();
             $table->foreign("pagamento_id")->references("id")->on("pagamentos");
 

@@ -34,4 +34,8 @@ class Inscricao extends Model
     public function camposPreenchidos() {
         return $this->belongsToMany('App\Models\Inscricao\CampoFormulario', 'valor_campo_extras', 'inscricao_id', 'campo_formulario_id')->withPivot('valor');
     }
+
+    public function categoria() {
+        return $this->belongsTo('App\Models\Inscricao\CategoriaParticipante', 'categoria_participante_id');
+    }
 }
