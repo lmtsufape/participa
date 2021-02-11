@@ -159,7 +159,7 @@ class InscricaoController extends Controller
             'valorPromocao'     => 'nullable',
             'descricaoPromo'    => 'nullable',
         ]);
-        
+
         $categoria = CategoriaParticipante::find($request->categoria);
         // dd($categoria->camposNecessarios()->orderBy('tipo')->get());
         $validatorData = $this->validarCamposExtras($request, $categoria, $validatorData);
@@ -169,9 +169,16 @@ class InscricaoController extends Controller
         $promocao = null;
         $atividades = null;
         $valorComDesconto = null;
-        $cupom = CupomDeDesconto::where([['evento_id', $evento->id],['identificador', '=', $request->cupom]])->first();
+        $cupom = null;
 
-        if ($request->cupom != null) {
+        if ($request->revisandoInscricao != null) {
+            $inscricao = Inscricao::find($request->revisandoInscricao);
+            $cupom = $inscricao->cupomDesconto;
+        } else {
+            $cupom = CupomDeDesconto::where([['evento_id', $evento->id],['identificador', '=', $request->cupom]])->first();
+        }
+
+        if ($request->cupom != null || $request->revisandoInscricao != null) {
             if ($cupom != null && $cupom->porcentagem) {
                 $valorComDesconto = $valorDaInscricao - $valorDaInscricao * ($cupom->valor / 100);
             } else {

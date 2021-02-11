@@ -253,7 +253,7 @@
             </div>
         @endif
         <div class="row">
-            <div class="@if($cupom != null) col-sm-3 @else col-sm-6 @endif">
+            <div class="@if($inscricao->cupomDesconto != null) col-sm-3 @else col-sm-6 @endif">
                 <label for="metodo">Método de pagamento</label>
                 <select name="metodo" class="form-control" id="metodo" required>
                     <option value="" selected disabled>-- Selecione o método --</option>
@@ -261,11 +261,32 @@
                     <option value="cartao">Cartão de Crédito</option>
                 </select>
             </div>
-            <div class="@if($cupom != null) col-sm-3 @else col-sm-6 @endif">
+            <div class="@if($inscricao->cupomDesconto != null) col-sm-3 @else col-sm-6 @endif">
                 <label for="valorTotal">Valor total</label>
                 <input id="valorTotal" type="text" class="form-control" disabled value="R$ {{number_format($valor, 2,',','.')}}">
-                <input type="hidden" name="valorTotal" value="{{$valor}}">
+                <input type="hidden" @if($inscricao->cupomDesconto == null) name="valorTotal" @endif value="{{$valor}}">
             </div>
+            @if ($inscricao->cupomDesconto != null)
+                <div class="col-sm-3">
+                    <label for="cupom">Cupom de desconto</label>
+                    <input type="text" id="cupom" disabled class="form-control" value="{{$inscricao->cupomDesconto->identificador}}">
+                    <input type="hidden" name="cupom" value="{{$inscricao->cupomDesconto->id}}">
+                    @if ($inscricao->cupomDesconto->porcentagem)
+                        <small>O cupom vale {{$inscricao->cupomDesconto->valor}}% de desconto.</small>
+                    @else 
+                        <small>O cupom vale R$ {{number_format($inscricao->cupomDesconto->valor, 2,',','.')}} de desconto.</small>
+                    @endif
+                </div>
+                <div class="col-sm-3">
+                    <label for="valorComDesconto">Valor final</label>
+                    <input type="hidden" name="valorFinal" value="{{$valorComDesconto}}">
+                    @if ($valorComDesconto <= 0)
+                        <input type="text" id="valorTotal" @if($inscricao->cupomDesconto != null) name="valorTotal" @endif disabled class="form-control" value="R$ {{number_format(0, 2,',','.')}}">
+                    @else 
+                        <input type="text" id="valorTotal" @if($inscricao->cupomDesconto != null) name="valorTotal" @endif disabled class="form-control" value="R$ {{number_format($valorComDesconto, 2,',','.')}}">
+                    @endif
+                </div>
+            @endif
             
             {{--  --}}
         </div>
