@@ -165,6 +165,10 @@ class CampoFormularioController extends Controller
         // Checar erros futuros após a criação da inscrição
         $campo = CampoFormulario::find($id);
 
+        if(count($campo->inscricoesFeitas) > 0) {
+            return redirect()->back()->with(['excluirCampoExtra' => 'Não foi possivel excluir, há inscrições realizadas que utilizam o campo.']);
+        }
+
         foreach ($campo->categorias as $categoria) {
             $campo->categorias()->detach($categoria->id);
         }
