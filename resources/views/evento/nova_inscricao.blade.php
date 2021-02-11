@@ -1300,11 +1300,30 @@
                 divs_pacotes[i].style.display = "none";
             }
 
-            console.log(select.value)
-
             document.getElementById("campos-extras-"+select.value).style.display = "block";
             document.getElementById("extra-form-pkt-atv-"+select.value).style.display = "block";
             
+            $.ajax({
+                url: "{{route('ajax.valor.categoria')}}",
+                method: 'get',
+                type: 'get',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    categoria_id: select.value,
+                },
+                success: function(valorCategoria){
+                    var valor = valorCategoria.valor;
+                    if (valor > 0) {
+                        $('#spanValorTotal').html("");
+                        $('#spanValorTotal').append("R$ " + Number(valor).toFixed(2));
+                        document.getElementById('valorTotal').value = valor;
+                    } else {
+                        $('#spanValorTotal').html("");
+                        $('#spanValorTotal').append("Gratuita");
+                        document.getElementById('valorTotal').value = 0;
+                    }
+                }
+            });
         }
     }
 

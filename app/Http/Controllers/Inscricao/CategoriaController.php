@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\ValorCategoria;
 use App\Models\Submissao\Evento;
+use Carbon\Carbon;
 
 class CategoriaController extends Controller
 {
@@ -185,5 +186,25 @@ class CategoriaController extends Controller
         $categoria->delete();
 
         return redirect()->back()->with(['mensagem' => 'Categoria excluida com sucesso!']);
+    }
+
+    public function valorAjax(Request $request) {
+        $categoria = CategoriaParticipante::find($request->categoria_id);
+
+        $hoje = Carbon::now('America/Recife')->subHours(3);
+
+        foreach ($categoria->valores as $lote) {
+            if ($hoje > Carbon::create($lote->inicio_prazo) && $hoje < Carbon::create($lote->fim_prazo)) {
+                if ($lote->porcentagem) {
+                    $valor = $categoria->valor_total - ($categoria->valor_total * $lote->valor / 100);
+                    return response()->json(collect(['valor' => $valor]));
+                } else {
+                    $valor = $categoria->valor_total - $lote->valor;
+                    return response()->json(collect(['valor' => $valor]));
+                }
+            }
+        }
+        
+        return response()->json(collect(['valor' => $categoria->valor_total]));
     }
 }
