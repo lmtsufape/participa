@@ -243,6 +243,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('{id}/inscricoes/excluir-categoria',    'Inscricao\CategoriaController@destroy')->name('categoria.destroy');
   Route::post('{id}/inscricoes/atualizar-categoria', 'Inscricao\CategoriaController@update')->name('categoria.participante.update');
   Route::get('valor/categoria',                      'Inscricao\CategoriaController@valorAjax')->name('ajax.valor.categoria');
+  Route::get('confirmar-inscricao',            'Inscricao\InscricaoController@store')->name('inscricao.confirmar');
+
 });
 
 // Auth::routes();

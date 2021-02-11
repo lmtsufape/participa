@@ -4,6 +4,7 @@
 <div class="container">
     <form id="formConfirmarInscricao" action="" method="">
         @csrf
+        <input type="hidden" name="inscricao_id" value="{{$inscricao->id}}">
         <div class="row justify-content-center titulo">
             <div class="col-sm-12">
                 <h1>Revise os dados e confirme o pagamento</h1>
@@ -60,7 +61,7 @@
             @else 
                 <div class="col-sm-6">
                     <label>Taxa do evento</label>
-                    <input type="text" class="form-control" disabled value="{{$evento->valorTaxas}}">
+                    <input type="text" class="form-control" disabled value="{{$inscricao->categoria->valor_total}}">
                 </div>
             @endif
         </div>
@@ -289,6 +290,25 @@
         }
 
         function confirmarInscricao() {
+            $.ajax({
+                url: "{{route('inscricao.confirmar')}}",
+                method: 'get',
+                type: 'get',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    inscricao_id: '{{$inscricao->id}}',
+                },
+                statusCode: {
+                    200: function() {
+                        alert('Inscrição salva, redirecionando para o pagamento...');
+                        pagamento();
+                    }
+                }
+            });
+            
+        }
+
+        function pagamento() {
             var form = document.getElementById('formConfirmarInscricao');
             form.action = "{{route('checkout.index', ['id' => $evento->id])}}"
             form.method = "POST";

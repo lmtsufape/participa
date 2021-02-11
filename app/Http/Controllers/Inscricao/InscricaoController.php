@@ -48,10 +48,12 @@ class InscricaoController extends Controller
     public function create($id)
     {
         $evento = Evento::find($id);
-        $inscricao = auth()->user()->inscricaos()->where('evento_id', '=', $evento->id)->first();
+        $inscricoes = auth()->user()->inscricaos()->where([['evento_id', '=', $evento->id], ['finalizada', '=', false]])->get();
         
-        if ($inscricao != null) {
-            $this->destroy($inscricao->id);
+        foreach ($inscricoes as $inscricao){
+            if ($inscricao != null) {
+                $this->destroy($inscricao->id);
+            }
         }
         
         return view('evento.nova_inscricao', ['evento'              => $evento,
@@ -71,7 +73,14 @@ class InscricaoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $inscricao = Inscricao::find($request->inscricao_id);
+
+        if ($inscricao != null) {
+            $inscricao->finalizada = true;
+            $inscricao->update();
+            return response()->json("OK.", 200);
+        }
+        return response()->json("Não encontrado.", 404);
     }
 
     /**
