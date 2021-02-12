@@ -396,7 +396,7 @@
                     "</div>"+
                     "<div class="+"col-sm-1"+">"+
                         "<a href="+"#"+" class="+"delete"+">"+
-                            "<img src="+"/img/icons/lixo.png"+" style="+"width:25px;margin-top:35px"+">"+
+                            "<img src="+"{{asset('img/icons/lixo.png')}}"+" style="+"width:25px;margin-top:35px"+">"+
                         "</a>"+
                     "</div>"+
                     "<div class='container'>" +
@@ -412,7 +412,7 @@
                             "</div>" +
                             "<div class='col-sm-1'>" +
                                 "<a href="+"#"+" onclick="+"addOpcaoCriterio(this,"+contadorOpcoes+")"+">"+
-                                    "<img src="+"{{ asset('/img/icons/plus-square-solid_black.svg')}}"+" style="+"width:25px;margin-top:5px"+">"+
+                                    "<img src="+"{{ asset('img/icons/plus-square-solid_black.svg')}}"+" style="+"width:25px;margin-top:5px"+">"+
                                 "</a>" +
                             "</div>" +
                         "</div>" +
@@ -872,16 +872,14 @@
     });
   });
 
-    function cadastrarCriterio() {
-        var form = document.getElementById('formCadastrarCriterio');
-        var modalidade = document.getElementById('modalidade');
+    // function cadastrarCriterio() {
+    //     var form = document.getElementById('formCadastrarCriterio');
+    //     var modalidade = document.getElementById('modalidade');
 
-        if (modalidade.value != "") {
-            form.submit();
-        } else {
-            alert("Escolha uma modalidade");
-        }
-    }
+    //     if (modalidade.value != "") {
+    //         form.submit();
+    //     } 
+    // }
 
     function myFunction(item, index) {
       // document.getElementById("demo").innerHTML += index + ":" + item + "<br>";
