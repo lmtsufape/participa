@@ -195,8 +195,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('/user/trabalhos', 'Users\UserController@meusTrabalhos')->name('user.meusTrabalhos');
 
   // Cadastrar Comissão
-  Route::post('/evento/cadastrarComissao','ComissaoController@store'                   )->name('cadastrar.comissao');
-  Route::post('/evento/cadastrarCoordComissao','ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
+  Route::post('/evento/cadastrarComissao','Users\ComissaoController@store'                   )->name('cadastrar.comissao');
+  Route::post('/evento/cadastrarCoordComissao','Users\ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
 
   
 

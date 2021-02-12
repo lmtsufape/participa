@@ -341,14 +341,16 @@
     });
 
     function exibirLimite(id, input) {
+        alert(input.value == "caracteres");
         var caracteres = document.getElementById('caracteres' + id);
         var palavras = document.getElementById('palavras' + id);
+        alert(caracteres.style.display);
         if (input.value == "caracteres") {
-            caracteres.style.display    = "block";
+            caracteres.style.display    = "";
             palavras.style.display      = "none";
         } else {
             caracteres.style.display    = "none";
-            palavras.style.display      = "block";
+            palavras.style.display      = "";
         }
     }
 
