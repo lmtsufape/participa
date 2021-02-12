@@ -955,56 +955,109 @@
         });
     }
 
-    function salvarTipoAtividadeAjax() {
-        $.ajax({
-            url: "/coord/evento/tipo-de-atividade/new/" + $('#nomeTipo').val(),
-            method: 'get',
-            type: 'get',
-            data: {
-                _token: '{{csrf_token()}}',
-                name: $('#nomeNovoTipo').val(),  
-            },
-            statusCode: {
-                404: function() {
-                    alert("O nome é obrigatório");
-                }
-            },
-            success: function(data){
-                // var data = JSON.parse(result);
-                if (data != null) {
-                    if (data.length > 0) {
-                        if($('#tipo').val() == null || $('#tipo').val() == ""){
-                            var option = '<option selected disabled>-- Tipo --</option>';
-                        }
-                        $.each(data, function(i, obj) {
-                            if($('#tipo').val() != null && $('#tipo').val() == obj.id && i > 0){
-                                option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
-                            } else if (i == 0) {
-                                option = '<option selected disabled>-- Tipo --</option>';
-                            } else {
-                                option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
-                            }
-                        })
-                    } else {
-                        var option = "<option selected disabled>-- Tipo --</option>";
+    function salvarTipoAtividadeAjax(id) {
+        if (id == 0) {
+            $.ajax({
+                url: "{{route('coord.tipo.store.ajax')}}",
+                method: 'get',
+                type: 'get',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    name: $('#nomeTipo').val(),  
+                    evento_id: "{{$evento->id}}",  
+                },
+                statusCode: {
+                    404: function() {
+                        alert("O nome é obrigatório");
                     }
-                    $('#tipo').html(option).show();
-                    if (data.length > 0) {
-                        for(var i = 0; i < data.length; i++) {
-                            // console.log('---------------------------------'+i+'------------------------');
-                            // console.log(data[i].descricao);
-                            // console.log(document.getElementById('nomeTipo').value);
-                            // console.log(data[i].descricao === document.getElementById('nomeTipo').value);
-                            if (data[i].descricao === document.getElementById('nomeTipo').value) {
-                                document.getElementById('tipo').selectedIndex = i;
+                },
+                success: function(data){
+                    // var data = JSON.parse(result);
+                    if (data != null) {
+                        if (data.length > 0) {
+                            if($('#tipo').val() == null || $('#tipo').val() == ""){
+                                var option = '<option selected disabled>-- Tipo --</option>';
+                            }
+                            $.each(data, function(i, obj) {
+                                if($('#tipo').val() != null && $('#tipo').val() == obj.id && i > 0){
+                                    option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                                } else if (i == 0) {
+                                    option = '<option selected disabled>-- Tipo --</option>';
+                                } else {
+                                    option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                                }
+                            })
+                        } else {
+                            var option = "<option selected disabled>-- Tipo --</option>";
+                        }
+                        $('#tipo').html(option).show();
+                        if (data.length > 0) {
+                            for(var i = 0; i < data.length; i++) {
+                                // console.log('---------------------------------'+i+'------------------------');
+                                // console.log(data[i].descricao);
+                                // console.log(document.getElementById('nomeTipo').value);
+                                // console.log(data[i].descricao === document.getElementById('nomeTipo').value);
+                                if (data[i].descricao === document.getElementById('nomeTipo').value) {
+                                    document.getElementById('tipo').selectedIndex = i;
+                                }
                             }
                         }
+                        document.getElementById('nomeTipo').value = "";
+                        $('#buttomFormNovoTipoAtividade').click();
                     }
-                    document.getElementById('nomeTipo').value = "";
-                    $('#buttomFormNovoTipoAtividade').click();
                 }
-            }
-        });
+            });
+        } else {
+            $.ajax({
+                url: "{{route('coord.tipo.store.ajax')}}",
+                method: 'get',
+                type: 'get',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    name: $('#nomeTipo'+id).val(),
+                    evento_id: "{{$evento->id}}",  
+                },
+                statusCode: {
+                    404: function() {
+                        alert("O nome é obrigatório");
+                    }
+                },
+                success: function(data){
+                    if (data != null) {
+                        if (data.length > 0) {
+                            if($('#tipo'+id).val() == null || $('#tipo'+id).val() == ""){
+                                var option = '<option selected disabled>-- Tipo --</option>';
+                            }
+                            $.each(data, function(i, obj) {
+                                if($('#tipo'+id).val() != null && $('#tipo'+id).val() == obj.id && i > 0){
+                                    option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                                } else if (i == 0) {
+                                    option = '<option selected disabled>-- Tipo --</option>';
+                                } else {
+                                    option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                                }
+                            })
+                        } else {
+                            var option = "<option selected disabled>-- Tipo --</option>";
+                        }
+                        $('#tipo'+id).html(option).show();
+                        if (data.length > 0) {
+                            for(var i = 0; i < data.length; i++) {
+                                // console.log('---------------------------------'+i+'------------------------');
+                                // console.log(data[i].descricao);
+                                // console.log(document.getElementById('nomeTipo').value);
+                                // console.log(data[i].descricao === document.getElementById('nomeTipo').value);
+                                if (data[i].descricao === document.getElementById('nomeTipo'+id).value) {
+                                    document.getElementById('tipo'+id).selectedIndex = i;
+                                }
+                            }
+                        }
+                        document.getElementById('nomeTipo'+id).value = "";
+                        $('#buttomFormNovoTipoAtividade'+id).click();
+                    }
+                }
+            });
+        }
     }
 
     //Funções do form de atividades da programação
@@ -1160,15 +1213,6 @@
             form.submit();
         });
 
-        //Função para controlar a exibição da div para cadastro de um novo tipo de atividade
-        $('#buttomFormNovoTipoAtividade').click(function(){
-            if (document.getElementById('formNovoTipoAtividade').style.display == "block") {
-                document.getElementById('formNovoTipoAtividade').style.display = "none";
-            } else {
-                document.getElementById('formNovoTipoAtividade').style.display = "block";
-            }
-        });
-
         //Função para controlar a exibição da div para cadastro de um novo tipo de função de convidado
         $('#buttonformNovaFuncaoDeConvidado').click(function() {
             if (document.getElementById('formNovaFuncaoDeConvidado').style.display == "block") {
@@ -1180,7 +1224,24 @@
 
         
     });
-    
+
+    //Função para controlar a exibição da div para cadastro de um novo tipo de atividade
+    function exibirFormTipoAtividade(id) {
+        if (id == 0) {
+            if (document.getElementById('formNovoTipoAtividade').style.display == "block") {
+                document.getElementById('formNovoTipoAtividade').style.display = "none";
+            } else {
+                document.getElementById('formNovoTipoAtividade').style.display = "block";
+            }
+        } else {
+            if (document.getElementById('formNovoTipoAtividade'+id).style.display == "block") {
+                document.getElementById('formNovoTipoAtividade'+id).style.display = "none";
+            } else {
+                document.getElementById('formNovoTipoAtividade'+id).style.display = "block";
+            }
+        }
+    }
+
     $(document).ready(function($){
         $(".apenasLetras").mask("#", {
             maxlength: false,

@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Submissao;
 use App\Models\Submissao\TipoAtividade;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Users\ComissaoEvento;
+use App\Models\Users\ComissaoOrganizadoraEvento;
+use App\Models\Submissao\Evento;
 
 class TipoAtividadeController extends Controller
 {
@@ -40,17 +43,26 @@ class TipoAtividadeController extends Controller
     }
 
     // Salvar uma nova tipo de atividade
-    public function storeAjax($nome = "") {
-        if ($nome != "") {
-            $tipoAtv = new TipoAtividade();
-            $tipoAtv->descricao = $nome;
-            $tipoAtv->save();
+    public function storeAjax(Request $request) {
+        $evento = Evento::find($request->evento_id);
+        if (auth()->user()->id == $evento->coordenadorId || $evento->usuariosDaComissao->contains(auth()->user()) || $evento->usuariosDaComissaoOrganizadora->contains(auth()->user())) {
+            
+            if ($request->name == null) {
+                return response()->json("Nome não contido na requição.", 404);
+            }
 
-            $tiposAtividades = TipoAtividade::orderBy('descricao')->get();
-            // dd($tiposAtividades);
-            return $tiposAtividades;
+            $tipo = new TipoAtividade();
+            $tipo->descricao = $request->name;
+            $tipo->evento_id = $evento->id;
+            $tipo->save();
+
+            $tiposAtividades = TipoAtividade::where('evento_id', '=', $evento->id)->get();
+
+            return response()->json($tiposAtividades);
+        } else {
+            return response()->json("Usuário não autorizado.", 403);
         }
-        return null;
+        
     }
 
     /**
