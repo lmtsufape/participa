@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container content">
+<div class="container content" style="position: relative; top: 50px;">
     <div class="row titulo">
         <h1>Cadastro</h1>
     </div>
@@ -231,6 +231,11 @@
     </form>
 
 </div>
+
+<br>
+<br> 
+@include('componentes.footer')
+
 @endsection
 
 @section('javascript')

@@ -17,7 +17,7 @@ class CreateEventosTable extends Migration
             $table->bigIncrements('id');
             $table->string('nome')->nullable();
             // $table->integer('numeroParticipantes');
-            $table->string('descricao')->nullable();
+            $table->text('descricao')->nullable();
             $table->string('tipo')->nullable();
             $table->date('dataInicio')->nullable();
             $table->date('dataFim')->nullable();
@@ -28,7 +28,7 @@ class CreateEventosTable extends Migration
             $table->integer('numMaxTrabalhos')->nullable();
             $table->integer('numMaxCoautores')->nullable();
             // $table->boolean('possuiTaxa');
-            $table->double('valorTaxa');
+            $table->string('recolhimento')->nullable();
             $table->string('fotoEvento')->nullable();
             $table->boolean('publicado')->default('false');
 

@@ -17,6 +17,9 @@ class CreateTipoAtividadesTable extends Migration
             $table->bigIncrements('id');
             $table->string('descricao');
             $table->timestamps();
+
+            $table->bigInteger('evento_id');
+            $table->foreign("evento_id")->references("id")->on("eventos");
         });
     }
 

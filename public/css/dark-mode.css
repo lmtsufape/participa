@@ -1,0 +1,97 @@
+
+.clicavel {
+  cursor: pointer;
+}
+
+.dark-mode body {
+  transition: 1s;
+  background-color: rgb(41, 41, 41);
+}
+
+.dark-mode .evento-atual {
+  transition: 1s;
+  background-color: rgb(41, 41, 41);
+  color: white;
+}
+
+.dark-mode body .barra-horizontal h2 {
+  color: white;
+}
+
+.dark-mode .titulo {
+  color: white;
+}
+
+.dark-mode .subtitulo {
+  color: white;
+}
+
+.dark-mode .titulo-detalhes {
+  color: white;
+}
+
+.dark-mode .table-trabalhos table {
+  color: white;
+}
+
+.dark-mode .table-trabalhos tr:hover {
+  color: white;
+  background-color: rgb(107, 107, 107);
+}
+
+.dark-mode .div-listar-usuarios table {
+  color: white;
+}
+
+.dark-mode .div-listar-usuarios .modal {
+  color: black;
+}
+
+.dark-mode .div-listar-usuarios tr:hover {
+  color: white;
+  background-color: rgb(107, 107, 107);
+}
+
+.dark-mode .content .titulo {
+  color: white;
+}
+
+.dark-mode .content .subtitulo {
+  color: white;
+}
+
+.dark-mode .content label {
+  color: white;
+}
+
+.dark-mode .card-login-cadastro label {
+  color: black;
+} 
+
+.dark-mode .card-change-mode .titulo {
+  color: black;
+}
+
+.dark-mode .card-change-mode .subtitulo {
+  color: black;
+}
+
+.dark-mode #change-mode {
+  transition: 1s;
+}
+
+html {
+  transition: 1s;
+}
+
+body {
+  transition: 1s;
+}
+
+.dark-mode {
+  transition: 1s;
+}
+
+.dark-mode #form-buscar-eventos {
+  color: white;
+}

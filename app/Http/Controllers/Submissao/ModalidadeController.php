@@ -63,7 +63,7 @@ class ModalidadeController extends Controller
             'fimDaSubmissão'    => ['required', 'date', 'after:inícioDaSubmissão'],
             'inícioDaRevisão'   => ['required', 'date', 'after:inícioDaSubmissão'],
             'fimDaRevisão'      => ['required', 'date', 'after:inícioDaRevisão'],
-            'inícioDoResultado' => ['required', 'date', 'after:fimDaRevisão'],
+            'resultado' => ['required', 'date', 'after:fimDaRevisão'],
             'mincaracteres'     => ['nullable', 'integer'],
             'maxcaracteres'     => ['nullable', 'integer'],
             'minpalavras'       => ['nullable', 'integer'],
@@ -115,7 +115,7 @@ class ModalidadeController extends Controller
         $modalidade->fimSubmissao       = $request->input("fimDaSubmissão");
         $modalidade->inicioRevisao      = $request->input("inícioDaRevisão");
         $modalidade->fimRevisao         = $request->input("fimDaRevisão");
-        $modalidade->inicioResultado    = $request->input("inícioDoResultado");
+        $modalidade->inicioResultado    = $request->resultado;
         $modalidade->arquivo            = $request->arquivo;
         $modalidade->caracteres         = $caracteres;
         $modalidade->palavras           = $palavras;
@@ -199,7 +199,7 @@ class ModalidadeController extends Controller
             'fimSubmissão'           => ['required', 'date', 'after:inícioSubmissão'],
             'inícioRevisão'          => ['required', 'date', 'after:inícioSubmissão'],
             'fimRevisão'             => ['required', 'date', 'after:inícioRevisão'],
-            'inicioResultado'        => ['required', 'date', 'after:fimRevisão'],
+            'resultado'              => ['required', 'date', 'after:fimRevisão'],
             'mincaracteres'          => ['nullable', 'integer'],
             'maxcaracteres'          => ['nullable', 'integer'],
             'minpalavras'            => ['nullable', 'integer'],
@@ -217,7 +217,7 @@ class ModalidadeController extends Controller
         }
 
         // Condição para opção de caracteres escolhida 
-        if ($request->limitEdit == "caracteres") {
+        if ($request->limit == "limit-option1") {
             // Verifica se um campo foi deixado em branco
             if ($request->mincaracteres == null || $request->maxcaracteres == null){
                 return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado']);
@@ -230,7 +230,7 @@ class ModalidadeController extends Controller
             $modalidadeEdit->maxpalavras         = null;
         }
         // Condição para opção de palavras escolhida
-        if ($request->limitEdit == "palavras") {
+        if ($request->limit == "limit-option2") {
             // Verifica se um campo foi deixado em branco
             if ($request->minpalavras == null || $request->maxpalavras == null){
                 return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado']);
@@ -287,7 +287,7 @@ class ModalidadeController extends Controller
         $modalidadeEdit->fimSubmissao        = $request->input('fimSubmissão');
         $modalidadeEdit->inicioRevisao       = $request->input('inícioRevisão');
         $modalidadeEdit->fimRevisao          = $request->input('fimRevisão');
-        $modalidadeEdit->inicioResultado     = $request->inicioResultado;
+        $modalidadeEdit->inicioResultado     = $request->resultado;
         // $modalidadeEdit->texto               = $texto;
         $modalidadeEdit->arquivo             = $request->arquivoEdit;
         $modalidadeEdit->caracteres          = $caracteres;

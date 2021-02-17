@@ -25,4 +25,8 @@ class CategoriaParticipante extends Model
     public function promocoes() {
         return $this->belongsToMany('App\Models\Inscricao\Promocao', 'exibir_promocaos', 'categoria_participante_id', 'promocao_id');
     }
+
+    public function inscricoes() {
+        return $this->hasMany('App\Models\Inscricao\Inscricao', 'categoria_participante_id');
+    }
 }
