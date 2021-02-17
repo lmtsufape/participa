@@ -389,9 +389,13 @@ class EventoController extends Controller
       $data['enderecoId'] = $endereco->id;
       $evento = Evento::create($data);
 
-      // Se o evento tem foto
-      $evento->fotoEvento = $this->uploadFile($request);
+      $evento->coordenadorId = auth()->user()->id;
       $evento->save();
+      // Se o evento tem foto
+      if ($request->fotoEvento != null) {
+        $evento->fotoEvento = $this->uploadFile($request);
+        $evento->save();
+      }
 
       $user = Auth::user();
       $subject = "Evento Criado";
@@ -404,7 +408,7 @@ class EventoController extends Controller
         'eventoId' => $evento->id,
       ]);
 
-      return redirect()->route('coord.home');
+      return redirect()->route('home');
     }
 
     public function uploadFile($request,$evento){

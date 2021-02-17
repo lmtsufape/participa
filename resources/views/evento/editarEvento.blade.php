@@ -118,7 +118,7 @@
                             @enderror
                         </div>
                     </div>{{-- end nome | Participantes | Tipo--}}
-
+                    <br>
                     {{-- Descricao Evento --}}
                     <div class="row justify-content-center">
                         <div class="col-sm-7">

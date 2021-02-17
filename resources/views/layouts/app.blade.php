@@ -91,31 +91,31 @@
                             <!-- Authentication Links -->
                             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                     @guest
-                                        <a class="nav-link" href="{{ route('index') }}" >
+                                        <a class="nav-link" href="{{ route('index') }}" style="margin-right: 5px; margin-left: 5px">
                                             Início 
                                         </a>
                                     @else
-                                        <a class="nav-link" href="{{ route('home') }}" >
+                                        <a class="nav-link" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
                                             Início
                                         </a>
                                     @endguest
                             </div>
                             @guest
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
+                                    {{-- <a class="nav-link" data-toggle="modal" data-target="#modalLogin">{{ __('Login') }}</a> --}}
+                                </li>
                                 @if (Route::has('register'))
-                                    <li class="nav-item" style="margin-right: 10px; margin-left: 10px">
-                                        <a class="nav-link" href="{{ route('register') }}">{{ __('Cadastre seu evento') }}</a>
+                                    <li class="nav-item" style="margin-right: 5px; margin-left: 5px">
+                                        <a class="nav-link" href="{{ route('register') }}">{{ __('Cadastre-se') }}</a>
                                         {{-- <a class="nav-link" data-toggle="modal" data-target="#modalCadastro">{{ __('Cadastro') }}</a> --}}
                                     </li>
                                 @endif
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                    {{-- <a class="nav-link" data-toggle="modal" data-target="#modalLogin">{{ __('Login') }}</a> --}}
-                                </li>
                             @else
 
                                     {{-- $ComissaoEvento = ComissaoEvento::where('user_id', Auth::user()->id)->first(); --}}
                                 
-                                <li class="nav-item dropdown" style="margin-right: 10px; margin-left: 10px">
+                                <li class="nav-item dropdown" style="margin-right: 5px; margin-left: 5px">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                         Perfis <span class="caret"></span>
                                     </a>
