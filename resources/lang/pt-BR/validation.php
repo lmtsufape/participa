@@ -173,8 +173,10 @@ return [
             'required'  => 'O campo fim é obrigatório.',
             'date'      => 'O campo deve ter uma data válida.',
             'after'     => 'A data informada deve ser depois do início.',
+        ],
+        'dataInicio'    => [
+            'after'     => 'A data informada deve ser depois de ontem.'
         ]
-
     ],
     /*
     |--------------------------------------------------------------------------
