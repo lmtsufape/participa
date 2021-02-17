@@ -21,7 +21,7 @@
       </div>
 
     {{-- Tabela Trabalhos --}}
-    <div class="row">
+    <div class="row table-trabalhos">
       <div class="col-sm-12">
         
         <form action="{{route('atribuicao.check')}}" method="post">

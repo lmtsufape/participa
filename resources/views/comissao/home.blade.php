@@ -2,10 +2,10 @@
 
 @section('content')
 
-<div class="container">
+<div class="container"  style="position: relative; top: 80px;">
 
     {{-- titulo da página --}}
-    <div class="row justify-content-center titulo">
+    <div class="row justify-content-center titulo-detalhes">
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-10">

@@ -98,9 +98,9 @@
 
                             <div class="col-sm-6">
                                 <label for="inicioResultado" class="col-form-label">{{ __('Resultado') }}</label>
-                                <input id="inicioResultado" type="datetime-local" class="form-control @error('inícioDoResultado') is-invalid @enderror" name="inícioDoResultado" value="{{ old('inícioDoResultado') }}" autocomplete="inicioResultado" autofocus>
+                                <input id="inicioResultado" type="datetime-local" class="form-control @error('resultado') is-invalid @enderror" name="resultado" value="{{ old('resultado') }}" autocomplete="inicioResultado" autofocus>
 
-                                @error('inícioDoResultado')
+                                @error('resultado')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

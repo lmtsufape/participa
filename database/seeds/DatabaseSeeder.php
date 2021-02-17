@@ -68,7 +68,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'numMaxTrabalhos' => 2,
           'numMaxCoautores' => 5,
           // 'possuiTaxa'=>true,
-          'valorTaxa'=>10,
+          'recolhimento'=>'pago',
           'enderecoId'=>2,
           'coordenadorId'=>1,
           'publicado'=>true,
@@ -207,14 +207,17 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
 
         DB::table('tipo_atividades')->insert([  //
           'descricao' => 'palestra',
+          'evento_id' => 1,
         ]);
 
         DB::table('tipo_atividades')->insert([  //
           'descricao' => 'minicurso',
+          'evento_id' => 1,
         ]);
 
         DB::table('tipo_atividades')->insert([  //
           'descricao' => 'oficina',
+          'evento_id' => 1,
         ]);
 
         DB::table('atividades')->insert([  //
