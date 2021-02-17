@@ -53,14 +53,17 @@
                                       </a>
                                     </form>
                                   </td>
-                                  <td style="text-align:center">
-                                      <form action="{{route('revisor.email')}}" method="POST" >
+                                  <td >
+                                      {{-- <form action="{{route('revisor.email')}}" method="POST" >
                                         @csrf
                                           <input type="hidden" name="user" value= '@json($revisor->user)'>
                                           <button class="btn btn-primary btn-sm" type="submit">
                                               Enviar e-mail
                                           </button>
-                                      </form>
+                                      </form> --}}
+                                      @component('componentes.modal', ['email' => $revisor->user->email, 'evento' => $evento])
+                            
+                                      @endcomponent
                                   </td>
                                 </tr>
                               @endforeach

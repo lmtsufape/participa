@@ -30,7 +30,7 @@ class CreateEventosTable extends Migration
             // $table->boolean('possuiTaxa');
             $table->string('recolhimento')->nullable();
             $table->string('fotoEvento')->nullable();
-            $table->boolean('publicado')->nullable();
+            $table->boolean('publicado')->default('false');
 
             $table->integer('coord_comissao_cientifica_id')->nullable();
             $table->integer('coord_comissao_organizadora_id')->nullable();

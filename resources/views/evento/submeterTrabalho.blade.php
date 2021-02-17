@@ -44,18 +44,43 @@
                             </div>
                           @endif
                           @if ($indice == "etiquetaautortrabalho")
-                            <div class="row justify-content-center">
-                              {{-- Autor  --}}
+                            {{-- <div class="row justify-content-center">
+                               Autor  
                               <div class="col-sm-12">
                                   <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetaautortrabalho}}</label>
                                   <input class="form-control" type="text" disabled value="{{Auth::user()->name}}">
                               </div>
-                            </div>
+                            </div> --}}
                           @endif
                           @if ($indice == "etiquetacoautortrabalho")
                             <div class="flexContainer" style="margin-top:20px">
-                              <div class="col-sm-12">                                 
+                              <div class="col-sm-12">
+                                <h4>Autores</h4>                                 
                                   <div id="coautores" class="flexContainer " >
+                                    <div class="item card" id="1" style="order:1">
+                                      <div class="row card-body">
+                                          <div class="col-sm-4">
+                                              <label>E-mail</label>
+                                              <input type="email" style="margin-bottom:10px" id="email${order}" value="{{Auth::user()->email}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" required>
+                                          </div>
+                                          <div class="col-sm-5">
+                                              <label>Nome Completo</label>
+                                              <input type="text" style="margin-bottom:10px" value="{{Auth::user()->name}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" required>
+                                          </div>
+                                          <div class="col-sm-3">
+                                              <a href="#" class="delete pr-2">
+                                                <img src="/img/icons/user-times-solid.svg" style="margin-bottom:15px;width:25px;">
+                                              </a>
+                                              <a href="#" onclick="myFunction(event)">
+                                                <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                              </a>
+                                              <a href="#" onclick="myFunction(event)">
+                                                <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                              </a>
+                                              
+                                          </div>
+                                      </div>
+                                    </div>
                                   </div>
                                 <a href="#" onclick="addLinha(event)" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">{{$formSubTraba->etiquetacoautortrabalho}}</a>
                               </div>
@@ -450,7 +475,7 @@
     }
   });
 
-  let order = 0;
+  let order = 1;
 
   function myFunction(event) {
     event.preventDefault();
@@ -554,22 +579,6 @@
                   </div>
               </div>
             </div>`;
-
-    // return  "<div class="+"row"+">"+
-    //             "<div class="+"col-sm-6"+">"+
-    //                 "<label>Nome Completo</label>"+
-    //                 "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+" name="+'nomeCoautor[]'+" placeholder="+"Nome"+" required>"+
-    //             "</div>"+
-    //             "<div class="+"col-sm-5"+">"+
-    //                 "<label>E-mail</label>"+
-    //                 "<input"+" type="+'email'+" style="+"margin-bottom:10px"+" class="+'form-control emailCoautor'+"  name="+'emailCoautor[]'+" placeholder="+"E-mail"+" required>"+
-    //             "</div>"+
-    //             "<div class="+"col-sm-1"+">"+
-    //                 "<a href="+"#"+" class="+"delete"+">"+
-    //                   "<img src="+"/img/icons/user-times-solid.svg"+" style="+"width:25px;margin-top:35px"+">"+
-    //                 "</a>"+
-    //             "</div>"+
-    //         "</div>";
   }
 </script>
 
