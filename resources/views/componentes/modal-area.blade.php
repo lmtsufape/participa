@@ -20,7 +20,7 @@
                     <form method="POST" action="{{route('area.store')}}">
                         @csrf
                     <p class="card-text">
-                        <input type="hidden" name="eventoId" value="">
+                        <input type="hidden" name="eventoId" value="{{$evento->id ?? ''}}">
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
                                 <label for="nome" class="col-form-label">{{ __('Nome da Área') }}</label>
