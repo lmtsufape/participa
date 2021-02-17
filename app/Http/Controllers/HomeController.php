@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\Submissao\Evento;
+use App\Models\Inscricao\Inscricao;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -15,7 +17,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     /**
@@ -71,5 +73,22 @@ class HomeController extends Controller
           }else {
             return view('home');
           } 
+    }
+
+    public function home() {
+      $eventosDestaque = Inscricao::join("eventos", "inscricaos.evento_id", "=", "eventos.id")->select("eventos.id", DB::raw('count(inscricaos.evento_id) as total'))->groupBy("eventos.id")->orderBy("total", "desc")->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->limit(6)->get();
+      
+      if (count($eventosDestaque) > 0) {
+        $eventos = collect();
+        foreach ($eventosDestaque as $ev) {
+          $eventos->push(Evento::find($ev->id));
+        }
+      } else {
+        $eventos = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->get();
+      } 
+
+      $tiposEvento = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->selectRaw('DISTINCT tipo')->get();
+      
+      return view('index',['eventos'=>$eventos, 'tipos' => $tiposEvento]);
     }
 }

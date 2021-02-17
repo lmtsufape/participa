@@ -4,6 +4,10 @@ color secondary: #196572ff
 color dark: #071b1eff
 
 */
+body {
+    overflow-x: hidden;
+}
+
 .content{
     margin-top: 50px;
 }
@@ -95,15 +99,17 @@ body{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .titulo{
-    margin:7% 0 2% 0;
-    border-bottom: 2px solid #ccc;
+    margin:2% 0 2% 0;
+    /* border-bottom: 2px solid #ccc; */
+    font-size: 30px;
+    font-weight: bolder;
 }
-.titulo h1{
-    font-size: 35px;
-}
+
 .subtitulo{
-    font-size:25px
+    font-size: 20px;
+    font-weight: bolder;
 }
+
 .botao-form{
     width:100%;
     padding: 20px 0 20px 0;
@@ -279,22 +285,14 @@ body{
 
 /* EVENTO */
 .banner-evento{
-    width: 100vw;
-    height: 35vh;
-    border-image-slice: fill;
-    z-index: 0;
-    position: absolute;
-    top: 0;
-    overflow: hidden;
-    float: left;
-    padding: 0;
-    background-color:#071b1eff ;
-
+    min-width: 100%;
+    min-height: 425px;
+    background-color:#071b1eff;
 }
 .banner-evento img{
-    filter: blur(20px);
-    -webkit-filter: blur(20px);
     width: 100%;
+    min-height: 425px;
+    max-height: 425px;
 }
 .front-image-evento{
     margin-top: 25px;
@@ -318,6 +316,24 @@ body{
 }
 .info-evento p{
     font-size: 15px;
+}
+.info-evento {
+    text-align: left;
+}
+
+.info-evento .button-card-visualizar-evento {
+    text-align: center;
+    width: 100%;
+    background-color: rgb(0, 132, 255);
+}
+
+.info-evento .button-card-visualizar-evento:hover {
+    background-color: rgb(1, 195, 195);
+    box-shadow: 1px 3px 3px rgb(85, 85, 85);
+}
+
+.info-evento .titulo-modalidade {
+    color: rgb(0, 132, 255);
 }
 
 
@@ -364,9 +380,6 @@ body{
     }
     .main_content{
         margin-left: 130px;
-    }
-    .banner-evento{
-        height: 27vh;
     }
     .front-image-evento{
         margin: 35px 20px 35px 20px;
@@ -507,7 +520,7 @@ body{
     margin-top: 10px;
     margin-bottom: 10px;
     border: solid 1px black;
-    border-radius: 5px;
+    border-radius: 10px;
     -webkit-transition:background 0.3s ease-out;
     -moz-transition:background 0.3s ease-out;
     -o-transition:background 0.3s ease-out;
@@ -519,6 +532,7 @@ body{
     filter:alpha(opacity=100);
     -moz-opacity:1;
     opacity:1;
+    border-radius: 10px;
 }
 
 .btn-excluir {
@@ -537,4 +551,247 @@ body{
 
 .btn-editar:hover {
     background-color: #114048ff;
+}
+
+.navbar-center {
+    position: relative;
+    left: 50%;
+}
+
+.tam-letra {
+    font-size: 27px;
+    font-weight: bolder;
+}
+
+.nav-link {
+    border-radius: 10px;
+}
+
+.nav-link:hover, .nav-link:focus {
+    background-image: linear-gradient( to right, red, rgb(230, 46, 0), rgb(255, 153, 0) ); 
+    border-radius: 10px;
+    filter: alpha(opacity=100);
+    -moz-opacity:1;
+    opacity:1;
+    transition: 0.3s;
+    box-shadow: 5px 5px 5px black;
+}
+
+.card-visualizar-evento {
+    position: relative;
+    margin-left: 15%;
+    text-align: center;
+}
+
+.card-visualizar-evento .card {
+    position: relative;
+    top: -200px;
+    border-radius: 15px;
+}
+
+.card-visualizar-evento .card p {
+    text-align: justify;
+    color: black;
+}
+
+.card-visualizar-evento .card .white-color {
+    color: white;
+    font-weight: bolder;
+    box-shadow: 1px 3px 3px rgb(151, 151, 151);
+}
+
+.card-visualizar-evento .card .data {
+    position: relative;
+    left: -35px;
+}
+
+.card-visualizar-evento .card .clock {
+    position: relative;
+    left: -130px;
+}
+
+.card-visualizar-evento .card hr {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.card-perfil {
+    margin-bottom: -400px;
+}
+
+.card-perfil .card {
+    position: relative; 
+    top: -500px; 
+    margin-left: 135px;
+    margin-right: 135px;
+    border-radius: 15px;
+}
+
+.banner-perfil .curved {
+    height: 350px;
+}
+
+.btn-atualizar-perfil {
+    background-color: rgb(2, 168, 2);
+    color: white;
+    padding: 10px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    box-shadow: 1px 3px 3px rgb(128, 128, 128);
+}
+
+.btn-atualizar-perfil:hover {
+    background-color: rgb(0, 207, 0);
+    color: white;
+    box-shadow: 1px 3px 3px rgb(82, 82, 82);
+}
+
+.imagem-loader img {
+    cursor: pointer;
+    min-height: 195px;
+    min-width: 395px;
+    height: 195px;
+    width: 395px;
+    max-height: 195px;
+    max-width: 395px;
+    border-radius: 5px;
+    border: 1px solid rgba(92, 92, 92, 0.596);
+    box-shadow: 1px 5px 5px rgba(128, 128, 128, 0.596);
+}
+
+.imagem-loader img:hover {
+    transition: 0.2s;
+    box-shadow: 1px 5px 5px rgba(63, 63, 63, 0.596);
+}
+
+.invalid-feedback {
+    display: inline;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+
+.btn-buscar-evento {
+    width: 150px;
+    font-weight: bolder;
+    background-image: linear-gradient( to right, red, rgb(230, 46, 0), rgb(255, 153, 0) ); 
+    border-radius: 10px;
+    color: white;
+}
+
+.btn-buscar-evento:hover {
+    transition: 0.3s;
+    color: white;
+    box-shadow: 5px 5px 5px black;
+}
+
+.card-busca-livre-evento {
+    margin: 0;
+    margin-top: 20px;
+    width: 100%;
+    height: 250px;
+    border-radius: 5px;
+}
+
+.card-busca-livre-evento img {
+    position: relative;
+    border-radius: 5px 0px 0px 5px;
+    bottom: 1px;
+    right: 1px;
+    width: 445px;
+    height: 250px;
+    max-width: 445px;
+    min-width: 445px;
+}
+
+.card-busca-livre-evento .calendario-img img {
+    position: relative;
+    bottom: 0;
+    right: 0;
+    width: 23px;
+    height: 25px;
+    margin: 10px;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 23px;
+    min-width: 23px;
+}
+.card-busca-livre-evento .relogio-img img {
+    position: relative;
+    bottom: 0;
+    right: 0;
+    width: 25px;
+    margin: 10px;
+    margin-right: 0;
+    height: auto;
+    max-width: 25px;
+    min-width: 25px;
+}
+
+.card-busca-livre-evento .ponto-de-localizacao-img {
+    position: relative;
+    bottom: 0;
+    right: 0;
+    left: -15px;
+    margin: 10px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.card-busca-livre-evento .ponto-de-localizacao-img img {
+    width: 23px;
+    height: auto;
+    max-width: 23px;
+    min-width: 23px;
+}
+
+.card-busca-livre-evento .botao-inscricao {
+    position: relative;
+    border-radius: none;
+    background-image: linear-gradient( to right, rgb(0, 60, 255), rgb(85, 2, 180)); 
+    box-shadow: 1px 3px 3px rgb(32, 32, 32);
+}
+
+.card-busca-livre-evento .botao-inscricao:hover {
+    background-image: linear-gradient( to right, rgb(0, 36, 155), rgb(50, 1, 105)); 
+    transition: 0.3s;
+    border-radius: 5px;
+    box-shadow: 1px 3px 3px black;
+}
+.campo-exemplo {
+    padding: 10px;
+    background-color: rgba(240, 240, 240, 0.794);
+    border: solid rgb(212, 212, 212)  1px;
+}
+
+.campo-exemplo-head {
+    padding: 10px;
+    background-color: rgba(240, 240, 240, 0.794);
+    border-top: solid rgb(212, 212, 212)  1px;
+    border-left: solid rgb(212, 212, 212) 1px;
+    border-right: solid rgb(212, 212, 212) 1px;
+}
+
+.campo-exemplo-body {
+    padding: 10px;
+    background-color: rgba(240, 240, 240, 0.794);
+    border-left: solid rgb(212, 212, 212) 1px;
+    border-right: solid rgb(212, 212, 212) 1px;
+    border-bottom: solid rgb(212, 212, 212) 1px;
+}
+
+.card-inscricao-evento {
+    position: relative;
+    margin-left: 15%;
+}
+
+.card-inscricao-evento #card-inscricao {
+    position: relative;
+    top: -200px;
+    border-radius: 15px;
+}
+
+.card-inscricao-evento .titulo-detalhes {
+    text-align: center;
 }

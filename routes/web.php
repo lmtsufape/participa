@@ -13,11 +13,9 @@
 use Illuminate\Support\Facades\Log;
 use App\Models\Submissao\Evento;
 
-Route::get('/index', function () {
-    $eventos = Evento::all();
-    // dd($eventos);
-    return view('index',['eventos'=>$eventos]);
-})->name('index');
+Route::get('/index', 'HomeController@home')->name('index');
+Route::get('/evento/busca', 'Submissao\EventoController@buscaLivre')->name('busca.eventos');
+Route::get('/evento/buscar-livre', 'Submissao\EventoController@buscaLivreAjax')->name('busca.livre.ajax');
 
 Auth::routes(['verify' => true]);
 
@@ -37,7 +35,7 @@ Route::get('/#', function () {
   });
 
 
-Route::get('/{id}/atividades', 'AtividadeController@atividadesJson')->name('atividades.json');
+Route::get('/{id}/atividades', 'Submissao\AtividadeController@atividadesJson')->name('atividades.json');
 
 Route::get('/perfil','Users\UserController@perfil')->name('perfil')->middleware('auth');
 Route::post('/perfil/editar','Users\UserController@editarPerfil')->name('perfil.update')->middleware('auth');
@@ -103,7 +101,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
       Route::post('atividade/{id}/editar', 'AtividadeController@update')->name('atividades.update');
       Route::post('atividade/{id}/excluir', 'AtividadeController@destroy')->name('atividade.destroy');
       Route::post('{id}/atividade/salvar-pdf-programacao', 'EventoController@pdfProgramacao')->name('evento.pdf.programacao');
-      Route::get('tipo-de-atividade/new/{nome}', 'TipoAtividadeController@storeAjax')->name('tipo.store.ajax');
+      Route::get('tipo-de-atividade/new', 'TipoAtividadeController@storeAjax')->name('tipo.store.ajax');
       Route::get('eventos/editarEtiqueta', 'EventoController@editarEtiqueta')->name('editarEtiqueta');
       Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
     });
@@ -199,24 +197,24 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('/user/trabalhos', 'Users\UserController@meusTrabalhos')->name('user.meusTrabalhos');
 
   // Cadastrar Comissão
-  Route::post('/evento/cadastrarComissao','ComissaoController@store'                   )->name('cadastrar.comissao');
-  Route::post('/evento/cadastrarCoordComissao','ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
+  Route::post('/evento/cadastrarComissao','Users\ComissaoController@store'                   )->name('cadastrar.comissao');
+  Route::post('/evento/cadastrarCoordComissao','Users\ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
 
   
 
   Route::name('coord.')->group(function () {
-    Route::get('comissaoOrganizadora/{id}/cadastrar', 'ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
-    Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
-    Route::get('comissaoOrganizadora/{id}/listar', 'ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
-    Route::post('remover/comissaoOrganizadora/{id}', 'ComissaoOrganizadoraController@destroy')->name('remover.comissao.organizadora');
-    Route::post('remover/comissao/{id}',  'ComissaoController@destroy'      )->name('remover.comissao');
+    Route::get('comissaoOrganizadora/{id}/cadastrar', 'Users\ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
+    Route::get('comissaoOrganizadora/{id}/definir-coordenador', 'Users\ComissaoOrganizadoraController@definirCoordenador')->name('definir.coordComissaoOrganizadora');
+    Route::get('comissaoOrganizadora/{id}/listar',    'Users\ComissaoOrganizadoraController@index')->name('listar.comissaoOrganizadora');
+    Route::post('remover/comissaoOrganizadora/{id}',  'Users\ComissaoOrganizadoraController@destroy')->name('remover.comissao.organizadora');
+    Route::post('remover/comissao/{id}',              'Users\ComissaoController@destroy'      )->name('remover.comissao');
   });
   
   // ROTAS DO MODULO DE INSCRIÇÃO
   Route::get('{id}/inscricoes/nova-inscricao',  'Inscricao\InscricaoController@create')->name('inscricao.create');
   Route::get('inscricoes/atividades-da-promocao','Inscricao\PromocaoController@atividades')->name('promocao.atividades');
   Route::get('inscricoes/checar-cupom',          'Inscricao\CupomDeDescontoController@checar')->name('checar.cupom');
-  Route::get('{id}/inscricoes/nova-inscricao/checar', 'Inscricao\InscricaoController@checarDados')->name('inscricao.checar');
+  Route::post('{id}/inscricoes/nova-inscricao/checar', 'Inscricao\InscricaoController@checarDados')->name('inscricao.checar');
   Route::get('{id}/inscricoes/nova-inscricao/voltar', 'Inscricao\InscricaoController@voltarTela')->name('inscricao.voltar');
   Route::post('/inscricoes/salvar-campo-formulario',  'Inscricao\CampoFormularioController@store')->name('campo.formulario.store');
   Route::post('/inscricoes/campo-excluir/{id}',       'Inscricao\CampoFormularioController@destroy')->name('campo.destroy');
@@ -236,14 +234,19 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
   Route::get('inscricoes/evento-{id}/index',    'Inscricao\InscricaoController@index'   )->name('inscricoes');
   Route::post('inscricoes/criar-promocao',      'Inscricao\PromocaoController@store'    )->name('promocao.store');
+  Route::post('inscricoes/{id}/editar-promocao', 'Inscricao\PromocaoController@update')->name('promocao.update');
   Route::post('inscricoes/destroy/{id}-promocao','Inscricao\PromocaoController@destroy' )->name('promocao.destroy');
-
+  Route::get('inscricoes/{idInscricao}/download/{idCampo}',          'Inscricao\InscricaoController@downloadFileCampoExtra')->name('download.arquivo.inscricao');
   Route::post('inscricoes/criar-cupom',         'Inscricao\CupomDeDescontoController@store')->name('cupom.store');
+  Route::post('inscricoes/editar-cupom/{id}',        'Inscricao\CupomDeDescontoController@update')->name('cupom.update');
   Route::get('inscricoes/destroy/{id}-cupom',  'Inscricao\CupomDeDescontoController@destroy')->name('cupom.destroy');
 
   Route::post('inscricoes/criar-categoria-participante', 'Inscricao\CategoriaController@store')->name('categoria.participante.store');
   Route::get('{id}/inscricoes/excluir-categoria',    'Inscricao\CategoriaController@destroy')->name('categoria.destroy');
   Route::post('{id}/inscricoes/atualizar-categoria', 'Inscricao\CategoriaController@update')->name('categoria.participante.update');
+  Route::get('valor/categoria',                      'Inscricao\CategoriaController@valorAjax')->name('ajax.valor.categoria');
+  Route::get('confirmar-inscricao',            'Inscricao\InscricaoController@store')->name('inscricao.confirmar');
+
 });
 
 // Auth::routes();

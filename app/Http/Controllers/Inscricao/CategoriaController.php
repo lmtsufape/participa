@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\ValorCategoria;
 use App\Models\Submissao\Evento;
+use Carbon\Carbon;
 
 class CategoriaController extends Controller
 {
@@ -41,6 +42,7 @@ class CategoriaController extends Controller
         // dd($request);
         $evento = Evento::find($request->evento_id);
         $validateData = $request->validate([
+            'criarCategoria'        => 'required',
             'nome'                  => 'required',
             'valor_total'           => 'required',
             'tipo_valor.*'          => 'nullable',
@@ -48,6 +50,16 @@ class CategoriaController extends Controller
             'inícioDesconto.*'      => 'required_with:tipo_valor.*|date',
             'fimDesconto.*'         => 'required_with:tipo_valor.*|date|after:inícioDesconto.*',
         ]);
+
+        if ($request->valor_total < 0) {
+            return redirect()->back()->withErrors(['valor_total' => 'Digite um valor positivo ou 0 para gratuito.'])->withInput($validateData);
+        }
+        
+        foreach ($request->input('valorDesconto') as $i => $valor) {
+            if ($valor <= 0) {
+                return redirect()->back()->withErrors(['valorDesconto.'.$i => 'Digite um valor positivo.'])->withInput($validateData);
+            }
+        }
 
         $categoria = new CategoriaParticipante();
         $categoria->evento_id   = $evento->id;
@@ -118,6 +130,16 @@ class CategoriaController extends Controller
             'fimDesconto_'.$categoria->id.'.*'      => 'required_with:tipo_valor_'.$categoria->id.'.*|date|after:inícioDesconto_'.$categoria->id.'.*',
         ]);
 
+        if ($request->input('valor_total_'.$categoria->id) < 0) {
+            return redirect()->back()->withErrors(['valor_total_'.$categoria->id => 'Digite um valor positivo ou 0 para gratuito.'])->withInput($validateData);
+        }
+
+        foreach ($request->input('valorDesconto_'.$categoria->id) as $i => $valor) {
+            if ($request->input('valorDesconto_'.$categoria->id.'.'.$i) <= 0) {
+                return redirect()->back()->withErrors(['valorDesconto_'.$categoria->id.'.'.$i => 'Digite um valor positivo.'])->withInput($validateData);
+            }
+        }
+
         foreach ($categoria->valores as $valor) {
             $valor->delete();
         }
@@ -164,5 +186,25 @@ class CategoriaController extends Controller
         $categoria->delete();
 
         return redirect()->back()->with(['mensagem' => 'Categoria excluida com sucesso!']);
+    }
+
+    public function valorAjax(Request $request) {
+        $categoria = CategoriaParticipante::find($request->categoria_id);
+
+        $hoje = Carbon::now('America/Recife')->subHours(3);
+
+        foreach ($categoria->valores as $lote) {
+            if ($hoje > Carbon::create($lote->inicio_prazo) && $hoje < Carbon::create($lote->fim_prazo)) {
+                if ($lote->porcentagem) {
+                    $valor = $categoria->valor_total - ($categoria->valor_total * $lote->valor / 100);
+                    return response()->json(collect(['valor' => $valor]));
+                } else {
+                    $valor = $categoria->valor_total - $lote->valor;
+                    return response()->json(collect(['valor' => $valor]));
+                }
+            }
+        }
+        
+        return response()->json(collect(['valor' => $categoria->valor_total]));
     }
 }

@@ -21,7 +21,7 @@
                             <div class="row justify-content-right">
                                 <div class="col-sm-6">
                                     <label for="modalidade" class="col-form-label">{{ __('Escolha a Modalidade') }}</label>
-                                    <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidade">
+                                    <select class="form-control @error('modalidade') is-invalid @enderror" id="modalidade" name="modalidade" required>
                                         <option value="" disabled selected hidden>-- Modalidade --</option>
                                         @foreach($modalidades as $modalidade)
                                             <option value="{{$modalidade->id}}">{{$modalidade->nome}}</option>
@@ -46,7 +46,7 @@
                         </p>
                         <div class="row justify-content-center">
                             <div class="col-md-12">
-                                <button type="button" class="btn btn-primary" style="width:100%" onclick="cadastrarCriterio()">
+                                <button type="submit" class="btn btn-primary" style="width:100%">
                                     {{ __('Finalizar') }}
                                 </button>
                             </div>

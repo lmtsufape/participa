@@ -216,10 +216,10 @@
                                         <div class="row">
 
                                             <div class="col-sm-6">
-                                                <label for="inicioResultado" class="col-form-label">{{ __('Início do Resultado') }}</label>
-                                                <input id="inicioResultado" type="datetime-local" class="form-control @error('inicioResultado') is-invalid @enderror" name="inicioResultado" value="@if(old('inicioResultado')){{old('inicioResultado')}}@else{{ date('Y-m-d\TH:i',strtotime($modalidade->inicioResultado))}}@endif" autocomplete="inicioResultado" autofocus>
+                                                <label for="inicioResultado" class="col-form-label">{{ __('Resultado') }}</label>
+                                                <input id="inicioResultado" type="datetime-local" class="form-control @error('resultado') is-invalid @enderror" name="resultado" value="@if(old('resultado')){{old('resultado')}}@else{{ date('Y-m-d\TH:i',strtotime($modalidade->inicioResultado))}}@endif" autocomplete="inicioResultado" autofocus>
 
-                                                @error('inicioResultado')
+                                                @error('resultado')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -235,54 +235,54 @@
                                                 <label class="col-form-label">*{{ __('Restrições de resumo:') }}</label>
 
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="limitEdit" onchange="exibirLimite({{$modalidade->id}},this)" value="caracteres" id="id-limit-custom_field-accountEdit-1-1" @if (old('limitEdit') == 'caracteres') checked @else @if($modalidade->caracteres) checked @endif @endif>
+                                                    <input class="form-check-input" type="radio" name="limit" value="limit-option1" id="id-limit-custom_field-accountEdit-1-1" @if (old('limit') == 'limit-option1') checked @elseif(old('limitE') == null && $modalidade->caracteres) checked @endif>
                                                     <label class="form-check-label" for="texto">
                                                         Quantidade de caracteres
                                                     </label>
                                                     </div>
                                                     <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="limitEdit" onchange="exibirLimite({{$modalidade->id}},this)" value="palavras" id="id-limit-custom_field-accountEdit-1-2" @if (old('limitEdit') == 'palavras') checked @else @if($modalidade->palavras) checked @endif @endif>
+                                                    <input class="form-check-input" type="radio" name="limit" value="limit-option2" id="id-limit-custom_field-accountEdit-1-2" @if (old('limit') == 'limit-option2') checked @elseif(old('limit') == null && $modalidade->palavras) checked @endif>
                                                     <label class="form-check-label" for="arquivo">
                                                         Quantidade de palavras
                                                     </label>
                                                 </div>
 
-                                                
-                                                <div id="caracteres{{$modalidade->id}}" class="row" style="@if (old('limitEdit') == 'caracteres')display:block;@else @if($modalidade->caracteres && old('limitEdit') == null)display:block;@else display:none;@endif @endif">
-                                                    <div class="col-sm-6" id="min-max-caracteresEdit" >
+                                                <div class="row">
+                                                    <div class="col-sm-6" id="min-max-caracteres" style="@if (old('limit') == 'limit-option1')display:block;@else @if($modalidade->caracteres && old('limit') == null)display:block;@else display:none;@endif @endif">
                                                         <div class="form-group">
                                                             <label class="col-form-label">{{ __('Mínimo') }}</label>
                                                             <div>
-                                                            <input class="form-control" type="number" id="mincaracteres" name="mincaracteres" value="@if(old('mincaracteres')!=null){{old('mincaracteres')}}@else{{$modalidade->mincaracteres}}@endif">
+                                                              <input class="form-control" type="number" id="min_caracteres" name="mincaracteres" value="@if(old('mincaracteres')!=null){{old('mincaracteres')}}@else{{$modalidade->mincaracteres}}@endif">
                                                             </div>
                                                         </div>
-
+                
                                                         <div class="form-group">
                                                             <label class="col-form-label">{{ __('Máximo') }}</label>
                                                             <div>
-                                                            <input class="form-control" type="number" id="maxcaracteres" name="maxcaracteres" value="@if(old('maxcaracteres')!=null){{old('maxcaracteres')}}@else{{$modalidade->maxcaracteres}}@endif">
+                                                              <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres" value="@if(old('maxcaracteres')!=null){{old('maxcaracteres')}}@else{{$modalidade->maxcaracteres}}@endif">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                
+                                                <div class="row">
+                                                    <div class="col-sm-6" id="min-max-palavras" style="@if (old('limit') == 'limit-option2')display:block;@else @if($modalidade->palavras && old('limit') == null)display:block;@else display:none;@endif @endif">
+                                                        <div class="form-group">
+                                                            <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                                            <div>
+                                                              <input class="form-control" type="number" id="min_palavras" name="minpalavras" value="@if(old('minpalavras')!=null){{old('minpalavras')}}@else{{$modalidade->minpalavras}}@endif">
+                                                            </div>
+                                                        </div>
+                
+                                                        <div class="form-group">
+                                                            <label class="col-form-label">{{ __('Máximo') }}</label>
+                                                            <div>
+                                                              <input class="form-control" type="number" id="max_palavras" name="maxpalavras" value="@if(old('maxpalavras')!=null){{old('maxpalavras')}}@else{{$modalidade->maxpalavras}}@endif">
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div id="palavras{{$modalidade->id}}" class="row" style="@if (old('limitEdit') == 'palavras')display:block;@else @if($modalidade->palavras && old('limitEdit') == null)display:block;@else display:none;@endif @endif">
-                                                    <div class="col-sm-6" id="min-max-palavrasEdit">
-                                                        <div class="form-group">
-                                                            <label class="col-form-label">{{ __('Mínimo') }}</label>
-                                                            <div>
-                                                            <input class="form-control" type="number" id="minpalavras" name="minpalavras" value="@if(old('minpalavras')!=null){{old('minpalavras')}}@else{{$modalidade->minpalavras}}@endif">
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label class="col-form-label">{{ __('Máximo') }}</label>
-                                                            <div>
-                                                            <input class="form-control" type="number" id="maxpalavras" name="maxpalavras" value="@if(old('maxpalavras')!=null){{old('maxpalavras')}}@else{{$modalidade->maxpalavras}}@endif">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                                 <div class="form-check" style="margin-top: 10px">
                                                     <input class="form-check-input incluirarquivoEdit" type="checkbox" onchange="exibirTiposArquivo({{$modalidade->id}},this)" name="arquivoEdit" id="id-custom_field-accountEdit-1-2" @if(old('arquivoEdit') == "on") checked @else @if ($modalidade->arquivo == true) checked @endif @endif>
                                                     <label class="form-check-label" for="arquivoEdit">

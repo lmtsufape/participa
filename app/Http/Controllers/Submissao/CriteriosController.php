@@ -12,6 +12,10 @@ class CriteriosController extends Controller
 {
     public function store(Request $request)
     {   
+        $validatedData = $request->validate([
+            'nomeCriterioUpdate' => ['string'],
+            'pesoCriterioUpdate' => ['integer'],
+        ]);
         // dd($request);
         $quantDeCriterios = (count($request->all())- 3) / 4;
         // dd($quantDeCriterios);
