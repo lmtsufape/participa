@@ -9,6 +9,15 @@
             </div>
         </div>
 
+        @if ($evento->publicado == false)
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Atenção!</strong> Seu evento não está exposto ao público, para publica-lo vá em Publicar -> Publicar evento
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        @endif
+
         <!-- Row trabalhos -->
         <div class="row justify-content-center">
           <div class="col-sm-8">

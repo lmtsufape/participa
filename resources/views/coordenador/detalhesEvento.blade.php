@@ -216,20 +216,24 @@
                 <li>
                   <img src="{{ asset('img/icons/publish.svg') }}" alt=""><h5>Publicar</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
-                <div id="dropdownPublicar" style="background-color: gray">
-                  <a id="publicarEvento" onclick="habilitarEvento()">
+                <div style="display: none;">
                     <form id="habilitarEventoForm" method="GET" action="{{route('evento.habilitar', ['id' => $evento->id])}}"></form>
-                      <li>
-                          <img src="{{asset('img/icons/alto-falante.svg')}}" alt=""><h5> Publicar Evento</h5>
-                      </li>
-                  </a>
-                  <a id="desabilitarEventoPublicado" onclick="desabilitarEvento()">
                     <form id="desabilitarEventoForm" method="GET" action="{{route('evento.desabilitar', ['id' => $evento->id])}}"></form>
-                      <li>
-                          <img src="{{asset('img/icons/alto-falante-nao.svg')}}" alt=""><h5> Desfazer publicação</h5>
-                      </li>
-                  </a>
-              </div>
+                </div>
+                <div id="dropdownPublicar" style="background-color: gray">
+                    
+                    <a id="publicarEvento" onclick="habilitarEvento()">
+                        <li>
+                            <img src="{{asset('img/icons/alto-falante.svg')}}" alt=""><h5> Publicar Evento</h5>
+                        </li>
+                    </a>
+                    
+                    <a id="desabilitarEventoPublicado" onclick="desabilitarEvento()">
+                        <li>
+                            <img src="{{asset('img/icons/alto-falante-nao.svg')}}" alt=""><h5> Desfazer publicação</h5>
+                        </li>
+                    </a>
+                </div>
             </a>
             {{-- @endcan --}}
         </ul>
