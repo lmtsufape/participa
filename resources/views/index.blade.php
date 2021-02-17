@@ -265,7 +265,7 @@
       </div>
     </div>
 
-    <div class="barra-horizontal proximos-eventos" style="top: -150px;">
+    {{-- <div class="barra-horizontal proximos-eventos" style="top: -150px;">
       <h2>Tipos de Eventos</h2>
       <div class="conteudo-inferior">
         <div class="wrapper-barra-horizontal">
@@ -439,7 +439,7 @@
           <img src="{{asset('/img/icons/next.png')}}" alt="">
         </a>
       </div>
-    </div>
+    </div> --}}
 
   @endif
 
@@ -737,7 +737,7 @@
 
       
 
-      $('#modalInfo').modal('show');
+      // $('#modalInfo').modal('show');
 
       var botoes = document.getElementsByClassName('cor-aleatoria');
       for (var i = 0; i < botoes.length; i++) {

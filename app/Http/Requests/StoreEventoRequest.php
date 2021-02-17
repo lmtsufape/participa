@@ -31,7 +31,6 @@ class StoreEventoRequest extends FormRequest
             'dataInicio'          => ['required', 'date', 'after:yesterday'],
             'dataFim'             => ['required', 'date', 'after:dataInicio'],
             'fotoEvento'          => ['file', 'mimes:png'],
-            'valorTaxa'           => ['required'],
             'rua'                 => ['required', 'string'],
             'numero'              => ['required', 'string'],
             'bairro'              => ['required', 'string'],

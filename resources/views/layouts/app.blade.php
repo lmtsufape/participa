@@ -67,7 +67,7 @@
                                 <img src="{{ asset('/img/logo.png') }}" alt="" style="height: 45px; width: 135px;">
                             </a>
                         </div>
-                        <div class="col-sm-2 navbar-center clicavel">
+                        {{-- <div class="col-sm-2 navbar-center clicavel">
                             <a id="change-mode" class="navbar-brand">
                                 <img id="img-change-mode" src="{{asset('/img/icons/mom.png')}}" alt="" style="height: 40px; width: 45px;">
                             </a>
@@ -81,7 +81,7 @@
                             <a id="font-size-min" class="navbar-brand tam-letra">
                                 -A
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
 
 
