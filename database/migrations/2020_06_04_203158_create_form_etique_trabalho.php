@@ -16,19 +16,19 @@ class CreateFormEtiqueTrabalho extends Migration
         // Formulário para edição de etiquetas do da tela de submissão de trabalhos;
         Schema::create('form_subm_trabas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('etiquetatitulotrabalho')->nullable();
-            $table->string('etiquetaautortrabalho')->nullable();
-            $table->string('etiquetacoautortrabalho')->nullable();
-            $table->string('etiquetaresumotrabalho')->nullable();
-            $table->string('etiquetaareatrabalho')->nullable();
-            $table->string('etiquetauploadtrabalho')->nullable();
+            $table->string('etiquetatitulotrabalho')->default('Titulo');
+            $table->string('etiquetaautortrabalho')->default('Autor');
+            $table->string('etiquetacoautortrabalho')->default('Co-Autor');
+            $table->string('etiquetaresumotrabalho')->default('Resumo');
+            $table->string('etiquetaareatrabalho')->default('Área');
+            $table->string('etiquetauploadtrabalho')->default('Upload de Trabalho');
             
             // Etiquetas de campos extras
-            $table->string('etiquetacampoextra1')->nullable();
-            $table->string('etiquetacampoextra2')->nullable();
-            $table->string('etiquetacampoextra3')->nullable();
-            $table->string('etiquetacampoextra4')->nullable();
-            $table->string('etiquetacampoextra5')->nullable();
+            $table->string('etiquetacampoextra1')->default('Campo Extra');
+            $table->string('etiquetacampoextra2')->default('Campo Extra');
+            $table->string('etiquetacampoextra3')->default('Campo Extra');
+            $table->string('etiquetacampoextra4')->default('Campo Extra');
+            $table->string('etiquetacampoextra5')->default('Campo Extra');
 
             // Tipo dos campos extras
             $table->string('tipocampoextra1')->nullable();
@@ -44,7 +44,7 @@ class CreateFormEtiqueTrabalho extends Migration
             $table->boolean('checkcampoextra4')->nullable();
             $table->boolean('checkcampoextra5')->nullable();
 
-            $table->text('ordemCampos')->nullable();
+            $table->text('ordemCampos')->default('etiquetatitulotrabalho,etiquetaautortrabalho,etiquetacoautortrabalho,etiquetaresumotrabalho,etiquetaareatrabalho,etiquetauploadtrabalho,checkcampoextra1,etiquetacampoextra1,select_campo1,checkcampoextra2,etiquetacampoextra2,select_campo2,checkcampoextra3,etiquetacampoextra3,select_campo3,checkcampoextra4,etiquetacampoextra4,select_campo4,checkcampoextra5,etiquetacampoextra5,select_campo5');
 
             $table->bigInteger("eventoId")->nullable();
             $table->foreign("eventoId")->references("id")->on("eventos");

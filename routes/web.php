@@ -141,7 +141,9 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
     Route::get(   '/atribuir',              'AtribuicaoController@distribuicaoAutomatica')->name('distribuicao');
     Route::get(   '/atribuirPorArea',       'AtribuicaoController@distribuicaoPorArea'   )->name('distribuicaoAutomaticaPorArea');
     Route::post(  '/distribuicaoManual',    'AtribuicaoController@distribuicaoManual'    )->name('distribuicaoManual');
-    Route::post(  '{id}/removerAtribuicao',     'AtribuicaoController@deletePorRevisores'    )->name('atribuicao.delete');
+    Route::post(  '{id}/removerAtribuicao',     'AtribuicaoController@deletePorRevisores')->name('atribuicao.delete');
+    Route::post(  '/atribuir/check',                 'AtribuicaoController@atribuirCheck')->name('atribuicao.check');
+    Route::post(  '/atribuir/revisor/lote','AtribuicaoController@atribuirRevisorLote')->name('atribuir.revisor.lote');
     // rota downloadArquivo
     Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
     // rota download do arquivo do trabalho

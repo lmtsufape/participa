@@ -189,7 +189,7 @@
         </div>{{--end Rua | Número | Bairro --}}
 
         <div class="row justify-content-center">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
                 <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" @if(old('bairro') != null) value="{{ old('bairro') }}" @else value="{{$endereco->bairro}}" @endif required autocomplete="bairro" autofocus>
 
@@ -199,7 +199,7 @@
                 </span>
                 @enderror
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
                 <input id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" @if(old('cidade') != null) value="{{ old('cidade') }}" @else value="{{$endereco->cidade}}" @endif required autocomplete="cidade" autofocus>
 
@@ -210,6 +210,16 @@
                 @enderror
             </div>
             <div class="col-sm-4">
+                <label for="complemento" class="col-form-label">{{ __('Complemento*') }}</label>
+                <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" @if(old('complemento') != null) value="{{ old('complemento') }}" @else value="{{$endereco->complemento}}" @endif required autocomplete="complemento" autofocus>
+
+                @error('complemento')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+            <div class="col-sm-2">
                 <label for="uf" class="col-form-label">{{ __('UF') }}</label>
                 {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
                 <select value="{{$endereco->uf}}" class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
