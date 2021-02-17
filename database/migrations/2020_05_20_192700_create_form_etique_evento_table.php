@@ -16,17 +16,17 @@ class CreateFormEtiqueEventoTable extends Migration
         // Formulário para edição de etiquetas do card de eventos.
         Schema::create('form_eventos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('etiquetanomeevento')->nullable();
-            $table->string('etiquetatipoevento')->nullable();
-            $table->string('etiquetadescricaoevento')->nullable();
-            $table->string('etiquetadatas')->nullable();
-            $table->string('etiquetasubmissoes')->nullable();
-            $table->string('etiquetaenderecoevento')->nullable();
-            $table->string('etiquetamoduloinscricao')->nullable();
-            $table->string('etiquetamoduloprogramacao')->nullable();
-            $table->string('etiquetamoduloorganizacao')->nullable();
-            $table->string('etiquetabaixarregra')->nullable();
-            $table->string('etiquetabaixartemplate')->nullable();
+            $table->string('etiquetanomeevento')->default('Nome');
+            $table->string('etiquetatipoevento')->default('Tipo');
+            $table->string('etiquetadescricaoevento')->default('Descrição');
+            $table->string('etiquetadatas')->default('Realização');
+            $table->string('etiquetasubmissoes')->default('Submissões');
+            $table->string('etiquetaenderecoevento')->default('Endereço');
+            $table->string('etiquetamoduloinscricao')->default('Submissões');
+            $table->string('etiquetamoduloprogramacao')->default('Inscrições');
+            $table->string('etiquetamoduloorganizacao')->default('Organização');
+            $table->string('etiquetabaixarregra')->default('Regras');
+            $table->string('etiquetabaixartemplate')->default('Template');
 
             $table->boolean('modinscricao')->nullable();
             $table->boolean('modprogramacao')->nullable();

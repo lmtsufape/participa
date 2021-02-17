@@ -7,7 +7,9 @@
     </div>
 
     <form action="{{route('evento.criar')}}" method="POST" enctype="multipart/form-data">
-    @csrf
+        @csrf
+        <input type="hidden" name="coordenadorId" value="{{Auth::user()->id}}">
+        <input type="hidden" name="deletado" value="false">
         <div class="row subtitulo">
             <div class="col-sm-12">
                 <p>Informações Gerais</p>
