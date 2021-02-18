@@ -153,7 +153,7 @@ class TrabalhoController extends Controller
         'campoextra4grande' => ['nullable', 'string'],
         'campoextra5grande' => ['nullable', 'string'],
       ]);
-      
+      // dd($request);
       if($tiposExtensao->arquivo == true){
 
         $tiposcadastrados = [];
@@ -265,11 +265,12 @@ class TrabalhoController extends Controller
       if($request->emailCoautor != null){
         foreach ($request->emailCoautor as $key) {
           $userCoautor = User::where('email', $key)->first();
-          Coautor::create([
-            'ordem' => '-',
-            'autorId' => $userCoautor->id,
-            'trabalhoId'  => $trabalho->id,
-          ]);
+          $coautor = new Coautor();
+          $coautor->ordem = '-';
+          $coautor->autorId = $userCoautor->id;
+          $coautor->trabalhoId = $trabalho->id;
+          $coautor->eventos_id = $evento->id;
+          $coautor->save();
         }
       }
 
