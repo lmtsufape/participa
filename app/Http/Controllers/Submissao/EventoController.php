@@ -390,6 +390,7 @@ class EventoController extends Controller
       $evento = Evento::create($data);
 
       $evento->coordenadorId = auth()->user()->id;
+      $evento->deletado = false;
       $evento->save();
       // Se o evento tem foto
       if ($request->fotoEvento != null) {
