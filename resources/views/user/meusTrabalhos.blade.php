@@ -132,17 +132,9 @@
                   <td>{{$trabalho->titulo}}</td>
                   <td>{{$trabalho->autor->name}}</td>
                   <td style="text-align:center">
-                      {{-- @php $arquivo = ""; @endphp
-                      @foreach($trabalho->arquivo as $key)
-                      @php
-                          if($key->versaoFinal == true){
-                          $arquivo = $key->nome;
-                          }
-                      @endphp
-                      @endforeach
-                      <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                      <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
                           <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                      </a> --}}
+                      </a>
                   </td>                    
                   </tr>
               @endforeach

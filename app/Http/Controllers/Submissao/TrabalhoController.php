@@ -175,6 +175,12 @@ class TrabalhoController extends Controller
         if($tiposExtensao->odt == true){
           array_push($tiposcadastrados, "odt");
         }
+        if($tiposExtensao->zip == true) {
+          array_push($tiposcadastrados, "zip");
+        }
+        if($tiposExtensao->svg == true) {
+          array_push($tiposcadastrados, "svg");
+        }
 
         $extensao = $request->arquivo->getClientOriginalExtension();
         if(!in_array($extensao, $tiposcadastrados)){
