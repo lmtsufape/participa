@@ -523,24 +523,24 @@ class TrabalhoController extends Controller
         ou se for coordenador do evento, coordenador da comissão, se pertencer a comissão
         do evento ou se for autor do trabalho.        
       */
-      if ($revisor != null) {
-        $permissao = Atribuicao::where([['trabalhoId' ,'=', $id], ['revisorId', '=', $revisor->id]]);
+      $arquivo = $trabalho->arquivo()->where('versaoFinal', true)->first();
 
-        if ($permissao != null) {
-          if (Storage::disk()->exists('app/'.$trabalho->arquivo->nome)) {
-            return response()->download(storage_path('app/'.$trabalho->arquivo->nome));
-          }
-          return abort(404);
-        }
-        return abort(403);
-      
-      
-      } else if ($trabalho->evento->coordenadorId == auth()->user()->id || $trabalho->evento->coordComissaoId == auth()->user()->id || $user->membroComissaoEvento != null && $user->membroComissaoEvento == $trabalho->eventoId || $trabalho->autorId == auth()->user()->id) {
-        if (Storage::disk()->exists('app/'.$trabalho->arquivo->nome)) {
-          return response()->download(storage_path('app/'.$trabalho->arquivo->nome));
+      if ($trabalho->evento->coordenadorId == auth()->user()->id || $trabalho->evento->coordComissaoId == auth()->user()->id || $trabalho->autorId == auth()->user()->id) {
+        // dd();
+        if (Storage::disk()->exists($arquivo->nome)) {
+          return Storage::download($arquivo->nome,  $trabalho->titulo . "." . explode(".", $arquivo->nome)[1]);
         }
         return abort(404);
+      
+      } else if ($revisor != null) {
+        if ($revisor->trabalhosAtribuidos->contains($trabalho)) {
+          if (Storage::disk()->exists($arquivo->nome)) {
+            return Storage::download($arquivo->nome,  $trabalho->titulo . "." . explode(".", $arquivo->nome)[1]);
+          }
+          return abort(404);
+        } 
       }
+
       return abort(403);
     }
 

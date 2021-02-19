@@ -128,8 +128,17 @@ class UserController extends Controller
     public function meusTrabalhos(){
 
         $trabalhos = Trabalho::where('autorId', Auth::user()->id)->get();
+        $comoCoautor = Coautor::where('autorId', Auth::user()->id)->get();
+        
+        $trabalhosCoautor = collect();
+
+        foreach ($comoCoautor as $coautor) {
+            $trabalhosCoautor->push($coautor->trabalho);
+        }
+        // dd($trabalhosCoautor);
         return view('user.meusTrabalhos',[
                                             'trabalhos'           => $trabalhos,
+                                            'trabalhosCoautor'    => $trabalhosCoautor,
                                         ]);
     }
 
