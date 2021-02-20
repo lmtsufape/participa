@@ -116,13 +116,13 @@
                                 <label class="col-form-label">{{ __('Restrições de resumo:') }}</label>
 
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1" required>
+                                    <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1" >
                                     <label class="form-check-label" for="texto">
                                         Quantidade de caracteres
                                     </label>
                                     </div>
                                     <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-2" value="limit-option2" required>
+                                    <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-2" value="limit-option2" >
                                     <label class="form-check-label" for="arquivo">
                                         Quantidade de palavras
                                     </label>

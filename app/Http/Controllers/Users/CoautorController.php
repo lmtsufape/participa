@@ -15,7 +15,12 @@ class CoautorController extends Controller
      */
     public function index()
     {
-        //
+        return view('coautor.index');
+    }
+
+    public function trabalhos()
+    {
+        return view('coautor.index');
     }
 
     /**

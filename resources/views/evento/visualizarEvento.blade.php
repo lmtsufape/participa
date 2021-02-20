@@ -311,12 +311,12 @@
                 <div class="col-sm-12 info-evento">
                     <h5>{{$etiquetas->etiquetamoduloinscricao}}:</h5>
                     <p>
-                        {{-- @if ($isInscrito)
+                        @if ($isInscrito)
                           Você já está inscrito nesse evento.
                         @else
                           <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a>
-                        @endif --}}
-                        <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a>
+                        @endif
+                        {{-- <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a> --}}
                     </p>
                 </div>
               </div>

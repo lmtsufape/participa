@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-md-2">
                           {{-- <a href="#" class="btn btn-primary">Cadastrar área</a> --}}
-                          @component('componentes.modal-area')
+                          @component('componentes.modal-area', ['evento' => $evento])
                             
                           @endcomponent
                         </div>

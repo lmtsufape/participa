@@ -261,6 +261,7 @@ class TrabalhoController extends Controller
       }
 
       $trabalho->save();
+      // dd($trabalho->id);
 
       if($request->emailCoautor != null){
         foreach ($request->emailCoautor as $key) {
@@ -269,6 +270,7 @@ class TrabalhoController extends Controller
             'ordem' => '-',
             'autorId' => $userCoautor->id,
             'trabalhoId'  => $trabalho->id,
+            'eventos_id' => $evento->id
           ]);
         }
       }

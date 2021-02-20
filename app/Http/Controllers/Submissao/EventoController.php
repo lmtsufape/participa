@@ -387,10 +387,11 @@ class EventoController extends Controller
       $data = $request->all();
       $endereco = Endereco::create($data);        
       $data['enderecoId'] = $endereco->id;
+      $data['coordenadorId'] = Auth::user()->id;
       $evento = Evento::create($data);
 
       // Se o evento tem foto
-      $evento->fotoEvento = $this->uploadFile($request);
+      $evento->fotoEvento = $this->uploadFile($request, $evento);
       $evento->save();
 
       $user = Auth::user();
@@ -793,4 +794,3 @@ class EventoController extends Controller
       return response()->json($eventos);
     }
 }
-         

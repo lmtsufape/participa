@@ -12,15 +12,15 @@ class Coautor extends Model
    * @var array
    */
   protected $fillable = [
-      'ordem','autorId', 'trabalhoId',
+      'ordem','id', 'trabalhoId', 'eventos_id', 'autorId'
   ];
 
   public function user(){
       return $this->belongsTo('App\Models\Users\User');
   }
 
-  public function trabalho(){
-      return $this->belongsTo('App\Models\Submissao\Trabalho', 'trabalhoId');
+  public function trabalhos(){
+      return $this->belongsToMany('App\Models\Submissao\Trabalho');
   }
 
   public function eventos(){

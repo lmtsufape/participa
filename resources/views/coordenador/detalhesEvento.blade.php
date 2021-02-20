@@ -6,7 +6,7 @@
         <h2>{{{$evento->nome}}}</h2>
         <ul>
             @can('isCoordenador', $evento)
-                <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
+                <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}" style="text-decoration:none;">
                     <li>
                         <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
                     </li>
@@ -927,14 +927,7 @@
                       "Option 3": "value3"
                      };
     var $el = $("#testeId");
-    // $("#areaRevisorTrabalhos").change(function(){
-    //   alert("The text has been changed.");
-    //   $el.empty(); // remove old options
-    //   $.each(newOptions, function(key,value) {
-    //     $el.append($("<option></option>")
-    //     .attr("value", value).text(key));
-    //   });
-    // });
+    
     $("#testeId").change(function(){
       alert("The text has been changed.");
     });

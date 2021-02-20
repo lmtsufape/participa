@@ -13,6 +13,7 @@ use App\Mail\EmailLembrete;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\AtribuicaoRevisorRequest;
 
 class AtribuicaoController extends Controller
 {
@@ -232,10 +233,8 @@ class AtribuicaoController extends Controller
       return redirect()->back()->with(['mensagem' => $mensagem]);
     }
 
-    public function atribuirCheck(Request $request)
+    public function atribuirCheck(AtribuicaoRevisorRequest $request)
     {
-
-
       $data = $request->all();
      
       $evento = Evento::find($request->eventoId);
