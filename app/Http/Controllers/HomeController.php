@@ -25,7 +25,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function home()
     {   
         $user = Auth::user();
         if($user->administradors != null){    
@@ -75,18 +75,18 @@ class HomeController extends Controller
           } 
     }
 
-    public function home() {
+    public function index() {
       $eventosDestaque = Inscricao::join("eventos", "inscricaos.evento_id", "=", "eventos.id")->select("eventos.id", DB::raw('count(inscricaos.evento_id) as total'))->groupBy("eventos.id")->orderBy("total", "desc")->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->limit(6)->get();
       
+      $eventos = collect();
       if (count($eventosDestaque) > 0) {
-        $eventos = collect();
         foreach ($eventosDestaque as $ev) {
           $eventos->push(Evento::find($ev->id));
         }
       } else {
-        $eventos = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->get();
+        $eventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->get();
       } 
-
+      
       $tiposEvento = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->selectRaw('DISTINCT tipo')->get();
       
       return view('index',['eventos'=>$eventos, 'tipos' => $tiposEvento]);

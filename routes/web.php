@@ -13,7 +13,7 @@
 use Illuminate\Support\Facades\Log;
 use App\Models\Submissao\Evento;
 
-Route::get('/index', 'HomeController@home')->name('index');
+Route::get('/index', 'HomeController@index')->name('index');
 Route::get('/evento/busca', 'Submissao\EventoController@buscaLivre')->name('busca.eventos');
 Route::get('/evento/buscar-livre', 'Submissao\EventoController@buscaLivreAjax')->name('busca.livre.ajax');
 
@@ -255,4 +255,4 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
 // Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home')->middleware('verified', 'isTemp');
+Route::get('/home', 'HomeController@home')->name('home')->middleware('verified', 'isTemp');

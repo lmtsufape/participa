@@ -23,6 +23,9 @@
                           <h5 class="card-title">Áreas</h5>
                         </div>
                         <div class="col-md-2">
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cadastrarArea">
+                            Cadastrar área
+                          </button>
                           {{-- <a href="#" class="btn btn-primary">Cadastrar área</a> --}}
                           @component('componentes.modal-area', ['evento' => $evento])
                             
