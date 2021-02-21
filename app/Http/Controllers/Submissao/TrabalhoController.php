@@ -272,12 +272,13 @@ class TrabalhoController extends Controller
       if($request->emailCoautor != null){
         foreach ($request->emailCoautor as $key) {
           $userCoautor = User::where('email', $key)->first();
-          Coautor::create([
+          $coauntor = Coautor::create([
             'ordem' => '-',
             'autorId' => $userCoautor->id,
             'trabalhoId'  => $trabalho->id,
             'eventos_id' => $evento->id
           ]);
+          // $coauntor->trabalhos()->attach($trabalho);
         }
       }
 
