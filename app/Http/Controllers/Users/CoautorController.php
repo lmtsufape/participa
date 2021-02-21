@@ -21,11 +21,11 @@ class CoautorController extends Controller
 
     public function trabalhos()
     {   
-        $trabalhos = DB::table('users')
-                        ->join('coautors', 'users.id', '=', 'coautors.autorId')
-                        ->join('orders', 'users.id', '=', 'orders.user_id')
-                        ->select('users.*', 'contacts.phone', 'orders.price')
-                        ->get();
+        // $trabalhos = DB::table('users')
+        //                 ->join('coautors', 'users.id', '=', 'coautors.autorId')
+        //                 ->join('trabalhos', 'coautors.id', '=', 'orders.user_id')
+        //                 ->select('users.*', 'contacts.phone', 'orders.price')
+        //                 ->get();
         return view('coautor.index');
     }
 
