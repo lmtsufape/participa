@@ -63,7 +63,7 @@ class ModalidadeController extends Controller
             'fimDaSubmissão'    => ['required', 'date', 'after:inícioDaSubmissão'],
             'inícioDaRevisão'   => ['required', 'date', 'after:inícioDaSubmissão'],
             'fimDaRevisão'      => ['required', 'date', 'after:inícioDaRevisão'],
-            'resultado' => ['required', 'date', 'after:fimDaRevisão'],
+            'resultado'         => ['required', 'date', 'after:fimDaRevisão'],
             'mincaracteres'     => ['nullable', 'integer'],
             'maxcaracteres'     => ['nullable', 'integer'],
             'minpalavras'       => ['nullable', 'integer'],

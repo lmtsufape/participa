@@ -69,7 +69,7 @@
                                           </div>
                                           <div class="col-sm-3">
                                               <a href="#" class="delete pr-2">
-                                                <img src="/img/icons/user-times-solid.svg" style="margin-bottom:15px;width:25px;">
+                                                <img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;">
                                               </a>
                                               <a href="#" onclick="myFunction(event)">
                                                 <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
@@ -152,14 +152,15 @@
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" required>
                                   </div>
                                   <small>Arquivos aceitos nos formatos 
-                                    @if($modalidade->pdf == true)pdf - @endif
-                                    @if($modalidade->jpg == true)jpg - @endif
-                                    @if($modalidade->jpeg == true)jpeg - @endif
-                                    @if($modalidade->png == true)png - @endif
-                                    @if($modalidade->docx == true)docx - @endif
-                                    @if($modalidade->odt == true)odt - @endif 
-                                    @if($modalidade->zip == true)zip  - @endif
-                                    @if($modalidade->svg == true)svg @endif.</small>
+                                    @if($modalidade->pdf == true)<span> - pdf</span>@endif
+                                    @if($modalidade->jpg == true)<span> - jpg</span>@endif
+                                    @if($modalidade->jpeg == true)<span> - jpeg</span>@endif
+                                    @if($modalidade->png == true)<span> - png</span>@endif
+                                    @if($modalidade->docx == true)<span> - docx</span>@endif
+                                    @if($modalidade->odt == true)<span> - odt</span>@endif 
+                                    @if($modalidade->zip == true)<span> - zip</span>@endif
+                                    @if($modalidade->svg == true)<span> - svg</span>@endif.
+                                  </small>
                                   @error('arquivo')
                                   <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                     <strong>{{ $message }}</strong>
@@ -452,7 +453,7 @@
     $('.palavra').keyup(function() {
         var maxLength = parseInt($(this).attr('maxlength')); 
         var texto = $(this).val().length;
-        console.log(texto);
+        // console.log(texto);
         if ($(this).val()[length - 1] == " ") {
           var cont = $(this).val().length;
           // console.log("Contador:");
@@ -471,7 +472,7 @@
   $(document).ready(function(){
     function ordenar(event){
       event.preventDefault();
-      console.log(event);
+      // console.log(event);
     }
   });
 
@@ -531,7 +532,7 @@
 
     // Exibir modalidade de acordo com a área
     $("#area").change(function(){
-      console.log($(this).val());
+      // console.log($(this).val());
       addModalidade($(this).val());
     });
 
@@ -544,11 +545,11 @@
   });
 
   function addModalidade(areaId){
-    console.log(modalidades)
+    // console.log(modalidades)
     $("#modalidade").empty();
     for(let i = 0; i < modalidades.length; i++){
       if(modalidades[i].areaId == areaId){
-        console.log(modalidades[i]);
+        // console.log(modalidades[i]);
         $("#modalidade").append("<option value="+modalidades[i].modalidadeId+">"+modalidades[i].modalidadeNome+"</option>")
       }
     }
@@ -566,16 +567,9 @@
                       <input type="text" style="margin-bottom:10px" value="" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" required>
                   </div>
                   <div class="col-sm-3">
-                      <a href="#" class="delete pr-2">
-                        <img src="/img/icons/user-times-solid.svg" style="margin-bottom:15px;width:25px;">
-                      </a>
-                      <a href="#" onclick="myFunction(event)">
-                        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                      </a>
-                      <a href="#" onclick="myFunction(event)">
-                        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                      </a>
-                      
+                      <a href="#" class="delete pr-2"><img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;"></a>
+                      <a href="#" onclick="myFunction(event)"><i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i></a>
+                      <a href="#" onclick="myFunction(event)"><i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i></a>
                   </div>
               </div>
             </div>`;
@@ -589,32 +583,33 @@
     let email = document.querySelector('#'+card.id);
 
     email.addEventListener('keyup', function(event){
-      console.log(email)
+      // console.log(email)
       
         let data = {
         email: email.value,
         
         _token: '{{csrf_token()}}'
       };
-
-      $.ajax({
+      // console.log(data.email.indexOf('@'));
+      if (!(data.email=="" || data.email.indexOf('@')==-1 || data.email.indexOf('.')==-1)) {
+        $.ajax({
           type: 'POST',
           url: '{{ route("search.user") }}',
           data: data,
           dataType: 'json',
           success: function(res){
-            console.log(event)
             if(res.user[0] != null){
-              event.path[2].childNodes[3].childNodes[3].attributes[2].value = res.user[0]['name'];
+              // console.log('pega')
+              event.path[2].children[1].children[1].value = res.user[0]['name'];
             }
               
           },
           error: function(err){
-              console.log('err')
-              console.log(err)
+              // console.log('err')
+              // console.log(err)
           }
-      });
-
+        });
+      }
     });
   }
 

@@ -38,8 +38,8 @@ class Trabalho extends Model
       return $this->belongsTo('App\Models\Users\User', 'autorId');
   }
 
-  public function coautor(){
-      return $this->hasMany('App\Models\Users\Coautor', 'trabalhoId');
+  public function coautors(){
+      return $this->belongsToMany('App\Models\Users\Coautor');
   }
 
   public function pareceres(){

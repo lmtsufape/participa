@@ -23,8 +23,8 @@
                           <h5 class="card-title">Áreas</h5>
                         </div>
                         <div class="col-md-2">
-                          {{-- <a href="#" class="btn btn-primary">Cadastrar área</a> --}}
-                          @component('componentes.modal-area')
+                          
+                          @component('componentes.modal-area', ['evento' => $evento])
                             
                           @endcomponent
                         </div>
@@ -35,7 +35,6 @@
                         <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
                               <tr>
-                                <th scope="col">#</th>
                                 <th scope="col">Nome</th>
                                 <th scope="col" style="text-align:center">Editar</th>
                                 <th scope="col" style="text-align:center">Remover</th>
@@ -44,7 +43,6 @@
                             <tbody>
                               @foreach($areas as $area)
                                 <tr>
-                                  <th scope="row">{{$area->id}}</th>
                                   <td>{{$area->nome}}</td>
                                   <td style="text-align:center">
                                     <a href="#" data-toggle="modal" data-target="#modalEditarArea{{$area->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>

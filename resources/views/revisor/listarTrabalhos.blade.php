@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container content" style="margin-top:60px">
+<div class="container content" style="margin-top: 80px">
     <div class="row">
         <div class="col-sm-12">
           <h1 class="titulo-detalhes">Trabalhos de {{$evento->nome}}</h1>

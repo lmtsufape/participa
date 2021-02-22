@@ -67,7 +67,7 @@
                                 <img src="{{ asset('/img/logo.png') }}" alt="" style="height: 45px; width: 135px;">
                             </a>
                         </div>
-                        <div class="col-sm-2 navbar-center clicavel">
+                        {{-- <div class="col-sm-2 navbar-center clicavel">
                             <a id="change-mode" class="navbar-brand">
                                 <img id="img-change-mode" src="{{asset('/img/icons/mom.png')}}" alt="" style="height: 40px; width: 45px;">
                             </a>
@@ -81,7 +81,7 @@
                             <a id="font-size-min" class="navbar-brand tam-letra">
                                 -A
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
 
 
@@ -91,31 +91,31 @@
                             <!-- Authentication Links -->
                             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                     @guest
-                                        <a class="nav-link" href="{{ route('index') }}" >
+                                        <a class="nav-link" href="{{ route('index') }}" style="margin-right: 5px; margin-left: 5px">
                                             Início 
                                         </a>
                                     @else
-                                        <a class="nav-link" href="{{ route('home') }}" >
+                                        <a class="nav-link" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
                                             Início
                                         </a>
                                     @endguest
                             </div>
                             @guest
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
+                                    {{-- <a class="nav-link" data-toggle="modal" data-target="#modalLogin">{{ __('Login') }}</a> --}}
+                                </li>
                                 @if (Route::has('register'))
-                                    <li class="nav-item" style="margin-right: 10px; margin-left: 10px">
-                                        <a class="nav-link" href="{{ route('register') }}">{{ __('Cadastre seu evento') }}</a>
+                                    <li class="nav-item" style="margin-right: 5px; margin-left: 5px">
+                                        <a class="nav-link" href="{{ route('register') }}">{{ __('Cadastre-se') }}</a>
                                         {{-- <a class="nav-link" data-toggle="modal" data-target="#modalCadastro">{{ __('Cadastro') }}</a> --}}
                                     </li>
                                 @endif
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                    {{-- <a class="nav-link" data-toggle="modal" data-target="#modalLogin">{{ __('Login') }}</a> --}}
-                                </li>
                             @else
 
                                     {{-- $ComissaoEvento = ComissaoEvento::where('user_id', Auth::user()->id)->first(); --}}
                                 
-                                <li class="nav-item dropdown" style="margin-right: 10px; margin-left: 10px">
+                                <li class="nav-item dropdown" style="margin-right: 5px; margin-left: 5px">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                         Perfis <span class="caret"></span>
                                     </a>
@@ -126,7 +126,7 @@
                                             <img src="{{asset('img/icons/perfil.svg')}}" alt="">
                                             {{ __('Área do Participante') }}
                                         </a>
-                                        @if (isset(Auth::user()->revisor))
+                                        @if (Auth::user()->revisor->count())
                                             {{-- Rota - Area de Revisores --}}
                                             <a class="dropdown-item" href="{{ route('revisor.index') }}">
                                                 <img src="{{asset('img/icons/revisor.png')}}" alt="">
@@ -160,7 +160,7 @@
                                             </a>
                                         @endif
 
-                                        @if (isset(Auth::user()->membroComissaoEvento))
+                                        @if (Auth::user()->membroComissaoEvento->count())
                                             {{-- Rota - Area da Comissao --}}
                                             <a class="dropdown-item" href="{{ route('home.membro') }}">
                                                 <img src="{{asset('img/icons/comissao.png')}}" alt="">
@@ -173,6 +173,14 @@
                                             <a class="dropdown-item" href="{{ route('coord.index') }}">
                                                 <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                                 {{ __('Área do Coordenador de Evento') }}
+                                            </a>
+                                        @endif
+
+                                        @if ( isset(Auth::user()->coautor) && Auth::user()->coautor->count())
+                                            {{-- Rota - Area do coautor --}}
+                                            <a class="dropdown-item" href="{{ route('coautor.index') }}">
+                                                <img src="{{asset('img/icons/comissao.png')}}" alt="">
+                                                {{ __('Área de Coautor de Trabalho') }}
                                             </a>
                                         @endif
 

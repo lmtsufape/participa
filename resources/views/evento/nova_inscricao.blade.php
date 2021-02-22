@@ -280,7 +280,7 @@
                                     <div class="row form-group">
                                         <div class="col-sm-9">
                                             @if ($categoria->promocoes()->count() > 0)
-                                                <label for="promocao">Pacotes disponíveis</label>
+                                                <label for="promocao">Pacote</label>
                                                 <select name="promocao" id="promocao" class="form-control" onchange="carregarAtividadesDoPacote(this)">
                                                     <option value="" disabled selected>-- Escolha um pacote --</option>
                                                     @foreach ($categoria->promocoes as $pacote)
@@ -288,7 +288,8 @@
                                                     @endforeach
                                                 </select>
                                             @else 
-                                                Não existe pacotes para essa categoria 
+                                                <label for="promocao">Pacote</label>
+                                                <input type="text" disabled class="form-control" value="Não existe pacotes para essa categoria"> 
                                             @endif
                                         </div>
                                         <div class="col-sm-3">
@@ -681,7 +682,7 @@
                                     <div class="row form-group">
                                         <div class="col-sm-9">
                                             @if ($categoria->promocoes()->count() > 0)
-                                                <label for="promocao">Pacotes disponíveis</label>
+                                                <label for="promocao">Pacote</label>
                                                 <select name="promocao" id="promocao" class="form-control" onchange="carregarAtividadesDoPacote(this)">
                                                     <option value="" disabled selected>-- Escolha um pacote --</option>
                                                     @foreach ($categoria->promocoes as $pacote)
@@ -689,7 +690,8 @@
                                                     @endforeach
                                                 </select>
                                             @else 
-                                                Não existe pacotes para essa categoria 
+                                                <label for="promocao">Pacote</label>
+                                                <input type="text" disabled class="form-control" value="Não existe pacotes para essa categoria"> 
                                             @endif
                                         </div>
                                         <div class="col-sm-3">

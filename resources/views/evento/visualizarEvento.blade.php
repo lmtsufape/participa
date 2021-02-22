@@ -242,26 +242,26 @@
                         <h5>{{$etiquetas->etiquetasubmissoes}}</h5>
                         @foreach ($modalidades as $modalidade)
                           <h6 class="titulo-modalidade" >Modalidade: {{$modalidade->nome}}</h6>
-                          @if (isset($modalidade->inicioSubmissao))
-                            <p>
-                              <img class="" src="{{asset('img/icons/calendar-pink.png')}}" alt="">
-                              Envio: {{date('d/m/Y',strtotime($modalidade->inicioSubmissao))}} - {{date('d/m/Y',strtotime($modalidade->fimSubmissao))}}
-                            </p>
-                          @endif
-              
-                          @if (isset($modalidade->inicioRevisao))
-                          <p>
-                            <img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt="">
-                            Revisão: {{date('d/m/Y',strtotime($modalidade->inicioRevisao))}} - {{date('d/m/Y',strtotime($modalidade->fimRevisao))}}
-                          </p>
-                          @endif
-              
-                          @if (isset($modalidade->inicioResultado))
-                          <p>
-                            <img class="" src="{{asset('img/icons/calendar-green.png')}}" alt="">
-                            Resultado: {{date('d/m/Y',strtotime($modalidade->inicioResultado))}}
-                          </p>
-                          @endif
+                          <table>
+                            <tr>
+                              <td><img class="" src="{{asset('img/icons/calendar-pink.png')}}" alt=""></td>
+                              <td>Envio:</td>
+                              <td>{{date('d/m/Y',strtotime($modalidade->inicioSubmissao))}}</td>
+                              <td>- {{date('d/m/Y',strtotime($modalidade->fimSubmissao))}}</td>
+                            </tr>
+                            <tr>
+                              <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
+                              <td>Revisão:</td>
+                              <td>{{date('d/m/Y',strtotime($modalidade->inicioRevisao))}}</td>
+                              <td>- {{date('d/m/Y',strtotime($modalidade->fimRevisao))}}</td>
+                            </tr>
+                            <tr>
+                              <td><img class="" src="{{asset('img/icons/calendar-green.png')}}" alt=""></td>
+                              <td>Resultado:</td>
+                              <td>{{date('d/m/Y',strtotime($modalidade->inicioResultado))}}</td>
+                            </tr>
+                          </table>
+
                           {{-- {{dd(Carbon\Carbon::parse($modalidade->inicioSubmissao))}} --}}
                           @if(Carbon\Carbon::parse($modalidade->inicioSubmissao) <= $mytime)
                             @if($mytime <= Carbon\Carbon::parse($modalidade->fimSubmissao))
@@ -311,12 +311,12 @@
                 <div class="col-sm-12 info-evento">
                     <h5>{{$etiquetas->etiquetamoduloinscricao}}:</h5>
                     <p>
-                        {{-- @if ($isInscrito)
+                        @if ($isInscrito)
                           Você já está inscrito nesse evento.
                         @else
                           <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a>
-                        @endif --}}
-                        <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a>
+                        @endif
+                        {{-- <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a> --}}
                     </p>
                 </div>
               </div>

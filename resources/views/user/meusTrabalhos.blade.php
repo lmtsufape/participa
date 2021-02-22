@@ -46,9 +46,9 @@
     </div>
   </div>
   
-<div class="container content">
+<div class="container content" style="margin-top: 80px;">
     {{-- titulo da página --}}
-    <div class="row justify-content-center titulo">
+    <div class="row justify-content-center titulo-detalhes">
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-12">
@@ -58,7 +58,7 @@
             </div>
         </div>
     </div>
-    
+    <br>
     <div class="row margin">
         <div class="col-sm-12 info-evento">
             <h4>Como Autor</h4>
@@ -70,40 +70,38 @@
     <div class="row justify-content-center">
         <div class="col-sm-12">
 
-        <table class="table table-responsive-lg table-hover">
-            <thead>
-            <tr>
-                <th>Título</th>
-                <th style="text-align:center">Baixar</th>
-                <th style="text-align:center">Nova Versão</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{-- @foreach($trabalhos as $trabalho)
-                <tr>
-                <td>{{$trabalho->titulo}}</td>
-                <td style="text-align:center">
-                    @php $arquivo = ""; @endphp
-                    @foreach($trabalho->arquivo as $key)
-                    @php
-                        if($key->versaoFinal == true){
-                        $arquivo = $key->nome;
-                        }
-                    @endphp
-                    @endforeach
-                    <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                        <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                    </a>
-                </td>
-                <td style="text-align:center">
-                    <a href="#" onclick="changeTrabalho({{$trabalho->id}})" data-toggle="modal" data-target="#modalTrabalho" style="color:#114048ff">
-                    <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
-                    </a>
-                </td>
-                </tr>
-            @endforeach --}}
-            </tbody>
-        </table>
+        @if (count($trabalhos) > 0)
+          <table class="table table-responsive-lg table-hover">
+              <thead>
+              <tr>
+                  <th>Evento</th>
+                  <th>Título</th>
+                  <th style="text-align:center">Baixar</th>
+                  <th style="text-align:center">Nova Versão</th>
+              </tr>
+              </thead>
+              <tbody>
+              @foreach($trabalhos as $trabalho)
+                  <tr>
+                  <td>{{$trabalho->evento->nome}}</td>
+                  <td>{{$trabalho->titulo}}</td>
+                  <td style="text-align:center">
+                      <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                          <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                      </a>
+                  </td>
+                  <td style="text-align:center">
+                      <a href="#" onclick="changeTrabalho({{$trabalho->id}})" data-toggle="modal" data-target="#modalTrabalho" style="color:#114048ff">
+                      <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
+                      </a>
+                  </td>
+                  </tr>
+              @endforeach
+              </tbody>
+          </table>
+        @else 
+          Você não submeteu nenhum trabalho...
+        @endif
         </div>
     </div>
       
@@ -117,34 +115,34 @@
     <div class="row justify-content-center">
         <div class="col-sm-12">
 
-        <table class="table table-responsive-lg table-hover">
-            <thead>
-            <tr>
-                <th>Título</th>
-                <th  style="text-align:center">Baixar</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{-- @foreach($trabalhosCoautor as $trabalho)
-                <tr>
-                <td>{{$trabalho->titulo}}</td>
-                <td style="text-align:center">
-                    @php $arquivo = ""; @endphp
-                    @foreach($trabalho->arquivo as $key)
-                    @php
-                        if($key->versaoFinal == true){
-                        $arquivo = $key->nome;
-                        }
-                    @endphp
-                    @endforeach
-                    <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                        <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                    </a>
-                </td>                    
-                </tr>
-            @endforeach --}}
-            </tbody>
-        </table>
+        @if (count($trabalhosCoautor) > 0)
+          <table class="table table-responsive-lg table-hover">
+              <thead>
+              <tr>
+                  <th>Evento</th>
+                  <th>Título</th>
+                  <th>Autor</th>
+                  <th style="text-align:center">Baixar</th>
+              </tr>
+              </thead>
+              <tbody>
+              @foreach($trabalhosCoautor as $trabalho)
+                  <tr>
+                  <td>{{$trabalho->evento->nome}}</td>
+                  <td>{{$trabalho->titulo}}</td>
+                  <td>{{$trabalho->autor->name}}</td>
+                  <td style="text-align:center">
+                      <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                          <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                      </a>
+                  </td>                    
+                  </tr>
+              @endforeach
+              </tbody>
+          </table>
+        @else
+          Você não participa como coautor em nenhum trabalho...
+        @endif
         </div>
     </div>
 
