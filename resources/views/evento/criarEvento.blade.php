@@ -245,7 +245,7 @@
                         </div>
                         <div class="col-sm-4">
                             <label for="complemento" class="col-form-label">{{ __('Complemento*') }}</label>
-                            <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="{{ old('complemento') }}" required autocomplete="complemento" autofocus>
+                            <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="{{ old('complemento') }}" autocomplete="complemento" autofocus>
             
                             @error('complemento')
                             <span class="invalid-feedback" role="alert">

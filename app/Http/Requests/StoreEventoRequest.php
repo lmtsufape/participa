@@ -37,7 +37,7 @@ class StoreEventoRequest extends FormRequest
             'cidade'              => ['required', 'string'],
             'uf'                  => ['required', 'string'],
             'cep'                 => ['required', 'string'],
-            'complemento'         => ['required', 'string'],
+            'complemento'         => ['nullable', 'string'],
         ];
     }
 
