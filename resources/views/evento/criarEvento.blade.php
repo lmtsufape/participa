@@ -189,7 +189,7 @@
                     {{-- Rua | Número | Bairro --}}
                     <div class="row justify-content-center">
                         <div class="col-sm-4">
-                            <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
+                            <label for="cep" class="col-form-label">{{ __('CEP*') }}</label>
                             <input value="{{ old('cep') }}" onblur="pesquisacep(this.value);" id="cep" name="cep" type="text" class="form-control @error('cep') is-invalid @enderror" required autocomplete="cep">
 
                             @error('cep')
@@ -244,8 +244,8 @@
                             @enderror
                         </div>
                         <div class="col-sm-4">
-                            <label for="complemento" class="col-form-label">{{ __('Complemento*') }}</label>
-                            <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="{{ old('complemento') }}" required autocomplete="complemento" autofocus>
+                            <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
+                            <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="{{ old('complemento') }}" autocomplete="complemento" autofocus>
             
                             @error('complemento')
                             <span class="invalid-feedback" role="alert">

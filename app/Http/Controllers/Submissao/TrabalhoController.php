@@ -117,7 +117,7 @@ class TrabalhoController extends Controller
     public function store(Request $request, $modalidadeId){
       
       //Obtendo apenas os tipos de extensões selecionadas
-      $tiposExtensao = Modalidade::find($modalidadeId);
+      $modalidade = Modalidade::find($modalidadeId);
       
       $mytime = Carbon::now('America/Recife');
       $mytime = $mytime->toDateString();
@@ -154,39 +154,10 @@ class TrabalhoController extends Controller
         'campoextra5grande' => ['nullable', 'string'],
       ]);
       // dd($request);
-      if($tiposExtensao->arquivo == true){
-
-        $tiposcadastrados = [];
-        if($tiposExtensao->pdf == true){
-          array_push($tiposcadastrados, "pdf");
-        }
-        if($tiposExtensao->jpg == true){
-          array_push($tiposcadastrados, "jpg");
-        }
-        if($tiposExtensao->jpeg == true){
-          array_push($tiposcadastrados, "jpeg");
-        }
-        if($tiposExtensao->png == true){
-          array_push($tiposcadastrados, "png");
-        }
-        if($tiposExtensao->docx == true){
-          array_push($tiposcadastrados, "docx");
-        }
-        if($tiposExtensao->odt == true){
-          array_push($tiposcadastrados, "odt");
-        }
-        if($tiposExtensao->zip == true) {
-          array_push($tiposcadastrados, "zip");
-        }
-        if($tiposExtensao->svg == true) {
-          array_push($tiposcadastrados, "svg");
-        }
-
-        $extensao = $request->arquivo->getClientOriginalExtension();
-        if(!in_array($extensao, $tiposcadastrados)){
-          return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
-          Verifique no formulário, quais os tipos permitidos.']);
-        }
+      
+      if ($this->validarTipoDoArquivo($request, $modalidade)) {
+        return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
+        Verifique no formulário, quais os tipos permitidos.']);
       }
       
       $autor = Auth::user();
@@ -423,22 +394,31 @@ class TrabalhoController extends Controller
     public function novaVersao(Request $request){
       $mytime = Carbon::now('America/Recife');
       $mytime = $mytime->toDateString();
-      $evento = Evento::find($request->eventoId);
-      if($evento->inicioSubmissao > $mytime){
-        if($mytime >= $evento->fimSubmissao){
-            return redirect()->route('home');
-        }
-      }
+      $trabalho = Trabalho::find($request->trabalhoId);
+      $evento = $trabalho->evento;
+      $modalidade = $trabalho->modalidade;
+
       $validatedData = $request->validate([
-        'arquivo' => ['required', 'file', 'mimes:pdf'],
-        'eventoId' => ['required', 'integer'],
+        'arquivo' => ['required', 'file', 'max:2000000'],
         'trabalhoId' => ['required', 'integer'],
       ]);
 
-      $trabalho = Trabalho::find($request->trabalhoId);
+      // dd($validatedData);
+      if($modalidade->inicioSubmissao > $mytime){
+        if($mytime >= $modalidade->fimSubmissao){
+          return redirect()->back()->withErrors(['error' => 'O periodo de submissão para esse trabalho se encerrou.']);
+        }
+      }
+      
+      if($this->validarTipoDoArquivo($request, $trabalho->modalidade)) {
+        return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
+          Verifique no formulário, quais os tipos permitidos.', 'trabalhoId' => $trabalho->id]);
+      }
+
+      dd($modalidade);
 
       if(Auth::user()->id != $trabalho->autorId){
-        return redirect()->route('home');
+        return abort(403);
       }
 
       $arquivos = $trabalho->arquivo;
@@ -649,5 +629,42 @@ class TrabalhoController extends Controller
       $parecer->save();
 
       return redirect()->back()->with(['mensagem' => 'Avaliação salva']);
+    }
+
+    public function validarTipoDoArquivo(Request $request, $tiposExtensao) {
+      if($tiposExtensao->arquivo == true){
+
+        $tiposcadastrados = [];
+        if($tiposExtensao->pdf == true){
+          array_push($tiposcadastrados, "pdf");
+        }
+        if($tiposExtensao->jpg == true){
+          array_push($tiposcadastrados, "jpg");
+        }
+        if($tiposExtensao->jpeg == true){
+          array_push($tiposcadastrados, "jpeg");
+        }
+        if($tiposExtensao->png == true){
+          array_push($tiposcadastrados, "png");
+        }
+        if($tiposExtensao->docx == true){
+          array_push($tiposcadastrados, "docx");
+        }
+        if($tiposExtensao->odt == true){
+          array_push($tiposcadastrados, "odt");
+        }
+        if($tiposExtensao->zip == true) {
+          array_push($tiposcadastrados, "zip");
+        }
+        if($tiposExtensao->svg == true) {
+          array_push($tiposcadastrados, "svg");
+        }
+
+        $extensao = $request->arquivo->getClientOriginalExtension();
+        if(!in_array($extensao, $tiposcadastrados)){
+          return true;
+        }
+        return false;
+      }
     }
 }

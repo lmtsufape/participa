@@ -87,17 +87,19 @@ body{
 .footer{
   background-color:#114048ff;
   /* height: 90vh; */
-  padding: 100px;
-  padding-top: 70px;
+  padding: 50px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  width: 102%;
   color: white;
 }
 .footer .social{
-  width: 50px;
+  width: 40px;
   margin: 10px;
   transition: 0.5s;
 }
 .footer .social:hover{
-  width: 65px;
+  width: 55px;
   transition: 0.5s;
 }
 .footer .sobre a{
@@ -119,7 +121,7 @@ body{
     margin-bottom:30px;
   }
   .footer .social{
-    width:65px;
+    width:40px;
   }
   .curved{
     height: 550px;
@@ -541,9 +543,11 @@ body{
 }
 
 .separador hr {
+  position: relative;
   background-color: white;
   height: 2px;
-  margin-bottom: 50px;
+  right: 12px;
+  margin-bottom: 20px;
 }
 
 .footer .links-rodape a {
