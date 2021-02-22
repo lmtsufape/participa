@@ -9,7 +9,7 @@
         <hr>
       </div>
     </div>
-    <div class="row">
+    <div class="row" style="padding-left: 150px; padding-right: 150px;">
       <div class="col-sm-4 coluna">
         <div class="row justify-content-center">
           <small>Desenvolvidor por:</small>
@@ -26,15 +26,15 @@
         </div>
       </div>
     </div>
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" style="padding-left: 150px; padding-right: 150px;">
       <div class="col-sm-4 coluna">
         <div class="row justify-content-center">
           <a href="http://www.lmts.uag.ufrpe.br/br" name="lmts">
-            <img src="{{asset('img/lmts.png')}}" style="margin:20px 0 20px 0">
+            <img src="{{asset('img/lmts.png')}}" style="margin:20px 0 20px 0" width="200px;" >
           </a>
         </div>
         
-        <div class="row justify-content-center" style="text-align:center; font-size: 18px;">
+        <div class="row justify-content-center" style="text-align:center; font-size: 14px;">
           Laboratório Multidisciplinar de<br>
           Tecnologias Sociais
         </div>
@@ -67,10 +67,10 @@
         <div class="row justify-content-center">
           <div clss="col-sm-4">
             <a href="http://ww3.uag.ufrpe.br/">
-              <img style="width:77px" src="{{asset('img/logoUfape.svg')}}" alt="">
+              <img style="width:77px" src="{{asset('img/logoUfape.svg')}}" alt=""  width="100px;" height="125px;">
             </a>
           </div>
-          <div class="col-sm-8" style="position: relative; top: 100px; font-size: 18px;">
+          <div class="col-sm-8" style="position: relative; top: 50px; font-size: 14px;">
             <div class="row justify-content-center">
               Universidade Federal Rural<br>
               do Agreste de Pernambuco
