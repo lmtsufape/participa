@@ -42,11 +42,10 @@
                           <div class="container descricao-evento">
                             <div class="row">
                               <div class="col-sm-12" style="text-align: center;">
-                                <h4 class="acessibilidade">{{$evento->nome}}</h4>
+                                <h5 class="acessibilidade">{{$evento->nome}}</h5>
                               </div>
                             </div>
-                            <br>
-                            <div class="row acessibilidade" style="text-align: justify;">
+                            <div class="row acessibilidade" style="text-align: justify; font-size: 13px;">
                               <div class="col-sm-12">
                                 {{$evento->descricao}}
                               </div>
@@ -103,12 +102,11 @@
                           <div class="container descricao-evento">
                             <div class="row">
                               <div class="col-sm-12" style="text-align: center;">
-                                <h4 class="acessibilidade">{{$evento->nome}}</h4>
+                                <h5 class="acessibilidade">{{$evento->nome}}</h5>
                               </div>
                             </div>
-                            <br>
                             <div class="row" style="text-align: justify;">
-                              <div class="col-sm-12 acessibilidade">
+                              <div class="col-sm-12 acessibilidade" style="font-size: 13px;">
                                 {{$evento->descricao}}
                               </div>
                             </div>
@@ -222,7 +220,7 @@
                           @endif
                         </div>
                       </div>
-                      <div class="row data-horario">
+                      <div class="row data-horario" style="margin-top: -20px; margin-bottom: -10px;">
                         <div class="col-sm-6">
                           <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
                           <span>
