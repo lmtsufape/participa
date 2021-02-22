@@ -1,33 +1,52 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="modal fade" id="modalTrabalho" tabindex="-1" role="dialog" aria-labelledby="modalTrabalho" aria-hidden="true">
+
+@foreach ($trabalhos as $trabalho)
+  <div class="modal fade" id="modalTrabalho_{{$trabalho->id}}" tabindex="-1" role="dialog" aria-labelledby="modalTrabalho" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header" style="background-color: #114048ff; color: white;">
           <h5 class="modal-title" id="exampleModalCenterTitle">Submeter nova versão</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <form method="POST" action="{{route('trabalho.novaVersao')}}" enctype="multipart/form-data">
           @csrf
         <div class="modal-body">
-  
+
           <div class="row justify-content-center">
             <div class="col-sm-12">
-                {{-- @if($hasFile) --}}
-                  <input type="hidden" name="trabalhoId" value="" id="trabalhoNovaVersaoId">
-                {{-- @endif --}}
-                {{-- <input type="hidden" name="eventoId" value="{{$evento->id}}"> --}}
-  
+                @error('error')
+                  <div class="alert alert-danger">
+                    <p>{{$message}}</p>
+                  </div>
+                @enderror
+                @error('tipoExtensao')
+                <div class="alert alert-danger">
+                  <p>{{$message}}</p>
+                </div>
+                @enderror
+                <input type="hidden" name="trabalhoId" value="{{$trabalho->id}}" id="trabalhoNovaVersaoId">
+                
                 {{-- Arquivo  --}}
-                <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo') }}</label>
-  
+                <label for="nomeTrabalho" class="col-form-label">{{ __('Novo arquivo para ') }}{{$trabalho->titulo}}</label>
+
                 <div class="custom-file">
                   <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
                 </div>
-                <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
+
+                <small>Arquivos aceitos nos formatos 
+                  @if($trabalho->modalidade->pdf == true)<span> - pdf</span>@endif
+                  @if($trabalho->modalidade->jpg == true)<span> - jpg</span>@endif
+                  @if($trabalho->modalidade->jpeg == true)<span> - jpeg</span>@endif
+                  @if($trabalho->modalidade->png == true)<span> - png</span>@endif
+                  @if($trabalho->modalidade->docx == true)<span> - docx</span>@endif
+                  @if($trabalho->modalidade->odt == true)<span> - odt</span>@endif 
+                  @if($trabalho->modalidade->zip == true)<span> - zip</span>@endif
+                  @if($trabalho->modalidade->svg == true)<span> - svg</span>@endif.
+                </small>
                 @error('arquivo')
                 <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                   <strong>{{ $message }}</strong>
@@ -35,7 +54,7 @@
                 @enderror
             </div>
           </div>
-  
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -45,6 +64,7 @@
       </div>
     </div>
   </div>
+@endforeach
   
 <div class="container content" style="margin-top: 80px;">
     {{-- titulo da página --}}
@@ -91,7 +111,7 @@
                       </a>
                   </td>
                   <td style="text-align:center">
-                      <a href="#" onclick="changeTrabalho({{$trabalho->id}})" data-toggle="modal" data-target="#modalTrabalho" style="color:#114048ff">
+                      <a href="#" data-toggle="modal" data-target="#modalTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                       <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
                       </a>
                   </td>
@@ -152,9 +172,11 @@
 @endsection
 
 @section('javascript')
+@error('trabalhoId')
 <script>
-  function changeTrabalho(x){
-    document.getElementById('trabalhoNovaVersaoId').value = x;
-  }
+  $(document).ready(function() {
+    $("#modalTrabalho_{{$message}}").modal('show');
+  })
 </script>
+@enderror
 @endsection
