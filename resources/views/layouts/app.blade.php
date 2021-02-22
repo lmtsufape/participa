@@ -242,9 +242,9 @@
             @yield('javascript')
         @else
         @endif
-        <div id="div-input-change-mode" style="display: none;">
+        {{-- <div id="div-input-change-mode" style="display: none;">
             <input id="input-change-mode" type="checkbox">
-        </div>
+        </div> --}}
         <script>
             if (localStorage.getItem('dark-mode') == "active") {
                 document.getElementById('img-change-mode').src = "{{asset('/img/icons/sun.png')}}"

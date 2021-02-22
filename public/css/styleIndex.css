@@ -85,13 +85,15 @@ body{
   overflow-y: auto;
 }
 .footer{
+  position: relative;
   background-color:#114048ff;
-  /* height: 90vh; */
+  top: 105px;
   padding: 50px;
   padding-top: 15px;
   padding-bottom: 15px;
   width: 102%;
   color: white;
+  bottom: 0px;
 }
 .footer .social{
   width: 40px;
