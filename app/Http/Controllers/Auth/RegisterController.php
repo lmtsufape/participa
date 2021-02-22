@@ -64,7 +64,7 @@ class RegisterController extends Controller
             'cidade'        => ['required','string','max:255'],
             'uf'            => ['required','string'],
             'cep'           => ['required','string'],
-            'complemento'   => ['required','string'],
+            'complemento'   => ['nullable','string'],
         ]);
     }
 

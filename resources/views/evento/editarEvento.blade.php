@@ -250,8 +250,8 @@
                             @enderror
                         </div>
                         <div class="col-sm-4">
-                            <label for="complemento" class="col-form-label">{{ __('Complemento*') }}</label>
-                            <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="@if(old('complemento') != null){{old('complemento')}}@else{{$evento->endereco->complemento}}@endif" required autocomplete="complemento" autofocus>
+                            <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
+                            <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="@if(old('complemento') != null){{old('complemento')}}@else{{$evento->endereco->complemento}}@endif" autocomplete="complemento" autofocus>
             
                             @error('complemento')
                             <span class="invalid-feedback" role="alert">
