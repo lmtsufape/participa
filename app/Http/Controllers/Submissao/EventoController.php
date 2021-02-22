@@ -547,6 +547,9 @@ class EventoController extends Controller
         $evento = Evento::find($id);
         $evento->update($data);
 
+        $evento->recolhimento = $request->recolhimento;
+        $evento->update();
+
         $endereco = Endereco::find($evento->enderecoId);
         $evento->enderecoId           = $endereco->id;
         

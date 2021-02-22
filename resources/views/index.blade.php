@@ -443,7 +443,7 @@
 
   @endif
 
-  <div id="btn-mais-eventos" class="row justify-content-center" style="margin-bottom:-5px">
+  <div id="btn-mais-eventos" class="row justify-content-center" style="margin-bottom:-100px">
     <div class="col-sm-12">
       <button class="btn" onclick="window.location='{{route('busca.eventos')}}'">+ Ver Todos os Eventos</button>
     </div>
