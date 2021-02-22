@@ -87,8 +87,10 @@ class HomeController extends Controller
         $eventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->get();
       } 
       
+      $proximosEventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataInicio', '>=', today()]])->get();
+      
       $tiposEvento = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->selectRaw('DISTINCT tipo')->get();
       
-      return view('index',['eventos'=>$eventos, 'tipos' => $tiposEvento]);
+      return view('index',['eventos'=>$eventos, 'tipos' => $tiposEvento, 'proximosEventos' => $proximosEventos]);
     }
 }

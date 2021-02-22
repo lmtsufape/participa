@@ -11,9 +11,9 @@
         <h4>Destaques</h4>
       </div>
       <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators" @if(count($eventos) <= 1) style="display: none;"@endif>
-        @if (count($eventos) > 0)
-          @foreach ($eventos as $i => $evento) 
+        <ol class="carousel-indicators" @if(count($proximosEventos) <= 1) style="display: none;"@endif>
+        @if (count($proximosEventos) > 0)
+          @foreach ($proximosEventos as $i => $evento) 
             @if ($i == 0)
               <li data-target="#carouselExampleIndicators" data-slide-to="{{$i}}" class="active"></li>
             @else
@@ -25,8 +25,8 @@
         @endif
         </ol>
         <div class="carousel-inner">
-          @if (count($eventos) > 0)
-              @foreach ($eventos as $i => $evento) 
+          @if (count($proximosEventos) > 0)
+              @foreach ($proximosEventos as $i => $evento) 
                 @if ($i == 0)
                   <div class="carousel-item active">
                     <div class="container">
@@ -68,7 +68,7 @@
                                 <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span class="acessibilidade">{{date('d/m/Y',strtotime($evento->dataInicio))}}</span>
                               </div>
                               <div class="col-sm-6">
-                                <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span class="acessibilidade"> Colocar a hora aqui </span>
+                                {{-- <img class="clock" src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span class="acessibilidade"> Colocar a hora aqui </span> --}}
                               </div>
                             </div>
                             <div class="row location-pointer">
@@ -189,7 +189,7 @@
     </div>
   </div>
 
-  @if(count($eventos) > 0)
+  @if(count($proximosEventos) > 0)
 
     <div class="barra-horizontal proximos-eventos">
       <h2>Proximos eventos</h2>
@@ -197,7 +197,7 @@
         <div class="wrapper-barra-horizontal">
           <div class="scroll-horizontal">
             <div class="cards-wrapper">
-              @foreach($eventos as $evento)
+              @foreach($proximosEventos as $evento)
                 <div class="card acessibilidade" style="width: 13rem;">
                   @if ($evento->fotoEvento != null) 
                     <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
@@ -230,10 +230,10 @@
                           </span> 
                         </div>
                         <div class="col-sm-6">
-                          <img src="{{ asset('/img/icons/clock.png') }}" alt=""> 
+                          {{-- <img src="{{ asset('/img/icons/clock.png') }}" alt=""> 
                           <span> 
                             Horario 
-                          </span>
+                          </span> --}}
                         </div>
                       </div>
                       <div class="row location-pointer-card">
