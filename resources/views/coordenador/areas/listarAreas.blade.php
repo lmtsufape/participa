@@ -23,55 +23,10 @@
                           <h5 class="card-title">Áreas</h5>
                         </div>
                         <div class="col-md-2">
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cadastrarArea">
-                            Cadastrar área
-                          </button>
-                          {{-- <a href="#" class="btn btn-primary">Cadastrar área</a> --}}
-                          <div class="modal fade" id="cadastrarArea" tabindex="-1" aria-labelledby="cadastrarAreaLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                              <div class="modal-content">
-                                <div class="modal-header" style="background-color: #114048ff; color: white;">
-                                  <h5 class="modal-title" id="cadastrarAreaLabel">Cadastrar Área</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row justify-content-center">
-                                        <div class="col-sm-12">                    
-                                            <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova área para o seu evento</h6>
-                                            <form method="POST" action="{{route('area.store')}}">
-                                                @csrf
-                                            <p class="card-text">
-                                                <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                                                <div class="row justify-content-center">
-                                                    <div class="col-sm-12">
-                                                        <label for="nome" class="col-form-label">{{ __('Nome da Área') }}</label>
-                                                        <input id="nome" type="text" class="form-control apenasLetras @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
-                        
-                                                        @error('nome')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </p>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                                                <button type="submit" class="btn btn-primary" >
-                                                    {{ __('Finalizar') }}
-                                                </button>
-                                            </div>
-                                            
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                              </div>
-                            </div>
-                          </div>
+                          
+                          @component('componentes.modal-area', ['evento' => $evento])
+                            
+                          @endcomponent
                         </div>
 
                       </div>
@@ -80,7 +35,6 @@
                         <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
                               <tr>
-                                <th scope="col">#</th>
                                 <th scope="col">Nome</th>
                                 <th scope="col" style="text-align:center">Editar</th>
                                 <th scope="col" style="text-align:center">Remover</th>
@@ -89,7 +43,6 @@
                             <tbody>
                               @foreach($areas as $area)
                                 <tr>
-                                  <th scope="row">{{$area->id}}</th>
                                   <td>{{$area->nome}}</td>
                                   <td style="text-align:center">
                                     <a href="#" data-toggle="modal" data-target="#modalEditarArea{{$area->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>

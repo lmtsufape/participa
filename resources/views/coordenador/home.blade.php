@@ -28,7 +28,7 @@
         </div>
     @endif
     <div class="row">
-
+        {{-- {{dd($eventos)}} --}}
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
                 @can('isPublishOrIsCoordenador', $evento)

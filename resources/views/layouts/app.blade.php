@@ -126,7 +126,7 @@
                                             <img src="{{asset('img/icons/perfil.svg')}}" alt="">
                                             {{ __('Área do Participante') }}
                                         </a>
-                                        @if (isset(Auth::user()->revisor))
+                                        @if (Auth::user()->revisor->count())
                                             {{-- Rota - Area de Revisores --}}
                                             <a class="dropdown-item" href="{{ route('revisor.index') }}">
                                                 <img src="{{asset('img/icons/revisor.png')}}" alt="">
@@ -160,7 +160,7 @@
                                             </a>
                                         @endif
 
-                                        @if (isset(Auth::user()->membroComissaoEvento))
+                                        @if (Auth::user()->membroComissaoEvento->count())
                                             {{-- Rota - Area da Comissao --}}
                                             <a class="dropdown-item" href="{{ route('home.membro') }}">
                                                 <img src="{{asset('img/icons/comissao.png')}}" alt="">
@@ -173,6 +173,14 @@
                                             <a class="dropdown-item" href="{{ route('coord.index') }}">
                                                 <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                                 {{ __('Área do Coordenador de Evento') }}
+                                            </a>
+                                        @endif
+
+                                        @if ( isset(Auth::user()->coautor) && Auth::user()->coautor->count())
+                                            {{-- Rota - Area do coautor --}}
+                                            <a class="dropdown-item" href="{{ route('coautor.index') }}">
+                                                <img src="{{asset('img/icons/comissao.png')}}" alt="">
+                                                {{ __('Área de Coautor de Trabalho') }}
                                             </a>
                                         @endif
 

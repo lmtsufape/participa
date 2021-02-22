@@ -19,8 +19,8 @@
                     <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova área para o seu evento</h6>
                     <form method="POST" action="{{route('area.store')}}">
                         @csrf
+                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
                     <p class="card-text">
-                        <input type="hidden" name="eventoId" value="{{$evento->id ?? ''}}">
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
                                 <label for="nome" class="col-form-label">{{ __('Nome da Área') }}</label>

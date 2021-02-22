@@ -29,6 +29,11 @@
 
                 <form action="{{route('evento.criar')}}" method="POST" enctype="multipart/form-data">
                 @csrf
+                    {{-- <input type="hidden" name="" value="">
+                    <input type="hidden" name="" value="">
+                    <input type="hidden" name="" value="">
+                    <input type="hidden" name="" value="">
+                    <input type="hidden" name="" value=""> --}}
                     <div class="row subtitulo">
                         <div class="col-sm-12">
                             <p>Informações Gerais</p>

@@ -63,6 +63,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
     // rotas do Coordenador de evento
     Route::get('/home/coord', 'CoordEventoController@index')->name('coord.index');
     Route::get('/home/coord/eventos', 'CoordEventoController@listaEventos')->name('coord.eventos');
+     //Coautor
+     Route::get('coautor/index', 'CoautorController@index')->name('coautor.index');
   });
 
   Route::post('search/user', 'Users\UserController@searchUser')->name('search.user');
@@ -84,6 +86,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
       Route::get('revisores/cadastrarRevisores', 'EventoController@cadastrarRevisores')->name('cadastrarRevisores');
       Route::get('revisores/listarRevisores', 'EventoController@listarRevisores')->name('listarRevisores');
       Route::get('revisores/listarUsuarios', 'EventoController@listarUsuarios')->name('listarUsuarios');
+
+     
 
       // Route::get('revisores/{id}/disponiveis', 'RevisorController@listarRevisores')->name('adicionarRevisores');
 
