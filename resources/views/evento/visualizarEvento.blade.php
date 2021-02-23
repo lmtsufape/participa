@@ -268,27 +268,24 @@
                               @if ($modalidade->arquivo == true)
                                 @if(isset($modalidade->regra))
                                   <div style="margin-top: 20px; margin-bottom: 10px;">
-                                    <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                    <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">Regra
                                     </a>
-                                    <label for="nomeTrabalho" class="col-form-label">Regra</label>
                                   </div>
                                 @endif
                                 @if (isset($modalidade->template))
                                   <div style="margin-top: 20px; margin-bottom: 10px;">
-                                    <a href="{{route('download.template', ['file' => $modalidade->template])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                    <a href="{{route('download.template', ['file' => $modalidade->template])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">Template
                                     </a>
-                                    <label for="nomeTrabalho" class="col-form-label">Template</label>
                                   </div>  
                                 @endif
                               @else
                                 @if(isset($modalidade->regra))
                                   <div style="margin-top: 20px; margin-bottom: 10px;">
-                                    <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                    <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;Regras
                                     </a>
-                                    <label for="nomeTrabalho" class="col-form-label">Regras</label>
                                   </div>  
                                 @endif
                               @endif
