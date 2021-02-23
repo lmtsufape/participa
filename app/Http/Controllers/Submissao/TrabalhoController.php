@@ -249,7 +249,7 @@ class TrabalhoController extends Controller
             'trabalhoId'  => $trabalho->id,
             'eventos_id' => $evento->id
           ]);
-          // $coauntor->trabalhos()->attach($trabalho);
+          $coauntor->trabalhos()->attach($trabalho);
         }
       }
 
