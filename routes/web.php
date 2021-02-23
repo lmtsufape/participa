@@ -108,6 +108,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
       Route::get('tipo-de-atividade/new', 'TipoAtividadeController@storeAjax')->name('tipo.store.ajax');
       Route::get('eventos/editarEtiqueta', 'EventoController@editarEtiqueta')->name('editarEtiqueta');
       Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
+      Route::get('{id}/modulos',              'FormEventoController@indexModulo'            )->name('modulos');
+    
     });
     //Evento
     Route::get(   '/evento/criar',          'EventoController@create'                    )->name('evento.criar');

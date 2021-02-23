@@ -210,6 +210,11 @@
                         <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Etiquetas Trabalho</h5>
                     </li>
                   </a>
+                  <a id="modulos"  href="{{ route('coord.modulos', ['id' => $evento->id]) }}">
+                    <li>
+                        <img src="{{asset('img/icons/modulos.png')}}" alt=""><h5>Módulos</h5>
+                    </li>
+                  </a>
               </div>
             </a>
             <a id="publicar">
