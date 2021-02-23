@@ -42,7 +42,7 @@
                           <div class="container descricao-evento">
                             <div class="row">
                               <div class="col-sm-12" style="text-align: center;">
-                                <h5 class="acessibilidade">{{$evento->nome}}</h5>
+                                <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;"><h5 class="acessibilidade">{{$evento->nome}}</h5></a>
                               </div>
                             </div>
                             <div class="row acessibilidade" style="text-align: justify; font-size: 13px;">
@@ -102,7 +102,7 @@
                           <div class="container descricao-evento">
                             <div class="row">
                               <div class="col-sm-12" style="text-align: center;">
-                                <h5 class="acessibilidade">{{$evento->nome}}</h5>
+                                <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;"><h5 class="acessibilidade">{{$evento->nome}}</h5></a>
                               </div>
                             </div>
                             <div class="row" style="text-align: justify;">
