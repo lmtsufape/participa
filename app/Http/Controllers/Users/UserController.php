@@ -36,7 +36,7 @@ class UserController extends Controller
                 'numero' => 'required|string',
                 'bairro' => 'required|string|max:255',
                 'cidade' => 'required|string|max:255',
-                'complemento' => 'required|string|max:255',
+                'complemento' => 'nullable|string|max:255',
                 'uf' => 'required|string',
                 'cep' => 'required|string',
                 'password' => 'required|string|min:8|confirmed',
@@ -92,7 +92,7 @@ class UserController extends Controller
                 'rua' => 'required|string|max:255',
                 'numero' => 'required|string',
                 'bairro' => 'required|string|max:255',
-                'complemento' => 'required|string|max:255',
+                'complemento' => 'nullable|string|max:255',
                 'cidade' => 'required|string|max:255',
                 'uf' => 'required|string',
                 'cep' => 'required|string',
@@ -127,15 +127,16 @@ class UserController extends Controller
 
     public function meusTrabalhos(){
 
-        $trabalhos = Trabalho::where('autorId', Auth::user()->id)->get();
-        $comoCoautor = Coautor::where('autorId', Auth::user()->id)->get();
+        $user = Auth::user();
+        $trabalhos = Trabalho::where('autorId', $user->id)->get();
+        $comoCoautor = Coautor::where('autorId', $user->id)->first();
         
-        $trabalhosCoautor = collect();
-
-        foreach ($comoCoautor as $coautor) {
-            $trabalhosCoautor->push($coautor->trabalho);
+        if(isset($user->coautor)){
+            $trabalhosCoautor = $user->coautor->trabalhos;
+        }else{
+            $trabalhosCoautor = [];
         }
-        // dd($trabalhosCoautor);
+        // dd($user->coautor);
         return view('user.meusTrabalhos',[
                                             'trabalhos'           => $trabalhos,
                                             'trabalhosCoautor'    => $trabalhosCoautor,
