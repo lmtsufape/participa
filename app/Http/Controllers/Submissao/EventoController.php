@@ -160,19 +160,12 @@ class EventoController extends Controller
 
     public function cadastrarRevisores(Request $request)
     {
-        $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+      // return view('coordenador.revisores.cadastrarRevisores', [
+      //             'evento'                  => $evento,
+      //             'areas'                   => $areas,
+      //             'modalidades'             => $modalidades,
 
-        $areas = Area::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
-
-
-        return view('coordenador.revisores.cadastrarRevisores', [
-                                                    'evento'                  => $evento,
-                                                    'areas'                   => $areas,
-                                                    'modalidades'             => $modalidades,
-
-                                                  ]);
+      //           ]);
 
     }
 
@@ -183,11 +176,15 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrComissao', $evento);
         $revisores = Revisor::where('evento_id', $evento->id)->get();
         $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
 
         return view('coordenador.revisores.listarRevisores', [
                                                     'evento'                  => $evento,
                                                     'revisores'               => $revisores,
                                                     'revs'                    => $revs,
+                                                    'areas'                   => $areas,
+                                                    'modalidades'             => $modalidades,
                                                   ]);
 
     }

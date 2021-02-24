@@ -73,11 +73,11 @@
                     <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Revisores</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownRevisores" @if(request()->is('coord/evento/revisores*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                    <a id="cadastrarRevisores" href="{{ route('coord.cadastrarRevisores', ['eventoId' => $evento->id]) }}">
+                    {{-- <a id="cadastrarRevisores" href="{{ route('coord.cadastrarRevisores', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar Revisores</h5>
                         </li>
-                    </a>
+                    </a> --}}
                     {{-- <a id="adicionarRevisores" href="{{ route('coord.adicionarRevisores', ['id' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Adicionar Revisores</h5>
@@ -2158,6 +2158,13 @@
         });
     </script>
   @endif
+  @if(old('cadastrarRevisor') != null)
+    <script>
+        $(document).ready(function() {
+            $('#modalCadastrarRevisor').modal('show');
+        });
+    </script>
+  @endif
   @if(old('idNovaAtividade') == 2)
     <script>
         $(document).ready(function() {
@@ -2233,7 +2240,8 @@
         });
     </script>
   @endif
-@endsection
+@endsection 
+
 @hasSection ('javascript')
     @yield('javascript')
 @endif

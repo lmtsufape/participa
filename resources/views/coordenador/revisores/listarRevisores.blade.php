@@ -16,8 +16,15 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                      <h5 class="card-title">Revisores</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">Revisores cadastrados no seu evento</h6>
+                      <div class="row">
+                        <div class="col-sm-9">
+                          <h5 class="card-title">Revisores</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">Revisores cadastrados no seu evento</h6>
+                        </div>
+                        <div class="col-sm-3" style="text-align: right;">
+                          <button class="btn btn-primary" data-toggle="modal" data-target="#modalCadastrarRevisor">+ Cadastrar revisor</button>
+                        </div>
+                      </div>
                       <p class="card-text">
                         <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
@@ -175,5 +182,104 @@
         </div>
       </div>
     @endforeach
+    
+    <!-- Revisores -->
+    <div class="modal fade" id="modalCadastrarRevisor" tabindex="-1" role="dialog" aria-labelledby="modalCadastrarRevisorLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalCadastrarRevisorLabel">Cadastrar um novo revisor</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <form id="cadastrarRevisorForm" method="POST" action="{{route('revisor.store')}}">
+                  @csrf
+                  <p class="card-text">
+                      <div class="container">
+                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                        <input type="hidden" name="cadastrarRevisor" value="0">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="emailRevisor" class="col-form-label">{{ __('Email do Revisor') }}</label>
+                                <input id="emailRevisor" type="email" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{old('emailRevisor')}}" required autocomplete="emailRevisor" autofocus>
 
+                                @error('emailRevisor')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div  class="row">
+                          <div class="col-sm-6">
+                            <h6 for="areaRevisor" class="col-form-label">{{ __('Selecione as áreas') }}</h6>
+                            @if (old('areas') != null)
+                              @foreach ($areas as $area)
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <input id="area_{{$area->id}}" type="checkbox" name="areas[]" value="{{$area->id}}" @if(in_array($area->id, old('areas'))) checked @endif>
+                                    <label for="area_{{$area->id}}">{{$area->nome}}</label>
+                                  </div>
+                                </div>
+                              @endforeach
+                            @else
+                              @foreach ($areas as $area)
+                              <div class="row">
+                                <div class="col-sm-12">
+                                  <input id="area_{{$area->id}}" type="checkbox" name="areas[]" value="{{$area->id}}">
+                                  <label for="area_{{$area->id}}" >{{$area->nome}}</label>
+                                </div>
+                              </div>
+                              @endforeach
+                            @endif 
+
+                            @error('areas')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                          </div>
+                          <div class="col-sm-6">
+                              <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidade') }}</h6>
+                              @if (old('modalidades') != null)
+                                @foreach ($modalidades as $modalidade)
+                                    <div class="row">
+                                      <div class="col-sm-12">
+                                        <input id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidades[]" value="{{$modalidade->id}}" @if(in_array($modalidade->id, old('modalidades'))) checked @endif>
+                                        <label for="modalidade_{{$modalidade->id}}" >{{$modalidade->nome}}</label>
+                                      </div>
+                                    </div>
+                                @endforeach
+                              @else 
+                                @foreach ($modalidades as $modalidade)
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <input id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidades[]" value="{{$modalidade->id}}">
+                                    <label for="modalidade_{{$modalidade->id}}" >{{$modalidade->nome}}</label>
+                                  </div>
+                                </div>
+                                @endforeach
+                              @endif
+
+                              @error('modalidades')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                              @enderror
+                          </div>
+                        </div>
+                      </div>
+                  </p>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" form="cadastrarRevisorForm">{{ __('Finalizar') }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 @endsection

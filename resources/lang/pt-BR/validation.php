@@ -176,6 +176,12 @@ return [
         ],
         'dataInicio'    => [
             'after'     => 'A data informada deve ser depois de ontem.'
+        ],
+        'areas' => [
+            'required'  => 'Escolha as áreas do revisor',
+        ],
+        'modalidades' => [
+            'required'  => 'Escolha as modalidades do revisor',
         ]
     ],
     /*
