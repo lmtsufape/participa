@@ -97,4 +97,13 @@ class FormEventoController extends Controller
 
         return redirect()->back()->with(['mensagem' => 'Módulos em uso salvos com sucesso!']);
     }
+
+    public function indexModulo($id) {
+        $evento = Evento::find($id);
+
+        $this->authorize('isCoordenador', $evento);
+        $modulos = FormEvento::where('eventoId', $id)->first();
+
+        return view('coordenador.evento.modulos')->with(['modulos' => $modulos, 'evento' => $evento]);
+    }
 }
