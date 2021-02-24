@@ -130,6 +130,58 @@ return [
             'required'  => 'O campo início é obrigatório.',
             'date'      => 'O campo deve ter uma data válida.',
             'after'     => 'A data informada deve ser depois da data de início.'
+        ],
+
+        // Editar pacote
+        'identificador_*'   => [
+            'required'  => 'O campo identificador é obrigatório.',
+        ],
+        'valor_*'           => [
+            'required' => 'O campo valor do pacote é obrigatório.',
+        ],
+        'dataDeInício_*'    => [
+            'required' => 'O campo data de início é obrigatório.',
+            'date'     => 'O campo deve ter uma data válida.',
+        ],
+        'dataDeFim_*'       => [
+            'required' => 'O campo data de fim é obrigatório.',
+            'date'     => 'O campo deve ter uma data válida.',
+            'after'    => 'A data informada deve ser depois da data de início.',
+        ],
+        'disponibilidade_*'  => [
+            'required' => 'O campo disponibilidade é obrigatório.'
+        ],
+
+        //Editar cupom de desconto
+        'identificador_cupom_*' => [
+            'required'  => 'O campo identificador é obrigatório.',
+        ],
+        'quantidade_cupom_*'    => [
+            'required'  => 'O campo disponibilidade é obrigatório.',
+        ],
+        'tipo_valor_cupom_*'    => [
+            'required'  => 'O campo valor desconto é obrigatório.',
+        ],
+        'valor_cupom_*'         => [
+            'required'  => 'O campo é obrigatório.',
+        ],
+        'início_cupom_*'        => [
+            'required'  => 'O campo início é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+        ],
+        'fim_cupom_*'           => [
+            'required'  => 'O campo fim é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+            'after'     => 'A data informada deve ser depois do início.',
+        ],
+        'dataInicio'    => [
+            'after'     => 'A data informada deve ser depois de ontem.'
+        ],
+        'areas' => [
+            'required'  => 'Escolha as áreas do revisor',
+        ],
+        'modalidades' => [
+            'required'  => 'Escolha as modalidades do revisor',
         ]
     ],
     /*

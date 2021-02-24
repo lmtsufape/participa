@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container content">
+<div class="container content" style="position: relative; top: 50px;">
     <div class="row titulo">
         <h1>Cadastro</h1>
     </div>
@@ -166,7 +166,7 @@
 
             <div class="col-md-4">
                 <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
-                <input value="{{old('complemento')}}" id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" required autocomplete="complemento">
+                <input value="{{old('complemento')}}" id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" >
 
                 @error('complemento')
                     <span class="invalid-feedback" role="alert">
@@ -231,6 +231,11 @@
     </form>
 
 </div>
+
+<br>
+<br> 
+@include('componentes.footer')
+
 @endsection
 
 @section('javascript')

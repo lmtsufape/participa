@@ -4,164 +4,136 @@
     <!-- Trabalhos -->
     <div id="divListarTrabalhos" style="display: block">
 
-        <div class="row titulo-detalhes">
-            <div class="col-sm-9">
-                <h1 class="">Trabalhos</h1>
-            </div>            
-            <div class="col-sm-3">
-              <form method="GET" action="{{route('distribuicao')}}">
-                <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
-                  {{ __('Distribuir Trabalhos') }}
-                </button>
-              </form>
-            </div>
-            {{-- <div class="col-sm-12">
-              <p>                
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                  Ordenar por:
-                </button>
-              </p>
-              <div class="collapse" id="collapseExample">
-                <div class="card card-body">
-                  <div class="row">
-                    <div class="col-sm-2">
-                      <span>
-                        Nome
-                        <button class="btn btn-sm btn-primary">
-                          <i class="fas fa-arrow-alt-circle-up"></i>
-                        </button>
-                        <button class="btn btn-sm btn-primary">
-                          <i class="fas fa-arrow-alt-circle-down"></i>
-                        </button>
-                      </span>
-                    </div>
-                    <div class="col-sm-2">
-                      <span>
-                        Área
-                        <button class="btn btn-sm btn-primary">
-                          <i class="fas fa-arrow-alt-circle-up"></i>
-                        </button>
-                        <button class="btn btn-sm btn-primary">
-                          <i class="fas fa-arrow-alt-circle-down"></i>
-                        </button>
-                      </span>
-                    </div>
-                    <div class="col-sm-3">
-                      <span>
-                        Modalidade
-                        <button class="btn btn-sm btn-primary">
-                          <i class="fas fa-arrow-alt-circle-up"></i>
-                        </button>
-                        <button class="btn btn-sm btn-primary">
-                          <i class="fas fa-arrow-alt-circle-down"></i>
-                        </button>
-                      </span>
-                    </div>
-                    <div class="col-sm-3">
-                      <span>
-                        Revisores
-                        <button class="btn btn-sm btn-primary">
-                          <i class="fas fa-arrow-alt-circle-up"></i>
-                        </button>
-                        <button class="btn btn-sm btn-primary">
-                          <i class="fas fa-arrow-alt-circle-down"></i>
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> --}}
-        </div>
+      <div class="row ">
+        <div class="col-sm-6">
+            <h1 class="">Trabalhos</h1>
+        </div> 
+                  
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3">
+          <form method="GET" action="{{route('distribuicao')}}">
+            <input type="hidden" name="eventoId" value="{{$evento->id}}">
+            <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
+              {{ __('Distribuir trabalhos') }}
+            </button>
+          </form>
+
+        </div>            
+      </div>
 
     {{-- Tabela Trabalhos --}}
-    <div class="row">
+    <div class="row table-trabalhos">
       <div class="col-sm-12">
-        <table class="table table-hover table-responsive-lg table-sm">
-          <thead>
-            <tr>
-              <th scope="col">
-                Título
-                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc'])}}">
-                  <i class="fas fa-arrow-alt-circle-up"></i> 
-                </a>
-                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'desc'])}}">
-                  <i class="fas fa-arrow-alt-circle-down"></i>
-                </a>
-              </th>
-              <th scope="col">
-                Área
-                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'asc'])}}">
-                  <i class="fas fa-arrow-alt-circle-up"></i>
-                </a>
-                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
-                  <i class="fas fa-arrow-alt-circle-down"></i>
-                </a>
-              </th>
-              <th scope="col">
-                Modalidade
-                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'desc'])}}">
-                  <i class="fas fa-arrow-alt-circle-up"></i>
-                </a>
-                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'desc'])}}">
-                  <i class="fas fa-arrow-alt-circle-down"></i>
-                </a>
-              </th>
-              <th scope="col">
-                Revisores
-                {{-- <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
-                  <i class="fas fa-arrow-alt-circle-up"></i>
-                </a>
-                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
-                  <i class="fas fa-arrow-alt-circle-down"></i>
-                </a> --}}
-              </th>
-              <th scope="col" style="text-align:center">Baixar</th>
-              <th scope="col" style="text-align:center">Visualizar</th>
-            </tr>
-          </thead>
-          <tbody>
-            @php $i = 0; @endphp
-            @foreach($trabalhos as $trabalho)
-            <tr>
-              <td>{{$trabalho->titulo}}</td>
-              <td>{{$trabalho->area->nome}}</td>
-              <td>{{$trabalho->modalidade->nome}}</td>
-              <td>
-                @if (count($trabalho->atribuicoes) == 0)
-                  Nenhum revisor atribuído
-                @elseif (count($trabalho->atribuicoes) == 1)
-                  @foreach($trabalho->atribuicoes as $revisor)
-                    {{$revisor->user->email}}.
-                  @endforeach
-                @elseif (count($trabalho->atribuicoes) > 1 && count($trabalho->atribuicoes) <= 2)
-                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[1]->user->email}}.
-                @elseif(count($trabalho->atribuicoes) > 2)
-                  {{$trabalho->atribuicoes[0]->user->email}}, {{$trabalho->atribuicoes[1]->user->email}}, ...
-                @endif
-              </td>
-              <td style="text-align:center">
-                {{-- @php $arquivo = ""; $i++; @endphp
-                @foreach($trabalho->arquivo as $key)
-                @php
-                if($key->versaoFinal == true){
-                  $arquivo = $key->nome;
-                }
-                @endphp
-                @endforeach --}}
-                @if (!(empty($trabalho->arquivo->nome)))
-                    <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
-                @endif
-              </td>
-              <td style="text-align:center">
-                <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
-              </td>
-
-            </tr>
-            @endforeach
-          </tbody>
-        </table>
+        
+        <form action="{{route('atribuicao.check')}}" method="post">
+          @csrf
+          <div class="row">
+            <div class="col-sm-9"></div>
+            <div class="col-sm-3">
+              <button type="submit" class="btn btn-primary" style="width:100%">
+                {{ __('Distribuir em lote') }}
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              @if ($errors->any())
+                  <div class="alert alert-danger">
+                      <ul>
+                          @foreach ($errors->all() as $error)
+                              <li>{{ $error }}</li>
+                          @endforeach
+                      </ul>
+                  </div>
+              @endif 
+            </div>            
+          </div>
+          
+          <input type="hidden" name="eventoId" value="{{$evento->id}}">
+          <br>
+          <table class="table table-hover table-responsive-lg table-sm table-striped">
+            <thead>
+              <tr>
+                <th scope="col" style="text-align:center">Check</th>
+                <th scope="col">
+                  Título
+                  <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc'])}}">
+                    <i class="fas fa-arrow-alt-circle-up"></i> 
+                  </a>
+                  <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'desc'])}}">
+                    <i class="fas fa-arrow-alt-circle-down"></i>
+                  </a>
+                </th>
+                <th scope="col">
+                  Área
+                  <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'asc'])}}">
+                    <i class="fas fa-arrow-alt-circle-up"></i>
+                  </a>
+                  <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
+                    <i class="fas fa-arrow-alt-circle-down"></i>
+                  </a>
+                </th>
+                <th scope="col">                  
+                  Modalidade
+                  <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'asc'])}}">
+                    <i class="fas fa-arrow-alt-circle-up"></i>
+                  </a>
+                  <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'desc'])}}">
+                    <i class="fas fa-arrow-alt-circle-down"></i>
+                  </a>
+                </th>
+                <th scope="col">
+                  Revisores
+                  {{-- <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
+                    <i class="fas fa-arrow-alt-circle-up"></i>
+                  </a>
+                  <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
+                    <i class="fas fa-arrow-alt-circle-down"></i>
+                  </a> --}}
+                </th>
+                <th scope="col" style="text-align:center">Atribuir</th>
+              </tr>
+            </thead>
+            
+            <tbody>
+              @php $i = 0; @endphp
+              @foreach($trabalhos as $trabalho)
+              
+              <tr>
+                  <td style="text-align:center">
+                    <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" value="{{$trabalho->id}}">                
+                  </td>
+                  <td>
+                    @if (!(empty($trabalho->arquivo->nome)))
+                        <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
+                          {{$trabalho->titulo}}
+                        </a>
+                    @else
+                      {{$trabalho->titulo}}</td>                        
+                    @endif
+                    <td>{{$trabalho->area->nome}}</td>
+                  <td >{{$trabalho->modalidade->nome}}</td>
+                  <td>
+                    {{count($trabalho->atribuicoes)}}
+                    {{-- @if (count($trabalho->atribuicoes) == 0)
+                      Nenhum revisor atribuído
+                    @elseif (count($trabalho->atribuicoes) == 1)
+                      {{count($trabalho->atribuicoes)}}
+                    @endif --}}
+                  </td>
+                  
+                  <td style="text-align:center">
+                    <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}">
+                      <i class="fas fa-file-alt"></i>
+                    </a>
+                    
+                  </td>
+                </tr>
+              
+              @endforeach
+            </tbody>
+          </table>
+        </form>
       </div>
       
     </div>
@@ -261,7 +233,7 @@
           @else
             <div class="row justify-content-center">
               <div class="col-sm-12">
-                <h5>Nenhum revisor atribuido</h5>
+                <h5>0</h5>
               </div>
           @endif
           @foreach ($trabalho->atribuicoes as $i => $revisor) 

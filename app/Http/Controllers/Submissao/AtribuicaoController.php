@@ -12,6 +12,8 @@ use App\Models\Submissao\Area;
 use App\Mail\EmailLembrete;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\AtribuicaoRevisorRequest;
 
 class AtribuicaoController extends Controller
 {
@@ -230,4 +232,74 @@ class AtribuicaoController extends Controller
 
       return redirect()->back()->with(['mensagem' => $mensagem]);
     }
+
+    public function atribuirCheck(AtribuicaoRevisorRequest $request)
+    {
+      $data = $request->all();
+     
+      $evento = Evento::find($request->eventoId);
+      $revisores = Revisor::where('evento_id', $evento->id)->get();
+      $areasId = Trabalho::whereIn('id', $data['id'])->select('areaId')->get();
+      $trabalhos = Trabalho::whereIn('id', $data['id'])->get();
+      $areasTrabalhos = Area::whereIn('id', $areasId)->get();
+
+      return view('coordenador.trabalhos.distribuirLote',compact(
+                                                                  'evento',
+                                                                  'revisores',
+                                                                  'areasTrabalhos',
+                                                                  'trabalhos',
+                                                                ) );
+    }
+
+    public function atribuirRevisorLote(Request $request)
+    {
+      // dd($request->all());
+      $data = $request->all();
+
+      try {
+        $max = sizeof($data['trabalho']);
+        $revisor = Revisor::find($data['revisor_id']);
+        $evento = Evento::find($request->evento_id);
+        
+        for ($i =0; $i < $max; $i++) { 
+          $trabalho = Trabalho::find($data['trabalho'][$i]);
+          $trabalho->avaliado = 'processando';
+          $trabalho->save();
+          
+          $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando']);
+          $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
+          $revisor->save();
+          
+        }
+
+        return response()->json([
+          'data' => [
+            'status' => 'ok',
+            'revisor' => $revisor->user->email,
+          ]
+        ]);
+      } catch (\Exception $e) {
+
+        $message = env('APP_DEBUG') ? $e->getMessage() : 'Erro ao processar atribuição!';
+        return response()->json([
+            'data' => [
+                'status' => false,
+                'message' => $message
+            ]
+        ], 401);
+      }
+
+      
+      
+      
+      
+      // $subject = "Trabalho atribuido";
+      // $informacoes = $trabalho->titulo;
+      // Mail::to($revisor->user->email)
+      //       ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
+            
+      
+    }
+
+    
 }

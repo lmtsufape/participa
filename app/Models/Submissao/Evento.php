@@ -12,10 +12,8 @@ class Evento extends Model
    * @var array
    */
   protected $fillable = [
-      'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim',
-      'possuiTaxa', 'valorTaxa', 'fotoEvento',
-      'enderecoId', 'coordenadorId',
-      'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo', 'coord_comissao_organizadora_id'
+      'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim', 'fotoEvento',
+      'enderecoId', 'coordenadorId', 'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo', 'coord_comissao_organizadora_id'
   ];
 
   public function endereco(){

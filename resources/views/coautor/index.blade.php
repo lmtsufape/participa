@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container">
+<div class="container" style="position: relative; top: 80px;">
 
     <h2 style="margin-top: 100px; ">{{ Auth()->user()->name }} - Perfil: Coautor</h2>
 
@@ -11,14 +11,14 @@
 	         <a href="#" style="text-decoration:none; color: inherit;">
 	            <div class="card text-center " style="border-radius: 30px; width: 13rem;height: 15rem;">
 	                  <div class="card-body d-flex justify-content-center">
-	                      <h2 style="padding-top:15px">Eventos</h2>
+	                      <h2 style="padding-top:15px">Trabalhos</h2>
 	                  </div>
 	                 
 	            </div>
 	         </a>
 	      </div>
 
-	      <div class="col-sm-3 d-flex justify-content-center">
+	      {{-- <div class="col-sm-3 d-flex justify-content-center">
 	         <a href="#" style="text-decoration:none; color: inherit;">
 	            <div class="card text-center " style="border-radius: 30px; width: 13rem;height: 15rem;">
 	             <div class="card-body d-flex justify-content-center">
@@ -26,7 +26,7 @@
 	               </div>
 	            </div>
 	         </a>
-	      </div>
+	      </div> --}}
 	   </div>    
 
 </div>

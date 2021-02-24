@@ -52,7 +52,7 @@
                                     @enderror
                                 </div>
                                 <div class="col-sm-2">
-                                    <button id="buttomFormNovoTipoAtividade{{$atv->id}}" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Tipo</button>
+                                    <button id="buttomFormNovoTipoAtividade{{$atv->id}}" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;" onclick="exibirFormTipoAtividade({{$atv->id}})">+Tipo</button>
                                 </div>
                             </div>
                             <div id="formNovoTipoAtividade{{$atv->id}}" class="form-group" style="display: none;">
@@ -62,7 +62,7 @@
                                         <input class="form-control" type="text" name="nomeTipo" id="nomeTipo{{$atv->id}}" placeholder="Nome do novo tipo">
                                     </div>
                                     <div class="col-sm-12">
-                                        <button id="submitNovoTipoAtividade{{$atv->id}}" type="button" class="btn btn-primary">Salvar</button>
+                                        <button id="submitNovoTipoAtividade{{$atv->id}}" type="button" class="btn btn-primary" onclick="salvarTipoAtividadeAjax({{$atv->id}})">Salvar</button>
                                     </div>
                                 </div>
                             </div>
@@ -498,7 +498,7 @@
                             <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                             <div class="col-sm-6">
                                 <label for="titulo">Titulo*:</label>
-                                <input class="form-control apenasLetras @error('título') is-invalid @enderror" type="text" name="título" id="titulo" value="{{ old('título')}}" placeholder="Nova atividade">
+                                <input class="form-control apenasLetras @error('título') is-invalid @enderror" type="text" name="título" id="titulo" value="{{ old('título')}}" placeholder="Nova atividade" required>
                                 
                                 @error('título')
                                 <span class="invalid-feedback" role="alert">
@@ -508,7 +508,7 @@
                             </div>
                             <div class="col-sm-4">
                                 <label for="tipo">Tipo*:</label>
-                                <select class="form-control @error('tipo') is-invalid @enderror" name="tipo" id="tipo">
+                                <select class="form-control @error('tipo') is-invalid @enderror" name="tipo" id="tipo" required>
                                     <option value="" selected disabled>-- Tipo --</option>
                                     @foreach ($tipos as $tipo)
                                         <option value="{{ $tipo->id }}" @if(old('tipo') == $tipo->id) selected @endif >{{ $tipo->descricao }}</option>
@@ -522,7 +522,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-2">
-                                <button id="buttomFormNovoTipoAtividade" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;">+Tipo</button>
+                                <button id="buttomFormNovoTipoAtividade" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;" onclick="exibirFormTipoAtividade(0)">+Tipo</button>
                             </div>
                         </div>
                         <div id="formNovoTipoAtividade" class="form-group" style="display: none;">
@@ -532,7 +532,7 @@
                                     <input class="form-control apenasLetras" type="text" name="nomeNovoTipo" id="nomeTipo" placeholder="Nome do novo tipo">
                                 </div>
                                 <div class="col-sm-12">
-                                    <button id="submitNovoTipoAtividade" type="button" class="btn btn-primary" onclick="salvarTipoAtividadeAjax()">Salvar</button>
+                                    <button id="submitNovoTipoAtividade" type="button" class="btn btn-primary" onclick="salvarTipoAtividadeAjax(0)">Salvar</button>
                                 </div>
                             </div>
                         </div>
@@ -541,7 +541,7 @@
                         <div class="row form-group">
                             <div class="col-sm-12">
                                 <label for="descricao">Descricao*:</label>
-                                <textarea class="form-control @error('descrição') is-invalid @enderror" rows="5" name="descrição" id="descricao" placeholder="Descreva em detalhes sua atividade">{{ old('descrição') }}</textarea>
+                                <textarea class="form-control @error('descrição') is-invalid @enderror" rows="5" name="descrição" id="descricao" placeholder="Descreva em detalhes sua atividade">{{ old('descrição') }}</textarea required>
                                 
                                 @error('descrição')
                                 <span class="invalid-feedback" role="alert">
@@ -554,7 +554,7 @@
                         <div class="row form-group">
                             <div class="col-sm-6">
                                 <label for="duracaoAtividade">Duração*:</label>
-                                <select class="form-control  @error('duraçãoDaAtividade') is-invalid @enderror" name="duraçãoDaAtividade" id="duracaoAtividade" onchange="exibirDias(0)">
+                                <select class="form-control  @error('duraçãoDaAtividade') is-invalid @enderror" name="duraçãoDaAtividade" id="duracaoAtividade" onchange="exibirDias(0)" required>
                                     <option value="" selected disabled>-- Duração --</option>
                                     <option value="1" @if(old('duraçãoDaAtividade') == "1") selected @endif>Um dia</option>
                                     <option value="2" @if(old('duraçãoDaAtividade') == "2") selected @endif>Dois dia</option>
@@ -572,7 +572,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="local">Local*:</label>
-                                <input class="form-control @error('local') is-invalid @enderror" type="text" name="local" id="local"  placeholder="Local da atividade"  value="{{ old('local') }}">
+                                <input class="form-control @error('local') is-invalid @enderror" type="text" name="local" id="local"  placeholder="Local da atividade"  value="{{ old('local') }}" required>
                             
                                 @error('local')
                                 <span class="invalid-feedback" role="alert">
@@ -1020,7 +1020,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-sm-9">
-                                <button id="adicionarPdf" data-toggle="modal" data-target="#modalAdicionarPdf" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; left: 120px;">+ PDF com as atividades</button>
+                                <button id="adicionarPdf" data-toggle="modal" data-target="#modalAdicionarPdf" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; left: 100px;">+ PDF com as atividades</button>
                             </div>
                             <div class="col-sm-3">
                                 <button id="criarAtividade" data-toggle="modal" data-target="#modalCriarAtividade" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; margin-left: 20px;">+ Criar atividade</button>

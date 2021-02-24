@@ -63,12 +63,12 @@ class DatabaseSeeder extends Seeder
 O número máximo de autores por trabalho será seis autores;
 Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo uma (01) página, no formato PDF;',
           'tipo'=>'teste',
-          'dataInicio'=>'2020-07-01',
-          'dataFim'=>'2020-07-03',
-          'numMaxTrabalhos' => 2,
-          'numMaxCoautores' => 5,
+          'dataInicio'=>'2021-02-19',
+          'dataFim'=>'2021-04-20',
+          'numMaxTrabalhos' => 10,
+          'numMaxCoautores' => 10,
           // 'possuiTaxa'=>true,
-          'valorTaxa'=>10,
+          'recolhimento'=>'pago',
           'enderecoId'=>2,
           'coordenadorId'=>1,
           'publicado'=>true,
@@ -207,14 +207,17 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
 
         DB::table('tipo_atividades')->insert([  //
           'descricao' => 'palestra',
+          'evento_id' => 1,
         ]);
 
         DB::table('tipo_atividades')->insert([  //
           'descricao' => 'minicurso',
+          'evento_id' => 1,
         ]);
 
         DB::table('tipo_atividades')->insert([  //
           'descricao' => 'oficina',
+          'evento_id' => 1,
         ]);
 
         DB::table('atividades')->insert([  //

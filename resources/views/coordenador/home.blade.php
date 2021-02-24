@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container">
+<div class="container"  style="position: relative; top: 65px;">
     
     {{-- titulo da página --}}
     <div class="row justify-content-center titulo">
@@ -28,14 +28,13 @@
         </div>
     @endif
     <div class="row">
-
+        {{-- {{dd($eventos)}} --}}
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
                 @can('isPublishOrIsCoordenador', $evento)
                     <div class="card" style="width: 18rem;">
                         @if(isset($evento->fotoEvento))
-                        
-                        <img src="{{Storage::url($evento->fotoEvento)}}" class="card-img-top" alt="...">
+                        <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
                         @else
                         <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                         @endif

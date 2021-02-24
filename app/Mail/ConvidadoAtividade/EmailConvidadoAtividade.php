@@ -2,7 +2,7 @@
 
 namespace App\Mail\ConvidadoAtividade;
 
-use App\Convidado;
+use App\Models\Users\Convidado;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;

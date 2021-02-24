@@ -36,6 +36,7 @@ class UserController extends Controller
                 'numero' => 'required|string',
                 'bairro' => 'required|string|max:255',
                 'cidade' => 'required|string|max:255',
+                'complemento' => 'nullable|string|max:255',
                 'uf' => 'required|string',
                 'cep' => 'required|string',
                 'password' => 'required|string|min:8|confirmed',
@@ -48,6 +49,7 @@ class UserController extends Controller
             $end->numero = $request->input('numero');
             $end->bairro = $request->input('bairro');
             $end->cidade = $request->input('cidade');
+            $end->complemento = $request->input('complemento');
             $end->uf = $request->input('uf');
             $end->cep = $request->input('cep');
 
@@ -90,6 +92,7 @@ class UserController extends Controller
                 'rua' => 'required|string|max:255',
                 'numero' => 'required|string',
                 'bairro' => 'required|string|max:255',
+                'complemento' => 'nullable|string|max:255',
                 'cidade' => 'required|string|max:255',
                 'uf' => 'required|string',
                 'cep' => 'required|string',
@@ -103,7 +106,7 @@ class UserController extends Controller
             $user->instituicao = $request->input('instituicao');
             // $user->especProfissional = $request->input('especProfissional');
             $user->usuarioTemp = null;
-            $user->save();
+            $user->update();
 
             // endereço
             $end = Endereco::find($user->enderecoId);
@@ -111,10 +114,11 @@ class UserController extends Controller
             $end->numero = $request->input('numero');
             $end->bairro = $request->input('bairro');
             $end->cidade = $request->input('cidade');
+            $end->complemento = $request->input('complemento');
             $end->uf = $request->input('uf');
             $end->cep = $request->input('cep');
 
-            $end->save();
+            $end->update();
             // dd([$user,$end]);
             return redirect(route('home'));
 
@@ -123,9 +127,19 @@ class UserController extends Controller
 
     public function meusTrabalhos(){
 
-        $trabalhos = Trabalho::where('autorId', Auth::user()->id)->get();
+        $user = Auth::user();
+        $trabalhos = Trabalho::where('autorId', $user->id)->get();
+        $comoCoautor = Coautor::where('autorId', $user->id)->first();
+        
+        if(isset($user->coautor)){
+            $trabalhosCoautor = $user->coautor->trabalhos;
+        }else{
+            $trabalhosCoautor = [];
+        }
+        // dd($user->coautor);
         return view('user.meusTrabalhos',[
                                             'trabalhos'           => $trabalhos,
+                                            'trabalhosCoautor'    => $trabalhosCoautor,
                                         ]);
     }
 

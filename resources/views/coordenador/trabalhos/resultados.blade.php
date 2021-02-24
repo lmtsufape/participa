@@ -20,7 +20,7 @@
                         @endif
                     </select>
                 </div>
-                <div class="form-group mx-sm-3 mb-2">
+                <div class="form-group mx-sm-2 mb-2">
                     <label for="pesquisaTexto" class="sr-only">Nome do trabalho</label>
                     <input type="text" class="form-control" id="pesquisaTexto" name="pesquisaTexto" placeholder="Nome do trabalho" @if (count($areas) == 0) disabled @endif>
                 </div>

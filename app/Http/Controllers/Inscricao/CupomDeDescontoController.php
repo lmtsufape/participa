@@ -42,13 +42,17 @@ class CupomDeDescontoController extends Controller
         $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
         $validadeData = $request->validate([
             'criarCupom'    => 'required',
-            'identificador' => 'required',
+            'identificador' => 'required|unique:cupom_de_descontos',
             'quantidade'    => 'required',
             'tipo_valor'    => 'required',
             'valor'         => 'required',
             'início'        => 'required|date',
             'fim'           => 'required|date|after:início',
         ]);
+
+        if ($request->valor <= 0) {
+            return redirect()->back()->withErrors(['valor' => 'Digite um valor positivo.'])->withInput($validadeData);
+        }
 
         $cupomDeDesconto = new CupomDeDesconto();
         $cupomDeDesconto->evento_id             = $evento->id;
@@ -58,13 +62,13 @@ class CupomDeDescontoController extends Controller
         if ($request->quantidade == 0) {
             $cupomDeDesconto->quantidade_aplicacao  = -1;
         } else if ($request->quantidade < 0) {
-            return redirect()->back()->withErrors(['criarCupom' => '0','quantidade' => 'Digite um valor positivo.'])->withInput($validadeData);
+            return redirect()->back()->withErrors(['quantidade' => 'Digite um valor positivo.'])->withInput($validadeData);
         } else {
             $cupomDeDesconto->quantidade_aplicacao = $request->quantidade;
         }
 
         $cupomDeDesconto->inicio                = $request->input('início');
-        $cupomDeDesconto->fim                   =$request->fim;
+        $cupomDeDesconto->fim                   = $request->fim;
 
         if ($request->tipo_valor == "porcentagem") {
             $cupomDeDesconto->porcentagem = true;
@@ -108,7 +112,44 @@ class CupomDeDescontoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // dd($request);
+        $cupom = CupomDeDesconto::find($id);
+        $validadeData = $request->validate([
+            'editarCupom'                       => 'required',
+            'identificador_cupom_'.$cupom->id   => 'required',
+            'quantidade_cupom_'.$cupom->id      => 'required',
+            'tipo_valor_cupom_'.$cupom->id      => 'required',
+            'valor_cupom_'.$cupom->id           => 'required',
+            'início_cupom_'.$cupom->id          => 'required|date',
+            'fim_cupom_'.$cupom->id             => 'required|date|after:início_cupom_'.$cupom->id,
+        ]);
+
+        if ($request->input('valor_cupom_'.$cupom->id) < 0) {
+            return redirect()->back()->withErrors(['valor_cupom_'.$cupom->id => 'Digite um valor positivo.'])->withInput($validadeData);
+        }
+
+        if ($request->input('quantidade_cupom_'.$cupom->id) == 0) {
+            $cupom->quantidade_aplicacao  = -1;
+        } else if ($request->input('quantidade_cupom_'.$cupom->id) < 0) {
+            return redirect()->back()->withErrors(['quantidade_cupom_'.$cupom->id => 'Digite um valor positivo.'])->withInput($validadeData);
+        } else {
+            $cupom->quantidade_aplicacao = $request->input('quantidade_cupom_'.$cupom->id);
+        }
+
+        $cupom->identificador         = $request->input('identificador_cupom_'.$cupom->id);
+        $cupom->valor                 = $request->input('valor_cupom_'.$cupom->id);
+        $cupom->inicio                = $request->input('início_cupom_'.$cupom->id);
+        $cupom->fim                   = $request->input('fim_cupom_'.$cupom->id);
+
+        if ($request->input('tipo_valor_cupom_'.$cupom->id) == "porcentagem") {
+            $cupom->porcentagem = true;
+        } else {
+            $cupom->porcentagem = false;
+        }
+
+        $cupom->update();
+
+        return redirect()->back()->with(['mensagem' => 'Cupom atualizado com sucesso!']);
     }
 
     /**

@@ -3,10 +3,10 @@
 
 <div class="wrapper">
     <div class="sidebar">
-        <h2>{{{$evento->nome}}}</h2>
+        <h2>{{{$evento->nome}}} {{-- <a href="#" class="edit-evento" onmouseover="this.children[0].src='{{asset('img/icons/edit-regular.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/edit-regular-white.svg')}}'"><img src="{{asset('img/icons/edit-regular-white.svg')}}"  alt="" width="20px;"></a> --}} </h2>
         <ul>
             @can('isCoordenador', $evento)
-                <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
+                <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}" style="text-decoration:none;">
                     <li>
                         <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
                     </li>
@@ -73,11 +73,11 @@
                     <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Revisores</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownRevisores" @if(request()->is('coord/evento/revisores*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                    <a id="cadastrarRevisores" href="{{ route('coord.cadastrarRevisores', ['eventoId' => $evento->id]) }}">
+                    {{-- <a id="cadastrarRevisores" href="{{ route('coord.cadastrarRevisores', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar Revisores</h5>
                         </li>
-                    </a>
+                    </a> --}}
                     {{-- <a id="adicionarRevisores" href="{{ route('coord.adicionarRevisores', ['id' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Adicionar Revisores</h5>
@@ -210,26 +210,35 @@
                         <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Etiquetas Trabalho</h5>
                     </li>
                   </a>
+                  <a id="modulos"  href="{{ route('coord.modulos', ['id' => $evento->id]) }}">
+                    <li>
+                        <img src="{{asset('img/icons/modulos.png')}}" alt=""><h5>Módulos</h5>
+                    </li>
+                  </a>
               </div>
             </a>
             <a id="publicar">
                 <li>
                   <img src="{{ asset('img/icons/publish.svg') }}" alt=""><h5>Publicar</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
-                <div id="dropdownPublicar" style="background-color: gray">
-                  <a id="publicarEvento" onclick="habilitarEvento()">
+                <div style="display: none;">
                     <form id="habilitarEventoForm" method="GET" action="{{route('evento.habilitar', ['id' => $evento->id])}}"></form>
-                      <li>
-                          <img src="{{asset('img/icons/alto-falante.svg')}}" alt=""><h5> Publicar Evento</h5>
-                      </li>
-                  </a>
-                  <a id="desabilitarEventoPublicado" onclick="desabilitarEvento()">
                     <form id="desabilitarEventoForm" method="GET" action="{{route('evento.desabilitar', ['id' => $evento->id])}}"></form>
-                      <li>
-                          <img src="{{asset('img/icons/alto-falante-nao.svg')}}" alt=""><h5> Desfazer publicação</h5>
-                      </li>
-                  </a>
-              </div>
+                </div>
+                <div id="dropdownPublicar" style="background-color: gray">
+                    
+                    <a id="publicarEvento" onclick="habilitarEvento()">
+                        <li>
+                            <img src="{{asset('img/icons/alto-falante.svg')}}" alt=""><h5> Publicar Evento</h5>
+                        </li>
+                    </a>
+                    
+                    <a id="desabilitarEventoPublicado" onclick="desabilitarEvento()">
+                        <li>
+                            <img src="{{asset('img/icons/alto-falante-nao.svg')}}" alt=""><h5> Desfazer publicação</h5>
+                        </li>
+                    </a>
+                </div>
             </a>
             {{-- @endcan --}}
         </ul>
@@ -240,7 +249,7 @@
 @endsection
 @section('content')
 
-<div class="main_content">
+<div class="main_content" style="position: relative; top: 15px;">
   {{-- mensagem de confimação --}}
   @if(session('mensagem'))
     <div class="col-md-12" style="margin-top: 5px;">
@@ -281,7 +290,9 @@
         @enderror
     </div>
     
-    @yield('menu')
+    <div style="position: relative; top: 15px;">
+        @yield('menu')
+    </div>
 
     @hasSection ('script')
         @yield('script')
@@ -322,15 +333,15 @@
 
         $('#campoExemploNumero').mask(SPMaskBehavior, spOptions);
 
-        @if (old('criarCupom') != null) 
+        @if (old('criarCupom') != null || old('editarCupom') != null) 
             $('#li_cuponsDeDesconto').click();
-        @elseif (old('criarCategoria') != null)
+        @elseif (old('criarCategoria') != null || old('editarCategoria') != null)
             $('#li_categoria_participante').click();
         @elseif (old('criarCampo') != null)
             $('#li_formulario_inscricao').click();
         @elseif (old('campo_id') != null)
             $('#li_formulario_inscricao').click();
-        @elseif (old('novaPromocao') != null)
+        @elseif (old('novaPromocao') != null || old('editarPromocao') != null)
             $('#li_promocoes').click();
         @else
             $('#li_categoria_participante').click();
@@ -339,14 +350,16 @@
     });
 
     function exibirLimite(id, input) {
+        alert(input.value == "caracteres");
         var caracteres = document.getElementById('caracteres' + id);
         var palavras = document.getElementById('palavras' + id);
+        alert(caracteres.style.display);
         if (input.value == "caracteres") {
-            caracteres.style.display    = "block";
+            caracteres.style.display    = "";
             palavras.style.display      = "none";
         } else {
             caracteres.style.display    = "none";
-            palavras.style.display      = "block";
+            palavras.style.display      = "";
         }
     }
 
@@ -392,7 +405,7 @@
                     "</div>"+
                     "<div class="+"col-sm-1"+">"+
                         "<a href="+"#"+" class="+"delete"+">"+
-                            "<img src="+"/img/icons/lixo.png"+" style="+"width:25px;margin-top:35px"+">"+
+                            "<img src="+"{{asset('img/icons/lixo.png')}}"+" style="+"width:25px;margin-top:35px"+">"+
                         "</a>"+
                     "</div>"+
                     "<div class='container'>" +
@@ -408,7 +421,7 @@
                             "</div>" +
                             "<div class='col-sm-1'>" +
                                 "<a href="+"#"+" onclick="+"addOpcaoCriterio(this,"+contadorOpcoes+")"+">"+
-                                    "<img src="+"{{ asset('/img/icons/plus-square-solid_black.svg')}}"+" style="+"width:25px;margin-top:5px"+">"+
+                                    "<img src="+"{{ asset('img/icons/plus-square-solid_black.svg')}}"+" style="+"width:25px;margin-top:5px"+">"+
                                 "</a>" +
                             "</div>" +
                         "</div>" +
@@ -868,16 +881,14 @@
     });
   });
 
-    function cadastrarCriterio() {
-        var form = document.getElementById('formCadastrarCriterio');
-        var modalidade = document.getElementById('modalidade');
+    // function cadastrarCriterio() {
+    //     var form = document.getElementById('formCadastrarCriterio');
+    //     var modalidade = document.getElementById('modalidade');
 
-        if (modalidade.value != "") {
-            form.submit();
-        } else {
-            alert("Escolha uma modalidade");
-        }
-    }
+    //     if (modalidade.value != "") {
+    //         form.submit();
+    //     } 
+    // }
 
     function myFunction(item, index) {
       // document.getElementById("demo").innerHTML += index + ":" + item + "<br>";
@@ -925,14 +936,7 @@
                       "Option 3": "value3"
                      };
     var $el = $("#testeId");
-    // $("#areaRevisorTrabalhos").change(function(){
-    //   alert("The text has been changed.");
-    //   $el.empty(); // remove old options
-    //   $.each(newOptions, function(key,value) {
-    //     $el.append($("<option></option>")
-    //     .attr("value", value).text(key));
-    //   });
-    // });
+    
     $("#testeId").change(function(){
       alert("The text has been changed.");
     });
@@ -953,56 +957,109 @@
         });
     }
 
-    function salvarTipoAtividadeAjax() {
-        $.ajax({
-            url: "/coord/evento/tipo-de-atividade/new/" + $('#nomeTipo').val(),
-            method: 'get',
-            type: 'get',
-            data: {
-                _token: '{{csrf_token()}}',
-                name: $('#nomeNovoTipo').val(),  
-            },
-            statusCode: {
-                404: function() {
-                    alert("O nome é obrigatório");
-                }
-            },
-            success: function(data){
-                // var data = JSON.parse(result);
-                if (data != null) {
-                    if (data.length > 0) {
-                        if($('#tipo').val() == null || $('#tipo').val() == ""){
-                            var option = '<option selected disabled>-- Tipo --</option>';
-                        }
-                        $.each(data, function(i, obj) {
-                            if($('#tipo').val() != null && $('#tipo').val() == obj.id && i > 0){
-                                option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
-                            } else if (i == 0) {
-                                option = '<option selected disabled>-- Tipo --</option>';
-                            } else {
-                                option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
-                            }
-                        })
-                    } else {
-                        var option = "<option selected disabled>-- Tipo --</option>";
+    function salvarTipoAtividadeAjax(id) {
+        if (id == 0) {
+            $.ajax({
+                url: "{{route('coord.tipo.store.ajax')}}",
+                method: 'get',
+                type: 'get',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    name: $('#nomeTipo').val(),  
+                    evento_id: "{{$evento->id}}",  
+                },
+                statusCode: {
+                    404: function() {
+                        alert("O nome é obrigatório");
                     }
-                    $('#tipo').html(option).show();
-                    if (data.length > 0) {
-                        for(var i = 0; i < data.length; i++) {
-                            // console.log('---------------------------------'+i+'------------------------');
-                            // console.log(data[i].descricao);
-                            // console.log(document.getElementById('nomeTipo').value);
-                            // console.log(data[i].descricao === document.getElementById('nomeTipo').value);
-                            if (data[i].descricao === document.getElementById('nomeTipo').value) {
-                                document.getElementById('tipo').selectedIndex = i;
+                },
+                success: function(data){
+                    // var data = JSON.parse(result);
+                    if (data != null) {
+                        if (data.length > 0) {
+                            if($('#tipo').val() == null || $('#tipo').val() == ""){
+                                var option = '<option selected disabled>-- Tipo --</option>';
+                            }
+                            $.each(data, function(i, obj) {
+                                if($('#tipo').val() != null && $('#tipo').val() == obj.id && i > 0){
+                                    option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                                } else if (i == 0) {
+                                    option = '<option selected disabled>-- Tipo --</option>';
+                                } else {
+                                    option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                                }
+                            })
+                        } else {
+                            var option = "<option selected disabled>-- Tipo --</option>";
+                        }
+                        $('#tipo').html(option).show();
+                        if (data.length > 0) {
+                            for(var i = 0; i < data.length; i++) {
+                                // console.log('---------------------------------'+i+'------------------------');
+                                // console.log(data[i].descricao);
+                                // console.log(document.getElementById('nomeTipo').value);
+                                // console.log(data[i].descricao === document.getElementById('nomeTipo').value);
+                                if (data[i].descricao === document.getElementById('nomeTipo').value) {
+                                    document.getElementById('tipo').selectedIndex = i;
+                                }
                             }
                         }
+                        document.getElementById('nomeTipo').value = "";
+                        $('#buttomFormNovoTipoAtividade').click();
                     }
-                    document.getElementById('nomeTipo').value = "";
-                    $('#buttomFormNovoTipoAtividade').click();
                 }
-            }
-        });
+            });
+        } else {
+            $.ajax({
+                url: "{{route('coord.tipo.store.ajax')}}",
+                method: 'get',
+                type: 'get',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    name: $('#nomeTipo'+id).val(),
+                    evento_id: "{{$evento->id}}",  
+                },
+                statusCode: {
+                    404: function() {
+                        alert("O nome é obrigatório");
+                    }
+                },
+                success: function(data){
+                    if (data != null) {
+                        if (data.length > 0) {
+                            if($('#tipo'+id).val() == null || $('#tipo'+id).val() == ""){
+                                var option = '<option selected disabled>-- Tipo --</option>';
+                            }
+                            $.each(data, function(i, obj) {
+                                if($('#tipo'+id).val() != null && $('#tipo'+id).val() == obj.id && i > 0){
+                                    option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                                } else if (i == 0) {
+                                    option = '<option selected disabled>-- Tipo --</option>';
+                                } else {
+                                    option += '<option value="' + obj.id + '">' + obj.descricao + '</option>';
+                                }
+                            })
+                        } else {
+                            var option = "<option selected disabled>-- Tipo --</option>";
+                        }
+                        $('#tipo'+id).html(option).show();
+                        if (data.length > 0) {
+                            for(var i = 0; i < data.length; i++) {
+                                // console.log('---------------------------------'+i+'------------------------');
+                                // console.log(data[i].descricao);
+                                // console.log(document.getElementById('nomeTipo').value);
+                                // console.log(data[i].descricao === document.getElementById('nomeTipo').value);
+                                if (data[i].descricao === document.getElementById('nomeTipo'+id).value) {
+                                    document.getElementById('tipo'+id).selectedIndex = i;
+                                }
+                            }
+                        }
+                        document.getElementById('nomeTipo'+id).value = "";
+                        $('#buttomFormNovoTipoAtividade'+id).click();
+                    }
+                }
+            });
+        }
     }
 
     //Funções do form de atividades da programação
@@ -1158,15 +1215,6 @@
             form.submit();
         });
 
-        //Função para controlar a exibição da div para cadastro de um novo tipo de atividade
-        $('#buttomFormNovoTipoAtividade').click(function(){
-            if (document.getElementById('formNovoTipoAtividade').style.display == "block") {
-                document.getElementById('formNovoTipoAtividade').style.display = "none";
-            } else {
-                document.getElementById('formNovoTipoAtividade').style.display = "block";
-            }
-        });
-
         //Função para controlar a exibição da div para cadastro de um novo tipo de função de convidado
         $('#buttonformNovaFuncaoDeConvidado').click(function() {
             if (document.getElementById('formNovaFuncaoDeConvidado').style.display == "block") {
@@ -1178,7 +1226,24 @@
 
         
     });
-    
+
+    //Função para controlar a exibição da div para cadastro de um novo tipo de atividade
+    function exibirFormTipoAtividade(id) {
+        if (id == 0) {
+            if (document.getElementById('formNovoTipoAtividade').style.display == "block") {
+                document.getElementById('formNovoTipoAtividade').style.display = "none";
+            } else {
+                document.getElementById('formNovoTipoAtividade').style.display = "block";
+            }
+        } else {
+            if (document.getElementById('formNovoTipoAtividade'+id).style.display == "block") {
+                document.getElementById('formNovoTipoAtividade'+id).style.display = "none";
+            } else {
+                document.getElementById('formNovoTipoAtividade'+id).style.display = "block";
+            }
+        }
+    }
+
     $(document).ready(function($){
         $(".apenasLetras").mask("#", {
             maxlength: false,
@@ -1525,42 +1590,77 @@
         }
     }
 
-    function adicionarLoteAhPromocao() {
-        $('#lotes').append(
-            "<div class='row'>" +
-                "<div class='col-sm-4'>" +
-                    "<label for='dataDeInicio'>Data de início</label>" +
-                    "<input id='dataDeInicio' name='dataDeInício[]' class='form-control' type='date'>" +
-                "</div>" +
-                "<div class='col-sm-4'>" +
-                    "<label for='dataDeFim'>Data de fim</label>" +
-                    "<input id='dataDeFim' name='dataDeFim[]' class='form-control' type='date'>" +
-                "</div>" +
-                "<div class='col-sm-3'>" + 
-                    "<label for='quantidade'>Disponibilidade</label>" +
-                    "<input id='quantidade' name='disponibilidade[]' class='form-control' type='number' placeholder='10'>" +
-                "</div>" +
-                "<div class='col-sm-1'>" +
-                    "<a href='#' title='Remover lote' onclick='removerLoteDaPromocao(this)'><img src='{{asset('img/icons/lixo.png')}}' width='35px' style='position: relative; top: 32px;'></a>" +
-                "</div>" +
-            "</div>"
-        );
+    function adicionarLoteAhPromocao(id) {
+        if (id == 0) {
+            $('#lotes').append(
+                "<div class='row'>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeInicio'>Data de início</label>" +
+                        "<input id='dataDeInicio' name='dataDeInício[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeFim'>Data de fim</label>" +
+                        "<input id='dataDeFim' name='dataDeFim[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-3'>" + 
+                        "<label for='quantidade'>Disponibilidade</label>" +
+                        "<input id='quantidade' name='disponibilidade[]' class='form-control' type='number' placeholder='10'>" +
+                    "</div>" +
+                    "<div class='col-sm-1'>" +
+                        "<a href='#' title='Remover lote' onclick='removerLoteDaPromocao(this)'><img src='{{asset('img/icons/lixo.png')}}' width='35px' style='position: relative; top: 32px;'></a>" +
+                    "</div>" +
+                "</div>"
+            );
+        } else {
+            $('#lotes'+id).append(
+                "<div class='row'>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeInicio'>Data de início</label>" +
+                        "<input id='dataDeInicio' name='dataDeInício_"+id+"[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-4'>" +
+                        "<label for='dataDeFim'>Data de fim</label>" +
+                        "<input id='dataDeFim' name='dataDeFim_"+id+"[]' class='form-control' type='date'>" +
+                    "</div>" +
+                    "<div class='col-sm-3'>" + 
+                        "<label for='quantidade'>Disponibilidade</label>" +
+                        "<input id='quantidade' name='disponibilidade_"+id+"[]' class='form-control' type='number' placeholder='10'>" +
+                    "</div>" +
+                    "<div class='col-sm-1'>" +
+                        "<a href='#' title='Remover lote' onclick='removerLoteDaPromocao(this)'><img src='{{asset('img/icons/lixo.png')}}' width='35px' style='position: relative; top: 32px;'></a>" +
+                    "</div>" +
+                "</div>"
+            );
+        }
     }
 
     function removerLoteDaPromocao(elemento) {
         elemento.parentElement.parentElement.remove();
     }
 
-    function mostrarCategorias(input) {
-        if (input.checked) {
-            document.getElementById('categoriasPromocao').style.display = "none";
+    function mostrarCategorias(input, id) {
+        if (id == 0) {
+            if (input.checked) {
+                document.getElementById('categoriasPromocao').style.display = "none";
+            } else {
+                document.getElementById('categoriasPromocao').style.display = "block";
+            }
         } else {
-            document.getElementById('categoriasPromocao').style.display = "block";
+            if (input.checked) {
+                document.getElementById('categoriasPromocao'+id).style.display = "none";
+            } else {
+                document.getElementById('categoriasPromocao'+id).style.display = "block";
+            }
         }
     }
 
-    function alterarPlaceHolderDoNumero(elemento) {
-        var input = document.getElementById('valorCupom')
+    function alterarPlaceHolderDoNumero(elemento, id) {
+        var input = null;
+        if (id == 0) {
+            input = document.getElementById('valorCupom');
+        } else {
+            input = document.getElementById('valorCupom'+id);
+        }
         if (elemento.value == "real") {
             input.placeholder = "R$ 10,00"
         } else if (elemento.value == "porcentagem") {
@@ -1757,6 +1857,7 @@
         var campoExemploCpf = document.getElementById('campoExemploCpf');
         var campoExemploNumero = document.getElementById('campoExemploNumero');
         var divEnderecoExemplo = document.getElementById('divEnderecoExemplo');
+        var divTituloExemplo = document.getElementById('tituloExemplo');
 
         botoes.style.display = "none";
         inputs.style.display = "block";
@@ -1775,6 +1876,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Comprovante de matrícula";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1797,6 +1899,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Data de nascimento";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1819,6 +1922,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "E-mail para contato";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1841,6 +1945,7 @@
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.placeholder = "Por que quer participar?";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1861,6 +1966,7 @@
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1881,6 +1987,7 @@
                 campoExemploNumero.style.display = "block";
                 divEnderecoExemplo.style.display = "none";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1901,6 +2008,8 @@
                 campoExemploNumero.style.display = "none";
                 divEnderecoExemplo.style.display = "block";
                 tituloDoCampo.value = "";
+                divTituloExemplo.className = "campo-exemplo-head";
+                divEnderecoExemplo.className = "campo-exemplo-body";
                 $('#titulo_do_campo').on('keyup', function(e) {
                     if ($(this).val() != "") {
                         $('#labelCampoExemplo').html("");
@@ -1979,6 +2088,20 @@
         })
     </script>
   @endif
+  @if (old('editarCupom') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalEditarCupom"+"{{old('editarCupom')}}").modal('show');
+        })
+    </script>
+  @endif
+  @if (old('editarPromocao') != null) 
+    <script>
+        $(document).ready(function() {
+            $("#modalPromocaoEdit"+"{{old('editarPromocao')}}").modal('show');
+        })
+    </script>
+  @endif
   @if (old('editarCategoria') != null)
     <script>
         $(document).ready(function() {
@@ -2032,6 +2155,13 @@
     <script>
         $(document).ready(function() {
             $('#modalDistribuicaoAutomatica').modal('show');
+        });
+    </script>
+  @endif
+  @if(old('cadastrarRevisor') != null)
+    <script>
+        $(document).ready(function() {
+            $('#modalCadastrarRevisor').modal('show');
         });
     </script>
   @endif
@@ -2110,4 +2240,8 @@
         });
     </script>
   @endif
-@endsection
+@endsection 
+
+@hasSection ('javascript')
+    @yield('javascript')
+@endif
