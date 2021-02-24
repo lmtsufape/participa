@@ -255,4 +255,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
 // Auth::routes();
 
+Route::get('/demo', function () {
+  return new App\Mail\UserWelcome();
+});
+
 Route::get('/home', 'HomeController@home')->name('home')->middleware('verified', 'isTemp');
