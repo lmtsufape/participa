@@ -244,9 +244,9 @@
                           <h6 class="titulo-modalidade" >Modalidade: {{$modalidade->nome}}</h6>
                           <table>
                             <tr>
-                              @php
-                                  date_default_timezone_set('UTC');
-                              @endphp
+                              {{-- @php
+                                  date_default_timezone_set('America/Recife');
+                              @endphp --}}
                               <td><img class="" src="{{asset('img/icons/calendar-pink.png')}}" alt=""></td>
                               <td>Envio:</td>
                               <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioSubmissao))}}</td>

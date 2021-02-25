@@ -201,6 +201,7 @@ class ModalidadeController extends Controller
      */
     public function update(Request $request)
     {
+        // dd($request->all());
         $modalidadeEdit = Modalidade::find($request->modalidadeEditId);
         // dd($request->all());
         $validatedData = $request->validate([

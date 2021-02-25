@@ -43,7 +43,9 @@
 
                         {{-- Data: inicioSubmissao | fimSubmissao --}}
                         <div class="row justify-content-center">
-
+                            {{-- @php
+                                date_default_timezone_set('America/Recife');
+                            @endphp --}}
                             <div class="col-sm-6">
                                 <label for="inicioSubmissao" class="col-form-label">{{ __('Início da Submissão') }}</label>
                                 <input id="inicioSubmissao" type="datetime-local" class="form-control @error('inícioDaSubmissão') is-invalid @enderror" name="inícioDaSubmissão" value="{{ old('inícioDaSubmissão') }}" autocomplete="inicioSubmissao" autofocus>

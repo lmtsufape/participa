@@ -17,15 +17,15 @@ class CreateModalidadesTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('nome');
-            $table->dateTimeTz('inicioSubmissao')->nullable();
-            $table->dateTimeTz('fimSubmissao')->nullable();
-            $table->dateTimeTz('inicioRevisao')->nullable();
-            $table->dateTimeTz('fimRevisao')->nullable();
-            $table->dateTimeTz('inicioCorrecao')->nullable();
-            $table->dateTimeTz('fimCorrecao')->nullable();
-            $table->dateTimeTz('inicioValidacao')->nullable();
-            $table->dateTimeTz('fimValidacao')->nullable();
-            $table->dateTimeTz('inicioResultado')->nullable();
+            $table->dateTime('inicioSubmissao')->nullable();
+            $table->dateTime('fimSubmissao')->nullable();
+            $table->dateTime('inicioRevisao')->nullable();
+            $table->dateTime('fimRevisao')->nullable();
+            $table->dateTime('inicioCorrecao')->nullable();
+            $table->dateTime('fimCorrecao')->nullable();
+            $table->dateTime('inicioValidacao')->nullable();
+            $table->dateTime('fimValidacao')->nullable();
+            $table->dateTime('inicioResultado')->nullable();
 
             $table->boolean('texto')->nullable();
             $table->boolean('arquivo')->nullable();
