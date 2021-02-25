@@ -21,6 +21,10 @@ class CreateModalidadesTable extends Migration
             $table->dateTimeTz('fimSubmissao')->nullable();
             $table->dateTimeTz('inicioRevisao')->nullable();
             $table->dateTimeTz('fimRevisao')->nullable();
+            $table->dateTimeTz('inicioCorrecao')->nullable();
+            $table->dateTimeTz('fimCorrecao')->nullable();
+            $table->dateTimeTz('inicioValidacao')->nullable();
+            $table->dateTimeTz('fimValidacao')->nullable();
             $table->dateTimeTz('inicioResultado')->nullable();
 
             $table->boolean('texto')->nullable();

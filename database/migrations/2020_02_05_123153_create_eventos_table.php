@@ -30,13 +30,14 @@ class CreateEventosTable extends Migration
             // $table->boolean('possuiTaxa');
             $table->string('recolhimento')->nullable();
             $table->string('fotoEvento')->nullable();
+            // $table->string('timezone')->default('America/Recife');
             $table->boolean('publicado')->default('false');
 
             $table->integer('coord_comissao_cientifica_id')->nullable();
             $table->integer('coord_comissao_organizadora_id')->nullable();
             $table->integer('enderecoId')->nullable();
             $table->integer('coordenadorId')->nullable();
-            $table->boolean('deletado')->nullable();;
+            $table->boolean('deletado')->nullable();
 
             $table->timestamps();
         });
