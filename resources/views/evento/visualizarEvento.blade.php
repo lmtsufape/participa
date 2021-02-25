@@ -278,7 +278,7 @@
                             <tr>
                               <td><img class="" src="{{asset('img/icons/calendar-green.png')}}" alt=""></td>
                               <td>Resultado:</td>
-                              <td>{{date('d/m/Y',strtotime($modalidade->inicioResultado))}}</td>
+                              <td>{{date('d/m/Y  H:i',strtotime($modalidade->inicioResultado))}}</td>
                             </tr>
                           </table>
 
