@@ -244,21 +244,41 @@
                           <h6 class="titulo-modalidade" >Modalidade: {{$modalidade->nome}}</h6>
                           <table>
                             <tr>
+                              {{-- @php
+                                  date_default_timezone_set('America/Recife');
+                              @endphp --}}
                               <td><img class="" src="{{asset('img/icons/calendar-pink.png')}}" alt=""></td>
                               <td>Envio:</td>
-                              <td>{{date('d/m/Y',strtotime($modalidade->inicioSubmissao))}}</td>
-                              <td>- {{date('d/m/Y',strtotime($modalidade->fimSubmissao))}}</td>
+                              <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioSubmissao))}}</td>
+                              <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimSubmissao))}}</td>
                             </tr>
                             <tr>
                               <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
                               <td>Revisão:</td>
-                              <td>{{date('d/m/Y',strtotime($modalidade->inicioRevisao))}}</td>
-                              <td>- {{date('d/m/Y',strtotime($modalidade->fimRevisao))}}</td>
+                              <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioRevisao))}}</td>
+                              <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimRevisao))}}</td>
                             </tr>
+                            @if($modalidade->inicioCorrecao && $modalidade->fimCorrecao)
+                              <tr>
+                                <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
+                                <td>Correção:</td>
+                                <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioCorrecao))}}</td>
+                                <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimCorrecao))}}</td>
+                              </tr>                                
+                            @endif
+                            
+                            @if($modalidade->inicioValidacao && $modalidade->fimValidacao)
+                              <tr>                                
+                                <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
+                                <td>Validação:</td>
+                                <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioValidacao))}}</td>
+                                <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimValidacao))}}</td>                                
+                              </tr>                                
+                            @endif
                             <tr>
                               <td><img class="" src="{{asset('img/icons/calendar-green.png')}}" alt=""></td>
                               <td>Resultado:</td>
-                              <td>{{date('d/m/Y',strtotime($modalidade->inicioResultado))}}</td>
+                              <td>{{date('d/m/Y  H:i',strtotime($modalidade->inicioResultado))}}</td>
                             </tr>
                           </table>
 
@@ -268,27 +288,24 @@
                               @if ($modalidade->arquivo == true)
                                 @if(isset($modalidade->regra))
                                   <div style="margin-top: 20px; margin-bottom: 10px;">
-                                    <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                    <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">Regra
                                     </a>
-                                    <label for="nomeTrabalho" class="col-form-label">Regra</label>
                                   </div>
                                 @endif
                                 @if (isset($modalidade->template))
                                   <div style="margin-top: 20px; margin-bottom: 10px;">
-                                    <a href="{{route('download.template', ['file' => $modalidade->template])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                    <a href="{{route('download.template', ['file' => $modalidade->template])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">Template
                                     </a>
-                                    <label for="nomeTrabalho" class="col-form-label">Template</label>
                                   </div>  
                                 @endif
                               @else
                                 @if(isset($modalidade->regra))
                                   <div style="margin-top: 20px; margin-bottom: 10px;">
-                                    <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                    <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;Regras
                                     </a>
-                                    <label for="nomeTrabalho" class="col-form-label">Regras</label>
                                   </div>  
                                 @endif
                               @endif
