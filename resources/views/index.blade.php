@@ -42,7 +42,11 @@
                           <div class="container descricao-evento">
                             <div class="row">
                               <div class="col-sm-12" style="text-align: center;">
-                                <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;"><h5 class="acessibilidade">{{$evento->nome}}</h5></a>
+                                @auth
+                                  <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;"><h5 class="acessibilidade">{{$evento->nome}}</h5></a>    
+                                @else  
+                                  <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="color: black;"><h5 class="acessibilidade">{{$evento->nome}}</h5></a>
+                                @endauth
                               </div>
                             </div>
                             <div class="row acessibilidade" style="text-align: justify; font-size: 13px;">
@@ -203,9 +207,15 @@
                     <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
                   @endif
                   <div class="card-body">
-                    <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
-                      <h6 class="card-title acessibilidade">{{$evento->nome}}</h6>
-                    </a>
+                    @auth
+                      <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
+                        <h6 class="card-title acessibilidade">{{$evento->nome}}</h6>
+                      </a>
+                    @else
+                      <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="color: black;">
+                        <h6 class="card-title acessibilidade">{{$evento->nome}}</h6>
+                      </a>
+                    @endauth
                     <br> 
                     <div class="container" style="position: relative; top: -25px;">
                       <div class="tags-a row" style="position: relative; left: -15px;">
