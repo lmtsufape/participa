@@ -69,44 +69,35 @@ class RevisorController extends Controller
           'areas'        => ['required'],
           'modalidades'  => ['required'],
         ]);
-        dd($request);
+
         $usuario = User::where('email', $request->emailRevisor)->first();
         $evento = Evento::find($request->eventoId);
-        $revisor;
+
         if($usuario == null){
           $passwordTemporario = Str::random(8);
           Mail::to($request->emailRevisor)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Revisor', $evento->nome, $passwordTemporario));
-          
+
           $usuario = new User();
           $usuario->email       = $request->emailRevisor;
           $usuario->password    = bcrypt($passwordTemporario);
           $usuario->usuarioTemp = true;
           $usuario->save();
-          
 
-          $revisor = new Revisor();
-          $revisor->trabalhosCorrigidos   = 0;
-          $revisor->correcoesEmAndamento  = 0;
-          $revisor->user_id               = $usuario->id;
-          $revisor->areaId                = $request->areaRevisor;
-          $revisor->modalidadeId          = $request->modalidadeRevisor;
-          $revisor->evento_id             = $evento->id;
-          $revisor->save();
+          foreach ($request->areas as $area) {
+            foreach ($request->modalidades as $modalidade) {
+              $revisor = new Revisor();
+              $revisor->trabalhosCorrigidos   = 0;
+              $revisor->correcoesEmAndamento  = 0;
+              $revisor->user_id               = $usuario->id;
+              $revisor->areaId                = $area;
+              $revisor->modalidadeId          = $modalidade;
+              $revisor->evento_id             = $evento->id;
+              $revisor->save();
+            }
+          }
 
         } else {
-          $revisor = Revisor::where([['user_id', $usuario->id], ['areaId', $request->areaRevisor], ['modalidadeId', $request->modalidadeRevisor]])->first();
-          if ($revisor == null) {
-            $revisor = new Revisor();
-            $revisor->trabalhosCorrigidos   = 0;
-            $revisor->correcoesEmAndamento  = 0;
-            $revisor->user_id               = $usuario->id;
-            $revisor->areaId                = $request->areaRevisor;
-            $revisor->modalidadeId          = $request->modalidadeRevisor;
-            $revisor->evento_id             = $evento->id;
-            $revisor->save();
-          } else {
-            return redirect()->back()->withErrors(['cadastrarRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
-          }
+          return redirect()->back()->withErrors(['cadastrarRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
         }        
       
         return redirect()->back()->with(['mensagem' => 'Revisor cadastrado com sucesso!']);
