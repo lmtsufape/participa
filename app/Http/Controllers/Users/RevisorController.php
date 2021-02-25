@@ -183,11 +183,10 @@ class RevisorController extends Controller
     public function enviarEmailTodosRevisores(Request $request){
         $subject = "Lembrete ";
         
-        $revisores = json_decode($request->input('revisores')) ;
-
+        $revisores = json_decode($request->input('revisores'));
         foreach ($revisores as $revisor) {
-            $user = $revisor->user;
-            Mail::to($user->email)
+            $user = User::find($revisor->id);
+            Mail::to($revisor->email)
             ->send(new EmailLembrete($user, $subject));                
         }
 
