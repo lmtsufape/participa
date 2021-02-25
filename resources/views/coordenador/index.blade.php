@@ -26,8 +26,47 @@
             </div>
         </div>
     @endif
-    <div class="row">
-        
+    <div class="row cards-eventos-index">
+        {{-- @foreach ($eventos as $evento)
+            @if ($evento->deletado == false)
+                @can('isCoordenador', $evento)
+                    <div class="card" style="width: 18rem;">
+                        @if ($evento->fotoEvento != null) 
+                            <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
+                        @else
+                            <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
+                        @endif
+                        <div class="card-body">
+                            <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
+                                <h6 class="card-title">{{$evento->nome}}</h6>
+                            </a>
+                            <br> 
+                            <div class="container" style="position: relative; top: -25px;">
+                                <div class="row data-horario" style="margin-top: -20px; margin-bottom: -10px;">
+                                    <div class="col-sm-6">
+                                        <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
+                                        <span>
+                                        {{date('d/m/Y',strtotime($evento->dataInicio))}}
+                                        </span> 
+                                    </div>
+                                </div>
+                                <div class="row location-pointer-card">
+                                    <div class="col-sm-1">
+                                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
+                                    </div>
+                                    <div class="col-sm-11">
+                                        <span> 
+                                        {{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endcan
+            @endif
+        @endforeach --}}
+
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
                 @can('isCoordenador', $evento)
@@ -44,7 +83,6 @@
                                         <div class="row justify-content-center">
                                             <div class="col-sm-12">
                                                 {{$evento->nome}}
-                                                {{-- @if(Auth()->user()->revisor->eventos->contains($evento)) --}}
                                                     <div class="btn-group dropright dropdown-options">
                                                         
                                                         <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -71,7 +109,6 @@
                                                             </form>
                                                         </div>
                                                     </div>
-                                                {{-- @endif --}}
                                             </div>
 
                                         </div>
