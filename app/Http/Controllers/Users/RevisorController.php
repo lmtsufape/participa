@@ -145,16 +145,21 @@ class RevisorController extends Controller
      */
     public function destroy($id)
     {
-      $revisor = Revisor::find($id);
-
-      if (count($revisor->trabalhosAtribuidos) > 0) {
-        return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há trabalhos atribuídos para o mesmo.']);
+      $user = User::find($id);
+      
+      foreach ($user->revisor as $revisor) {
+        if (count($revisor->trabalhosAtribuidos) > 0) {
+          return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há trabalhos atribuídos para o mesmo.']);
+        }
+        if (count($revisor->avaliacoes) > 0) {
+          return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há avaliações do mesmo.']);
+        }
       }
-      if (count($revisor->avaliacoes) > 0) {
-        return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há avaliações do mesmo.']);
-      }
 
-      $revisor->delete();
+      foreach ($user->revisor as $revisor) {
+        $revisor->delete();
+      }
+      
       return redirect()->back()->with(['mensagem' => 'Revisor removido com sucesso!']);
     }
 
