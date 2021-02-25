@@ -43,7 +43,9 @@
 
                         {{-- Data: inicioSubmissao | fimSubmissao --}}
                         <div class="row justify-content-center">
-
+                            {{-- @php
+                                date_default_timezone_set('America/Recife');
+                            @endphp --}}
                             <div class="col-sm-6">
                                 <label for="inicioSubmissao" class="col-form-label">{{ __('Início da Submissão') }}</label>
                                 <input id="inicioSubmissao" type="datetime-local" class="form-control @error('inícioDaSubmissão') is-invalid @enderror" name="inícioDaSubmissão" value="{{ old('inícioDaSubmissão') }}" autocomplete="inicioSubmissao" autofocus>
@@ -92,6 +94,61 @@
                             </div>
                         </div>
                         {{-- end Data: inicioRevisão | fimRevisao --}}
+
+                        {{-- Data: inicioCorrecao | fimCorrecao --}}
+                        <div class="row justify-content-center">
+
+                            <div class="col-sm-6">
+                                <label for="inicioCorrecao" class="col-form-label">{{ __('Início da Correção') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inicioCorrecao') is-invalid @enderror" name="inicioCorrecao" value="{{ old('inicioCorrecao') }}" autocomplete="inicioCorrecao" autofocus>
+
+                                @error('inicioCorrecao')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="fimCorrecao" class="col-form-label">{{ __('Fim da Correção') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorrecao') is-invalid @enderror" name="fimCorrecao" value="{{ old('fimCorrecao') }}" autocomplete="fimCorrecao" autofocus>
+
+                                @error('fimCorrecao')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        {{-- end Data: inicioCorrecao | fimCorrecao --}}
+
+                        {{-- Data: inicioValidacao | fimValidacao --}}
+                        <div class="row justify-content-center">
+
+                            <div class="col-sm-6">
+                                <label for="inicioValidacao" class="col-form-label">
+                                    {{ __('Início da Validação') }}
+                                    <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i>
+                                </label>
+                                <input id="inicioValidacao" type="datetime-local" class="form-control @error('inicioValidacao') is-invalid @enderror" name="inicioValidacao" value="{{ old('inicioValidacao') }}" autocomplete="inicioValidacao" autofocus>
+                                
+                                @error('inicioValidacao')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="fimValidacao" class="col-form-label">{{ __('Fim da Validação') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidacao') is-invalid @enderror" name="fimValidacao" value="{{ old('fimValidacao') }}" autocomplete="fimValidacao" autofocus>
+
+                                @error('fimValidacao')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        {{-- end Data: inicioValidacao | fimValidacao --}}
 
                         {{-- Data: resultado --}}
                         <div class="row">

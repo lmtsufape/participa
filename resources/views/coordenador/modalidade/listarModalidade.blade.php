@@ -212,6 +212,63 @@
                                         </div>
                                         {{-- end Data: inicioRevisão | fimRevisao --}}
 
+                                        {{-- Data: inicioCorrecao | fimCorrecao --}}
+                                        @if($modalidade->inicioCorrecao && $modalidade->fimCorrecao)
+                                        <div class="row justify-content-center">
+
+                                            <div class="col-sm-6">
+                                                <label for="inicioCorrecao" class="col-form-label">{{ __('Início da Correcao') }}</label>
+                                                <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inicioCorrecao') is-invalid @enderror" name="inicioCorrecao" value="@if(old('inicioCorrecao')!=null){{old('inicioCorrecao')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioCorrecao))}}@endif" autocomplete="inicioCorrecao" autofocus>
+
+                                                @error('inicioCorrecao')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label for="fimCorrecao" class="col-form-label">{{ __('Fim da Correção') }}</label>
+                                                <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorrecao') is-invalid @enderror" name="fimCorrecao" value="@if(old('fimCorrecao')!=null){{old('fimCorrecao')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimCorrecao))}}@endif" autocomplete="fimCorrecao" autofocus>
+
+                                                @error('fimCorrecao')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        @endif
+                                        {{-- end Data: inicioCorrecao | fimCorrecao --}}
+
+                                        
+                                        {{-- Data: inicioValidacao | fimValidacao --}}
+                                        @if($modalidade->inicioValidacao && $modalidade->fimValidacao)
+                                        <div class="row justify-content-center">
+
+                                            <div class="col-sm-6">
+                                                <label for="inicioValidacao" class="col-form-label">{{ __('Início da Validação') }}</label>
+                                                <input id="inicioValidacao" type="datetime-local" class="form-control @error('inicioValidacao') is-invalid @enderror" name="inicioValidacao" value="@if(old('inicioValidacao')!=null){{old('inicioValidacao')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioValidacao))}}@endif" autocomplete="inicioValidacao" autofocus>
+
+                                                @error('inicioValidacao')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label for="fimValidacao" class="col-form-label">{{ __('Fim da Correção') }}</label>
+                                                <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidacao') is-invalid @enderror" name="fimValidacao" value="@if(old('fimValidacao')!=null){{old('fimValidacao')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimValidacao))}}@endif" autocomplete="fimValidacao" autofocus>
+
+                                                @error('fimValidacao')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        @endif
+                                        {{-- end Data: inicioValidacao | fimValidacao --}}
+
                                         {{-- Data: resultado --}}
                                         <div class="row">
 

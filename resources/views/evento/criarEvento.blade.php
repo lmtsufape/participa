@@ -174,6 +174,21 @@
                             </span>
                             @enderror
                         </div>
+                        {{-- <div class="col-sm-3">
+                            <label for="timezone" class="col-form-label">{{ __('TimeZone') }}</label>
+                            <select class="custom-select" id="inputGroupSelect01">
+                                <option selected>Selecione...</option>
+                                <option value="America/Rio_branco">America/Rio_branco</option>
+                                <option value="America/Belem">America/Belem</option>
+                                <option value="America/Recife">America/Recife</option>
+                              </select>
+
+                            @error('timezone')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div> --}}
                     </div><!-- end Inicio e fim do evento -->
 
                     {{-- Foto Evento --}}

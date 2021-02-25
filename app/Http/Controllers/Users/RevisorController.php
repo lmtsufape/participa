@@ -63,12 +63,13 @@ class RevisorController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $validatedData = $request->validate([
-          'emailRevisor'       => ['required', 'string', 'email', 'max:255'],
-          'areaRevisor'        => ['required', 'integer'],
-          'modalidadeRevisor'  => ['required', 'integer'],
+          'emailRevisor' => ['required', 'string', 'email', 'max:255'],
+          'areas'        => ['required'],
+          'modalidades'  => ['required'],
         ]);
-
+        dd($request);
         $usuario = User::where('email', $request->emailRevisor)->first();
         $evento = Evento::find($request->eventoId);
         $revisor;

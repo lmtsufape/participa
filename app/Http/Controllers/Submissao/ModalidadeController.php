@@ -63,6 +63,12 @@ class ModalidadeController extends Controller
             'fimDaSubmissão'    => ['required', 'date', 'after:inícioDaSubmissão'],
             'inícioDaRevisão'   => ['required', 'date', 'after:inícioDaSubmissão'],
             'fimDaRevisão'      => ['required', 'date', 'after:inícioDaRevisão'],
+
+            'inicioCorrecao'   => ['nullable','date', 'after:fimDaRevisão', 'required_with:fimCorrecao'],
+            'fimCorrecao'      => ['nullable','date', 'after:inicioCorrecao', 'required_with:inicioCorrecao'],
+            'inicioValidacao'   => ['nullable','date', 'after:fimCorrecao', 'required_with:fimValidacao'],
+            'fimValidacao'      => ['nullable','date', 'after:inicioValidacao', 'required_with:inicioValidacao'],
+
             'resultado'         => ['required', 'date', 'after:fimDaRevisão'],
             'mincaracteres'     => ['nullable', 'integer'],
             'maxcaracteres'     => ['nullable', 'integer'],
@@ -109,12 +115,17 @@ class ModalidadeController extends Controller
         }
 
         // Campo TEXTO boolean removido? 
+        // $modalidade = Modalidade::create($request->all());
         $modalidade = new Modalidade();
         $modalidade->nome               = $request->nomeModalidade;
         $modalidade->inicioSubmissao    = $request->input("inícioDaSubmissão");
         $modalidade->fimSubmissao       = $request->input("fimDaSubmissão");
         $modalidade->inicioRevisao      = $request->input("inícioDaRevisão");
         $modalidade->fimRevisao         = $request->input("fimDaRevisão");
+        $modalidade->inicioCorrecao     = $request->input("inicioCorrecao");
+        $modalidade->fimCorrecao        = $request->input("fimCorrecao");
+        $modalidade->inicioValidacao    = $request->input("inicioValidacao");
+        $modalidade->fimValidacao       = $request->input("fimValidacao");
         $modalidade->inicioResultado    = $request->resultado;
         $modalidade->arquivo            = $request->arquivo;
         $modalidade->caracteres         = $caracteres;
@@ -190,6 +201,7 @@ class ModalidadeController extends Controller
      */
     public function update(Request $request)
     {
+        // dd($request->all());
         $modalidadeEdit = Modalidade::find($request->modalidadeEditId);
         // dd($request->all());
         $validatedData = $request->validate([
@@ -199,6 +211,12 @@ class ModalidadeController extends Controller
             'fimSubmissão'           => ['required', 'date', 'after:inícioSubmissão'],
             'inícioRevisão'          => ['required', 'date', 'after:inícioSubmissão'],
             'fimRevisão'             => ['required', 'date', 'after:inícioRevisão'],
+
+            'inicioCorrecao'         => ['nullable','date', 'after:fimDaRevisão', 'required_with:fimCorrecao'],
+            'fimCorrecao'            => ['nullable','date', 'after:inicioCorrecao', 'required_with:inicioCorrecao'],
+            'inicioValidacao'        => ['nullable','date', 'after:fimCorrecao', 'required_with:fimValidacao'],
+            'fimValidacao'           => ['nullable','date', 'after:inicioValidacao', 'required_with:inicioValidacao'],
+
             'resultado'              => ['required', 'date', 'after:fimRevisão'],
             'mincaracteres'          => ['nullable', 'integer'],
             'maxcaracteres'          => ['nullable', 'integer'],
@@ -287,6 +305,10 @@ class ModalidadeController extends Controller
         $modalidadeEdit->fimSubmissao        = $request->input('fimSubmissão');
         $modalidadeEdit->inicioRevisao       = $request->input('inícioRevisão');
         $modalidadeEdit->fimRevisao          = $request->input('fimRevisão');
+        $modalidadeEdit->inicioCorrecao      = $request->input("inicioCorrecao");
+        $modalidadeEdit->fimCorrecao         = $request->input("fimCorrecao");
+        $modalidadeEdit->inicioValidacao     = $request->input("inicioValidacao");
+        $modalidadeEdit->fimValidacao        = $request->input("fimValidacao");
         $modalidadeEdit->inicioResultado     = $request->resultado;
         // $modalidadeEdit->texto               = $texto;
         $modalidadeEdit->arquivo             = $request->arquivoEdit;
