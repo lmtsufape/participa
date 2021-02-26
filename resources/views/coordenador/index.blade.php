@@ -27,112 +27,74 @@
         </div>
     @endif
     <div class="row cards-eventos-index">
-        {{-- @foreach ($eventos as $evento)
-            @if ($evento->deletado == false)
-                @can('isCoordenador', $evento)
-                    <div class="card" style="width: 18rem;">
-                        @if ($evento->fotoEvento != null) 
-                            <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
-                        @else
-                            <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
-                        @endif
-                        <div class="card-body">
-                            <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
-                                <h6 class="card-title">{{$evento->nome}}</h6>
-                            </a>
-                            <br> 
-                            <div class="container" style="position: relative; top: -25px;">
-                                <div class="row data-horario" style="margin-top: -20px; margin-bottom: -10px;">
-                                    <div class="col-sm-6">
-                                        <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
-                                        <span>
-                                        {{date('d/m/Y',strtotime($evento->dataInicio))}}
-                                        </span> 
-                                    </div>
-                                </div>
-                                <div class="row location-pointer-card">
-                                    <div class="col-sm-1">
-                                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
-                                    </div>
-                                    <div class="col-sm-11">
-                                        <span> 
-                                        {{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endcan
-            @endif
-        @endforeach --}}
-
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
                 @can('isCoordenador', $evento)
-                    <div class="card" style="width: 18rem;">
+                    <div class="card" style="width: 16rem;">
                         @if(isset($evento->fotoEvento))
-                            <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+                            <img class="img-card" src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
                         @else
-                            <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
+                            <img class="img-card" src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                         @endif
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h4 class="card-title">
-                                        <div class="row justify-content-center">
-                                            <div class="col-sm-12">
+                                    <h5 class="card-title">
+                                        <div class="row">
+                                            <div class="col-sm-10">
                                                 {{$evento->nome}}
-                                                    <div class="btn-group dropright dropdown-options">
-                                                        
-                                                        <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
-                                                                <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
-                                                            </div>
-                                                        </a>
-                                                        <div class="dropdown-menu">
-                                                            <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}" class="dropdown-item">
-                                                                <img src="{{asset('img/icons/eye-regular.svg')}}" class="icon-card" alt="">
-                                                                Detalhes
-                                                            </a>
-                                                            <a href="{{route('evento.editar',$evento->id)}}" class="dropdown-item">
-                                                                <img src="{{asset('img/icons/edit-regular.svg')}}" class="icon-card" alt="">
-                                                                Editar
-                                                            </a>
-                                                            <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
-                                                                {{ csrf_field() }}
-                                                                {{ method_field('DELETE') }}
-                                                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
-                                                                    <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt="">
-                                                                    Deletar
-                                                                </a>
-                                                            </form>
-                                                        </div>
-                                                    </div>
                                             </div>
-
+                                            <div class="col-sm-2">
+                                                <div class="btn-group dropright dropdown-options">
+                                                        
+                                                    <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
+                                                            <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
+                                                        </div>
+                                                    </a>
+                                                    <div class="dropdown-menu">
+                                                        <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}" class="dropdown-item">
+                                                            <img src="{{asset('img/icons/eye-regular.svg')}}" class="icon-card" alt="">
+                                                            Detalhes
+                                                        </a>
+                                                        <a href="{{route('evento.editar',$evento->id)}}" class="dropdown-item">
+                                                            <img src="{{asset('img/icons/edit-regular.svg')}}" class="icon-card" alt="">
+                                                            Editar
+                                                        </a>
+                                                        <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
+                                                            {{ csrf_field() }}
+                                                            {{ method_field('DELETE') }}
+                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
+                                                                <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt="">
+                                                                Deletar
+                                                            </a>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         
-                                    </h4>
+                                    </h5>
                                 </div>
                             </div>
-                            <p class="card-text">
-                                <strong>Realização:</strong> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
-                                {{-- <strong>Submissão:</strong> {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}<br>
-                                <strong>Revisão:</strong> {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}<br> --}}
-                            </p>
-                            <p>
-
-                                <div class="row justify-content-center">
-                                    <div class="col-sm-12">
-                                        <img src="{{asset('img/icons/map-marker-alt-solid.svg')}}" alt="" style="width:15px">
-                                        {{$evento->endereco->rua}}, {{$evento->endereco->numero}} - {{$evento->endereco->cidade}} / {{$evento->endereco->uf}}.
+                            <div>
+                                <p class="card-text">
+                                    <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px;" style="position: relative; top: -2px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
+                                    {{-- <strong>Submissão:</strong> {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}<br>
+                                    <strong>Revisão:</strong> {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}<br> --}}
+                                </p>
+                                <p>
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-12">
+                                            <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="18px" height="auto">
+                                            {{$evento->endereco->rua}}, {{$evento->endereco->numero}} - {{$evento->endereco->cidade}} / {{$evento->endereco->uf}}.
+                                        </div>
                                     </div>
-                                </div>
-                            </p>
-                            <p>
-                                <a href="{{  route('evento.visualizar',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
-                            </p>
+                                </p>
+                                <p>
+                                    <a href="{{  route('evento.visualizar',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
+                                </p>
+                            </div>
                         </div>
 
                     </div>

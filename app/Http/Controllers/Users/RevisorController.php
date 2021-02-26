@@ -110,7 +110,7 @@ class RevisorController extends Controller
             }
           }
         } else {
-          return redirect()->back()->withErrors(['cadastrarRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
+          return redirect()->back()->withErrors(['errorRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
         }
       
         return redirect()->back()->with(['mensagem' => 'Revisor cadastrado com sucesso!']);
@@ -162,10 +162,10 @@ class RevisorController extends Controller
       
       foreach ($user->revisor as $revisor) {
         if (count($revisor->trabalhosAtribuidos) > 0) {
-          return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há trabalhos atribuídos para o mesmo.']);
+          return redirect()->back()->withErrors(['errorRevisor' => 'Não é possível remover o revisor, pois há trabalhos atribuídos para o mesmo.']);
         }
         if (count($revisor->avaliacoes) > 0) {
-          return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há avaliações do mesmo.']);
+          return redirect()->back()->withErrors(['errorRevisor' => 'Não é possível remover o revisor, pois há avaliações do mesmo.']);
         }
       }
 

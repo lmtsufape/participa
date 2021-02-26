@@ -3,7 +3,7 @@
 @section('menu')
 
     <div id="divListarRevisores" style="display: block">
-        @error('removerRevisor')
+        @error('errorRevisor')
           @include('componentes.mensagens')
         @enderror
         <div class="row">
