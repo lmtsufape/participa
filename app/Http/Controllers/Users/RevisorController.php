@@ -72,7 +72,7 @@ class RevisorController extends Controller
 
         $usuario = User::where('email', $request->emailRevisor)->first();
         $evento = Evento::find($request->eventoId);
-
+        // dd(count($usuario->revisor()->where('evento_id', $evento->id)->get()));
         if($usuario == null){
           $passwordTemporario = Str::random(8);
           Mail::to($request->emailRevisor)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Revisor', $evento->nome, $passwordTemporario));
@@ -96,9 +96,22 @@ class RevisorController extends Controller
             }
           }
 
+        } else if (count($usuario->revisor()->where('evento_id', $evento->id)->get()) <= 0) {
+          foreach ($request->areas as $area) {
+            foreach ($request->modalidades as $modalidade) {
+              $revisor = new Revisor();
+              $revisor->trabalhosCorrigidos   = 0;
+              $revisor->correcoesEmAndamento  = 0;
+              $revisor->user_id               = $usuario->id;
+              $revisor->areaId                = $area;
+              $revisor->modalidadeId          = $modalidade;
+              $revisor->evento_id             = $evento->id;
+              $revisor->save();
+            }
+          }
         } else {
           return redirect()->back()->withErrors(['cadastrarRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
-        }        
+        }
       
         return redirect()->back()->with(['mensagem' => 'Revisor cadastrado com sucesso!']);
     }
