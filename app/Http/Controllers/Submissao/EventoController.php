@@ -30,6 +30,10 @@ use App\Mail\EventoCriado;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
+use App\Models\Submissao\Form;
+use App\Models\Submissao\Opcao;
+use App\Models\Submissao\Pergunta;
+use App\Models\Submissao\Resposta;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -307,6 +311,73 @@ class EventoController extends Controller
 
     }
 
+    public function forms(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
+        
+        return view('coordenador.modalidade.formulario', compact(
+                                                                  'evento',
+                                                                  'modalidades'
+                                                                ));
+
+    }
+
+    public function atribuirForm(Request $request)
+    {
+      $evento = Evento::find($request->evento_id);
+      $modalidade = Modalidade::find($request->modalidade_id);
+      
+      return view('coordenador.modalidade.atribuirFormulario', compact('evento', 'modalidade'));
+
+    }
+
+    public function salvarForm(Request $request)
+    {
+      $evento = Evento::find($request->evento_id);
+      $modalidade = Modalidade::find($request->modalidade_id);
+      $data = $request->all();
+     
+      $form = $modalidade->forms()->create([
+          'titulo' => 'Titulo do form',
+      ]);
+
+      foreach ($data['pergunta'] as $key => $value) {
+        $pergunta = $form->perguntas()->create([
+          'pergunta' => $value
+        ]);
+
+        if($data['tipo'][$key] == 'paragrafo'){
+          $resposta = $pergunta->resposta()->create([
+            'resposta' => $data['resposta'][$key]
+          ]);
+        }else if($data['tipo'][$key] == 'checkbox'){
+          $resposta = $pergunta->resposta()->create([
+            'resposta' => null
+          ]);
+          $resposta->opcoes()->create([
+            'titulo' => 'titulo do checkbox'
+          ]);
+        }
+
+        // print_r($value);
+      }
+     
+      
+      return view('coordenador.modalidade.atribuirFormulario', compact('evento','modalidade'));
+
+    }
+    
+    public function visualizarForm(Request $request)
+    {
+      $evento = Evento::find($request->evento_id);
+      $modalidade = Modalidade::find($request->modalidade_id);
+      // $form = $modalidade->forms;
+      $data = $request->all();
+
+      return view('coordenador.modalidade.visualizarFormulario', compact('evento', 'modalidade'));
+
+    }
     public function editarEtiqueta(Request $request)
     {
         $evento = Evento::find($request->eventoId);
@@ -360,7 +431,6 @@ class EventoController extends Controller
                                                   ]);
 
     }
-
 
     /**
      * Show the form for creating a new resource.

@@ -29,4 +29,9 @@ class Modalidade extends Model
   public function revisores() {
     return $this->hasMany('App\Models\Users\Revisor', 'modalidadeId');
   }
+
+  public function forms(){
+    return $this->hasMany('App\Models\Submissao\Form', 'modalidadeId');
+  }
+  
 }

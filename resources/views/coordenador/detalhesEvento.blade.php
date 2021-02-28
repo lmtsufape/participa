@@ -169,6 +169,11 @@
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Criterios</h5>
                         </li>
                     </a>
+                    <a id="forms" href="{{ route('coord.forms', ['eventoId' => $evento->id]) }}">
+                        <li>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Formulário</h5>
+                        </li>
+                    </a>
                 </div>
             </a>
             {{-- @can('isCoordenador', $evento) --}}
