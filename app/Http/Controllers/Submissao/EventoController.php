@@ -178,15 +178,15 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
 
         $this->authorize('isCoordenadorOrComissao', $evento);
-        $revisores = Revisor::where('evento_id', $evento->id)->get();
-        $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
+        $revisores = User::join('revisors', 'users.id', '=', 'revisors.user_id')->where('revisors.evento_id', '=', $evento->id)->selectRaw('DISTINCT users.*')->get();
+        // $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
         $areas = Area::where('eventoId', $evento->id)->get();
         $modalidades = Modalidade::where('evento_id', $evento->id)->get();
 
         return view('coordenador.revisores.listarRevisores', [
                                                     'evento'                  => $evento,
                                                     'revisores'               => $revisores,
-                                                    'revs'                    => $revs,
+                                                    // 'revs'                    => $revisores,
                                                     'areas'                   => $areas,
                                                     'modalidades'             => $modalidades,
                                                   ]);

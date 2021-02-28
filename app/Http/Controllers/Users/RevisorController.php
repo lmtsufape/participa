@@ -69,45 +69,49 @@ class RevisorController extends Controller
           'areas'        => ['required'],
           'modalidades'  => ['required'],
         ]);
-        dd($request);
+
         $usuario = User::where('email', $request->emailRevisor)->first();
         $evento = Evento::find($request->eventoId);
-        $revisor;
+        // dd(count($usuario->revisor()->where('evento_id', $evento->id)->get()));
         if($usuario == null){
           $passwordTemporario = Str::random(8);
           Mail::to($request->emailRevisor)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Revisor', $evento->nome, $passwordTemporario));
-          
+
           $usuario = new User();
           $usuario->email       = $request->emailRevisor;
           $usuario->password    = bcrypt($passwordTemporario);
           $usuario->usuarioTemp = true;
           $usuario->save();
-          
 
-          $revisor = new Revisor();
-          $revisor->trabalhosCorrigidos   = 0;
-          $revisor->correcoesEmAndamento  = 0;
-          $revisor->user_id               = $usuario->id;
-          $revisor->areaId                = $request->areaRevisor;
-          $revisor->modalidadeId          = $request->modalidadeRevisor;
-          $revisor->evento_id             = $evento->id;
-          $revisor->save();
-
-        } else {
-          $revisor = Revisor::where([['user_id', $usuario->id], ['areaId', $request->areaRevisor], ['modalidadeId', $request->modalidadeRevisor]])->first();
-          if ($revisor == null) {
-            $revisor = new Revisor();
-            $revisor->trabalhosCorrigidos   = 0;
-            $revisor->correcoesEmAndamento  = 0;
-            $revisor->user_id               = $usuario->id;
-            $revisor->areaId                = $request->areaRevisor;
-            $revisor->modalidadeId          = $request->modalidadeRevisor;
-            $revisor->evento_id             = $evento->id;
-            $revisor->save();
-          } else {
-            return redirect()->back()->withErrors(['cadastrarRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
+          foreach ($request->areas as $area) {
+            foreach ($request->modalidades as $modalidade) {
+              $revisor = new Revisor();
+              $revisor->trabalhosCorrigidos   = 0;
+              $revisor->correcoesEmAndamento  = 0;
+              $revisor->user_id               = $usuario->id;
+              $revisor->areaId                = $area;
+              $revisor->modalidadeId          = $modalidade;
+              $revisor->evento_id             = $evento->id;
+              $revisor->save();
+            }
           }
-        }        
+
+        } else if (count($usuario->revisor()->where('evento_id', $evento->id)->get()) <= 0) {
+          foreach ($request->areas as $area) {
+            foreach ($request->modalidades as $modalidade) {
+              $revisor = new Revisor();
+              $revisor->trabalhosCorrigidos   = 0;
+              $revisor->correcoesEmAndamento  = 0;
+              $revisor->user_id               = $usuario->id;
+              $revisor->areaId                = $area;
+              $revisor->modalidadeId          = $modalidade;
+              $revisor->evento_id             = $evento->id;
+              $revisor->save();
+            }
+          }
+        } else {
+          return redirect()->back()->withErrors(['errorRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
+        }
       
         return redirect()->back()->with(['mensagem' => 'Revisor cadastrado com sucesso!']);
     }
@@ -154,16 +158,21 @@ class RevisorController extends Controller
      */
     public function destroy($id)
     {
-      $revisor = Revisor::find($id);
-
-      if (count($revisor->trabalhosAtribuidos) > 0) {
-        return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há trabalhos atribuídos para o mesmo.']);
+      $user = User::find($id);
+      
+      foreach ($user->revisor as $revisor) {
+        if (count($revisor->trabalhosAtribuidos) > 0) {
+          return redirect()->back()->withErrors(['errorRevisor' => 'Não é possível remover o revisor, pois há trabalhos atribuídos para o mesmo.']);
+        }
+        if (count($revisor->avaliacoes) > 0) {
+          return redirect()->back()->withErrors(['errorRevisor' => 'Não é possível remover o revisor, pois há avaliações do mesmo.']);
+        }
       }
-      if (count($revisor->avaliacoes) > 0) {
-        return redirect()->back()->withErrors(['removerRevisor' => 'Não é possível remover o revisor, pois há avaliações do mesmo.']);
-      }
 
-      $revisor->delete();
+      foreach ($user->revisor as $revisor) {
+        $revisor->delete();
+      }
+      
       return redirect()->back()->with(['mensagem' => 'Revisor removido com sucesso!']);
     }
 
@@ -192,11 +201,10 @@ class RevisorController extends Controller
     public function enviarEmailTodosRevisores(Request $request){
         $subject = "Lembrete ";
         
-        $revisores = json_decode($request->input('revisores')) ;
-
+        $revisores = json_decode($request->input('revisores'));
         foreach ($revisores as $revisor) {
-            $user = $revisor->user;
-            Mail::to($user->email)
+            $user = User::find($revisor->id);
+            Mail::to($revisor->email)
             ->send(new EmailLembrete($user, $subject));                
         }
 

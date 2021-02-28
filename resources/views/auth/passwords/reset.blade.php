@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container content">
-    <div class="row justify-content-center">
+<div class="container content" >
+    <div class="row justify-content-center"style="position: relative; top: 60px;">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Redefinir Senha') }}</div>
@@ -62,4 +62,5 @@
         </div>
     </div>
 </div>
+@include('componentes.footer')
 @endsection
