@@ -157,7 +157,7 @@ class TrabalhoController extends Controller
       
       if ($this->validarTipoDoArquivo($request, $modalidade)) {
         return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
-        Verifique no formulário, quais os tipos permitidos.']);
+        Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
       }
       
       $autor = Auth::user();

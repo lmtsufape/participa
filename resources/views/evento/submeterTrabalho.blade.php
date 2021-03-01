@@ -57,6 +57,34 @@
                               <div class="col-sm-12">
                                 <h4>Autores</h4>                                 
                                   <div id="coautores" class="flexContainer " >
+                                    @if (old('nomeCoautor') != null)
+                                      @foreach (old('nomeCoautor') as $i => $nomeCoautor)
+                                        <div class="item card" id="1" style="order:1">
+                                          <div class="row card-body">
+                                              <div class="col-sm-4">
+                                                  <label>E-mail</label>
+                                                  <input type="email" style="margin-bottom:10px" id="email${order}" value="{{old('emailCoautor.'.$i)}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" required>
+                                              </div>
+                                              <div class="col-sm-5">
+                                                  <label>Nome Completo</label>
+                                                  <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" required>
+                                              </div>
+                                              <div class="col-sm-3">
+                                                  <a href="#" class="delete pr-2">
+                                                    <img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;">
+                                                  </a>
+                                                  <a href="#" onclick="myFunction(event)">
+                                                    <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                                  </a>
+                                                  <a href="#" onclick="myFunction(event)">
+                                                    <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                                  </a>
+                                                  
+                                              </div>
+                                          </div>
+                                        </div>
+                                      @endforeach
+                                    @else 
                                     <div class="item card" id="1" style="order:1">
                                       <div class="row card-body">
                                           <div class="col-sm-4">
@@ -81,6 +109,7 @@
                                           </div>
                                       </div>
                                     </div>
+                                    @endif
                                   </div>
                                 <a href="#" onclick="addLinha(event)" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">{{$formSubTraba->etiquetacoautortrabalho}}</a>
                               </div>
@@ -91,7 +120,7 @@
                               <div class="row justify-content-center">
                                 <div class="col-sm-12">
                                     <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                                    <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" minlength="{{$modalidade->mincaracteres}}" maxlength="{{$modalidade->maxcaracteres}}" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
+                                    <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" minlength="{{$modalidade->mincaracteres}}" maxlength="{{$modalidade->maxcaracteres}}" name="resumo"  autocomplete="resumo" autofocusrows="5">{{old('resumo')}}</textarea>
                                     <p class="text-muted"><small><span name="resumo">0</span></small> - Min Caracteres: {{$modalidade->mincaracteres}} - Max Caracteres: {{$modalidade->maxcaracteres}}</p>
                                     @error('resumo')
                                     <span class="invalid-feedback" role="alert">
@@ -122,14 +151,11 @@
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
                                     <label for="area" class="col-form-label">{{$formSubTraba->etiquetaareatrabalho}}</label>
-                                    <select class="form-control @error('area') is-invalid @enderror" id="area" name="areaId">
+                                    <select class="form-control @error('areaId') is-invalid @enderror" id="area" name="areaId">
                                         <option value="" disabled selected hidden>-- Área --</option>
-                                        {{-- @foreach($areasEnomes as $area)
-                                          <option value="{{$area->id}}">{{$area->nome}}</option>
-                                        @endforeach --}}
                                         {{-- Apenas um teste abaixo --}}
                                         @foreach($areas as $area)
-                                          <option value="{{$area->id}}">{{$area->nome}}</option>
+                                          <option value="{{$area->id}}" @if(old('areaId') == $area->id) selected @endif>{{$area->nome}}</option>
                                         @endforeach
                                     </select>
                                     @error('areaId')
