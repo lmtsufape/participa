@@ -30,8 +30,6 @@
                             <thead>
                               <tr>
                                 <th scope="col">Nome</th>
-                                {{-- <th scope="col">Área</th>
-                                <th scope="col">Modalidade</th> --}}
                                 <th scope="col" style="text-align:center">Em Andamento</th>
                                 <th scope="col" style="text-align:center">Finalizados</th>
                                 <th scope="col" style="text-align:center">Visualizar</th>
@@ -42,18 +40,16 @@
                             <tbody>
                               @foreach($revisores as $revisor)
                                 <tr>
-                                  <td>{{$revisor->email}}</td>
-                                  {{-- <td>{{$revisor->name}}</td>
-                                  <td>{{$revisor->name}}</td> --}}
-                                  <td style="text-align:center">{{$revisor->revisor()->sum('correcoesEmAndamento')}}</td>
-                                  <td style="text-align:center">{{$revisor->revisor()->sum('trabalhosCorrigidos')}}</td>
+                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
+                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">{{$revisor->revisor()->sum('correcoesEmAndamento')}}</td>
+                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">{{$revisor->revisor()->sum('trabalhosCorrigidos')}}</td>
                                   <td style="text-align:center">
                                     <a href="#" data-toggle="modal" data-target="#modalRevisor{{$revisor->id}}">
                                       <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                                     </a>
                                   </td>
                                   <td style="text-align:center">
-                                    <form id="removerRevisor{{$revisor->id}}" action="{{route('remover.revisor', ['id' => $revisor->id])}}" method="POST">
+                                    <form id="removerRevisor{{$revisor->id}}" action="{{route('remover.revisor', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
                                       @csrf
                                       <a href="#" data-toggle="modal" data-target="#modalRemoverRevisor{{$revisor->id}}">
                                         <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
@@ -199,6 +195,112 @@
           </div>
         </div>
       </div>
+
+      {{-- Modal editar revisor --}}
+      <div class="modal fade" id="modalEditarRevisor{{$revisor->id}}" tabindex="-1" role="dialog" aria-labelledby="modalEditarRevisor{{$revisor->id}}Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+              <h5 class="modal-title" id="modalEditarRevisor{{$revisor->id}}Label">Editar revisor</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form id="editarRevisor{{$revisor->id}}" method="POST" action="{{route('revisor.update')}}">
+                    @csrf
+                    <p class="card-text">
+                        <div class="container">
+                          <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                          <input type="hidden" name="editarRevisor" value="{{$revisor->id}}">
+                          <div class="row">
+                              <div class="col-sm-6">
+                                  <label for="emailRevisor{{$revisor->id}}" class="col-form-label">{{ __('Email do Revisor') }}</label>
+                                  <input id="emailRevisor{{$revisor->id}}" type="email" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{$revisor->email}}" autocomplete="emailRevisor" disabled>
+  
+                                  @error('emailRevisor')
+                                  <span class="invalid-feedback" role="alert">
+                                      <strong>{{ $message }}</strong>
+                                  </span>
+                                  @enderror
+                              </div>
+                          </div>
+                          <div  class="row">
+                            <div class="col-sm-6">
+                              <h6 for="areaRevisor" class="col-form-label">{{ __('Selecione as áreas') }}</h6>
+
+                              @php
+                                  $areasRevisor = $revisor->revisor()->distinct('areaId')->get();
+                                  $modalidadesRevisor = $revisor->revisor()->distinct('modalidadeId')->get();
+                              @endphp
+                              @if (old('areasEditadas_'.$revisor->id) != null)
+                                @foreach ($areas as $area)
+                                  <div class="row">
+                                    <div class="col-sm-12">
+                                      <input id="area_{{$area->id}}" type="checkbox" name="areasEditadas_{{$revisor->id}}[]" value="{{$area->id}}" @if(in_array($area->id, old('areasEditadas_'.$revisor->id))) checked @endif>
+                                      <label for="area_{{$area->id}}">{{$area->nome}}</label>
+                                    </div>
+                                  </div>
+                                @endforeach
+                              @else 
+                                @foreach ($areas as $area)
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <input id="area_{{$area->id}}" type="checkbox" name="areasEditadas_{{$revisor->id}}[]" value="{{$area->id}}" @if($areasRevisor->contains('areaId', $area->id)) checked @endif>
+                                    <label for="area_{{$area->id}}">{{$area->nome}}</label>
+                                  </div>
+                                </div>
+                                @endforeach
+                              @endif 
+  
+                              @error('areasEditadas_'.$revisor->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                              @enderror
+
+                            </div>
+                            <div class="col-sm-6">
+                              <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidade') }}</h6>
+                              @if (old('modalidadesEditadas_'.$revisor->id) != null)
+                                @foreach ($modalidades as $modalidade)
+                                    <div class="row">
+                                      <div class="col-sm-12">
+                                        <input id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidadesEditadas_{{$revisor->id}}[]" value="{{$modalidade->id}}" @if(in_array($modalidade->id, old('modalidadesEditadas_'.$revisor->id))) checked @endif>
+                                        <label for="modalidade_{{$modalidade->id}}">{{$modalidade->nome}}</label>
+                                      </div>
+                                    </div>
+                                @endforeach
+                              @else 
+                                @foreach ($modalidades as $modalidade)
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <input id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidadesEditadas_{{$revisor->id}}[]" value="{{$modalidade->id}}"  @if($modalidadesRevisor->contains('modalidadeId', $modalidade->id)) checked @endif>
+                                    <label for="modalidade_{{$modalidade->id}}">{{$modalidade->nome}}</label>
+                                  </div>
+                                </div>
+                                @endforeach
+                              @endif
+
+                              @error('modalidadesEditadas_'.$revisor->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                              @enderror
+                            </div>
+                          </div>
+                        </div>
+                    </p>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" form="editarRevisor{{$revisor->id}}">{{ __('Salvar') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{-- Fim modal editar revisor --}}
     @endforeach
     
     <!-- Revisores -->

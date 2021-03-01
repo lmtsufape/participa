@@ -2165,6 +2165,13 @@
         });
     </script>
   @endif
+  @if(old('editarRevisor') != null)
+    <script>
+        $(document).ready(function() {
+            $('#modalEditarRevisor{{old('editarRevisor')}}').modal('show');
+        });
+    </script>
+  @endif
   @if(old('idNovaAtividade') == 2)
     <script>
         $(document).ready(function() {
