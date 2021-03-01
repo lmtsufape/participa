@@ -59,11 +59,11 @@
                                   <div id="coautores" class="flexContainer " >
                                     @if (old('nomeCoautor') != null)
                                       @foreach (old('nomeCoautor') as $i => $nomeCoautor)
-                                        <div class="item card" id="1" style="order:1">
+                                        <div class="item card" id="{{$i+1}}" style="order: {{$i+1}};">
                                           <div class="row card-body">
                                               <div class="col-sm-4">
                                                   <label>E-mail</label>
-                                                  <input type="email" style="margin-bottom:10px" id="email${order}" value="{{old('emailCoautor.'.$i)}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" required>
+                                                  <input type="email" style="margin-bottom:10px" id="email{{$i+1}}" value="{{old('emailCoautor.'.$i)}}" onclick="digitarEmail(email{{$i+1}})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" required>
                                               </div>
                                               <div class="col-sm-5">
                                                   <label>Nome Completo</label>
