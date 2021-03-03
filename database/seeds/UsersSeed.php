@@ -23,6 +23,8 @@ class UsersSeed extends Seeder
           'enderecoId' => 1,
         ]);
 
+         
+
         DB::table('users')->insert([  //
           'name' => 'Participante',
           'email' => 'participante@ufrpe.br',

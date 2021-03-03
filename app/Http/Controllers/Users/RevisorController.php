@@ -341,4 +341,26 @@ class RevisorController extends Controller
       return view('revisor.listarTrabalhos')->with(['evento' => $evento,'trabalhosPorRevisor' => $trabalhos]);
       // $trabalhos = Atribuicao::where('eventoId', $id);
     }
+
+    public function responde(Request $request)
+    {
+      // dd($request->all());
+      $data = $request->all();
+      $evento = Evento::find($data['evento_id']);
+      $data['revisor'] = Revisor::find($data['revisor_id']);
+      $data['modalidade'] = Modalidade::find($data['modalidade_id']);
+      $data['trabalho'] = Trabalho::find($data['trabalho_id']);
+
+      $forms = $data['modalidade']->forms;
+      
+      return view('revisor.formularioRevisor', compact('evento', 'data', 'forms'));
+
+    }
+
+    public function salvarRespostas(Request $request)
+    {
+      $data = $request->all();
+      dd($data);
+
+    }
 }

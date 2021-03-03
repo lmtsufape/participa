@@ -16,6 +16,7 @@
             <h5 class="card-title">{{$form->titulo}}</h5>
             
             <p class="card-text">
+                
                 @foreach ($form->perguntas as $pergunta)
                     <div class="card">
                         <div class="card-body">

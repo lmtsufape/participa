@@ -25,7 +25,7 @@
                             <label>Resposta</label>
                             <div class="row" id="row1">
                                 <div class="col-md-12">
-                                    <input type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]" required>
+                                    <input type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]">
                                 </div>                                
                             </div>
                         </div>
@@ -176,7 +176,7 @@
                             <label>Resposta</label>
                             <div class="row" id="row${order}">
                                 <div class="col-md-12">
-                                    <input type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]" required>
+                                    <input type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]">
                                 </div>                                
                             </div>
                         </div>

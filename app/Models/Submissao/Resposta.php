@@ -18,4 +18,19 @@ class Resposta extends Model
     {
         return $this->hasMany('App\Models\Submissao\Opcao');
     }
+
+    public function paragrafo()
+    {
+        return $this->hasOne('App\Models\Submissao\Paragrafo');
+    }
+
+    public function revisor()
+    {
+        return $this->belongsTo('App\Models\Users\Revisor');
+    }
+
+    public function trabalho()
+    {
+        return $this->belongsTo('App\Models\Submissao\Trabalho');
+    }
 }

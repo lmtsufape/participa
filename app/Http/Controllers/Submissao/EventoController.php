@@ -34,6 +34,7 @@ use App\Models\Submissao\Form;
 use App\Models\Submissao\Opcao;
 use App\Models\Submissao\Pergunta;
 use App\Models\Submissao\Resposta;
+use App\Models\Submissao\Paragrafo;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -347,10 +348,14 @@ class EventoController extends Controller
           'pergunta' => $value
         ]);
 
+        $resposta = new Resposta();
+        $resposta->pergunta_id = $pergunta->id;
+        $resposta->save();
+
         if($data['tipo'][$key] == 'paragrafo'){
-          $resposta = $pergunta->resposta()->create([
-            'resposta' => $data['resposta'][$key]
-          ]);
+          $paragrafo = new Paragrafo();
+          $resposta->paragrafo()->save($paragrafo);
+
         }else if($data['tipo'][$key] == 'checkbox'){
           $resposta = $pergunta->resposta()->create([
             'resposta' => null
