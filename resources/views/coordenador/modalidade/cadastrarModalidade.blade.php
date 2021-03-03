@@ -28,7 +28,7 @@
                             </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
-                                    <input id="nomeModalidade" type="text" class="form-control apenasLetras @error('nomeModalidade') is-invalid @enderror" name="nomeModalidade" value="{{ old('nomeModalidade') }}" required autocomplete="nomeModalidade" autofocus>
+                                    <input id="nomeModalidade" type="text" class="form-control @error('nomeModalidade') is-invalid @enderror" name="nomeModalidade" value="{{ old('nomeModalidade') }}" required autocomplete="nomeModalidade" autofocus>
 
                                     @error('nomeModalidade')
                                     <span class="invalid-feedback" role="alert">
