@@ -75,7 +75,7 @@ class ModalidadeController extends Controller
             'minpalavras'       => ['nullable', 'integer'],
             'maxpalavras'       => ['nullable', 'integer'],
             'arquivoRegras'     => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
-            'arquivoTemplates'  => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
+            'arquivoTemplates'  => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2000000'],
         ]);
 
         // Verificar se o limite máximo de palavra ou caractere é menor que o limite mínimo
@@ -223,7 +223,7 @@ class ModalidadeController extends Controller
             'minpalavras'            => ['nullable', 'integer'],
             'maxpalavras'            => ['nullable', 'integer'],
             'arquivoRegras'          => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
-            'arquivoTemplates'       => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
+            'arquivoTemplates'       => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2000000'],
 
         ]);
 
