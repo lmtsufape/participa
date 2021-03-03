@@ -145,9 +145,69 @@ class RevisorController extends Controller
      * @param  \App\Revisor  $revisor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Revisor $revisor)
+    public function update(Request $request)
     {
-        //
+      $user = User::find($request->editarRevisor);
+      $evento = Evento::find($request->eventoId);
+      $validatedData = $request->validate([
+        'editarRevisor'   => 'required',
+        'areasEditadas_'.$user->id => 'required',
+        'modalidadesEditadas_'.$user->id => 'required',
+      ]);
+
+      $revisores = $user->revisor()->where('evento_id', '=', $evento->id)->get();
+      $revisoresRetirados = collect();
+
+      // Checando se o alguma área e modalidade foiram retiradas
+      foreach ($revisores as $revisor) {
+        foreach ($request->input('areasEditadas_'.$user->id) as $area) {
+          foreach ($request->input('modalidadesEditadas_'.$user->id) as $modalidade) {
+            if ($revisor->areaId == $area && $revisor->modalidadeId == $modalidade) {
+              $revisoresRetirados->push($revisor);
+            }
+          }
+        }
+      }
+
+      $revisoresRetirados = $revisores->diff($revisoresRetirados);
+      if (count($revisoresRetirados) > 0) {
+        foreach ($revisoresRetirados as $revisor) {
+          if (count($revisor->trabalhosAtribuidos) > 0) {
+            return redirect()->back()->withErrors(['errorRevisor' => 'Existem trabalhos atribuidos para esse revisor na área de ' . $revisor->area->nome . ' na modalidade de ' . $revisor->modalidade->nome . '.']);
+          }
+        }
+      }
+
+      // Deletando os revisores que foram retirados
+      if (count($revisoresRetirados) > 0) {
+        foreach ($revisoresRetirados as $revisor) {
+          $revisor->delete();
+        }
+      }
+
+      // Adicionando os novos revisores
+      foreach ($request->input('areasEditadas_'.$user->id) as $area) {
+        $encontrado = false;
+        foreach ($request->input('modalidadesEditadas_'.$user->id) as $modalidade) {
+          foreach ($revisores as $revisor) {
+            if ($revisor->areaId == $area && $revisor->modalidadeId == $modalidade) {
+              $encontrado = true;
+            }
+          }
+          if ($encontrado == false) {
+            $revisor = new Revisor();
+            $revisor->trabalhosCorrigidos   = 0;
+            $revisor->correcoesEmAndamento  = 0;
+            $revisor->user_id               = $user->id;
+            $revisor->areaId                = $area;
+            $revisor->modalidadeId          = $modalidade;
+            $revisor->evento_id             = $evento->id;
+            $revisor->save();
+          }
+        }
+      }
+      
+      return redirect()->back()->with(['mensagem' => 'Revisor salvo com sucesso!']);
     }
 
     /**
@@ -156,11 +216,12 @@ class RevisorController extends Controller
      * @param  \App\Revisor  $revisor
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, $evento_id)
     {
       $user = User::find($id);
-      
-      foreach ($user->revisor as $revisor) {
+      $evento = Evento::find($evento_id);
+
+      foreach ($user->revisor()->where('evento_id', '=', $evento->id)->get() as $revisor) {
         if (count($revisor->trabalhosAtribuidos) > 0) {
           return redirect()->back()->withErrors(['errorRevisor' => 'Não é possível remover o revisor, pois há trabalhos atribuídos para o mesmo.']);
         }
@@ -169,7 +230,7 @@ class RevisorController extends Controller
         }
       }
 
-      foreach ($user->revisor as $revisor) {
+      foreach ($user->revisor()->where('evento_id', '=', $evento->id)->get() as $revisor) {
         $revisor->delete();
       }
       
