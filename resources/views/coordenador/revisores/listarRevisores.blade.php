@@ -143,13 +143,13 @@
               <div class="row justify-content-center">
                 <div class="col-sm-6">
                   <h5 for="">Áreas de correção</h5>
-                  @foreach ($revisor->revisor()->distinct('areaId')->get() as $user)
+                  @foreach ($revisor->revisor()->where('evento_id', $evento->id)->distinct('areaId')->get() as $user)
                     <div>{{$user->area->nome}}</div>
                   @endforeach
                 </div>
                 <div class="col-sm-6">
                   <h5 for="">Modalidades de correção</h5>
-                  @foreach ($revisor->revisor()->distinct('modalidadeId')->get() as $user)
+                  @foreach ($revisor->revisor()->where('evento_id', $evento->id)->distinct('modalidadeId')->get() as $user)
                     <div>{{$user->modalidade->nome}}</div>
                   @endforeach
                 </div>
@@ -261,7 +261,7 @@
 
                             </div>
                             <div class="col-sm-6">
-                              <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidade') }}</h6>
+                              <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidades') }}</h6>
                               @if (old('modalidadesEditadas_'.$revisor->id) != null)
                                 @foreach ($modalidades as $modalidade)
                                     <div class="row">
@@ -362,7 +362,7 @@
                             @enderror
                           </div>
                           <div class="col-sm-6">
-                              <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidade') }}</h6>
+                              <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidades') }}</h6>
                               @if (old('modalidades') != null)
                                 @foreach ($modalidades as $modalidade)
                                     <div class="row">
