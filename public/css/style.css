@@ -336,6 +336,13 @@ body{
     color: rgb(0, 132, 255);
 }
 
+.accordion-modadalidade {
+    display: ruby;
+    margin-bottom: 4px;
+    border-radius: 5%;
+    padding-top: 8px;
+    padding-bottom: 4px;
+}
 
 /* Visualização dos conteúdos dos detalhes do evento */
 #divInformacoes{display: block;}
