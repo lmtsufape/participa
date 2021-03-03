@@ -3,7 +3,7 @@
 @section('menu')
 
     <div id="divListarRevisores" style="display: block">
-        @error('removerRevisor')
+        @error('errorRevisor')
           @include('componentes.mensagens')
         @enderror
         <div class="row">
@@ -30,8 +30,6 @@
                             <thead>
                               <tr>
                                 <th scope="col">Nome</th>
-                                <th scope="col">Área</th>
-                                <th scope="col">Modalidade</th>
                                 <th scope="col" style="text-align:center">Em Andamento</th>
                                 <th scope="col" style="text-align:center">Finalizados</th>
                                 <th scope="col" style="text-align:center">Visualizar</th>
@@ -42,25 +40,23 @@
                             <tbody>
                               @foreach($revisores as $revisor)
                                 <tr>
-                                  <td>{{$revisor->user->email}}</td>
-                                  <td>{{$revisor->area->nome}}</td>
-                                  <td>{{$revisor->modalidade->nome}}</td>
-                                  <td style="text-align:center">{{$revisor->correcoesEmAndamento}}</td>
-                                  <td style="text-align:center">{{$revisor->trabalhosCorrigidos}}</td>
+                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
+                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">{{$revisor->revisor()->sum('correcoesEmAndamento')}}</td>
+                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">{{$revisor->revisor()->sum('trabalhosCorrigidos')}}</td>
                                   <td style="text-align:center">
                                     <a href="#" data-toggle="modal" data-target="#modalRevisor{{$revisor->id}}">
                                       <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                                     </a>
                                   </td>
                                   <td style="text-align:center">
-                                    <form id="removerRevisor{{$revisor->id}}" action="{{route('remover.revisor', ['id' => $revisor->id])}}" method="POST">
+                                    <form id="removerRevisor{{$revisor->id}}" action="{{route('remover.revisor', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
                                       @csrf
                                       <a href="#" data-toggle="modal" data-target="#modalRemoverRevisor{{$revisor->id}}">
                                         <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
                                       </a>
                                     </form>
                                   </td>
-                                  <td >
+                                  <td style="text-align:center">
                                       {{-- <form action="{{route('revisor.email')}}" method="POST" >
                                         @csrf
                                           <input type="hidden" name="user" value= '@json($revisor->user)'>
@@ -68,7 +64,7 @@
                                               Enviar e-mail
                                           </button>
                                       </form> --}}
-                                      @component('componentes.modal', ['email' => $revisor->user->email, 'evento' => $evento])
+                                      @component('componentes.modal', ['email' => $revisor->email, 'evento' => $evento])
                             
                                       @endcomponent
                                   </td>
@@ -76,10 +72,10 @@
                               @endforeach
                             </tbody>
                           </table>
-                          @if(count($revs) > 0 && isset($revs))
+                          @if(count($revisores) > 0 && isset($revisores))
                             <form action="{{route('revisor.emailTodos')}}" method="POST" >
                                 @csrf
-                                  <input type="hidden" name="revisores" value='@json($revs)'>
+                                  <input type="hidden" name="revisores" value='@json($revisores)'>
                                   <button class="btn btn-primary btn-sm" type="submit">
                                       Lembrar todos
                                   </button>
@@ -128,59 +124,183 @@
             <div class="modal-body">
               <div class="row justify-content-center">
                 <div class="col-sm-6">
-                  <label for="">Nome</label>
-                  <h5>{{$revisor->user->name}}</h5>
+                  <h5 for="">Nome</h5>
+                  <div>@if($revisor->name != null){{$revisor->name}}@else O usuário precisa completar o cadastro @endif</div>
                 </div>
                 <div class="col-sm-6">
-                  <label for="">E-mail</label>
-                  <h5>{{$revisor->user->email}}</h5>
+                  <h5 for="">E-mail</h5>
+                  <div>{{$revisor->email}}</div>
                 </div>
               </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-6">
+                  <h5 for="">Instituição</h5>
+                  <div>@if($revisor->instituicao != null){{$revisor->instituicao}}@else O usuário precisa completar o cadastro @endif</div>
+                </div>
+              </div>
+              <br>
               <div class="row justify-content-center">
                 <div class="col-sm-6">
-                  <label for="">Área</label>
-                  <h5>{{$revisor->area->nome}}</h5>
+                  <h5 for="">Áreas de correção</h5>
+                  @foreach ($revisor->revisor()->distinct('areaId')->get() as $user)
+                    <div>{{$user->area->nome}}</div>
+                  @endforeach
                 </div>
                 <div class="col-sm-6">
-                  <label for="">Instituição</label>
-                  <h5>{{$revisor->user->instituicao}}</h5>
+                  <h5 for="">Modalidades de correção</h5>
+                  @foreach ($revisor->revisor()->distinct('modalidadeId')->get() as $user)
+                    <div>{{$user->modalidade->nome}}</div>
+                  @endforeach
                 </div>
+                
               </div>
-
-              <div class="row justify-content-center" style="margin-top:20px">
-                <div class="col-sm-12">
-                  <h4>Trabalhos</h4>
-                </div>
-              </div>
+              <br>
+              {{-- <div class="row justify-content-center" style="margin-top:20px">
+                
+              </div> --}}
               <div class="row justify-content-center">
                 <div class="col-sm-12">
-                  @if (count($revisor->trabalhosAtribuidos) > 0)
-                    <table class="table table-hover table-responsive-lg table-sm">
-                      <thead>
-                        <tr>
-                          <th scope="col">Título</th>
-                          <th scope="col">Status</th>
-
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @foreach ($revisor->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
-                          <tr>
-                            <td>{{$trabalho->titulo}}</td>
-                            <td>{{$trabalho->avaliado}}</td>
-                          </tr>
-                        @endforeach
-                      </tbody>
-                    </table>
-                  @else 
-                    <h5>Nenhum trabalho atríbuido</h5>
-                  @endif
+                  @foreach ($revisor->revisor as $revisorDosTrabalhos)
+                    @if (count($revisorDosTrabalhos->trabalhosAtribuidos) > 0)
+                      <div class="container">
+                        <div class="row">
+                          <h4 style="text-align: left;">Trabalhos da área de {{$revisorDosTrabalhos->area->nome}} na modalidade {{$revisorDosTrabalhos->modalidade->nome}}</h4>
+                        </div>
+                        <div class="row">
+                          <table class="table table-hover table-responsive-lg table-sm">
+                            <thead>
+                              <tr>
+                                <th scope="col">Título</th>
+                                <th scope="col">Status</th>
+  
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @foreach ($revisorDosTrabalhos->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
+                                <tr>
+                                  <td>{{$trabalho->titulo}}</td>
+                                  <td>{{$trabalho->avaliado}}</td>
+                                </tr>
+                              @endforeach
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    @endif 
+                  @endforeach
                 </div>
               </div>
               </div>
           </div>
         </div>
       </div>
+
+      {{-- Modal editar revisor --}}
+      <div class="modal fade" id="modalEditarRevisor{{$revisor->id}}" tabindex="-1" role="dialog" aria-labelledby="modalEditarRevisor{{$revisor->id}}Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+              <h5 class="modal-title" id="modalEditarRevisor{{$revisor->id}}Label">Editar revisor</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form id="editarRevisor{{$revisor->id}}" method="POST" action="{{route('revisor.update')}}">
+                    @csrf
+                    <p class="card-text">
+                        <div class="container">
+                          <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                          <input type="hidden" name="editarRevisor" value="{{$revisor->id}}">
+                          <div class="row">
+                              <div class="col-sm-6">
+                                  <label for="emailRevisor{{$revisor->id}}" class="col-form-label">{{ __('Email do Revisor') }}</label>
+                                  <input id="emailRevisor{{$revisor->id}}" type="email" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{$revisor->email}}" autocomplete="emailRevisor" disabled>
+  
+                                  @error('emailRevisor')
+                                  <span class="invalid-feedback" role="alert">
+                                      <strong>{{ $message }}</strong>
+                                  </span>
+                                  @enderror
+                              </div>
+                          </div>
+                          <div  class="row">
+                            <div class="col-sm-6">
+                              <h6 for="areaRevisor" class="col-form-label">{{ __('Selecione as áreas') }}</h6>
+
+                              @php
+                                  $areasRevisor = $revisor->revisor()->distinct('areaId')->get();
+                                  $modalidadesRevisor = $revisor->revisor()->distinct('modalidadeId')->get();
+                              @endphp
+                              @if (old('areasEditadas_'.$revisor->id) != null)
+                                @foreach ($areas as $area)
+                                  <div class="row">
+                                    <div class="col-sm-12">
+                                      <input id="area_{{$area->id}}" type="checkbox" name="areasEditadas_{{$revisor->id}}[]" value="{{$area->id}}" @if(in_array($area->id, old('areasEditadas_'.$revisor->id))) checked @endif>
+                                      <label for="area_{{$area->id}}">{{$area->nome}}</label>
+                                    </div>
+                                  </div>
+                                @endforeach
+                              @else 
+                                @foreach ($areas as $area)
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <input id="area_{{$area->id}}" type="checkbox" name="areasEditadas_{{$revisor->id}}[]" value="{{$area->id}}" @if($areasRevisor->contains('areaId', $area->id)) checked @endif>
+                                    <label for="area_{{$area->id}}">{{$area->nome}}</label>
+                                  </div>
+                                </div>
+                                @endforeach
+                              @endif 
+  
+                              @error('areasEditadas_'.$revisor->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                              @enderror
+
+                            </div>
+                            <div class="col-sm-6">
+                              <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidade') }}</h6>
+                              @if (old('modalidadesEditadas_'.$revisor->id) != null)
+                                @foreach ($modalidades as $modalidade)
+                                    <div class="row">
+                                      <div class="col-sm-12">
+                                        <input id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidadesEditadas_{{$revisor->id}}[]" value="{{$modalidade->id}}" @if(in_array($modalidade->id, old('modalidadesEditadas_'.$revisor->id))) checked @endif>
+                                        <label for="modalidade_{{$modalidade->id}}">{{$modalidade->nome}}</label>
+                                      </div>
+                                    </div>
+                                @endforeach
+                              @else 
+                                @foreach ($modalidades as $modalidade)
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <input id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidadesEditadas_{{$revisor->id}}[]" value="{{$modalidade->id}}"  @if($modalidadesRevisor->contains('modalidadeId', $modalidade->id)) checked @endif>
+                                    <label for="modalidade_{{$modalidade->id}}">{{$modalidade->nome}}</label>
+                                  </div>
+                                </div>
+                                @endforeach
+                              @endif
+
+                              @error('modalidadesEditadas_'.$revisor->id)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                              @enderror
+                            </div>
+                          </div>
+                        </div>
+                    </p>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" form="editarRevisor{{$revisor->id}}">{{ __('Salvar') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{-- Fim modal editar revisor --}}
     @endforeach
     
     <!-- Revisores -->

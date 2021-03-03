@@ -38,6 +38,7 @@
                             <th scope="col">Resumo</th>
                             <th scope="col">Baixar</th>
                             <th scope="col">Avaliar</th>
+                            <th scope="col">Questionário</th>
                           </tr>
                         </thead>
                         @foreach($trabalhosDoRevisor as $trabalho)
@@ -67,6 +68,21 @@
                                     <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
                                   </td>
                                 @endif
+                                {{-- {{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}} --}}
+                                <td>
+                                  
+                                  <form action="{{route('revisor.responde')}}" method="get">
+                                    @csrf
+                                    <input type="hidden" name="revisor_id" value="{{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}}">
+                                    <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
+                                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                                    <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
+                                    <button type="submit" class="btn btn-success">
+                                      Avaliar
+                                    </button>
+                                  </form>
+                                
+                                </td>
                               @else
                               <td>
                                 <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Trabalho já avaliado">

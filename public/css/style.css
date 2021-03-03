@@ -804,6 +804,17 @@ body{
     text-align: center;
 }
 
+.cards-eventos-index .card {
+    border-radius: 15px;
+    width: 80%;
+}
+
+.cards-eventos-index .card .img-card {
+    border-radius: 15px 15px 0px 0px;
+    height: 28%;
+    width: 100%;
+}
+
 /* .edit-evento img{
     border: 1px white solid;
     padding: 2px;

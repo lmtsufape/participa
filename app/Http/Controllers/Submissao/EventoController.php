@@ -30,6 +30,11 @@ use App\Mail\EventoCriado;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
+use App\Models\Submissao\Form;
+use App\Models\Submissao\Opcao;
+use App\Models\Submissao\Pergunta;
+use App\Models\Submissao\Resposta;
+use App\Models\Submissao\Paragrafo;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -174,15 +179,15 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
 
         $this->authorize('isCoordenadorOrComissao', $evento);
-        $revisores = Revisor::where('evento_id', $evento->id)->get();
-        $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
+        $revisores = User::join('revisors', 'users.id', '=', 'revisors.user_id')->where('revisors.evento_id', '=', $evento->id)->selectRaw('DISTINCT users.*')->get();
+        // $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
         $areas = Area::where('eventoId', $evento->id)->get();
         $modalidades = Modalidade::where('evento_id', $evento->id)->get();
 
         return view('coordenador.revisores.listarRevisores', [
                                                     'evento'                  => $evento,
                                                     'revisores'               => $revisores,
-                                                    'revs'                    => $revs,
+                                                    // 'revs'                    => $revisores,
                                                     'areas'                   => $areas,
                                                     'modalidades'             => $modalidades,
                                                   ]);
@@ -307,6 +312,77 @@ class EventoController extends Controller
 
     }
 
+    public function forms(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
+        
+        return view('coordenador.modalidade.formulario', compact(
+                                                                  'evento',
+                                                                  'modalidades'
+                                                                ));
+
+    }
+
+    public function atribuirForm(Request $request)
+    {
+      $evento = Evento::find($request->evento_id);
+      $modalidade = Modalidade::find($request->modalidade_id);
+      
+      return view('coordenador.modalidade.atribuirFormulario', compact('evento', 'modalidade'));
+
+    }
+
+    public function salvarForm(Request $request)
+    {
+      $evento = Evento::find($request->evento_id);
+      $modalidade = Modalidade::find($request->modalidade_id);
+      $data = $request->all();
+     
+      $form = $modalidade->forms()->create([
+          'titulo' => 'Titulo do form',
+      ]);
+
+      foreach ($data['pergunta'] as $key => $value) {
+        $pergunta = $form->perguntas()->create([
+          'pergunta' => $value
+        ]);
+
+        $resposta = new Resposta();
+        $resposta->pergunta_id = $pergunta->id;
+        $resposta->save();
+
+        if($data['tipo'][$key] == 'paragrafo'){
+          $paragrafo = new Paragrafo();
+          $resposta->paragrafo()->save($paragrafo);
+
+        }else if($data['tipo'][$key] == 'checkbox'){
+          $resposta = $pergunta->resposta()->create([
+            'resposta' => null
+          ]);
+          $resposta->opcoes()->create([
+            'titulo' => 'titulo do checkbox'
+          ]);
+        }
+
+        // print_r($value);
+      }
+     
+      
+      return view('coordenador.modalidade.atribuirFormulario', compact('evento','modalidade'));
+
+    }
+    
+    public function visualizarForm(Request $request)
+    {
+      $evento = Evento::find($request->evento_id);
+      $modalidade = Modalidade::find($request->modalidade_id);
+      // $form = $modalidade->forms;
+      $data = $request->all();
+
+      return view('coordenador.modalidade.visualizarFormulario', compact('evento', 'modalidade'));
+
+    }
     public function editarEtiqueta(Request $request)
     {
         $evento = Evento::find($request->eventoId);
@@ -360,7 +436,6 @@ class EventoController extends Controller
                                                   ]);
 
     }
-
 
     /**
      * Show the form for creating a new resource.

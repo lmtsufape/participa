@@ -57,4 +57,8 @@ class Trabalho extends Model
   public function avaliacoes() {
     return $this->hasMany('App\Models\Submissao\Avaliacao', 'trabalho_id');
   }
+
+  public function respostas() {
+    return $this->hasMany('App\Models\Submissao\Resposta');
+  }
 }

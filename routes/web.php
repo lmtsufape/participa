@@ -84,6 +84,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
       Route::get('areas/listarAreas', 'EventoController@listarAreas')->name('listarAreas');
 
       Route::get('revisores/cadastrarRevisores', 'EventoController@cadastrarRevisores')->name('cadastrarRevisores');
+      
       Route::get('revisores/listarRevisores', 'EventoController@listarRevisores')->name('listarRevisores');
       Route::get('revisores/listarUsuarios', 'EventoController@listarUsuarios')->name('listarUsuarios');
 
@@ -98,6 +99,11 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
       Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');
       Route::get('modalidade/cadastrarCriterio', 'EventoController@cadastrarCriterio')->name('cadastrarCriterio');
       Route::get('modalidade/listarCriterios', 'EventoController@listarCriterios')->name('listarCriterios');
+      Route::get('modalidade/forms', 'EventoController@forms')->name('forms');
+      Route::get('modalidade/atribuir/form', 'EventoController@atribuirForm')->name('atribuir.form');
+      Route::get('modalidade/form/salvar', 'EventoController@salvarForm')->name('salvar.form');
+      Route::get('modalidade/form/visualizar', 'EventoController@visualizarForm')->name('visualizar.form');
+
       Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');
       // Atenção se mudar url da rota abaixo mudar função setVisibilidadeAtv na view detalhesEvento.blade.php
       Route::post('atividades/{id}/visibilidade', 'AtividadeController@setVisibilidadeAjax')->name('atividades.visibilidade');
@@ -189,15 +195,18 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
     //Revisores
     Route::post(  '/revisor/criar',         'RevisorController@store'                    )->name('revisor.store');
+    Route::post('revisores/editarRevisor', 'RevisorController@update')->name('revisor.update');
     Route::get(   '/revisor/listarTrabalhos','RevisorController@indexListarTrabalhos'    )->name('revisor.listarTrabalhos');
     Route::post(  '/revisor/email',         'RevisorController@enviarEmailRevisor'       )->name('revisor.email');
     Route::get(  '{id}/revisor/convite',    'RevisorController@conviteParaEvento'        )->name('revisor.convite.evento');
     Route::post(  '/revisor/emailTodos',    'RevisorController@enviarEmailTodosRevisores')->name('revisor.emailTodos');
     Route::get(  '/revisores-por-area/{id}','RevisorController@revisoresPorAreaAjax'     )->name('revisores.area');
-    Route::post(  '/remover/revisor/{id}',  'RevisorController@destroy'                  )->name('remover.revisor');
+    Route::post(  '/remover/revisor/{id}/{evento_id}',  'RevisorController@destroy'                  )->name('remover.revisor');
     Route::get('/area/revisores/trabalhos/area/{area_id}/modalidade/{modalidade_id}', 'RevisorController@indexListarTrabalhos')->name('avaliar.listar.trabalhos.filtro');
     Route::get('/area/revisores/{id}/trabalhos',  'RevisorController@trabalhosDoEvento' )->name('revisor.trabalhos.evento');
     Route::get('/area/revisores',        'RevisorController@index'                      )->name('revisor.index');
+    Route::get('revisores/responde',        'RevisorController@responde'                      )->name('revisor.responde');
+    Route::post('revisores/resposta/salvar',        'RevisorController@salvarRespostas'  )->name('revisor.salvar.respostas');
   });
   // Visualizar trabalhos do usuário
   Route::get('/user/trabalhos', 'Users\UserController@meusTrabalhos')->name('user.meusTrabalhos');

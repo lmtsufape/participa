@@ -251,9 +251,9 @@
                 </div>
             @else
                 <div class="container">
-                    <div class="row justify-content-center titulo">
+                    <div class="row" style="margin-top: 20px; margin-bottom: 20px; font-weight: 2000;">
                         <div class="col-sm-12">
-                            Complete seu cadastro
+                            <h1>Complete seu cadastro</h1>
                         </div>
                     </div>
 

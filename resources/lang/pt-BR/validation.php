@@ -182,6 +182,15 @@ return [
         ],
         'modalidades' => [
             'required'  => 'Escolha as modalidades do revisor',
+        ],
+        'areasEditadas_*' => [
+            'required'  => 'Escolha as áreas do revisor',
+        ],
+        'modalidadesEditadas_*' => [
+            'required'  => 'Escolha as modalidades do revisor',
+        ],
+        'areaId' => [
+            'required'  => 'Selecione a área do evento a qual o trabalho pertence',
         ]
     ],
     /*
