@@ -57,10 +57,7 @@
                                                                 <img src="{{asset('img/icons/eye-regular.svg')}}" class="icon-card" alt="">
                                                                 Detalhes
                                                             </a>
-                                                            <a href="{{route('evento.editar',$evento->id)}}" class="dropdown-item">
-                                                                <img src="{{asset('img/icons/edit-regular.svg')}}" class="icon-card" alt="">
-                                                                Editar
-                                                            </a>
+                                                            
                                                             <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
                                                                 {{ csrf_field() }}
                                                                 {{ method_field('DELETE') }}

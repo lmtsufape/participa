@@ -3,7 +3,8 @@
 
 <div class="wrapper">
     <div class="sidebar">
-        <h2>{{{$evento->nome}}} {{-- <a href="#" class="edit-evento" onmouseover="this.children[0].src='{{asset('img/icons/edit-regular.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/edit-regular-white.svg')}}'"><img src="{{asset('img/icons/edit-regular-white.svg')}}"  alt="" width="20px;"></a> --}} </h2>
+        <h2>{{{$evento->nome}}} <a href="{{route('evento.editar',$evento->id)}}" class="edit-evento" onmouseover="this.children[0].src='{{asset('img/icons/edit-regular.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/edit-regular-white.svg')}}'"><img src="{{asset('img/icons/edit-regular-white.svg')}}"  alt="" width="20px;"></a> </h2>
+        
         <ul>
             @can('isCoordenador', $evento)
                 <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}" style="text-decoration:none;">
