@@ -379,13 +379,27 @@ class RevisorController extends Controller
           $resposta->paragrafo()->create([
             'resposta' => $data['resposta'][$key],
           ]);
+
+          $trabalho = Trabalho::find($data['trabalho_id']);
+          $evento_id = $trabalho->eventoId;
+          $trabalho->avaliado = "Avaliado";
+          $trabalho->save();
           
         }else if($pergunta->respostas->first()->opcoes->count()){
           $pergunta;
 
         }
       }
-      return redirect()->back()->with(['message' => 'Respostas salvas']);
-      // return redirect()->route('revisor.trabalhos.evento')->with();
+      $evento = Evento::find($evento_id);
+      $revisores = Revisor::where([['user_id', auth()->user()->id],['evento_id', $evento_id]])->get();
+      $trabalhos = collect();
+      foreach ($revisores as $revisor) {
+        $trabalhos->push($revisor->trabalhosAtribuidos()->orderBy('titulo')->get());
+      }
+
+      return view('revisor.listarTrabalhos')->with(['evento' => $evento,'trabalhosPorRevisor' => $trabalhos])->with(['message' => 'Respostas salvas']);
+
+
+      
     }
 }
