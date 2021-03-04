@@ -17,6 +17,9 @@ Route::get('/index', 'HomeController@index')->name('index');
 Route::get('/evento/busca', 'Submissao\EventoController@buscaLivre')->name('busca.eventos');
 Route::get('/evento/buscar-livre', 'Submissao\EventoController@buscaLivreAjax')->name('busca.livre.ajax');
 
+
+
+
 Auth::routes(['verify' => true]);
 
 Route::get('/#', function () {
@@ -28,17 +31,18 @@ Route::get('/#', function () {
     return view('index',['eventos'=>$eventos]);
 })->name('cancelarCadastro');
 
-  Route::namespace('Submissao')->group(function () {
-    Route::get('/evento/visualizar/naologado/{id}','EventoController@showNaoLogado')->name('evento.visualizarNaoLogado');
-    Route::get('/home', 'EventoController@index')->name('home')->middleware('verified', 'isTemp');
+Route::namespace('Submissao')->group(function () {
+  Route::get('/evento/visualizar/naologado/{id}','EventoController@showNaoLogado')->name('evento.visualizarNaoLogado');
+  Route::get('/home', 'EventoController@index')->name('home')->middleware('verified', 'isTemp');
 
-  });
+});
 
 
 Route::get('/{id}/atividades', 'Submissao\AtividadeController@atividadesJson')->name('atividades.json');
 
 Route::get('/perfil','Users\UserController@perfil')->name('perfil')->middleware('auth');
 Route::post('/perfil/editar','Users\UserController@editarPerfil')->name('perfil.update')->middleware('auth');
+
 
 Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('/', 'HomeController@index')->name('home.user');
@@ -103,6 +107,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
       Route::get('modalidade/atribuir/form', 'EventoController@atribuirForm')->name('atribuir.form');
       Route::get('modalidade/form/salvar', 'EventoController@salvarForm')->name('salvar.form');
       Route::get('modalidade/form/visualizar', 'EventoController@visualizarForm')->name('visualizar.form');
+      Route::get('modalidade/form/respostas', 'EventoController@respostas')->name('respostas');
 
       Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');
       // Atenção se mudar url da rota abaixo mudar função setVisibilidadeAtv na view detalhesEvento.blade.php
@@ -267,5 +272,9 @@ Route::get('/demo', function () {
 });
 
 Route::get('/home', 'HomeController@home')->name('home')->middleware('verified', 'isTemp');
-Route::get('{id}/modalidade-arquivo-regras',  'Submissao\ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
-Route::get('{id}/modalidade-template',      'Submissao\ModalidadeController@downloadTemplate'  )->name('modalidade.template.download');
+
+Route::namespace('Submissao')->group(function () {
+  Route::get('{id}/modalidade-arquivo-regras',  'ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
+  Route::get('{id}/modalidade-template',      'ModalidadeController@downloadTemplate'  )->name('modalidade.template.download');
+
+});

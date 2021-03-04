@@ -10,6 +10,15 @@
             </div>
         </div> 
     </div>
+    @if(session('message'))
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 5px;">
+            <div class="alert alert-success">
+                <p>{{session('message')}}</p>
+            </div>
+        </div>
+    </div>
+    @endif
     {{-- {{dd($data['modalidade']->forms)}} --}}
     <div class="row">
         <div class="col-md-12">
@@ -30,14 +39,14 @@
                             <div class="card">
                                 <div class="card-body">
                                     <p>Pergunta: {{$pergunta->pergunta}}</p>
-                                    @if(!isset($pergunta->resposta->opcoes))
+                                    {{-- @if(!isset($pergunta->respostas->opcoes))
                                         Resposta com Multipla escolha:
-                                    @else
+                                    @else --}}
                                             <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
                                             <p>Resposta com paragrafo: </p>
                                             <input type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]">
                                         
-                                            @endif
+                                    {{-- @endif --}}
                                         </div>
                                     </div>
                                     

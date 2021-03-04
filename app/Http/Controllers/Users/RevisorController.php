@@ -10,6 +10,11 @@ use App\Models\Submissao\Atribuicao;
 use App\Models\Submissao\Trabalho;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Modalidade;
+use App\Models\Submissao\Pergunta;
+use App\Models\Submissao\Resposta;
+use App\Models\Submissao\Paragrafo;
+use App\Models\Submissao\Form;
+use App\Models\Submissao\Opcao;
 use Illuminate\Http\Request;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailLembrete;
@@ -360,7 +365,27 @@ class RevisorController extends Controller
     public function salvarRespostas(Request $request)
     {
       $data = $request->all();
-      dd($data);
+      // $comment = $post->comments()->create([
+      //     'message' => 'A new comment.',
+      // ]);
 
+      foreach ($data['pergunta_id'] as $key => $value) {
+        $pergunta = Pergunta::find($value);
+        if($pergunta->respostas->first()->paragrafo->count()){
+          $resposta =  $pergunta->respostas()->create([            
+            'revisor_id' => $data['revisor_id'],
+            'trabalho_id' => $data['trabalho_id']
+          ]);
+          $resposta->paragrafo()->create([
+            'resposta' => $data['resposta'][$key],
+          ]);
+          
+        }else if($pergunta->respostas->first()->opcoes->count()){
+          $pergunta;
+
+        }
+      }
+      return redirect()->back()->with(['message' => 'Respostas salvas']);
+      // return redirect()->route('revisor.trabalhos.evento')->with();
     }
 }
