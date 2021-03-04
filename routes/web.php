@@ -17,6 +17,9 @@ Route::get('/index', 'HomeController@index')->name('index');
 Route::get('/evento/busca', 'Submissao\EventoController@buscaLivre')->name('busca.eventos');
 Route::get('/evento/buscar-livre', 'Submissao\EventoController@buscaLivreAjax')->name('busca.livre.ajax');
 
+
+
+
 Auth::routes(['verify' => true]);
 
 Route::get('/#', function () {
@@ -28,17 +31,18 @@ Route::get('/#', function () {
     return view('index',['eventos'=>$eventos]);
 })->name('cancelarCadastro');
 
-  Route::namespace('Submissao')->group(function () {
-    Route::get('/evento/visualizar/naologado/{id}','EventoController@showNaoLogado')->name('evento.visualizarNaoLogado');
-    Route::get('/home', 'EventoController@index')->name('home')->middleware('verified', 'isTemp');
+Route::namespace('Submissao')->group(function () {
+  Route::get('/evento/visualizar/naologado/{id}','EventoController@showNaoLogado')->name('evento.visualizarNaoLogado');
+  Route::get('/home', 'EventoController@index')->name('home')->middleware('verified', 'isTemp');
 
-  });
+});
 
 
 Route::get('/{id}/atividades', 'Submissao\AtividadeController@atividadesJson')->name('atividades.json');
 
 Route::get('/perfil','Users\UserController@perfil')->name('perfil')->middleware('auth');
 Route::post('/perfil/editar','Users\UserController@editarPerfil')->name('perfil.update')->middleware('auth');
+
 
 Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
   Route::get('/', 'HomeController@index')->name('home.user');
@@ -140,8 +144,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
     //AreaModalidade
     // Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
-    Route::get('{id}/modalidade-arquivo-regras',  'ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
-    Route::get('{id}/modalidade-template',      'ModalidadeController@downloadTemplate'  )->name('modalidade.template.download');
+    
     //Trabalho
     Route::get(   '/trabalho/submeter/{id}/{idModalidade}','TrabalhoController@index'    )->name('trabalho.index');
     Route::post(  '/trabalho/novaVersao',   'TrabalhoController@novaVersao'              )->name('trabalho.novaVersao');
@@ -272,3 +275,9 @@ Route::get('/demo', function () {
 });
 
 Route::get('/home', 'HomeController@home')->name('home')->middleware('verified', 'isTemp');
+
+Route::namespace('Submissao')->group(function () {
+  Route::get('{id}/modalidade-arquivo-regras',  'ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
+  Route::get('{id}/modalidade-template',      'ModalidadeController@downloadTemplate'  )->name('modalidade.template.download');
+
+});
