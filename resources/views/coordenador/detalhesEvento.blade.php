@@ -2271,4 +2271,4 @@
 
 @hasSection ('javascript')
     @yield('javascript')
-@endif
+@endif                     
