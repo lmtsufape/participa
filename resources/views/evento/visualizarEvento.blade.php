@@ -232,7 +232,7 @@
                   <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> {{date('d/m/Y',strtotime($evento->dataInicio))}} </span>
                 </div>
                 <div class="col-sm-6 clock">
-                  <img src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
+                  {{-- <img src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span> --}}
                 </div>
               </div>
               <hr>
@@ -253,7 +253,6 @@
 																		
 														<div id="{{ 'collapse_' . $modalidade->id }}" class="accordion-body in collapse" style="height: auto;">
 															<div class="accordion-inner">
-                                modalidade.regras.download
 																<table>
 																	<tr>
 																			{{-- @php
@@ -301,14 +300,14 @@
 																			@if(isset($modalidade->regra))
 																				<div style="margin-top: 20px; margin-bottom: 10px;">
 																					<a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
-																						<img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">Regra
+																						<img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
 																					</a>
 																				</div>
 																			@endif
 																			@if (isset($modalidade->template))
 																				<div style="margin-top: 20px; margin-bottom: 10px;">
 																					<a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
-																						<img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">Template
+																						<img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixartemplate}}
 																					</a>
 																				</div>  
 																			@endif
@@ -316,7 +315,7 @@
 																			@if(isset($modalidade->regra))
 																				<div style="margin-top: 20px; margin-bottom: 10px;">
 																						<a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
-																								<img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;Regras
+																								<img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
 																						</a>
 																				</div>  
 																			@endif
@@ -500,21 +499,21 @@
           @endif
         @endif --}}
       
-        <div class="row justify-content-center" style="margin: 20px 0 20px 0">
+        {{-- <div class="row justify-content-center" style="margin: 20px 0 20px 0"> --}}
       
             {{-- <div class="col-md-6 botao-form-left" style="">
                 <a class="btn btn-secondary botao-form" href="{{route('cancelarCadastro')}}" style="width:100%">Voltar</a>
             </div> --}}
       
-            @if($evento->inicioSubmissao <= $mytime)
+            {{-- @if($evento->inicioSubmissao <= $mytime)
               @if($mytime < $evento->fimSubmissao)
                 <div class="col-md-6 botao-form-right" style="">
                   <a class="btn btn-primary botao-form" href="{{route('trabalho.index',['id'=>$evento->id])}}" style="width:100%">Submeter Trabalho</a>
                 </div>
               @endif
-            @endif
+            @endif --}}
       
-        </div>
+        {{-- </div> --}}
       </div>
     </div>
   </div>
