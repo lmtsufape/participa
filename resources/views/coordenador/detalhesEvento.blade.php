@@ -517,6 +517,13 @@
                 $("#tipo-arquivo").hide();
             }
         });
+        $('.incluir-resumo').on("change", function() {
+            if (this.checked) {
+                $("#restricoes-resumo-texto").show();
+            } else {
+                $("#restricoes-resumo-texto").hide();
+            }          
+        })
     });
 
     $(document).ready(function() {

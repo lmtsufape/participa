@@ -115,7 +115,7 @@
                               </div>
                             </div>
                           @endif
-                          @if ($indice == "etiquetaresumotrabalho")
+                          @if ($modalidade->texto && $indice == "etiquetaresumotrabalho")
                             @if ($modalidade->caracteres == true)
                               <div class="row justify-content-center">
                                 <div class="col-sm-12">

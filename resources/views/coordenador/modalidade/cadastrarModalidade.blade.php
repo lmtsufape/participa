@@ -28,7 +28,7 @@
                             </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
-                                    <input id="nomeModalidade" type="text" class="form-control apenasLetras @error('nomeModalidade') is-invalid @enderror" name="nomeModalidade" value="{{ old('nomeModalidade') }}" required autocomplete="nomeModalidade" autofocus>
+                                    <input id="nomeModalidade" type="text" class="form-control @error('nomeModalidade') is-invalid @enderror" name="nomeModalidade" value="{{ old('nomeModalidade') }}" required autocomplete="nomeModalidade" autofocus>
 
                                     @error('nomeModalidade')
                                     <span class="invalid-feedback" role="alert">
@@ -170,52 +170,65 @@
                         <div class="row">
 
                             <div class="col-sm-6">
-                                <label class="col-form-label">{{ __('Restrições de resumo:') }}</label>
-
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1" >
-                                    <label class="form-check-label" for="texto">
-                                        Quantidade de caracteres
+                                <div class="form-check" style="margin-top: 10px">
+                                    <input class="form-check-input incluir-resumo" type="checkbox" name="texto" id="id-custom_field-account-1-2">
+                                    <label class="form-check-label" for="resumo">
+                                        Adicionar campo resumo por texto
                                     </label>
-                                    </div>
+                                    @error('resumo')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div id="restricoes-resumo-texto" style="display: none;">
+                                    <label class="col-form-label">{{ __('Restrições de resumo:') }}</label>
+    
                                     <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-2" value="limit-option2" >
-                                    <label class="form-check-label" for="arquivo">
-                                        Quantidade de palavras
-                                    </label>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-6" id="min-max-caracteres" style="display: none">
-                                        <div class="form-group">
-                                            <label class="col-form-label">{{ __('Mínimo') }}</label>
-                                            <div>
-                                              <input class="form-control" type="number" id="min_caracteres" name="mincaracteres">
-                                            </div>
+                                        <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1" >
+                                        <label class="form-check-label" for="texto">
+                                            Quantidade de caracteres
+                                        </label>
                                         </div>
-
-                                        <div class="form-group">
-                                            <label class="col-form-label">{{ __('Máximo') }}</label>
-                                            <div>
-                                              <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres">
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-2" value="limit-option2" >
+                                        <label class="form-check-label" for="arquivo">
+                                            Quantidade de palavras
+                                        </label>
+                                    </div>
+    
+                                    <div class="row">
+                                        <div class="col-sm-6" id="min-max-caracteres" style="display: none">
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="min_caracteres" name="mincaracteres">
+                                                </div>
+                                            </div>
+    
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('Máximo') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-6" id="min-max-palavras" style="display: none">
-                                        <div class="form-group">
-                                            <label class="col-form-label">{{ __('Mínimo') }}</label>
-                                            <div>
-                                              <input class="form-control" type="number" id="min_palavras" name="minpalavras">
+    
+                                    <div class="row">
+                                        <div class="col-sm-6" id="min-max-palavras" style="display: none">
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="min_palavras" name="minpalavras">
+                                                </div>
                                             </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-form-label">{{ __('Máximo') }}</label>
-                                            <div>
-                                              <input class="form-control" type="number" id="max_palavras" name="maxpalavras">
+    
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('Máximo') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="max_palavras" name="maxpalavras">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -233,6 +246,7 @@
                                     @enderror
                                 </div>
                             </div>
+                            
                         </div>
 
                         <div class="row">
@@ -313,7 +327,7 @@
                                 <div class="custom-file">
                                   <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates">
                                 </div>
-                                <small>O arquivo selecionado deve ser no formato PDF de até 2 MB.</small>
+                                <small>O arquivo selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF, TXT ou PDF de até 2 MB.</small>
                                 @error('arquivoTemplates')
                                 <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                   <strong>{{ $message }}</strong>

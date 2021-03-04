@@ -33,14 +33,26 @@
                                 </button>
                             </form>
                             @if($modalidade->forms->count())
-                                <form action="{{route('coord.visualizar.form')}}" method="get">
-                                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                                    <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
-                                    <button type="submit" class="btn btn-info">
-                                        Ver form
-                                    </button>
-                                
-                                </form>
+                                <td>
+                                    <form action="{{route('coord.visualizar.form')}}" method="get">
+                                        <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                                        <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
+                                        <button type="submit" class="btn btn-info">
+                                            Ver form
+                                        </button>
+                                    
+                                    </form>
+                                </td>
+                                <td>
+                                    <form action="{{route('coord.respostas')}}" method="get">
+                                        <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                                        <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
+                                        <button type="submit" class="btn btn-secondary">
+                                            Ver respostas
+                                        </button>
+                                    
+                                    </form>
+                                </td>
                             @endif
                         </td>
                       </tr> 
