@@ -138,7 +138,7 @@
                                         <form method="POST" action="{{route('modalidade.update')}}" enctype="multipart/form-data">
                                         @csrf
                                         <p class="card-text">
-                                            <input type="hidden" name="modalidadeEditId" id="modalidadeEditId" value="{{$modalidade->id}}">
+                                            <input type="hidden" name="modalidadeEditId" value="{{$modalidade->id}}">
                                             <input type="hidden" name="eventoId" value="{{$evento->id}}">
                                             <div class="row">
                                                 <div class="col-sm-12">
@@ -147,9 +147,9 @@
                                             </div>
                                             <div class="row justify-content-center">
                                                 <div class="col-sm-12">
-                                                <input id="nomeModalidadeEdit" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="@if(old('nome')!=null){{old('nome')}}@else{{$modalidade->nome}}@endif" required autocomplete="nomes" autofocus>
+                                                <input id="nomeModalidadeEdit" type="text" class="form-control @error('nome'.$modalidade->id) is-invalid @enderror" name="nome{{$modalidade->id}}" value="@if(old('nome'.$modalidade->id)!=null){{old('nome'.$modalidade->id)}}@else{{$modalidade->nome}}@endif" required autocomplete="nomes" autofocus>
 
-                                                    @error('nome')
+                                                    @error('nome'.$modalidade->id)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
@@ -165,9 +165,9 @@
 
                                             <div class="col-sm-6">
                                                 <label for="inicioSubmissaoEdit" class="col-form-label">{{ __('Início da Submissão') }}</label>
-                                                <input id="inicioSubmissaoEdit" type="datetime-local" class="form-control @error('inícioSubmissão') is-invalid @enderror" name="inícioSubmissão" value="@if(old('inícioSubmissão')!=null){{old('inícioSubmissão')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioSubmissao))}}@endif" autocomplete="inícioSubmissão" autofocus>
+                                                <input id="inicioSubmissaoEdit" type="datetime-local" class="form-control @error('inícioSubmissão'.$modalidade->id) is-invalid @enderror" name="inícioSubmissão{{$modalidade->id}}" value="@if(old('inícioSubmissão'.$modalidade->id)!=null){{old('inícioSubmissão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioSubmissao))}}@endif" autocomplete="inícioSubmissão" autofocus>
 
-                                                @error('inícioSubmissão')
+                                                @error('inícioSubmissão'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -175,9 +175,9 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label for="fimSubmissaoEdit" class="col-form-label">{{ __('Fim da Submissão') }}</label>
-                                                <input id="fimSubmissaoEdit" type="datetime-local" class="form-control @error('fimSubmissão') is-invalid @enderror" name="fimSubmissão" value="@if(old('fimSubmissão')!=null){{old('fimSubmissão')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimSubmissao))}}@endif" autocomplete="fimSubmissão" autofocus>
+                                                <input id="fimSubmissaoEdit" type="datetime-local" class="form-control @error('fimSubmissão'.$modalidade->id) is-invalid @enderror" name="fimSubmissão{{$modalidade->id}}" value="@if(old('fimSubmissão'.$modalidade->id)!=null){{old('fimSubmissão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimSubmissao))}}@endif" autocomplete="fimSubmissão" autofocus>
 
-                                                @error('fimSubmissão')
+                                                @error('fimSubmissão'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -191,9 +191,9 @@
 
                                             <div class="col-sm-6">
                                                 <label for="inicioRevisaoEdit" class="col-form-label">{{ __('Início da Revisão') }}</label>
-                                                <input id="inicioRevisaoEdit" type="datetime-local" class="form-control @error('inícioRevisão') is-invalid @enderror" name="inícioRevisão" value="@if(old('inícioRevisão')!=null){{old('inícioRevisão')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioRevisao))}}@endif" autocomplete="inícioRevisão" autofocus>
+                                                <input id="inicioRevisaoEdit" type="datetime-local" class="form-control @error('inícioRevisão'.$modalidade->id) is-invalid @enderror" name="inícioRevisão{{$modalidade->id}}" value="@if(old('inícioRevisão'.$modalidade->id)!=null){{old('inícioRevisão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioRevisao))}}@endif" autocomplete="inícioRevisão" autofocus>
 
-                                                @error('inícioRevisão')
+                                                @error('inícioRevisão'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -201,9 +201,9 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label for="fimRevisaoEdit" class="col-form-label">{{ __('Fim da Revisão') }}</label>
-                                                <input id="fimRevisaoEdit" type="datetime-local" class="form-control @error('fimRevisão') is-invalid @enderror" name="fimRevisão" value="@if(old('fimRevisão')!=null){{old('fimRevisão')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimRevisao))}}@endif" autocomplete="fimRevisão" autofocus>
+                                                <input id="fimRevisaoEdit" type="datetime-local" class="form-control @error('fimRevisão'.$modalidade->id) is-invalid @enderror" name="fimRevisão{{$modalidade->id}}" value="@if(old('fimRevisão'.$modalidade->id)!=null){{old('fimRevisão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimRevisao))}}@endif" autocomplete="fimRevisão" autofocus>
 
-                                                @error('fimRevisão')
+                                                @error('fimRevisão'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -218,9 +218,9 @@
 
                                             <div class="col-sm-6">
                                                 <label for="inicioCorrecao" class="col-form-label">{{ __('Início da Correcao') }}</label>
-                                                <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inicioCorrecao') is-invalid @enderror" name="inicioCorrecao" value="@if(old('inicioCorrecao')!=null){{old('inicioCorrecao')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioCorrecao))}}@endif" autocomplete="inicioCorrecao" autofocus>
+                                                <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inícioCorreção'.$modalidade->id) is-invalid @enderror" name="inícioCorreção{{$modalidade->id}}" value="@if(old('inícioCorreção'.$modalidade->id)!=null){{old('inícioCorreção'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioCorrecao))}}@endif" autocomplete="inicioCorrecao" autofocus>
 
-                                                @error('inicioCorrecao')
+                                                @error('inícioCorreção'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -228,9 +228,9 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label for="fimCorrecao" class="col-form-label">{{ __('Fim da Correção') }}</label>
-                                                <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorrecao') is-invalid @enderror" name="fimCorrecao" value="@if(old('fimCorrecao')!=null){{old('fimCorrecao')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimCorrecao))}}@endif" autocomplete="fimCorrecao" autofocus>
+                                                <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorreção'.$modalidade->id) is-invalid @enderror" name="fimCorreção{{$modalidade->id}}" value="@if(old('fimCorreção'.$modalidade->id)!=null){{old('fimCorreção'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimCorrecao))}}@endif" autocomplete="fimCorrecao" autofocus>
 
-                                                @error('fimCorrecao')
+                                                @error('fimCorreção'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -247,9 +247,9 @@
 
                                             <div class="col-sm-6">
                                                 <label for="inicioValidacao" class="col-form-label">{{ __('Início da Validação') }}</label>
-                                                <input id="inicioValidacao" type="datetime-local" class="form-control @error('inicioValidacao') is-invalid @enderror" name="inicioValidacao" value="@if(old('inicioValidacao')!=null){{old('inicioValidacao')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioValidacao))}}@endif" autocomplete="inicioValidacao" autofocus>
+                                                <input id="inicioValidacao" type="datetime-local" class="form-control @error('inícioValidação'.$modalidade->id) is-invalid @enderror" name="inícioValidação{{$modalidade->id}}" value="@if(old('inícioValidação'.$modalidade->id)!=null){{old('inícioValidação'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioValidacao))}}@endif" autocomplete="inicioValidacao" autofocus>
 
-                                                @error('inicioValidacao')
+                                                @error('inícioValidação'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -257,9 +257,9 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label for="fimValidacao" class="col-form-label">{{ __('Fim da Correção') }}</label>
-                                                <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidacao') is-invalid @enderror" name="fimValidacao" value="@if(old('fimValidacao')!=null){{old('fimValidacao')}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimValidacao))}}@endif" autocomplete="fimValidacao" autofocus>
+                                                <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidação'.$modalidade->id) is-invalid @enderror" name="fimValidação{{$modalidade->id}}" value="@if(old('fimValidação'.$modalidade->id)!=null){{old('fimValidação'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimValidacao))}}@endif" autocomplete="fimValidacao" autofocus>
 
-                                                @error('fimValidacao')
+                                                @error('fimValidação'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -274,9 +274,9 @@
 
                                             <div class="col-sm-6">
                                                 <label for="inicioResultado" class="col-form-label">{{ __('Resultado') }}</label>
-                                                <input id="inicioResultado" type="datetime-local" class="form-control @error('resultado') is-invalid @enderror" name="resultado" value="@if(old('resultado')){{old('resultado')}}@else{{ date('Y-m-d\TH:i',strtotime($modalidade->inicioResultado))}}@endif" autocomplete="inicioResultado" autofocus>
+                                                <input id="inicioResultado" type="datetime-local" class="form-control @error('resultado'.$modalidade->id) is-invalid @enderror" name="resultado{{$modalidade->id}}" value="@if(old('resultado'.$modalidade->id)){{old('resultado'.$modalidade->id)}}@else{{ date('Y-m-d\TH:i',strtotime($modalidade->inicioResultado))}}@endif" autocomplete="inicioResultado" autofocus>
 
-                                                @error('resultado')
+                                                @error('resultado'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -290,64 +290,64 @@
 
                                             <div class="col-sm-6">
                                                 <div class="form-check" style="margin-top: 10px">
-                                                    <input class="form-check-input incluir-resumo-edit" type="checkbox" name="texto" id="id-custom_field-account-1-2" @if($modalidade->texto) checked @endif>
+                                                    <input class="form-check-input incluir-resumo-edit" type="checkbox" name="texto{{$modalidade->id}}" id="id-custom_field-account-1-2" @if(old('texto'.$modalidade->id)) checked @elseif(old('texto'.$modalidade->id) == null && $modalidade->texto) checked @endif>
                                                     <label class="form-check-label" for="resumo">
                                                         Adicionar campo resumo por texto
                                                     </label>
-                                                    @error('resumo')
+                                                    @error('resumo'.$modalidade->id)
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                         </span>
                                                     @enderror
                                                 </div>
 
-                                                <div id="restricoes-resumo-texto-edit{{$modalidade->id}}" @if($modalidade->texto)style="display: block;"@else style="display: none;" @endif>
+                                                <div id="restricoes-resumo-texto-edit{{$modalidade->id}}" @if(old('texto'.$modalidade->id)) style="display: block;" @elseif(old('texto'.$modalidade->id) == null && $modalidade->texto) style="display: block;"@else style="display: none;" @endif>
                                                     <label class="col-form-label">*{{ __('Restrições de resumo:') }}</label>
 
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="limit" value="limit-option1" id="id-limit-custom_field-accountEdit-1-1" @if (old('limit') == 'limit-option1') checked @elseif(old('limitE') == null && $modalidade->caracteres) checked @endif>
+                                                        <input class="form-check-input limit" type="radio" name="limit{{$modalidade->id}}" value="limit-option1" id="id-limit-custom_field-accountEdit-1-1" @if (old('limit'.$modalidade->id) == 'limit-option1') checked @elseif(old('limit'.$modalidade->id) == null && $modalidade->caracteres) checked @endif>
                                                         <label class="form-check-label" for="texto">
                                                             Quantidade de caracteres
                                                         </label>
                                                         </div>
                                                         <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="limit" value="limit-option2" id="id-limit-custom_field-accountEdit-1-2" @if (old('limit') == 'limit-option2') checked @elseif(old('limit') == null && $modalidade->palavras) checked @endif>
+                                                        <input class="form-check-input limit" type="radio" name="limit{{$modalidade->id}}" value="limit-option2" id="id-limit-custom_field-accountEdit-1-2" @if (old('limit'.$modalidade->id) == 'limit-option2') checked @elseif(old('limit'.$modalidade->id) == null && $modalidade->palavras) checked @endif>
                                                         <label class="form-check-label" for="arquivo">
                                                             Quantidade de palavras
                                                         </label>
                                                     </div>
 
                                                     <div class="row">
-                                                        <div class="col-sm-6" id="min-max-caracteres" style="@if (old('limit') == 'limit-option1')display:block;@else @if($modalidade->caracteres && old('limit') == null)display:block;@else display:none;@endif @endif">
+                                                        <div class="col-sm-6" id="min-max-caracteres" style="@if (old('limit'.$modalidade->id) == 'limit-option1')display:block;@elseif($modalidade->caracteres && old('limit'.$modalidade->id) == null)display:block;@else display:none; @endif">
                                                             <div class="form-group">
                                                                 <label class="col-form-label">{{ __('Mínimo') }}</label>
                                                                 <div>
-                                                                <input class="form-control" type="number" id="min_caracteres" name="mincaracteres" value="@if(old('mincaracteres')!=null){{old('mincaracteres')}}@else{{$modalidade->mincaracteres}}@endif">
+                                                                <input class="form-control" type="number" id="min_caracteres" name="mincaracteres{{$modalidade->id}}" value="@if(old('mincaracteres'.$modalidade->id)!=null){{old('mincaracteres'.$modalidade->id)}}@else{{$modalidade->mincaracteres}}@endif">
                                                                 </div>
                                                             </div>
                     
                                                             <div class="form-group">
                                                                 <label class="col-form-label">{{ __('Máximo') }}</label>
                                                                 <div>
-                                                                <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres" value="@if(old('maxcaracteres')!=null){{old('maxcaracteres')}}@else{{$modalidade->maxcaracteres}}@endif">
+                                                                <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres{{$modalidade->id}}" value="@if(old('maxcaracteres'.$modalidade->id)!=null){{old('maxcaracteres'.$modalidade->id)}}@else{{$modalidade->maxcaracteres}}@endif">
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                     
                                                     <div class="row">
-                                                        <div class="col-sm-6" id="min-max-palavras" style="@if (old('limit') == 'limit-option2')display:block;@else @if($modalidade->palavras && old('limit') == null)display:block;@else display:none;@endif @endif">
+                                                        <div class="col-sm-6" id="min-max-palavras" style="@if (old('limit'.$modalidade->id) == 'limit-option2')display:block;@elseif($modalidade->palavras && old('limit'.$modalidade->id) == null)display:block;@else display:none; @endif">
                                                             <div class="form-group">
                                                                 <label class="col-form-label">{{ __('Mínimo') }}</label>
                                                                 <div>
-                                                                <input class="form-control" type="number" id="min_palavras" name="minpalavras" value="@if(old('minpalavras')!=null){{old('minpalavras')}}@else{{$modalidade->minpalavras}}@endif">
+                                                                <input class="form-control" type="number" id="min_palavras" name="minpalavras{{$modalidade->id}}" value="@if(old('minpalavras'.$modalidade->id)!=null){{old('minpalavras'.$modalidade->id)}}@else{{$modalidade->minpalavras}}@endif">
                                                                 </div>
                                                             </div>
                     
                                                             <div class="form-group">
                                                                 <label class="col-form-label">{{ __('Máximo') }}</label>
                                                                 <div>
-                                                                <input class="form-control" type="number" id="max_palavras" name="maxpalavras" value="@if(old('maxpalavras')!=null){{old('maxpalavras')}}@else{{$modalidade->maxpalavras}}@endif">
+                                                                <input class="form-control" type="number" id="max_palavras" name="maxpalavras{{$modalidade->id}}" value="@if(old('maxpalavras'.$modalidade->id)!=null){{old('maxpalavras'.$modalidade->id)}}@else{{$modalidade->maxpalavras}}@endif">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -355,11 +355,11 @@
                                                 </div>
 
                                                 <div class="form-check" style="margin-top: 10px">
-                                                    <input class="form-check-input incluirarquivoEdit" type="checkbox" onchange="exibirTiposArquivo({{$modalidade->id}},this)" name="arquivoEdit" id="id-custom_field-accountEdit-1-2" @if(old('arquivoEdit') == "on") checked @else @if ($modalidade->arquivo == true) checked @endif @endif>
+                                                    <input class="form-check-input incluirarquivoEdit" type="checkbox" onchange="exibirTiposArquivo({{$modalidade->id}},this)" name="arquivoEdit{{$modalidade->id}}" id="id-custom_field-accountEdit-1-2" @if(old('arquivoEdit'.$modalidade->id) == "on") checked @elseif (old('arquivoEdit'.$modalidade->id) == null && $modalidade->arquivo == true) checked @endif>
                                                     <label class="form-check-label" for="arquivoEdit">
                                                         Incluir submissão por arquivo
                                                     </label>
-                                                    @error('arquivoEdit')
+                                                    @error('arquivoEdit'.$modalidade->id)
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                         </span>
@@ -369,46 +369,58 @@
                                             </div>
                                         </div>
 
-                                        <div class="row tiposDeArquivos{{$modalidade->id}}" style="@if(old('arquivoEdit')=="on") display: block @else @if($modalidade->arquivo == true) display: block @else display: none @endif @endif">
+                                        <div class="row tiposDeArquivos{{$modalidade->id}}" style="@if(old('arquivoEdit'.$modalidade->id)=="on") display: block @elseif(old('arquivoEdit'.$modalidade->id) == null && $modalidade->arquivo == true) display: block @else display: none @endif">
                                             <div class="col-sm-6" id="tipo-arquivoEdit">
 
                                                 <div class="titulo-detalhes" style="margin-top: 10px"></div>
                                                 <label class="col-form-label">{{ __('Tipos de extensão aceitas') }}</label>
 
                                                 <div class="form-check" style="margin-top: 10px">
-                                                    <input class="form-check-input" type="checkbox" id="pdfEdit" name="pdfEdit" @if(old('pdfEdit') == "on") checked @else @if ($modalidade->pdf == true) checked @endif @endif>
+                                                    <input class="form-check-input" type="checkbox" id="pdfEdit" name="pdf{{$modalidade->id}}" @if(old('pdf'.$modalidade->id) == "on") checked @elseif (old('pdf'.$modalidade->id) == null && $modalidade->pdf == true) checked @endif>
                                                     <label class="form-check-label" for="pdfEdit">
                                                         .pdf
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="jpgEdit" name="jpgEdit" @if(old('jpgEdit') == "on") checked @else @if ($modalidade->jpg == true) checked @endif @endif>
+                                                    <input class="form-check-input" type="checkbox" id="jpgEdit" name="jpg{{$modalidade->id}}" @if(old('jpg'.$modalidade->id) == "on") checked @elseif (old('jpg'.$modalidade->id) == null && $modalidade->jpg == true) checked @endif>
                                                     <label class="form-check-label" for="jpgEdit">
                                                         .jpg
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="jpegEdit" name="jpegEdit" @if(old('jpegEdit') == "on") checked @else @if ($modalidade->jpeg == true) checked @endif @endif>
+                                                    <input class="form-check-input" type="checkbox" id="jpegEdit" name="jpeg{{$modalidade->id}}" @if(old('jpeg'.$modalidade->id) == "on") checked @elseif (old('jpeg'.$modalidade->id) == null && $modalidade->jpeg == true) checked @endif>
                                                     <label class="form-check-label" for="jpegEdit">
                                                         .jpeg
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="pngEdit" name="pngEdit" @if(old('pngEdit') == "on") checked @else @if ($modalidade->png == true) checked @endif @endif>
+                                                    <input class="form-check-input" type="checkbox" id="pngEdit" name="png{{$modalidade->id}}" @if(old('png'.$modalidade->id) == "on") checked @elseif (old('png'.$modalidade->id) == null && $modalidade->png == true) checked @endif>
                                                     <label class="form-check-label" for="pngEdit">
                                                         .png
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="docxEdit" name="docxEdit" @if(old('docxEdit') == "on") checked @else @if ($modalidade->docx == true) checked @endif @endif>
+                                                    <input class="form-check-input" type="checkbox" id="docxEdit" name="docx{{$modalidade->id}}" @if(old('docx'.$modalidade->id) == "on") checked @elseif (old('docx'.$modalidade->id) == null && $modalidade->docx == true) checked @endif>
                                                     <label class="form-check-label" for="docxEdit">
                                                         .docx
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="odtEdit" name="odtEdit" @if(old('odtEdit') == "on") checked @else @if ($modalidade->odt == true) checked @endif @endif>
+                                                    <input class="form-check-input" type="checkbox" id="odtEdit" name="odt{{$modalidade->id}}" @if(old('odt'.$modalidade->id) == "on") checked @elseif (old('odt'.$modalidade->id) == null && $modalidade->odt == true) checked @endif>
                                                     <label class="form-check-label" for="odtEdit">
                                                         .odt
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="zipEdit" name="zip{{$modalidade->id}}" @if(old('zip'.$modalidade->id) == "on") checked @elseif (old('zip'.$modalidade->id) == null && $modalidade->zip == true) checked @endif>
+                                                    <label class="form-check-label" for="zipEdit">
+                                                        .zip
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="svgEdit" name="svg{{$modalidade->id}}" @if(old('svg'.$modalidade->id) == "on") checked @elseif (old('svg'.$modalidade->id) == null && $modalidade->svg == true) checked @endif>
+                                                    <label class="form-check-label" for="svgEdit">
+                                                        .svg
                                                     </label>
                                                 </div>
                                             </div>
@@ -419,7 +431,7 @@
                                                 <label for="arquivoRegras" class="col-form-label">{{ __('Enviar regras:') }}</label> @if ($modalidade->regra != null) <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
 
                                             <div class="custom-file">
-                                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegras">
+                                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegras{{$modalidade->id}}">
                                             </div>
                                             <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small><br>
                                             <small>Se deseja alterar o arquivo, envie a nova versão.</small>
@@ -430,11 +442,11 @@
                                             @enderror
                                             </div>
                                             {{-- Arquivo de Templates --}}
-                                            <div class="col-sm-12 tiposDeArquivos{{$modalidade->id}}" id="area-templateEdit" style="@if(old('arquivoEdit')=="on") display: block @else @if($modalidade->arquivo == true) display: block @else display: none @endif @endif">
+                                            <div class="col-sm-12 tiposDeArquivos{{$modalidade->id}}" id="area-templateEdit" style="@if(old('arquivoEdit'.$modalidade->id)=="on") display: block @elseif(old('arquivoEdit'.$modalidade->id) == null && $modalidade->arquivo == true) display: block; @else display: none; @endif">
                                                 <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar template:') }}</label> @if ($modalidade->template != null) <a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
 
                                                 <div class="custom-file">
-                                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates">
+                                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates{{$modalidade->id}}">
                                                 </div>
                                                 <small>O arquivo Selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF, TXT ou PDF de até 2mb.</small><br>
                                                 <small>Se deseja alterar o arquivo, envie a nova versão.</small>

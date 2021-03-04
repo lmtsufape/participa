@@ -559,13 +559,13 @@
     });
 
     $(document).ready(function() {
-        $('input:radio[name="limitEdit"]').on("change", function() {
-            if (this.checked && this.value == 'limit-option1Edit') {
-                $("#min-max-caracteresEdit").show();
-                $("#min-max-palavrasEdit").hide();
+        $('.limit').on("change", function() {
+            if (this.checked && this.value == 'limit-option1') {
+                this.parentElement.parentElement.children[3].children[0].style.display = "block";
+                this.parentElement.parentElement.children[4].children[0].style.display = "none";
             } else {
-                $("#min-max-palavrasEdit").show();
-                $("#min-max-caracteresEdit").hide();
+                this.parentElement.parentElement.children[3].children[0].style.display = "none";
+                this.parentElement.parentElement.children[4].children[0].style.display = "block";
             }
         });
     });
