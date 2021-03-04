@@ -289,52 +289,66 @@
                                         <div class="row">
 
                                             <div class="col-sm-6">
-                                                <label class="col-form-label">*{{ __('Restrições de resumo:') }}</label>
-
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="limit" value="limit-option1" id="id-limit-custom_field-accountEdit-1-1" @if (old('limit') == 'limit-option1') checked @elseif(old('limitE') == null && $modalidade->caracteres) checked @endif>
-                                                    <label class="form-check-label" for="texto">
-                                                        Quantidade de caracteres
+                                                <div class="form-check" style="margin-top: 10px">
+                                                    <input class="form-check-input incluir-resumo" type="checkbox" name="texto" id="id-custom_field-account-1-2" @if($modalidade->texto) checked @endif>
+                                                    <label class="form-check-label" for="resumo">
+                                                        Adicionar campo resumo por texto
                                                     </label>
-                                                    </div>
+                                                    @error('resumo')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
+                                                </div>
+
+                                                <div id="restricoes-resumo-texto" @if($modalidade->texto)style="display: block;"@else style="display: none;" @endif>
+                                                    <label class="col-form-label">*{{ __('Restrições de resumo:') }}</label>
+
                                                     <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="limit" value="limit-option2" id="id-limit-custom_field-accountEdit-1-2" @if (old('limit') == 'limit-option2') checked @elseif(old('limit') == null && $modalidade->palavras) checked @endif>
-                                                    <label class="form-check-label" for="arquivo">
-                                                        Quantidade de palavras
-                                                    </label>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-sm-6" id="min-max-caracteres" style="@if (old('limit') == 'limit-option1')display:block;@else @if($modalidade->caracteres && old('limit') == null)display:block;@else display:none;@endif @endif">
-                                                        <div class="form-group">
-                                                            <label class="col-form-label">{{ __('Mínimo') }}</label>
-                                                            <div>
-                                                              <input class="form-control" type="number" id="min_caracteres" name="mincaracteres" value="@if(old('mincaracteres')!=null){{old('mincaracteres')}}@else{{$modalidade->mincaracteres}}@endif">
-                                                            </div>
+                                                        <input class="form-check-input" type="radio" name="limit" value="limit-option1" id="id-limit-custom_field-accountEdit-1-1" @if (old('limit') == 'limit-option1') checked @elseif(old('limitE') == null && $modalidade->caracteres) checked @endif>
+                                                        <label class="form-check-label" for="texto">
+                                                            Quantidade de caracteres
+                                                        </label>
                                                         </div>
-                
-                                                        <div class="form-group">
-                                                            <label class="col-form-label">{{ __('Máximo') }}</label>
-                                                            <div>
-                                                              <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres" value="@if(old('maxcaracteres')!=null){{old('maxcaracteres')}}@else{{$modalidade->maxcaracteres}}@endif">
+                                                        <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="limit" value="limit-option2" id="id-limit-custom_field-accountEdit-1-2" @if (old('limit') == 'limit-option2') checked @elseif(old('limit') == null && $modalidade->palavras) checked @endif>
+                                                        <label class="form-check-label" for="arquivo">
+                                                            Quantidade de palavras
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-sm-6" id="min-max-caracteres" style="@if (old('limit') == 'limit-option1')display:block;@else @if($modalidade->caracteres && old('limit') == null)display:block;@else display:none;@endif @endif">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                                                <div>
+                                                                <input class="form-control" type="number" id="min_caracteres" name="mincaracteres" value="@if(old('mincaracteres')!=null){{old('mincaracteres')}}@else{{$modalidade->mincaracteres}}@endif">
+                                                                </div>
+                                                            </div>
+                    
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">{{ __('Máximo') }}</label>
+                                                                <div>
+                                                                <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres" value="@if(old('maxcaracteres')!=null){{old('maxcaracteres')}}@else{{$modalidade->maxcaracteres}}@endif">
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                
-                                                <div class="row">
-                                                    <div class="col-sm-6" id="min-max-palavras" style="@if (old('limit') == 'limit-option2')display:block;@else @if($modalidade->palavras && old('limit') == null)display:block;@else display:none;@endif @endif">
-                                                        <div class="form-group">
-                                                            <label class="col-form-label">{{ __('Mínimo') }}</label>
-                                                            <div>
-                                                              <input class="form-control" type="number" id="min_palavras" name="minpalavras" value="@if(old('minpalavras')!=null){{old('minpalavras')}}@else{{$modalidade->minpalavras}}@endif">
+                    
+                                                    <div class="row">
+                                                        <div class="col-sm-6" id="min-max-palavras" style="@if (old('limit') == 'limit-option2')display:block;@else @if($modalidade->palavras && old('limit') == null)display:block;@else display:none;@endif @endif">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                                                <div>
+                                                                <input class="form-control" type="number" id="min_palavras" name="minpalavras" value="@if(old('minpalavras')!=null){{old('minpalavras')}}@else{{$modalidade->minpalavras}}@endif">
+                                                                </div>
                                                             </div>
-                                                        </div>
-                
-                                                        <div class="form-group">
-                                                            <label class="col-form-label">{{ __('Máximo') }}</label>
-                                                            <div>
-                                                              <input class="form-control" type="number" id="max_palavras" name="maxpalavras" value="@if(old('maxpalavras')!=null){{old('maxpalavras')}}@else{{$modalidade->maxpalavras}}@endif">
+                    
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">{{ __('Máximo') }}</label>
+                                                                <div>
+                                                                <input class="form-control" type="number" id="max_palavras" name="maxpalavras" value="@if(old('maxpalavras')!=null){{old('maxpalavras')}}@else{{$modalidade->maxpalavras}}@endif">
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -351,6 +365,7 @@
                                                         </span>
                                                     @enderror
                                                 </div>
+
                                             </div>
                                         </div>
 

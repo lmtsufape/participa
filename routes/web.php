@@ -139,8 +139,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
 
     //AreaModalidade
     // Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
-    Route::get('{id}/modalidade-arquivo-regras',  'ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
-    Route::get('{id}/modalidade-template',      'ModalidadeController@downloadTemplate'  )->name('modalidade.template.download');
+    
     //Trabalho
     Route::get(   '/trabalho/submeter/{id}/{idModalidade}','TrabalhoController@index'    )->name('trabalho.index');
     Route::post(  '/trabalho/novaVersao',   'TrabalhoController@novaVersao'              )->name('trabalho.novaVersao');
@@ -160,10 +159,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
     Route::get(   '/download-trabalho/{id}',     'TrabalhoController@downloadArquivo'    )->name('downloadTrabalho');
     // rota download da foto do evento
     Route::get(   '/download-logo-evento/{id}',   'EventoController@downloadFotoEvento'  )->name('download.foto.evento');
-    // rota download arquivo de regras para submissão de trabalho
-    Route::get(   '/downloadArquivoRegras',       'RegraSubmisController@downloadArquivo')->name('download.regra');
-    // rota download arquivo de templates para submissão de trabalho
-    Route::get(   '/downloadArquivoTemplates',    'TemplateSubmisController@downloadArquivo'       )->name('download.template');
+    
     // atualizar etiquetas do form de eventos
     Route::post(  '/etiquetas/editar/{id}', 'FormEventoController@update'                )->name('etiquetas.update');
     // atualizar etiquetas do form de submissão de trabalhos
@@ -271,3 +267,5 @@ Route::get('/demo', function () {
 });
 
 Route::get('/home', 'HomeController@home')->name('home')->middleware('verified', 'isTemp');
+Route::get('{id}/modalidade-arquivo-regras',  'Submissao\ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
+Route::get('{id}/modalidade-template',      'Submissao\ModalidadeController@downloadTemplate'  )->name('modalidade.template.download');
