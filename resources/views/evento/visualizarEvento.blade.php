@@ -232,91 +232,106 @@
                   <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> {{date('d/m/Y',strtotime($evento->dataInicio))}} </span>
                 </div>
                 <div class="col-sm-6 clock">
-                  <img src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span>
+                  {{-- <img src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span> --}}
                 </div>
               </div>
               <hr>
               <div class="row">
                 @if ($etiquetas->modsubmissao == true)
-                    <div class="col-sm-12 info-evento">
-                        <h5>{{$etiquetas->etiquetasubmissoes}}</h5>
-                        @foreach ($modalidades as $modalidade)
-                          <h6 class="titulo-modalidade" >Modalidade: {{$modalidade->nome}}</h6>
-                          <table>
-                            <tr>
-                              {{-- @php
-                                  date_default_timezone_set('America/Recife');
-                              @endphp --}}
-                              <td><img class="" src="{{asset('img/icons/calendar-pink.png')}}" alt=""></td>
-                              <td>Envio:</td>
-                              <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioSubmissao))}}</td>
-                              <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimSubmissao))}}</td>
-                            </tr>
-                            <tr>
-                              <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
-                              <td>Revisão:</td>
-                              <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioRevisao))}}</td>
-                              <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimRevisao))}}</td>
-                            </tr>
-                            @if($modalidade->inicioCorrecao && $modalidade->fimCorrecao)
-                              <tr>
-                                <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
-                                <td>Correção:</td>
-                                <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioCorrecao))}}</td>
-                                <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimCorrecao))}}</td>
-                              </tr>                                
-                            @endif
-                            
-                            @if($modalidade->inicioValidacao && $modalidade->fimValidacao)
-                              <tr>                                
-                                <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
-                                <td>Validação:</td>
-                                <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioValidacao))}}</td>
-                                <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimValidacao))}}</td>                                
-                              </tr>                                
-                            @endif
-                            <tr>
-                              <td><img class="" src="{{asset('img/icons/calendar-green.png')}}" alt=""></td>
-                              <td>Resultado:</td>
-                              <td>{{date('d/m/Y  H:i',strtotime($modalidade->inicioResultado))}}</td>
-                            </tr>
-                          </table>
+                  <div class="col-sm-12 info-evento">
+                    <h5>{{$etiquetas->etiquetasubmissoes}}</h5>
+											<div class="accordion" id="accordion_modalidades">
+												@foreach ($modalidades as $modalidade)
+													<div class="accordion-group">
+																		
+																		
+														<div class="accordion-heading accordion-modadalidade">
+															<a class="accordion-button accordion-toggle titulo-modalidade" data-toggle="collapse" data-parent="#accordion_modalidades" href="{{ '#collapse_' . $modalidade->id }}">
+																<h6>Modalidade: {{$modalidade->nome}}</h6>
+															</a>
+														</div>
+																		
+														<div id="{{ 'collapse_' . $modalidade->id }}" class="accordion-body in collapse" style="height: auto;">
+															<div class="accordion-inner">
+																<table>
+																	<tr>
+																			{{-- @php
+																																						 date_default_timezone_set('America/Recife');
+																																						 @endphp --}}
+																		<td><img class="" src="{{asset('img/icons/calendar-pink.png')}}" alt=""></td>
+																		<td>Envio:</td>
+																		<td>{{date('d/m/Y H:i',strtotime($modalidade->inicioSubmissao))}}</td>
+																		<td>- {{date('d/m/Y H:i',strtotime($modalidade->fimSubmissao))}}</td>
+																	</tr>
+																	<tr>
+																		<td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
+																		<td>Revisão:</td>
+																		<td>{{date('d/m/Y H:i',strtotime($modalidade->inicioRevisao))}}</td>
+																		<td>- {{date('d/m/Y H:i',strtotime($modalidade->fimRevisao))}}</td>
+																	</tr>
+																	@if($modalidade->inicioCorrecao && $modalidade->fimCorrecao)
+																		<tr>
+																			<td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
+																			<td>Correção:</td>
+																			<td>{{date('d/m/Y H:i',strtotime($modalidade->inicioCorrecao))}}</td>
+																			<td>- {{date('d/m/Y H:i',strtotime($modalidade->fimCorrecao))}}</td>
+																		</tr>                                
+																	@endif
+																	
+																	@if($modalidade->inicioValidacao && $modalidade->fimValidacao)
+																		<tr>                                
+																			<td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
+																			<td>Validação:</td>
+																			<td>{{date('d/m/Y H:i',strtotime($modalidade->inicioValidacao))}}</td>
+																			<td>- {{date('d/m/Y H:i',strtotime($modalidade->fimValidacao))}}</td>                                
+																		</tr>                                
+																	@endif
+																	<tr>
+																		<td><img class="" src="{{asset('img/icons/calendar-green.png')}}" alt=""></td>
+																		<td>Resultado:</td>
+																		<td>{{date('d/m/Y  H:i',strtotime($modalidade->inicioResultado))}}</td>
+																	</tr>
+																</table>
 
-                          {{-- {{dd(Carbon\Carbon::parse($modalidade->inicioSubmissao))}} --}}
-                          @if(Carbon\Carbon::parse($modalidade->inicioSubmissao) <= $mytime)
-                            @if($mytime <= Carbon\Carbon::parse($modalidade->fimSubmissao))
-                              @if ($modalidade->arquivo == true)
-                                @if(isset($modalidade->regra))
-                                  <div style="margin-top: 20px; margin-bottom: 10px;">
-                                    <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
-                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">Regra
-                                    </a>
-                                  </div>
-                                @endif
-                                @if (isset($modalidade->template))
-                                  <div style="margin-top: 20px; margin-bottom: 10px;">
-                                    <a href="{{route('download.template', ['file' => $modalidade->template])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
-                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">Template
-                                    </a>
-                                  </div>  
-                                @endif
-                              @else
-                                @if(isset($modalidade->regra))
-                                  <div style="margin-top: 20px; margin-bottom: 10px;">
-                                    <a href="{{route('download.regra', ['file' => $modalidade->regra])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
-                                      <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;Regras
-                                    </a>
-                                  </div>  
-                                @endif
-                              @endif
-                              <div class="col-md-12 botao-form-left" style="">
-                                <a class="btn button-card-visualizar-evento white-color" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">SUBMETER TRABALHO</a>
-                              </div>
-                            @endif
-                          @endif
-                        <hr>
+																{{-- {{dd(Carbon\Carbon::parse($modalidade->inicioSubmissao))}} --}}
+																@if(Carbon\Carbon::parse($modalidade->inicioSubmissao) <= $mytime)
+																	@if($mytime <= Carbon\Carbon::parse($modalidade->fimSubmissao))
+																		@if ($modalidade->arquivo == true)
+																			@if(isset($modalidade->regra))
+																				<div style="margin-top: 20px; margin-bottom: 10px;">
+																					<a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+																						<img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
+																					</a>
+																				</div>
+																			@endif
+																			@if (isset($modalidade->template))
+																				<div style="margin-top: 20px; margin-bottom: 10px;">
+																					<a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+																						<img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixartemplate}}
+																					</a>
+																				</div>  
+																			@endif
+																		@else
+																			@if(isset($modalidade->regra))
+																				<div style="margin-top: 20px; margin-bottom: 10px;">
+																						<a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+																								<img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
+																						</a>
+																				</div>  
+																			@endif
+																		@endif
+																		<div class="col-md-12 botao-form-left" style="">
+																			<a class="btn button-card-visualizar-evento white-color" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">SUBMETER TRABALHO</a>
+																		</div>
+																	@endif
+																@endif
+															</div>
+															<hr>
+														</div>
+													</div>
                         @endforeach
-                    </div>
+											</div>
+                  </div>
                 @endif
               </div>
             </div>
@@ -484,21 +499,21 @@
           @endif
         @endif --}}
       
-        <div class="row justify-content-center" style="margin: 20px 0 20px 0">
+        {{-- <div class="row justify-content-center" style="margin: 20px 0 20px 0"> --}}
       
             {{-- <div class="col-md-6 botao-form-left" style="">
                 <a class="btn btn-secondary botao-form" href="{{route('cancelarCadastro')}}" style="width:100%">Voltar</a>
             </div> --}}
       
-            @if($evento->inicioSubmissao <= $mytime)
+            {{-- @if($evento->inicioSubmissao <= $mytime)
               @if($mytime < $evento->fimSubmissao)
                 <div class="col-md-6 botao-form-right" style="">
                   <a class="btn btn-primary botao-form" href="{{route('trabalho.index',['id'=>$evento->id])}}" style="width:100%">Submeter Trabalho</a>
                 </div>
               @endif
-            @endif
+            @endif --}}
       
-        </div>
+        {{-- </div> --}}
       </div>
     </div>
   </div>

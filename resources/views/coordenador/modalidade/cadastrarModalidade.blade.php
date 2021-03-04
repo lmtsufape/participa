@@ -100,9 +100,9 @@
 
                             <div class="col-sm-6">
                                 <label for="inicioCorrecao" class="col-form-label">{{ __('Início da Correção') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
-                                <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inicioCorrecao') is-invalid @enderror" name="inicioCorrecao" value="{{ old('inicioCorrecao') }}" autocomplete="inicioCorrecao" autofocus>
+                                <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inícioCorreção') is-invalid @enderror" name="inícioCorreção" value="{{ old('inícioCorreção') }}" autocomplete="inicioCorrecao" autofocus>
 
-                                @error('inicioCorrecao')
+                                @error('inícioCorreção')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -110,9 +110,9 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="fimCorrecao" class="col-form-label">{{ __('Fim da Correção') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
-                                <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorrecao') is-invalid @enderror" name="fimCorrecao" value="{{ old('fimCorrecao') }}" autocomplete="fimCorrecao" autofocus>
+                                <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorreção') is-invalid @enderror" name="fimCorreção" value="{{ old('fimCorreção') }}" autocomplete="fimCorrecao" autofocus>
 
-                                @error('fimCorrecao')
+                                @error('fimCorreção')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -129,9 +129,9 @@
                                     {{ __('Início da Validação') }}
                                     <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i>
                                 </label>
-                                <input id="inicioValidacao" type="datetime-local" class="form-control @error('inicioValidacao') is-invalid @enderror" name="inicioValidacao" value="{{ old('inicioValidacao') }}" autocomplete="inicioValidacao" autofocus>
+                                <input id="inicioValidacao" type="datetime-local" class="form-control @error('inícioValidação') is-invalid @enderror" name="inícioValidação" value="{{ old('inícioValidação') }}" autocomplete="inicioValidacao" autofocus>
                                 
-                                @error('inicioValidacao')
+                                @error('inícioValidação')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -139,9 +139,9 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="fimValidacao" class="col-form-label">{{ __('Fim da Validação') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
-                                <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidacao') is-invalid @enderror" name="fimValidacao" value="{{ old('fimValidacao') }}" autocomplete="fimValidacao" autofocus>
+                                <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidação') is-invalid @enderror" name="fimValidação" value="{{ old('fimValidação') }}" autocomplete="fimValidacao" autofocus>
 
-                                @error('fimValidacao')
+                                @error('fimValidação')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -170,59 +170,72 @@
                         <div class="row">
 
                             <div class="col-sm-6">
-                                <label class="col-form-label">{{ __('Restrições de resumo:') }}</label>
-
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1" >
-                                    <label class="form-check-label" for="texto">
-                                        Quantidade de caracteres
+                                <div class="form-check" style="margin-top: 10px">
+                                    <input class="form-check-input incluir-resumo" type="checkbox" name="texto" id="id-custom_field-account-1-2" @if (old('texto') == true) checked @endif>
+                                    <label class="form-check-label" for="resumo">
+                                        Adicionar campo resumo por texto
                                     </label>
-                                    </div>
+                                    @error('resumo')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div id="restricoes-resumo-texto" @if (old('texto') == true) style="display: block;" @else style="display: none;" @endif>
+                                    <label class="col-form-label">{{ __('Restrições de resumo:') }}</label>
+    
                                     <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-2" value="limit-option2" >
-                                    <label class="form-check-label" for="arquivo">
-                                        Quantidade de palavras
-                                    </label>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-6" id="min-max-caracteres" style="display: none">
-                                        <div class="form-group">
-                                            <label class="col-form-label">{{ __('Mínimo') }}</label>
-                                            <div>
-                                              <input class="form-control" type="number" id="min_caracteres" name="mincaracteres">
-                                            </div>
+                                        <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1" @if (old('limit') == "limit-option1") checked @endif>
+                                        <label class="form-check-label" for="texto">
+                                            Quantidade de caracteres
+                                        </label>
                                         </div>
-
-                                        <div class="form-group">
-                                            <label class="col-form-label">{{ __('Máximo') }}</label>
-                                            <div>
-                                              <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres">
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-2" value="limit-option2" @if (old('limit') == "limit-option2") checked @endif>
+                                        <label class="form-check-label" for="arquivo">
+                                            Quantidade de palavras
+                                        </label>
+                                    </div>
+    
+                                    <div class="row">
+                                        <div class="col-sm-6" id="min-max-caracteres" @if (old('limit') == "limit-option1") style="display: block" @else style="display: none" @endif>
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="min_caracteres" name="mincaracteres" value="{{old('mincaracteres')}}">
+                                                </div>
+                                            </div>
+    
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('Máximo') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres"  value="{{old('maxcaracteres')}}">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-6" id="min-max-palavras" style="display: none">
-                                        <div class="form-group">
-                                            <label class="col-form-label">{{ __('Mínimo') }}</label>
-                                            <div>
-                                              <input class="form-control" type="number" id="min_palavras" name="minpalavras">
+    
+                                    <div class="row">
+                                        <div class="col-sm-6" id="min-max-palavras" @if (old('limit') == "limit-option2") style="display: block" @else style="display: none" @endif>
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="min_palavras" name="minpalavras" value="{{old('minpalavras')}}">
+                                                </div>
                                             </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-form-label">{{ __('Máximo') }}</label>
-                                            <div>
-                                              <input class="form-control" type="number" id="max_palavras" name="maxpalavras">
+    
+                                            <div class="form-group">
+                                                <label class="col-form-label">{{ __('Máximo') }}</label>
+                                                <div>
+                                                  <input class="form-control" type="number" id="max_palavras" name="maxpalavras" value="{{old('maxpalavras')}}">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-check" style="margin-top: 10px">
-                                    <input class="form-check-input incluirarquivo" type="checkbox" name="arquivo" id="id-custom_field-account-1-2">
+                                    <input class="form-check-input incluirarquivo" type="checkbox" name="arquivo" id="id-custom_field-account-1-2" @if(old('arquivo') == true) checked @endif>
                                     <label class="form-check-label" for="arquivo">
                                         Incluir submissão por arquivo
                                     </label>
@@ -233,58 +246,59 @@
                                     @enderror
                                 </div>
                             </div>
+                            
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-6" id="tipo-arquivo" style="display: none">
+                            <div class="col-sm-6" id="tipo-arquivo" @if(old('arquivo') == true) style="display: block" @else style="display: none" @endif>
 
                                 <div class="titulo-detalhes" style="margin-top: 10px"></div>
                                 <label class="col-form-label">{{ __('Tipos de extensão aceitas') }}</label>
 
                                 <div class="form-check" style="margin-top: 10px">
-                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="pdf">
+                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="pdf" @if(old('pdf')) checked @endif>
                                     <label class="form-check-label" for="defaultCheck1">
                                         .pdf
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="jpg">
+                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="jpg" @if(old('jpg')) checked @endif>
                                     <label class="form-check-label" for="defaultCheck1">
                                         .jpg
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="jpeg">
+                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="jpeg" @if(old('jpeg')) checked @endif>
                                     <label class="form-check-label" for="defaultCheck1">
                                         .jpeg
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="png">
+                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="png" @if(old('png')) checked @endif>
                                     <label class="form-check-label" for="defaultCheck1">
                                         .png
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="docx">
+                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="docx" @if(old('docx')) checked @endif>
                                     <label class="form-check-label" for="defaultCheck1">
                                         .docx
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="odt">
+                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="odt" @if(old('odt')) checked @endif>
                                     <label class="form-check-label" for="defaultCheck1">
                                         .odt
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="zip">
+                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="zip" @if(old('zip')) checked @endif>
                                     <label class="form-check-label" for="defaultCheck1">
                                         .zip
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="svg">
+                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="svg" @if(old('svg')) checked @endif>
                                     <label class="form-check-label" for="defaultCheck1">
                                         .svg
                                     </label>

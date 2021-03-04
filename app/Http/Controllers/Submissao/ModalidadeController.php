@@ -64,12 +64,25 @@ class ModalidadeController extends Controller
             'inícioDaRevisão'   => ['required', 'date', 'after:inícioDaSubmissão'],
             'fimDaRevisão'      => ['required', 'date', 'after:inícioDaRevisão'],
 
-            'inicioCorrecao'   => ['nullable','date', 'after:fimDaRevisão', 'required_with:fimCorrecao'],
-            'fimCorrecao'      => ['nullable','date', 'after:inicioCorrecao', 'required_with:inicioCorrecao'],
-            'inicioValidacao'   => ['nullable','date', 'after:fimCorrecao', 'required_with:fimValidacao'],
-            'fimValidacao'      => ['nullable','date', 'after:inicioValidacao', 'required_with:inicioValidacao'],
+            'inícioCorreção'   => ['nullable','date', 'after:fimDaRevisão', 'required_with:fimCorreção'],
+            'fimCorreção'      => ['nullable','date', 'after:inícioCorreção', 'required_with:inícioCorreção'],
+            'inícioValidação'   => ['nullable','date', 'after:fimCorreção', 'required_with:fimValidação'],
+            'fimValidação'      => ['nullable','date', 'after:inícioValidação', 'required_with:inícioValidação'],
 
             'resultado'         => ['required', 'date', 'after:fimDaRevisão'],
+
+            'texto'             => ['nullable'],
+            'limit'             => ['nullable'],
+            'arquivo'           => ['nullable'],
+            'pdf'               => ['nullable'],
+            'jpg'               => ['nullable'],
+            'jpeg'              => ['nullable'],
+            'png'               => ['nullable'],
+            'docx'              => ['nullable'],
+            'odt'               => ['nullable'],
+            'zip'               => ['nullable'],
+            'svg'               => ['nullable'],
+
             'mincaracteres'     => ['nullable', 'integer'],
             'maxcaracteres'     => ['nullable', 'integer'],
             'minpalavras'       => ['nullable', 'integer'],
@@ -77,34 +90,38 @@ class ModalidadeController extends Controller
             'arquivoRegras'     => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
             'arquivoTemplates'  => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2000000'],
         ]);
-
-        // Verificar se o limite máximo de palavra ou caractere é menor que o limite mínimo
-        if(isset($request->maxcaracteres) && isset($request->mincaracteres) && $request->maxcaracteres <= $request->mincaracteres){
-            return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!'])->withInput($validatedData);
-        }
-        if(isset($request->maxpalavras) && isset($request->minpalavras) && $request->maxpalavras <= $request->minpalavras){
-            return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!'])->withInput($validatedData);
-        }
-
-        if ($request->limit == null) {
-            return redirect()->back()->withErrors(['caracteresoupalavras' => 'O tipo caracteres ou palavras não foi selecionado.'])->withInput($validatedData);
-        }
-
-        if ($request->limit == "limit-option1") {
-            // Verifica se um campo foi deixado em branco
-            if ($request->mincaracteres == null || $request->maxcaracteres == null){
-                return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($validatedData);
+        // dd($request);
+        $caracteres = false;
+        $palavras = false;
+        if ($request->texto == true) {
+            // Verificar se o limite máximo de palavra ou caractere é menor que o limite mínimo
+            if(isset($request->maxcaracteres) && isset($request->mincaracteres) && $request->maxcaracteres <= $request->mincaracteres){
+                return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!'])->withInput($validatedData);
             }
-            $caracteres = true;
-            $palavras = false;
-        }
-        if ($request->limit == "limit-option2") {
-            // Verifica se um campo foi deixado em branco
-            if ($request->minpalavras == null || $request->maxpalavras == null){
-                return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($validatedData);
+            if(isset($request->maxpalavras) && isset($request->minpalavras) && $request->maxpalavras <= $request->minpalavras){
+                return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!'])->withInput($validatedData);
             }
-            $caracteres = false;
-            $palavras = true;
+
+            if ($request->limit == null) {
+                return redirect()->back()->withErrors(['caracteresoupalavras' => 'O tipo caracteres ou palavras não foi selecionado.'])->withInput($validatedData);
+            }
+
+            if ($request->limit == "limit-option1") {
+                // Verifica se um campo foi deixado em branco
+                if ($request->mincaracteres == null || $request->maxcaracteres == null){
+                    return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($validatedData);
+                }
+                $caracteres = true;
+                $palavras = false;
+            }
+            if ($request->limit == "limit-option2") {
+                // Verifica se um campo foi deixado em branco
+                if ($request->minpalavras == null || $request->maxpalavras == null){
+                    return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($validatedData);
+                }
+                $caracteres = false;
+                $palavras = true;
+            }
         }
 
         if ($request->arquivo == true) {
@@ -122,11 +139,12 @@ class ModalidadeController extends Controller
         $modalidade->fimSubmissao       = $request->input("fimDaSubmissão");
         $modalidade->inicioRevisao      = $request->input("inícioDaRevisão");
         $modalidade->fimRevisao         = $request->input("fimDaRevisão");
-        $modalidade->inicioCorrecao     = $request->input("inicioCorrecao");
-        $modalidade->fimCorrecao        = $request->input("fimCorrecao");
-        $modalidade->inicioValidacao    = $request->input("inicioValidacao");
-        $modalidade->fimValidacao       = $request->input("fimValidacao");
+        $modalidade->inicioCorrecao     = $request->input("inícioCorreção");
+        $modalidade->fimCorrecao        = $request->input("fimCorreção");
+        $modalidade->inicioValidacao    = $request->input("inícioValidação");
+        $modalidade->fimValidacao       = $request->input("fimValidação");
         $modalidade->inicioResultado    = $request->resultado;
+        $modalidade->texto              = $request->texto;
         $modalidade->arquivo            = $request->arquivo;
         $modalidade->caracteres         = $caracteres;
         $modalidade->palavras           = $palavras;

@@ -518,6 +518,20 @@
                 $("#tipo-arquivo").hide();
             }
         });
+        $('.incluir-resumo').on("change", function() {
+            if (this.checked) {
+                $("#restricoes-resumo-texto").show();
+            } else {
+                $("#restricoes-resumo-texto").hide();
+            }          
+        });
+        $('.incluir-resumo-edit').on("change", function() {
+            if (this.checked) {
+                this.parentElement.parentElement.children[1].style.display = "block";
+            } else {
+                this.parentElement.parentElement.children[1].style.display = "none";
+            }
+        })
     });
 
     $(document).ready(function() {

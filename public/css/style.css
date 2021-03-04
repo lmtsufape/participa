@@ -336,6 +336,13 @@ body{
     color: rgb(0, 132, 255);
 }
 
+.accordion-modadalidade {
+    display: ruby;
+    margin-bottom: 4px;
+    border-radius: 5%;
+    padding-top: 8px;
+    padding-bottom: 4px;
+}
 
 /* Visualização dos conteúdos dos detalhes do evento */
 #divInformacoes{display: block;}
@@ -565,6 +572,7 @@ body{
 
 .nav-link {
     border-radius: 10px;
+    margin: 5px;
 }
 
 .nav-link:hover, .nav-link:focus {
@@ -574,6 +582,7 @@ body{
     -moz-opacity:1;
     opacity:1;
     transition: 0.3s;
+    padding-right: 10px;
     box-shadow: 5px 5px 5px black;
 }
 
