@@ -338,7 +338,7 @@ class EventoController extends Controller
       $evento = Evento::find($request->evento_id);
       $modalidade = Modalidade::find($request->modalidade_id);
       $data = $request->all();
-     
+      dd($data);
       $form = $modalidade->forms()->create([
           'titulo' => 'Titulo do form',
       ]);
@@ -357,18 +357,14 @@ class EventoController extends Controller
           $resposta->paragrafo()->save($paragrafo);
 
         }else if($data['tipo'][$key] == 'checkbox'){
-          $resposta = $pergunta->resposta()->create([
-            'resposta' => null
+          $resposta = $resposta->opcoes()->create([
+            'titulo' => "titulo do checkbox",
+            'tipo' => 'checkbox',
           ]);
-          $resposta->opcoes()->create([
-            'titulo' => 'titulo do checkbox'
-          ]);
-        }
 
-        // print_r($value);
+        }
       }
-     
-      
+
       return view('coordenador.modalidade.atribuirFormulario', compact('evento','modalidade'));
 
     }
@@ -383,6 +379,18 @@ class EventoController extends Controller
       return view('coordenador.modalidade.visualizarFormulario', compact('evento', 'modalidade'));
 
     }
+
+    public function respostas(Request $request)
+    {
+      $evento = Evento::find($request->evento_id);
+      $modalidade = Modalidade::find($request->modalidade_id);
+      // $form = $modalidade->forms;
+      $data = $request->all();
+
+      return view('coordenador.modalidade.visualizarRespostas', compact('evento', 'modalidade'));
+
+    }
+    
     public function editarEtiqueta(Request $request)
     {
         $evento = Evento::find($request->eventoId);

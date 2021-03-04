@@ -13,8 +13,8 @@ class Pergunta extends Model
         return $this->belongsTo('App\Models\Submissao\Form');
     }
 
-    public function resposta()
+    public function respostas()
     {
-        return $this->hasOne('App\Models\Submissao\Resposta');
+        return $this->hasMany('App\Models\Submissao\Resposta');
     }
 }

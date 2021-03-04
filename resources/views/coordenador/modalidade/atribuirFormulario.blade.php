@@ -81,8 +81,10 @@
                 
             }else if('checkbox' == select){
                 console.log('checkbox')
-                console.log(event)
-                event.path[3].children[1].children[1].innerHTML = montarOpcao();
+                console.log(event.path[3].children[1].children[1].id)
+                let id = event.path[3].children[1].children[1].id;
+                
+                event.path[3].children[1].children[1].innerHTML = montarOpcao(id);
                 
             }else if('radio' == select){
 
@@ -148,7 +150,8 @@
             let div = document.createElement('div');
             console.log(div)
             div.classList.add("col-md-10");
-            div.innerHTML = addCheckboxInput();
+            
+            div.innerHTML = addCheckboxInput(id);
             let find = document.querySelector("#"+id);
             find.appendChild(div);
         }
@@ -207,7 +210,7 @@
                 </div>`;
         }
 
-        function montarOpcao(){
+        function montarOpcao(check){
 
             return `<div  class="col-md-10 itemRadio">
                         <div class="input-group mb-3">
@@ -216,7 +219,7 @@
                                 <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input">
                                 </div>
                             </div>
-                            <input type="text" name="tituloCheckox" class="form-control" aria-label="Text input with checkbox">
+                            <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox">
                         </div>
                     </div>
                     <div class="col-md-1 mt-2">
@@ -227,14 +230,14 @@
                     </div>`;
         }
 
-        function addCheckboxInput(){
+        function addCheckboxInput(check){
             return `<div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                             <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input">
                             </div>
                         </div>
-                        <input type="text" name="tituloCheckox" class="form-control" aria-label="Text input with checkbox">
+                        <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox">
                     </div>`;
         }
 

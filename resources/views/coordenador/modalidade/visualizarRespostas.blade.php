@@ -24,9 +24,30 @@
                             @if($pergunta->respostas->first()->opcoes->count())
                                 Resposta com Multipla escolha:
                             @elseif($pergunta->respostas->first()->paragrafo->count() )
-                                
+                                {{-- {{dd($pergunta->respostas->first())}} --}}
                                 <p>Resposta com paragrafo: </p>
-                                
+                                <table class="table table-striped table-dark">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Revisor</th>
+                                        <th scope="col">Trabalho</th>
+                                        <th scope="col">Resposta</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($pergunta->respostas as $resposta)
+                                        @if($resposta->revisor != null || $resposta->trabalho != null)
+                                            <tr>
+                                                <td>{{$resposta->revisor->user->name}}</td>
+                                                <td>{{$resposta->trabalho->titulo}} </td>
+                                                <td>{{$resposta->paragrafo->resposta}}</td>                                                
+                                            </tr>
+                                            @endif
+                                        @empty
+                                        <p>Sem respostas</p>
+                                        @endforelse
+                                    </tbody>
+                                </table>
                             @endif
                         </div>
                     </div>
