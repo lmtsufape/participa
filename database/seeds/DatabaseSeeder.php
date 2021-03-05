@@ -69,17 +69,17 @@ class DatabaseSeeder extends Seeder
         ]);
         
         
-        DB::table('users')->insert([  //
-          'name' => 'Gabriel Revisor',
-          'email' => 'gabriel.app.dev@gmail.com',
-          'password' => bcrypt('12345678'),
-          'cpf' => 123132131,
-          'instituicao'     => 'd',
-          'celular'    => 2,
-          'especProfissional' => 'e',
-          'email_verified_at' => '2020-02-15',
-          'enderecoId' => 1,
-        ]); 
+        // DB::table('users')->insert([  //
+        //   'name' => 'Gabriel Revisor',
+        //   'email' => 'gabriel.app.dev@gmail.com',
+        //   'password' => bcrypt('12345678'),
+        //   'cpf' => 123132131,
+        //   'instituicao'     => 'd',
+        //   'celular'    => 2,
+        //   'especProfissional' => 'e',
+        //   'email_verified_at' => '2020-02-15',
+        //   'enderecoId' => 1,
+        // ]); 
 
         $evento = DB::table('eventos')->insert([
           'nome'=>'II CONGRESSO REGIONAL DE ZOOTECNIA',
@@ -102,24 +102,24 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
 
         
 
-        $evento = DB::table('eventos')->insert([
-          'nome'=>'Evento Teste',
-          // 'numeroParticipantes'=>60,
-          'descricao'=>'Cada autor inscrito poderá submeter até dois (2) resumos;
-O número máximo de autores por trabalho será seis autores;
-Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo uma (01) página, no formato PDF;',
-          'tipo'=>'teste',
-          'dataInicio'=>'2021-02-19',
-          'dataFim'=>'2021-04-20',
-          'numMaxTrabalhos' => 10,
-          'numMaxCoautores' => 10,
-          // 'possuiTaxa'=>true,
-          'recolhimento'=>'pago',
-          'enderecoId'=>2,
-          'coordenadorId'=>2,
-          'publicado'=>true,
-          'deletado'=>false,
-        ]);
+//         $evento = DB::table('eventos')->insert([
+//           'nome'=>'Evento Teste',
+//           // 'numeroParticipantes'=>60,
+//           'descricao'=>'Cada autor inscrito poderá submeter até dois (2) resumos;
+// O número máximo de autores por trabalho será seis autores;
+// Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo uma (01) página, no formato PDF;',
+//           'tipo'=>'teste',
+//           'dataInicio'=>'2021-02-19',
+//           'dataFim'=>'2021-04-20',
+//           'numMaxTrabalhos' => 10,
+//           'numMaxCoautores' => 10,
+//           // 'possuiTaxa'=>true,
+//           'recolhimento'=>'pago',
+//           'enderecoId'=>2,
+//           'coordenadorId'=>2,
+//           'publicado'=>true,
+//           'deletado'=>false,
+//         ]);
         // $user_id = DB::table('eventos')->where('nome','II CONGRESSO REGIONAL DE ZOOTECNIA')->pluck('id');
         
 
@@ -155,37 +155,37 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'ordemCampos'                    => 'etiquetatitulotrabalho,etiquetaautortrabalho,etiquetacoautortrabalho,etiquetaresumotrabalho,etiquetaareatrabalho,etiquetauploadtrabalho,checkcampoextra1,etiquetacampoextra1,select_campo1,checkcampoextra2,etiquetacampoextra2,select_campo2,checkcampoextra3,etiquetacampoextra3,select_campo3,checkcampoextra4,etiquetacampoextra4,select_campo4,checkcampoextra5,etiquetacampoextra5,select_campo5',
         ]);
 
-        DB::table('form_eventos')->insert([
-          'eventoId'                       => 2,
-          'etiquetanomeevento'             => 'Nome',
-          'etiquetatipoevento'             => 'Tipo',
-          'etiquetadescricaoevento'        => 'Descrição',
-          'etiquetadatas'                  => 'Realização',
-          'etiquetasubmissoes'             => 'Submissões',
-          'etiquetabaixarregra'            => 'Regras',
-          'etiquetabaixartemplate'         => 'Template',
-          'etiquetaenderecoevento'         => 'Endereço',
-          'etiquetamoduloinscricao'        => 'Inscrições',
-          'etiquetamoduloprogramacao'      => 'Programação',
-          'etiquetamoduloorganizacao'      => 'Organização',
-          'modsubmissao'                   => true
-        ]);
+        // DB::table('form_eventos')->insert([
+        //   'eventoId'                       => 2,
+        //   'etiquetanomeevento'             => 'Nome',
+        //   'etiquetatipoevento'             => 'Tipo',
+        //   'etiquetadescricaoevento'        => 'Descrição',
+        //   'etiquetadatas'                  => 'Realização',
+        //   'etiquetasubmissoes'             => 'Submissões',
+        //   'etiquetabaixarregra'            => 'Regras',
+        //   'etiquetabaixartemplate'         => 'Template',
+        //   'etiquetaenderecoevento'         => 'Endereço',
+        //   'etiquetamoduloinscricao'        => 'Inscrições',
+        //   'etiquetamoduloprogramacao'      => 'Programação',
+        //   'etiquetamoduloorganizacao'      => 'Organização',
+        //   'modsubmissao'                   => true
+        // ]);
 
-        DB::table('form_subm_trabas')->insert([
-          'eventoId'                       => 2,
-          'etiquetatitulotrabalho'         => 'Titulo',
-          'etiquetaautortrabalho'          => 'Autor',
-          'etiquetacoautortrabalho'        => 'Co-Autor',
-          'etiquetaresumotrabalho'         => 'Resumo',
-          'etiquetaareatrabalho'           => 'Área',
-          'etiquetauploadtrabalho'         => 'Upload de Trabalho',
-          'etiquetacampoextra1'            => 'Campo Extra',
-          'etiquetacampoextra2'            => 'Campo Extra',
-          'etiquetacampoextra3'            => 'Campo Extra',
-          'etiquetacampoextra4'            => 'Campo Extra',
-          'etiquetacampoextra5'            => 'Campo Extra',
-          'ordemCampos'                    => 'etiquetatitulotrabalho,etiquetaautortrabalho,etiquetacoautortrabalho,etiquetaresumotrabalho,etiquetaareatrabalho,etiquetauploadtrabalho,checkcampoextra1,etiquetacampoextra1,select_campo1,checkcampoextra2,etiquetacampoextra2,select_campo2,checkcampoextra3,etiquetacampoextra3,select_campo3,checkcampoextra4,etiquetacampoextra4,select_campo4,checkcampoextra5,etiquetacampoextra5,select_campo5',
-        ]);
+        // DB::table('form_subm_trabas')->insert([
+        //   'eventoId'                       => 2,
+        //   'etiquetatitulotrabalho'         => 'Titulo',
+        //   'etiquetaautortrabalho'          => 'Autor',
+        //   'etiquetacoautortrabalho'        => 'Co-Autor',
+        //   'etiquetaresumotrabalho'         => 'Resumo',
+        //   'etiquetaareatrabalho'           => 'Área',
+        //   'etiquetauploadtrabalho'         => 'Upload de Trabalho',
+        //   'etiquetacampoextra1'            => 'Campo Extra',
+        //   'etiquetacampoextra2'            => 'Campo Extra',
+        //   'etiquetacampoextra3'            => 'Campo Extra',
+        //   'etiquetacampoextra4'            => 'Campo Extra',
+        //   'etiquetacampoextra5'            => 'Campo Extra',
+        //   'ordemCampos'                    => 'etiquetatitulotrabalho,etiquetaautortrabalho,etiquetacoautortrabalho,etiquetaresumotrabalho,etiquetaareatrabalho,etiquetauploadtrabalho,checkcampoextra1,etiquetacampoextra1,select_campo1,checkcampoextra2,etiquetacampoextra2,select_campo2,checkcampoextra3,etiquetacampoextra3,select_campo3,checkcampoextra4,etiquetacampoextra4,select_campo4,checkcampoextra5,etiquetacampoextra5,select_campo5',
+        // ]);
 
         $areasEventoZoo = [
                             'Produção e nutrição de ruminantes',
@@ -205,10 +205,10 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
             'nome'      => $areasEventoZoo[$i],
             'eventoId'  => 1,
           ]);
-          DB::table('areas')->insert([
-            'nome'      => $areasEventoZoo[$i],
-            'eventoId'  => 2,
-          ]);
+          // DB::table('areas')->insert([
+          //   'nome'      => $areasEventoZoo[$i],
+          //   'eventoId'  => 2,
+          // ]);
         }
         
 
@@ -217,32 +217,32 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'evento_id'   => 1,
         ]);
 
-        DB::table('modalidades')->insert([
-          'nome'            =>  'Modalidade teste',
-          'evento_id'       =>  2,
-          'inicioSubmissao' =>  '2021-03-02 16:43:00',
-          'fimSubmissao'    =>  '2021-04-30 16:43:00',
-          'inicioRevisao'   =>  '2021-05-01 16:43:00',
-          'fimRevisao'      =>  '2021-05-05 16:44:00',
-          'inicioCorrecao'  =>  '2021-05-06 16:44:00',
-          'fimCorrecao'     =>  '2021-05-07 16:44:00',
-          'inicioValidacao' =>  '2021-05-08 16:44:00',
-          'fimValidacao'    =>  '2021-05-09 16:44:00',
-          'inicioResultado' =>  '2021-05-10 16:44:00',
-          'texto'           =>  null,
-          'arquivo'         =>  null,
-          'caracteres'      =>  true,
-          'mincaracteres'   =>  1,
-          'maxcaracteres'   =>  20,
-          'palavras'        =>  false,
-          'minpalavras'     =>  null,
-          'maxpalavras'     =>  null,
-          'pdf'             =>  null,
-          'jpg'             =>  null,
-          'regra'           =>  null,
-          'template'        =>  null       
+        // DB::table('modalidades')->insert([
+        //   'nome'            =>  'Modalidade teste',
+        //   'evento_id'       =>  2,
+        //   'inicioSubmissao' =>  '2021-03-02 16:43:00',
+        //   'fimSubmissao'    =>  '2021-04-30 16:43:00',
+        //   'inicioRevisao'   =>  '2021-05-01 16:43:00',
+        //   'fimRevisao'      =>  '2021-05-05 16:44:00',
+        //   'inicioCorrecao'  =>  '2021-05-06 16:44:00',
+        //   'fimCorrecao'     =>  '2021-05-07 16:44:00',
+        //   'inicioValidacao' =>  '2021-05-08 16:44:00',
+        //   'fimValidacao'    =>  '2021-05-09 16:44:00',
+        //   'inicioResultado' =>  '2021-05-10 16:44:00',
+        //   'texto'           =>  null,
+        //   'arquivo'         =>  null,
+        //   'caracteres'      =>  true,
+        //   'mincaracteres'   =>  1,
+        //   'maxcaracteres'   =>  20,
+        //   'palavras'        =>  false,
+        //   'minpalavras'     =>  null,
+        //   'maxpalavras'     =>  null,
+        //   'pdf'             =>  null,
+        //   'jpg'             =>  null,
+        //   'regra'           =>  null,
+        //   'template'        =>  null       
 
-        ]);
+        // ]);
 
         // for($i = 0; $i < sizeof($areasEventoZoo); $i++){
         //   DB::table('area_modalidades')->insert([
@@ -366,6 +366,6 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         $this->call(ParticipanteSeed::class);
         $this->call(CoordEventoSeed::class);
         $this->call(TipoPagamentoSeed::class);
-        $this->call(RevisorSeeder::class);
+        // $this->call(RevisorSeeder::class);
     }
 }

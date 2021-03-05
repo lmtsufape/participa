@@ -35,13 +35,25 @@ class EmailConviteRevisor extends Mailable
     public function build()
     {
         $subject = 'Easy - Convite de Evento';
-        return  $this->from('lmtsteste@gmail.com', 'Eventos - LMTS')
+        // return $this->markdown('emails.user.welcome')->with([
+        //     'user' => $this->nomeUsuarioPai,
+        //     'evento' => $this->nomeEvento,                   
+        //     'funcao' => $this->nomeFuncao,                   
+        //     'senha' => $this->senhaTemporaria,                   
+        // ]);->subject($this->subject)
+        // ->view('emails.emailConviteRevisor')
+        // ->with([
+        //     'user'      => $this->user,
+        //     'info'      => $this->informacoes,
+        //     'evento'    => $this->evento,
+        // ]);
+        return  $this->from('lmtsteste@gmail.com', 'Easy')
                     ->subject($this->subject)
-                    ->view('emails.emailConviteRevisor')
-                    ->with([
+                    ->markdown('emails.emailConviteRevisor', [
                         'user'      => $this->user,
                         'info'      => $this->informacoes,
                         'evento'    => $this->evento,
                     ]);
+                    
     }
 }

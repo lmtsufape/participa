@@ -48,19 +48,21 @@
                                                 <div class="btn-group dropright dropdown-options">
                                                         
                                                     <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
+                                                        {{-- <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
                                                             <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
-                                                        </div>
+                                                            
+                                                        </div> --}}
+                                                        <a  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><i class="fas fa-cog "></i></a>
                                                     </a>
                                                     <div class="dropdown-menu">
                                                         <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}" class="dropdown-item">
                                                             <img src="{{asset('img/icons/eye-regular.svg')}}" class="icon-card" alt="">
                                                             Detalhes
                                                         </a>
-                                                        <a href="{{route('evento.editar',$evento->id)}}" class="dropdown-item">
+                                                        {{-- <a href="{{route('evento.editar',$evento->id)}}" class="dropdown-item">
                                                             <img src="{{asset('img/icons/edit-regular.svg')}}" class="icon-card" alt="">
                                                             Editar
-                                                        </a>
+                                                        </a> --}}
                                                         <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
                                                             {{ csrf_field() }}
                                                             {{ method_field('DELETE') }}

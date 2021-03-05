@@ -202,7 +202,7 @@ class AtribuicaoController extends Controller
       $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
       $revisor->save();
 
-      $subject = "Trabalho atribuido";
+      $subject = "Easy - Atribuição de Trabalho";
       $informacoes = $trabalho->titulo;
       Mail::to($revisor->user->email)
             ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
