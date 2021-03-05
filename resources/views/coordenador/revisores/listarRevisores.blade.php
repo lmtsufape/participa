@@ -1,5 +1,6 @@
 @extends('coordenador.detalhesEvento')
-
+<!-- Adiciona o arquivo js para funções apenas dessa pagina -->
+<script src="{{ asset('js/js_listar_revisores.js') }}" defer></script>
 @section('menu')
 
     <div id="divListarRevisores" style="display: block">
@@ -228,7 +229,8 @@
                           <div  class="row">
                             <div class="col-sm-6">
                               <h6 for="areaRevisor" class="col-form-label">{{ __('Selecione as áreas') }}</h6>
-
+                            <input type="checkbox" id="chk_marcar_desmarcar_todas_areas" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_area_{{ $revisor->id }}')">
+                            <label for="btn_marcar_desmarcar_todas_areas"><b>Selecionar todas</b></label>
                               @php
                                   $areasRevisor = $revisor->revisor()->distinct('areaId')->get();
                                   $modalidadesRevisor = $revisor->revisor()->distinct('modalidadeId')->get();
@@ -237,7 +239,7 @@
                                 @foreach ($areas as $area)
                                   <div class="row">
                                     <div class="col-sm-12">
-                                      <input id="area_{{$area->id}}" type="checkbox" name="areasEditadas_{{$revisor->id}}[]" value="{{$area->id}}" @if(in_array($area->id, old('areasEditadas_'.$revisor->id))) checked @endif>
+                                      <input class="checkbox_area_{{ $revisor->id }}" id="area_{{$area->id}}" type="checkbox" name="areasEditadas_{{$revisor->id}}[]" value="{{$area->id}}" @if(in_array($area->id, old('areasEditadas_'.$revisor->id))) checked @endif>
                                       <label for="area_{{$area->id}}">{{$area->nome}}</label>
                                     </div>
                                   </div>
@@ -246,7 +248,7 @@
                                 @foreach ($areas as $area)
                                 <div class="row">
                                   <div class="col-sm-12">
-                                    <input id="area_{{$area->id}}" type="checkbox" name="areasEditadas_{{$revisor->id}}[]" value="{{$area->id}}" @if($areasRevisor->contains('areaId', $area->id)) checked @endif>
+                                    <input class="checkbox_area_{{ $revisor->id }}"  id="area_{{$area->id}}" type="checkbox" name="areasEditadas_{{$revisor->id}}[]" value="{{$area->id}}" @if($areasRevisor->contains('areaId', $area->id)) checked @endif>
                                     <label for="area_{{$area->id}}">{{$area->nome}}</label>
                                   </div>
                                 </div>
@@ -262,11 +264,13 @@
                             </div>
                             <div class="col-sm-6">
                               <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidades') }}</h6>
+                              <input type="checkbox" id="chk_marcar_desmarcar_todas_modalidades" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_modalidade_{{ $revisor->id }}')">
+                              <label for="btn_marcar_desmarcar_todas_modalidades"><b>Selecionar todas</b></label>
                               @if (old('modalidadesEditadas_'.$revisor->id) != null)
                                 @foreach ($modalidades as $modalidade)
                                     <div class="row">
                                       <div class="col-sm-12">
-                                        <input id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidadesEditadas_{{$revisor->id}}[]" value="{{$modalidade->id}}" @if(in_array($modalidade->id, old('modalidadesEditadas_'.$revisor->id))) checked @endif>
+                                        <input class="checkbox_modalidade_{{ $revisor->id }}" id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidadesEditadas_{{$revisor->id}}[]" value="{{$modalidade->id}}" @if(in_array($modalidade->id, old('modalidadesEditadas_'.$revisor->id))) checked @endif>
                                         <label for="modalidade_{{$modalidade->id}}">{{$modalidade->nome}}</label>
                                       </div>
                                     </div>
@@ -275,7 +279,7 @@
                                 @foreach ($modalidades as $modalidade)
                                 <div class="row">
                                   <div class="col-sm-12">
-                                    <input id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidadesEditadas_{{$revisor->id}}[]" value="{{$modalidade->id}}"  @if($modalidadesRevisor->contains('modalidadeId', $modalidade->id)) checked @endif>
+                                    <input class="checkbox_modalidade_{{ $revisor->id }}" id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidadesEditadas_{{$revisor->id}}[]" value="{{$modalidade->id}}"  @if($modalidadesRevisor->contains('modalidadeId', $modalidade->id)) checked @endif>
                                     <label for="modalidade_{{$modalidade->id}}">{{$modalidade->nome}}</label>
                                   </div>
                                 </div>
@@ -335,11 +339,13 @@
                         <div  class="row">
                           <div class="col-sm-6">
                             <h6 for="areaRevisor" class="col-form-label">{{ __('Selecione as áreas') }}</h6>
+                            <input type="checkbox" id="chk_marcar_desmarcar_todas_areas" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_area')">
+                            <label for="btn_marcar_desmarcar_todas_areas"><b>Selecionar todas</b></label>
                             @if (old('areas') != null)
                               @foreach ($areas as $area)
                                 <div class="row">
                                   <div class="col-sm-12">
-                                    <input id="area_{{$area->id}}" type="checkbox" name="areas[]" value="{{$area->id}}" @if(in_array($area->id, old('areas'))) checked @endif>
+                                    <input class="checkbox_area" id="area_{{$area->id}}" type="checkbox" name="areas[]" value="{{$area->id}}" @if(in_array($area->id, old('areas'))) checked @endif>
                                     <label for="area_{{$area->id}}">{{$area->nome}}</label>
                                   </div>
                                 </div>
@@ -348,7 +354,7 @@
                               @foreach ($areas as $area)
                               <div class="row">
                                 <div class="col-sm-12">
-                                  <input id="area_{{$area->id}}" type="checkbox" name="areas[]" value="{{$area->id}}">
+                                  <input class="checkbox_area" id="area_{{$area->id}}" type="checkbox" name="areas[]" value="{{$area->id}}">
                                   <label for="area_{{$area->id}}" >{{$area->nome}}</label>
                                 </div>
                               </div>
@@ -363,11 +369,13 @@
                           </div>
                           <div class="col-sm-6">
                               <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidades') }}</h6>
+                              <input type="checkbox" id="chk_marcar_desmarcar_todas_modalidades" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_modalidade')">
+                              <label for="btn_marcar_desmarcar_todas_modalidades"><b>Selecionar todas</b></label>
                               @if (old('modalidades') != null)
                                 @foreach ($modalidades as $modalidade)
                                     <div class="row">
                                       <div class="col-sm-12">
-                                        <input id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidades[]" value="{{$modalidade->id}}" @if(in_array($modalidade->id, old('modalidades'))) checked @endif>
+                                        <input class="checkbox_modalidade" id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidades[]" value="{{$modalidade->id}}" @if(in_array($modalidade->id, old('modalidades'))) checked @endif>
                                         <label for="modalidade_{{$modalidade->id}}" >{{$modalidade->nome}}</label>
                                       </div>
                                     </div>
@@ -376,7 +384,7 @@
                                 @foreach ($modalidades as $modalidade)
                                 <div class="row">
                                   <div class="col-sm-12">
-                                    <input id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidades[]" value="{{$modalidade->id}}">
+                                    <input class="checkbox_modalidade" id="modalidade_{{$modalidade->id}}" type="checkbox" name="modalidades[]" value="{{$modalidade->id}}">
                                     <label for="modalidade_{{$modalidade->id}}" >{{$modalidade->nome}}</label>
                                   </div>
                                 </div>
