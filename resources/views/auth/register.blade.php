@@ -217,12 +217,12 @@
             </div>
           </div>
 
-          <div class="row justify-content-center" style="margin: 20px 0 20px 0">
+          <div class="row justify-content-center">
 
-            <div class="col-md-6" style="padding-left:0">
+            <div class="col-md-6" style="padding-bottom:10px">
                 <a class="btn btn-secondary botao-form" href="{{route('cancelarCadastro')}}" style="width:100%">Cancelar Cadastro</a>
             </div>
-            <div class="col-md-6" style="padding-right:0">
+            <div class="col-md-6">
                 <button type="submit" class="btn btn-primary botao-form" style="width:100%">
                     {{ __('Finalizar Cadastro') }}
                 </button>
@@ -232,8 +232,6 @@
 
 </div>
 
-<br>
-<br> 
 @include('componentes.footer')
 
 @endsection
