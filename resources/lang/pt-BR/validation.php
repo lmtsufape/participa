@@ -191,6 +191,69 @@ return [
         ],
         'areaId' => [
             'required'  => 'Selecione a área do evento a qual o trabalho pertence',
+        ],
+        // Editar modalidade
+        'inícioSubmissão*' => [
+            'required'  => 'O campo é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+        ],
+        'fimSubmissão*' => [
+            'required'  => 'O campo é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+            'after'     => 'Fim da submissão deve ser uma data depois do início da submissão.',
+        ],
+        'inícioRevisão*' => [
+            'required'  => 'O campo é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+            'after'     => 'Início da revisão deve ser uma data depois do fim da submissão.',
+        ],
+        'fimRevisão*' => [
+            'required'  => 'O campo é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+            'after'     => 'Fim da revisão deve ser uma data depois do início da submissão.',
+        ],
+        'inícioCorreção*' => [
+            'required'      => 'O campo é obrigatório.',
+            'date'          => 'O campo deve ter uma data válida.',
+            'after'         => 'Início da correção deve ser uma data depois do fim da revissão.',
+            'required_with' => 'O campo início da correção é obrigatório quando fim da correção está presente.'
+        ],
+        'fimCorreção*' => [
+            'required'      => 'O campo é obrigatório.',
+            'date'          => 'O campo deve ter uma data válida.',
+            'after'         => 'Fim da correção deve ser uma data depois do início da correção.',
+            'required_with' => 'O campo fim da correção é obrigatório quando início da correção está presente.'
+        ],
+        'inícioValidação*' => [
+            'required'      => 'O campo é obrigatório.',
+            'date'          => 'O campo deve ter uma data válida.',
+            'after'         => 'Início da validação deve ser uma data depois do fim da correção.',
+            'required_with' => 'O campo início da validação é obrigatório quando fim da validação está presente.'
+        ],
+        'fimValidação*' => [
+            'required'      => 'O campo é obrigatório.',
+            'date'          => 'O campo deve ter uma data válida.',
+            'after'         => 'Fim da validação deve ser uma data depois do início da validação.',
+            'required_with' => 'O campo fim da validação é obrigatório quando início da validação está presente.'
+        ],
+        'resultado*' => [
+            'required'      => 'O campo é obrigatório.',
+            'date'          => 'O campo deve ter uma data válida.',
+            'after'         => 'Resultado deve ser uma data depois do fim da revisão.',
+        ],
+        'inícioSubmissão*' => [
+            'required'  => 'O campo é obrigatório.',
+            'date'     => 'O campo deve ter uma data válida.',
+        ],
+        'arquivoRegras*' => [
+            'file'      => 'O campo arquivo regras deve ter um arquivo válido.',
+            'mimes'     => 'O arquivo deve ser do tipo PDF.',
+            'max'       => 'O arquivo deve ter no máximo 2mb.',
+        ],
+        'arquivoTemplates*' => [
+            'file'      => 'O campo arquivo template deve ter um arquivo válido.',
+            'mimes'     => 'O arquivo deve ser do tipo odt, ott, docx, doc, rtf, txt ou pdf.',
+            'max'       => 'O arquivo deve ter no máximo 2mb.',
         ]
     ],
     /*
