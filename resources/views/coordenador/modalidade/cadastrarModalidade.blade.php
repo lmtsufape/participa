@@ -321,7 +321,7 @@
                               @enderror
                             </div>
                             {{-- Arquivo de Templates --}}
-                            <div class="col-sm-12" id="area-template" style="margin-top: 20px; display:none">
+                            <div class="col-sm-12" id="area-template" style="margin-top: 20px; @if(old('arquivo')) display:block; @else display:none; @endif" >
                                 <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar template:') }}</label>
 
                                 <div class="custom-file">

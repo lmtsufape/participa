@@ -22,13 +22,13 @@ Route::get('/evento/buscar-livre', 'Submissao\EventoController@buscaLivreAjax')-
 
 Auth::routes(['verify' => true]);
 
-Route::get('/#', function () {
+Route::get('/', function () {
     if(Auth::check()){
-      return redirect()->route('home');
+      return redirect()->route('index');
     }
 
     $eventos = Evento::all();
-    return view('index',['eventos'=>$eventos]);
+    return redirect()->route('index');
 })->name('cancelarCadastro');
 
 Route::namespace('Submissao')->group(function () {
@@ -45,7 +45,7 @@ Route::post('/perfil/editar','Users\UserController@editarPerfil')->name('perfil.
 
 
 Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
-  Route::get('/', 'HomeController@index')->name('home.user');
+  Route::get('/home-user', 'HomeController@index')->name('home.user');
 
   Route::namespace('Users')->group(function () {
     // rotas do administrador
