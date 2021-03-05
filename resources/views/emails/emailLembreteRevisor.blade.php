@@ -1,16 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-	
-</head>
-<body>
-		
-	
-	@if(isset($info))
-		<h4>Lembrete para revisor, {{$user->email}}, foi atribuido para você o trabalho: {{$info}}  </h4>
-	@else 
-		<h4>Lembrete para revisor, {{$user->email}}  </h4>
-		
-	@endif
-</body>
-</html>
+@component('mail::message')
+# Aviso
+
+    
+Você foi  atribuído ao trabalho: {{$info}} como revisor pelo o Easy - Sistema de Gestão de Eventos.
+    
+ 
+
+@component('mail::button', ['url' => 'http://sistemas.ufape.edu.br/easy/login'])
+Acessar site
+@endcomponent
+
+Obrigado,<br>
+{{ config('app.name') }}
+@endcomponent

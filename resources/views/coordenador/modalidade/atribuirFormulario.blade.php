@@ -13,7 +13,16 @@
         <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
         <input type="hidden" name="evento_id"     value="{{$evento->id}}">
     <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <label> <strong> Titulo do Formulário*:</strong></label>
+                <input type="text" syle="margin-bottom:10px"   class="form-control " name="tituloForm" required>
+                </div>
+            </div>            
+        </div>
         <div class="col-md-12">                                
+            
             <div id="coautores" class="flexContainer " >
                 <div class="item card" style="order:1">
                     <div class="row card-body">
@@ -25,7 +34,7 @@
                             <label>Resposta</label>
                             <div class="row" id="row1">
                                 <div class="col-md-12">
-                                    <input type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]">
+                                    <input type="text" style="margin-bottom:10px" disabled='true' class="form-control " name="resposta[]">
                                 </div>                                
                             </div>
                         </div>
@@ -179,7 +188,7 @@
                             <label>Resposta</label>
                             <div class="row" id="row${order}">
                                 <div class="col-md-12">
-                                    <input type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]">
+                                    <input type="text" style="margin-bottom:10px" disabled='true' class="form-control " name="resposta[]">
                                 </div>                                
                             </div>
                         </div>
@@ -243,7 +252,7 @@
 
         function addParagrafo(){
             return `<div class="col-md-12">
-                        <input type="text" style="margin-bottom:10px"  class="form-control" name="resposta[]" required>
+                        <input type="text" style="margin-bottom:10px" disabled='true' class="form-control" name="resposta[]" required>
                     </div>`;
         }
     </script>

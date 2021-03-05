@@ -357,9 +357,9 @@ class EventoController extends Controller
       $evento = Evento::find($request->evento_id);
       $modalidade = Modalidade::find($request->modalidade_id);
       $data = $request->all();
-      dd($data);
+      // dd($data);
       $form = $modalidade->forms()->create([
-          'titulo' => 'Titulo do form',
+          'titulo' => $data['tituloForm']
       ]);
 
       foreach ($data['pergunta'] as $key => $value) {

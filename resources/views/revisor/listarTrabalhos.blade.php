@@ -15,6 +15,15 @@
           </div>
       </div>
     @endif
+    @if(session('message'))
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 5px;">
+            <div class="alert alert-success">
+                <p>{{session('message')}}</p>
+            </div>
+        </div>
+    </div>
+    @endif
 
     {{-- Tabela Trabalhos --}}
     @foreach ($trabalhosPorRevisor as $trabalhosDoRevisor)
@@ -37,7 +46,7 @@
                             <th scope="col">Status</th>
                             <th scope="col">Resumo</th>
                             <th scope="col">Baixar</th>
-                            <th scope="col">Avaliar</th>
+                            {{-- <th scope="col">Avaliar</th> --}}
                             <th scope="col">Questionário</th>
                           </tr>
                         </thead>
@@ -60,17 +69,9 @@
                               </td>
                               @if ($trabalho->avaliado != "Avaliado") 
                                 @if (date('yy-m-d') >= $trabalho->modalidade->inicioRevisao && date('yy-m-d') <= $trabalho->modalidade->fimRevisao)
-                                  <td>
+                                  {{-- <td>
                                     <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
-                                  </td>
-                                @else 
-                                  <td>
-                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
-                                  </td>
-                                @endif
-                                {{-- {{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}} --}}
-                                <td>
-                                  
+                                  </td> --}}
                                   <form action="{{route('revisor.responde')}}" method="get">
                                     @csrf
                                     <input type="hidden" name="revisor_id" value="{{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}}">
@@ -81,6 +82,16 @@
                                       Avaliar
                                     </button>
                                   </form>
+                                @else 
+                                  
+                                  <td>
+                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
+                                  </td>
+                                @endif
+                                {{-- {{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}} --}}
+                                <td>
+                                  
+                                  
                                 
                                 </td>
                               @else
