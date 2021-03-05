@@ -98,12 +98,8 @@ body{
 .footer .social{
   width: 40px;
   margin: 10px;
-  transition: 0.5s;
 }
-.footer .social:hover{
-  width: 55px;
-  transition: 0.5s;
-}
+
 .footer .sobre a{
   margin-bottom: 10px;
   color: white;

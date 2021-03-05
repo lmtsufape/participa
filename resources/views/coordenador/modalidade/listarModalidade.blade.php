@@ -290,7 +290,7 @@
 
                                             <div class="col-sm-6">
                                                 <div class="form-check" style="margin-top: 10px">
-                                                    <input class="form-check-input incluir-resumo" type="checkbox" name="texto" id="id-custom_field-account-1-2" @if($modalidade->texto) checked @endif>
+                                                    <input class="form-check-input incluir-resumo-edit" type="checkbox" name="texto" id="id-custom_field-account-1-2" @if($modalidade->texto) checked @endif>
                                                     <label class="form-check-label" for="resumo">
                                                         Adicionar campo resumo por texto
                                                     </label>
@@ -301,7 +301,7 @@
                                                     @enderror
                                                 </div>
 
-                                                <div id="restricoes-resumo-texto" @if($modalidade->texto)style="display: block;"@else style="display: none;" @endif>
+                                                <div id="restricoes-resumo-texto-edit{{$modalidade->id}}" @if($modalidade->texto)style="display: block;"@else style="display: none;" @endif>
                                                     <label class="col-form-label">*{{ __('Restrições de resumo:') }}</label>
 
                                                     <div class="form-check">
