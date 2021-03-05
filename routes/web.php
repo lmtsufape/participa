@@ -44,7 +44,7 @@ Route::get('/perfil','Users\UserController@perfil')->name('perfil')->middleware(
 Route::post('/perfil/editar','Users\UserController@editarPerfil')->name('perfil.update')->middleware('auth');
 
 
-Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function(){
+Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
   Route::get('/', 'HomeController@index')->name('home.user');
 
   Route::namespace('Users')->group(function () {

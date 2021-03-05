@@ -53,6 +53,16 @@
                                     
                                     </form>
                                 </td>
+                                <td>
+                                <form action="{{route('coord.respostas')}}" method="get">
+                                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                                    <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
+                                    <button type="submit" class="btn btn-secondary">
+                                        Ver respostas por trabalho
+                                    </button>
+                                
+                                </form>
+                                </td>
                             @endif
                         </td>
                       </tr> 

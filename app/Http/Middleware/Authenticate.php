@@ -16,7 +16,7 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {   Log::info('redirect - auth');
         if (! $request->expectsJson()) {
-            return route('register');
+            return route('index');
         }
     }
 }

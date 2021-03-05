@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-	
-</head>
-<body>
-    <h4>Convidamos vossa senhoria, para ser revisor do evento {{$evento->nome}}.</h4>
+@component('mail::message')
+# Seja Bem-Vindo
+
+    Convidamos vossa senhoria, para ser revisor do evento {{$evento->nome}}.</h4>
     
-    @if (auth()->user()->id == $evento->coordenadorId)
-        <h6>Att, coordenador do evento.</h6>
-    @else 
-        <h6>Att, comissão do evento.</h6>
-    @endif
-</body>
-</html>
+
+@component('mail::button', ['url' => 'http://sistemas.ufape.edu.br/easy'])
+Acessar site
+@endcomponent
+
+Obrigado,<br>
+{{ config('app.name') }}
+@endcomponent
