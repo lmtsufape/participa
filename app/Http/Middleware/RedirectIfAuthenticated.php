@@ -18,7 +18,7 @@ class RedirectIfAuthenticated
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null)
-    {   Log::info('redirect - RedirectIfAuthenticated');
+    {   
         if (Auth::guard($guard)->check()) {
             return redirect(RouteServiceProvider::HOME);
         }
