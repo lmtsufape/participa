@@ -11356,3 +11356,18 @@ a.text-dark:focus {
   }
 }
 
+#showcase{
+  background-image: url('../img/papeldeparede.png');
+  background-size: cover;
+  background-position:center;
+  height: 100vh;
+}
+
+.sizeImg{
+  height: 400px;
+}
+@media screen and (max-width: 531px) and (min-width: 0px){
+  .sizeImg{
+    height: 300px;
+  }
+}
