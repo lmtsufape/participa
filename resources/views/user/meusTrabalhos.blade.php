@@ -95,6 +95,7 @@
               <thead>
               <tr>
                   <th>Evento</th>
+                  <th>ID</th>
                   <th>Título</th>
                   <th style="text-align:center">Baixar</th>
                   <th style="text-align:center">Nova Versão</th>
@@ -104,6 +105,7 @@
               @foreach($trabalhos as $trabalho)
                   <tr>
                   <td>{{$trabalho->evento->nome}}</td>
+                  <td>{{$trabalho->id}}</td>
                   <td>{{$trabalho->titulo}}</td>
                   <td style="text-align:center">
                       <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
