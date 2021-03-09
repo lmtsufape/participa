@@ -130,7 +130,7 @@ class UserController extends Controller
         $user = Auth::user();
         $trabalhos = Trabalho::where('autorId', $user->id)->get();
         $comoCoautor = Coautor::where('autorId', $user->id)->first();
-        
+        // dd();
         if(isset($user->coautor)){
             $trabalhosCoautor = $user->coautor->trabalhos;
         }else{

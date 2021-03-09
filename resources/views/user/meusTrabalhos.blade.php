@@ -124,7 +124,8 @@
         @endif
         </div>
     </div>
-      
+    
+    <br>
 
     <div class="row margin">
         <div class="col-sm-12 info-evento">

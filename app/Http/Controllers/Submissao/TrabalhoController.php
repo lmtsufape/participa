@@ -127,7 +127,6 @@ class TrabalhoController extends Controller
             return redirect()->route('home');
         }
       }
-
       $validatedData = $request->validate([
         'nomeTrabalho'      => ['required', 'string',],
         'areaId'            => ['required', 'integer'],
@@ -243,12 +242,15 @@ class TrabalhoController extends Controller
       if($request->emailCoautor != null){
         foreach ($request->emailCoautor as $key) {
           $userCoautor = User::where('email', $key)->first();
-          $coauntor = Coautor::create([
-            'ordem' => '-',
-            'autorId' => $userCoautor->id,
-            'trabalhoId'  => $trabalho->id,
-            'eventos_id' => $evento->id
-          ]);
+          $coauntor = $userCoautor->coautor;
+          if ($userCoautor == null) {
+            $coauntor = Coautor::create([
+              'ordem' => '-',
+              'autorId' => $userCoautor->id,
+              'trabalhoId'  => $trabalho->id,
+              'eventos_id' => $evento->id
+            ]);
+          }
           $coauntor->trabalhos()->attach($trabalho);
         }
       }
@@ -257,7 +259,7 @@ class TrabalhoController extends Controller
         
         $file = $request->arquivo;
         $path = 'trabalhos/' . $request->eventoId . '/' . $trabalho->id .'/';
-        $nome = "1.pdf";
+        $nome = $request->arquivo->getClientOriginalName();
         Storage::putFileAs($path, $file, $nome);
 
         $arquivo = Arquivo::create([
