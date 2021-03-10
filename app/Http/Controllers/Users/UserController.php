@@ -130,10 +130,16 @@ class UserController extends Controller
         $user = Auth::user();
         $trabalhos = Trabalho::where('autorId', $user->id)->get();
         $comoCoautor = Coautor::where('autorId', $user->id)->first();
+
+        $trabalhosCoautor = null;
+
+        if ($comoCoautor != null) {
+            $trabalhosCoautor = $comoCoautor->trabalhos;
+        }
         
         return view('user.meusTrabalhos',[
                                             'trabalhos'           => $trabalhos,
-                                            'trabalhosCoautor'    => $comoCoautor->trabalhos,
+                                            'trabalhosCoautor'    => $trabalhosCoautor,
                                         ]);
     }
 

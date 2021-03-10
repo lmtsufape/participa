@@ -243,11 +243,11 @@ class TrabalhoController extends Controller
         foreach ($request->emailCoautor as $key) {
           $userCoautor = User::where('email', $key)->first();
           $coauntor = $userCoautor->coautor;
-          if ($userCoautor == null) {
+          if ($coauntor == null) {
             $coauntor = Coautor::create([
               'ordem' => '-',
               'autorId' => $userCoautor->id,
-              'trabalhoId'  => $trabalho->id,
+              // 'trabalhoId'  => $trabalho->id,
               'eventos_id' => $evento->id
             ]);
           }
@@ -388,9 +388,31 @@ class TrabalhoController extends Controller
      * @param  \App\Trabalho  $trabalho
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Trabalho $trabalho)
+    public function destroy($id)
     {
-        //
+      $trabalho = Trabalho::find($id);
+      if (auth()->user()->id != $trabalho->autorId) {
+        return abort(403);
+      }
+
+      
+      $coautores = $trabalho->coautors;
+      foreach ($coautores as $coautor) {
+        $coautor->trabalhos()->detach($trabalho->id);
+        
+        if (count($coautor->trabalhos) <= 0) {
+          $coautor->delete();
+        }
+      }
+
+      if ($trabalho->arquivo != null && Storage::disk()->exists($trabalho->arquivo->nome)) {
+        Storage::delete($trabalho->arquivo->nome);
+        $trabalho->arquivo->delete();
+      }
+
+      $trabalho->delete();
+      
+      return redirect()->back()->with(['mensagem' => 'Trabalho deletado com sucesso!']);
     }
 
     public function novaVersao(Request $request){

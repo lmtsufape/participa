@@ -515,12 +515,12 @@ class EventoController extends Controller
         $hasTrabalho = false;
         $hasTrabalhoCoautor = false;
         $hasFile = false;
-        $trabalhos = Trabalho::where('autorId', Auth::user()->id)->get();
-        $trabalhosCount = Trabalho::where('autorId', Auth::user()->id)->count();
-        $trabalhosId = Trabalho::where('eventoId', $evento->id)->select('id')->get();
-        $trabalhosIdCoautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->select('trabalhoId')->get();
-        $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
-        $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
+        // $trabalhos = Trabalho::where('autorId', Auth::user()->id)->get();
+        // $trabalhosCount = Trabalho::where('autorId', Auth::user()->id)->count();
+        // $trabalhosId = Trabalho::where('eventoId', $evento->id)->select('id')->get();
+        // $trabalhosIdCoautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->select('trabalhoId')->get();
+        // $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
+        // $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
         $modalidades = Modalidade::where('evento_id', $evento->id)->get();
         $atividades = Atividade::where('eventoId', $id)->get();
         $primeiraAtividade = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
@@ -528,14 +528,14 @@ class EventoController extends Controller
         $isInscrito = Inscricao::where('user_id', Auth()->user()->id)->where('evento_id', $evento->id)->count();
 
 
-        if($trabalhosCount != 0){
-          $hasTrabalho = true;
-          $hasFile = true;
-        }
-        if($coautorCount != 0){
-          $hasTrabalhoCoautor = true;
-          $hasFile = true;
-        }
+        // if($trabalhosCount != 0){
+        //   $hasTrabalho = true;
+        //   $hasFile = true;
+        // }
+        // if($coautorCount != 0){
+        //   $hasTrabalhoCoautor = true;
+        //   $hasFile = true;
+        // }
 
         $mytime = Carbon::now('America/Recife');
         $etiquetas = FormEvento::where('eventoId',$evento->id)->first();
@@ -547,10 +547,10 @@ class EventoController extends Controller
         }
         return view('evento.visualizarEvento', [
                                                 'evento'              => $evento,
-                                                'trabalhos'           => $trabalhos,
-                                                'trabalhosCoautor'    => $trabalhosCoautor,
-                                                'hasTrabalho'         => $hasTrabalho,
-                                                'hasTrabalhoCoautor'  => $hasTrabalhoCoautor,
+                                                // 'trabalhos'           => $trabalhos,
+                                                // 'trabalhosCoautor'    => $trabalhosCoautor,
+                                                // 'hasTrabalho'         => $hasTrabalho,
+                                                // 'hasTrabalhoCoautor'  => $hasTrabalhoCoautor,
                                                 'hasFile'             => $hasFile,
                                                 'mytime'              => $mytime,
                                                 'etiquetas'           => $etiquetas,
