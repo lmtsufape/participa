@@ -391,10 +391,10 @@ class TrabalhoController extends Controller
     public function destroy($id)
     {
       $trabalho = Trabalho::find($id);
-      if (auth()->user()->id != $trabalho->autorId) {
+      $agora = Carbon::now();
+      if (auth()->user()->id != $trabalho->autorId || $agora > $trabalho->modalidade->fimSubmissao) {
         return abort(403);
       }
-
       
       $coautores = $trabalho->coautors;
       foreach ($coautores as $coautor) {

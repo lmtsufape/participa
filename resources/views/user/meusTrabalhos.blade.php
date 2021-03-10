@@ -128,7 +128,7 @@
                       </a>
                   </td>
                   <td style="text-align:center">
-                    <a href="#" data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}" style="color:#114048ff">
+                    <a href="#" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A exclusão do trabalho só é permitida durante o periodo de" @endif>
                       <img class="" src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:20px">
                     </a>
                   </td>
