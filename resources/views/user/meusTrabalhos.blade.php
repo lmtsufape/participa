@@ -123,9 +123,9 @@
                       </a>
                   </td>
                   <td style="text-align:center">
-                      <a href="#" data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff">
+                      {{-- <a href="#" data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                         <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
-                      </a>
+                      </a> --}}
                   </td>
                   <td style="text-align:center">
                     <a href="#" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A exclusão do trabalho só é permitida durante o periodo de submissão." @endif>
