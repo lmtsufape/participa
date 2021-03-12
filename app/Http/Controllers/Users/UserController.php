@@ -12,6 +12,7 @@ use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
 use App\Models\Users\ComissaoEvento;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -126,20 +127,21 @@ class UserController extends Controller
     }
 
     public function meusTrabalhos(){
-
+        $agora = Carbon::now();
         $user = Auth::user();
         $trabalhos = Trabalho::where('autorId', $user->id)->get();
         $comoCoautor = Coautor::where('autorId', $user->id)->first();
-        
-        if(isset($user->coautor)){
-            $trabalhosCoautor = $user->coautor->trabalhos;
-        }else{
-            $trabalhosCoautor = [];
+
+        $trabalhosCoautor = null;
+
+        if ($comoCoautor != null) {
+            $trabalhosCoautor = $comoCoautor->trabalhos;
         }
-        // dd($user->coautor);
+        
         return view('user.meusTrabalhos',[
                                             'trabalhos'           => $trabalhos,
                                             'trabalhosCoautor'    => $trabalhosCoautor,
+                                            'agora'               => $agora,
                                         ]);
     }
 

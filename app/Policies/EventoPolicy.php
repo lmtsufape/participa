@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Users\User;
+use App\Models\Submissao\Trabalho;
 use App\Models\Submissao\Evento;
 use App\Models\Users\ComissaoEvento;
 use Illuminate\Support\Facades\Log;

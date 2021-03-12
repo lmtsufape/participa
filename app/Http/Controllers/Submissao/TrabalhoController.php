@@ -127,7 +127,6 @@ class TrabalhoController extends Controller
             return redirect()->route('home');
         }
       }
-
       $validatedData = $request->validate([
         'nomeTrabalho'      => ['required', 'string',],
         'areaId'            => ['required', 'integer'],
@@ -243,12 +242,15 @@ class TrabalhoController extends Controller
       if($request->emailCoautor != null){
         foreach ($request->emailCoautor as $key) {
           $userCoautor = User::where('email', $key)->first();
-          $coauntor = Coautor::create([
-            'ordem' => '-',
-            'autorId' => $userCoautor->id,
-            'trabalhoId'  => $trabalho->id,
-            'eventos_id' => $evento->id
-          ]);
+          $coauntor = $userCoautor->coautor;
+          if ($coauntor == null) {
+            $coauntor = Coautor::create([
+              'ordem' => '-',
+              'autorId' => $userCoautor->id,
+              // 'trabalhoId'  => $trabalho->id,
+              'eventos_id' => $evento->id
+            ]);
+          }
           $coauntor->trabalhos()->attach($trabalho);
         }
       }
@@ -257,7 +259,7 @@ class TrabalhoController extends Controller
         
         $file = $request->arquivo;
         $path = 'trabalhos/' . $request->eventoId . '/' . $trabalho->id .'/';
-        $nome = "1.pdf";
+        $nome = $request->arquivo->getClientOriginalName();
         Storage::putFileAs($path, $file, $nome);
 
         $arquivo = Arquivo::create([
@@ -386,9 +388,31 @@ class TrabalhoController extends Controller
      * @param  \App\Trabalho  $trabalho
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Trabalho $trabalho)
+    public function destroy($id)
     {
-        //
+      $trabalho = Trabalho::find($id);
+      $agora = Carbon::now();
+      if (auth()->user()->id != $trabalho->autorId || $agora > $trabalho->modalidade->fimSubmissao) {
+        return abort(403);
+      }
+      
+      $coautores = $trabalho->coautors;
+      foreach ($coautores as $coautor) {
+        $coautor->trabalhos()->detach($trabalho->id);
+        
+        if (count($coautor->trabalhos) <= 0) {
+          $coautor->delete();
+        }
+      }
+
+      if ($trabalho->arquivo != null && Storage::disk()->exists($trabalho->arquivo->nome)) {
+        Storage::delete($trabalho->arquivo->nome);
+        $trabalho->arquivo->delete();
+      }
+
+      $trabalho->delete();
+      
+      return redirect()->back()->with(['mensagem' => 'Trabalho deletado com sucesso!']);
     }
 
     public function novaVersao(Request $request){

@@ -12,7 +12,7 @@
         <!-- Scripts -->
         <script src="{{ asset('js/jquery-3.5.1.slim.min.js')}}"></script>
         <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
-        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
         <script src="{{ asset('js/app.js') }}" defer></script>
 
         <!-- Fonts -->
@@ -257,6 +257,9 @@
 
                     elemento.css("fontSize", fonte);
                 })
+            })
+            $(function () {
+                $('[data-toggle="popover"]').popover()
             })
         </script> 
     </body>

@@ -39,7 +39,7 @@ class Trabalho extends Model
   }
 
   public function coautors(){
-      return $this->belongsToMany('App\Models\Users\Coautor');
+      return $this->belongsToMany('App\Models\Users\Coautor', 'coautor_trabalho', 'trabalho_id', 'coautor_id');
   }
 
   public function pareceres(){

@@ -149,8 +149,9 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::get(   '/trabalho/submeter/{id}/{idModalidade}','TrabalhoController@index'    )->name('trabalho.index');
     Route::post(  '/trabalho/novaVersao',   'TrabalhoController@novaVersao'              )->name('trabalho.novaVersao');
     Route::post(  '/trabalho/criar/{id}}',        'TrabalhoController@store'             )->name('trabalho.store');
-    Route::get(  '/trabalho/pesquisa','TrabalhoController@pesquisaAjax')->name('trabalho.pesquisa.ajax');
-    Route::post(  '/trabalho/{id}/avaliar', 'TrabalhoController@avaliarTrabalho')->name('trabalho.avaliacao.revisor');
+    Route::get(  '/trabalho/pesquisa','TrabalhoController@pesquisaAjax'                  )->name('trabalho.pesquisa.ajax');
+    Route::post(  '/trabalho/{id}/avaliar', 'TrabalhoController@avaliarTrabalho'         )->name('trabalho.avaliacao.revisor');
+    Route::post( 'trabalho/{id}/excluir',   'TrabalhoController@destroy'                 )->name('excluir.trabalho');
     //Atribuição
     Route::get(   '/atribuir',              'AtribuicaoController@distribuicaoAutomatica')->name('distribuicao');
     Route::get(   '/atribuirPorArea',       'AtribuicaoController@distribuicaoPorArea'   )->name('distribuicaoAutomaticaPorArea');

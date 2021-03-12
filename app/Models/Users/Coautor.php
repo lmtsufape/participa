@@ -20,7 +20,7 @@ class Coautor extends Model
   }
 
   public function trabalhos(){
-      return $this->belongsToMany('App\Models\Submissao\Trabalho');
+      return $this->belongsToMany('App\Models\Submissao\Trabalho', 'coautor_trabalho', 'coautor_id', 'trabalho_id');
   }
 
   public function eventos(){
