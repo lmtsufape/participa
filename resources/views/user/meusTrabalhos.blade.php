@@ -166,14 +166,14 @@
               <tbody>
               @foreach($trabalhosCoautor as $trabalho)
                   <tr>
-                  <td>{{$trabalho->evento->nome}}</td>
-                  <td>{{$trabalho->titulo}}</td>
-                  <td>{{$trabalho->autor->name}}</td>
-                  <td style="text-align:center">
-                      <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                          <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                      </a>
-                  </td>                    
+                    <td>{{$trabalho->evento->nome}}</td>
+                    <td>{{$trabalho->titulo}}</td>
+                    <td>{{$trabalho->autor->name}}</td>
+                    <td style="text-align:center">
+                        <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
+                            <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                        </a>
+                    </td>
                   </tr>
               @endforeach
               </tbody>
