@@ -27,14 +27,14 @@
         
         <form action="{{route('atribuicao.check')}}" method="post">
           @csrf
-          <div class="row">
+          {{-- <div class="row">
             <div class="col-sm-9"></div>
             <div class="col-sm-3">
               <button type="submit" class="btn btn-primary" style="width:100%">
                 {{ __('Distribuir em lote') }}
               </button>
             </div>
-          </div>
+          </div> --}}
           <div class="row">
             <div class="col-sm-12">
               @if ($errors->any())

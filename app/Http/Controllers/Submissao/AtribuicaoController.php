@@ -235,20 +235,20 @@ class AtribuicaoController extends Controller
 
     public function atribuirCheck(AtribuicaoRevisorRequest $request)
     {
-      $data = $request->all();
+      // $data = $request->all();
      
-      $evento = Evento::find($request->eventoId);
-      $revisores = Revisor::where('evento_id', $evento->id)->get();
-      $areasId = Trabalho::whereIn('id', $data['id'])->select('areaId')->get();
-      $trabalhos = Trabalho::whereIn('id', $data['id'])->get();
-      $areasTrabalhos = Area::whereIn('id', $areasId)->get();
+      // $evento = Evento::find($request->eventoId);
+      // $revisores = Revisor::where('evento_id', $evento->id)->get();
+      // $areasId = Trabalho::whereIn('id', $data['id'])->select('areaId')->get();
+      // $trabalhos = Trabalho::whereIn('id', $data['id'])->get();
+      // $areasTrabalhos = Area::whereIn('id', $areasId)->get();
 
-      return view('coordenador.trabalhos.distribuirLote',compact(
-                                                                  'evento',
-                                                                  'revisores',
-                                                                  'areasTrabalhos',
-                                                                  'trabalhos',
-                                                                ) );
+      // return view('coordenador.trabalhos.distribuirLote',compact(
+      //                                                             'evento',
+      //                                                             'revisores',
+      //                                                             'areasTrabalhos',
+      //                                                             'trabalhos',
+      //                                                           ) );
     }
 
     public function atribuirRevisorLote(Request $request)
