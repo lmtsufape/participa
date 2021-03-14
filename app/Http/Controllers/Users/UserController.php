@@ -132,10 +132,17 @@ class UserController extends Controller
         $trabalhos = Trabalho::where('autorId', $user->id)->get();
         $comoCoautor = Coautor::where('autorId', $user->id)->first();
 
-        $trabalhosCoautor = null;
+        $trabalhosCoautor = collect();
 
         if ($comoCoautor != null) {
-            $trabalhosCoautor = $comoCoautor->trabalhos;
+
+            $trabalhosC = $comoCoautor->trabalhos;
+            foreach ($trabalhosC as $trab) {
+                if ($trab->autorId != auth()->user()->id) {
+                    $trabalhosCoautor->push($trab);
+                }
+            }
+            
         }
         
         return view('user.meusTrabalhos',[

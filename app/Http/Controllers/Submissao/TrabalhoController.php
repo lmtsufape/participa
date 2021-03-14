@@ -183,7 +183,7 @@ class TrabalhoController extends Controller
           $userCoautor = User::where('email', $key)->first();
           if($userCoautor == null){
             $passwordTemporario = Str::random(8);
-            Mail::to($key)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario));
+            Mail::to($key)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, $request->nomeTrabalho, 'Coautor', $evento->nome, $passwordTemporario, $key));
             $usuario = User::create([
               'email' => $key,
               'password' => bcrypt($passwordTemporario),
@@ -377,9 +377,9 @@ class TrabalhoController extends Controller
      * @param  \App\Trabalho  $trabalho
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Trabalho $trabalho)
+    public function update(Request $request, $id)
     {
-        //
+      dd($request);
     }
 
     /**
