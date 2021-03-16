@@ -45,7 +45,7 @@
                           @endif
                           @if ($indice == "etiquetaautortrabalho")
                             {{-- <div class="row justify-content-center">
-                               Autor  
+                               Autor
                               <div class="col-sm-12">
                                   <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetaautortrabalho}}</label>
                                   <input class="form-control" type="text" disabled value="{{Auth::user()->name}}">
@@ -55,7 +55,7 @@
                           @if ($indice == "etiquetacoautortrabalho")
                             <div class="flexContainer" style="margin-top:20px">
                               <div class="col-sm-12">
-                                <h4>Autores</h4>                                 
+                                <h4>Autores</h4>
                                   <div id="coautores" class="flexContainer " >
                                     @if (old('nomeCoautor') != null)
                                       @foreach (old('nomeCoautor') as $i => $nomeCoautor)
@@ -79,12 +79,12 @@
                                                   <a href="#" onclick="myFunction(event)">
                                                     <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
                                                   </a>
-                                                  
+
                                               </div>
                                           </div>
                                         </div>
                                       @endforeach
-                                    @else 
+                                    @else
                                     <div class="item card" id="1" style="order:1">
                                       <div class="row card-body">
                                           <div class="col-sm-4">
@@ -105,7 +105,7 @@
                                               <a href="#" onclick="myFunction(event)">
                                                 <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
                                               </a>
-                                              
+
                                           </div>
                                       </div>
                                     </div>
@@ -129,7 +129,7 @@
                                     @enderror
 
                                 </div>
-                              </div>                              
+                              </div>
                             @elseif ($modalidade->palavras == true)
                               <div class="row justify-content-center">
                                 <div class="col-sm-12">
@@ -173,17 +173,17 @@
                               @if ($modalidade->arquivo == true)
                                 <div class="col-sm-12" style="margin-top: 20px;">
                                   <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
-    
+
                                   <div class="custom-file">
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" required>
                                   </div>
-                                  <small>Arquivos aceitos nos formatos 
+                                  <small>Arquivos aceitos nos formatos
                                     @if($modalidade->pdf == true)<span> - pdf</span>@endif
                                     @if($modalidade->jpg == true)<span> - jpg</span>@endif
                                     @if($modalidade->jpeg == true)<span> - jpeg</span>@endif
                                     @if($modalidade->png == true)<span> - png</span>@endif
                                     @if($modalidade->docx == true)<span> - docx</span>@endif
-                                    @if($modalidade->odt == true)<span> - odt</span>@endif 
+                                    @if($modalidade->odt == true)<span> - odt</span>@endif
                                     @if($modalidade->zip == true)<span> - zip</span>@endif
                                     @if($modalidade->svg == true)<span> - svg</span>@endif.
                                   </small>
@@ -198,14 +198,14 @@
                           @endif
                           @if ($indice == "etiquetacampoextra1")
                             @if ($formSubTraba->checkcampoextra1 == true)
-                              @if ($formSubTraba->tipocampoextra1 == "textosimples")  
+                              @if ($formSubTraba->tipocampoextra1 == "textosimples")
                                 {{-- Texto Simples --}}
                                 <div class="row justify-content-center">
                                   {{-- Nome Trabalho  --}}
                                   <div class="col-sm-12">
                                         <label for="campoextra1simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
                                         <input id="campoextra1simples" type="text" class="form-control @error('campoextra1simples') is-invalid @enderror" name="campoextra1simples" value="{{ old('campoextra1simples') }}" required autocomplete="campoextra1simples" autofocus>
-      
+
                                         @error('campoextra1simples')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -219,7 +219,7 @@
                                 <div class="col-sm-12">
                                       <label for="campoextra1grande" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
                                       <textarea id="campoextra1grande" type="text" class="form-control @error('campoextra1grande') is-invalid @enderror" name="campoextra1grande" value="{{ old('campoextra1grande') }}" required autocomplete="campoextra1grande" autofocus></textarea>
-      
+
                                       @error('campoextra1grande')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
@@ -230,7 +230,7 @@
                               @elseif ($formSubTraba->tipocampoextra1 == "upload")
                                 <div class="col-sm-12" style="margin-top: 20px;">
                                   <label for="campoextra1arquivo" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
-            
+
                                   <div class="custom-file">
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra1arquivo" required>
                                   </div>
@@ -252,7 +252,7 @@
                                 <div class="col-sm-12">
                                       <label for="campoextra2simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
                                       <input id="campoextra2simples" type="text" class="form-control @error('campoextra2simples') is-invalid @enderror" name="campoextra2simples" value="{{ old('campoextra2simples') }}" required autocomplete="campoextra2simples" autofocus>
-          
+
                                       @error('campoextra2simples')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
@@ -266,7 +266,7 @@
                                 <div class="col-sm-12">
                                       <label for="campoextra2grande" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
                                       <textarea id="campoextra2grande" type="text" class="form-control @error('campoextra2grande') is-invalid @enderror" name="campoextra2grande" value="{{ old('campoextra2grande') }}" required autocomplete="campoextra2grande" autofocus></textarea>
-          
+
                                       @error('campoextra2grande')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
@@ -277,7 +277,7 @@
                               @elseif ($formSubTraba->tipocampoextra2 == "upload")
                                 <div class="col-sm-12" style="margin-top: 20px;">
                                   <label for="campoextra2arquivo" class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}:</label>
-            
+
                                   <div class="custom-file">
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra2arquivo" required>
                                   </div>
@@ -299,7 +299,7 @@
                                 <div class="col-sm-12">
                                       <label for="campoextra3simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
                                       <input id="campoextra3simples" type="text" class="form-control @error('campoextra3simples') is-invalid @enderror" name="campoextra3simples" value="{{ old('campoextra3simples') }}" required autocomplete="campoextra3simples" autofocus>
-      
+
                                       @error('campoextra3simples')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
@@ -313,7 +313,7 @@
                                 <div class="col-sm-12">
                                       <label for="campoextra3grande" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
                                       <textarea id="campoextra3grande" type="text" class="form-control @error('campoextra3grande') is-invalid @enderror" name="campoextra3grande" value="{{ old('campoextra3grande') }}" required autocomplete="campoextra3grande" autofocus></textarea>
-      
+
                                       @error('campoextra3grande')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
@@ -325,7 +325,7 @@
                                 {{-- Arquivo de Regras  --}}
                                 <div class="col-sm-12" style="margin-top: 20px;">
                                   <label for="campoextra3arquivo" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}:</label>
-            
+
                                   <div class="custom-file">
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra3arquivo" required>
                                   </div>
@@ -347,7 +347,7 @@
                                 <div class="col-sm-12">
                                       <label for="campoextra4simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}:</label>
                                       <input id="campoextra4simples" type="text" class="form-control @error('campoextra4simples') is-invalid @enderror" name="campoextra4simples" value="{{ old('campoextra4simples') }}" required autocomplete="campoextra4simples" autofocus>
-      
+
                                       @error('campoextra4simples')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
@@ -361,7 +361,7 @@
                                 <div class="col-sm-12">
                                       <label for="campoextra4grande" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}:</label>
                                       <textarea id="campoextra4grande" type="text" class="form-control @error('campoextra4grande') is-invalid @enderror" name="campoextra4grande" value="{{ old('campoextra4grande') }}" required autocomplete="campoextra4grande" autofocus></textarea>
-      
+
                                       @error('campoextra4grande')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
@@ -373,7 +373,7 @@
                                 {{-- Arquivo de Regras  --}}
                                 <div class="col-sm-12" style="margin-top: 20px;">
                                   <label for="campoextra4arquivo" class="col-form-label">{{$formSubTraba->etiquetacampoextra4}}:</label>
-            
+
                                   <div class="custom-file">
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra4arquivo" required>
                                   </div>
@@ -395,7 +395,7 @@
                                 <div class="col-sm-12">
                                       <label for="campoextra5simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
                                       <input id="campoextra5simples" type="text" class="form-control @error('campoextra5simples') is-invalid @enderror" name="campoextra5simples" value="{{ old('campoextra5simples') }}" required autocomplete="campoextra5simples" autofocus>
-      
+
                                       @error('campoextra5simples')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
@@ -409,7 +409,7 @@
                                 <div class="col-sm-12">
                                       <label for="campoextra5" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
                                       <textarea id="campoextra5grande" type="text" class="form-control @error('campoextra5grande') is-invalid @enderror" name="campoextra5grande" value="{{ old('campoextra5grande') }}" required autocomplete="campoextra5grande" autofocus></textarea>
-      
+
                                       @error('campoextra5grande')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
@@ -421,7 +421,7 @@
                                 {{-- Arquivo de Regras  --}}
                                 <div class="col-sm-12" style="margin-top: 20px;">
                                   <label for="campoextra5arquivo" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}:</label>
-            
+
                                   <div class="custom-file">
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="campoextra5arquivo" required>
                                   </div>
@@ -448,7 +448,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     </form>
                 </div>
               </div>
@@ -461,23 +461,23 @@
 @section('javascript')
 <script type="text/javascript">
 
-  // 
+  //
 
   $(document).ready(function(){
     $('.char-count').keyup(function() {
-        var maxLength = parseInt($(this).attr('maxlength')); 
+        var maxLength = parseInt($(this).attr('maxlength'));
         var length = $(this).val().length;
         // var newLength = maxLength-length;
-        
+
         var name = $(this).attr('name');
-        
+
         $('span[name="'+name+'"]').text(length);
     });
   });
 
   $(document).ready(function(){
     $('.palavra').keyup(function() {
-        var maxLength = parseInt($(this).attr('maxlength')); 
+        var maxLength = parseInt($(this).attr('maxlength'));
         var texto = $(this).val().length;
         // console.log(texto);
         if ($(this).val()[length - 1] == " ") {
@@ -490,7 +490,7 @@
         // console.log(texto);
 
         var name = $(this).attr('name');
-        
+
         $('span[name="'+name+'"]').text(length);
     });
   });
@@ -508,34 +508,34 @@
     event.preventDefault();
     el = event.srcElement.id
     // console.log( event.path['5'].childNodes)
-    arr = event.path['5'].childNodes;    
-    
-    if(el == "arrow-up"){      
+    arr = event.path['5'].childNodes;
+
+    if(el == "arrow-up"){
       number = event.path['4'].style.order;
       if(number == 1) return
 
       for (var i = 0; i < arr.length; i++) {
         if(event.path['5'].childNodes[i].style['order'] == parseInt(event.path['4'].style.order, 10) - 1 ){
           event.path['5'].childNodes[i].style['order'] = parseInt(event.path['5'].childNodes[i].style['order'], 10) + parseInt(1, 10);
-          
+
           event.path['4'].style.order =  parseInt(event.path['4'].style.order, 10) - parseInt(1, 10);
-          
+
           break;
         }
       }
 
-      
-        
+
+
     }else if(el == "arrow-down"){
       number = event.path['4'].style.order;
       if(number == order) return
-      
+
       for (var i = 0; i < arr.length; i++) {
         if(event.path['5'].childNodes[i].style['order'] == parseInt(event.path['4'].style.order, 10) + 1 ){
           event.path['5'].childNodes[i].style['order'] = parseInt(event.path['5'].childNodes[i].style['order'], 10) - parseInt(1, 10);
-          
+
           event.path['4'].style.order =  parseInt(event.path['4'].style.order, 10) + parseInt(1, 10);
-          
+
           break;
         }
       }
@@ -553,8 +553,8 @@
 
   $(function(){
     // Coautores
-    
-    
+
+
 
     // Exibir modalidade de acordo com a área
     $("#area").change(function(){
@@ -605,15 +605,15 @@
 <script>
 
   let digitarEmail = card => {
-    
+
     let email = document.querySelector('#'+card.id);
 
     email.addEventListener('keyup', function(event){
       // console.log(email)
-      
+
         let data = {
         email: email.value,
-        
+
         _token: '{{csrf_token()}}'
       };
       // console.log(data.email.indexOf('@'));
@@ -628,7 +628,7 @@
               // console.log('pega')
               event.path[2].children[1].children[1].value = res.user[0]['name'];
             }
-              
+
           },
           error: function(err){
               // console.log('err')
@@ -639,10 +639,10 @@
     });
   }
 
-  
-  
 
-  
+
+
+
 
 </script>
 @endsection
