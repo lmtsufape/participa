@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container"  style="position: relative; top: 65px;">
-    
+
     {{-- titulo da página --}}
     <div class="row justify-content-center titulo">
         <div class="col-sm-12">
@@ -16,7 +16,7 @@
                 </div> --}}
             </div>
         </div>
-        
+
     </div>
     @if(session('mensagem'))
         <div class="row">
@@ -57,7 +57,7 @@
                                                                 <img src="{{asset('img/icons/eye-regular.svg')}}" class="icon-card" alt="">
                                                                 Detalhes
                                                             </a>
-                                                            
+
                                                             <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
                                                                 {{ csrf_field() }}
                                                                 {{ method_field('DELETE') }}

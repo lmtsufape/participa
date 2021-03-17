@@ -46,11 +46,11 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <div class="btn-group dropright dropdown-options">
-                                                        
+
                                                     <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         {{-- <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
                                                             <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
-                                                            
+
                                                         </div> --}}
                                                         <a  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><i class="fas fa-cog "></i></a>
                                                     </a>
@@ -75,7 +75,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </h5>
                                 </div>
                             </div>
