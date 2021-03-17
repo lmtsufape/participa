@@ -391,9 +391,9 @@ class TrabalhoController extends Controller
      * @param  \App\Trabalho  $trabalho
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Trabalho $trabalho)
+    public function update(Request $request, $id)
     {
-        //
+      dd($request);
     }
 
     /**
