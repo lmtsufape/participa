@@ -27,14 +27,14 @@
         
         <form action="{{route('atribuicao.check')}}" method="post">
           @csrf
-          <div class="row">
+          {{-- <div class="row">
             <div class="col-sm-9"></div>
             <div class="col-sm-3">
               <button type="submit" class="btn btn-primary" style="width:100%">
                 {{ __('Distribuir em lote') }}
               </button>
             </div>
-          </div>
+          </div> --}}
           <div class="row">
             <div class="col-sm-12">
               @if ($errors->any())
@@ -73,7 +73,16 @@
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>
-                <th scope="col">                  
+                 <th scope="col">
+                  Autor
+                  <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'asc'])}}">
+                    <i class="fas fa-arrow-alt-circle-up"></i>
+                  </a>
+                  <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'desc'])}}">
+                    <i class="fas fa-arrow-alt-circle-down"></i>
+                  </a>
+                </th>
+                <th scope="col" style="width:15%"> 
                   Modalidade
                   <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'asc'])}}">
                     <i class="fas fa-arrow-alt-circle-up"></i>
@@ -109,9 +118,11 @@
                           {{$trabalho->titulo}}
                         </a>
                     @else
-                      {{$trabalho->titulo}}</td>                        
+                      {{$trabalho->titulo}}
                     @endif
-                    <td>{{$trabalho->area->nome}}</td>
+                  </td>
+                  <td>{{$trabalho->area->nome}}</td>
+                  <td>{{$trabalho->autor->name}}</td>
                   <td >{{$trabalho->modalidade->nome}}</td>
                   <td>
                     {{count($trabalho->atribuicoes)}}
