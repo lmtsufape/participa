@@ -410,6 +410,12 @@ class TrabalhoController extends Controller
         $trabalho->arquivo->delete();
       }
 
+      if ($trabalho->atribuicoes != null && $trabalho->atribuicoes->count() > 0) {
+        foreach ($trabalho->atribuicoes as $atrib) {
+          $trabalho->atribuicoes()->detach($atrib->revisor_id);
+        }
+      }
+
       $trabalho->delete();
       
       return redirect()->back()->with(['mensagem' => 'Trabalho deletado com sucesso!']);

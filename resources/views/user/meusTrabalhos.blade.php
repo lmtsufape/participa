@@ -227,7 +227,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form id="formEditarTrab{{$trabalho->id}}" action="{{route('editar.trabalho', ['id' => $trabalho->id])}}" method="POST">
+            <form id="formEditarTrab{{$trabalho->id}}" action="{{route('editar.trabalho', ['id' => $trabalho->id])}}" method="POST" enctype="multipart/form-data">
               @csrf
 
               @php
@@ -396,7 +396,7 @@
                         <br>
                         <small>Para trocar o arquivo envie um novo.</small>
                         <div class="custom-file">
-                          <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo_{{$trabalho->id}}">
+                          <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo{{$trabalho->id}}">
                         </div>
                         <small>Arquivos aceitos nos formatos 
                           @if($modalidade->pdf == true)<span> - pdf</span>@endif
@@ -424,8 +424,8 @@
                       <div class="row justify-content-center">
                         {{-- Nome Trabalho  --}}
                         <div class="col-sm-12">
-                              <label for="campoextra1simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
-                              <input id="campoextra1simples" type="text" class="form-control @error('campoextra1simples') is-invalid @enderror" name="campoextra1simples" value="{{ old('campoextra1simples') }}" required autocomplete="campoextra1simples" autofocus>
+                              <label for="campoextra1simples_{{$trabalho->id}}" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
+                              <input id="campoextra1simples_{{$trabalho->id}}" type="text" class="form-control @error('campoextra1simples') is-invalid @enderror" name="campoextra1simples" value="{{ old('campoextra1simples') }}" required autocomplete="campoextra1simples" autofocus>
 
                               @error('campoextra1simples')
                               <span class="invalid-feedback" role="alert">
