@@ -23,7 +23,7 @@ class Trabalho extends Model
   }
 
   public function arquivo(){
-      return $this->hasOne('App\Models\Submissao\Arquivo', 'trabalhoId');
+      return $this->hasMany('App\Models\Submissao\Arquivo', 'trabalhoId');
   }
 
   public function modalidade(){

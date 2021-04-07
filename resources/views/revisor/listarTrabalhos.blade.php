@@ -60,10 +60,14 @@
                                 <td>Pendente</td>    
                               @endif
                               <td>
-                                <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
+                                @if ($trabalho->resumo != null)
+                                  <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
+                                @else 
+                                  Sem resumo
+                                @endif
                               </td>
                               <td>
-                                @if (!(empty($trabalho->arquivo->items)))
+                                @if ($trabalho->arquivo != null && $trabalho->arquivo->count() > 0)
                                   <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                                 @endif
                               </td>
@@ -120,9 +124,9 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="resumoModalLongTitle">Regras da modalidade {{$trabalhosDoRevisor[0]->modalidade->nome}} </h5>
+                <h5 class="modal-title">Regras da modalidade {{$trabalhosDoRevisor[0]->modalidade->nome}} </h5>
               </div>
-              <div class="modal-body" name="resumoTrabalhoModal" id="resumoTrabalhoModal">
+              <div class="modal-body">
                 <div class="container">
                   <div class="row">
                     <div class="col-sm-12">
