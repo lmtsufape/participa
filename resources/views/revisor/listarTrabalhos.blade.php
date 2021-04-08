@@ -71,21 +71,23 @@
                                   <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                                 @endif
                               </td>
-                              @if ($trabalho->avaliado != "Avaliado") 
-                                @if (date('yy-m-d') >= $trabalho->modalidade->inicioRevisao && date('yy-m-d') <= $trabalho->modalidade->fimRevisao)
+                              @if ($trabalho->avaliado != "Avaliado")
+                                @if (today() >= $trabalho->modalidade->inicioRevisao && today() <= $trabalho->modalidade->fimRevisao)
                                   {{-- <td>
                                     <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
                                   </td> --}}
-                                  <form action="{{route('revisor.responde')}}" method="get">
-                                    @csrf
-                                    <input type="hidden" name="revisor_id" value="{{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}}">
-                                    <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
-                                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                                    <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
-                                    <button type="submit" class="btn btn-success">
-                                      Avaliar
-                                    </button>
-                                  </form>
+                                  <td>
+                                    <form action="{{route('revisor.responde')}}" method="get">
+                                      @csrf
+                                      <input type="hidden" name="revisor_id" value="{{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}}">
+                                      <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
+                                      <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                                      <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
+                                      <button type="submit" class="btn btn-success">
+                                        Avaliar
+                                      </button>
+                                    </form>
+                                  </td>
                                 @else 
                                   
                                   <td>
