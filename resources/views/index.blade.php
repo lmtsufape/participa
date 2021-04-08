@@ -48,12 +48,12 @@
                     <div class="row container" style="margin-left: 0px; margin-top:15px;">
                       <div class="col-md-12" style="text-align:center; margin-top:20px;margin-bottom:10px;">
                         @auth
-                          <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="font-size:20px;line-height: 1.2; color:#12583C; font-weight:600">{{$evento->nome}}</a>
+                          <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
                         @else  
-                        <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:20px;line-height: 1.2; color:#12583C; font-weight:600">{{$evento->nome}}</a>
+                          <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
                         @endauth
                       </div>
-                      <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{$evento->descricao}}</div>
+                      <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 325, "...")}}</div>
                       <div class="col-md-12">
                         <div class="row" style="text-align: center;">
                           <div class="col-6">
@@ -93,12 +93,12 @@
                   <div class="row container" style="margin-left: 0px; margin-top:15px;">
                     <div class="col-md-12" style="text-align:center; margin-top:20px;margin-bottom:10px;">
                       @auth
-                        <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="font-size:20px;line-height: 1.2; color:#12583C; font-weight:600">{{$evento->nome}}</a>
+                        <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
                       @else  
-                      <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:20px;line-height: 1.2; color:#12583C; font-weight:600">{{$evento->nome}}</a>
+                        <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
                       @endauth
                     </div>
-                    <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{$evento->descricao}}</div>
+                    <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 325, "...")}}</div>
                     <div class="col-md-12">
                       <div class="row" style="text-align: center;">
                         <div class="col-6">
@@ -153,11 +153,11 @@
                 <div class="col-md-12" style="height:80px">
                   @auth
                     <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
-                      <h5 class="card-title">{{$evento->nome}}</h5>
+                      <h5 class="card-title">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</h5>
                     </a>
                   @else
                     <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="color: black;">
-                      <h5 class="card-title">{{$evento->nome}}</h5>
+                      <h5 class="card-title">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</h5>
                     </a>
                   @endauth
                 </div>
