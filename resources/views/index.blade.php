@@ -142,7 +142,7 @@
       <div class="row justify-content-center" style="padding-left:10px">
         
         @foreach($proximosEventos as $evento)
-          <div class="card" style="width: 15rem; margin:8px; border: 0px solid #1492E6; border-radius: 12px;">
+          <div class="card" style="width: 16rem; margin:8px; border: 0px solid #1492E6; border-radius: 12px;">
             @if ($evento->fotoEvento != null) 
               <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
             @else
