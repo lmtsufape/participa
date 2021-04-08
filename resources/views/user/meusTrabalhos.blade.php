@@ -123,9 +123,9 @@
                       </a>
                   </td>
                   <td style="text-align:center">
-                      {{-- <a href="#" data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff">
+                      <a href="#" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A edição do trabalho só é permitida durante o periodo de submissão." @endif>
                         <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
-                      </a> --}}
+                      </a>
                   </td>
                   <td style="text-align:center">
                     <a href="#" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A exclusão do trabalho só é permitida durante o periodo de submissão." @endif>
@@ -236,7 +236,16 @@
                 $modalidade = $trabalho->modalidade;
                 $areas = $trabalho->evento->areas;
               @endphp
-
+              <input type="hidden" name="trabalhoEditId" value="{{$trabalho->id}}">
+              @error('numeroMax'.$trabalho->id)
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="alert alert-danger" role="alert">
+                      {{ $message }}
+                    </div>
+                  </div>
+                </div>    
+              @enderror
               @foreach ($ordem as $indice)
                 @if ($indice == "etiquetatitulotrabalho")
                   <div class="row justify-content-center">
@@ -252,15 +261,6 @@
                         @enderror
                     </div>
                   </div>
-                @endif
-                @if ($indice == "etiquetaautortrabalho")
-                  {{-- <div class="row justify-content-center">
-                      Autor  
-                    <div class="col-sm-12">
-                        <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetaautortrabalho}}</label>
-                        <input class="form-control" type="text" disabled value="{{Auth::user()->name}}">
-                    </div>
-                  </div> --}}
                 @endif
                 @if ($indice == "etiquetacoautortrabalho")
                   <div class="flexContainer" style="margin-top:20px">
@@ -299,11 +299,11 @@
                                 <div class="row card-body">
                                     <div class="col-sm-4">
                                         <label>E-mail</label>
-                                        <input type="email" style="margin-bottom:10px" value="{{$coautor->user->email}}" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor{{$trabalho->id}}[]" placeholder="E-mail" required>
+                                        <input type="email" style="margin-bottom:10px" value="{{$coautor->user->email}}" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
                                     </div>
                                     <div class="col-sm-5">
                                         <label>Nome Completo</label>
-                                        <input type="text" style="margin-bottom:10px" value="{{$coautor->user->name}}" class="form-control emailCoautor" name="nomeCoautor{{$trabalho->id}}[]" placeholder="Nome" required>
+                                        <input type="text" style="margin-bottom:10px" value="{{$coautor->user->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
                                     </div>
                                     <div class="col-sm-3">
                                         <a href="#" onclick="deletarCoautor(this)" class="delete pr-2">
@@ -363,7 +363,7 @@
                   <div class="row justify-content-center">
                       <div class="col-sm-12">
                           <label for="area_{{$trabalho->id}}" class="col-form-label">{{$formSubTraba->etiquetaareatrabalho}}</label>
-                          <select id="area_{{$trabalho->id}}" class="form-control @error('area'.$trabalho->id) is-invalid @enderror" name="area{{$trabalho->id}}">
+                          <select id="area_{{$trabalho->id}}" class="form-control @error('area'.$trabalho->id) is-invalid @enderror" name="area{{$trabalho->id}}" required>
                               <option value="" disabled selected hidden>-- Área --</option>
                               {{-- Apenas um teste abaixo --}}
                               @if (old('area'.$trabalho->id) != null) 
@@ -392,7 +392,7 @@
                     @if ($modalidade->arquivo == true)
                       <div class="col-sm-12" style="margin-top: 20px;">
                         <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}:</label>
-                        <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">Arquivo atual</a>
+                          <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">Arquivo atual</a>
                         <br>
                         <small>Para trocar o arquivo envie um novo.</small>
                         <div class="custom-file">
@@ -408,10 +408,10 @@
                           @if($modalidade->zip == true)<span> - zip</span>@endif
                           @if($modalidade->svg == true)<span> - svg</span>@endif.
                         </small>
-                        @error('arquivo')
-                        <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                          <strong>{{ $message }}</strong>
-                        </span>
+                        @error('arquivo'.$trabalho->id)
+                          <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                            <strong>{{ $message }}</strong>
+                          </span>
                         @enderror
                       </div>
                     @endif
@@ -675,6 +675,13 @@
 @endsection
 
 @section('javascript')
+@if(old('trabalhoEditId')) 
+  <script>
+    $(document).ready(function() {
+      $('#modalEditarTrabalho_{{old('trabalhoEditId')}}').modal('show');
+    })
+  </script>
+@endif
 
 <script>
   function montarLinhaInput(div, id){
@@ -703,12 +710,6 @@
   function deletarCoautor(div) {
     div.parentElement.parentElement.parentElement.remove();
   }
-
-  @error('trabalhoId')
-    $(document).ready(function() {
-      $("#modalTrabalho_{{$message}}").modal('show');
-    })
-  @enderror
 
   $(document).ready(function(){
     $('.char-count').keyup(function() {

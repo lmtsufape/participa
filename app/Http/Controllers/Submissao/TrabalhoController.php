@@ -154,7 +154,7 @@ class TrabalhoController extends Controller
       ]);
       // dd($request);
 
-      if ($this->validarTipoDoArquivo($request, $modalidade)) {
+      if ($this->validarTipoDoArquivo($request->arquivo, $modalidade)) {
         return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
         Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
       }
@@ -393,7 +393,254 @@ class TrabalhoController extends Controller
      */
     public function update(Request $request, $id)
     {
-      dd($request);
+      // dd($request);
+
+      $validatedData = $request->validate([
+        'trabalhoEditId'        => ['required'],
+        'nomeTrabalho'.$id      => ['required', 'string',],
+        'area'.$id              => ['required', 'integer'],
+        'resumo'.$id            => ['nullable','string'],
+        'nomeCoautor_'.$id.'.*'  => ['string'],
+        'emailCoautor_'.$id.'.*' => ['string'],
+        'arquivo'.$id           => ['nullable', 'file', 'max:2000000'],
+        'campoextra1arquivo'    => ['nullable', 'file', 'max:2000000'],
+        'campoextra2arquivo'    => ['nullable', 'file', 'max:2000000'],
+        'campoextra3arquivo'    => ['nullable', 'file', 'max:2000000'],
+        'campoextra4arquivo'    => ['nullable', 'file', 'max:2000000'],
+        'campoextra5arquivo'    => ['nullable', 'file', 'max:2000000'],
+        'campoextra1simples'    => ['nullable', 'string'],
+        'campoextra2simples'    => ['nullable', 'string'],
+        'campoextra3simples'    => ['nullable', 'string'],
+        'campoextra4simples'    => ['nullable', 'string'],
+        'campoextra5simples'    => ['nullable', 'string'],
+        'campoextra1grande'     => ['nullable', 'string'],
+        'campoextra2grande'     => ['nullable', 'string'],
+        'campoextra3grande'     => ['nullable', 'string'],
+        'campoextra4grande'     => ['nullable', 'string'],
+        'campoextra5grande'     => ['nullable', 'string'],
+      ]);
+  
+      $trabalho = Trabalho::find($id);
+      $evento = $trabalho->evento;
+      $arquivo = $request->file('arquivo'.$id);
+      if ($arquivo != null && $this->validarTipoDoArquivo($arquivo, $trabalho->modalidade)) {
+        return redirect()->back()->withErrors(['arquivo'.$id => 'Extensão de arquivo enviado é diferente do permitido.
+                                                                  Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
+      }
+
+      if($request->input('emailCoautor_'.$id) != null){
+        $i = 0;
+        foreach ($request->input('emailCoautor_'.$id) as $key) {
+          $i++;
+        }
+        if($i > $evento->numMaxCoautores){
+          return redirect()->back()->withErrors(['numeroMax'.$id => 'Número de coautores deve ser menor igual a '.$evento->numMaxCoautores])->withInput($validatedData);
+        }
+      } else {
+        return redirect()->back()->withErrors(['numeroMax'.$id => 'O trabalho deve conter pelo menos o seu autor'])->withInput($validatedData);
+      }
+
+      $trabalho->titulo = $request->input('nomeTrabalho'.$id);
+      $trabalho->resumo = $request->input('resumo'.$id);
+      $trabalho->areaId = $request->input('area'.$id);
+
+      $coautores = collect();
+      foreach ($trabalho->coautors as $coautor_id) {
+        $coautores->push(User::find($coautor_id->autorId));
+      }
+      
+      $coautoresExcluidos = collect();
+      // TODO Checando a mudança do autor do trabalho, a inclusão e exclusão de coautores
+      foreach ($request->input('emailCoautor_'.$id) as $i => $email) {
+        $coautor = User::where('email', $email)->first();
+        // Chegando se existe do usuário cadastrado no sistema 
+        // Se existir é checado se o usario já é coautor do trabalho e adicionado nos coautores 
+        // excluidos para diff futuro. Se o usuário é existente no sistema mas não é coautor do trabalho
+        // é checado se ele é coautor de algum trabalho, se for coautor o trabalho é adicionado no relacionamento,
+        // se não é criado um coautor com o id do user e o trabalho é adicionado
+
+
+        if ($coautor != null) {
+          if ($coautores->contains($coautor)) {
+            $coautoresExcluidos->contains($coautor);
+          } else {
+            $coautorExistente = $coautor->coautor;
+            if ($coautorExistente != null && $i != 0) {
+              $coautorExistente->trabalhos()->attach($trabalho);
+            } else if ($i != 0) {
+              $coauntorAdicional = Coautor::create([
+                'ordem' => '-',
+                'autorId' => $coautor->id,
+                'eventos_id' => $evento->id
+              ]);
+              $coauntorAdicional->trabalhos()->attach($trabalho);
+            }
+          }
+        } else if ($coautor == null) {
+          // Se o usuário não existir eu crio um usuário temporário um coautor para o usuário criado
+          // e relaciono o trabalho a ele
+
+          $passwordTemporario = Str::random(8);
+          Mail::to($email)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $email));
+          $usuario = User::create([
+            'email' => $email,
+            'password' => bcrypt($passwordTemporario),
+            'usuarioTemp' => true,
+            'name' => $request->input('nomeCoautor_'.$id)[$i],
+          ]);
+
+          if ($i != 0) {
+            $coauntorAdicional = $usuario->coautor;
+            if ($coauntorAdicional == null) {
+              $coauntorAdicional = Coautor::create([
+                'ordem' => '-',
+                'autorId' => $usuario->id,
+                'eventos_id' => $evento->id
+              ]);
+            }
+            $coauntorAdicional->trabalhos()->attach($trabalho);
+          }
+        }
+
+        if ($i == 0) {
+          // checando se o autor foi alterado
+          if ($trabalho->autor->email != $email) {
+            $autor = User::where('email', $email)->first();
+            $trabalho->autorId = $autor->id;
+          } 
+        }
+      }
+
+      // TODO comparando os autores existentes com os excluidos
+      // os que restarem são os excluidos do trabalho
+
+      $coautoresExcluidos = $coautores->diff($coautoresExcluidos);
+      foreach ($coautoresExcluidos as $coautor) {
+        if (!(in_array($coautor->email, $request->input('emailCoautor_'.$id)))) {
+          $coautor->coautor->trabalhos()->detach($id);
+        }
+      }
+
+      if(isset($request->campoextra1simples)){
+        $trabalho->campoextra1simples          = $request->campoextra1simples;
+      }
+      if(isset($request->campoextra1grande)){
+        $trabalho->campoextra1grande           = $request->campoextra1grande;
+      }
+      if(isset($request->campoextra2simples)){
+        $trabalho->campoextra2simples          = $request->campoextra2simples;
+      }
+      if(isset($request->campoextra2grande)){
+        $trabalho->campoextra2grande           = $request->campoextra2grande;
+      }
+      if(isset($request->campoextra3simples)){
+        $trabalho->campoextra3simples          = $request->campoextra3simples;
+      }
+      if(isset($request->campoextra3grande)){
+        $trabalho->campoextra3grande           = $request->campoextra3grande;
+      }
+      if(isset($request->campoextra4simples)){
+        $trabalho->campoextra4simples          = $request->campoextra4simples;
+      }
+      if(isset($request->campoextra4grande)){
+        $trabalho->campoextra4grande           = $request->campoextra4grande;
+      }
+      if(isset($request->campoextra5simples)){
+        $trabalho->campoextra5simples          = $request->campoextra5simples;
+      }
+      if(isset($request->campoextra5grande)){
+        $trabalho->campoextra5grande           = $request->campoextra5grande;
+      }
+
+
+      if($request->file('arquivo'.$id) != null){
+
+        $file = $request->file('arquivo'.$id);
+        $path = 'trabalhos/' . $evento->id . '/' . $trabalho->id .'/';
+        $nome = $request->file('arquivo'.$id)->getClientOriginalName();
+        Storage::putFileAs($path, $file, $nome);
+
+        $arquivo = Arquivo::create([
+          'nome'  => $path . $nome,
+          'trabalhoId'  => $trabalho->id,
+          'versaoFinal' => true,
+        ]);
+
+        $arquivoAtual = $trabalho->arquivo()->where('versaoFinal', true)->first();
+        if (Storage::disk()->exists($arquivoAtual->nome)) {
+          Storage::delete($arquivoAtual->nome);
+          $arquivoAtual->delete();
+        }
+      }
+
+      if(isset($request->campoextra1arquivo)){
+
+        $file = $request->campoextra1arquivo;
+        $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
+        $nome = $request->campoextra1arquivo->getClientOriginalName();
+        Storage::putFileAs($path, $file, $nome);
+
+        $arquivoExtra1 = Arquivoextra::create([
+          'nome'  => $path . $nome,
+          'trabalhoId'  => $trabalho->id,
+        ]);
+      }
+
+      if(isset($request->campoextra2arquivo)){
+
+        $file = $request->campoextra2arquivo;
+        $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
+        $nome = $request->campoextra2arquivo->getClientOriginalName();
+        Storage::putFileAs($path, $file, $nome);
+
+        $arquivoExtra2 = Arquivoextra::create([
+          'nome'  => $path . $nome,
+          'trabalhoId'  => $trabalho->id,
+        ]);
+      }
+
+      if(isset($request->campoextra3arquivo)){
+
+        $file = $request->campoextra3arquivo;
+        $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
+        $nome = $request->campoextra3arquivo->getClientOriginalName();
+        Storage::putFileAs($path, $file, $nome);
+
+        $arquivoExtra3 = Arquivoextra::create([
+          'nome'  => $path . $nome,
+          'trabalhoId'  => $trabalho->id,
+        ]);
+      }
+
+      if(isset($request->campoextra4arquivo)){
+
+        $file = $request->campoextra4arquivo;
+        $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
+        $nome = $request->campoextra4arquivo->getClientOriginalName();
+        Storage::putFileAs($path, $file, $nome);
+
+        $arquivoExtra4 = Arquivoextra::create([
+          'nome'  => $path . $nome,
+          'trabalhoId'  => $trabalho->id,
+        ]);
+      }
+
+      if(isset($request->campoextra5arquivo)){
+
+        $file = $request->campoextra5arquivo;
+        $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
+        $nome = $request->campoextra5arquivo->getClientOriginalName();
+        Storage::putFileAs($path, $file, $nome);
+
+        $arquivoExtra5 = Arquivoextra::create([
+          'nome'  => $path . $nome,
+          'trabalhoId'  => $trabalho->id,
+        ]);
+      }
+
+      $trabalho->update();
+
+      return redirect()->back()->with(['mensagem' => $trabalho->titulo . ' editado com sucesso!']);
     }
 
     /**
@@ -675,7 +922,7 @@ class TrabalhoController extends Controller
       return redirect()->back()->with(['mensagem' => 'Avaliação salva']);
     }
 
-    public function validarTipoDoArquivo(Request $request, $tiposExtensao) {
+    public function validarTipoDoArquivo($arquivo, $tiposExtensao) {
       if($tiposExtensao->arquivo == true){
 
         $tiposcadastrados = [];
@@ -704,7 +951,7 @@ class TrabalhoController extends Controller
           array_push($tiposcadastrados, "svg");
         }
 
-        $extensao = $request->arquivo->getClientOriginalExtension();
+        $extensao = $arquivo->getClientOriginalExtension();
         if(!in_array($extensao, $tiposcadastrados)){
           return true;
         }
