@@ -807,14 +807,14 @@ class TrabalhoController extends Controller
       if ($trabalho->evento->coordenadorId == auth()->user()->id || $trabalho->evento->coordComissaoId == auth()->user()->id || $trabalho->autorId == auth()->user()->id) {
         // dd();
         if (Storage::disk()->exists($arquivo->nome)) {
-          return Storage::download($arquivo->nome,  $trabalho->titulo . "." . explode(".", $arquivo->nome)[1]);
+          return Storage::download($arquivo->nome);
         }
         return abort(404);
 
       } else if ($revisor != null) {
         if ($revisor->trabalhosAtribuidos->contains($trabalho)) {
           if (Storage::disk()->exists($arquivo->nome)) {
-            return Storage::download($arquivo->nome,  $trabalho->titulo . "." . explode(".", $arquivo->nome)[1]);
+            return Storage::download($arquivo->nome);
           }
           return abort(404);
         }
