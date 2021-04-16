@@ -113,7 +113,7 @@
                     <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" value="{{$trabalho->id}}">                
                   </td>
                   <td>
-                    @if (!(empty($trabalho->arquivo->nome)))
+                    @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
                           {{$trabalho->titulo}}
                         </a>
