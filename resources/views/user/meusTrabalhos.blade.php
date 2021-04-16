@@ -123,9 +123,9 @@
                       </a>
                   </td>
                   <td style="text-align:center">
-                      {{-- <a href="#" data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff">
+                      <a href="#" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A edição do trabalho só é permitida durante o periodo de submissão." @endif>
                         <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
-                      </a> --}}
+                      </a>
                   </td>
                   <td style="text-align:center">
                     <a href="#" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A exclusão do trabalho só é permitida durante o periodo de submissão." @endif>
@@ -227,7 +227,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form id="formEditarTrab{{$trabalho->id}}" action="{{route('editar.trabalho', ['id' => $trabalho->id])}}" method="POST">
+            <form id="formEditarTrab{{$trabalho->id}}" action="{{route('editar.trabalho', ['id' => $trabalho->id])}}" method="POST" enctype="multipart/form-data">
               @csrf
 
               @php
@@ -236,7 +236,16 @@
                 $modalidade = $trabalho->modalidade;
                 $areas = $trabalho->evento->areas;
               @endphp
-
+              <input type="hidden" name="trabalhoEditId" value="{{$trabalho->id}}">
+              @error('numeroMax'.$trabalho->id)
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="alert alert-danger" role="alert">
+                      {{ $message }}
+                    </div>
+                  </div>
+                </div>    
+              @enderror
               @foreach ($ordem as $indice)
                 @if ($indice == "etiquetatitulotrabalho")
                   <div class="row justify-content-center">
@@ -253,31 +262,21 @@
                     </div>
                   </div>
                 @endif
-                @if ($indice == "etiquetaautortrabalho")
-                  {{-- <div class="row justify-content-center">
-                      Autor  
-                    <div class="col-sm-12">
-                        <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetaautortrabalho}}</label>
-                        <input class="form-control" type="text" disabled value="{{Auth::user()->name}}">
-                    </div>
-                  </div> --}}
-                @endif
                 @if ($indice == "etiquetacoautortrabalho")
                   <div class="flexContainer" style="margin-top:20px">
-                    <div id="divCoautores_{{$trabalho->id}}" class="col-sm-12">
                       <h4>Autores</h4>                                 
                         <div id="coautores_{{$trabalho->id}}" class="flexContainer " >
                           @if (old('nomeCoautor') != null)
                             @foreach (old('nomeCoautor') as $i => $nomeCoautor)
-                              <div class="item card" id="{{$i+1}}" style="order: {{$i+1}};">
+                              <div class="item card">
                                 <div class="row card-body">
                                     <div class="col-sm-4">
                                         <label>E-mail</label>
-                                        <input type="email" style="margin-bottom:10px" id="email{{$i+1}}" value="{{old('emailCoautor.'.$i)}}" onclick="digitarEmail(email{{$i+1}})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" required>
+                                        <input type="email" style="margin-bottom:10px" value="{{old('emailCoautor.'.$i)}}" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
                                     </div>
                                     <div class="col-sm-5">
                                         <label>Nome Completo</label>
-                                        <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" required>
+                                        <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
                                     </div>
                                     <div class="col-sm-3">
                                         <a href="#" class="delete pr-2">
@@ -296,24 +295,24 @@
                           @else 
                           
                             @foreach ($trabalho->coautors as $i => $coautor)
-                              <div class="item card" id="{{$i+1}}" style="order:{{$i+1}}">
+                              <div class="item card">
                                 <div class="row card-body">
                                     <div class="col-sm-4">
                                         <label>E-mail</label>
-                                        <input type="email" style="margin-bottom:10px" id="email${order}" value="{{$coautor->user->email}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor{{$trabalho->id}}[]" placeholder="E-mail" required>
+                                        <input type="email" style="margin-bottom:10px" value="{{$coautor->user->email}}" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
                                     </div>
                                     <div class="col-sm-5">
                                         <label>Nome Completo</label>
-                                        <input type="text" style="margin-bottom:10px" value="{{$coautor->user->name}}" class="form-control emailCoautor" name="nomeCoautor{{$trabalho->id}}[]" placeholder="Nome" required>
+                                        <input type="text" style="margin-bottom:10px" value="{{$coautor->user->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
                                     </div>
                                     <div class="col-sm-3">
                                         <a href="#" onclick="deletarCoautor(this)" class="delete pr-2">
                                           <img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;">
                                         </a>
-                                        <a href="#" onclick="mover(this, 1, {{$trabalho->id}})">
+                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}})">
                                           <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
                                         </a>
-                                        <a href="#" onclick="mover(this, 0, {{$trabalho->id}})">
+                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}})">
                                           <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
                                         </a>
                                     </div>
@@ -327,7 +326,6 @@
                     <div class="col-sm-12">
                       <a href="#" onclick="montarLinhaInput(this, {{$trabalho->id}})" class="btn btn-primary addCoautor" id="addCoautor_{{$trabalho->id}}" style="width:100%;margin-top:10px">{{$formSubTraba->etiquetacoautortrabalho}}</a>
                     </div>
-                  </div>
                 @endif
                 @if ($modalidade->texto && $indice == "etiquetaresumotrabalho")
                   @if ($modalidade->caracteres == true)
@@ -335,7 +333,7 @@
                       <div class="col-sm-12">
                           <label for="resumo_{{$trabalho->id}}" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
                           <textarea id="resumo_{{$trabalho->id}}" class="char-count form-control @error('resumo'.$trabalho->id) is-invalid @enderror" data-ls-module="charCounter" minlength="{{$modalidade->mincaracteres}}" maxlength="{{$modalidade->maxcaracteres}}" name="resumo{{$trabalho->id}}"  autocomplete="resumo" autofocusrows="5">@if(old('resumo'.$trabalho->id) != null){{old('resumo'.$trabalho->id)}}@else{{$trabalho->resumo}}@endif</textarea>
-                          <p class="text-muted"><small><span name="resumo">{{strlen($trabalho->resumo)}}</span></small> - Min Caracteres: {{$modalidade->mincaracteres}} - Max Caracteres: {{$modalidade->maxcaracteres}}</p>
+                          <p class="text-muted"><small><span id="resumo{{$trabalho->id}}">{{strlen($trabalho->resumo)}}</span></small> - Min Caracteres: {{$modalidade->mincaracteres}} - Max Caracteres: {{$modalidade->maxcaracteres}}</p>
                           @error('resumo'.$trabalho->id)
                           <span class="invalid-feedback" role="alert">
                               <strong>{{ $message }}</strong>
@@ -349,7 +347,7 @@
                       <div class="col-sm-12">
                           <label for="resumo_{{$trabalho->id}}" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
                           <textarea id="resumo_{{$trabalho->id}}" class="form-control palavra @error('resumo'.$trabalho->id) is-invalid @enderror" name="resumo{{$trabalho->id}}" autocomplete="resumo" autofocusrows="5">@if(old('resumo'.$trabalho->id) != null){{old('resumo'.$trabalho->id)}}@else{{$trabalho->resumo}}@endif</textarea>
-                          <p class="text-muted"><small><span id="numpalavra">{{count(explode(" ", $trabalho->resumo))}}</span></small> - Min Palavras: {{$modalidade->minpalavras}} - Max Palavras: {{$modalidade->maxpalavras}}</p>
+                          <p class="text-muted"><small><span id="resumo{{$trabalho->id}}">{{count(explode(" ", $trabalho->resumo))}}</span></small> - Min Palavras: {{$modalidade->minpalavras}} - Max Palavras: {{$modalidade->maxpalavras}}</p>
                           @error('resumo'.$trabalho->id)
                           <span class="invalid-feedback" role="alert">
                               <strong>{{ $message }}</strong>
@@ -365,7 +363,7 @@
                   <div class="row justify-content-center">
                       <div class="col-sm-12">
                           <label for="area_{{$trabalho->id}}" class="col-form-label">{{$formSubTraba->etiquetaareatrabalho}}</label>
-                          <select id="area_{{$trabalho->id}}" class="form-control @error('area'.$trabalho->id) is-invalid @enderror" name="area{{$trabalho->id}}">
+                          <select id="area_{{$trabalho->id}}" class="form-control @error('area'.$trabalho->id) is-invalid @enderror" name="area{{$trabalho->id}}" required>
                               <option value="" disabled selected hidden>-- Área --</option>
                               {{-- Apenas um teste abaixo --}}
                               @if (old('area'.$trabalho->id) != null) 
@@ -394,11 +392,11 @@
                     @if ($modalidade->arquivo == true)
                       <div class="col-sm-12" style="margin-top: 20px;">
                         <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}:</label>
-                        <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">Arquivo atual</a>
+                          <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">Arquivo atual</a>
                         <br>
                         <small>Para trocar o arquivo envie um novo.</small>
                         <div class="custom-file">
-                          <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo_{{$trabalho->id}}">
+                          <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo{{$trabalho->id}}">
                         </div>
                         <small>Arquivos aceitos nos formatos 
                           @if($modalidade->pdf == true)<span> - pdf</span>@endif
@@ -410,10 +408,10 @@
                           @if($modalidade->zip == true)<span> - zip</span>@endif
                           @if($modalidade->svg == true)<span> - svg</span>@endif.
                         </small>
-                        @error('arquivo')
-                        <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                          <strong>{{ $message }}</strong>
-                        </span>
+                        @error('arquivo'.$trabalho->id)
+                          <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                            <strong>{{ $message }}</strong>
+                          </span>
                         @enderror
                       </div>
                     @endif
@@ -426,8 +424,8 @@
                       <div class="row justify-content-center">
                         {{-- Nome Trabalho  --}}
                         <div class="col-sm-12">
-                              <label for="campoextra1simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
-                              <input id="campoextra1simples" type="text" class="form-control @error('campoextra1simples') is-invalid @enderror" name="campoextra1simples" value="{{ old('campoextra1simples') }}" required autocomplete="campoextra1simples" autofocus>
+                              <label for="campoextra1simples_{{$trabalho->id}}" class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}:</label>
+                              <input id="campoextra1simples_{{$trabalho->id}}" type="text" class="form-control @error('campoextra1simples') is-invalid @enderror" name="campoextra1simples" value="{{ old('campoextra1simples') }}" required autocomplete="campoextra1simples" autofocus>
 
                               @error('campoextra1simples')
                               <span class="invalid-feedback" role="alert">
@@ -677,32 +675,31 @@
 @endsection
 
 @section('javascript')
+@if(old('trabalhoEditId')) 
+  <script>
+    $(document).ready(function() {
+      $('#modalEditarTrabalho_{{old('trabalhoEditId')}}').modal('show');
+    })
+  </script>
+@endif
 
 <script>
   function montarLinhaInput(div, id){
-    var tamanho = div.parentElement.parentElement.children[0].children[1].children.length;
-    var order = null;
 
-    try {
-      order = parseInt(div.parentElement.parentElement.children[0].children[1].children[tamanho-1].id) + 1;
-    } catch (TypeError) {
-      order = 1;
-    }
-
-    var html = `<div class="item card" id="${order}" style="order:${order}">
+    var html = `<div class="item card">
                   <div class="row card-body">
                     <div class="col-sm-4">
                         <label>E-mail</label>
-                        <input type="email" style="margin-bottom:10px" id="email${order}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" required>
+                        <input type="email" style="margin-bottom:10px" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_${id}[]" placeholder="E-mail" required>
                     </div>
                     <div class="col-sm-5">
                         <label>Nome Completo</label>
-                        <input type="text" style="margin-bottom:10px" value="" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" required>
+                        <input type="text" style="margin-bottom:10px" value="" class="form-control emailCoautor" name="nomeCoautor_${id}[]" placeholder="Nome" required>
                     </div>
                     <div class="col-sm-3">
                         <a href="#" onclick="deletarCoautor(this)" class="delete pr-2"><img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;"></a>
-                        <a href="#" onclick="mover(this, 1, ${id})"><i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i></a>
-                        <a href="#" onclick="mover(this, 0, ${id})"><i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i></a>
+                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, ${id})"><i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i></a>
+                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, ${id})"><i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i></a>
                     </div>
                   </div>
                 </div>`;
@@ -714,163 +711,89 @@
     div.parentElement.parentElement.parentElement.remove();
   }
 
-  @error('trabalhoId')
-    $(document).ready(function() {
-      $("#modalTrabalho_{{$message}}").modal('show');
-    })
-  @enderror
+  $(document).ready(function(){
+    $('.char-count').keyup(function() {
 
-  // $(document).ready(function(){
-  //   $('.char-count').keyup(function() {
-  //       var maxLength = parseInt($(this).attr('maxlength')); 
-  //       var length = $(this).val().length;
-  //       // var newLength = maxLength-length;
+        var maxLength = parseInt($(this).attr('maxlength')); 
+        var length = $(this).val().length;
+        // var newLength = maxLength-length;
         
-  //       var name = $(this).attr('name');
+        var name = $(this).attr("name");
+        $('#'+name).text(length);
+    });
+  });
+
+  $(document).ready(function(){
+    $('.palavra').keyup(function() {
+        var maxLength = parseInt($(this).attr('maxlength')); 
+        var texto = $(this).val().length;
+        // console.log(texto);
+        if ($(this).val()[length - 1] == " ") {
+          var cont = $(this).val().length;
+          // console.log("Contador:");
+          // console.log(cont);
+        }
+
+        // console.log("Texto:");
+        // console.log(texto);
+
+        var name = $(this).attr('name');
         
-  //       $('span[name="'+name+'"]').text(length);
-  //   });
-  // });
+        $('span[name="'+name+'"]').text(length);
+    });
+  });
 
-  // $(document).ready(function(){
-  //   $('.palavra').keyup(function() {
-  //       var maxLength = parseInt($(this).attr('maxlength')); 
-  //       var texto = $(this).val().length;
-  //       // console.log(texto);
-  //       if ($(this).val()[length - 1] == " ") {
-  //         var cont = $(this).val().length;
-  //         // console.log("Contador:");
-  //         // console.log(cont);
-  //       }
-
-  //       // console.log("Texto:");
-  //       // console.log(texto);
-
-  //       var name = $(this).attr('name');
-        
-  //       $('span[name="'+name+'"]').text(length);
-  //   });
-  // });
-
-  // $(document).ready(function(){
-  //   function ordenar(event){
-  //     event.preventDefault();
-  //     // console.log(event);
-  //   }
-  // });
-
-  // let order = 1;
 
   function mover(div, direcao, id) {
-    ordemClicado = div.parentElement.parentElement.parentElement.style.order;  
-    // var salva = div.parentElement.parentElement.parentElement.parentElement;
-    // html = '<div id="aaa">' + salva.innerHTML +'</div>';
-    // console.log(div.parentElement.parentElement.parentElement.parentElement.remove());
-    // $('#divCoautores_'+id).append(html);
+    var coautores = document.getElementById("coautores_"+id);
     
     if(direcao == 0) {
-      var divs = div.parentElement.parentElement.parentElement.parentElement.children;
-      console.log(divs[1]);
-      for (var i = 0; i < divs.length; i++) {
-        if (ordemClicado == divs[i].style.order && divs[i+1] != null) {
-          var idCima = divs[i].style.order;
-          divs[i].style.order = parseInt(divs[i+1].style.order, 10);
-          divs[i+1].style.order = parseInt(idCima, 10);
-          var div = divs[i];
-          divs[i] = divs[i+1];
-          divs[i+1] = div;
-          
+      for(var i = 0; i < coautores.children.length; i++) {
+        if (coautores.children[i] == div && coautores.children[i+1] != null) {
+          var baixo = coautores.children[i+1];
+          var cima = coautores.children[i];
+          coautores.children[i+1].remove();
+          cima.parentNode.insertBefore(baixo, cima);
+          return
         }
       }
-      console.log(divs[1]);
-    } else {
-      var divs = div.parentElement.parentElement.parentElement.parentElement.children;
-      for (var i = 0; i < divs.length; i++) {
-        console.log(ordemClicado == divs[i].id);
-        // if (idClicado == divs[i].id) {
-        //   var cima = div[i-1];
-        //   var baixo = div[i];
-        //   div[i].style.order = baixo.style.order;
-        //   if (cima != null) {
-        //     div[i+1].style.order = cima.style.order;
-        //   }
-        // }
+    } else if (direcao == 1) {
+      for(var i = 0; i < coautores.children.length; i++) {
+        if (coautores.children[i] == div && coautores.firstChild != div) {
+          var baixo = coautores.children[i];
+          var cima = coautores.children[i-1];
+          coautores.children[i].remove();
+          cima.parentNode.insertBefore(baixo, cima);
+          return
+        }
       }
     }
   }
 
+  function buscarEmail(input) {
+    var emailBuscado = input.value;
+    var inputName = input.parentElement.parentElement.children[1].children[1];
 
-  // function addLinha(event){
-  //   event.preventDefault();
-  //   order += 1;
-  //     linha = montarLinhaInput(order);
-  //     $('#coautores').append(linha);
-  // }
+    let data = {email: emailBuscado,};
 
-  // $(function(){
-  //   // Coautores
-    
-    
-
-  //   // Exibir modalidade de acordo com a área
-  //   $("#area").change(function(){
-  //     // console.log($(this).val());
-  //     addModalidade($(this).val());
-  //   });
-
-
-  // });
-  // // Remover Coautor
-  // $(document).on('click','.delete',function(){
-  //   $(this).closest('.item').remove();
-  //         return false;
-  // });
-
-  // function addModalidade(areaId){
-  //   // console.log(modalidades)
-  //   $("#modalidade").empty();
-  //   for(let i = 0; i < modalidades.length; i++){
-  //     if(modalidades[i].areaId == areaId){
-  //       // console.log(modalidades[i]);
-  //       $("#modalidade").append("<option value="+modalidades[i].modalidadeId+">"+modalidades[i].modalidadeNome+"</option>")
-  //     }
-  //   }
-  // }
-
-  // let digitarEmail = card => {
-    
-  //   let email = document.querySelector('#'+card.id);
-
-  //   email.addEventListener('keyup', function(event){
-  //     // console.log(email)
-      
-  //       let data = {
-  //       email: email.value,
-        
-  //       _token: '{{csrf_token()}}'
-  //     };
-  //     // console.log(data.email.indexOf('@'));
-  //     if (!(data.email=="" || data.email.indexOf('@')==-1 || data.email.indexOf('.')==-1)) {
-  //       $.ajax({
-  //         type: 'POST',
-  //         url: '{{ route("search.user") }}',
-  //         data: data,
-  //         dataType: 'json',
-  //         success: function(res){
-  //           if(res.user[0] != null){
-  //             // console.log('pega')
-  //             event.path[2].children[1].children[1].value = res.user[0]['name'];
-  //           }
-              
-  //         },
-  //         error: function(err){
-  //             // console.log('err')
-  //             // console.log(err)
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
+    if (!(emailBuscado=="" || emailBuscado.indexOf('@')==-1 || emailBuscado.indexOf('.')==-1)) {
+      $.ajax({
+        type: 'GET',
+        url: '{{ route("search.user") }}',
+        data: data,
+        dataType: 'json',
+        success: function(res) {
+          if(res.user[0] != null) {
+            inputName.value = res.user[0]['name'];
+          }
+        },
+        error: function(err){
+            // console.log('err')
+            // console.log(err)
+        }
+      });
+    }
+  }
 
 </script>
 

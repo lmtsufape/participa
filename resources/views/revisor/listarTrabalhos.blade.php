@@ -60,28 +60,34 @@
                                 <td>Pendente</td>    
                               @endif
                               <td>
-                                <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
+                                @if ($trabalho->resumo != null)
+                                  <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
+                                @else 
+                                  Sem resumo
+                                @endif
                               </td>
                               <td>
-                                @if (!(empty($trabalho->arquivo->items)))
+                                @if ($trabalho->arquivo != null && $trabalho->arquivo->count() > 0)
                                   <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                                 @endif
                               </td>
-                              @if ($trabalho->avaliado != "Avaliado") 
-                                @if (date('yy-m-d') >= $trabalho->modalidade->inicioRevisao && date('yy-m-d') <= $trabalho->modalidade->fimRevisao)
+                              @if ($trabalho->avaliado != "Avaliado")
+                                @if (today() >= $trabalho->modalidade->inicioRevisao && today() <= $trabalho->modalidade->fimRevisao)
                                   {{-- <td>
                                     <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
                                   </td> --}}
-                                  <form action="{{route('revisor.responde')}}" method="get">
-                                    @csrf
-                                    <input type="hidden" name="revisor_id" value="{{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}}">
-                                    <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
-                                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                                    <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
-                                    <button type="submit" class="btn btn-success">
-                                      Avaliar
-                                    </button>
-                                  </form>
+                                  <td>
+                                    <form action="{{route('revisor.responde')}}" method="get">
+                                      @csrf
+                                      <input type="hidden" name="revisor_id" value="{{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}}">
+                                      <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
+                                      <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                                      <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
+                                      <button type="submit" class="btn btn-success">
+                                        Avaliar
+                                      </button>
+                                    </form>
+                                  </td>
                                 @else 
                                   
                                   <td>
@@ -120,9 +126,9 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="resumoModalLongTitle">Regras da modalidade {{$trabalhosDoRevisor[0]->modalidade->nome}} </h5>
+                <h5 class="modal-title">Regras da modalidade {{$trabalhosDoRevisor[0]->modalidade->nome}} </h5>
               </div>
-              <div class="modal-body" name="resumoTrabalhoModal" id="resumoTrabalhoModal">
+              <div class="modal-body">
                 <div class="container">
                   <div class="row">
                     <div class="col-sm-12">

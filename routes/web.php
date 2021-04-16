@@ -71,7 +71,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
      Route::get('coautor/index', 'CoautorController@index')->name('coautor.index');
   });
 
-  Route::post('search/user', 'Users\UserController@searchUser')->name('search.user');
+  Route::get('search/user', 'Users\UserController@searchUser')->name('search.user');
   
   // rotas de teste
   Route::namespace('Submissao')->group(function () {

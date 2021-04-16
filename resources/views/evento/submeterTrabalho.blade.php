@@ -619,7 +619,7 @@
       // console.log(data.email.indexOf('@'));
       if (!(data.email=="" || data.email.indexOf('@')==-1 || data.email.indexOf('.')==-1)) {
         $.ajax({
-          type: 'POST',
+          type: 'GET',
           url: '{{ route("search.user") }}',
           data: data,
           dataType: 'json',
