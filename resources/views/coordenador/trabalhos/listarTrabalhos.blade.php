@@ -237,18 +237,21 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <td>{{$trabalho->autor->email}}</td>
+                    <td>{{$trabalho->autor->name}}</td>
+                    <td>Autor</td>
+                  </tr>
                   @foreach ($trabalho->coautors as $coautor)
+                  @if($coautor->user->id != $trabalho->autorId)
                   <tr>
                     <td>{{$coautor->user->email}}</td>
                     <td>{{$coautor->user->name}}</td>
                     <td>
-                      @if($coautor->user->id == $trabalho->autorId) 
-                        Autor
-                      @else 
-                        Coautor
-                      @endif
+                      Coautor
                     </td>
                   </tr>
+                  @endif
                   @endforeach
                 </tbody>
               </table>
