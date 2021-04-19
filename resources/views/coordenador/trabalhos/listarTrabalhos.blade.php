@@ -222,11 +222,37 @@
         </div>
         <div class="modal-body">
           <div class="row justify-content-center">
-            <div class="col-sm-12">
+            <div class="col-sm-6">
               <h5>Título</h5>
               <p id="tituloTrabalho">{{$trabalho->titulo}}</p>
             </div>
-
+            <div class="col-sm-6">
+              <h5>Autores</h5>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">E-mail</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Vinculação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($trabalho->coautors as $coautor)
+                  <tr>
+                    <td>{{$coautor->user->email}}</td>
+                    <td>{{$coautor->user->name}}</td>
+                    <td>
+                      @if($coautor->user->id == $trabalho->autorId) 
+                        Autor
+                      @else 
+                        Coautor
+                      @endif
+                    </td>
+                  </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
           </div>
           @if ($trabalho->resumo != "")
             <div class="row justify-content-center">
