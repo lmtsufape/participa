@@ -642,11 +642,4 @@
 
       $('.scroll-horizontal-prev-icon').click(function() {
         var move = this.parentElement.parentElement.children[1].children[0].scrollLeft -= 200;
-        $(this).closest('.barra-horizontal')
-               .children('.conteudo-inferior')
-               .children('.wrapper-barra-horizontal').animate({scrollLeft: move}, 500);
-      })
-    });
-
-  </script> 
-@endsection
+    
