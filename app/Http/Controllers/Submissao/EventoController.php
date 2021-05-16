@@ -174,7 +174,7 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrComissao', $evento);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-
+        $areas = $areas->sortBy('nome', SORT_NATURAL)->values()->all();
         return view('coordenador.areas.listarAreas', [
                                                     'evento'                  => $evento,
                                                     'areas'                   => $areas,
