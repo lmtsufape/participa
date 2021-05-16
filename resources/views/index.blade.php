@@ -10,7 +10,7 @@
     <div id="carouselExampleIndicators" class="col-md-11 carousel slide" data-ride="carousel">
       <ol class="carousel-indicators" @if(count($proximosEventos) <= 1) style="display: none;"@endif>
         @if (count($proximosEventos) > 0)
-          @foreach ($proximosEventos as $i => $evento) 
+          @foreach ($proximosEventos as $i => $evento)
             @if ($i == 0)
               <li data-target="#carouselExampleIndicators" data-slide-to="{{$i}}" class="active" style="background-color:#ccbcac"></li>
             @else
@@ -26,12 +26,12 @@
       -moz-box-shadow: -1px 0px 11px 2px rgba(0,0,0,0.39);">
 
         @if(count($proximosEventos)>0)
-          @foreach ($proximosEventos as $i => $evento) 
+          @foreach ($proximosEventos as $i => $evento)
             @if ($i == 0)
               <div class="carousel-item active" style="background-color:white">
                 <div class="row">
                   <div class="col-md-7 evento-image sizeImg">
-                    @if ($evento->fotoEvento != null) 
+                    @if ($evento->fotoEvento != null)
                       <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="" alt="..." style="
                       max-width:300px;
                       max-height:150px;
@@ -49,23 +49,12 @@
                       <div class="col-md-12" style="text-align:center; margin-top:20px;margin-bottom:10px;">
                         @auth
                           <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
-                        @else  
+                        @else
                           <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
                         @endauth
                       </div>
                       <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 325, "...")}}</div>
                       <div class="col-md-12">
-                        <div class="row" style="text-align: center;">
-                          <div class="col-6">
-                            <p style=" font-size:17px;font-weight:600;background-color:#1492E6; border-color:skyblue; padding-top:5px; padding-bottom:6px;  padding-left:10px; padding-right:10px; border: 0px solid #1492E6; border-radius: 8px; color:white">{{$evento->tipo}}</p>
-                          </div>
-                          <div class="col-6">
-                            @if ($evento->recolhimento == "pago")
-                              <p style=" font-size:17px;font-weight:600;background:linear-gradient(280deg, rgba(247,83,83,1) 35%, rgba(235,236,84,1) 100%); border-color:skyblue; padding-top:5px; padding-bottom:6px;  padding-left:10px; padding-right:10px; border: 0px solid #1492E6; border-radius: 8px; color:white">Pago</p></div>
-                            @else 
-                              <p style=" font-size:17px;font-weight:600;background:linear-gradient(280deg, rgba(176,74,227,1) 36%, rgba(112,84,236,1) 100%); border-color:skyblue; padding-top:5px; padding-bottom:6px;  padding-left:10px; padding-right:10px; border: 0px solid #1492E6; border-radius: 8px; color:white">Gratuito</p></div>
-                            @endif
-                          </div>
                       </div>
                       <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:17px"><img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}}</div>
                       <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:13px" ><img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;">  {{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</div>
@@ -77,7 +66,7 @@
             <div class="carousel-item" style="background-color:white">
               <div class="row">
                 <div class="col-md-7 evento-image sizeImg">
-                  @if ($evento->fotoEvento != null) 
+                  @if ($evento->fotoEvento != null)
                     <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="" alt="..." style="max-width:300px;
                     max-height:150px;
                     width: auto;
@@ -94,7 +83,7 @@
                     <div class="col-md-12" style="text-align:center; margin-top:20px;margin-bottom:10px;">
                       @auth
                         <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
-                      @else  
+                      @else
                         <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
                       @endauth
                     </div>
@@ -107,7 +96,7 @@
                         <div class="col-6">
                           @if ($evento->recolhimento == "pago")
                             <p style=" font-size:17px;font-weight:600;background:linear-gradient(280deg, rgba(247,83,83,1) 35%, rgba(235,236,84,1) 100%); border-color:skyblue; padding-top:5px; padding-bottom:6px;  padding-left:10px; padding-right:10px; border: 0px solid #1492E6; border-radius: 8px; color:white">Pago</p></div>
-                          @else 
+                          @else
                             <p style=" font-size:17px;font-weight:600;background:linear-gradient(280deg, rgba(176,74,227,1) 36%, rgba(112,84,236,1) 100%); border-color:skyblue; padding-top:5px; padding-bottom:6px;  padding-left:10px; padding-right:10px; border: 0px solid #1492E6; border-radius: 8px; color:white">Gratuito</p></div>
                           @endif
                         </div>
@@ -123,7 +112,7 @@
         @else
           <div>Nenhum evento</div>
         @endif
-      
+
       </div>
       @if (count($eventos) > 1)
           <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev" style="margin-left: -100px">
@@ -140,14 +129,14 @@
     <div class="col-md-12" style="font-size: 20px; margin-top:5rem; margin-bottom:20px; text-align:center">Próximos eventos</div>
     <div class="col-md-11">
       <div class="row justify-content-center" style="padding-left:10px">
-        
+
         @foreach($proximosEventos as $evento)
           <div class="card" style="width: 16rem; margin:8px; border: 0px solid #1492E6; border-radius: 12px;">
-            @if ($evento->fotoEvento != null) 
+            @if ($evento->fotoEvento != null)
               <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
             @else
               <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
-            @endif  
+            @endif
             <div class="card-body">
               <div class="row">
                 <div class="col-md-12" style="height:80px">
@@ -169,7 +158,7 @@
                     <div class="col-6">
                       @if ($evento->recolhimento == "pago")
                         <p style=" font-size:15px;font-weight:600;background:linear-gradient(280deg, rgba(247,83,83,1) 35%, rgba(235,236,84,1) 100%); border-color:skyblue; padding-top:4px; padding-bottom:6px;  padding-left:6px; padding-right:6px; border: 0px solid #1492E6; border-radius: 8px; color:white">Pago</p>
-                      @else 
+                      @else
                         <p style=" font-size:15px;font-weight:600;background:linear-gradient(280deg, rgba(176,74,227,1) 36%, rgba(112,84,236,1) 100%); border-color:skyblue; padding-top:4px; padding-bottom:6px;  padding-left:6px; padding-right:6px; border: 0px solid #1492E6; border-radius: 8px; color:white">Gratuito</p>
                       @endif
                     </div>
@@ -177,13 +166,13 @@
                 </div>
                 <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:13px"><img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}}</div>
                 <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:13px" ><img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;">  {{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</div>
-                    
+
               </div>
             </div>
           </div>
         @endforeach
 
-        
+
       </div>
     </div>
     <!-- MAIS EVENTOS-->
@@ -247,7 +236,7 @@
             <div class="cards-wrapper">
               @foreach($proximosEventos as $evento)
                 <div class="card acessibilidade" style="width: 13rem;">
-                  @if ($evento->fotoEvento != null) 
+                  @if ($evento->fotoEvento != null)
                     <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
                   @else
                     <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
@@ -262,7 +251,7 @@
                         <h6 class="card-title acessibilidade">{{$evento->nome}}</h6>
                       </a>
                     @endauth
-                    <br> 
+                    <br>
                     <div class="container" style="position: relative; top: -25px;">
                       <div class="tags-a row" style="position: relative; left: -15px;">
                         <div class="col-sm-8">
@@ -278,24 +267,24 @@
                       </div>
                       <div class="row data-horario" style="margin-top: -20px; margin-bottom: -10px;">
                         <div class="col-sm-6">
-                          <img src="{{ asset('/img/icons/calendar.png') }}" alt=""> 
+                          <img src="{{ asset('/img/icons/calendar.png') }}" alt="">
                           <span>
                             {{date('d/m/Y',strtotime($evento->dataInicio))}}
-                          </span> 
+                          </span>
                         </div>
                         <div class="col-sm-6">
-                          {{-- <img src="{{ asset('/img/icons/clock.png') }}" alt=""> 
-                          <span> 
-                            Horario 
+                          {{-- <img src="{{ asset('/img/icons/clock.png') }}" alt="">
+                          <span>
+                            Horario
                           </span> --}}
                         </div>
                       </div>
                       <div class="row location-pointer-card">
                         <div class="col-sm-1">
-                          <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto"> 
+                          <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto">
                         </div>
                         <div class="col-sm-11">
-                          <span> 
+                          <span>
                             {{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.
                           </span>
                         </div>
@@ -309,7 +298,7 @@
         </div>
       </div>
       <div class="conteudo-superior">
-        
+
         <a class="scroll-horizontal-prev-icon">
           <img src="{{asset('/img/icons/previos.png')}}" alt="">
         </a>
@@ -372,10 +361,10 @@
                 <div class="info-modulo-head">
                   <img src="{{asset('img/icons/inscricao.svg')}}" alt="">
                   <h1>Inscrições</h1>
-        
+
                 </div>
                 <div class="">
-        
+
                   <p>Permite a inscrição de pessoas físicas,
                     jurídicas, grupos e outras modalidades nos eventos criados de
                     modo gratuito, pago ou ainda com cupons de desconto ou de gratuidade.
@@ -386,17 +375,17 @@
                   </div>
               </div>
             </div>
-        
+
             <div class="col-sm-4" style="position: relative; top: 150px;">
               <div class="info-modulo">
                 <div class="info-modulo-head">
                   <img src="{{asset('img/icons/documento.svg')}}" alt="">
                   <h1>Trabalhos</h1>
-        
+
                 </div>
-                
+
                 <div class="">
-        
+
                   <p>Propicia a gestão do fluxo dos
                     trabalhos acadêmicos de diversas naturezas (resumo,
                     trabalho completo, etc) dentro de um evento, isto é,
@@ -410,11 +399,11 @@
                 <div class="info-modulo-head">
                   <img src="{{asset('img/icons/certificado.svg')}}" alt="">
                   <h1>Certificados</h1>
-        
+
                 </div>
-                
+
                 <div class="">
-        
+
                   <p>Viabiliza a emissão de
                     todo os certificados necessários de modo rápido e
                     em tempo real. Contempla a emissão de certificados
@@ -428,16 +417,16 @@
             </div>
           {{-- Container Eventos Recentes --}}
           {{-- <div class="container-fluid" style="width:95%; margin-bottom:50px">
-      
+
             <div class="col-sm-12">
               <div class="row titulo" style="margin-top:0">
                 <h1>Eventos em curso</h1>
               </div>
             </div>
-      
+
             <div class="row">
               @foreach ($eventos as $evento)
-                @if($evento->publicado && $evento->deletado == false) 
+                @if($evento->publicado && $evento->deletado == false)
                   <div class="card" style="width: 18rem;">
                       @if(isset($evento->fotoEvento))
                         <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
@@ -479,11 +468,11 @@
                                                   </div>
                                               @endcan
                                           </div>
-      
+
                                       </div>
-      
+
                                   </h4>
-      
+
                               </div>
                           </div>
                           <p class="card-text">
@@ -492,7 +481,7 @@
                               <strong>Revisão:</strong> {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}<br>
                           </p>
                           <p>
-      
+
                               <div class="row justify-content-center">
                                   <div class="col-sm-12">
                                       <img src="{{asset('img/icons/map-marker-alt-solid.svg')}}" alt="" style="width:15px">
@@ -504,18 +493,18 @@
                               <a href="{{  route('evento.visualizarNaoLogado',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
                           </p>
                       </div>
-      
+
                   </div>
                 @endif
               @endforeach
             </div>
-      
+
             <div class="row justify-content-center">
               <a class="btn btn-outline-secondary btn-lg" href="{{route('home')}}"
                 style="margin-bottom:10px;" role="button">Mais Eventos</a>
-      
+
             </div>
-      
+
           </div> --}}
           {{-- end Container Eventos Recentes           --}}
         </div>
@@ -615,7 +604,7 @@
         interval: false
       });
 
-      
+
 
       // $('#modalInfo').modal('show');
 
@@ -642,4 +631,11 @@
 
       $('.scroll-horizontal-prev-icon').click(function() {
         var move = this.parentElement.parentElement.children[1].children[0].scrollLeft -= 200;
-    
+        $(this).closest('.barra-horizontal')
+               .children('.conteudo-inferior')
+               .children('.wrapper-barra-horizontal').animate({scrollLeft: move}, 500);
+      })
+    });
+
+  </script>
+@endsection
