@@ -54,10 +54,7 @@
                         @endauth
                       </div>
                       <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 325, "...")}}</div>
-                      <div class="col-md-12">
-                      </div>
-                      <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:17px"><img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}}</div>
-                      <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:13px" ><img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;">  {{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</div>
+
                     </div>
                   </div>
                 </div>
@@ -88,11 +85,7 @@
                       @endauth
                     </div>
                     <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 325, "...")}}</div>
-                    <div class="col-md-12">
 
-                    </div>
-                    <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:17px"><img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}}</div>
-                    <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:13px" ><img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;">  {{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</div>
                   </div>
                 </div>
               </div>
@@ -140,13 +133,7 @@
                     </a>
                   @endauth
                 </div>
-                <div class="col-md-12">
-                  <div class="row" style="text-align: center;">
 
-                  </div>
-                </div>
-                <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:13px"><img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}}</div>
-                <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:13px" ><img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;">  {{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</div>
 
               </div>
             </div>

@@ -202,24 +202,7 @@
           <div class="col-sm-6">
             <div class="container">
 
-              <div class="row" style="color:white;">
-                <div class="col-sm-1">
-                  <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto" style="margin-right: -10px;">
-                </div>
-                <div class="col-sm-11">
-                  <p>
-                    {{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.
-                  </p>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-6 data">
-                  <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="23px" height="auto"> <span> {{date('d/m/Y',strtotime($evento->dataInicio))}} </span>
-                </div>
-                <div class="col-sm-6 clock">
-                  {{-- <img src="{{ asset('/img/icons/clock.png') }}" alt="" width="25px" height="auto"> <span> 14:30 </span> --}}
-                </div>
-              </div>
+
               <hr>
               <div class="row">
                 @if ($etiquetas->modsubmissao == true)
