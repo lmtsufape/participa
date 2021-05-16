@@ -42,6 +42,7 @@ class TrabalhoController extends Controller
     {
         $evento = Evento::find($id);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
+        $areas = $areas->sortBy('nome')->values()->all();
         // $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         // $revisores = Revisor::where('eventoId', $evento->id)->get();
         // $modalidades = Modalidade::all();
@@ -419,7 +420,7 @@ class TrabalhoController extends Controller
         'campoextra4grande'     => ['nullable', 'string'],
         'campoextra5grande'     => ['nullable', 'string'],
       ]);
-  
+
       $trabalho = Trabalho::find($id);
       $evento = $trabalho->evento;
       $arquivo = $request->file('arquivo'.$id);
@@ -448,13 +449,13 @@ class TrabalhoController extends Controller
       foreach ($trabalho->coautors as $coautor_id) {
         $coautores->push(User::find($coautor_id->autorId));
       }
-      
+
       $coautoresExcluidos = collect();
       // TODO Checando a mudança do autor do trabalho, a inclusão e exclusão de coautores
       foreach ($request->input('emailCoautor_'.$id) as $i => $email) {
         $coautor = User::where('email', $email)->first();
-        // Chegando se existe do usuário cadastrado no sistema 
-        // Se existir é checado se o usario já é coautor do trabalho e adicionado nos coautores 
+        // Chegando se existe do usuário cadastrado no sistema
+        // Se existir é checado se o usario já é coautor do trabalho e adicionado nos coautores
         // excluidos para diff futuro. Se o usuário é existente no sistema mas não é coautor do trabalho
         // é checado se ele é coautor de algum trabalho, se for coautor o trabalho é adicionado no relacionamento,
         // se não é criado um coautor com o id do user e o trabalho é adicionado
@@ -507,7 +508,7 @@ class TrabalhoController extends Controller
           if ($trabalho->autor->email != $email) {
             $autor = User::where('email', $email)->first();
             $trabalho->autorId = $autor->id;
-          } 
+          }
         }
       }
 
