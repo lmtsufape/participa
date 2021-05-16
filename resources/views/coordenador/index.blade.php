@@ -17,11 +17,11 @@
             </div>
         </div>
     </div>
-    @if(session('mensagem'))
+    @if(session('message'))
         <div class="row">
             <div class="col-md-12" style="margin-top: 5px;">
                 <div class="alert alert-success">
-                    <p>{{session('mensagem')}}</p>
+                    <p>{{session('message')}}</p>
                 </div>
             </div>
         </div>

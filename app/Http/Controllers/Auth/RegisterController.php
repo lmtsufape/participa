@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 use App\Models\Users\User;
 use App\Models\Submissao\Endereco;
@@ -54,16 +55,49 @@ class RegisterController extends Controller
             'name'          => ['required', 'string', 'max:255'],
             'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'      => ['required', 'string', 'min:8', 'confirmed'],
-            'cpf'           => ['required', 'cpf', 'unique:users'],
-            'celular'       => ['required','string', 'telefone'],
-            'instituicao'   => ['required','string','max:255'],
+            // 'pais'          => ['required'],
+            'cpf'           => ['required_if: passaporte, null' ,
+                                    function ($attribute, $value, $fail) use ($data){
+                                        if ($data['passaporte'] == null && $value == null) {
+                                            $fail($attribute.' ou cpf precisa ser preenchido.');
+                                            return;
+                                        }
+                                        if ($data['passaporte'] == null && User::where('cpf',$data['cpf'])->count() != 0) {
+                                            $fail($attribute.' já está me uso.');
+                                            return;
+                                        }
+                                        if ($data['cpf'] != null) {
+                                            if (User::where('cpf',$value)->count() != 0) {
+                                                $fail($attribute.' já está me uso.');
+                                                return;
+                                            }
+                                        }
+
+                                    },],
+            'passaporte'    => ['required_if: cpf, null','max:10',
+                                function ($attribute, $value, $fail) use ($data){
+                                    if ($data['cpf'] == null && $value == null) {
+                                        // dd( $data['cpf'] == null && $value == null);
+                                        $fail($attribute.' ou cpf precisa ser preenchido.');
+                                        return;
+                                    }
+                                    if ($data['passaporte'] != null && User::where('passaporte',$data['passaporte'])->count() != 0) {
+                                        $fail($attribute.' já está me uso.');
+                                        return;
+                                    }
+
+
+                                },
+                                ],
+            'celular'       => ['nullable','string', 'telefone'],
+            'instituicao'   => ['nullable','string','max:255'],
             // 'especProfissional' => [],
-            'rua'           => ['required','string','max:255'],
-            'numero'        => ['nullable','string'],
-            'bairro'        => ['required','string','max:255'],
-            'cidade'        => ['required','string','max:255'],
-            'uf'            => ['required','string'],
-            'cep'           => ['required','string'],
+            'rua'           => ['required_if: pais, brasil','string','max:255'],
+            'numero'        => ['required_if: pais, brasil','string'],
+            'bairro'        => ['required_if: pais, brasil','string','max:255'],
+            'cidade'        => ['required_if: pais, brasil','string','max:255'],
+            'uf'            => ['required_if: pais, brasil','string'],
+            'cep'           => ['required_if: pais, brasil','string'],
             'complemento'   => ['nullable','string'],
         ]);
     }
@@ -76,18 +110,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-
+        // dd("teste");
         // endereço
-        $end = new Endereco();
-        $end->rua = $data['rua'];
-        $end->numero = $data['numero'];
-        $end->bairro = $data['bairro'];
-        $end->cidade = $data['cidade'];
-        $end->uf = $data['uf'];
-        $end->cep = $data['cep'];
-        $end->complemento = $data['complemento'];
-
-        $end->save();
         // dd($end)
 
         $user = new User();
@@ -95,10 +119,29 @@ class RegisterController extends Controller
         $user->email = $data['email'];
         $user->password = bcrypt($data['password']);
         $user->cpf = $data['cpf'];
+        $user->passaporte = $data['passaporte'];
         $user->celular = $data['celular'];
         $user->instituicao = $data['instituicao'];
 
-        $user->enderecoId = $end->id;
+        if( $data['rua'] != null && $data['cep'] != null ){
+            $end = new Endereco();
+            $end->rua = $data['rua'];
+            $end->numero = $data['numero'];
+            $end->bairro = $data['bairro'];
+            $end->cidade = $data['cidade'];
+            $end->uf = $data['uf'];
+            $end->cep = $data['cep'];
+            $end->complemento = $data['complemento'];
+
+            $end->save();
+            $user->enderecoId = $end->id;
+            $user->save();
+
+            return $user;
+
+        }
+
+        $user->enderecoId = null;
         $user->save();
 
         return $user;

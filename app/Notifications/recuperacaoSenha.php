@@ -42,9 +42,9 @@ class recuperacaoSenha extends Notification
     {
         return (new MailMessage)
                     ->subject('Recuperação de senha')
-                    ->greeting('Olá;!')
+                    ->greeting('Olá!')
                     ->line('Você está recebendo este e-mail porque nós recebemos uma requisição de redefinição de senha para sua conta.')
-                    ->action('REDEFINIR SENHA', route('password.reset', $this->token))
+                    ->action('Redefinir Senha', route('password.reset', $this->token))
                     ->line('Se não foi você que solicitou esta recuperação, apenas ignore este e-mail.')
                     ->line('Obrigado por usar o nosso sistema.')
                     ->markdown('vendor.notifications.email');

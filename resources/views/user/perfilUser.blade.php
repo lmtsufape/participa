@@ -4,9 +4,9 @@
 
 <div class="banner-perfil"  style="position: relative; top: 65px;">
     <div class="row justify-content-center curved" style="margin-bottom:-5px">
-    
+
     </div>
-    
+
     <div class="row justify-content-center">
         <div class="col-sm-12">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#114048ff"
@@ -33,12 +33,21 @@
                             <p>Informações Pessoais</p>
                         </div>
                     </div>
+                    @if(session('message'))
+                        <div class="row">
+                            <div class="col-md-12" style="margin-top: 5px;">
+                                <div class="alert alert-success">
+                                    <p>{{session('message')}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                     <form method="POST" action="{{ route('perfil.update') }}">
                         @csrf
                         <div class="row justify-content-center">
                             <input hidden name="id" value="{{$user->id}}">
-                            <div class="col-md-7">
+                            <div class="col-md-12">
                                 <label for="name" class="col-form-label">{{ __('Nome Completo') }}</label>
                                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" @if(old('name') != null) value="{{ old('name') }}" @else value="{{$user->name}}" @endif required autocomplete="name" autofocus>
 
@@ -48,10 +57,22 @@
                                     </span>
                                 @enderror
                             </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <label for="passaporte" class="col-form-label">{{ __('Passaporte') }}</label>
+                                <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" @if(old('passaporte') != null) value="{{ old('passaporte') }}" @else value="{{$user->passaporte ?? "indefinido"}}" @endif  autocomplete="passaporte" autofocus>
 
-                            <div class="col-md-5">
+                                @error('passaporte')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
                                 <label for="cpf" class="col-form-label">{{ __('CPF') }}</label>
-                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" @if(old('cpf') != null) value="{{ old('cpf') }}" @else value="{{$user->cpf}}" @endif required autocomplete="cpf" autofocus>
+                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" @if(old('cpf') != null) value="{{ old('cpf') }}" @else value="{{$user->cpf ?? "indefinido"}}" @endif  autocomplete="cpf" autofocus>
 
                                 @error('cpf')
                                     <span class="invalid-feedback" role="alert">
@@ -87,153 +108,155 @@
 
                         </div>
 
-                        <div class="row subtitulo" style="margin-top:20px">
-                            <div class="col-sm-12">
-                                <p>Endereço</p>
+                        @if($end != null)
+                            <div class="row subtitulo" style="margin-top:20px">
+                                <div class="col-sm-12">
+                                    <p>Endereço</p>
+                                </div>
                             </div>
-                        </div>
 
-                        {{-- Endereço --}}
-                        <div class="form-group row justify-content-center">
-                            <div class="col-md-2">
-                                <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
-                                <input onblur="pesquisacep(this.value);" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" @if(old('cep') != null ) value="{{ old('cep') }}" @else value="{{$end->cep}}" @endif required autocomplete="cep">
+                            {{-- Endereço --}}
+                            <div class="form-group row justify-content-center">
+                                <div class="col-md-2">
+                                    <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
+                                    <input onblur="pesquisacep(this.value);" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" @if(old('cep') != null ) value="{{ old('cep') }}" @else value="{{$end->cep}}" @endif required autocomplete="cep">
 
-                                @error('cep')
+                                    @error('cep')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="rua" class="col-form-label">{{ __('Rua') }}</label>
+                                    <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" @if(old('rua') != null) value="{{ old('rua') }}" @else value="{{$end->rua}}" @endif required autocomplete="new-password">
+
+                                    @error('rua')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-4">
+                                <label for="numero" class="col-form-label">{{ __('Número') }}</label>
+                                <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$end->numero}}" @endif required autocomplete="numero">
+
+                                @error('numero')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-                            <div class="col-md-6">
-                                <label for="rua" class="col-form-label">{{ __('Rua') }}</label>
-                                <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" @if(old('rua') != null) value="{{ old('rua') }}" @else value="{{$end->rua}}" @endif required autocomplete="new-password">
+                            </div>
 
-                                @error('rua')
+
+                            <div class="form-group row justify-content-center">
+                                <div class="col-md-3">
+                                    <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
+                                    <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" @if(old('bairro') != null) value="{{ old('bairro') }}" @else value="{{$end->bairro}}" @endif required autocomplete="bairro">
+
+                                    @error('bairro')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
+                                    <input id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" @if(old('cidade') != null) value="{{ old('cidade') }}" @else value="{{$end->cidade}}" @endif required autocomplete="cidade">
+
+                                    @error('cidade')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
+                                    <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" @if(old('complemento') != null) value="{{ old('complemento') }}" @else value="{{$end->complemento}} @endif" required autocomplete="complemento" autofocus>
+
+                                    @error('complemento')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                @enderror
-                            </div>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="uf" class="col-form-label">{{ __('UF') }}</label>
+                                    {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
+                                    <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
+                                        @if (old('uf') != null)
+                                            <option value="" disabled selected hidden>-- UF --</option>
+                                            <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
+                                            <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
+                                            <option @if(old('uf') == 'AP') selected @endif value="AP">Amapá</option>
+                                            <option @if(old('uf') == 'AM') selected @endif value="AM">Amazonas</option>
+                                            <option @if(old('uf') == 'BA') selected @endif value="BA">Bahia</option>
+                                            <option @if(old('uf') == 'CE') selected @endif value="CE">Ceará</option>
+                                            <option @if(old('uf') == 'DF') selected @endif value="DF">Distrito Federal</option>
+                                            <option @if(old('uf') == 'ES') selected @endif value="ES">Espírito Santo</option>
+                                            <option @if(old('uf') == 'GO') selected @endif value="GO">Goiás</option>
+                                            <option @if(old('uf') == 'MA') selected @endif value="MA">Maranhão</option>
+                                            <option @if(old('uf') == 'MT') selected @endif value="MT">Mato Grosso</option>
+                                            <option @if(old('uf') == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
+                                            <option @if(old('uf') == 'MG') selected @endif value="MG">Minas Gerais</option>
+                                            <option @if(old('uf') == 'PA') selected @endif value="PA">Pará</option>
+                                            <option @if(old('uf') == 'PB') selected @endif value="PB">Paraíba</option>
+                                            <option @if(old('uf') == 'PR') selected @endif value="PR">Paraná</option>
+                                            <option @if(old('uf') == 'PE') selected @endif value="PE">Pernambuco</option>
+                                            <option @if(old('uf') == 'PI') selected @endif value="PI">Piauí</option>
+                                            <option @if(old('uf') == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
+                                            <option @if(old('uf') == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
+                                            <option @if(old('uf') == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
+                                            <option @if(old('uf') == 'RO') selected @endif value="RO">Rondônia</option>
+                                            <option @if(old('uf') == 'RR') selected @endif value="RR">Roraima</option>
+                                            <option @if(old('uf') == 'SC') selected @endif value="SC">Santa Catarina</option>
+                                            <option @if(old('uf') == 'SP') selected @endif value="SP">São Paulo</option>
+                                            <option @if(old('uf') == 'SE') selected @endif value="SE">Sergipe</option>
+                                            <option @if(old('uf') == 'TO') selected @endif value="TO">Tocantins</option>
+                                        @else
+                                            <option value="" disabled selected hidden>-- UF --</option>
+                                            <option @if($end->uf == 'AC') selected @endif value="AC">Acre</option>
+                                            <option @if($end->uf == 'AL') selected @endif value="AL">Alagoas</option>
+                                            <option @if($end->uf == 'AP') selected @endif value="AP">Amapá</option>
+                                            <option @if($end->uf == 'AM') selected @endif value="AM">Amazonas</option>
+                                            <option @if($end->uf == 'BA') selected @endif value="BA">Bahia</option>
+                                            <option @if($end->uf == 'CE') selected @endif value="CE">Ceará</option>
+                                            <option @if($end->uf == 'DF') selected @endif value="DF">Distrito Federal</option>
+                                            <option @if($end->uf == 'ES') selected @endif value="ES">Espírito Santo</option>
+                                            <option @if($end->uf == 'GO') selected @endif value="GO">Goiás</option>
+                                            <option @if($end->uf == 'MA') selected @endif value="MA">Maranhão</option>
+                                            <option @if($end->uf == 'MT') selected @endif value="MT">Mato Grosso</option>
+                                            <option @if($end->uf == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
+                                            <option @if($end->uf == 'MG') selected @endif value="MG">Minas Gerais</option>
+                                            <option @if($end->uf == 'PA') selected @endif value="PA">Pará</option>
+                                            <option @if($end->uf == 'PB') selected @endif value="PB">Paraíba</option>
+                                            <option @if($end->uf == 'PR') selected @endif value="PR">Paraná</option>
+                                            <option @if($end->uf == 'PE') selected @endif value="PE">Pernambuco</option>
+                                            <option @if($end->uf == 'PI') selected @endif value="PI">Piauí</option>
+                                            <option @if($end->uf == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
+                                            <option @if($end->uf == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
+                                            <option @if($end->uf == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
+                                            <option @if($end->uf == 'RO') selected @endif value="RO">Rondônia</option>
+                                            <option @if($end->uf == 'RR') selected @endif value="RR">Roraima</option>
+                                            <option @if($end->uf == 'SC') selected @endif value="SC">Santa Catarina</option>
+                                            <option @if($end->uf == 'SP') selected @endif value="SP">São Paulo</option>
+                                            <option @if($end->uf == 'SE') selected @endif value="SE">Sergipe</option>
+                                            <option @if($end->uf == 'TO') selected @endif value="TO">Tocantins</option>
+                                        @endif
+                                    </select>
 
-                            <div class="col-md-4">
-                            <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                            <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$end->numero}}" @endif required autocomplete="numero">
-
-                            @error('numero')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        </div>
-
-
-                        <div class="form-group row justify-content-center">
-                            <div class="col-md-3">
-                                <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
-                                <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" @if(old('bairro') != null) value="{{ old('bairro') }}" @else value="{{$end->bairro}}" @endif required autocomplete="bairro">
-
-                                @error('bairro')
+                                    @error('uf')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                @enderror
-                            </div>
+                                    @enderror
+                                </div>
 
-                            <div class="col-md-3">
-                                <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
-                                <input id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" @if(old('cidade') != null) value="{{ old('cidade') }}" @else value="{{$end->cidade}}" @endif required autocomplete="cidade">
-
-                                @error('cidade')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
                             </div>
-                            <div class="col-sm-4">
-                                <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
-                                <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" @if(old('complemento') != null) value="{{ old('complemento') }}" @else value="{{$end->complemento}} @endif" required autocomplete="complemento" autofocus>
-                
-                                @error('complemento')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="col-sm-2">
-                                <label for="uf" class="col-form-label">{{ __('UF') }}</label>
-                                {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
-                                <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
-                                    @if (old('uf') != null) 
-                                        <option value="" disabled selected hidden>-- UF --</option>
-                                        <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
-                                        <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
-                                        <option @if(old('uf') == 'AP') selected @endif value="AP">Amapá</option>
-                                        <option @if(old('uf') == 'AM') selected @endif value="AM">Amazonas</option>
-                                        <option @if(old('uf') == 'BA') selected @endif value="BA">Bahia</option>
-                                        <option @if(old('uf') == 'CE') selected @endif value="CE">Ceará</option>
-                                        <option @if(old('uf') == 'DF') selected @endif value="DF">Distrito Federal</option>
-                                        <option @if(old('uf') == 'ES') selected @endif value="ES">Espírito Santo</option>
-                                        <option @if(old('uf') == 'GO') selected @endif value="GO">Goiás</option>
-                                        <option @if(old('uf') == 'MA') selected @endif value="MA">Maranhão</option>
-                                        <option @if(old('uf') == 'MT') selected @endif value="MT">Mato Grosso</option>
-                                        <option @if(old('uf') == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
-                                        <option @if(old('uf') == 'MG') selected @endif value="MG">Minas Gerais</option>
-                                        <option @if(old('uf') == 'PA') selected @endif value="PA">Pará</option>
-                                        <option @if(old('uf') == 'PB') selected @endif value="PB">Paraíba</option>
-                                        <option @if(old('uf') == 'PR') selected @endif value="PR">Paraná</option>
-                                        <option @if(old('uf') == 'PE') selected @endif value="PE">Pernambuco</option>
-                                        <option @if(old('uf') == 'PI') selected @endif value="PI">Piauí</option>
-                                        <option @if(old('uf') == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
-                                        <option @if(old('uf') == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
-                                        <option @if(old('uf') == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
-                                        <option @if(old('uf') == 'RO') selected @endif value="RO">Rondônia</option>
-                                        <option @if(old('uf') == 'RR') selected @endif value="RR">Roraima</option>
-                                        <option @if(old('uf') == 'SC') selected @endif value="SC">Santa Catarina</option>
-                                        <option @if(old('uf') == 'SP') selected @endif value="SP">São Paulo</option>
-                                        <option @if(old('uf') == 'SE') selected @endif value="SE">Sergipe</option>
-                                        <option @if(old('uf') == 'TO') selected @endif value="TO">Tocantins</option>
-                                    @else 
-                                        <option value="" disabled selected hidden>-- UF --</option>
-                                        <option @if($end->uf == 'AC') selected @endif value="AC">Acre</option>
-                                        <option @if($end->uf == 'AL') selected @endif value="AL">Alagoas</option>
-                                        <option @if($end->uf == 'AP') selected @endif value="AP">Amapá</option>
-                                        <option @if($end->uf == 'AM') selected @endif value="AM">Amazonas</option>
-                                        <option @if($end->uf == 'BA') selected @endif value="BA">Bahia</option>
-                                        <option @if($end->uf == 'CE') selected @endif value="CE">Ceará</option>
-                                        <option @if($end->uf == 'DF') selected @endif value="DF">Distrito Federal</option>
-                                        <option @if($end->uf == 'ES') selected @endif value="ES">Espírito Santo</option>
-                                        <option @if($end->uf == 'GO') selected @endif value="GO">Goiás</option>
-                                        <option @if($end->uf == 'MA') selected @endif value="MA">Maranhão</option>
-                                        <option @if($end->uf == 'MT') selected @endif value="MT">Mato Grosso</option>
-                                        <option @if($end->uf == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
-                                        <option @if($end->uf == 'MG') selected @endif value="MG">Minas Gerais</option>
-                                        <option @if($end->uf == 'PA') selected @endif value="PA">Pará</option>
-                                        <option @if($end->uf == 'PB') selected @endif value="PB">Paraíba</option>
-                                        <option @if($end->uf == 'PR') selected @endif value="PR">Paraná</option>
-                                        <option @if($end->uf == 'PE') selected @endif value="PE">Pernambuco</option>
-                                        <option @if($end->uf == 'PI') selected @endif value="PI">Piauí</option>
-                                        <option @if($end->uf == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
-                                        <option @if($end->uf == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
-                                        <option @if($end->uf == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
-                                        <option @if($end->uf == 'RO') selected @endif value="RO">Rondônia</option>
-                                        <option @if($end->uf == 'RR') selected @endif value="RR">Roraima</option>
-                                        <option @if($end->uf == 'SC') selected @endif value="SC">Santa Catarina</option>
-                                        <option @if($end->uf == 'SP') selected @endif value="SP">São Paulo</option>
-                                        <option @if($end->uf == 'SE') selected @endif value="SE">Sergipe</option>
-                                        <option @if($end->uf == 'TO') selected @endif value="TO">Tocantins</option>
-                                    @endif
-                                </select>
-
-                                @error('uf')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                        </div>
+                        @endif
                         <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 
                             <div class="col-md-7" style="padding-left:0">
@@ -316,7 +339,7 @@
 
                         </div>
 
-                        
+
 
                         <div class="row">
                             @if ($user->membroComissaoEvento != null && count($user->membroComissaoEvento) > 0)
@@ -363,9 +386,9 @@
                                     @foreach ($areas as $area)
                                         @if (Auth::user()->revisor->areaId == $area->id)
                                             <option value="{{$area->id}}" selected>{{$area->nome}}</option>
-                                        @else 
+                                        @else
                                             <option value="{{$area->id}}">{{$area->nome}}</option>
-                                        @endif    
+                                        @endif
                                     @endforeach
 
                                     @error('primeiraArea')
@@ -393,7 +416,7 @@
                             </div>
                         </div>
                         @endif --}}
-                        
+
                         <div class="row subtitulo" style="margin-top:20px">
                             <div class="col-sm-12">
                                 <p>Endereço</p>
@@ -461,7 +484,7 @@
                             <div class="col-sm-4">
                                 <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
                                 <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="{{ old('complemento') }}" autocomplete="complemento" autofocus>
-                
+
                                 @error('complemento')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
