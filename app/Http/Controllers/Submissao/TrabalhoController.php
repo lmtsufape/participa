@@ -42,7 +42,7 @@ class TrabalhoController extends Controller
     {
         $evento = Evento::find($id);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-        $areas = $areas->sortBy('nome')->values()->all();
+        $areas = $areas->sortBy('nome', SORT_NATURAL)->values()->all();
         // $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         // $revisores = Revisor::where('eventoId', $evento->id)->get();
         // $modalidades = Modalidade::all();
