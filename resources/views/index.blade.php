@@ -89,17 +89,7 @@
                     </div>
                     <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 325, "...")}}</div>
                     <div class="col-md-12">
-                      <div class="row" style="text-align: center;">
-                        <div class="col-6">
-                          <p style=" font-size:17px;font-weight:600;background-color:#1492E6; border-color:skyblue; padding-top:5px; padding-bottom:6px;  padding-left:10px; padding-right:10px; border: 0px solid #1492E6; border-radius: 8px; color:white">{{$evento->tipo}}</p>
-                        </div>
-                        <div class="col-6">
-                          @if ($evento->recolhimento == "pago")
-                            <p style=" font-size:17px;font-weight:600;background:linear-gradient(280deg, rgba(247,83,83,1) 35%, rgba(235,236,84,1) 100%); border-color:skyblue; padding-top:5px; padding-bottom:6px;  padding-left:10px; padding-right:10px; border: 0px solid #1492E6; border-radius: 8px; color:white">Pago</p></div>
-                          @else
-                            <p style=" font-size:17px;font-weight:600;background:linear-gradient(280deg, rgba(176,74,227,1) 36%, rgba(112,84,236,1) 100%); border-color:skyblue; padding-top:5px; padding-bottom:6px;  padding-left:10px; padding-right:10px; border: 0px solid #1492E6; border-radius: 8px; color:white">Gratuito</p></div>
-                          @endif
-                        </div>
+
                     </div>
                     <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:17px"><img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}}</div>
                     <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:13px" ><img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;">  {{$evento->endereco->rua}}, {{$evento->endereco->numero}}-{{$evento->endereco->cidade}}/{{$evento->endereco->uf}}.</div>
@@ -152,16 +142,7 @@
                 </div>
                 <div class="col-md-12">
                   <div class="row" style="text-align: center;">
-                    <div class="col-6">
-                      <p style=" font-size:15px;font-weight:600;background-color:#1492E6; border-color:skyblue; padding-top:5px; padding-bottom:6px;  padding-left:10px; padding-right:10px; border: 0px solid #1492E6; border-radius: 8px; color:white">{{$evento->tipo}}</p>
-                    </div>
-                    <div class="col-6">
-                      @if ($evento->recolhimento == "pago")
-                        <p style=" font-size:15px;font-weight:600;background:linear-gradient(280deg, rgba(247,83,83,1) 35%, rgba(235,236,84,1) 100%); border-color:skyblue; padding-top:4px; padding-bottom:6px;  padding-left:6px; padding-right:6px; border: 0px solid #1492E6; border-radius: 8px; color:white">Pago</p>
-                      @else
-                        <p style=" font-size:15px;font-weight:600;background:linear-gradient(280deg, rgba(176,74,227,1) 36%, rgba(112,84,236,1) 100%); border-color:skyblue; padding-top:4px; padding-bottom:6px;  padding-left:6px; padding-right:6px; border: 0px solid #1492E6; border-radius: 8px; color:white">Gratuito</p>
-                      @endif
-                    </div>
+
                   </div>
                 </div>
                 <div class="col-md-12" style="margin-bottom:15px; font-weight:600; color:#12583C; font-size:13px"><img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px" height="auto" style="margin-top: -5px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}}</div>
