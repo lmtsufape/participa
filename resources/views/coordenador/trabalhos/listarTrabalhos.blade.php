@@ -7,8 +7,8 @@
       <div class="row ">
         <div class="col-sm-6">
             <h1 class="">Trabalhos</h1>
-        </div> 
-                  
+        </div>
+
         <div class="col-sm-3"></div>
         <div class="col-sm-3">
           <form method="GET" action="{{route('distribuicao')}}">
@@ -18,13 +18,13 @@
             </button>
           </form>
 
-        </div>            
+        </div>
       </div>
 
     {{-- Tabela Trabalhos --}}
     <div class="row table-trabalhos">
       <div class="col-sm-12">
-        
+
         <form action="{{route('atribuicao.check')}}" method="post">
           @csrf
           {{-- <div class="row">
@@ -45,10 +45,10 @@
                           @endforeach
                       </ul>
                   </div>
-              @endif 
-            </div>            
+              @endif
+            </div>
           </div>
-          
+
           <input type="hidden" name="eventoId" value="{{$evento->id}}">
           <br>
           <table class="table table-hover table-responsive-lg table-sm table-striped">
@@ -58,7 +58,7 @@
                 <th scope="col">
                   Título
                   <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc'])}}">
-                    <i class="fas fa-arrow-alt-circle-up"></i> 
+                    <i class="fas fa-arrow-alt-circle-up"></i>
                   </a>
                   <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'desc'])}}">
                     <i class="fas fa-arrow-alt-circle-down"></i>
@@ -82,7 +82,7 @@
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>
-                <th scope="col" style="width:15%"> 
+                <th scope="col" style="width:15%">
                   Modalidade
                   <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'asc'])}}">
                     <i class="fas fa-arrow-alt-circle-up"></i>
@@ -103,27 +103,41 @@
                 <th scope="col" style="text-align:center">Atribuir</th>
               </tr>
             </thead>
-            
+
             <tbody>
               @php $i = 0; @endphp
               @foreach($trabalhos as $trabalho)
-              
+
               <tr>
                   <td style="text-align:center">
-                    <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" value="{{$trabalho->id}}">                
+                    <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" value="{{$trabalho->id}}">
                   </td>
                   <td>
                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
-                          {{$trabalho->titulo}}
+                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                {{$trabalho->titulo}}
+                            </span>
                         </a>
                     @else
-                      {{$trabalho->titulo}}
+                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                            {{$trabalho->titulo}}
+                        </span>
                     @endif
                   </td>
-                  <td>{{$trabalho->area->nome}}</td>
+                  <td>
+                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
+                      {{$trabalho->area->nome}}
+                    </span>
+
+                  </td>
                   <td>{{$trabalho->autor->name}}</td>
-                  <td >{{$trabalho->modalidade->nome}}</td>
+                  <td>
+                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->modalidade->nome}}" style="max-width: 150px;">
+                      {{$trabalho->modalidade->nome}}
+                    </span>
+
+                  </td>
                   <td>
                     {{count($trabalho->atribuicoes)}}
                     {{-- @if (count($trabalho->atribuicoes) == 0)
@@ -132,21 +146,21 @@
                       {{count($trabalho->atribuicoes)}}
                     @endif --}}
                   </td>
-                  
+
                   <td style="text-align:center">
                     <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}">
                       <i class="fas fa-file-alt"></i>
                     </a>
-                    
+
                   </td>
                 </tr>
-              
+
               @endforeach
             </tbody>
           </table>
         </form>
       </div>
-      
+
     </div>
 
 </div>
@@ -263,7 +277,7 @@
                 <h5>Resumo</h5>
                 <p id="resumoTrabalho">{{$trabalho->resumo}}</p>
               </div>
-            </div> 
+            </div>
           @endif
           @if (count($trabalho->atribuicoes) > 0)
             <div class="row justify-content-center">
@@ -276,7 +290,7 @@
                 <h5>0</h5>
               </div>
           @endif
-          @foreach ($trabalho->atribuicoes as $i => $revisor) 
+          @foreach ($trabalho->atribuicoes as $i => $revisor)
             @if ($i % 3 == 0) </div><div class="row"> @endif
               <div class="col-sm-4">
                 <div class="card" style="width: 13.5rem; text-align: center;">

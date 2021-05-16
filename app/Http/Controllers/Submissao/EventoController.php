@@ -54,16 +54,16 @@ class EventoController extends Controller
         $user = User::find(auth()->user()->id);
         $eventos = $user->membroComissaoEvento;
 
-        return view('comissao.home')->with(['eventos' => $eventos]);      
+        return view('comissao.home')->with(['eventos' => $eventos]);
     }
 
     public function informacoes(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        
+
         $this->authorize('isCoordenadorOrComissao', $evento);
 
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();        
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
         $numeroRevisores = Revisor::where('evento_id', $evento->id)->count();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
@@ -73,7 +73,7 @@ class EventoController extends Controller
         foreach ($trabalhosId as $trabalho) {
           $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
         }
-        
+
         $numeroComissao = count($evento->usuariosDaComissao);
 
 
@@ -129,13 +129,13 @@ class EventoController extends Controller
             $trabalhos = Trabalho::whereIn('areaId', $areasId)->orderBy($column, $direction)->get();
         }
 
-        
+
         // dd($trabalhos);
         return view('coordenador.trabalhos.listarTrabalhos', [
                                                     'evento'            => $evento,
                                                     'areas'             => $areas,
                                                     'trabalhos'         => $trabalhos,
-                                                
+
                                                   ]);
 
     }
@@ -335,7 +335,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-        
+
         return view('coordenador.modalidade.formulario', compact(
                                                                   'evento',
                                                                   'modalidades'
@@ -347,7 +347,7 @@ class EventoController extends Controller
     {
       $evento = Evento::find($request->evento_id);
       $modalidade = Modalidade::find($request->modalidade_id);
-      
+
       return view('coordenador.modalidade.atribuirFormulario', compact('evento', 'modalidade'));
 
     }
@@ -387,7 +387,7 @@ class EventoController extends Controller
       return view('coordenador.modalidade.atribuirFormulario', compact('evento','modalidade'));
 
     }
-    
+
     public function visualizarForm(Request $request)
     {
       $evento = Evento::find($request->evento_id);
@@ -409,7 +409,7 @@ class EventoController extends Controller
       return view('coordenador.modalidade.visualizarRespostas', compact('evento', 'modalidade'));
 
     }
-    
+
     public function editarEtiqueta(Request $request)
     {
         $evento = Evento::find($request->eventoId);
@@ -484,7 +484,7 @@ class EventoController extends Controller
     public function store(StoreEventoRequest $request)
     {
       $data = $request->all();
-      $endereco = Endereco::create($data);        
+      $endereco = Endereco::create($data);
       $data['enderecoId'] = $endereco->id;
       $data['coordenadorId'] = Auth::user()->id;
       $evento = Evento::create($data);
@@ -501,21 +501,21 @@ class EventoController extends Controller
       $user = Auth::user();
       $subject = "Evento Criado";
       Mail::to($user->email)->send(new EventoCriado($user, $subject));
-      
-      $FormEvento = FormEvento::create([          
+
+      $FormEvento = FormEvento::create([
         'eventoId' => $evento->id,
-      ]);       
-      $FormSubmTraba = FormSubmTraba::create([   
+      ]);
+      $FormSubmTraba = FormSubmTraba::create([
         'eventoId' => $evento->id,
       ]);
 
-      return redirect()->route('home');
+      return redirect()->route('home')->with(['message' => "Evento criado com sucesso!"]);
     }
 
     public function uploadFile($request,$evento){
       if($request->hasFile('fotoEvento')){
         $image = $request->file('fotoEvento');
-        $path = 'public/eventos/' . $evento->id;          
+        $path = 'public/eventos/' . $evento->id;
         $path = Storage::putFileAs($path, $image,"logo.png");
         return $path;
       }
@@ -596,7 +596,7 @@ class EventoController extends Controller
         $modalidades = Modalidade::where('evento_id', $id)->get();
         $mytime = Carbon::now('America/Recife');
         // dd(false);
-
+        $isInscrito = false;
         if ($primeiraAtividade == null) {
           $primeiraAtividade = "";
         }
@@ -613,6 +613,7 @@ class EventoController extends Controller
                                                 'atividades'          => $atividades,
                                                 'dataInicial'         => $primeiraAtividade,
                                                 'modalidades'         => $modalidades,
+                                                'isInscrito'          => $isInscrito,
                                                ]);
     }
 
@@ -651,7 +652,7 @@ class EventoController extends Controller
 
         $endereco = Endereco::find($evento->enderecoId);
         $evento->enderecoId           = $endereco->id;
-        
+
         if($request->fotoEvento != null){
           if(Storage::disk()->exists('public/'.$evento->fotoEvento)) {
             Storage::delete($evento->fotoEvento);
@@ -664,13 +665,13 @@ class EventoController extends Controller
         }
 
         $evento->save();
-        
-        $endereco->update($data);
-        
-        return redirect()->route('home');
 
-        
-        
+        $endereco->update($data);
+
+        return redirect()->route('home')->with(['message' => "Evento editado com sucesso!"]);
+
+
+
     }
 
     /**
@@ -686,7 +687,7 @@ class EventoController extends Controller
         $evento->deletado = true;
         $evento->update();
 
-        return redirect()->back()->with(['mensagem' => 'Evento deletado com sucesso']);
+        return redirect()->back()->with(['message' => 'Evento deletado com sucesso']);
     }
 
     public function detalhes(Request $request){
@@ -713,7 +714,7 @@ class EventoController extends Controller
         $numeroComissao = count($evento->usuariosDaComissao);
 
         $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
-        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); 
+        $etiquetas = FormEvento::where('eventoId', $evento->id)->first();
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
         $criteriosModalidade = [];
@@ -747,7 +748,7 @@ class EventoController extends Controller
 
     public function numTrabalhos(Request $request){
       $evento = Evento::find($request->eventoId);
-      
+
       $validatedData = $request->validate([
         'eventoId'                => ['required', 'integer'],
         'trabalhosPorAutor'       => ['required', 'integer'],
@@ -763,7 +764,7 @@ class EventoController extends Controller
 
     public function setResumo(Request $request){
       $evento = Evento::find($request->eventoId);
-      
+
       $validatedData = $request->validate([
         'eventoId'                => ['required', 'integer'],
         'hasResumo'               => ['required', 'string']
@@ -781,7 +782,7 @@ class EventoController extends Controller
 
     public function setFotoEvento(Request $request){
       $evento = Evento::find($request->eventoId);
-      
+
       // dd($request);
       $validatedData = $request->validate([
         'eventoId'                => ['required', 'integer'],
@@ -821,7 +822,7 @@ class EventoController extends Controller
 
     public function pdfProgramacao(Request $request, $id) {
       $evento = Evento::find($id);
-      
+
       $request->validate([
         'pdf_programacao' => ['file', 'mimetypes:application/pdf']
       ]);
@@ -838,13 +839,13 @@ class EventoController extends Controller
         $nome = '/pdf-programacao.pdf';
         Storage::putFileAs($path, $file, $nome);
         $evento->pdf_programacao = 'eventos/' . $evento->id . $nome;
-        $evento->exibir_calendario_programacao = false; 
+        $evento->exibir_calendario_programacao = false;
         $evento->save();
 
         $formEvento->modprogramacao = true;
         $formEvento->update();
-      } 
-      
+      }
+
       return redirect()->back()->with(['mensagem' => 'PDF salvo com sucesso!']);
     }
 
@@ -861,37 +862,37 @@ class EventoController extends Controller
         case "tipo":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.tipo", "=", $request->tipo], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
-        case "data_inicio": 
+        case "data_inicio":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.dataInicio", "=", $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
-        case "data_fim": 
+        case "data_fim":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
-        case "nome_tipo": 
+        case "nome_tipo":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.nome", "ilike", "%".$request->nome."%"], ["eventos.tipo", "=", $request->tipo], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
-        case "nome_data_inicio": 
+        case "nome_data_inicio":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.nome", "ilike", "%".$request->nome."%"], ["eventos.dataInicio", "=", $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
-        case "nome_data_fim": 
+        case "nome_data_fim":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.nome", "ilike", "%".$request->nome."%"], ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
-        case "tipo_data_inicio": 
+        case "tipo_data_inicio":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.tipo", "=", $request->tipo], ["eventos.dataInicio", "=", $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
-        case "tipo_data_fim": 
+        case "tipo_data_fim":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.tipo", "=", $request->tipo], ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
-        case "nome_datas": 
+        case "nome_datas":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.nome", "ilike", "%".$request->nome."%"], ["eventos.dataInicio", "=", $request->data_inicio], ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
         case "tipo_datas":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.tipo", "=", $request->tipo], ["eventos.dataInicio", "=", $request->data_inicio],  ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
-        case "datas": 
+        case "datas":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.dataInicio", "=", $request->data_inicio], ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
-        case "todos": 
+        case "todos":
           $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.nome", "ilike", "%".$request->nome."%"], ["eventos.tipo", "=", $request->tipo], ["eventos.dataInicio", "=", $request->data_inicio], ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento','eventos.*', 'enderecos.*')->get();
           break;
         default:

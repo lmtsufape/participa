@@ -13,6 +13,7 @@ use App\Models\Users\Coautor;
 use App\Models\Users\ComissaoEvento;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -30,6 +31,7 @@ class UserController extends Controller
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
                 'cpf' => 'required|cpf|unique:users',
+                'passaporte' => 'required|cpf|unique:users',
                 'celular' => 'required|string|telefone',
                 'instituicao' => 'required|string| max:255',
                 'especialidade' => 'nullable|string',
@@ -60,6 +62,7 @@ class UserController extends Controller
             $user = User::find($request->id);
             $user->name = $request->input('name');
             $user->cpf = $request->input('cpf');
+            $user->passaporte = $request->input('passaporte');
             $user->celular = $request->input('celular');
             $user->instituicao = $request->input('instituicao');
             $user->password = bcrypt($request->password);
@@ -79,14 +82,16 @@ class UserController extends Controller
             //     $revisor->save();
             // }
 
-            return redirect(route('home'));
-            
+            return back()->with(['message' => "Atualizado com sucesso!"]);
+
         }
 
         else {
+            $user = User::find($request->id);
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
-                'cpf' => 'required|cpf',
+                'cpf' => ['required_if: passaporte, null', Rule::unique('users')->ignore($user->id)],
+                'passaporte' => ['required_if: cpf, null', Rule::unique('users')->ignore($user->id)],
                 'celular' => 'required|string|telefone',
                 'instituicao' => 'required|string| max:255',
                 // 'especProfissional' => 'nullable|string',
@@ -100,9 +105,10 @@ class UserController extends Controller
             ]);
 
             // User
-            $user = User::find($request->id);
+
             $user->name = $request->input('name');
             $user->cpf = $request->input('cpf');
+            $user->passaporte = $request->input('passaporte');
             $user->celular = $request->input('celular');
             $user->instituicao = $request->input('instituicao');
             // $user->especProfissional = $request->input('especProfissional');
@@ -121,7 +127,7 @@ class UserController extends Controller
 
             $end->update();
             // dd([$user,$end]);
-            return redirect(route('home'));
+            return back()->with(['message' => "Atualizado com sucesso!"]);
 
         }
     }
@@ -142,9 +148,9 @@ class UserController extends Controller
                     $trabalhosCoautor->push($trab);
                 }
             }
-            
+
         }
-        
+
         return view('user.meusTrabalhos',[
                                             'trabalhos'           => $trabalhos,
                                             'trabalhosCoautor'    => $trabalhosCoautor,

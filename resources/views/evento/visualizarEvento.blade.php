@@ -42,8 +42,8 @@
                             <h5 class="convidadoNome">{{$convidado->nome}}</h5>
                             <small class="convidadoFuncao">{{$convidado->funcao}}</small>
                         </div>
-                      @endforeach  
-                    </div>                                  
+                      @endforeach
+                    </div>
                   </div>
                 @endif
                 <hr>
@@ -168,7 +168,7 @@
             </button>
           </div>
         @endif
-      
+
         {{-- <div class="row margin">
             <div class="col-sm-12">
                 <h4>{{$etiquetas->etiquetanomeevento}}:</h4>
@@ -181,7 +181,7 @@
                 </h1>
             </div>
         </div>
-      
+
         {{-- <div class="row margin">
             <div class="col-sm-12">
                 <h4>{{$etiquetas->etiquetadescricaoevento}}:</h4>
@@ -192,7 +192,7 @@
                 <p>{{$evento->descricao}}</p>
             </div>
         </div>
-      
+
         {{-- <div class="row margin">
           <div class="col-sm-12">
               <h4>{{$etiquetas->etiquetatipoevento}}:</h4>
@@ -201,25 +201,10 @@
         <div class="row">
           <div class="col-sm-6">
             <div class="container">
-              <div class="row">
-                <div class="col-sm-6">
-                    <p>
-                      <a class="btn cor-aleatoria white-color" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 80%;">#{{$evento->tipo}}</a>
-                    </p>
-                </div>
-                <div class="col-sm-6">
-                    <p>
-                      @if($evento->recolhimento == "pago")
-                        <a class="btn pago white-color" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 60%; left: -20px;">Pago</a>
-                      @else 
-                        <a class="btn gratuito white-color" style="pointer-events: none; margin-top: 10px; margin-bottom: 15px; width: 70%;">Gratuito</a>
-                      @endif
-                    </p>
-                </div>
-              </div>
+
               <div class="row" style="color:white;">
                 <div class="col-sm-1">
-                  <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto" style="margin-right: -10px;"> 
+                  <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="20px" height="auto" style="margin-right: -10px;">
                 </div>
                 <div class="col-sm-11">
                   <p>
@@ -243,14 +228,14 @@
 											<div class="accordion" id="accordion_modalidades">
 												@foreach ($modalidades as $modalidade)
 													<div class="accordion-group">
-																		
-																		
+
+
 														<div class="accordion-heading accordion-modadalidade">
 															<a class="accordion-button accordion-toggle titulo-modalidade" data-toggle="collapse" data-parent="#accordion_modalidades" href="{{ '#collapse_' . $modalidade->id }}">
 																<h6>Modalidade: {{$modalidade->nome}}</h6>
 															</a>
 														</div>
-																		
+
 														<div id="{{ 'collapse_' . $modalidade->id }}" class="accordion-body in collapse" style="height: auto;">
 															<div class="accordion-inner">
 																<table>
@@ -275,16 +260,16 @@
 																			<td>Correção:</td>
 																			<td>{{date('d/m/Y H:i',strtotime($modalidade->inicioCorrecao))}}</td>
 																			<td>- {{date('d/m/Y H:i',strtotime($modalidade->fimCorrecao))}}</td>
-																		</tr>                                
+																		</tr>
 																	@endif
-																	
+
 																	@if($modalidade->inicioValidacao && $modalidade->fimValidacao)
-																		<tr>                                
+																		<tr>
 																			<td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
 																			<td>Validação:</td>
 																			<td>{{date('d/m/Y H:i',strtotime($modalidade->inicioValidacao))}}</td>
-																			<td>- {{date('d/m/Y H:i',strtotime($modalidade->fimValidacao))}}</td>                                
-																		</tr>                                
+																			<td>- {{date('d/m/Y H:i',strtotime($modalidade->fimValidacao))}}</td>
+																		</tr>
 																	@endif
 																	<tr>
 																		<td><img class="" src="{{asset('img/icons/calendar-green.png')}}" alt=""></td>
@@ -309,7 +294,7 @@
 																					<a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
 																						<img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixartemplate}}
 																					</a>
-																				</div>  
+																				</div>
 																			@endif
 																		@else
 																			@if(isset($modalidade->regra))
@@ -317,7 +302,7 @@
 																						<a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
 																								<img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
 																						</a>
-																				</div>  
+																				</div>
 																			@endif
 																		@endif
 																		<div class="col-md-12 botao-form-left" style="">
@@ -362,11 +347,11 @@
                         LOCAL DA ORGANIZAÇÃO
                     </p>
                 </div>
-              </div>    
+              </div>
             @endif
           </div>
-        </div>  
-        
+        </div>
+
         <div class="row">
           {{-- Modulo Programação --}}
           @if ($etiquetas->modprogramacao == true)
@@ -374,23 +359,23 @@
                 <h5>{{$etiquetas->etiquetamoduloprogramacao}}</h5>
                 <p>
                     {{-- LOCAL DA PROGRAMAÇÃO --}}
-                    @if (!($evento->exibir_calendario_programacao) && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null) 
+                    @if (!($evento->exibir_calendario_programacao) && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null)
                       <iframe src="{{asset('storage/' . $evento->pdf_programacao)}}" width="100%" height="500" style="border: none;"></iframe>
                     @elseif ($evento->exibir_calendario_programacao && $etiquetas->modprogramacao == true)
-                      @if ($atividades != null && count($atividades) > 0) 
+                      @if ($atividades != null && count($atividades) > 0)
                         <div id="wrap">
                           <div id='calendar-wrap' style="width: 100%;">
                             <div id='calendar'></div>
                           </div>
                         </div>
-                      @else 
+                      @else
                         Nenhuma atividade programada
                       @endif
                     @else
                         Nenhuma atividade programada
                     @endif
                 </p>
-            </div>        
+            </div>
           @endif
         </div>
 
@@ -408,12 +393,12 @@
                     <h4>Como Autor</h4>
                 </div>
             </div>
-      
+
             <!-- Tabela de trabalhos -->
-      
+
             <div class="row justify-content-center">
               <div class="col-sm-12">
-      
+
                 <table class="table table-responsive-lg table-hover">
                   <thead>
                     <tr>
@@ -455,17 +440,17 @@
               </div>
             </div>
           @endif
-      
+
           @if($hasTrabalhoCoautor)
             <div class="row margin">
                 <div class="col-sm-12 info-evento">
                     <h4>Como Coautor</h4>
                 </div>
             </div>
-      
+
             <div class="row justify-content-center">
               <div class="col-sm-12">
-      
+
                 <table class="table table-responsive-lg table-hover">
                   <thead>
                     <tr>
@@ -498,13 +483,13 @@
             </div>
           @endif
         @endif --}}
-      
+
         {{-- <div class="row justify-content-center" style="margin: 20px 0 20px 0"> --}}
-      
+
             {{-- <div class="col-md-6 botao-form-left" style="">
                 <a class="btn btn-secondary botao-form" href="{{route('cancelarCadastro')}}" style="width:100%">Voltar</a>
             </div> --}}
-      
+
             {{-- @if($evento->inicioSubmissao <= $mytime)
               @if($mytime < $evento->fimSubmissao)
                 <div class="col-md-6 botao-form-right" style="">
@@ -512,7 +497,7 @@
                 </div>
               @endif
             @endif --}}
-      
+
         {{-- </div> --}}
       </div>
     </div>
@@ -569,7 +554,7 @@
 
       var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialDate: "{{$dataInicial->data}}",    
+        initialDate: "{{$dataInicial->data}}",
         headerToolbar: {
           left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
           center: 'title',
@@ -582,7 +567,7 @@
           $(idModal).modal('show');
         },
         events: "{{ route('atividades.json', ['id' => $evento->id]) }}",
-        
+
       });
       calendar.render();
       });

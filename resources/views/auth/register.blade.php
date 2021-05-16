@@ -17,7 +17,7 @@
         {{-- Nome | CPF --}}
         <div class="form-group row">
 
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <label for="name" class="col-form-label">{{ __('Nome Completo*') }}</label>
                 <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
 
@@ -27,10 +27,23 @@
                     </span>
                 @enderror
             </div>
+        </div>
+        <div class="form-group row">
 
-            <div class="col-md-4">
-                <label for="cpf" class="col-form-label">{{ __('CPF') }}</label>
-                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ old('cpf') }}" required autocomplete="cpf" autofocus>
+            <div class="col-md-6">
+                <label for="passaporte" class="col-form-label">{{ __('Passaporte*') }}</label>
+                <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" value="{{ old('passaporte') }}"  autocomplete="passaporte" autofocus>
+
+                @error('passaporte')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="col-md-6">
+                <label for="cpf" class="col-form-label">{{ __('CPF*') }}</label>
+                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ old('cpf') }}" autocomplete="cpf" autofocus>
 
                 @error('cpf')
                     <span class="invalid-feedback" role="alert">
