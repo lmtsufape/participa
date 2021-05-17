@@ -36,12 +36,13 @@
                       max-width:300px;
                       max-height:150px;
                       width: auto;
-                      height: auto;background: no-repeat center;">
+                      height: auto;background: no-repeat center;
+                      background-size: cover;">
                     @else
                       <img src="{{ asset('img/colorscheme.png') }}" class="" alt="..." style="max-width:300px;
                       max-height:150px;
                       width: auto;
-                      height: auto;background: no-repeat center;">
+                      height: auto;background: no-repeat center;background-size: cover;">
                     @endif
                   </div>
                   <div class="col-md-5" style=" height: 350px;">
@@ -67,12 +68,14 @@
                     <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="" alt="..." style="max-width:300px;
                     max-height:150px;
                     width: auto;
-                    height: auto;background: no-repeat center;">
+                    height: auto;background: no-repeat center;
+                    background-size: cover;">
                   @else
                     <img src="{{ asset('img/colorscheme.png') }}" class="" alt="..." style="max-width:300px;
                     max-height:150px;
                     width: auto;
-                    height: auto;background: no-repeat center;">
+                    height: auto;background: no-repeat center;
+                    background-size: cover;">
                   @endif
                 </div>
                 <div class="col-md-5" style=" height: 350px;">

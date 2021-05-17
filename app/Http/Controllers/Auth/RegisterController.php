@@ -51,53 +51,21 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        // dd($data);
         return Validator::make($data, [
             'name'          => ['required', 'string', 'max:255'],
             'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'      => ['required', 'string', 'min:8', 'confirmed'],
-            // 'pais'          => ['required'],
-            'cpf'           => ['required_if: passaporte, null' ,
-                                    function ($attribute, $value, $fail) use ($data){
-                                        if ($data['passaporte'] == null && $value == null) {
-                                            $fail($attribute.' ou cpf precisa ser preenchido.');
-                                            return;
-                                        }
-                                        if ($data['passaporte'] == null && User::where('cpf',$data['cpf'])->count() != 0) {
-                                            $fail($attribute.' já está me uso.');
-                                            return;
-                                        }
-                                        if ($data['cpf'] != null) {
-                                            if (User::where('cpf',$value)->count() != 0) {
-                                                $fail($attribute.' já está me uso.');
-                                                return;
-                                            }
-                                        }
-
-                                    },],
-            'passaporte'    => ['required_if: cpf, null','max:10',
-                                function ($attribute, $value, $fail) use ($data){
-                                    if ($data['cpf'] == null && $value == null) {
-                                        // dd( $data['cpf'] == null && $value == null);
-                                        $fail($attribute.' ou cpf precisa ser preenchido.');
-                                        return;
-                                    }
-                                    if ($data['passaporte'] != null && User::where('passaporte',$data['passaporte'])->count() != 0) {
-                                        $fail($attribute.' já está me uso.');
-                                        return;
-                                    }
-
-
-                                },
-                                ],
+            'cpf'           => ($data['passaporte']==null ? ['required','cpf','unique:users'] : 'nullable'),
+            'passaporte'    => ($data['cpf']==null ? 'required|max:10|unique:users' : 'nullable'),
             'celular'       => ['nullable','string', 'telefone'],
             'instituicao'   => ['nullable','string','max:255'],
-            // 'especProfissional' => [],
-            'rua'           => ['required_if: pais, brasil','string','max:255'],
-            'numero'        => ['required_if: pais, brasil','string'],
-            'bairro'        => ['required_if: pais, brasil','string','max:255'],
-            'cidade'        => ['required_if: pais, brasil','string','max:255'],
-            'uf'            => ['required_if: pais, brasil','string'],
-            'cep'           => ['required_if: pais, brasil','string'],
+            'rua'           => ['nullable','string','max:255'],
+            'numero'        => ['nullable','string'],
+            'bairro'        => ['nullable','string','max:255'],
+            'cidade'        => ['nullable','string','max:255'],
+            'uf'            => ['nullable','string'],
+            'cep'           => ['nullable','string'],
             'complemento'   => ['nullable','string'],
         ]);
     }
@@ -147,3 +115,38 @@ class RegisterController extends Controller
         return $user;
     }
 }
+
+
+// 'cpf'           => ['required_if: passaporte, null' ,
+//                                     function ($attribute, $value, $fail) use ($data){
+//                                         if ($data['passaporte'] == null && $value == null) {
+//                                             $fail($attribute.' ou cpf precisa ser preenchido.');
+//                                             return;
+//                                         }
+//                                         if ($data['passaporte'] == null && User::where('cpf',$data['cpf'])->count() != 0) {
+//                                             $fail($attribute.' já está me uso.');
+//                                             return;
+//                                         }
+//                                         if ($data['cpf'] != null) {
+//                                             if (User::where('cpf',$value)->count() != 0) {
+//                                                 $fail($attribute.' já está me uso.');
+//                                                 return;
+//                                             }
+//                                         }
+
+//                                     },],
+//             'passaporte'    => ['required_if: cpf, null','max:10',
+//                                 function ($attribute, $value, $fail) use ($data){
+//                                     if ($data['cpf'] == null && $value == null) {
+//                                         // dd( $data['cpf'] == null && $value == null);
+//                                         $fail($attribute.' ou cpf precisa ser preenchido.');
+//                                         return;
+//                                     }
+//                                     if ($data['passaporte'] != null && User::where('passaporte',$data['passaporte'])->count() != 0) {
+//                                         $fail($attribute.' já está me uso.');
+//                                         return;
+//                                     }
+
+
+//                                 },
+//                                 ],
