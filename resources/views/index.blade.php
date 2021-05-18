@@ -54,7 +54,7 @@
                           <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
                         @endauth
                       </div>
-                      <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 325, "...")}}</div>
+                      <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 621, "...")}}</div>
 
                     </div>
                   </div>
