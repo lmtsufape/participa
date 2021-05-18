@@ -31,7 +31,7 @@
                 </div>
                 @enderror
                 <input type="hidden" name="trabalhoId" value="{{$trabalho->id}}" id="trabalhoNovaVersaoId">
-                
+
                 {{-- Arquivo  --}}
                 <label for="nomeTrabalho" class="col-form-label">{{ __('Novo arquivo para ') }}{{$trabalho->titulo}}</label>
 
@@ -39,13 +39,13 @@
                   <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
                 </div>
 
-                <small>Arquivos aceitos nos formatos 
+                <small>Arquivos aceitos nos formatos
                   @if($trabalho->modalidade->pdf == true)<span> - pdf</span>@endif
                   @if($trabalho->modalidade->jpg == true)<span> - jpg</span>@endif
                   @if($trabalho->modalidade->jpeg == true)<span> - jpeg</span>@endif
                   @if($trabalho->modalidade->png == true)<span> - png</span>@endif
                   @if($trabalho->modalidade->docx == true)<span> - docx</span>@endif
-                  @if($trabalho->modalidade->odt == true)<span> - odt</span>@endif 
+                  @if($trabalho->modalidade->odt == true)<span> - odt</span>@endif
                   @if($trabalho->modalidade->zip == true)<span> - zip</span>@endif
                   @if($trabalho->modalidade->svg == true)<span> - svg</span>@endif.
                 </small>
@@ -67,7 +67,7 @@
     </div>
   </div>
 @endforeach
-  
+
 <div class="container content" style="margin-top: 80px;">
     {{-- titulo da página --}}
     <div class="row justify-content-center titulo-detalhes">
@@ -83,7 +83,7 @@
                 <div class="col-sm-12">
                     <h1>Meus Trabalhos</h1>
                 </div>
-               
+
             </div>
         </div>
     </div>
@@ -136,12 +136,12 @@
               @endforeach
               </tbody>
           </table>
-        @else 
+        @else
           Você não submeteu nenhum trabalho...
         @endif
         </div>
     </div>
-    
+
     <br>
 
     <div class="row margin">
@@ -244,7 +244,7 @@
                       {{ $message }}
                     </div>
                   </div>
-                </div>    
+                </div>
               @enderror
               @foreach ($ordem as $indice)
                 @if ($indice == "etiquetatitulotrabalho")
@@ -264,7 +264,7 @@
                 @endif
                 @if ($indice == "etiquetacoautortrabalho")
                   <div class="flexContainer" style="margin-top:20px">
-                      <h4>Autores</h4>                                 
+                      <h4>Autores</h4>
                         <div id="coautores_{{$trabalho->id}}" class="flexContainer " >
                           @if (old('nomeCoautor') != null)
                             @foreach (old('nomeCoautor') as $i => $nomeCoautor)
@@ -272,11 +272,11 @@
                                 <div class="row card-body">
                                     <div class="col-sm-4">
                                         <label>E-mail</label>
-                                        <input type="email" style="margin-bottom:10px" value="{{old('emailCoautor.'.$i)}}" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
+                                        <input type="email" style="margin-bottom:10px" value="{{old('emailCoautor.'.$i)}}" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" disabled>
                                     </div>
                                     <div class="col-sm-5">
                                         <label>Nome Completo</label>
-                                        <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
+                                        <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" disabled>
                                     </div>
                                     <div class="col-sm-3">
                                         <a href="#" class="delete pr-2">
@@ -292,8 +292,8 @@
                                 </div>
                               </div>
                             @endforeach
-                          @else 
-                          
+                          @else
+
                             @foreach ($trabalho->coautors as $i => $coautor)
                               <div class="item card">
                                 <div class="row card-body">
@@ -321,7 +321,7 @@
                             @endforeach
                           @endif
                         </div>
-                      
+
                     </div>
                     <div class="col-sm-12">
                       <a href="#" onclick="montarLinhaInput(this, {{$trabalho->id}})" class="btn btn-primary addCoautor" id="addCoautor_{{$trabalho->id}}" style="width:100%;margin-top:10px">{{$formSubTraba->etiquetacoautortrabalho}}</a>
@@ -341,7 +341,7 @@
                           @enderror
 
                       </div>
-                    </div>                              
+                    </div>
                   @elseif ($modalidade->palavras == true)
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
@@ -366,16 +366,16 @@
                           <select id="area_{{$trabalho->id}}" class="form-control @error('area'.$trabalho->id) is-invalid @enderror" name="area{{$trabalho->id}}" required>
                               <option value="" disabled selected hidden>-- Área --</option>
                               {{-- Apenas um teste abaixo --}}
-                              @if (old('area'.$trabalho->id) != null) 
+                              @if (old('area'.$trabalho->id) != null)
                                 @foreach($areas as $area)
                                   <option value="{{$area->id}}" @if(old('area') == $area->id) selected @endif>{{$area->nome}}</option>
                                 @endforeach
-                              @else 
+                              @else
                                 @foreach($areas as $area)
                                   <option value="{{$area->id}}" @if($trabalho->areaId == $area->id) selected @endif>{{$area->nome}}</option>
                                 @endforeach
                               @endif
-                              
+
                           </select>
                           @error('area'.$trabalho->id)
                           <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
@@ -398,13 +398,13 @@
                         <div class="custom-file">
                           <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo{{$trabalho->id}}">
                         </div>
-                        <small>Arquivos aceitos nos formatos 
+                        <small>Arquivos aceitos nos formatos
                           @if($modalidade->pdf == true)<span> - pdf</span>@endif
                           @if($modalidade->jpg == true)<span> - jpg</span>@endif
                           @if($modalidade->jpeg == true)<span> - jpeg</span>@endif
                           @if($modalidade->png == true)<span> - png</span>@endif
                           @if($modalidade->docx == true)<span> - docx</span>@endif
-                          @if($modalidade->odt == true)<span> - odt</span>@endif 
+                          @if($modalidade->odt == true)<span> - odt</span>@endif
                           @if($modalidade->zip == true)<span> - zip</span>@endif
                           @if($modalidade->svg == true)<span> - svg</span>@endif.
                         </small>
@@ -419,7 +419,7 @@
                 @endif
                 @if ($indice == "etiquetacampoextra1")
                   @if ($formSubTraba->checkcampoextra1 == true)
-                    @if ($formSubTraba->tipocampoextra1 == "textosimples")  
+                    @if ($formSubTraba->tipocampoextra1 == "textosimples")
                       {{-- Texto Simples --}}
                       <div class="row justify-content-center">
                         {{-- Nome Trabalho  --}}
@@ -675,7 +675,7 @@
 @endsection
 
 @section('javascript')
-@if(old('trabalhoEditId')) 
+@if(old('trabalhoEditId'))
   <script>
     $(document).ready(function() {
       $('#modalEditarTrabalho_{{old('trabalhoEditId')}}').modal('show');
@@ -714,10 +714,10 @@
   $(document).ready(function(){
     $('.char-count').keyup(function() {
 
-        var maxLength = parseInt($(this).attr('maxlength')); 
+        var maxLength = parseInt($(this).attr('maxlength'));
         var length = $(this).val().length;
         // var newLength = maxLength-length;
-        
+
         var name = $(this).attr("name");
         $('#'+name).text(length);
     });
@@ -725,7 +725,7 @@
 
   $(document).ready(function(){
     $('.palavra').keyup(function() {
-        var maxLength = parseInt($(this).attr('maxlength')); 
+        var maxLength = parseInt($(this).attr('maxlength'));
         var texto = $(this).val().length;
         // console.log(texto);
         if ($(this).val()[length - 1] == " ") {
@@ -738,7 +738,7 @@
         // console.log(texto);
 
         var name = $(this).attr('name');
-        
+
         $('span[name="'+name+'"]').text(length);
     });
   });
@@ -746,7 +746,7 @@
 
   function mover(div, direcao, id) {
     var coautores = document.getElementById("coautores_"+id);
-    
+
     if(direcao == 0) {
       for(var i = 0; i < coautores.children.length; i++) {
         if (coautores.children[i] == div && coautores.children[i+1] != null) {

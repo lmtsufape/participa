@@ -63,11 +63,11 @@
                                           <div class="row card-body">
                                               <div class="col-sm-4">
                                                   <label>E-mail</label>
-                                                  <input type="email" style="margin-bottom:10px" id="email{{$i+1}}" value="{{old('emailCoautor.'.$i)}}" onclick="digitarEmail(email{{$i+1}})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" required>
+                                                  <input   type="email" style="margin-bottom:10px" id="email{{$i+1}}" value="{{old('emailCoautor.'.$i)}}" onclick="digitarEmail(email{{$i+1}})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" disabled>
                                               </div>
                                               <div class="col-sm-5">
                                                   <label>Nome Completo</label>
-                                                  <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" required>
+                                                  <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" disabled>
                                               </div>
                                               <div class="col-sm-3">
                                                   <a href="#" class="delete pr-2">
@@ -89,11 +89,11 @@
                                       <div class="row card-body">
                                           <div class="col-sm-4">
                                               <label>E-mail</label>
-                                              <input type="email" style="margin-bottom:10px" id="email${order}" value="{{Auth::user()->email}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" required>
+                                              <input type="email" style="margin-bottom:10px" id="email${order}" value="{{Auth::user()->email}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" disabled>
                                           </div>
                                           <div class="col-sm-5">
                                               <label>Nome Completo</label>
-                                              <input type="text" style="margin-bottom:10px" value="{{Auth::user()->name}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" required>
+                                              <input type="text" style="margin-bottom:10px" value="{{Auth::user()->name}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" disabled>
                                           </div>
                                           <div class="col-sm-3">
                                               <a href="#" class="delete pr-2">
@@ -152,7 +152,7 @@
                                 <div class="col-sm-12">
                                     <label for="area" class="col-form-label">{{$formSubTraba->etiquetaareatrabalho}}</label>
                                     <select class="form-control @error('areaId') is-invalid @enderror" id="area" name="areaId">
-                                        <option value="" disabled selected hidden>-- Área --</option>
+                                        <option value="" disabled selected hidden>-- {{ $formSubTraba->etiquetaareatrabalho }} --</option>
                                         {{-- Apenas um teste abaixo --}}
                                         @foreach($areas as $area)
                                           <option value="{{$area->id}}" @if(old('areaId') == $area->id) selected @endif>{{$area->nome}}</option>
@@ -177,15 +177,15 @@
                                   <div class="custom-file">
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" required>
                                   </div>
-                                  <small>Arquivos aceitos nos formatos
-                                    @if($modalidade->pdf == true)<span> - pdf</span>@endif
-                                    @if($modalidade->jpg == true)<span> - jpg</span>@endif
-                                    @if($modalidade->jpeg == true)<span> - jpeg</span>@endif
-                                    @if($modalidade->png == true)<span> - png</span>@endif
-                                    @if($modalidade->docx == true)<span> - docx</span>@endif
-                                    @if($modalidade->odt == true)<span> - odt</span>@endif
-                                    @if($modalidade->zip == true)<span> - zip</span>@endif
-                                    @if($modalidade->svg == true)<span> - svg</span>@endif.
+                                  <small>Extensão de arquivos aceitas:
+                                    @if($modalidade->pdf == true)<span> / ".pdf"</span>@endif
+                                    @if($modalidade->jpg == true)<span> / ".jpg"</span>@endif
+                                    @if($modalidade->jpeg == true)<span> / ".jpeg"</span>@endif
+                                    @if($modalidade->png == true)<span> / ".png"</span>@endif
+                                    @if($modalidade->docx == true)<span> / ".docx"</span>@endif
+                                    @if($modalidade->odt == true)<span> / ".odt"</span>@endif
+                                    @if($modalidade->zip == true)<span> / ".zip"</span>@endif
+                                    @if($modalidade->svg == true)<span> / ".svg"</span>@endif.
                                   </small>
                                   @error('arquivo')
                                   <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">

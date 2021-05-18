@@ -233,7 +233,7 @@
 																	</tr>
 																	<tr>
 																		<td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
-																		<td>Revisão:</td>
+																		<td>Avaliação:</td>
 																		<td>{{date('d/m/Y H:i',strtotime($modalidade->inicioRevisao))}}</td>
 																		<td>- {{date('d/m/Y H:i',strtotime($modalidade->fimRevisao))}}</td>
 																	</tr>

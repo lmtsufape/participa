@@ -47,7 +47,7 @@
                         @csrf
                         <div class="row justify-content-center">
                             <input hidden name="id" value="{{$user->id}}">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label for="name" class="col-form-label">{{ __('Nome Completo') }}</label>
                                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" @if(old('name') != null) value="{{ old('name') }}" @else value="{{$user->name}}" @endif required autocomplete="name" autofocus>
 
@@ -57,31 +57,38 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
-                        <div class="row justify-content-center">
                             <div class="col-md-6">
-                                <label for="passaporte" class="col-form-label">{{ __('Passaporte') }}</label>
-                                <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" @if(old('passaporte') != null) value="{{ old('passaporte') }}" @else value="{{$user->passaporte ?? "indefinido"}}" @endif  autocomplete="passaporte" autofocus>
+                                <div class="custom-control custom-radio custom-control-inline col-form-label">
+                                  <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" @if($user->cpf == null) disabled @else checked @endif  >
+                                  <label class="custom-control-label" for="customRadioInline1">CPF</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                  <input type="radio" id="customRadioInline2" name="customRadioInline" class="custom-control-input" @if($user->passaporte == null) disabled @else checked @endif >
+                                  <label class="custom-control-label " for="customRadioInline2">Passaporte</label>
+                                </div>
 
-                                @error('passaporte')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                                <div id="fieldCPF" @error('passaporte') style="display: none" @enderror>
+                                  <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" @if(old('cpf') != null) value="{{ old('cpf') }}" @else value="{{$user->cpf}}" @endif autocomplete="cpf" placeholder="CPF" autofocus>
 
-                            <div class="col-md-6">
-                                <label for="cpf" class="col-form-label">{{ __('CPF') }}</label>
-                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" @if(old('cpf') != null) value="{{ old('cpf') }}" @else value="{{$user->cpf ?? "indefinido"}}" @endif  autocomplete="cpf" autofocus>
+                                  @error('cpf')
+                                      <span class="invalid-feedback" role="alert">
+                                          <strong>{{ $message }}</strong>
+                                      </span>
+                                  @enderror
+                                </div>
+                                <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: none" >
+                                  <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="Passaporte"@if(old('passaporte') != null) value="{{ old('passaporte') }}" @else value="{{$user->passaporte}}" @endif autocomplete="passaporte" autofocus>
 
-                                @error('cpf')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                                  @error('passaporte')
+                                      <span class="invalid-feedback" role="alert">
+                                          <strong>{{ $message }}</strong>
+                                      </span>
+                                  @enderror
+                                </div>
 
+                          </div>
                         </div>
+
                         <div class="row justify-content-center">
 
                             <div class="col-md-7">
@@ -633,4 +640,22 @@
         }
     };
   </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+      $(document).ready(function(){
+          // $("#fieldPassaporte").hide();
+          $("#customRadioInline1").click(function(){
+              $("#fieldPassaporte").hide();
+              $("#fieldCPF").show();
+          });
+
+          $("#customRadioInline2").click(function(){
+              $("#fieldPassaporte").show();
+              $("#fieldCPF").hide();
+          });
+
+      });
+
+    </script>
 @endsection
