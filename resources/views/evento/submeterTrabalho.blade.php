@@ -55,7 +55,7 @@
                           @if ($indice == "etiquetacoautortrabalho")
                             <div class="row " style="margin-top:20px">
                               <div class="col-sm-12">
-                                <h4>Autores</h4>
+                                <h4>Autor(a)</h4>
                                   <div id="coautores" class="row " >
                                     @if (old('nomeCoautor') != null)
                                       @foreach (old('nomeCoautor') as $i => $nomeCoautor)
