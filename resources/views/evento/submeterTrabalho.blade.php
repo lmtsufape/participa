@@ -8,7 +8,7 @@
             <div class="card" style="margin-top:50px">
                 <div class="card-body">
                   <h2 class="card-title">{{$evento->nome}}</h2>
-                  <h4 class="card-title">{{$modalidade->nome}}</h4>
+                  <h4 class="card-title">Modalidade: {{$modalidade->nome}}</h4>
                   <div class="titulo-detalhes"></div>
                   <br>
                   <h4 class="card-title">Enviar Trabalho</h4>
@@ -32,7 +32,7 @@
                             <div class="row justify-content-center">
                               {{-- Nome Trabalho  --}}
                               <div class="col-sm-12">
-                                  <label for="nomeTrabalho" class="col-form-label">{{ $formSubTraba->etiquetatitulotrabalho }}</label>
+                                  <label for="nomeTrabalho" class="col-form-label"><strong>{{ $formSubTraba->etiquetatitulotrabalho }}</strong> </label>
                                   <input id="nomeTrabalho" type="text" class="form-control @error('nomeTrabalho') is-invalid @enderror" name="nomeTrabalho" value="{{ old('nomeTrabalho') }}" required autocomplete="nomeTrabalho" autofocus>
 
                                   @error('nomeTrabalho')
@@ -53,13 +53,13 @@
                             </div> --}}
                           @endif
                           @if ($indice == "etiquetacoautortrabalho")
-                            <div class="flexContainer" style="margin-top:20px">
+                            <div class="row " style="margin-top:20px">
                               <div class="col-sm-12">
                                 <h4>Autores</h4>
-                                  <div id="coautores" class="flexContainer " >
+                                  <div id="coautores" class="row " >
                                     @if (old('nomeCoautor') != null)
                                       @foreach (old('nomeCoautor') as $i => $nomeCoautor)
-                                        <div class="item card" id="{{$i+1}}" style="order: {{$i+1}};">
+                                        <div class="item card " id="{{$i+1}}" style="order: {{$i+1}};width:100%;">
                                           <div class="row card-body">
                                               <div class="col-sm-4">
                                                   <label>E-mail</label>
@@ -85,7 +85,7 @@
                                         </div>
                                       @endforeach
                                     @else
-                                    <div class="item card" id="1" style="order:1">
+                                    <div class="item card" id="1" style="order:1;width:100%;">
                                       <div class="row card-body">
                                           <div class="col-sm-4">
                                               <label>E-mail</label>
@@ -150,7 +150,7 @@
                             <!-- Areas -->
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
-                                    <label for="area" class="col-form-label">{{$formSubTraba->etiquetaareatrabalho}}</label>
+                                    <label for="area" class="col-form-label"><strong>{{$formSubTraba->etiquetaareatrabalho}}</strong> </label>
                                     <select class="form-control @error('areaId') is-invalid @enderror" id="area" name="areaId">
                                         <option value="" disabled selected hidden>-- {{ $formSubTraba->etiquetaareatrabalho }} --</option>
                                         {{-- Apenas um teste abaixo --}}
@@ -172,12 +172,12 @@
 
                               @if ($modalidade->arquivo == true)
                                 <div class="col-sm-12" style="margin-top: 20px;">
-                                  <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}</label>
+                                  <label for="nomeTrabalho" class="col-form-label"><strong>{{$formSubTraba->etiquetauploadtrabalho}}</strong> </label>
 
                                   <div class="custom-file">
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" required>
                                   </div>
-                                  <small>Extensão de arquivos aceitas:
+                                  <small><strong>Extensão de arquivos aceitas:</strong>
                                     @if($modalidade->pdf == true)<span> / ".pdf"</span>@endif
                                     @if($modalidade->jpg == true)<span> / ".jpg"</span>@endif
                                     @if($modalidade->jpeg == true)<span> / ".jpeg"</span>@endif
@@ -582,7 +582,7 @@
   }
   function montarLinhaInput(order){
 
-    return `<div class="item card" id="${order}" style="order:${order}">
+    return `<div class="item card" id="${order}" style="order:${order};width:100%;">
               <div class="row card-body">
                   <div class="col-sm-4">
                       <label>E-mail</label>
