@@ -186,7 +186,7 @@
 
             <div class="col-md-4">
                 <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
-                <input value="{{old('complemento')}}" id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" >
+                <input type="text" value="{{old('complemento')}}" id="complemento" class="form-control  @error('complemento') is-invalid @enderror" name="complemento" >
 
                 @error('complemento')
                     <span class="invalid-feedback" role="alert">

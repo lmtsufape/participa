@@ -28,10 +28,11 @@ class UserController extends Controller
         // dd($request->name);
 
         if(Auth()->user()->usuarioTemp == true){
+            $user = User::find($request->id);
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
-                'cpf' => 'required|cpf|unique:users',
-                'passaporte' => 'required|cpf|unique:users',
+                'cpf'           => ($request->cpf ==null ? ['required','cpf','unique:users'] : 'nullable'),
+                'passaporte'    => ($request->passaporte ==null ? 'required|max:10|unique:users' : 'nullable'),
                 'celular' => 'required|string|telefone',
                 'instituicao' => 'required|string| max:255',
                 'especialidade' => 'nullable|string',
@@ -59,7 +60,7 @@ class UserController extends Controller
             $end->save();
 
             // Atualizar dados não preenchidos de User
-            $user = User::find($request->id);
+
             $user->name = $request->input('name');
             $user->cpf = $request->input('cpf');
             $user->passaporte = $request->input('passaporte');
@@ -90,8 +91,8 @@ class UserController extends Controller
             $user = User::find($request->id);
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
-                'cpf' => ['required_if: passaporte, null', Rule::unique('users')->ignore($user->id)],
-                'passaporte' => ['required_if: cpf, null', Rule::unique('users')->ignore($user->id)],
+                'cpf'           => ($request->cpf ==null ? ['required','cpf',Rule::unique('users')->ignore($user->id)] : 'nullable'),
+                'passaporte'    => ($request->passaporte == null && $request->cpf ==null? ['required','max:10',Rule::unique('users')->ignore($user->id)] : ['nullable']),
                 'celular' => 'required|string|telefone',
                 'instituicao' => 'required|string| max:255',
                 // 'especProfissional' => 'nullable|string',
