@@ -541,6 +541,7 @@ class EventoController extends Controller
         // $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
         // $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
         $modalidades = Modalidade::where('evento_id', $evento->id)->get();
+        $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
         $atividades = Atividade::where('eventoId', $id)->get();
         $primeiraAtividade = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
 
@@ -594,6 +595,7 @@ class EventoController extends Controller
         $atividades = Atividade::where([['eventoId', $id], ['visibilidade_participante', true]])->get();
         $primeiraAtividade = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where([['eventoId', '=', $id], ['visibilidade_participante', '=', true]])->first();
         $modalidades = Modalidade::where('evento_id', $id)->get();
+        $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
         $mytime = Carbon::now('America/Recife');
         // dd(false);
         $isInscrito = false;
