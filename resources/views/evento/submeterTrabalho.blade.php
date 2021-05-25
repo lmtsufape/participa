@@ -96,7 +96,8 @@
                                               <input type="text" style="margin-bottom:10px" value="{{Auth::user()->name}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" disabled>
                                           </div>
                                           <div class="col-sm-3">
-                                              <a href="#" class="delete pr-2">
+
+                                              <a href="#" @if(!Auth::check()) class=" delete  pr-2" @else class="  pr-2" @endif>
                                                 <img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;">
                                               </a>
                                               <a href="#" onclick="myFunction(event)">
