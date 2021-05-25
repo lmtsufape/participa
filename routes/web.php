@@ -72,7 +72,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
   });
 
   Route::get('search/user', 'Users\UserController@searchUser')->name('search.user');
-  
+
   // rotas de teste
   Route::namespace('Submissao')->group(function () {
     // Controllers Within The "App\Http\Controllers\Admin" Namespace
@@ -81,18 +81,18 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('detalhes', 'EventoController@informacoes')->name('detalhesEvento');
       Route::get('informacoes', 'EventoController@informacoes')->name('informacoes');
       Route::get('trabalhos/definirSubmissoes', 'EventoController@definirSubmissoes')->name('definirSubmissoes');
-      Route::get('trabalhos/listarTrabalhos/{column?}/{direction?}', 'EventoController@listarTrabalhos')->name('listarTrabalhos');
+      Route::get('trabalhos/listarTrabalhos/{column?}/{direction?}/{status?}', 'EventoController@listarTrabalhos')->name('listarTrabalhos');
       Route::get('trabalhos/{id}/resultados', 'TrabalhoController@resultados')->name('resultados');
 
       Route::get('areas/cadastrarAreas', 'EventoController@cadastrarAreas')->name('cadastrarAreas');
       Route::get('areas/listarAreas', 'EventoController@listarAreas')->name('listarAreas');
 
       Route::get('revisores/cadastrarRevisores', 'EventoController@cadastrarRevisores')->name('cadastrarRevisores');
-      
+
       Route::get('revisores/listarRevisores', 'EventoController@listarRevisores')->name('listarRevisores');
       Route::get('revisores/listarUsuarios', 'EventoController@listarUsuarios')->name('listarUsuarios');
 
-     
+
 
       // Route::get('revisores/{id}/disponiveis', 'RevisorController@listarRevisores')->name('adicionarRevisores');
 
@@ -120,7 +120,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('eventos/editarEtiqueta', 'EventoController@editarEtiqueta')->name('editarEtiqueta');
       Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
       Route::get('{id}/modulos',              'FormEventoController@indexModulo'            )->name('modulos');
-    
+
     });
     //Evento
     Route::get(   '/evento/criar',          'EventoController@create'                    )->name('evento.criar');
@@ -140,11 +140,11 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     //Area
     Route::post(  '/area/criar',            'AreaController@store'                       )->name('area.store');
     Route::delete(  '/area/deletar/{id}',   'AreaController@destroy'                     )->name('area.destroy');
-    Route::post(    '/area/editar/{id}',    'AreaController@update'                     )->name('area.update'); 
+    Route::post(    '/area/editar/{id}',    'AreaController@update'                     )->name('area.update');
 
     //AreaModalidade
     // Route::post(  '/areaModalidade/criar',  'AreaModalidadeController@store'             )->name('areaModalidade.store');
-    
+
     //Trabalho
     Route::get(   '/trabalho/submeter/{id}/{idModalidade}','TrabalhoController@index'    )->name('trabalho.index');
     Route::post(  '/trabalho/novaVersao',   'TrabalhoController@novaVersao'              )->name('trabalho.novaVersao');
@@ -153,6 +153,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::post(  '/trabalho/{id}/avaliar', 'TrabalhoController@avaliarTrabalho'         )->name('trabalho.avaliacao.revisor');
     Route::post( '/trabalho/{id}/excluir',   'TrabalhoController@destroy'                )->name('excluir.trabalho');
     Route::post(  '/trabalho/{id}/editar',   'TrabalhoController@update'                 )->name('editar.trabalho');
+    Route::get(  '/trabalho/status/{id}/{status}',  'TrabalhoController@statusTrabalho'  )->name('trabalho.status');
     //Atribuição
     Route::get(   '/atribuir',              'AtribuicaoController@distribuicaoAutomatica')->name('distribuicao');
     Route::get(   '/atribuirPorArea',       'AtribuicaoController@distribuicaoPorArea'   )->name('distribuicaoAutomaticaPorArea');
@@ -166,7 +167,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::get(   '/download-trabalho/{id}',     'TrabalhoController@downloadArquivo'    )->name('downloadTrabalho');
     // rota download da foto do evento
     Route::get(   '/download-logo-evento/{id}',   'EventoController@downloadFotoEvento'  )->name('download.foto.evento');
-    
+
     // atualizar etiquetas do form de eventos
     Route::post(  '/etiquetas/editar/{id}', 'FormEventoController@update'                )->name('etiquetas.update');
     // atualizar etiquetas do form de submissão de trabalhos
@@ -180,16 +181,16 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     // Ajax para encontrar modalidade especifica e enviar para o modal de edição
     Route::post(   '/atualizarModalidade',   'ModalidadeController@update'                )->name('modalidade.update');
     //
-    
+
     // Encontrar resumo especifico para trabalhos
     Route::get(   '/encontrarResumo',    'TrabalhoController@findResumo'                  )->name('trabalhoResumo');
     // Critérios
     Route::post(  '/criterio/', 'CriteriosController@store'                               )->name('cadastrar.criterio');
     Route::post(  '/criterio/{id}/atualizar', 'CriteriosController@update'                )->name('atualizar.criterio');
     Route::get(   '/{evento_id}/criterio/{id}/deletar',   'CriteriosController@destroy'               )->name('criterio.destroy');
-    Route::get(   '/encontrarCriterio', 'CriteriosController@findCriterio'                )->name('encontrar.criterio');     
+    Route::get(   '/encontrarCriterio', 'CriteriosController@findCriterio'                )->name('encontrar.criterio');
   });
-  
+
   Route::namespace('Users')->group(function () {
   // Controllers Within The "App\Http\Controllers\Admin" Namespace
     Route::prefix('/comissao/cientifica/evento/')->name('comissao.cientifica.')->group(function(){
@@ -218,7 +219,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
   Route::post('/evento/cadastrarComissao','Users\ComissaoController@store'                   )->name('cadastrar.comissao');
   Route::post('/evento/cadastrarCoordComissao','Users\ComissaoController@coordenadorComissao')->name('cadastrar.coordComissao');
 
-  
+
 
   Route::name('coord.')->group(function () {
     Route::get('comissaoOrganizadora/{id}/cadastrar', 'Users\ComissaoOrganizadoraController@create')->name('comissao.organizadora.create');
@@ -227,7 +228,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::post('remover/comissaoOrganizadora/{id}',  'Users\ComissaoOrganizadoraController@destroy')->name('remover.comissao.organizadora');
     Route::post('remover/comissao/{id}',              'Users\ComissaoController@destroy'      )->name('remover.comissao');
   });
-  
+
   // ROTAS DO MODULO DE INSCRIÇÃO
   Route::get('{id}/inscricoes/nova-inscricao',  'Inscricao\InscricaoController@create')->name('inscricao.create');
   Route::get('inscricoes/atividades-da-promocao','Inscricao\PromocaoController@atividades')->name('promocao.atividades');
@@ -237,7 +238,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
   Route::post('/inscricoes/salvar-campo-formulario',  'Inscricao\CampoFormularioController@store')->name('campo.formulario.store');
   Route::post('/inscricoes/campo-excluir/{id}',       'Inscricao\CampoFormularioController@destroy')->name('campo.destroy');
   Route::post('inscricoes/editar-campo/{id}',         'Inscricao\CampoFormularioController@update')->name('campo.edit');
-  // Checkout 
+  // Checkout
   Route::prefix('checkout')->name('checkout.')->group(function(){
     Route::post('/confirmar-inscricao/{id}',  'Inscricao\CheckoutController@index')->name('index');
     Route::post('/proccess',  'Inscricao\CheckoutController@proccess')->name('proccess');

@@ -136,7 +136,7 @@ class UserController extends Controller
     public function meusTrabalhos(){
         $agora = Carbon::now();
         $user = Auth::user();
-        $trabalhos = Trabalho::where('autorId', $user->id)->get();
+        $trabalhos = Trabalho::where('autorId', $user->id)->where('status', '!=', 'arquivado')->get();
         $comoCoautor = Coautor::where('autorId', $user->id)->first();
 
         $trabalhosCoautor = collect();
