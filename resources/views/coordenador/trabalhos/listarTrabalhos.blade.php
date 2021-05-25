@@ -48,6 +48,34 @@
               @endif
             </div>
           </div>
+          <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
+
+            <div class="btn-group" role="group">
+              <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Opções
+              </button>
+              <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}">
+                    Arquivados
+                </a>
+                <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'arquivado'])}}">
+                    Desarquivados
+                </a>
+                <a class="dropdown-item disabled" href="#" >
+                    Submetidos
+                </a>
+                <a class="dropdown-item disabled" href="#" >
+                    Aprovados
+                </a>
+                <a class="dropdown-item disabled" href="#" >
+                    Corrigidos
+                </a>
+                <a class="dropdown-item disabled" href="#" >
+                    Rascunhos
+                </a>
+              </div>
+            </div>
+          </div>
 
           <input type="hidden" name="eventoId" value="{{$evento->id}}">
           <br>
@@ -101,6 +129,7 @@
                   </a> --}}
                 </th>
                 <th scope="col" style="text-align:center">Atribuir</th>
+                <th scope="col" style="text-align:center">Arquivar</th>
               </tr>
             </thead>
 
@@ -152,6 +181,17 @@
                       <i class="fas fa-file-alt"></i>
                     </a>
 
+                  </td>
+                  <td style="text-align:center">
+                    @if ($trabalho->status == 'arquivado')
+                        <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" class="btn btn-info" >
+                            <i class="fas fa-folder-open"></i>
+                        </a>
+                    @else
+                        <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}" class="btn btn-info" >
+                            <i class="fas fa-archive"></i>
+                        </a>
+                    @endif
                   </td>
                 </tr>
 

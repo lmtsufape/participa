@@ -153,14 +153,15 @@ class TrabalhoController extends Controller
         'campoextra4grande' => ['nullable', 'string'],
         'campoextra5grande' => ['nullable', 'string'],
       ]);
-      // dd($request);
+    //   dd($request->all());
 
       if ($this->validarTipoDoArquivo($request->arquivo, $modalidade)) {
         return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
         Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
       }
 
-      $autor = User::where('email', $request->emailCoautor[0])->first();
+    //   $autor = User::where('email', $request->emailCoautor[0])->first();
+      $autor = Auth::user();
 
       $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->count();
       // $areaModalidade = AreaModalidade::where('areaId', $request->araeaId)->where('modalidadeId', $request->modalidadeId)->first();
@@ -361,6 +362,12 @@ class TrabalhoController extends Controller
       }
 
       return redirect()->route('evento.visualizar',['id'=>$request->eventoId]);
+    }
+
+    public function statusTrabalho($id, $status)
+    {
+        $trabalho = Trabalho::where('id', $id)->update(['status' => $status]);
+        return back();
     }
 
     /**

@@ -221,7 +221,7 @@
 
 														<div id="{{ 'collapse_' . $modalidade->id }}" class="accordion-body in collapse" style="height: auto;">
 															<div class="accordion-inner">
-																<table>
+																<table class="mb-1">
 																	<tr>
 																			{{-- @php
 																																						 date_default_timezone_set('America/Recife');

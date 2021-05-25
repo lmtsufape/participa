@@ -3,9 +3,11 @@
 namespace App\Models\Submissao;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Trabalho extends Model
 {
+    use SoftDeletes;
   /**
    * The attributes that are mass assignable.
    *
@@ -15,7 +17,7 @@ class Trabalho extends Model
       'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
       'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
       'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
-      'campoextra4grande', 'campoextra5grande',
+      'campoextra4grande', 'campoextra5grande', 'status'
   ];
 
   public function recurso(){

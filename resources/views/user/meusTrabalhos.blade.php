@@ -109,6 +109,7 @@
                   <th style="text-align:center">Baixar</th>
                   <th style="text-align:center">Editar</th>
                   <th style="text-align:center">Excluir</th>
+                  {{-- <th style="text-align:center">Arquivar</th> --}}
               </tr>
               </thead>
               <tbody>
@@ -132,6 +133,13 @@
                       <img class="" src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:20px">
                     </a>
                   </td>
+                  {{-- <td style="text-align:center">
+                    <form action="{{ route('trabalho.arquivar') }}" method="post">
+                        @csrf
+                        <input type="hidden" name="trabalho_id" value="{{ $trabalho->id }}">
+                        <button type="submit" class="btn btn-warning">Arquivar</button>
+                    </form>
+                  </td> --}}
                   </tr>
               @endforeach
               </tbody>
