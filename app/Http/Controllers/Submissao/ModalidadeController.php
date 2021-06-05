@@ -131,7 +131,7 @@ class ModalidadeController extends Controller
             }
         }
 
-        // Campo TEXTO boolean removido? 
+        // Campo TEXTO boolean removido?
         // $modalidade = Modalidade::create($request->all());
         $modalidade = new Modalidade();
         $modalidade->nome               = $request->nomeModalidade;
@@ -177,12 +177,12 @@ class ModalidadeController extends Controller
             $fileTemplates = $request->arquivoTemplates;
             $pathTemplates = 'templates/' . $modalidade->nome . '/';
             $nomeTemplates = $request->arquivoTemplates->getClientOriginalName();
-            
+
             Storage::putFileAs($pathTemplates, $fileTemplates, $nomeTemplates);
 
             $modalidade->template = $pathTemplates . $nomeTemplates;
         }
-        
+
         $modalidade->save();
 
         return redirect()->back()->with(['mensagem' => 'Modalidade cadastrada com sucesso!']);
@@ -219,7 +219,7 @@ class ModalidadeController extends Controller
      */
     public function update(Request $request)
     {
-        // dd($request->all());
+
         $modalidadeEdit = Modalidade::find($request->modalidadeEditId);
         // dd($request);
         $validatedData = $request->validate([
@@ -259,7 +259,7 @@ class ModalidadeController extends Controller
 
         $caracteres = $modalidadeEdit->caracteres;
         $palavras = $modalidadeEdit->palavras;
-         
+
 
         if($request->input('maxcaracteres'.$request->modalidadeEditId) != null && $request->input('mincaracteres'.$request->modalidadeEditId) != null && $request->input('maxcaracteres'.$request->modalidadeEditId) <= $request->input('mincaracteres'.$request->modalidadeEditId)) {
             return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!']);
@@ -268,7 +268,7 @@ class ModalidadeController extends Controller
             return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!']);
         }
 
-        // Condição para opção de caracteres escolhida 
+        // Condição para opção de caracteres escolhida
         if ($request->input('limit'.$request->modalidadeEditId) == "limit-option1") {
             // Verifica se um campo foi deixado em branco
             if ($request->input('mincaracteres'.$request->modalidadeEditId) == null || $request->input('maxcaracteres'.$request->modalidadeEditId) == null){
@@ -297,7 +297,7 @@ class ModalidadeController extends Controller
 
         // // Condição para opção de texto escolhida
         // if($request->custom_fieldEdit == "option1Edit"){
-            
+
         //     $texto = true;
         //     $arquivo = false;
 
@@ -307,8 +307,8 @@ class ModalidadeController extends Controller
         //     $modalidadeEdit->png  = false;
         //     $modalidadeEdit->docx = false;
         //     $modalidadeEdit->odt  = false;
-            
-            
+
+
         // }
 
         // Condição para opção de arquivo escolhida
@@ -352,40 +352,42 @@ class ModalidadeController extends Controller
         $modalidadeEdit->caracteres          = $caracteres;
         $modalidadeEdit->palavras            = $palavras;
 
+        // dd($request->file('arquivoRegras'.$request->modalidadeEditId));
+        if($request->file('arquivoRegras'.$request->modalidadeEditId) != null){
 
-        if($request->input('arquivoRegras'.$request->modalidadeEditId) != null){
-            
             $path = $modalidadeEdit->regra;
             Storage::delete($path);
 
-            $fileRegras = $request->input('arquivoRegras'.$request->modalidadeEditId);
+            $fileRegras = $request->file('arquivoRegras'.$request->modalidadeEditId);
+
             $pathRegras = 'regras/' . $modalidadeEdit->nome . '/';
-            $nomeRegras = $request->input('arquivoRegras'.$request->modalidadeEditId)->getClientOriginalName();
-            
+            $nomeRegras = $request->file('arquivoRegras'.$request->modalidadeEditId)->getClientOriginalName();
+
             Storage::putFileAs($pathRegras, $fileRegras, $nomeRegras);
 
             $modalidadeEdit->regra = $pathRegras . $nomeRegras;
 
             $modalidadeEdit->save();
+
         }
 
-        if ($request->input('arquivoTemplates'.$request->modalidadeEditId)) {
+        if ($request->file('arquivoTemplates'.$request->modalidadeEditId)) {
 
             $path = $modalidadeEdit->template;
             Storage::delete($path);
-            
-            $fileTemplates = $request->input('arquivoTemplates'.$request->modalidadeEditId);
+
+            $fileTemplates = $request->file('arquivoTemplates'.$request->modalidadeEditId);
             $pathTemplates = 'templates/' . $modalidadeEdit->nome . '/';
-            $nomeTemplates = $request->input('arquivoTemplates'.$request->modalidadeEditId)->getClientOriginalName();
-            
+            $nomeTemplates = $request->file('arquivoTemplates'.$request->modalidadeEditId)->getClientOriginalName();
+
             Storage::putFileAs($pathTemplates, $fileTemplates, $nomeTemplates);
 
             $modalidadeEdit->template = $pathTemplates . $nomeTemplates;
 
             $modalidadeEdit->save();
         }
-        
         $modalidadeEdit->save();
+        // dd($modalidadeEdit);
 
         return redirect()->back()->with(['mensagem' => 'Modalidade salva com sucesso!']);
     }
