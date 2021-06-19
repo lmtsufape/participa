@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Models\Users\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -93,9 +94,38 @@ class AdministradorController extends Controller
         return view('administrador.index');
     }
 
-    public function usuarios()
+    public function users()
     {
-        return view('administrador.index');
+        $users = User::doesntHave('administradors')->orderBy('updated_at', 'ASC')->paginate(20);
+
+        return view('administrador.users', compact('users'));
+    }
+
+    public function editUser($id)
+    {
+        $user = User::doesntHave('administradors')->find($id);
+
+        return view('administrador.editUser', compact('user'));
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        // dd($request->all());
+        $user = User::doesntHave('administradors')->find($id);
+        $user->update([
+            'name'  => $request->name,
+            'email' => $request->email
+        ]);
+
+        return redirect()->route('admin.users')->with(['message' => "Atualizado com sucesso!"]);
+    }
+    public function deleteUser( $id)
+    {
+        // dd($request->all());
+        $user = User::doesntHave('administradors')->find($id);
+        $user->delete();
+
+        return redirect()->route('admin.users')->with(['message' => "Deletado com sucesso!"]);
     }
 
 }

@@ -49,10 +49,15 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
 
   Route::namespace('Users')->group(function () {
     // rotas do administrador
-    Route::get('admin/home', 'AdministradorController@index')->name('admin.home');
-    Route::get('admin/editais', 'AdministradorController@editais')->name('admin.editais');
-    Route::get('admin/areas', 'AdministradorController@areas')->name('admin.areas');
-    Route::get('admin/usuarios', 'AdministradorController@usuarios')->name('admin.usuarios');
+    Route::prefix('/admin')->name('admin.')->group(function(){
+        Route::get('/home', 'AdministradorController@index')->name('home');
+        Route::get('/editais', 'AdministradorController@editais')->name('editais');
+        Route::get('/areas', 'AdministradorController@areas')->name('areas');
+        Route::get('/users', 'AdministradorController@users')->name('users');
+        Route::get('/edit/user/{id}', 'AdministradorController@editUser')->name('editUser');
+        Route::post('/update/user/{id}', 'AdministradorController@updateUser')->name('updateUser');
+        Route::get('/delete/user/{id}', 'AdministradorController@deleteUser')->name('deleteUser');
+    });
     // rotas da Comissao Cientifica
     Route::get('comissao', 'MembroComissaoController@index')->name('home.membro');
     Route::get('comissaoCientifica/home', 'CoordComissaoCientificaController@index')->name('cientifica.home');
