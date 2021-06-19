@@ -96,7 +96,7 @@ class AdministradorController extends Controller
 
     public function users()
     {
-        $users = User::doesntHave('administradors')->orderBy('updated_at', 'ASC')->paginate(20);
+        $users = User::doesntHave('administradors')->orderBy('updated_at', 'ASC')->paginate(100);
 
         return view('administrador.users', compact('users'));
     }
@@ -126,6 +126,22 @@ class AdministradorController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users')->with(['message' => "Deletado com sucesso!"]);
+    }
+    public function search(Request $request)
+    {
+        // dd($request->all());
+        $users = User::doesntHave('administradors')->where('email','like', '%'.$request->search.'%' )->paginate(100);
+        if($users->count() == 0){
+            $users = User::doesntHave('administradors')->where('name','like', '%'.$request->search.'%')->paginate(100);
+
+        }
+        if($users->count() == 0){
+            return view('administrador.users', compact('users'))->with(['message' => "Nenhum Resultado encontrado!"]);
+
+        }
+        return view('administrador.users', compact('users'));
+
+
     }
 
 }
