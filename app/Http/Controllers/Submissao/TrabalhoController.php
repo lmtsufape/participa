@@ -2,34 +2,36 @@
 
 namespace App\Http\Controllers\Submissao;
 
-use App\Models\Submissao\Trabalho;
-use App\Models\Users\Coautor;
-use App\Models\Submissao\Evento;
+use Auth;
+use Carbon\Carbon;
 use App\Models\Users\User;
-use App\Models\Submissao\AreaModalidade;
-use App\Models\Submissao\Area;
-use App\Models\Submissao\Avaliacao;
-use App\Models\Submissao\Arquivoextra;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\Users\Coautor;
 use App\Models\Users\Revisor;
-use App\Models\Submissao\Modalidade;
-use App\Models\Submissao\Atribuicao;
+use App\Models\Submissao\Area;
+use App\Mail\SubmissaoTrabalho;
+use App\Models\Submissao\Evento;
 use App\Models\Submissao\Arquivo;
+use App\Models\Submissao\Parecer;
+use App\Models\Submissao\Trabalho;
+use App\Models\Submissao\Avaliacao;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Models\Submissao\Atribuicao;
+use App\Models\Submissao\Modalidade;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Submissao\RegraSubmis;
+use App\Models\Submissao\Arquivoextra;
 use App\Models\Submissao\FormTipoSubm;
 use App\Models\Submissao\FormSubmTraba;
-use App\Models\Submissao\RegraSubmis;
-use App\Models\Submissao\Parecer;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Submissao\AreaModalidade;
 use App\Models\Submissao\ComissaoEvento;
 use App\Models\Submissao\TemplateSubmis;
-use Carbon\Carbon;
-use Auth;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use App\Mail\SubmissaoTrabalho;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\SubmissaoTrabalhoNotification;
 
 class TrabalhoController extends Controller
 {
@@ -347,8 +349,8 @@ class TrabalhoController extends Controller
       }
 
       $subject = "Submissão de Trabalho";
-      Mail::to($autor->email)
-            ->send(new SubmissaoTrabalho($autor, $subject));
+      Notification::send($autor, new SubmissaoTrabalhoNotification($autor, $subject, $trabalho ));
+    //   Mail::to($autor->email)->send(new SubmissaoTrabalho($autor, $subject));
       if($request->emailCoautor != null){
         foreach ($request->emailCoautor as $key => $value) {
             if($key == 0){

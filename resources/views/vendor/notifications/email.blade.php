@@ -43,7 +43,7 @@
 @if (! empty($salutation))
 {{ $salutation }}
 @else
-<br>@lang('Atenciosamente'),<br><br>
+@lang('Atenciosamente'),<br><br>
 {{ config('app.name') .' - Eventos Acadêmicos
 Laboratório Multidisciplinar de Tecnologias Sociais
 Universidade Federal do Agreste de Pernambuco' }}
