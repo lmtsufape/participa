@@ -130,9 +130,9 @@ class AdministradorController extends Controller
     public function search(Request $request)
     {
         // dd($request->all());
-        $users = User::doesntHave('administradors')->where('email','like', '%'.$request->search.'%' )->paginate(100);
+        $users = User::doesntHave('administradors')->where('email','ilike', '%'.$request->search.'%' )->paginate(100);
         if($users->count() == 0){
-            $users = User::doesntHave('administradors')->where('name','like', '%'.$request->search.'%')->paginate(100);
+            $users = User::doesntHave('administradors')->where('name','ilike', '%'.$request->search.'%')->paginate(100);
 
         }
         if($users->count() == 0){
