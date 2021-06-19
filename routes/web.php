@@ -57,6 +57,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
         Route::get('/edit/user/{id}', 'AdministradorController@editUser')->name('editUser');
         Route::post('/update/user/{id}', 'AdministradorController@updateUser')->name('updateUser');
         Route::get('/delete/user/{id}', 'AdministradorController@deleteUser')->name('deleteUser');
+        Route::post('/delete/search', 'AdministradorController@search')->name('search');
     });
     // rotas da Comissao Cientifica
     Route::get('comissao', 'MembroComissaoController@index')->name('home.membro');
