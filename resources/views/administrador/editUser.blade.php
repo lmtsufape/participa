@@ -7,11 +7,11 @@
     <div class="row justify-content-center">
         <div class="col-auto">
             <h2 >
-                Editar User
+                Editar usuário: {{ $user->name }}
             </h2>
         </div>
     </div>
-
+    <br>
     <div class="row justify-content-md-center">
         <div class="col-md-6">
             <form method="POST" action="{{ route('admin.updateUser', ['id' => $user->id]) }}">
