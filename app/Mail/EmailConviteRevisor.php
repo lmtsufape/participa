@@ -14,16 +14,18 @@ class EmailConviteRevisor extends Mailable
     public $subject;
     public $informacoes;
     public $evento;
+    public $coord;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $evento, $subject, $informacoes = "")
+    public function __construct($user, $evento, $subject, $coord = "",$informacoes = "")
     {
         $this->user = $user;
         $this->subject = $subject;
         $this->evento = $evento;
+        $this->coord = $coord;
         $this->informacoes = $informacoes;
     }
 
@@ -37,9 +39,9 @@ class EmailConviteRevisor extends Mailable
         $subject = 'Easy - Convite de Evento';
         // return $this->markdown('emails.user.welcome')->with([
         //     'user' => $this->nomeUsuarioPai,
-        //     'evento' => $this->nomeEvento,                   
-        //     'funcao' => $this->nomeFuncao,                   
-        //     'senha' => $this->senhaTemporaria,                   
+        //     'evento' => $this->nomeEvento,
+        //     'funcao' => $this->nomeFuncao,
+        //     'senha' => $this->senhaTemporaria,
         // ]);->subject($this->subject)
         // ->view('emails.emailConviteRevisor')
         // ->with([
@@ -53,7 +55,8 @@ class EmailConviteRevisor extends Mailable
                         'user'      => $this->user,
                         'info'      => $this->informacoes,
                         'evento'    => $this->evento,
+                        'coord'    => $this->coord,
                     ]);
-                    
+
     }
 }

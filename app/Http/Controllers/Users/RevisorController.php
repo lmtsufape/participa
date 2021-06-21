@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
- 
+
 class RevisorController extends Controller
 {
     /**
@@ -42,13 +42,13 @@ class RevisorController extends Controller
 
 
     public function indexListarTrabalhos()
-    { 
+    {
         $revisor = Revisor::where("user_id", Auth::user()->id)->first();
         $trabalhos = $revisor->trabalhosAtribuidos;
 
         return view('revisor.listarTrabalhos', [
           "trabalhos" => $trabalhos,]);
-    } 
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -117,7 +117,7 @@ class RevisorController extends Controller
         } else {
           return redirect()->back()->withErrors(['errorRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
         }
-      
+
         return redirect()->back()->with(['mensagem' => 'Revisor cadastrado com sucesso!']);
     }
 
@@ -211,7 +211,7 @@ class RevisorController extends Controller
           }
         }
       }
-      
+
       return redirect()->back()->with(['mensagem' => 'Revisor salvo com sucesso!']);
     }
 
@@ -238,7 +238,7 @@ class RevisorController extends Controller
       foreach ($user->revisor()->where('evento_id', '=', $evento->id)->get() as $revisor) {
         $revisor->delete();
       }
-      
+
       return redirect()->back()->with(['mensagem' => 'Revisor removido com sucesso!']);
     }
 
@@ -266,12 +266,12 @@ class RevisorController extends Controller
     }
     public function enviarEmailTodosRevisores(Request $request){
         $subject = "Lembrete ";
-        
+
         $revisores = json_decode($request->input('revisores'));
         foreach ($revisores as $revisor) {
             $user = User::find($revisor->id);
             Mail::to($revisor->email)
-            ->send(new EmailLembrete($user, $subject));                
+            ->send(new EmailLembrete($user, $subject));
         }
 
         return redirect()->back()->with(['mensagem' => 'E-mails de lembrete enviados!']);
@@ -283,7 +283,7 @@ class RevisorController extends Controller
       $revisores = Revisor::all();
 
       // dd($revisores[0]);
-      
+
       return view('coordenador.revisores.revisoresCadastrados')->with(['evento'    => $evento,
                                                                        'revisores' => $revisores,
                                                                        'areas'     => $areas]);
@@ -292,7 +292,7 @@ class RevisorController extends Controller
     public function conviteParaEvento(Request $request, $id) {
       $subject = "Evento - Convinte para revisor";
       $evento = Evento::find($id);
-      
+
       $user = User::find($request->id);
 
       if ($user->revisor->eventosComoRevisor()->where([['evento_id', $id], ['convite_aceito', null]])->first() != null) {
@@ -307,9 +307,9 @@ class RevisorController extends Controller
 
       //Log::debug('Revisores ' . gettype($user));
       //Log::debug('Revisores ' . $request->input('user'));
-
+      return $request->all();
       Mail::to($user->email)
-          ->send(new EmailConviteRevisor($user, $evento, $subject));
+          ->send(new EmailConviteRevisor($user, $evento, $subject, Auth::user()));
 
       return redirect()->back()->with(['mensagem' => 'Convite enviado']);
     }
@@ -357,7 +357,7 @@ class RevisorController extends Controller
       $data['trabalho'] = Trabalho::find($data['trabalho_id']);
 
       $forms = $data['modalidade']->forms;
-      
+
       return view('revisor.formularioRevisor', compact('evento', 'data', 'forms'));
 
     }
@@ -372,7 +372,7 @@ class RevisorController extends Controller
       foreach ($data['pergunta_id'] as $key => $value) {
         $pergunta = Pergunta::find($value);
         if($pergunta->respostas->first()->paragrafo->count()){
-          $resposta =  $pergunta->respostas()->create([            
+          $resposta =  $pergunta->respostas()->create([
             'revisor_id' => $data['revisor_id'],
             'trabalho_id' => $data['trabalho_id']
           ]);
@@ -384,7 +384,7 @@ class RevisorController extends Controller
           $evento_id = $trabalho->eventoId;
           $trabalho->avaliado = "Avaliado";
           $trabalho->save();
-          
+
         }else if($pergunta->respostas->first()->opcoes->count()){
           $pergunta;
 
@@ -400,6 +400,6 @@ class RevisorController extends Controller
       return view('revisor.listarTrabalhos')->with(['evento' => $evento,'trabalhosPorRevisor' => $trabalhos])->with(['message' => 'Respostas salvas']);
 
 
-      
+
     }
 }

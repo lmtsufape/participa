@@ -1,8 +1,14 @@
 @component('mail::message')
-# Seja Bem-Vindo
+# Olá {{ $user->name }}!
 
-    Convidamos vossa senhoria, para ser revisor do evento {{$evento->nome}}.</h4>
-    
+
+
+Você foi indicado(a) pela coordenação do evento "{{ $evento->nome }}" ({{ $coord->email }}) para atuar como avaliador(a) ou parecerista de atividades e/ou trabalhos acadêmicos.
+
+Pedimos que acesse o site para completar o seu cadastro, caso não o possua, e ter acesso aos trabalhos para avaliação.
+
+Agradecemos de antemão pela sua disponibilidade para colaborar com a realização deste evento.
+
 
 @component('mail::button', ['url' => 'http://sistemas.ufape.edu.br/easy'])
 Acessar site

@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Submissao;
 
-use App\Models\Submissao\Atribuicao;
-use Illuminate\Http\Request;
-use App\Models\Submissao\Evento;
-use App\Models\Users\Revisor;
 use App\Models\Users\User;
-use App\Models\Submissao\Trabalho;
-use App\Models\Submissao\Area;
 use App\Mail\EmailLembrete;
-use Illuminate\Support\Facades\Mail;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Users\Revisor;
+use App\Models\Submissao\Area;
+use App\Models\Submissao\Evento;
+use App\Mail\EmailConviteRevisor;
+use App\Models\Submissao\Trabalho;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\Submissao\Atribuicao;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\AtribuicaoRevisorRequest;
+use Illuminate\Support\Facades\Auth;
 
 class AtribuicaoController extends Controller
 {
@@ -104,13 +106,14 @@ class AtribuicaoController extends Controller
     }
 
     public function distribuicaoAutomatica(Request $request){
-      $this->authorize('isCoordenadorOrComissao', $evento);
+
 
       $validatedData = $request->validate([
         'eventoId' => ['required', 'integer'],
       ]);
 
       $evento = Evento::find($request->eventoId);
+      $this->authorize('isCoordenadorOrComissao', $evento);
       $areas = Area::where('eventoId', $evento->id)->get();
       $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
       $revisores = Revisor::where('eventoId', $evento->id)->get();
@@ -189,7 +192,7 @@ class AtribuicaoController extends Controller
         'trabalhoId'=> ['required', 'integer'],
         'revisorId' => ['required', 'integer']
       ]);
-        
+
       $evento = Evento::find($request->eventoId);
       $this->authorize('isCoordenador', $evento);
 
@@ -204,9 +207,11 @@ class AtribuicaoController extends Controller
 
       $subject = "Easy - Atribuição de Trabalho";
       $informacoes = $trabalho->titulo;
+    //   Mail::to($revisor->user->email)
+    //         ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
       Mail::to($revisor->user->email)
-            ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
-      
+        ->send(new EmailConviteRevisor($revisor->user, $evento, $subject, Auth::user()));
+
       $mensagem = $trabalho->titulo . ' atribuido ao revisor ' . $revisor->user->name . ' com sucesso!';
       return redirect()->back()->with(['mensagem' => $mensagem]);
     }
@@ -222,7 +227,7 @@ class AtribuicaoController extends Controller
       $this->authorize('isCoordenador', $evento);
 
       $revisor = Revisor::find($id);
-      $revisor->correcoesEmAndamento -= 1; 
+      $revisor->correcoesEmAndamento -= 1;
       $revisor->update();
 
       $trabalho = Trabalho::find($request->trabalho_id);
@@ -236,7 +241,7 @@ class AtribuicaoController extends Controller
     public function atribuirCheck(AtribuicaoRevisorRequest $request)
     {
       // $data = $request->all();
-     
+
       // $evento = Evento::find($request->eventoId);
       // $revisores = Revisor::where('evento_id', $evento->id)->get();
       // $areasId = Trabalho::whereIn('id', $data['id'])->select('areaId')->get();
@@ -260,16 +265,16 @@ class AtribuicaoController extends Controller
         $max = sizeof($data['trabalho']);
         $revisor = Revisor::find($data['revisor_id']);
         $evento = Evento::find($request->evento_id);
-        
-        for ($i =0; $i < $max; $i++) { 
+
+        for ($i =0; $i < $max; $i++) {
           $trabalho = Trabalho::find($data['trabalho'][$i]);
           $trabalho->avaliado = 'processando';
           $trabalho->save();
-          
+
           $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando']);
           $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
           $revisor->save();
-          
+
         }
 
         return response()->json([
@@ -289,17 +294,17 @@ class AtribuicaoController extends Controller
         ], 401);
       }
 
-      
-      
-      
-      
+
+
+
+
       // $subject = "Trabalho atribuido";
       // $informacoes = $trabalho->titulo;
       // Mail::to($revisor->user->email)
       //       ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
-            
-      
+
+
     }
 
-    
+
 }
