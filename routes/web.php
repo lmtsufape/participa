@@ -80,6 +80,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
   Route::get('search/user', 'Users\UserController@searchUser')->name('search.user');
 
   // rotas de teste
+  Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
   Route::namespace('Submissao')->group(function () {
     // Controllers Within The "App\Http\Controllers\Admin" Namespace
     Route::get('/coordenador/home','EventoController@index')->name('coord.home');
@@ -168,7 +169,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::post(  '/atribuir/check',                 'AtribuicaoController@atribuirCheck')->name('atribuicao.check');
     Route::post(  '/atribuir/revisor/lote','AtribuicaoController@atribuirRevisorLote')->name('atribuir.revisor.lote');
     // rota downloadArquivo
-    Route::get(   '/downloadArquivo',       'HomeController@downloadArquivo'             )->name('download');
+
     // rota download do arquivo do trabalho
     Route::get(   '/download-trabalho/{id}',     'TrabalhoController@downloadArquivo'    )->name('downloadTrabalho');
     // rota download da foto do evento

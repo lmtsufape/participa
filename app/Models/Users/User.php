@@ -70,7 +70,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo('App\Models\Submissao\Endereco', 'enderecoId');
     }
 
-    
+
 
     public function comissaoEvento(){
         return $this->hasMany('App\Models\Submissao\ComissaoEvento');
@@ -103,7 +103,7 @@ class User extends Authenticatable implements MustVerifyEmail
     function membroComissaoEvento(){
         return $this->belongsToMany('App\Models\Submissao\Evento','comissao_cientifica_eventos','user_id','evento_id');
     }
-    
+
     public function coordEvento(){
         return $this->hasOne('App\Models\Users\CoordenadorEvento');
     }

@@ -2,6 +2,8 @@
 
 @section('content')
 <div class="container content" style="position: relative; top: 50px;">
+
+
     <div class="row titulo">
         <h1>Cadastro</h1>
     </div>
@@ -11,6 +13,7 @@
             <p>Informações Pessoais</p>
         </div>
     </div>
+
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -20,7 +23,6 @@
             </ul>
         </div>
     @endif
-
     <form method="POST" action="{{ route('register') }}">
         @csrf
         {{-- Nome | CPF --}}

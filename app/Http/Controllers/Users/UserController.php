@@ -25,15 +25,21 @@ class UserController extends Controller
         return view('user.perfilUser',['user'=>$user,'end'=>$end,'areas'=>$areas]);
     }
     function editarPerfil(Request $request){
-        // dd($request->name);
+        if ($request->passaporte != null &&  $request->cpf != null) {
+            $request->merge(['passaporte' => null]);
+        }
+        // dd($request->all());
 
         if(Auth()->user()->usuarioTemp == true){
             $user = User::find($request->id);
+
+
+
             $validator = $request->validate([
-                'name' => 'required|string|max:255',
-                'cpf'           => ($request->cpf ==null ? ['required','cpf','unique:users'] : 'nullable'),
-                'passaporte'    => ($request->passaporte ==null ? 'required|max:10|unique:users' : 'nullable'),
-                'celular' => 'required|string|telefone',
+                'name' => 'bail|required|string|max:255',
+                'cpf'           => ($request->passaporte ==null ? ['bail','required','cpf','unique:users'] : 'nullable'),
+                'passaporte'    => ($request->cpf ==null ? 'bail|required|max:10|unique:users' : 'nullable'),
+                'celular' => 'required|string|max:16',
                 'instituicao' => 'required|string| max:255',
                 'especialidade' => 'nullable|string',
                 'rua' => 'required|string|max:255',
@@ -88,12 +94,15 @@ class UserController extends Controller
         }
 
         else {
+            if ($request->passaporte != null &&  $request->cpf != null) {
+                $request->merge(['passaporte' => null]);
+            }
             $user = User::find($request->id);
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
-                'cpf'           => ($request->cpf ==null ? ['required','cpf',Rule::unique('users')->ignore($user->id)] : 'nullable'),
-                'passaporte'    => ($request->passaporte == null && $request->cpf ==null? ['required','max:10',Rule::unique('users')->ignore($user->id)] : ['nullable']),
-                'celular' => 'required|string|telefone',
+                'cpf'           => ($request->passaporte  ==null ? ['bail','required','cpf',Rule::unique('users')->ignore($user->id)] : 'nullable'),
+                'passaporte'    => ($request->cpf == null && $request->cpf ==null? ['bail','required','max:10',Rule::unique('users')->ignore($user->id)] : ['nullable']),
+                'celular' => 'required|string|max:16',
                 'instituicao' => 'required|string| max:255',
                 // 'especProfissional' => 'nullable|string',
                 'rua' => 'required|string|max:255',
