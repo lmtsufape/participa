@@ -30,21 +30,22 @@
         <link href='{{asset('fullcalendar-5.3.2/lib/main.css')}}' rel='stylesheet' />
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        {{-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> --}}
 
         <style>
-            .flexContainer { 
-                display: flex; 
-                flex-direction: column; 
+            .flexContainer {
+                display: flex;
+                flex-direction: column;
             }
 
             .item {
-                
+
                 margin-bottom: 4px;
             }
 
-            
+
         </style>
-        
+
         <?php
             use App\Revisor;
             use App\User;
@@ -52,7 +53,7 @@
             use Illuminate\Support\Facades\Auth;
             use Illuminate\Http\Request;
         ?>
-        
+
     </head>
     <body>
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -80,7 +81,7 @@
                             <li class="nav-item">
                                 @guest
                                     <a class="nav-link" href="{{ route('index') }}" style="margin-right: 5px; margin-left: 5px">
-                                        Início 
+                                        Início
                                     </a>
                                 @else
                                     <a class="nav-link" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
@@ -88,7 +89,7 @@
                                     </a>
                                 @endguest
                             </li>
-                            @auth 
+                            @auth
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     Perfis
@@ -105,7 +106,7 @@
                                             <img src="{{asset('img/icons/revisor.png')}}" alt="">
                                             {{ __('Área do Revisor') }}
                                         </a>
-                                    @endif                                    
+                                    @endif
 
                                     @if (isset(Auth::user()->administradors))
                                         {{-- Rota - Area da Comissao --}}
@@ -187,7 +188,7 @@
                                     </form>
                                 </div>
                             </li>
-                            @else 
+                            @else
                                 <li class="nav-item dropdown">
                                     <a class="nav-link" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
                                 </li>
@@ -206,6 +207,8 @@
 
             {{-- <main class="container-fluid"> --}}
             <div>
+
+
                 @yield('content')
             </div>
             {{-- </main> --}}
@@ -222,7 +225,7 @@
             if (localStorage.getItem('dark-mode') == "active") {
                 document.getElementById('img-change-mode').src = "{{asset('/img/icons/sun.png')}}"
                 document.documentElement.classList.toggle('dark-mode')
-            } 
+            }
 
             $(document).ready(function () {
                 $('#change-mode').click(function () {
@@ -261,6 +264,6 @@
             $(function () {
                 $('[data-toggle="popover"]').popover()
             })
-        </script> 
+        </script>
     </body>
 </html>

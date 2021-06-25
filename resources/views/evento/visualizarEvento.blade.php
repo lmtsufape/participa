@@ -174,6 +174,11 @@
                 <h4>{{$etiquetas->etiquetanomeevento}}:</h4>
             </div>
         </div> --}}
+        @if (session('message'))
+            <div class="alert alert-{{ session('class') }}">
+                {{ session('message') }}
+            </div>
+        @endif
         <div class="row margin">
             <div class="col-sm-12">
                 <h1>

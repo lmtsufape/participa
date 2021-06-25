@@ -338,7 +338,8 @@ class TrabalhoController extends Controller
         }
       }
 
-      return redirect()->route('evento.visualizar',['id'=>$request->eventoId]);
+      return redirect()->route('evento.visualizar',['id'=>$request->eventoId])
+                       ->with(['message' => 'Submissão concluída com sucesso!','class' => 'success']);
     }
 
     public function statusTrabalho($id, $status)
