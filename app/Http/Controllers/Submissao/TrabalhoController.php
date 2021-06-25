@@ -226,7 +226,7 @@ class TrabalhoController extends Controller
 
       if($request->emailCoautor != null){
         foreach ($request->emailCoautor as $key => $value) {
-            if($request->emailCoautor == $autor->email){
+            if($value == $autor->email){
 
             }else{
                 $userCoautor = User::where('email', $value)->first();
@@ -328,7 +328,7 @@ class TrabalhoController extends Controller
       Notification::send($autor, new SubmissaoTrabalhoNotification($autor, $subject, $trabalho ));
       if($request->emailCoautor != null){
         foreach ($request->emailCoautor as $key => $value) {
-            if($request->emailCoautor == $autor->email){
+            if($value == $autor->email){
 
             }else{
                 $userCoautor = User::where('email', $value)->first();
