@@ -45,31 +45,7 @@ class TrabalhoController extends Controller
         $evento = Evento::find($id);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $areas = $areas->sortBy('nome', SORT_NATURAL)->values()->all();
-        // $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
-        // $revisores = Revisor::where('eventoId', $evento->id)->get();
-        // $modalidades = Modalidade::all();
-        // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
-        // $areasEnomes = Area::wherein('id', $areasId)->get();
-        // $modalidadesIDeNome = [];
-        // foreach ($areaModalidades as $key) {
-        //   array_push($modalidadesIDeNome,['areaId' => $key->area->id,
-        //                                   'modalidadeId' => $key->modalidade->id,
-        //                                   'modalidadeNome' => $key->modalidade->nome]);
-        // }
-
-        // $trabalhos = Trabalho::where('autorId', Auth::user()->id)->whereIn('areaId', $areasId)->get();
-
-        // $formtiposubmissao é um vetor com os dados que serão ou
-        // não exibidos no formulario de submissão de trabalho.
-        // $formtiposubmissao = FormTipoSubm::where('modalidadeId', $idModalidade)->first();
-
-        // Pegando apenas as areas que possuem relação com a modalidade selecionada
-        // ao clciar no botão "submeter trabalho".
-        // $areaPorModalidade = AreaModalidade::where('modalidadeId', $idModalidade)->select('areaId')->get();
-        // $areasEspecificas = Area::wherein('id', $areaPorModalidade)->get();
-
         $formSubTraba = FormSubmTraba::where('eventoId', $evento->id)->first();
-
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
         $ordemCampos = explode(",", $formSubTraba->ordemCampos);
@@ -250,7 +226,7 @@ class TrabalhoController extends Controller
 
       if($request->emailCoautor != null){
         foreach ($request->emailCoautor as $key => $value) {
-            if($key == 0){
+            if($request->emailCoautor == $autor->email){
 
             }else{
                 $userCoautor = User::where('email', $value)->first();
@@ -350,10 +326,9 @@ class TrabalhoController extends Controller
 
       $subject = "Submissão de Trabalho";
       Notification::send($autor, new SubmissaoTrabalhoNotification($autor, $subject, $trabalho ));
-    //   Mail::to($autor->email)->send(new SubmissaoTrabalho($autor, $subject));
       if($request->emailCoautor != null){
         foreach ($request->emailCoautor as $key => $value) {
-            if($key == 0){
+            if($request->emailCoautor == $autor->email){
 
             }else{
                 $userCoautor = User::where('email', $value)->first();
