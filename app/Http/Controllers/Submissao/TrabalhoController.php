@@ -98,248 +98,255 @@ class TrabalhoController extends Controller
       //Obtendo apenas os tipos de extensões selecionadas
       $modalidade = Modalidade::find($modalidadeId);
 
-      $mytime = Carbon::now('America/Recife');
-      $mytime = $mytime->toDateString();
-      $evento = Evento::find($request->eventoId);
-      if($evento->inicioSubmissao > $mytime){
-        if($mytime >= $evento->fimSubmissao){
-            return redirect()->route('home');
-        }
-      }
-      $validatedData = $request->validate([
-        'nomeTrabalho'      => ['required', 'string',],
-        'areaId'            => ['required', 'integer'],
-        'modalidadeId'      => ['required', 'integer'],
-        'eventoId'          => ['required', 'integer'],
-        'resumo'            => ['nullable','string'],
-        'nomeCoautor.*'     => ['string'],
-        'emailCoautor.*'    => ['string'],
-        'arquivo'           => ['nullable', 'file', 'max:2000000'],
-        'campoextra1arquivo' => ['nullable', 'file', 'max:2000000'],
-        'campoextra2arquivo' => ['nullable', 'file', 'max:2000000'],
-        'campoextra3arquivo' => ['nullable', 'file', 'max:2000000'],
-        'campoextra4arquivo' => ['nullable', 'file', 'max:2000000'],
-        'campoextra5arquivo' => ['nullable', 'file', 'max:2000000'],
-        'campoextra1simples' => ['nullable', 'string'],
-        'campoextra2simples' => ['nullable', 'string'],
-        'campoextra3simples' => ['nullable', 'string'],
-        'campoextra4simples' => ['nullable', 'string'],
-        'campoextra5simples' => ['nullable', 'string'],
-        'campoextra1grande' => ['nullable', 'string'],
-        'campoextra2grande' => ['nullable', 'string'],
-        'campoextra3grande' => ['nullable', 'string'],
-        'campoextra4grande' => ['nullable', 'string'],
-        'campoextra5grande' => ['nullable', 'string'],
-      ]);
-    //   dd($request->all());
-
-      if ($this->validarTipoDoArquivo($request->arquivo, $modalidade)) {
-        return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
-        Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
-      }
-
-    //   $autor = User::where('email', $request->emailCoautor[0])->first();
-      $autor = Auth::user();
-
-      $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->count();
-      // $areaModalidade = AreaModalidade::where('areaId', $request->araeaId)->where('modalidadeId', $request->modalidadeId)->first();
-      Log::debug('Numero de trabalhos' . $evento);
-      if($trabalhosDoAutor >= $evento->numMaxTrabalhos){
-        return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.']);
-      }
-
-      if($request->emailCoautor != null){
-        $i = 0;
-        foreach ($request->emailCoautor as $key) {
-          $i++;
-        }
-        if($i > $evento->numMaxCoautores){
-          return redirect()->back()->withErrors(['numeroMax' => 'Número de coautores deve ser menor igual a '.$evento->numMaxCoautores]);
-        }
-      }
-
-      if($request->emailCoautor != null){
-        $i = 0;
-        foreach ($request->emailCoautor as $key => $value) {
-          if($key == 0){
-
-          }else{
-              $userCoautor = User::where('email', $value)->first();
-              if($userCoautor == null){
-                $passwordTemporario = Str::random(8);
-                Mail::to($value)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $value));
-                $usuario = User::create([
-                  'email' => $value,
-                  'password' => bcrypt($passwordTemporario),
-                  'usuarioTemp' => true,
-                  'name' => $request->nomeCoautor[$i],
-                ]);
-              }
-              $i++;
+      try {
+        $mytime = Carbon::now('America/Recife');
+        $mytime = $mytime->toDateString();
+        $evento = Evento::find($request->eventoId);
+        if($evento->inicioSubmissao > $mytime){
+          if($mytime >= $evento->fimSubmissao){
+              return redirect()->route('home');
           }
         }
-      }
+        $validatedData = $request->validate([
+          'nomeTrabalho'      => ['required', 'string',],
+          'areaId'            => ['required', 'integer'],
+          'modalidadeId'      => ['required', 'integer'],
+          'eventoId'          => ['required', 'integer'],
+          'resumo'            => ['nullable','string'],
+          'nomeCoautor.*'     => ['string'],
+          'emailCoautor.*'    => ['string'],
+          'arquivo'           => ['nullable', 'file', 'max:2000000'],
+          'campoextra1arquivo' => ['nullable', 'file', 'max:2000000'],
+          'campoextra2arquivo' => ['nullable', 'file', 'max:2000000'],
+          'campoextra3arquivo' => ['nullable', 'file', 'max:2000000'],
+          'campoextra4arquivo' => ['nullable', 'file', 'max:2000000'],
+          'campoextra5arquivo' => ['nullable', 'file', 'max:2000000'],
+          'campoextra1simples' => ['nullable', 'string'],
+          'campoextra2simples' => ['nullable', 'string'],
+          'campoextra3simples' => ['nullable', 'string'],
+          'campoextra4simples' => ['nullable', 'string'],
+          'campoextra5simples' => ['nullable', 'string'],
+          'campoextra1grande' => ['nullable', 'string'],
+          'campoextra2grande' => ['nullable', 'string'],
+          'campoextra3grande' => ['nullable', 'string'],
+          'campoextra4grande' => ['nullable', 'string'],
+          'campoextra5grande' => ['nullable', 'string'],
+        ]);
+      //   dd($request->all());
 
-      $trabalho = Trabalho::create([
-        'titulo' => $request->nomeTrabalho,
-        'resumo' => $request->resumo,
-        'modalidadeId'  => $request->modalidadeId,
-        'areaId'  => $request->areaId,
-        'autorId' => $autor->id,
-        'eventoId'  => $evento->id,
-        'avaliado' => 'nao',
-      ]);
+        if ($this->validarTipoDoArquivo($request->arquivo, $modalidade)) {
+          return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
+          Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
+        }
 
-      if(isset($request->campoextra1simples)){
-        $trabalho->campoextra1simples          = $request->campoextra1simples;
-      }
-      if(isset($request->campoextra1grande)){
-        $trabalho->campoextra1grande           = $request->campoextra1grande;
-      }
-      if(isset($request->campoextra2simples)){
-        $trabalho->campoextra2simples          = $request->campoextra2simples;
-      }
-      if(isset($request->campoextra2grande)){
-        $trabalho->campoextra2grande           = $request->campoextra2grande;
-      }
-      if(isset($request->campoextra3simples)){
-        $trabalho->campoextra3simples          = $request->campoextra3simples;
-      }
-      if(isset($request->campoextra3grande)){
-        $trabalho->campoextra3grande           = $request->campoextra3grande;
-      }
-      if(isset($request->campoextra4simples)){
-        $trabalho->campoextra4simples          = $request->campoextra4simples;
-      }
-      if(isset($request->campoextra4grande)){
-        $trabalho->campoextra4grande           = $request->campoextra4grande;
-      }
-      if(isset($request->campoextra5simples)){
-        $trabalho->campoextra5simples          = $request->campoextra5simples;
-      }
-      if(isset($request->campoextra5grande)){
-        $trabalho->campoextra5grande           = $request->campoextra5grande;
-      }
+      //   $autor = User::where('email', $request->emailCoautor[0])->first();
+        $autor = Auth::user();
 
-      $trabalho->save();
-      // dd($trabalho->id);
+        $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->where('status', '!=','arquivado' )->count();
+        // $areaModalidade = AreaModalidade::where('areaId', $request->araeaId)->where('modalidadeId', $request->modalidadeId)->first();
+        Log::debug('Numero de trabalhos' . $evento);
+        if($trabalhosDoAutor >= $evento->numMaxTrabalhos){
+          return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.']);
+        }
 
-      if($request->emailCoautor != null){
-        foreach ($request->emailCoautor as $key => $value) {
+        if($request->emailCoautor != null){
+          $i = 0;
+          foreach ($request->emailCoautor as $key) {
+            $i++;
+          }
+          if($i > $evento->numMaxCoautores){
+            return redirect()->back()->withErrors(['numeroMax' => 'Número de coautores deve ser menor igual a '.$evento->numMaxCoautores]);
+          }
+        }
+
+        if($request->emailCoautor != null){
+          $i = 0;
+          foreach ($request->emailCoautor as $key => $value) {
             if($value == $autor->email){
 
             }else{
                 $userCoautor = User::where('email', $value)->first();
-                $coauntor = $userCoautor->coautor;
-                if ($coauntor == null) {
-                  $coauntor = Coautor::create([
-                    'ordem' => '-',
-                    'autorId' => $userCoautor->id,
-                    // 'trabalhoId'  => $trabalho->id,
-                    'eventos_id' => $evento->id
+                if($userCoautor == null){
+                  $passwordTemporario = Str::random(8);
+                  Mail::to($value)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $value));
+                  $usuario = User::create([
+                    'email' => $value,
+                    'password' => bcrypt($passwordTemporario),
+                    'usuarioTemp' => true,
+                    'name' => $request->nomeCoautor[$i],
                   ]);
                 }
-                $coauntor->trabalhos()->attach($trabalho);
+                $i++;
             }
-
+          }
         }
-      }
 
-      if(isset($request->arquivo)){
-
-        $file = $request->arquivo;
-        $path = 'trabalhos/' . $request->eventoId . '/' . $trabalho->id .'/';
-        $nome = $request->arquivo->getClientOriginalName();
-        Storage::putFileAs($path, $file, $nome);
-
-        $arquivo = Arquivo::create([
-          'nome'  => $path . $nome,
-          'trabalhoId'  => $trabalho->id,
-          'versaoFinal' => true,
+        $trabalho = Trabalho::create([
+          'titulo' => $request->nomeTrabalho,
+          'resumo' => $request->resumo,
+          'modalidadeId'  => $request->modalidadeId,
+          'areaId'  => $request->areaId,
+          'autorId' => $autor->id,
+          'eventoId'  => $evento->id,
+          'avaliado' => 'nao',
         ]);
-      }
 
-      if(isset($request->campoextra1arquivo)){
-
-        $file = $request->campoextra1arquivo;
-        $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
-        $nome = $request->campoextra1arquivo->getClientOriginalName();
-        Storage::putFileAs($path, $file, $nome);
-
-        $arquivoExtra1 = Arquivoextra::create([
-          'nome'  => $path . $nome,
-          'trabalhoId'  => $trabalho->id,
-        ]);
-      }
-
-      if(isset($request->campoextra2arquivo)){
-
-        $file = $request->campoextra2arquivo;
-        $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
-        $nome = $request->campoextra2arquivo->getClientOriginalName();
-        Storage::putFileAs($path, $file, $nome);
-
-        $arquivoExtra2 = Arquivoextra::create([
-          'nome'  => $path . $nome,
-          'trabalhoId'  => $trabalho->id,
-        ]);
-      }
-
-      if(isset($request->campoextra3arquivo)){
-
-        $file = $request->campoextra3arquivo;
-        $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
-        $nome = $request->campoextra3arquivo->getClientOriginalName();
-        Storage::putFileAs($path, $file, $nome);
-
-        $arquivoExtra3 = Arquivoextra::create([
-          'nome'  => $path . $nome,
-          'trabalhoId'  => $trabalho->id,
-        ]);
-      }
-
-      if(isset($request->campoextra4arquivo)){
-
-        $file = $request->campoextra4arquivo;
-        $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
-        $nome = $request->campoextra4arquivo->getClientOriginalName();
-        Storage::putFileAs($path, $file, $nome);
-
-        $arquivoExtra4 = Arquivoextra::create([
-          'nome'  => $path . $nome,
-          'trabalhoId'  => $trabalho->id,
-        ]);
-      }
-
-      if(isset($request->campoextra5arquivo)){
-
-        $file = $request->campoextra5arquivo;
-        $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
-        $nome = $request->campoextra5arquivo->getClientOriginalName();
-        Storage::putFileAs($path, $file, $nome);
-
-        $arquivoExtra5 = Arquivoextra::create([
-          'nome'  => $path . $nome,
-          'trabalhoId'  => $trabalho->id,
-        ]);
-      }
-
-      $subject = "Submissão de Trabalho";
-      Notification::send($autor, new SubmissaoTrabalhoNotification($autor, $subject, $trabalho ));
-      if($request->emailCoautor != null){
-        foreach ($request->emailCoautor as $key => $value) {
-            if($value == $autor->email){
-
-            }else{
-                $userCoautor = User::where('email', $value)->first();
-                Mail::to($userCoautor->email)
-                  ->send(new SubmissaoTrabalho($userCoautor, $subject));
-            }
+        if(isset($request->campoextra1simples)){
+          $trabalho->campoextra1simples          = $request->campoextra1simples;
         }
+        if(isset($request->campoextra1grande)){
+          $trabalho->campoextra1grande           = $request->campoextra1grande;
+        }
+        if(isset($request->campoextra2simples)){
+          $trabalho->campoextra2simples          = $request->campoextra2simples;
+        }
+        if(isset($request->campoextra2grande)){
+          $trabalho->campoextra2grande           = $request->campoextra2grande;
+        }
+        if(isset($request->campoextra3simples)){
+          $trabalho->campoextra3simples          = $request->campoextra3simples;
+        }
+        if(isset($request->campoextra3grande)){
+          $trabalho->campoextra3grande           = $request->campoextra3grande;
+        }
+        if(isset($request->campoextra4simples)){
+          $trabalho->campoextra4simples          = $request->campoextra4simples;
+        }
+        if(isset($request->campoextra4grande)){
+          $trabalho->campoextra4grande           = $request->campoextra4grande;
+        }
+        if(isset($request->campoextra5simples)){
+          $trabalho->campoextra5simples          = $request->campoextra5simples;
+        }
+        if(isset($request->campoextra5grande)){
+          $trabalho->campoextra5grande           = $request->campoextra5grande;
+        }
+
+        $trabalho->save();
+        // dd($trabalho->id);
+
+        if($request->emailCoautor != null){
+          foreach ($request->emailCoautor as $key => $value) {
+              if($value == $autor->email){
+
+              }else{
+                  $userCoautor = User::where('email', $value)->first();
+                  $coauntor = $userCoautor->coautor;
+                  if ($coauntor == null) {
+                    $coauntor = Coautor::create([
+                      'ordem' => '-',
+                      'autorId' => $userCoautor->id,
+                      // 'trabalhoId'  => $trabalho->id,
+                      'eventos_id' => $evento->id
+                    ]);
+                  }
+                  $coauntor->trabalhos()->attach($trabalho);
+              }
+
+          }
+        }
+
+        if(isset($request->arquivo)){
+
+          $file = $request->arquivo;
+          $path = 'trabalhos/' . $request->eventoId . '/' . $trabalho->id .'/';
+          $nome = $request->arquivo->getClientOriginalName();
+          Storage::putFileAs($path, $file, $nome);
+
+          $arquivo = Arquivo::create([
+            'nome'  => $path . $nome,
+            'trabalhoId'  => $trabalho->id,
+            'versaoFinal' => true,
+          ]);
+        }
+
+        if(isset($request->campoextra1arquivo)){
+
+          $file = $request->campoextra1arquivo;
+          $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
+          $nome = $request->campoextra1arquivo->getClientOriginalName();
+          Storage::putFileAs($path, $file, $nome);
+
+          $arquivoExtra1 = Arquivoextra::create([
+            'nome'  => $path . $nome,
+            'trabalhoId'  => $trabalho->id,
+          ]);
+        }
+
+        if(isset($request->campoextra2arquivo)){
+
+          $file = $request->campoextra2arquivo;
+          $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
+          $nome = $request->campoextra2arquivo->getClientOriginalName();
+          Storage::putFileAs($path, $file, $nome);
+
+          $arquivoExtra2 = Arquivoextra::create([
+            'nome'  => $path . $nome,
+            'trabalhoId'  => $trabalho->id,
+          ]);
+        }
+
+        if(isset($request->campoextra3arquivo)){
+
+          $file = $request->campoextra3arquivo;
+          $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
+          $nome = $request->campoextra3arquivo->getClientOriginalName();
+          Storage::putFileAs($path, $file, $nome);
+
+          $arquivoExtra3 = Arquivoextra::create([
+            'nome'  => $path . $nome,
+            'trabalhoId'  => $trabalho->id,
+          ]);
+        }
+
+        if(isset($request->campoextra4arquivo)){
+
+          $file = $request->campoextra4arquivo;
+          $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
+          $nome = $request->campoextra4arquivo->getClientOriginalName();
+          Storage::putFileAs($path, $file, $nome);
+
+          $arquivoExtra4 = Arquivoextra::create([
+            'nome'  => $path . $nome,
+            'trabalhoId'  => $trabalho->id,
+          ]);
+        }
+
+        if(isset($request->campoextra5arquivo)){
+
+          $file = $request->campoextra5arquivo;
+          $path = 'arquivosextra/' . $request->eventoId . '/' . $trabalho->id .'/';
+          $nome = $request->campoextra5arquivo->getClientOriginalName();
+          Storage::putFileAs($path, $file, $nome);
+
+          $arquivoExtra5 = Arquivoextra::create([
+            'nome'  => $path . $nome,
+            'trabalhoId'  => $trabalho->id,
+          ]);
+        }
+
+        $subject = "Submissão de Trabalho";
+        Notification::send($autor, new SubmissaoTrabalhoNotification($autor, $subject, $trabalho ));
+        if($request->emailCoautor != null){
+          foreach ($request->emailCoautor as $key => $value) {
+              if($value == $autor->email){
+
+              }else{
+                  $userCoautor = User::where('email', $value)->first();
+                  Mail::to($userCoautor->email)
+                    ->send(new SubmissaoTrabalho($userCoautor, $subject));
+              }
+          }
+        }
+
+        return redirect()->route('evento.visualizar',['id'=>$request->eventoId])
+                         ->with(['message' => 'Submissão concluída com sucesso!','class' => 'success']);
+      } catch (\Throwable $th) {
+          \Log::info("message".$th->getMessage());
+        return redirect()->back()->with(['message' => "Submissão não foi concluída!",'class' => 'danger']);
       }
 
-      return redirect()->route('evento.visualizar',['id'=>$request->eventoId])
-                       ->with(['message' => 'Submissão concluída com sucesso!','class' => 'success']);
+
     }
 
     public function statusTrabalho($id, $status)
