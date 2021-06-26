@@ -13,6 +13,7 @@ class Trabalho extends Model
    *
    * @var array
    */
+  // status = ['rascunho','submetido', 'avaliado', 'corrigido','aprovado','reprovado', 'arquivado']
   protected $fillable = [
       'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
       'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',

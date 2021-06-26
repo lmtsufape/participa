@@ -142,7 +142,7 @@ class TrabalhoController extends Controller
       //   $autor = User::where('email', $request->emailCoautor[0])->first();
         $autor = Auth::user();
 
-        $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->count();
+        $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->where('status', '!=','arquivado' )->count();
         // $areaModalidade = AreaModalidade::where('areaId', $request->araeaId)->where('modalidadeId', $request->modalidadeId)->first();
         Log::debug('Numero de trabalhos' . $evento);
         if($trabalhosDoAutor >= $evento->numMaxTrabalhos){
