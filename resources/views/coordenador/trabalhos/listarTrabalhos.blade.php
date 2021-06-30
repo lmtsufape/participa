@@ -128,6 +128,7 @@
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a> --}}
                 </th>
+                <th scope="col" style="text-align:center">Data</th>
                 <th scope="col" style="text-align:center">Atribuir</th>
                 <th scope="col" style="text-align:center">Arquivar</th>
               </tr>
@@ -175,13 +176,17 @@
                       {{count($trabalho->atribuicoes)}}
                     @endif --}}
                   </td>
+                  <td>
+                    {{ date("d/m/Y H:i", strtotime($trabalho->created_at) ) }}
 
+                  </td>
                   <td style="text-align:center">
                     <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}">
                       <i class="fas fa-file-alt"></i>
                     </a>
 
                   </td>
+
                   <td style="text-align:center">
                     @if ($trabalho->status == 'arquivado')
                         <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" class="btn btn-info" >
