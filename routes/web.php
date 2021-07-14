@@ -90,6 +90,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('trabalhos/definirSubmissoes', 'EventoController@definirSubmissoes')->name('definirSubmissoes');
       Route::get('trabalhos/listarTrabalhos/{column?}/{direction?}/{status?}', 'EventoController@listarTrabalhos')->name('listarTrabalhos');
       Route::get('trabalhos/{id}/resultados', 'TrabalhoController@resultados')->name('resultados');
+      Route::get('trabalhos/edit/{id}', 'TrabalhoController@edit')->name('trabalho.edit');
 
       Route::get('areas/cadastrarAreas', 'EventoController@cadastrarAreas')->name('cadastrarAreas');
       Route::get('areas/listarAreas', 'EventoController@listarAreas')->name('listarAreas');

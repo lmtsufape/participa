@@ -372,9 +372,10 @@ class TrabalhoController extends Controller
      * @param  \App\Trabalho  $trabalho
      * @return \Illuminate\Http\Response
      */
-    public function edit(Trabalho $trabalho)
+    public function edit($id)
     {
-        //
+        $trabalho = Trabalho::find($id);
+        return view('coordenador.trabalhos.trabalho_edit', compact('trabalho'));
     }
 
     /**
@@ -798,8 +799,8 @@ class TrabalhoController extends Controller
       $arquivo = $trabalho->arquivo()->where('versaoFinal', true)->first();
 
       if ($trabalho->evento->coordenadorId == auth()->user()->id || $trabalho->evento->coordComissaoId == auth()->user()->id || $trabalho->autorId == auth()->user()->id) {
-        // dd();
-        if (Storage::disk()->exists($arquivo->nome)) {
+        // dd($arquivo);
+        if ($arquivo != null && Storage::disk()->exists($arquivo->nome)) {
           return Storage::download($arquivo->nome);
         }
         return abort(404);

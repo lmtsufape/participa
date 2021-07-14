@@ -131,6 +131,7 @@
                 <th scope="col" style="text-align:center">Data</th>
                 <th scope="col" style="text-align:center">Atribuir</th>
                 <th scope="col" style="text-align:center">Arquivar</th>
+                <th scope="col" style="text-align:center">Editar</th>
               </tr>
             </thead>
 
@@ -198,8 +199,14 @@
                         </a>
                     @endif
                   </td>
-                </tr>
+                    <td style="text-align:center">
+                        <a href="{{ route('coord.trabalho.edit', ['id' => $trabalho->id]) }}" >
+                            <i class="fas fa-edit"></i>
+                        </a>
 
+                    </td>
+
+                </tr>
               @endforeach
             </tbody>
           </table>
