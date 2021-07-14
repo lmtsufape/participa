@@ -135,6 +135,7 @@ class EventoController extends Controller
                                                     'evento'            => $evento,
                                                     'areas'             => $areas,
                                                     'trabalhos'         => $trabalhos,
+                                                    'agora'         => now(),
 
                                                   ]);
 
