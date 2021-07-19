@@ -46,7 +46,7 @@ class CoordComissaoCientificaController extends Controller
         $usuario = User::find($request->user_id);
 
         $permissoes = $request->all();
-        // dd($permissoes );        
+        // dd($permissoes );
 
         if (isset($permissoes['revisor'])) {
             if ( !isset($usuario->revisor) ) {
@@ -59,8 +59,8 @@ class CoordComissaoCientificaController extends Controller
                 $revisor->save();
 
                 $usuario->revisor()->save($revisor);
-            }  
-                       
+            }
+
         }elseif(isset($usuario->revisor) && !isset($permissoes['revisor'])){
             $usuario->revisor()->delete();
         }
@@ -72,16 +72,16 @@ class CoordComissaoCientificaController extends Controller
     }
 
     public function novoUsuario(Request $request)
-    {   
+    {
         $validationData = $this->validate($request,[
             'emailUsuario'=>'required|string|email',
-            
+
             ]);
 
         $user = User::where('email',$request->input('emailUsuario'))->first();
         if($user == null){
             $passwordTemporario = Str::random(8);
-            Mail::to($request->emailUsuario)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', "Revisor", " ", $passwordTemporario));
+            Mail::to($request->emailUsuario)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', "Revisor", " ", $passwordTemporario, ' ', ' '));
             $user = User::create([
               'name' => $request->nomeUsuario,
               'email' => $request->emailUsuario,
@@ -90,7 +90,7 @@ class CoordComissaoCientificaController extends Controller
             ]);
 
             $user->revisor()->create([ 'user_id' => $user->id ]);
-            
+
         }
 
         return redirect()->back()->with('success', 'E-mail enviado!');

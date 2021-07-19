@@ -86,13 +86,14 @@ class ComissaoController extends Controller
         $evento = Evento::find($request->eventoId);
         if($user == null){
           $passwordTemporario = Str::random(8);
-          Mail::to($request->emailMembroComissao)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Comissao', $evento->nome, $passwordTemporario));
+          $coord = User::find($evento->coordenadorId);
+          Mail::to($request->emailMembroComissao)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Comissao', $evento->nome, $passwordTemporario, ' ', $coord));
           $user = User::create([
             'email' => $request->emailMembroComissao,
             'password' => bcrypt($passwordTemporario),
             'usuarioTemp' => true,
           ]);
-        } else {            
+        } else {
             $usuarioDaComissa = $evento->usuariosDaComissao()->where('user_id', $user->id)->first();
             if ($usuarioDaComissa != null) {
                 return redirect()->back()->withErrors(['cadastrarComissao' => 'Esse usuário já é membro da comissão.'])->withInput($validationData);
@@ -175,7 +176,7 @@ class ComissaoController extends Controller
     public function destroy(Request $request, $id)
     {
         $evento = Evento::find($request->evento_id);
-        
+
         $evento->usuariosDaComissao()->detach($id);
 
         return redirect()->back()->with(['mensagem' => 'Membro da comissão removido com sucesso!']);

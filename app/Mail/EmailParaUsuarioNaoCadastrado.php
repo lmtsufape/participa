@@ -16,14 +16,15 @@ class EmailParaUsuarioNaoCadastrado extends Mailable
     public $nomeEvento;
     public $senhaTemporaria;
     public $email;
+    public $coord;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(String $nomeUsuarioPai, String $nomeTrabalho, 
-              String $nomeFuncao, String $nomeEvento, String $senhaTemporaria, String $email)
+    public function __construct(String $nomeUsuarioPai, String $nomeTrabalho,
+              String $nomeFuncao, String $nomeEvento, String $senhaTemporaria, String $email, $coord)
     {
       $this->nomeUsuarioPai  = $nomeUsuarioPai;
       $this->nomeTrabalho    = $nomeTrabalho;
@@ -31,6 +32,7 @@ class EmailParaUsuarioNaoCadastrado extends Mailable
       $this->nomeEvento      = $nomeEvento;
       $this->senhaTemporaria = $senhaTemporaria;
       $this->email           = $email;
+      $this->coord           = $coord;
     }
 
     /**
@@ -41,15 +43,16 @@ class EmailParaUsuarioNaoCadastrado extends Mailable
     public function build()
     {
       return  $this->from('lmtsteste@gmail.com', 'Easy ')
-                    ->subject("Ative sua conta")
+                    ->subject("Sistema Easy - Lembrete de cadastro")
                     ->markdown('emails.usuarioNaoCadastrado')->with([
                       'user' => $this->nomeUsuarioPai,
-                      'evento' => $this->nomeEvento,                   
-                      'funcao' => $this->nomeFuncao,                   
-                      'senha' => $this->senhaTemporaria,                   
+                      'evento' => $this->nomeEvento,
+                      'funcao' => $this->nomeFuncao,
+                      'senha' => $this->senhaTemporaria,
+                      'coord' => $this->coord,
                   ]);
-       
+
         // return $this->view('emails.usuarioNaoCadastrado');
-                  
+
     }
 }

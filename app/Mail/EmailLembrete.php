@@ -14,6 +14,10 @@ class EmailLembrete extends Mailable
     public $user;
     public $subject;
     public $informacoes;
+    public $trabalhos;
+    public $dataLimite;
+    public $evento;
+    public $coord;
 
 
     /**
@@ -21,11 +25,15 @@ class EmailLembrete extends Mailable
      *
      * @return void
      */
-    public function __construct($user, $subject, $informacoes = "")
+    public function __construct($user, $subject, $informacoes = "", $trabalhos = "", $dataLimite = "", $evento, $coord)
     {
         $this->user = $user;
         $this->subject = $subject;
         $this->informacoes = $informacoes;
+        $this->trabalhos = $trabalhos;
+        $this->dataLimite = $dataLimite;
+        $this->evento = $evento;
+        $this->coord = $coord;
 
     }
 
@@ -43,13 +51,17 @@ class EmailLembrete extends Mailable
         //             ->with([
         //                 'user' => $this->user,
         //                 'info' => $this->informacoes,
-                        
+
         //             ]);
         return  $this->from('lmtsteste@gmail.com', 'Easy')
                     ->subject($this->subject)
                     ->markdown('emails.emailLembreteRevisor')->with([
                         'user' => $this->user,
-                        'info' => $this->informacoes,                   
+                        'info' => $this->informacoes,
+                        'trabalhos' => $this->trabalhos,
+                        'dataLimite' => $this->dataLimite,
+                        'evento' => $this->evento,
+                        'coord' => $this->coord,
                   ]);
     }
 }
