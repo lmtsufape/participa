@@ -811,6 +811,11 @@ class TrabalhoController extends Controller
             return Storage::download($arquivo->nome);
           }
           return abort(404);
+        }else{
+            if (Storage::disk()->exists($arquivo->nome)) {
+                return Storage::download($arquivo->nome);
+              }
+            return abort(404);
         }
       }
 
