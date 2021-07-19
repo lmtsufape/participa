@@ -24,7 +24,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-
+use Event;
 
 class RevisorController extends Controller
 {
@@ -80,7 +80,8 @@ class RevisorController extends Controller
         // dd(count($usuario->revisor()->where('evento_id', $evento->id)->get()));
         if($usuario == null){
           $passwordTemporario = Str::random(8);
-          Mail::to($request->emailRevisor)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Revisor', $evento->nome, $passwordTemporario, $request->emailRevisor));
+          $coord = User::find($evento->coordenadorId);
+          Mail::to($request->emailRevisor)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Revisor', $evento->nome, $passwordTemporario, $request->emailRevisor, $coord));
 
           $usuario = new User();
           $usuario->email       = $request->emailRevisor;
@@ -260,18 +261,40 @@ class RevisorController extends Controller
         //Log::debug('Revisores ' . $request->input('user'));
 
         Mail::to($user->email)
-            ->send(new EmailLembrete($user, $subject));
+            ->send(new EmailLembrete($user, $subject, ' ', ' ', ' ', ' ', ' '));
 
         return redirect()->back()->with(['mensagem' => 'E-mail de lembrete de revisão enviado para ' . $user->email . '.']);
     }
     public function enviarEmailTodosRevisores(Request $request){
-        $subject = "Lembrete ";
+        $subject = "Sistema Easy - Lembrete  de trabalho";
 
         $revisores = json_decode($request->input('revisores'));
         foreach ($revisores as $revisor) {
             $user = User::find($revisor->id);
-            Mail::to($revisor->email)
-            ->send(new EmailLembrete($user, $subject));
+            //dd($user->revisor[0]->correcoesEmAndamento);
+            $revisorTemp = $user->revisor[0];
+            if(isset($revisorTemp->trabalhosAtribuidos)){
+                $trabalhosMail = "";
+                $dataLimite = "";
+                $evento = "";
+                $coord = "";
+                $trabalhosAtribuidos = $revisorTemp->trabalhosAtribuidos;
+                $flag = false;
+                foreach($trabalhosAtribuidos as $trabalho){
+                    if($trabalho->avaliado != "Avaliado"){
+                        $flag = true;
+                        $evento = Evento::find($trabalho->eventoId);
+                        $coord = User::find($evento->coordenadorId);
+                        $modalidade = Modalidade::where([['evento_id', $trabalho->eventoId]])->first();
+                        $trabalhosMail .= $trabalho->titulo . ", ";
+                        $dataLimite = $modalidade->fimRevisao;
+                    }
+                }
+                if($flag){
+                    Mail::to($revisor->email)
+                    ->send(new EmailLembrete($user, $subject, ' ', $trabalhosMail, $dataLimite, $evento, $coord));
+                }
+            }
         }
 
         return redirect()->back()->with(['mensagem' => 'E-mails de lembrete enviados!']);
@@ -290,7 +313,7 @@ class RevisorController extends Controller
     }
 
     public function conviteParaEvento(Request $request, $id) {
-      $subject = "Evento - Convinte para revisor";
+      $subject = "Sistema Easy - Atribuição como avaliador(a) e/ou parecerista";
       $evento = Evento::find($id);
 
       $user = User::find($request->id);
