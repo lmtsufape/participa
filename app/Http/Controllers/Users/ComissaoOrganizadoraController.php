@@ -54,13 +54,14 @@ class ComissaoOrganizadoraController extends Controller
         // dd($user);
         if ($user == null) {
             $passwordTemporario = Str::random(8);
-            Mail::to($request->emailMembroComissao)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Comissao Organizadora', $evento->nome, $passwordTemporario));
+            $coord = User::find($evento->coordenadorId);
+            Mail::to($request->emailMembroComissao)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Comissao Organizadora', $evento->nome, $passwordTemporario, ' ', $coord));
             $user = User::create([
                 'email' => $request->emailMembroComissao,
                 'password' => bcrypt($passwordTemporario),
                 'usuarioTemp' => true,
             ]);
-        } else {            
+        } else {
             $usuarioDaComissao = $evento->usuariosDaComissaoOrganizadora()->where('user_id', $user->id)->first();
             if ($usuarioDaComissao != null) {
                 return redirect()->back()->withErrors(['cadastrarComissao' => 'Esse usuário já é membro da comissão organizadora.'])->withInput($validationData);

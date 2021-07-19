@@ -168,7 +168,8 @@ class TrabalhoController extends Controller
                 $userCoautor = User::where('email', $value)->first();
                 if($userCoautor == null){
                   $passwordTemporario = Str::random(8);
-                  Mail::to($value)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $value));
+                  $coord = User::find($evento->coordenadorId);
+                  Mail::to($value)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $value, $coord));
                   $usuario = User::create([
                     'email' => $value,
                     'password' => bcrypt($passwordTemporario),
@@ -475,7 +476,8 @@ class TrabalhoController extends Controller
           // e relaciono o trabalho a ele
 
           $passwordTemporario = Str::random(8);
-          Mail::to($email)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $email));
+          $coord = User::find($evento->coordenadorId);
+          Mail::to($email)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $email, $coord));
           $usuario = User::create([
             'email' => $email,
             'password' => bcrypt($passwordTemporario),
