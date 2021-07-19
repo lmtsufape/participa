@@ -219,6 +219,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::get('/area/revisores',        'RevisorController@index'                      )->name('revisor.index');
     Route::get('revisores/responde',        'RevisorController@responde'                      )->name('revisor.responde');
     Route::post('revisores/resposta/salvar',        'RevisorController@salvarRespostas'  )->name('revisor.salvar.respostas');
+    Route::post('/reenviaremail/revisor/{id}/{evento_id}', 'RevisorController@reenviarEmailRevisor')->name('revisor.reenviarEmail');
   });
   // Visualizar trabalhos do usuário
   Route::get('/user/trabalhos', 'Users\UserController@meusTrabalhos')->name('user.meusTrabalhos');

@@ -243,6 +243,21 @@ class RevisorController extends Controller
       return redirect()->back()->with(['mensagem' => 'Revisor removido com sucesso!']);
     }
 
+    public function reenviarEmailRevisor($id, $evento_id)
+    {
+        $user = User::find($id);
+        $evento = Evento::find($evento_id);
+        if($user->usuarioTemp){
+            $passwordTemporario = Str::random(8);
+            $coord = User::find($evento->coordenadorId);
+            Mail::to($user->email)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Revisor', $evento->nome, $passwordTemporario, $user->email, $coord));
+            $user->password    = bcrypt($passwordTemporario);
+            $user->save();
+            return redirect()->back()->with(['mensagem' => 'E-mail para completar o cadastrado enviado com sucesso!']);
+        }
+        return redirect()->back()->withErrors(['errorRevisor' => 'Não é possível reenviar um e-mail para o revisor, pois o mesmo já completou o seu cadastro.']);
+    }
+
     public function numeroDeRevisoresAjax(Request $request){
       $validatedData = $request->validate([
         'areaId' => ['required', 'string'],

@@ -36,6 +36,7 @@
                                 <th scope="col" style="text-align:center">Visualizar</th>
                                 <th scope="col" style="text-align:center">Remover</th>
                                 <th scope="col" style="text-align:center">Lembrar</th>
+                                <th scope="col" style="text-align:center">Cadastro</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -66,8 +67,16 @@
                                           </button>
                                       </form> --}}
                                       @component('componentes.modal', ['email' => $revisor->email, 'evento' => $evento])
-                            
+
                                       @endcomponent
+                                  </td>
+                                  <td style="text-align:center">
+                                    <form id="reenviarEmailRevisor{{$revisor->id}}" action="{{route('revisor.reenviarEmail', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
+                                      @csrf
+                                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalReenviarEmailRevisor{{$revisor->id}}">
+                                        Reenviar cadastro
+                                      </button>
+                                    </form>
                                   </td>
                                 </tr>
                               @endforeach
@@ -107,6 +116,27 @@
               <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
                   <button type="submit" class="btn btn-primary" form="removerRevisor{{$revisor->id}}">Sim</button>
+              </div>
+          </div>
+          </div>
+        </div>
+      <!-- fim do modal -->
+      <!-- Modal de reenvio de email -->
+        <div class="modal fade" id="modalReenviarEmailRevisor{{$revisor->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header" style="background-color: #114048ff; color: white;">
+              <h5 class="modal-title" id="#label">Confirmação</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+                  <div class="modal-body">
+                      Tem certeza que deseja reenviar um e-mail de cadastro para esse revisor?
+                  </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                  <button type="submit" class="btn btn-primary" form="reenviarEmailRevisor{{$revisor->id}}">Sim</button>
               </div>
           </div>
           </div>
@@ -154,11 +184,11 @@
                     <div>{{$user->modalidade->nome}}</div>
                   @endforeach
                 </div>
-                
+
               </div>
               <br>
               {{-- <div class="row justify-content-center" style="margin-top:20px">
-                
+
               </div> --}}
               <div class="row justify-content-center">
                 <div class="col-sm-12">
@@ -174,7 +204,7 @@
                               <tr>
                                 <th scope="col">Título</th>
                                 <th scope="col">Status</th>
-  
+
                               </tr>
                             </thead>
                             <tbody>
@@ -188,7 +218,7 @@
                           </table>
                         </div>
                       </div>
-                    @endif 
+                    @endif
                   @endforeach
                 </div>
               </div>
@@ -218,7 +248,7 @@
                               <div class="col-sm-6">
                                   <label for="emailRevisor{{$revisor->id}}" class="col-form-label">{{ __('Email do Revisor') }}</label>
                                   <input id="emailRevisor{{$revisor->id}}" type="email" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{$revisor->email}}" autocomplete="emailRevisor" disabled>
-  
+
                                   @error('emailRevisor')
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
@@ -244,7 +274,7 @@
                                     </div>
                                   </div>
                                 @endforeach
-                              @else 
+                              @else
                                 @foreach ($areas as $area)
                                 <div class="row">
                                   <div class="col-sm-12">
@@ -253,8 +283,8 @@
                                   </div>
                                 </div>
                                 @endforeach
-                              @endif 
-  
+                              @endif
+
                               @error('areasEditadas_'.$revisor->id)
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -275,7 +305,7 @@
                                       </div>
                                     </div>
                                 @endforeach
-                              @else 
+                              @else
                                 @foreach ($modalidades as $modalidade)
                                 <div class="row">
                                   <div class="col-sm-12">
@@ -306,7 +336,7 @@
       </div>
       {{-- Fim modal editar revisor --}}
     @endforeach
-    
+
     <!-- Revisores -->
     <div class="modal fade" id="modalCadastrarRevisor" tabindex="-1" role="dialog" aria-labelledby="modalCadastrarRevisorLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
@@ -359,7 +389,7 @@
                                 </div>
                               </div>
                               @endforeach
-                            @endif 
+                            @endif
 
                             @error('areas')
                             <span class="invalid-feedback" role="alert">
@@ -380,7 +410,7 @@
                                       </div>
                                     </div>
                                 @endforeach
-                              @else 
+                              @else
                                 @foreach ($modalidades as $modalidade)
                                 <div class="row">
                                   <div class="col-sm-12">
@@ -409,5 +439,5 @@
         </div>
       </div>
     </div>
-    
+
 @endsection
