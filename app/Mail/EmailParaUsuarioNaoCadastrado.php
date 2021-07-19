@@ -43,7 +43,7 @@ class EmailParaUsuarioNaoCadastrado extends Mailable
     public function build()
     {
       return  $this->from('lmtsteste@gmail.com', 'Easy ')
-                    ->subject("Sistema Easy - Lembrete de cadastro")
+                    ->subject("Ative sua conta")
                     ->markdown('emails.usuarioNaoCadastrado')->with([
                       'user' => $this->nomeUsuarioPai,
                       'evento' => $this->nomeEvento,
