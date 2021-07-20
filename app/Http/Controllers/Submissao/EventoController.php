@@ -389,6 +389,36 @@ class EventoController extends Controller
 
     }
 
+    public function destroyForm($id)
+    {
+        $form = Form::find($id);
+        $temRespostas = false;
+        foreach($form->perguntas as $pergunta){
+            if($pergunta->respostas->first()->opcoes->count()){
+                //Resposta com Multipla escolha:
+            }elseif($pergunta->respostas->first()->paragrafo->count()){
+                foreach($pergunta->respostas as $resposta){
+                    if($resposta->revisor != null || $resposta->trabalho != null){
+                        $temRespostas = true;
+                        break;
+                    }
+                }
+            }elseif($temRespostas){
+                break;
+            }
+        }
+        //dd($temRespostas);
+
+        if(!$temRespostas){
+            $form->delete();
+            return redirect()->back()->with(['mensagem' => 'Formulário excluído com sucesso!']);
+        }else{
+            return redirect()->back()->withErrors(['excluirFormulario' => 'Não é possível excluir. Existem respostas submetidas ligadas a este formulário.']);
+        }
+
+
+    }
+
     public function visualizarForm(Request $request)
     {
       $evento = Evento::find($request->evento_id);

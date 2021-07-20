@@ -7,12 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class EmailParaUsuarioNaoCadastrado extends Mailable
+class EmailLembreteUsuarioNaoCadastrado extends Mailable
 {
     use Queueable, SerializesModels;
-    public $nomeUsuarioPai;
-    public $nomeTrabalho;
-    public $nomeFuncao;
     public $nomeEvento;
     public $senhaTemporaria;
     public $email;
@@ -23,12 +20,8 @@ class EmailParaUsuarioNaoCadastrado extends Mailable
      *
      * @return void
      */
-    public function __construct(String $nomeUsuarioPai, String $nomeTrabalho,
-              String $nomeFuncao, String $nomeEvento, String $senhaTemporaria, String $email, $coord)
+    public function __construct(String $nomeEvento, String $senhaTemporaria, String $email, $coord)
     {
-      $this->nomeUsuarioPai  = $nomeUsuarioPai;
-      $this->nomeTrabalho    = $nomeTrabalho;
-      $this->nomeFuncao      = $nomeFuncao;
       $this->nomeEvento      = $nomeEvento;
       $this->senhaTemporaria = $senhaTemporaria;
       $this->email           = $email;
@@ -43,16 +36,12 @@ class EmailParaUsuarioNaoCadastrado extends Mailable
     public function build()
     {
       return  $this->from('lmtsteste@gmail.com', 'Easy ')
-                    ->subject("Ative sua conta")
-                    ->markdown('emails.usuarioNaoCadastrado')->with([
-                      'user' => $this->nomeUsuarioPai,
+                    ->subject("Sistema Easy - Lembrete de cadastro")
+                    ->markdown('emails.emailLembreteCadastro')->with([
                       'evento' => $this->nomeEvento,
-                      'funcao' => $this->nomeFuncao,
                       'senha' => $this->senhaTemporaria,
+                      'email' => $this->email,
                       'coord' => $this->coord,
                   ]);
-
-        // return $this->view('emails.usuarioNaoCadastrado');
-
     }
 }

@@ -1,9 +1,8 @@
 @component('mail::message',['url' => 'http://sistemas.ufape.edu.br/easy'])
-# Olá {{$email}}!
+# Seja Bem-Vindo!
 
-Este e-mail é um lembrete de que você foi indicado(a) pela coordenação do evento "{{ $evento }}" ({{ $coord->email }}) para atuar como avaliador(a) ou parecerista de atividades e/ou trabalhos acadêmicos e que **necessita completar o seu cadastro para ter acesso aos trabalhos para avaliação**.
-
-Agradecemos de antemão pela sua disponibilidade para colaborar com a realização deste evento.
+Você foi convidado a se cadastrar no evento {{$evento}} como {{$funcao}} pelo o usuário {{$user}},
+para ativar é preciso fazer login na sua conta.
 
 
 Seus dados de login para que possa completar o cadastro:

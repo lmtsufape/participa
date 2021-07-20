@@ -116,6 +116,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('modalidade/form/salvar', 'EventoController@salvarForm')->name('salvar.form');
       Route::get('modalidade/form/visualizar', 'EventoController@visualizarForm')->name('visualizar.form');
       Route::get('modalidade/form/respostas', 'EventoController@respostas')->name('respostas');
+      Route::get('modalidade/form/{id}/excluir', 'EventoController@destroyForm')->name('deletar.form');
 
       Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');
       // Atenção se mudar url da rota abaixo mudar função setVisibilidadeAtv na view detalhesEvento.blade.php
@@ -219,6 +220,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::get('/area/revisores',        'RevisorController@index'                      )->name('revisor.index');
     Route::get('revisores/responde',        'RevisorController@responde'                      )->name('revisor.responde');
     Route::post('revisores/resposta/salvar',        'RevisorController@salvarRespostas'  )->name('revisor.salvar.respostas');
+    Route::post('/reenviaremail/revisor/{id}/{evento_id}', 'RevisorController@reenviarEmailRevisor')->name('revisor.reenviarEmail');
   });
   // Visualizar trabalhos do usuário
   Route::get('/user/trabalhos', 'Users\UserController@meusTrabalhos')->name('user.meusTrabalhos');
