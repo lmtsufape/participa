@@ -17,6 +17,7 @@ use App\Models\Submissao\Form;
 use App\Models\Submissao\Opcao;
 use Illuminate\Http\Request;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
+use App\Mail\EmailLembreteUsuarioNaoCadastrado;
 use App\Mail\EmailLembrete;
 use App\Mail\EmailConviteRevisor;
 use Illuminate\Support\Facades\Mail;
@@ -250,7 +251,7 @@ class RevisorController extends Controller
         if($user->usuarioTemp){
             $passwordTemporario = Str::random(8);
             $coord = User::find($evento->coordenadorId);
-            Mail::to($user->email)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Revisor', $evento->nome, $passwordTemporario, $user->email, $coord));
+            Mail::to($user->email)->send(new EmailLembreteUsuarioNaoCadastrado($evento->nome, $passwordTemporario, $user->email, $coord));
             $user->password    = bcrypt($passwordTemporario);
             $user->save();
             return redirect()->back()->with(['mensagem' => 'E-mail para completar o cadastrado enviado com sucesso!']);
