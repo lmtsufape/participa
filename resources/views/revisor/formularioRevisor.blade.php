@@ -8,7 +8,7 @@
             <div class="col-sm-12">
                 <h3 class="titulo-detalhes">Formulário(s) da molidade: <br> <strong> {{$data['modalidade']->nome}}</strong> </h3>
             </div>
-        </div> 
+        </div>
     </div>
     @if(session('message'))
     <div class="row">
@@ -26,53 +26,52 @@
                 <div class="card" style="width: 48rem;">
                     <div class="card-body">
                     <h5 class="card-title">{{$form->titulo}}</h5>
-                    
+
                     <p class="card-text">
-                        
+
                         <form action="{{route('revisor.salvar.respostas')}}" method="post">
                             @csrf
                             <input type="hidden" name="revisor_id" value="{{$data['revisor']->id}}">
                             <input type="hidden" name="trabalho_id" value="{{$data['trabalho']->id}}">
                             <input type="hidden" name="modalidade_id" value="{{$data['modalidade']->id}}">
                             <input type="hidden" name="form_id[]" value="{{$form->id}}">
-                        @foreach ($form->perguntas as $pergunta)
-                            <div class="card">
-                                <div class="card-body">
-                                    <p>Pergunta: {{$pergunta->pergunta}}</p>
-                                    {{-- @if(!isset($pergunta->respostas->opcoes))
-                                        Resposta com Multipla escolha:
-                                    @else --}}
-                                            <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
-                                            <p>Resposta com paragrafo: </p>
-                                            <input type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]">
-                                        
-                                    {{-- @endif --}}
-                                        </div>
+                            @foreach ($form->perguntas as $pergunta)
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p><b>{{$pergunta->pergunta}}</b></p>
+                                        {{-- @if(!isset($pergunta->respostas->opcoes))
+                                            Resposta com Multipla escolha:
+                                        @else --}}
+                                                <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
+                                                <p><b>Resposta: </b></p>
+                                                <textarea type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]" required></textarea>
+
+                                        {{-- @endif --}}
                                     </div>
-                                    
-                        @endforeach
+                                </div>
+                            @endforeach
                         <button type="submit" class="btn btn-success">
                             Salvar respostas
                         </button>
                         </form>
                     </p>
-                    
+
                     </div>
                 </div>
-                
+
             @empty
                 <h4>Não há formulário para ser respondido</h4>
             @endforelse
         </div>
     </div>
-    
-</div>   
-   
+
+</div>
+
 
 @endsection
 
 {{-- <div class="row">
-    <div class="col-md-12">                                
+    <div class="col-md-12">
         <div id="coautores" class="flexContainer " >
             <div class="item card" style="order:1">
                 <div class="row card-body">
@@ -85,7 +84,7 @@
                         <div class="row" id="row1">
                             <div class="col-md-12">
                                 <input type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]" required>
-                            </div>                                
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -94,7 +93,7 @@
                             <select onchange="escolha(this.value)" name="tipo[]" class="form-control" id="FormControlSelect">
                                 <option value="paragrafo">Parágrafo</option>
                                 <option value="checkbox">Multipla escolha</option>
-                                
+
                             </select>
                         </div>
                     </div>
@@ -109,7 +108,7 @@
                         <a href="#" onclick="myFunction(event)">
                         <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
                         </a>
-                        
+
                     </div>
                 </div>
             </div>
