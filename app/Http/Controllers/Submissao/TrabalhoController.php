@@ -556,17 +556,27 @@ class TrabalhoController extends Controller
         $nome = $request->file('arquivo'.$id)->getClientOriginalName();
         Storage::putFileAs($path, $file, $nome);
 
+        //É necessário excluir o arquivo da tabela de arquivo também ao editar um trabalho
+        //Não só fazer o Storage::delete() do arquivo
+        $arquivosTrabalho = $trabalho->arquivo()->where('versaoFinal', true)->get();
+        foreach ($arquivosTrabalho as $arquivoTrabalho) {
+            if (Storage::disk()->exists($arquivoTrabalho->nome)) {
+                Storage::delete($arquivoTrabalho->nome);
+            }
+            $arquivoTrabalho->delete();
+        }
+
         $arquivo = Arquivo::create([
           'nome'  => $path . $nome,
           'trabalhoId'  => $trabalho->id,
           'versaoFinal' => true,
         ]);
 
-        $arquivoAtual = $trabalho->arquivo()->where('versaoFinal', true)->first();
+        /*$arquivoAtual = $trabalho->arquivo()->where('versaoFinal', true)->first();
         if (Storage::disk()->exists($arquivoAtual->nome)) {
           Storage::delete($arquivoAtual->nome);
           $arquivoAtual->delete();
-        }
+        }*/
       }
 
       if(isset($request->campoextra1arquivo)){
