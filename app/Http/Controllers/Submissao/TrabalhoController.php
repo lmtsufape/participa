@@ -377,7 +377,8 @@ class TrabalhoController extends Controller
     {
         $trabalho = Trabalho::find($id);
         $modalidades = Modalidade::where('evento_id', $trabalho->eventoId)->get();
-        return view('coordenador.trabalhos.trabalho_edit', compact('trabalho', 'modalidades'));
+        $evento = Evento::find($trabalho->eventoId);
+        return view('coordenador.trabalhos.trabalho_edit', compact('trabalho', 'modalidades', 'evento'));
     }
 
     /**
@@ -442,8 +443,12 @@ class TrabalhoController extends Controller
       $trabalho->areaId = $request->input('area'.$id);
       if($request->input('modalidade'.$id) != $trabalho->modalidadeId && $trabalho->avaliado == 'Avaliado'){
         return redirect()->back()->withErrors(['modalidadeError'.$id => 'Não é possível alterar a modalidade de um trabalho avaliado.'])->withInput($validatedData);
+      }else if ($request->input('modalidade'.$id) != $trabalho->modalidadeId && $trabalho->atribuicoes->count() > 0) {
+        return redirect()->back()->withErrors(['modalidadeError'.$id => 'Não é possível alterar a modalidade de um trabalho com revisores atribuídos.'])->withInput($validatedData);
+      }else{
+        $trabalho->modalidadeId = $request->input('modalidade'.$id);
       }
-      $trabalho->modalidadeId = $request->input('modalidade'.$id);
+
 
       $coautores = collect();
       foreach ($trabalho->coautors as $coautor_id) {
