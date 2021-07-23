@@ -376,7 +376,8 @@ class TrabalhoController extends Controller
     public function edit($id)
     {
         $trabalho = Trabalho::find($id);
-        return view('coordenador.trabalhos.trabalho_edit', compact('trabalho'));
+        $modalidades = Modalidade::where('evento_id', $trabalho->eventoId)->get();
+        return view('coordenador.trabalhos.trabalho_edit', compact('trabalho', 'modalidades'));
     }
 
     /**
@@ -388,12 +389,13 @@ class TrabalhoController extends Controller
      */
     public function update(Request $request, $id)
     {
-      // dd($request);
+      //dd($request)
 
       $validatedData = $request->validate([
         'trabalhoEditId'        => ['required'],
         'nomeTrabalho'.$id      => ['required', 'string',],
         'area'.$id              => ['required', 'integer'],
+        'modalidade'.$id      => ['required', 'integer'],
         'resumo'.$id            => ['nullable','string'],
         'nomeCoautor_'.$id.'.*'  => ['string'],
         'emailCoautor_'.$id.'.*' => ['string'],
@@ -438,6 +440,10 @@ class TrabalhoController extends Controller
       $trabalho->titulo = $request->input('nomeTrabalho'.$id);
       $trabalho->resumo = $request->input('resumo'.$id);
       $trabalho->areaId = $request->input('area'.$id);
+      if($request->input('modalidade'.$id) != $trabalho->modalidadeId && $trabalho->avaliado == 'Avaliado'){
+        return redirect()->back()->withErrors(['modalidadeError'.$id => 'Não é possível alterar a modalidade de um trabalho avaliado.'])->withInput($validatedData);
+      }
+      $trabalho->modalidadeId = $request->input('modalidade'.$id);
 
       $coautores = collect();
       foreach ($trabalho->coautors as $coautor_id) {
