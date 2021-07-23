@@ -53,6 +53,7 @@
                         <button type="submit" class="btn btn-success">
                             Salvar respostas
                         </button>
+                        <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('revisor.trabalhos.evento', ['id' => $evento->id]) }}'">Cancelar</button>
                         </form>
                     </p>
 

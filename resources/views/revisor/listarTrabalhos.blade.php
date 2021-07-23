@@ -33,7 +33,7 @@
               <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Trabalhos da área de {{$trabalhosDoRevisor[0]->area->nome}}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Que tem como modalidade {{$trabalhosDoRevisor[0]->modalidade->nome}} 
+                    <h6 class="card-subtitle mb-2 text-muted">Que tem como modalidade {{$trabalhosDoRevisor[0]->modalidade->nome}}
                       <a href="#" data-toggle="modal" data-target="#modalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Visualizar regras da modalidade" width="15px" title="Visualizar regras da modalidade"></a>
                     </h6>
                     <p class="card-text">
@@ -57,12 +57,12 @@
                               @if ($trabalho->avaliado == "Avaliado")
                                 <td>Avaliado</td>
                               @else
-                                <td>Pendente</td>    
+                                <td>Pendente</td>
                               @endif
                               <td>
                                 @if ($trabalho->resumo != null)
                                   <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
-                                @else 
+                                @else
                                   Sem resumo
                                 @endif
                               </td>
@@ -72,7 +72,7 @@
                                 @endif
                               </td>
                               @if ($trabalho->avaliado != "Avaliado")
-                                @if (today() >= $trabalho->modalidade->inicioRevisao && today() <= $trabalho->modalidade->fimRevisao)
+                                @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao)
                                   {{-- <td>
                                     <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
                                   </td> --}}
@@ -88,17 +88,17 @@
                                       </button>
                                     </form>
                                   </td>
-                                @else 
-                                  
+                                @else
+
                                   <td>
                                     <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
                                   </td>
                                 @endif
                                 {{-- {{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}} --}}
                                 <td>
-                                  
-                                  
-                                
+
+
+
                                 </td>
                               @else
                               <td>
@@ -225,7 +225,7 @@
                             </span>
                           @enderror
                         </div>
-                      </div>    
+                      </div>
                     @endforeach
                     <div class="row">
                       <div class="col-sm-12">
