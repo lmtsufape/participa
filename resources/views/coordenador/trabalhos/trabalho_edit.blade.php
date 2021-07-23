@@ -184,6 +184,30 @@
                           @enderror
                       </div>
                   </div>
+                  <!-- Modalidades -->
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <label for="modalidade_{{$trabalho->id}}" class="col-form-label">Modalidade</label>
+                        <select id="modalidade_{{$trabalho->id}}" class="form-control @error('modalidadeError'.$trabalho->id) is-invalid @enderror" name="modalidade{{$trabalho->id}}" required>
+                            <option value="" disabled selected hidden>-- Modalidade --</option>
+                            @if (old('modalidade'.$trabalho->id) != null)
+                              @foreach($modalidades as $modalidade)
+                                <option value="{{$modalidade->id}}" @if(old('modalidade') == $modalidade->id) selected @endif>{{$modalidade->nome}}</option>
+                              @endforeach
+                            @else
+                              @foreach($modalidades as $modalidade)
+                                <option value="{{$modalidade->id}}" @if($trabalho->modalidadeId == $modalidade->id) selected @endif>{{$modalidade->nome}}</option>
+                              @endforeach
+                            @endif
+
+                        </select>
+                        @error('modalidadeError'.$trabalho->id)
+                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
                 @endif
                 @if ($indice == "etiquetauploadtrabalho")
                   <div class="row justify-content-center">
@@ -464,7 +488,7 @@
                 <br>
                 <br>
                 <button type="submit" class="btn btn-primary mr-4" form="formEditarTrab{{$trabalho->id}}">Salvar</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}'">Cancelar</button>
             </form>
           </div>
     </div>

@@ -212,7 +212,7 @@ class AtribuicaoController extends Controller
       Mail::to($revisor->user->email)
         ->send(new EmailConviteRevisor($revisor->user, $evento, $subject, Auth::user()));
 
-      $mensagem = $trabalho->titulo . ' atribuido ao revisor ' . $revisor->user->name . ' com sucesso!';
+      $mensagem = $trabalho->titulo . ' atribuído ao revisor ' . $revisor->user->name . ' com sucesso!';
       return redirect()->back()->with(['mensagem' => $mensagem]);
     }
 

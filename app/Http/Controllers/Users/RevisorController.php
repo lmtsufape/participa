@@ -436,7 +436,7 @@ class RevisorController extends Controller
         $trabalhos->push($revisor->trabalhosAtribuidos()->orderBy('titulo')->get());
       }
 
-      return view('revisor.listarTrabalhos')->with(['evento' => $evento,'trabalhosPorRevisor' => $trabalhos])->with(['message' => 'Respostas salvas']);
+      return redirect()->route('revisor.trabalhos.evento', ['id' => $evento_id])->with(['message' => 'Respostas salvas']);
 
 
 
