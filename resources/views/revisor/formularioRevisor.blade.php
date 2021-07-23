@@ -29,7 +29,7 @@
 
                     <p class="card-text">
 
-                        <form action="{{route('revisor.salvar.respostas')}}" method="post">
+                        <form action="{{route('revisor.salvar.respostas')}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="revisor_id" value="{{$data['revisor']->id}}">
                             <input type="hidden" name="trabalho_id" value="{{$data['trabalho']->id}}">
@@ -50,10 +50,46 @@
                                     </div>
                                 </div>
                             @endforeach
-                        <button type="submit" class="btn btn-success">
-                            Salvar respostas
-                        </button>
-                        <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('revisor.trabalhos.evento', ['id' => $evento->id]) }}'">Cancelar</button>
+                            <div class="row justify-content-center">
+                                {{-- Submeter Arquivo Avalicao --}}
+
+                                @if ($data['modalidade']->arquivo == true)
+                                  <div class="col-sm-12" style="margin-top: 20px;">
+                                    <label for="nomeTrabalho" class="col-form-label"><strong>Upload de Avaliação</strong> </label>
+
+                                    <div class="custom-file">
+                                      <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" required>
+                                    </div>
+                                    <small><strong>Extensão de arquivos aceitas:</strong>
+                                      @if($data['modalidade']->pdf == true)<span> / ".pdf"</span>@endif
+                                      @if($data['modalidade']->jpg == true)<span> / ".jpg"</span>@endif
+                                      @if($data['modalidade']->jpeg == true)<span> / ".jpeg"</span>@endif
+                                      @if($data['modalidade']->png == true)<span> / ".png"</span>@endif
+                                      @if($data['modalidade']->docx == true)<span> / ".docx"</span>@endif
+                                      @if($data['modalidade']->odt == true)<span> / ".odt"</span>@endif
+                                      @if($data['modalidade']->zip == true)<span> / ".zip"</span>@endif
+                                      @if($data['modalidade']->svg == true)<span> / ".svg"</span>@endif.
+                                    </small>
+                                    @error('arquivo')
+                                    <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                      <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                  </div>
+                                @endif
+                            </div>
+
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('revisor.trabalhos.evento', ['id' => $evento->id]) }}'" style="width:100%">Cancelar</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-primary" style="width:100%">
+                                        {{ __('Salvar respostas') }}
+                                    </button>
+                                </div>
+                            </div>
+
                         </form>
                     </p>
 

@@ -845,6 +845,33 @@ class TrabalhoController extends Controller
       return abort(403);
     }
 
+    public function downloadArquivoAvaliacao($id) {
+        $trabalho = Trabalho::find($id);
+        $revisor = Revisor::where([['evento_id', '=', $trabalho->eventoId], ['user_id', '=', auth()->user()->id]])->first();
+
+        if($trabalho->arquivo()->where('versaoFinal', true)->get()->count() > 1){
+            $arquivo = $trabalho->arquivo()->where('versaoFinal', true)->skip(1)->first();
+        }else{
+            return abort(403);
+        }
+
+        if ($trabalho->evento->coordenadorId == auth()->user()->id || $trabalho->evento->coordComissaoId == auth()->user()->id) {
+          if ($arquivo != null && Storage::disk()->exists($arquivo->nome)) {
+            return Storage::download($arquivo->nome);
+          }
+          return abort(404);
+
+        } else if ($revisor != null) {
+          if ($revisor->trabalhosAtribuidos->contains($trabalho)) {
+            if (Storage::disk()->exists($arquivo->nome)) {
+              return Storage::download($arquivo->nome);
+            }
+            return abort(404);
+          }
+        }
+        return abort(403);
+      }
+
     public function resultados($id) {
       $evento = Evento::find($id);
       $this->authorize('isCoordenadorOrComissao', $evento);

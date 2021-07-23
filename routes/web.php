@@ -174,6 +174,8 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
 
     // rota download do arquivo do trabalho
     Route::get(   '/download-trabalho/{id}',     'TrabalhoController@downloadArquivo'    )->name('downloadTrabalho');
+    //rota download do arquivo do trabalho
+    Route::get(   '/download-avaliacao/{id}',     'TrabalhoController@downloadArquivoAvaliacao'    )->name('downloadAvaliacao');
     // rota download da foto do evento
     Route::get(   '/download-logo-evento/{id}',   'EventoController@downloadFotoEvento'  )->name('download.foto.evento');
 
