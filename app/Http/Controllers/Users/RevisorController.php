@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use App\Models\Submissao\ArquivoAvaliacao;
 use Event;
 
 class RevisorController extends Controller
@@ -444,8 +445,9 @@ class RevisorController extends Controller
         $nome = $request->arquivo->getClientOriginalName();
         Storage::putFileAs($path, $file, $nome);
 
-        $arquivo = Arquivo::create([
+        $arquivo = ArquivoAvaliacao::create([
           'nome'  => $path . $nome,
+          'revisorId' => $revisor->id,
           'trabalhoId'  => $trabalho->id,
           'versaoFinal' => true,
         ]);

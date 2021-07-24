@@ -29,6 +29,10 @@ class Trabalho extends Model
       return $this->hasMany('App\Models\Submissao\Arquivo', 'trabalhoId');
   }
 
+  public function arquivoAvaliacao(){
+    return $this->hasMany('App\Models\Submissao\ArquivoAvaliacao', 'trabalhoId');
+}
+
   public function modalidade(){
       return $this->belongsTo('App\Models\Submissao\Modalidade', 'modalidadeId');
   }
