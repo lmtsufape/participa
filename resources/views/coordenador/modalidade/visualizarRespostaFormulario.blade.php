@@ -28,7 +28,7 @@
                             @elseif($pergunta->respostas->first()->paragrafo->count() )
                                 @forelse ($pergunta->respostas as $resposta)
                                     @if($resposta->revisor != null || $resposta->trabalho != null)
-                                        @if($resposta->revisor->user_id == $revisorUser->id)
+                                        @if($resposta->revisor->user_id == $revisorUser->id && $resposta->trabalho->id == $trabalho->id)
 
                                             <p class="card-text">
                                                 <p>{{$resposta->paragrafo->resposta}}</p>
