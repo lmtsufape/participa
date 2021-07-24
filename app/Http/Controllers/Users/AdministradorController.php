@@ -104,7 +104,7 @@ class AdministradorController extends Controller
     public function users()
     {
         $this->authorize('isAdmin', Administrador::class);
-        $users = User::doesntHave('administradors')->orderBy('updated_at', 'ASC')->paginate(100);
+        $users = User::orderBy('updated_at', 'ASC')->paginate(100);
 
         return view('administrador.users', compact('users'));
     }
@@ -112,7 +112,7 @@ class AdministradorController extends Controller
     public function editUser($id)
     {
         $this->authorize('isAdmin', Administrador::class);
-        $user = User::doesntHave('administradors')->find($id);
+        $user = User::find($id);
         $end = $user->endereco;
 
         return view('administrador.editUser', ['user'=>$user,'end'=>$end]);
@@ -122,7 +122,7 @@ class AdministradorController extends Controller
     {
         // dd($request->all());
         $this->authorize('isAdmin', Administrador::class);
-        $user = User::doesntHave('administradors')->find($id);
+        $user = User::find($id);
 
         if ($request->passaporte != null &&  $request->cpf != null) {
             $request->merge(['passaporte' => null]);
@@ -247,9 +247,9 @@ class AdministradorController extends Controller
     {
         // dd($request->all());
         $this->authorize('isAdmin', Administrador::class);
-        $users = User::doesntHave('administradors')->where('email','ilike', '%'.$request->search.'%' )->paginate(100);
+        $users = User::where('email','ilike', '%'.$request->search.'%' )->paginate(100);
         if($users->count() == 0){
-            $users = User::doesntHave('administradors')->where('name','ilike', '%'.$request->search.'%')->paginate(100);
+            $users = User::where('name','ilike', '%'.$request->search.'%')->paginate(100);
 
         }
         if($users->count() == 0){
