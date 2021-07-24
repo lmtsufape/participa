@@ -7,7 +7,7 @@ use App\Models\Submissao\Endereco;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-
+use App\Models\Users\Administrador;
 
 class AdministradorController extends Controller
 {
@@ -18,6 +18,7 @@ class AdministradorController extends Controller
      */
     public function index()
     {
+        $this->authorize('isAdmin', Administrador::class);
         return view('administrador.index');
     }
 
@@ -84,21 +85,25 @@ class AdministradorController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('isAdmin', Administrador::class);
         return view('administrador.index');
     }
 
     public function editais()
     {
+        $this->authorize('isAdmin', Administrador::class);
         return view('administrador.index');
     }
 
     public function areas()
     {
+        $this->authorize('isAdmin', Administrador::class);
         return view('administrador.index');
     }
 
     public function users()
     {
+        $this->authorize('isAdmin', Administrador::class);
         $users = User::doesntHave('administradors')->orderBy('updated_at', 'ASC')->paginate(100);
 
         return view('administrador.users', compact('users'));
@@ -106,6 +111,7 @@ class AdministradorController extends Controller
 
     public function editUser($id)
     {
+        $this->authorize('isAdmin', Administrador::class);
         $user = User::doesntHave('administradors')->find($id);
         $end = $user->endereco;
 
@@ -115,6 +121,7 @@ class AdministradorController extends Controller
     public function updateUser(Request $request, $id)
     {
         // dd($request->all());
+        $this->authorize('isAdmin', Administrador::class);
         $user = User::doesntHave('administradors')->find($id);
 
         if ($request->passaporte != null &&  $request->cpf != null) {
@@ -230,6 +237,7 @@ class AdministradorController extends Controller
     public function deleteUser( $id)
     {
         // dd($request->all());
+        $this->authorize('isAdmin', Administrador::class);
         $user = User::doesntHave('administradors')->find($id);
         $user->delete();
 
@@ -238,6 +246,7 @@ class AdministradorController extends Controller
     public function search(Request $request)
     {
         // dd($request->all());
+        $this->authorize('isAdmin', Administrador::class);
         $users = User::doesntHave('administradors')->where('email','ilike', '%'.$request->search.'%' )->paginate(100);
         if($users->count() == 0){
             $users = User::doesntHave('administradors')->where('name','ilike', '%'.$request->search.'%')->paginate(100);

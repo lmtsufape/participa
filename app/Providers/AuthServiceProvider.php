@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Submissao\Evento;
+use App\Models\Users\Administrador;
+use App\Policies\AdministradorPolicy;
 use App\Policies\EventoPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -17,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         // 'App\Model' => 'App\Policies\ModelPolicy',
         Evento::class  =>  EventoPolicy::class,
+        Administrador::class => AdministradorPolicy::class,
     ];
 
     /**
