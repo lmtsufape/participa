@@ -115,6 +115,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('modalidade/atribuir/form', 'EventoController@atribuirForm')->name('atribuir.form');
       Route::get('modalidade/form/salvar', 'EventoController@salvarForm')->name('salvar.form');
       Route::get('modalidade/form/visualizar', 'EventoController@visualizarForm')->name('visualizar.form');
+      Route::get('modalidade/form/visualizarRespostaFormulario', 'EventoController@visualizarRespostaFormulario')->name('visualizarRespostaFormulario');
       Route::get('modalidade/form/respostas', 'EventoController@respostas')->name('respostas');
       Route::get('modalidade/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', 'EventoController@listarRespostasTrabalhos')->name('respostasTrabalhos');
       Route::get('modalidade/form/{id}/excluir', 'EventoController@destroyForm')->name('deletar.form');
@@ -176,7 +177,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     // rota download do arquivo do trabalho
     Route::get(   '/download-trabalho/{id}',     'TrabalhoController@downloadArquivo'    )->name('downloadTrabalho');
     //rota download do arquivo do trabalho
-    Route::get(   '/download-avaliacao/{id}',     'TrabalhoController@downloadArquivoAvaliacao'    )->name('downloadAvaliacao');
+    Route::get(   '/download-avaliacao',     'TrabalhoController@downloadArquivoAvaliacao'    )->name('downloadAvaliacao');
     // rota download da foto do evento
     Route::get(   '/download-logo-evento/{id}',   'EventoController@downloadFotoEvento'  )->name('download.foto.evento');
 

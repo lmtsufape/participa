@@ -80,6 +80,7 @@
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a> --}}
                 </th>
+                <th scope="col" style="text-align:center">Revisões</th>
               </tr>
             </thead>
 
@@ -118,6 +119,12 @@
                     {{count($trabalho->atribuicoes)}}
                   </td>
 
+                  <td style="text-align:center">
+                    <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}">
+                      <i class="fas fa-file-alt"></i>
+                    </a>
+                  </td>
+
                 </tr>
               @endforeach
             </tbody>
@@ -129,64 +136,6 @@
 
 </div>
 <!-- End Trabalhos -->
-<!-- Modal Trabalho -->
-<div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header" style="background-color: #114048ff; color: white;">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Distrbuir trabalhos automaticamente</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form method="GET" action="{{ route('distribuicaoAutomaticaPorArea') }}" id="formDistribuicaoPorArea">
-        <div class="modal-body">
-          <input type="hidden" name="eventoId" value="{{$evento->id}}">
-          <div class="row">
-            <div class="col-sm-12">
-                <input type="hidden" name="distribuirTrabalhosAutomaticamente" value="{{$evento->id}}">
-                <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
-                <select class="form-control @error('área') is-invalid @enderror" id="areaIdformDistribuicaoPorArea" name="área" required>
-                    <option value="" disabled selected hidden>-- Área --</option>
-                    @foreach($areas as $area)
-                        <option value="{{$area->id}}">{{$area->nome}}</option>
-                    @endforeach
-                </select>
-
-                @error('área')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-          </div>
-          <div class="row">
-              <div class="col-sm-12">
-                  <label for="numeroDeRevisoresPorTrabalho" class="col-form-label">{{ __('Número de revisores por trabalho') }}</label>
-              </div>
-          </div>
-          <div class="row justify-content-center">
-              <div class="col-sm-12">
-                  <input id="numeroDeRevisoresPorTrabalhoInput" type="number" min="1" class="form-control @error('numeroDeRevisoresPorTrabalho') is-invalid @enderror" name="numeroDeRevisoresPorTrabalho" value="{{ old('numeroDeRevisoresPorTrabalho') }}" required autocomplete="numeroDeRevisoresPorTrabalho" autofocus>
-
-                  @error('numeroDeRevisoresPorTrabalho')
-                  <span class="invalid-feedback" role="alert">
-                      <strong>{{ $message }}</strong>
-                  </span>
-                  @enderror
-              </div>
-
-          </div>{{-- end row--}}
-        </div>
-      </form>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        <button id="numeroDeRevisoresPorTrabalhoButton" onclick="document.getElementById('formDistribuicaoPorArea').submit();" type="button" class="btn btn-primary">Distribuir</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 @foreach ($trabalhos as $trabalho)
     <!-- Modal Trabalho -->
   <div class="modal fade" id="modalTrabalho{{$trabalho->id}}" tabindex="-1" role="dialog" aria-labelledby="labelModalTrabalho{{$trabalho->id}}" aria-hidden="true">
@@ -246,7 +195,7 @@
           @if (count($trabalho->atribuicoes) > 0)
             <div class="row justify-content-center">
               <div class="col-sm-12">
-                <h5>Revisores atribuidos ao trabalho</h5>
+                <h5>Revisores atribuídos ao trabalho</h5>
               </div>
           @else
             <div class="row justify-content-center">
@@ -263,44 +212,13 @@
                     <h6 class="card-title">{{$revisor->user->name}}</h6>
                     <strong>E-mail</strong>
                     <p class="card-text">{{$revisor->user->email}}</p>
-                    <form action="{{ route('atribuicao.delete', ['id' => $revisor->id]) }}" method="post">
-                      @csrf
-                      <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                      <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
-                      <button type="submit" class="btn btn-primary" id="removerRevisorTrabalho">Remover Revisor</button>
-                    </form>
+                    <button type="button" class="btn btn-primary" onclick="window.location='{{ route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id]) }}'">Exibir Revisão</button>
                   </div>
                 </div>
               </div>
           @endforeach
           </div>
           <br>
-          <div class="row">
-            <div class="col-sm-12">
-              <h5>Adicionar Revisor</h5>
-            </div>
-          </div>
-          <form action="{{ route('distribuicaoManual') }}" method="post">
-            @csrf
-            <input type="hidden" name="trabalhoId" value="{{$trabalho->id}}">
-            <input type="hidden" name="eventoId" value="{{$evento->id}}">
-            <div class="row" >
-              <div class="col-sm-9">
-                <div class="form-group">
-                  <select name="revisorId" class="form-control" id="selectRevisorTrabalho">
-                    <option value="" disabled selected>-- E-mail do revisor --</option>
-                    @foreach ($evento->revisors()->where([['modalidadeId', $trabalho->modalidade->id], ['areaId', $trabalho->area->id]])->get() as $revisor)
-                      @if (!$trabalho->atribuicoes->contains($revisor))
-                        <option value="{{$revisor->id}}">{{$revisor->user->email}}</option>
-                      @endif
-                    @endforeach
-                  </select>
-                </div>
-              </div>
-              <div class="col-sm-3">
-                <button type="submit" class="btn btn-primary" id="addRevisorTrabalho">Adicionar Revisor</button>
-              </div>
-          </form>
           </div>
           </div>
         <div class="modal-footer">

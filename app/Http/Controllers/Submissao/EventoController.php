@@ -456,7 +456,8 @@ class EventoController extends Controller
         if($column == "autor") {
             // Não tem como ordenar os trabalhos por nome do autor automaticamente
             // Já que na tabale a de trabalhos não existe o nome do autor
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])->get()->sortBy(
+            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
+            ->orWhere([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->get()->sortBy(
                 function($trabalho) {
                     return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
                 },
@@ -465,7 +466,8 @@ class EventoController extends Controller
         } else {
             // Como aqui é um else, então $trabalhos nunca vai ser null
             // Busca os trabalhos da forma como era feita antes
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])->orderBy($column, $direction)->get();
+            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
+            ->orWhere([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->orderBy($column, $direction)->get();
         }
 
         return view('coordenador.modalidade.listarRespostasTrabalhos', [
@@ -475,6 +477,18 @@ class EventoController extends Controller
                                                     'agora'         => now(),
 
                                                   ]);
+    }
+
+    public function visualizarRespostaFormulario(Request $request)
+    {
+      $evento = Evento::find($request->eventoId);
+      $modalidade = Modalidade::find($request->modalidadeId);
+      $trabalho = Trabalho::find($request->trabalhoId);
+      $revisor = Revisor::find($request->revisorId);
+      $revisorUser = User::find($revisor->user_id);
+
+      return view('coordenador.modalidade.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser'));
+
     }
 
     public function editarEtiqueta(Request $request)
