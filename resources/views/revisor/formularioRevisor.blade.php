@@ -58,7 +58,7 @@
                                     <label for="nomeTrabalho" class="col-form-label"><strong>Upload de Avaliação</strong> </label>
 
                                     <div class="custom-file">
-                                      <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" required>
+                                      <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
                                     </div>
                                     <small><strong>Extensão de arquivos aceitas:</strong>
                                       @if($data['modalidade']->pdf == true)<span> / ".pdf"</span>@endif
