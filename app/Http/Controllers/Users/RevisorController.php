@@ -24,7 +24,9 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use App\Models\Submissao\ArquivoAvaliacao;
 use Event;
 
 class RevisorController extends Controller
@@ -434,6 +436,21 @@ class RevisorController extends Controller
       $trabalhos = collect();
       foreach ($revisores as $revisor) {
         $trabalhos->push($revisor->trabalhosAtribuidos()->orderBy('titulo')->get());
+      }
+
+      if(isset($request->arquivo)){
+
+        $file = $request->arquivo;
+        $path = 'avaliacoes/' . $evento_id . '/' . $trabalho->id .'/';
+        $nome = $request->arquivo->getClientOriginalName();
+        Storage::putFileAs($path, $file, $nome);
+
+        $arquivo = ArquivoAvaliacao::create([
+          'nome'  => $path . $nome,
+          'revisorId' => $revisor->id,
+          'trabalhoId'  => $trabalho->id,
+          'versaoFinal' => true,
+        ]);
       }
 
       return redirect()->route('revisor.trabalhos.evento', ['id' => $evento_id])->with(['message' => 'Respostas salvas']);

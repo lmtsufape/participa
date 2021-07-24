@@ -845,6 +845,39 @@ class TrabalhoController extends Controller
       return abort(403);
     }
 
+    public function downloadArquivoAvaliacao(Request $request)
+    {
+        $trabalho = Trabalho::find($request->trabalhoId);
+        $modalidadesRevisor = Revisor::where([['evento_id', '=', $trabalho->eventoId], ['user_id', '=', $request->revisorUserId]])->get();
+        if($modalidadesRevisor->count() > 0){
+            $arquivo = $trabalho->arquivoAvaliacao()->where([['versaoFinal', true], ['revisorId', $modalidadesRevisor->first()->id]])->first();
+            foreach($modalidadesRevisor as $revisor){
+                if($trabalho->arquivoAvaliacao()->where([['versaoFinal', true], ['revisorId', $revisor->id]])->first() != null){
+                    $arquivo = $trabalho->arquivoAvaliacao()->where([['versaoFinal', true], ['revisorId', $revisor->id]])->first();
+                    break;
+                }
+            }
+            $arquivo = $trabalho->arquivoAvaliacao()->where([['versaoFinal', true], ['revisorId', $revisor->id]])->first();
+
+            if ($trabalho->evento->coordenadorId == auth()->user()->id || $trabalho->evento->coordComissaoId == auth()->user()->id) {
+                if ($arquivo != null && Storage::disk()->exists($arquivo->nome)) {
+                    return Storage::download($arquivo->nome);
+                }
+                return abort(404);
+
+            }else if($revisor != null && $revisor->id == auth()->user()->id) {
+                if ($revisor->trabalhosAtribuidos->contains($trabalho)) {
+                    if (Storage::disk()->exists($arquivo->nome)) {
+                        return Storage::download($arquivo->nome);
+                    }
+                return abort(404);
+                }
+            }
+            return abort(403);
+        }
+        return abort(403);
+    }
+
     public function resultados($id) {
       $evento = Evento::find($id);
       $this->authorize('isCoordenadorOrComissao', $evento);
