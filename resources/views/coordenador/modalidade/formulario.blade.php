@@ -8,7 +8,7 @@
                 <h1 >Formulários </h1>
                 <h4 class="titulo-detalhes" >Evento: {{$evento->nome}}</h4>
             </div>
-        </div> 
+        </div>
     </div>
 
     <div class="row">
@@ -40,7 +40,7 @@
                                         <button type="submit" class="btn btn-info">
                                             Ver form
                                         </button>
-                                    
+
                                     </form>
                                 </td>
                                 <td>
@@ -50,31 +50,24 @@
                                         <button type="submit" class="btn btn-secondary">
                                             Ver respostas
                                         </button>
-                                    
+
                                     </form>
                                 </td>
                                 <td>
-                                <form action="{{route('coord.respostas')}}" method="get">
-                                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                                    <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
-                                    <button type="submit" class="btn btn-secondary">
-                                        Ver respostas por trabalho
-                                    </button>
-                                
-                                </form>
+                                    <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}'">Ver respostas por trabalho</button>
                                 </td>
                             @endif
                         </td>
-                      </tr> 
+                      </tr>
                     @empty
                         <p>Sem modalidades</p>
-                    @endforelse                  
+                    @endforelse
                 </tbody>
-              </table>    
-            
+              </table>
+
         </div>
     </div>
 
-   
+
 
 @endsection

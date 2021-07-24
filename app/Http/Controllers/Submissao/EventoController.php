@@ -441,6 +441,42 @@ class EventoController extends Controller
 
     }
 
+    public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
+    {
+        $evento = Evento::find($request->eventoId);
+        // $this->authorize('isCoordenadorOrComissao', $evento);
+        // $users = $evento->usuariosDaComissao;
+
+        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
+
+
+        $trabalhos = NULL;
+
+        if($column == "autor") {
+            // Não tem como ordenar os trabalhos por nome do autor automaticamente
+            // Já que na tabale a de trabalhos não existe o nome do autor
+            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])->get()->sortBy(
+                function($trabalho) {
+                    return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
+                },
+                SORT_REGULAR, // Usa o método padrão de ordenação
+                $direction == "desc"); // Se true, então ordena decrescente
+        } else {
+            // Como aqui é um else, então $trabalhos nunca vai ser null
+            // Busca os trabalhos da forma como era feita antes
+            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])->orderBy($column, $direction)->get();
+        }
+
+        return view('coordenador.modalidade.listarRespostasTrabalhos', [
+                                                    'evento'            => $evento,
+                                                    'areas'             => $areas,
+                                                    'trabalhos'         => $trabalhos,
+                                                    'agora'         => now(),
+
+                                                  ]);
+    }
+
     public function editarEtiqueta(Request $request)
     {
         $evento = Evento::find($request->eventoId);
