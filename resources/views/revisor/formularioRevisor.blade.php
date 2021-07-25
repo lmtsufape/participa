@@ -55,7 +55,7 @@
 
                                 @if ($data['modalidade']->arquivo == true)
                                   <div class="col-sm-12" style="margin-top: 20px;">
-                                    <label for="nomeTrabalho" class="col-form-label"><strong>Upload de Avaliação</strong> </label>
+                                    <label for="nomeTrabalho" class="col-form-label"><strong>Trabalho corrigido e/ou com comentários (opcional):</strong> </label>
 
                                     <div class="custom-file">
                                       <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
