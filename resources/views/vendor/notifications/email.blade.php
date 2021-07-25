@@ -43,10 +43,10 @@
 @if (! empty($salutation))
 {{ $salutation }}
 @else
-@lang('Atenciosamente'),<br><br>
-{{ config('app.name') .' - Eventos Acadêmicos
+@lang('Obrigado'),<br>
+{{ config('app.name') /*.' - Eventos Acadêmicos
 Laboratório Multidisciplinar de Tecnologias Sociais
-Universidade Federal do Agreste de Pernambuco' }}
+Universidade Federal do Agreste de Pernambuco'*/ }}
 @endif
 
 {{-- Subcopy --}}

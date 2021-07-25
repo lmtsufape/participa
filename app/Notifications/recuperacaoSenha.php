@@ -40,13 +40,12 @@ class recuperacaoSenha extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->subject('Recuperação de senha')
+        return (new MailMessage)->from('lmtsteste@gmail.com', 'Easy')
+                    ->subject('Sistema Easy - Recuperação de senha')
                     ->greeting('Olá!')
-                    ->line('Você está recebendo este e-mail porque nós recebemos uma requisição de redefinição de senha para sua conta.')
+                    ->line('Você está recebendo este e-mail porque nós recebemos uma requisição de redefinição de senha para a sua conta.')
                     ->action('Redefinir Senha', route('password.reset', $this->token))
-                    ->line('Se não foi você que solicitou esta recuperação, apenas ignore este e-mail.')
-                    ->line('Obrigado por usar o nosso sistema.')
+                    ->line('Se você não solicitou esta recuperação de senha, apenas ignore este e-mail.')
                     ->markdown('vendor.notifications.email');
     }
 
