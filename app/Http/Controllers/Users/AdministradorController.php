@@ -184,6 +184,7 @@ class AdministradorController extends Controller
             }
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
+                'email'         => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
                 'cpf'           => ($request->passaporte  ==null ? ['bail','required','cpf',Rule::unique('users')->ignore($user->id)] : 'nullable'),
                 'passaporte'    => ($request->cpf == null && $request->cpf ==null? ['bail','required','max:10',Rule::unique('users')->ignore($user->id)] : ['nullable']),
                 'celular' => 'required|string|max:16',
@@ -201,6 +202,7 @@ class AdministradorController extends Controller
             // User
 
             $user->name = $request->input('name');
+            $user->email = $request->input('email');
             $user->cpf = $request->input('cpf');
             $user->passaporte = $request->input('passaporte');
             $user->celular = $request->input('celular');
