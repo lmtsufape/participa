@@ -119,6 +119,17 @@
             @endif
 
             <div class="col-md-4">
+                <label for="email" class="col-form-label">{{ __('E-Mail') }}</label>
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" @if(old('email') != null) value="{{ old('email') }}" @else value="{{$user->email}}" @endif required autocomplete="email" autofocus>
+
+                @error('email')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="col-md-4">
                 <label for="password" class="col-form-label">{{ __('Senha') }}</label>
                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
 
