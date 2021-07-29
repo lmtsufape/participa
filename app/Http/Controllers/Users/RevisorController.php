@@ -20,6 +20,7 @@ use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailLembreteUsuarioNaoCadastrado;
 use App\Mail\EmailLembrete;
 use App\Mail\EmailConviteRevisor;
+use App\Mail\EmailNotificacaoTrabalhoAvaliado;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -451,6 +452,14 @@ class RevisorController extends Controller
           'trabalhoId'  => $trabalho->id,
           'versaoFinal' => true,
         ]);
+      }
+
+      if(isset($evento->coord_comissao_cientifica_id)){
+        $coord_comissao_cientifica = User::find($evento->coord_comissao_cientifica_id);
+        $autor = User::find($trabalho->autorId);
+        $revisor = User::find($revisores->first()->user_id);
+
+        Mail::to($coord_comissao_cientifica->email)->send(new EmailNotificacaoTrabalhoAvaliado($coord_comissao_cientifica, $autor, $evento->nome, $trabalho, $revisor));
       }
 
       return redirect()->route('revisor.trabalhos.evento', ['id' => $evento_id])->with(['message' => 'Respostas salvas']);

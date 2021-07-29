@@ -134,7 +134,7 @@
                                             @include('componentes.mensagens')
                                         @enderror
                                     </div>
-                                    <form method="get" action="" enctype="multipart/form-data">
+                                    <form method="get" action="{{route('coord.update.form')}}" enctype="multipart/form-data">
                                         @csrf
                                         <p class="card-text">
                                             <input type="hidden" name="formEditId" value="{{$form->id}}">
@@ -190,21 +190,21 @@
                                                                     </div>
 
 
-                                                                    <div class="col-sm-4">
+                                                                    {{-- <div class="col-sm-4">
                                                                         <div class="form-group">
                                                                             <label for="exampleFormControlSelect1">Tipo</label>
                                                                             <select onchange="escolha(this.value)" name="tipo[]" class="form-control" id="FormControlSelect">
                                                                                 <option value="paragrafo">Parágrafo</option>
                                                                                 <option value="checkbox">Múltipla escolha</option>
-                                                                                {{-- <option value="radio">Seleção</option> --}}
+                                                                                 <option value="radio">Seleção</option>
                                                                             </select>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
                                                                     <div class="col-md-5"></div>
                                                                         <div class="col-sm-7">
-                                                                            <a href="#" class="delete pr-2 mr-2">
+                                                                            {{-- <a href="#" class="delete pr-2 mr-2">
                                                                                 <i class="fas fa-trash-alt fa-2x"></i>
-                                                                            </a>
+                                                                            </a> --}}
                                                                             <a href="#" onclick="myFunction(event)">
                                                                             <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
                                                                             </a>
@@ -229,13 +229,13 @@
                                         </p>
 
                                         <br>
-                                        {{--<div class="row justify-content-center">
+                                        <div class="row justify-content-center">
                                             <div class="col-md-12">
                                                 <button type="submit" class="btn btn-success" style="width:100%;margin-top:10px">
                                                     {{ __('Salvar') }}
                                                 </button>
                                             </div>
-                                        </div>--}}
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -246,7 +246,7 @@
         </div>
     </div>
 
-    <!-- Modal de exclusão da área -->
+    <!-- Modal de exclusão do form -->
     <div class="modal fade" id="modalExcluirForm{{$form->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
         <div class="modal-dialog" role="document">
         <div class="modal-content">
