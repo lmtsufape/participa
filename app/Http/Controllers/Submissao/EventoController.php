@@ -389,6 +389,53 @@ class EventoController extends Controller
 
     }
 
+    public function updateForm(Request $request)
+    {
+        $form = Form::find($request->formEditId);
+        $data = $request->all();
+
+        foreach ($data as $key => $value) {
+            if(strpos($key, 'pergunta') === 0){
+                $string = 'pergunta';
+                $id = substr($key, strpos($key, $string) + strlen($string));
+                if(strlen($id)>0){
+                    $pergunta = Pergunta::find($id);
+                    $pergunta->pergunta = $value;
+                    $pergunta->update();
+                }
+            }elseif(strpos($key, 'titulo') === 0){
+                $form->titulo = $value;
+                $form->update();
+            }
+        }
+
+        if(isset($request->pergunta)){
+            foreach ($data['pergunta'] as $key => $value) {
+                $pergunta = $form->perguntas()->create([
+                  'pergunta' => $value
+                ]);
+
+                $resposta = new Resposta();
+                $resposta->pergunta_id = $pergunta->id;
+                $resposta->save();
+
+                if($data['tipo'][$key] == 'paragrafo'){
+                  $paragrafo = new Paragrafo();
+                  $resposta->paragrafo()->save($paragrafo);
+
+                }else if($data['tipo'][$key] == 'checkbox'){
+                  $resposta = $resposta->opcoes()->create([
+                    'titulo' => "titulo do checkbox",
+                    'tipo' => 'checkbox',
+                  ]);
+
+                }
+            }
+        }
+
+        return redirect()->back()->with(['mensagem' => 'Formulário editado com sucesso!']);
+    }
+
     public function destroyForm($id)
     {
         $form = Form::find($id);
