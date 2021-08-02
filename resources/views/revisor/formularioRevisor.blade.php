@@ -84,8 +84,8 @@
                                     <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('revisor.trabalhos.evento', ['id' => $evento->id]) }}'" style="width:100%">Cancelar</button>
                                 </div>
                                 <div class="col-md-6">
-                                    <button type="submit" class="btn btn-primary" style="width:100%">
-                                        {{ __('Salvar respostas') }}
+                                    <button type="submit" class="btn btn-primary" style="width:100%"  onclick="this.disabled=true;this.form.submit();">
+                                        {{ __('Enviar avaliação') }}
                                     </button>
                                 </div>
                             </div>

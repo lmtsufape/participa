@@ -462,7 +462,7 @@ class RevisorController extends Controller
         Mail::to($coord_comissao_cientifica->email)->send(new EmailNotificacaoTrabalhoAvaliado($coord_comissao_cientifica, $autor, $evento->nome, $trabalho, $revisor));
       }
 
-      return redirect()->route('revisor.trabalhos.evento', ['id' => $evento_id])->with(['message' => 'Respostas salvas']);
+      return redirect()->route('revisor.trabalhos.evento', ['id' => $evento_id])->with(['message' => 'Avaliação enviada com sucesso.']);
 
 
 
