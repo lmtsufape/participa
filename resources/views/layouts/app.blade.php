@@ -260,6 +260,14 @@
 
                     elemento.css("fontSize", fonte);
                 })
+
+                var btn = document.getElementById("submeterFormBotao");
+                if(btn){
+                    $(document).on('submit', 'form', function() {
+                        $('button').attr('disabled', 'disabled');
+                        btn.textContent = 'Aguarde...';
+                    });
+                }
             })
             $(function () {
                 $('[data-toggle="popover"]').popover()

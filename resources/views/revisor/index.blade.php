@@ -9,7 +9,8 @@
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-10">
-                    <h1>Eventos como revisor</h1>
+                    <h1>Trabalhos/Atividades a serem avaliadas</h1>
+                    <br>
                 </div>
                 {{-- <div class="col-sm-2">
                     <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
@@ -18,7 +19,24 @@
         </div>
     </div>
 
-    <div class="row cards-eventos-index">
+    @if(session('mensagem'))
+        <div class="col-md-12" style="margin-top: 5px;">
+            <div class="alert alert-success">
+                <p>{{session('mensagem')}}</p>
+            </div>
+        </div>
+    @endif
+    @if(session('message'))
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 5px;">
+                <div class="alert alert-success">
+                    <p>{{session('message')}}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{--<div class="row cards-eventos-index">
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
                 <div class="card" style="width: 16rem;">
@@ -34,7 +52,7 @@
                                     <div class="row">
                                         <div class="col-sm-10">
                                             {{$evento->nome}}
-                                        </div> 
+                                        </div>
                                         <div class="col-sm-2">
                                             <div class="btn-group dropright dropdown-options">
                                                 <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -60,7 +78,7 @@
                             <p class="card-text">
                                 <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px;" style="position: relative; top: -2px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
                                 {{-- <strong>Submissão:</strong> {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}<br>
-                                <strong>Revisão:</strong> {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}<br> --}}
+                                <strong>Revisão:</strong> {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}<br>
                             </p>
                             <p>
                                 <div class="row justify-content-center">
@@ -79,7 +97,180 @@
                 </div>
             @endif
         @endforeach
-    </div>
+    </div>--}}
+
+    @foreach ($trabalhosPorEvento as $key=> $trabalhosPorRevisor)
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="titulo-detalhes" style="text-align:center">
+                    <a href="{{  route('evento.visualizar',['id'=>$eventos[$key]->id])  }}"> {{$eventos[$key]->nome}} </a>
+                </h3>
+            </div>
+        </div>
+
+        {{-- Tabela Trabalhos --}}
+        @foreach ($trabalhosPorRevisor as $trabalhosDoRevisor)
+            @if ($trabalhosDoRevisor != null && count($trabalhosDoRevisor) > 0)
+            <div class="row justify-content-center" style="width: 100%;">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                        <h5 class="card-title">Área: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor[0]->area->nome}}</span></h5>
+                        <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor[0]->modalidade->nome}}</span>
+                            <a href="#" data-toggle="modal" data-target="#modalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Visualizar regras da modalidade" width="15px" title="Visualizar regras da modalidade"></a>
+                        </h5>
+                        <p class="card-text">
+                            <div class="col-sm-12">
+                            <table class="table table-hover table-responsive-lg table-sm">
+                            <thead>
+                                <tr>
+                                <th scope="col">Código</th>
+                                <th scope="col">Título</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Resumo</th>
+                                <th scope="col">Baixar</th>
+                                {{-- <th scope="col">Avaliar</th> --}}
+                                <th scope="col">Questionário</th>
+                                </tr>
+                            </thead>
+                            @foreach($trabalhosDoRevisor as $trabalho)
+                                <tr>
+                                    <td>{{$trabalho->id}}</td>
+                                    <td>{{$trabalho->titulo}}</td>
+                                    @if ($trabalho->avaliado == "Avaliado")
+                                    <td>Avaliado</td>
+                                    @else
+                                    <td>Pendente</td>
+                                    @endif
+                                    <td>
+                                    @if ($trabalho->resumo != null)
+                                        <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
+                                    @else
+                                        Sem resumo
+                                    @endif
+                                    </td>
+                                    <td>
+                                    @if ($trabalho->arquivo != null && $trabalho->arquivo->count() > 0)
+                                        <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
+                                    @endif
+                                    </td>
+                                    @if ($trabalho->avaliado != "Avaliado")
+                                    @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao)
+                                        {{-- <td>
+                                        <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
+                                        </td> --}}
+                                        <td>
+                                        <form action="{{route('revisor.responde')}}" method="get">
+                                            @csrf
+                                            <input type="hidden" name="revisor_id" value="{{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}}">
+                                            <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
+                                            <input type="hidden" name="evento_id" value="{{$eventos[$key]->id}}">
+                                            <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
+                                            <button type="submit" class="btn btn-success">
+                                            Avaliar
+                                            </button>
+                                        </form>
+                                        </td>
+                                    @else
+
+                                        <td>
+                                        <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
+                                        </td>
+                                    @endif
+                                    {{-- {{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}} --}}
+                                    <td>
+
+
+
+                                    </td>
+                                    @else
+                                    <td>
+                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Trabalho já avaliado">
+                                    </td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                            </table>
+                        </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- @else
+            <h4>Nenhum trabalho atribuido para correção</h4> --}}
+            @endif
+        @endforeach
+
+
+        @foreach ($trabalhosPorRevisor as $trabalhosDoRevisor)
+            <!-- Modal regras da Modalidade-->
+            @if($trabalhosDoRevisor != null && count($trabalhosDoRevisor) > 0)
+            <div class="modal fade" id="modalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#labelModalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title">Regras da modalidade {{$trabalhosDoRevisor[0]->modalidade->nome}} </h5>
+                    </div>
+                    <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                        <div class="col-sm-12">
+                            <strong>Período de avaliação</strong>
+                            <p id="periodo">
+                            De {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->fimRevisao))}}
+                            </p>
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-sm-12">
+                            @if ($trabalhosDoRevisor[0]->modalidade->arquivo != null && $trabalhosDoRevisor[0]->modalidade->arquivo == true)
+                            <strong>Forma de avaliação</strong>
+                            <p id="formaDeAvaliacao">
+                                Avaliação por arquivo submetido
+                            </p>
+                            @else
+                            <strong>Forma de avaliação</strong>
+                            <p id="formaDeAvaliacao">
+                                Avaliação por texto digitado
+                            </p>
+                            @endif
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-sm-12">
+                            @if ($trabalhosDoRevisor[0]->modalidade->caracteres)
+                            <strong>Limite por quantidade caracteres</strong>
+                            <p>
+                                Minimo: {{number_format($trabalhosDoRevisor[0]->modalidade->mincaracteres, 0, ',', '.')}}<br>
+                                Máximo: {{number_format($trabalhosDoRevisor[0]->modalidade->maxcaracteres, 0, ',', '.')}}
+                            </p>
+                            @elseif ($trabalhosDoRevisor[0]->modalidade->palavras)
+                            <strong>Limite por quantidade palavras</strong>
+                            <p>
+                                Minimo: {{number_format($trabalhosDoRevisor[0]->modalidade->minpalavras, 0, ',', '.')}}<br>
+                                Máximo: {{number_format($trabalhosDoRevisor[0]->modalidade->maxpalavras, 0, ',', '.')}}
+                            </p>
+                            @endif
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-sm-12">
+                            @if ($trabalhosDoRevisor[0]->modalidade->regra != null)
+                            <a href="{{route('modalidade.regras.download', ['id' => $trabalhosDoRevisor[0]->modalidade->id])}}">Arquivo de regras extras</a>
+                            @endif
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            @endif
+        @endforeach
+    @endforeach
 
 </div>
 

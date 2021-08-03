@@ -41,7 +41,22 @@ class RevisorController extends Controller
       $idsEventos = Revisor::where('user_id', auth()->user()->id)->groupBy('evento_id')->select('evento_id')->get();
       $eventosComoRevisor = Evento::whereIn('id', $idsEventos)->get();
       // dd($eventosComoRevisor);
-      return view('revisor.index')->with(['eventos' => $eventosComoRevisor]);
+      //return view('revisor.index')->with(['eventos' => $eventosComoRevisor]);
+
+      $revisores = collect();
+      foreach ($eventosComoRevisor as $evento){
+        $revisores->push(Revisor::where([['user_id', auth()->user()->id],['evento_id', $evento->id]])->get());
+      }
+
+      $trabalhosPorEvento = collect();
+      foreach ($revisores as $revisorEvento) {
+        $trabalhos = collect();
+        foreach($revisorEvento as $revisor){
+            $trabalhos->push($revisor->trabalhosAtribuidos()->orderBy('titulo')->get());
+        }
+        $trabalhosPorEvento->push($trabalhos);
+      }
+      return view('revisor.index')->with(['eventos' => $eventosComoRevisor, 'trabalhosPorEvento' => $trabalhosPorEvento]);
     }
 
 
@@ -462,7 +477,7 @@ class RevisorController extends Controller
         Mail::to($coord_comissao_cientifica->email)->send(new EmailNotificacaoTrabalhoAvaliado($coord_comissao_cientifica, $autor, $evento->nome, $trabalho, $revisor));
       }
 
-      return redirect()->route('revisor.trabalhos.evento', ['id' => $evento_id])->with(['message' => 'Avaliação enviada com sucesso.']);
+      return redirect()->route('revisor.index')->with(['message' => 'Avaliação enviada com sucesso.']);
 
 
 
