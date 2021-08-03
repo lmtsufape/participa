@@ -78,13 +78,14 @@
                                   </div>
                                 @endif
                             </div>
+                            <br>
 
                             <div class="row justify-content-center">
                                 <div class="col-md-6">
-                                    <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('revisor.trabalhos.evento', ['id' => $evento->id]) }}'" style="width:100%">Cancelar</button>
+                                    <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('revisor.index') }}'" style="width:100%">Cancelar</button>
                                 </div>
                                 <div class="col-md-6">
-                                    <button type="submit" class="btn btn-primary" style="width:100%"  onclick="this.disabled=true;this.form.submit();">
+                                    <button type="submit" class="btn btn-primary" style="width:100%" id="submeterFormBotao">
                                         {{ __('Enviar avaliação') }}
                                     </button>
                                 </div>
