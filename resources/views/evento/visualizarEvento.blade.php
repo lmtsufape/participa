@@ -297,6 +297,37 @@
                                                                             <div class="col-md-12 botao-form-left" style="">
                                                                                 <a class="btn button-card-visualizar-evento white-color" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">SUBMETER TRABALHO</a>
                                                                             </div>
+                                                                        @else
+                                                                        {{-- Permitindo Coordenador ou Comissao Cientifica submeter trabalhos mesmo passada a data de submissao --}}
+                                                                            @can('isCoordenadorOrComissao', $evento)
+                                                                                @if ($modalidade->arquivo == true)
+                                                                                    @if(isset($modalidade->regra))
+                                                                                        <div style="margin-top: 20px; margin-bottom: 10px;">
+                                                                                            <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                                                                                <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                    @if (isset($modalidade->template))
+                                                                                        <div style="margin-top: 20px; margin-bottom: 10px;">
+                                                                                            <a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                                                                                <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixartemplate}}
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                @else
+                                                                                    @if(isset($modalidade->regra))
+                                                                                        <div style="margin-top: 20px; margin-bottom: 10px;">
+                                                                                                <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                                                                                        <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
+                                                                                                </a>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                @endif
+                                                                                <div class="col-md-12 botao-form-left" style="">
+                                                                                    <a class="btn button-card-visualizar-evento white-color" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">SUBMETER TRABALHO</a>
+                                                                                </div>
+                                                                            @endcan
                                                                         @endif
                                                                     @endif
                                                                 </div>
