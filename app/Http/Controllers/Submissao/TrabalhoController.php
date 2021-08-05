@@ -50,6 +50,11 @@ class TrabalhoController extends Controller
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
         $ordemCampos = explode(",", $formSubTraba->ordemCampos);
         $modalidade = Modalidade::find($idModalidade);
+
+        $mytime = Carbon::now('America/Recife');
+        if($mytime > $modalidade->fimSubmissao){
+            $this->authorize('isCoordenadorOrComissao', $evento);
+        }
         // dd($formSubTraba);
         return view('evento.submeterTrabalho',[
                                               'evento'                 => $evento,
@@ -100,8 +105,11 @@ class TrabalhoController extends Controller
 
       try {
         $mytime = Carbon::now('America/Recife');
-        $mytime = $mytime->toDateString();
+        //$mytime = $mytime->toDateString();
         $evento = Evento::find($request->eventoId);
+        if($mytime > $modalidade->fimSubmissao){
+            $this->authorize('isCoordenadorOrComissao', $evento);
+        }
         if($evento->inicioSubmissao > $mytime){
           if($mytime >= $evento->fimSubmissao){
               return redirect()->route('home');

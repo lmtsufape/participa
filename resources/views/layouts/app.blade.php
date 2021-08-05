@@ -79,13 +79,15 @@
                     <div class="collapse navbar-collapse flex-grow-0"  id="navbarNavAltMarkup">
                         <div class="navbar-nav text-right">
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('index') }}" style="margin-right: 5px; margin-left: 5px">
+                                    Início
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 @guest
-                                    <a class="nav-link" href="{{ route('index') }}" style="margin-right: 5px; margin-left: 5px">
-                                        Início
-                                    </a>
                                 @else
                                     <a class="nav-link" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
-                                        Início
+                                        Meus Eventos
                                     </a>
                                 @endguest
                             </li>

@@ -379,7 +379,7 @@
                     <option value="" disabled selected>-- E-mail do revisor --</option>
                     @foreach ($evento->revisors()->where([['modalidadeId', $trabalho->modalidade->id], ['areaId', $trabalho->area->id]])->get() as $revisor)
                       @if (!$trabalho->atribuicoes->contains($revisor))
-                        <option value="{{$revisor->id}}">{{$revisor->user->email}}</option>
+                        <option value="{{$revisor->id}}">{{$revisor->user->name}} ({{$revisor->user->email}})</option>
                       @endif
                     @endforeach
                   </select>
