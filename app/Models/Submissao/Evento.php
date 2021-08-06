@@ -28,6 +28,10 @@ class Evento extends Model
       return $this->hasMany('App\Models\Submissao\Area', 'eventoId');
   }
 
+  public function modalidades(){
+    return $this->hasMany('App\Models\Submissao\Modalidade', 'evento_id');
+}
+
   public function coordenador(){
       return $this->belongsTo('App\Models\Users\User', 'coordenadorId');
   }
@@ -47,7 +51,7 @@ class Evento extends Model
 
   function usuariosDaComissao(){
     return $this->belongsToMany('App\Models\Users\User','comissao_cientifica_eventos','evento_id','user_id');
-  }  
+  }
 
   function formEvento() {
     return $this->hasOne('App\Models\Submissao\FormEvento', 'eventoId');
@@ -72,7 +76,7 @@ class Evento extends Model
   public function cuponsDeDesconto() {
     return $this->hasMany('App\Models\Inscricao\CupomDeDesconto', 'evento_id');
   }
-  
+
   // public function revisores(){
   //   return $this->belongsToMany('App\Revisor', 'evento_revisors', 'evento_id', 'revisor_id')->withPivot('convite_aceito')->withTimestamps();
   // }

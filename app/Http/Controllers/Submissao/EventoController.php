@@ -140,6 +140,36 @@ class EventoController extends Controller
                                                   ]);
 
     }
+    public function listarTrabalhosModalidades(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
+    {
+        $evento = Evento::find($request->eventoId);
+        $modalidade = Modalidade::find($request->modalidadeId);
+        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
+
+
+        $trabalhos = NULL;
+
+        if($column == "autor") {
+            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId]])->get()->sortBy(
+                function($trabalho) {
+                    return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
+                },
+                SORT_REGULAR, // Usa o método padrão de ordenação
+                $direction == "desc"); // Se true, então ordena decrescente
+        } else {
+            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId]])->orderBy($column, $direction)->get();
+        }
+        return view('coordenador.trabalhos.listarTrabalhosModalidades', [
+                                                    'evento'            => $evento,
+                                                    'areas'             => $areas,
+                                                    'trabalhos'         => $trabalhos,
+                                                    'agora'             => now(),
+                                                    'modalidade'        => $modalidade,
+
+                                                  ]);
+
+    }
     public function cadastrarComissao(Request $request)
     {
         $evento = Evento::find($request->eventoId);
