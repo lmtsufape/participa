@@ -4,7 +4,7 @@
 <div class="wrapper">
     <div class="sidebar">
         <h2>{{{$evento->nome}}} <a href="{{route('evento.editar',$evento->id)}}" class="edit-evento" onmouseover="this.children[0].src='{{asset('img/icons/edit-regular.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/edit-regular-white.svg')}}'"><img src="{{asset('img/icons/edit-regular-white.svg')}}"  alt="" width="20px;"></a> </h2>
-        
+
         <ul>
             @can('isCoordenador', $evento)
                 <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}" style="text-decoration:none;">
@@ -34,10 +34,38 @@
                                 <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Resultado</h5>
                             </li>
                         </a>
-                        <a id="listarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
+                        <a id="submeterTrabalho">
                             <li>
-                                <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5>
+                                <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Submeter Trabalho</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                             </li>
+                            <div id="dropdownSubmeterTrabalho"  @if(request()->is('coord/evento/submeterTrabalho*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                                @foreach ($evento->modalidades()->get() as $modalidade)
+                                    <a id="submeterTrabalho{{$modalidade->id}}" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">
+                                        <li>
+                                            <h5>{{$modalidade->nome}}</h5>
+                                        </li>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </a>
+                        <a id="trabalhosModalidades">
+                            <li>
+                                <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                            </li>
+                            <div  class="dropdown" id="dropdownTrabalhosModalidades"  @if(request()->is('coord/evento/trabalhosModalidades*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                                <a id="listarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
+                                    <li>
+                                        <h5>Todos os Trabalhos</h5>
+                                    </li>
+                                </a>
+                                @foreach ($evento->modalidades()->get() as $modalidade)
+                                    <a id="listarTrabalhosModalidade{{$modalidade->id}}" href="{{ route('coord.listarTrabalhosModalidades',  ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
+                                        <li>
+                                            <h5>{{$modalidade->nome}}</h5>
+                                        </li>
+                                    </a>
+                                @endforeach
+                            </div>
                         </a>
                     @endcan
                     @can('isRevisorComAtribuicao')
@@ -53,7 +81,7 @@
             @endcan
 
             <a id="areas">
-                
+
                 <li>
                     <img src="{{asset('img/icons/area.svg')}}" alt=""><h5> Áreas</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
@@ -187,7 +215,7 @@
                         <li>
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Atividades</h5>
                         </li>
-                    </a> 
+                    </a>
                     <a id="cadastrarModalidade" href="{{ route('inscricoes', ['id' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5>
@@ -197,7 +225,7 @@
                         <li>
                             <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Pagamentos</h5>
                         </li>
-                    </a>                        
+                    </a>
                 </div>
             </a>
 
@@ -232,13 +260,13 @@
                     <form id="desabilitarEventoForm" method="GET" action="{{route('evento.desabilitar', ['id' => $evento->id])}}"></form>
                 </div>
                 <div id="dropdownPublicar" style="background-color: gray">
-                    
+
                     <a id="publicarEvento" onclick="habilitarEvento()">
                         <li>
                             <img src="{{asset('img/icons/alto-falante.svg')}}" alt=""><h5> Publicar Evento</h5>
                         </li>
                     </a>
-                    
+
                     <a id="desabilitarEventoPublicado" onclick="desabilitarEvento()">
                         <li>
                             <img src="{{asset('img/icons/alto-falante-nao.svg')}}" alt=""><h5> Desfazer publicação</h5>
@@ -295,7 +323,7 @@
           @include('componentes.mensagens')
         @enderror
     </div>
-    
+
     <div style="position: relative; top: 15px;">
         @yield('menu')
     </div>
@@ -339,7 +367,7 @@
 
         $('#campoExemploNumero').mask(SPMaskBehavior, spOptions);
 
-        @if (old('criarCupom') != null || old('editarCupom') != null) 
+        @if (old('criarCupom') != null || old('editarCupom') != null)
             $('#li_cuponsDeDesconto').click();
         @elseif (old('criarCategoria') != null || old('editarCategoria') != null)
             $('#li_categoria_participante').click();
@@ -351,8 +379,8 @@
             $('#li_promocoes').click();
         @else
             $('#li_categoria_participante').click();
-        @endif 
-        
+        @endif
+
     });
 
     function exibirLimite(id, input) {
@@ -377,7 +405,7 @@
             tiposDeArquivo[1].style.display = "block";
         } else {
             tiposDeArquivo[0].style.display = "none";
-            tiposDeArquivo[1].style.display = "none";  
+            tiposDeArquivo[1].style.display = "none";
         }
     }
 
@@ -441,7 +469,7 @@
         if (input.value > 10 || input.value < 0) {
             alert("O valor da opção deve estar entre 0 e 10");
             input.value = 0;
-        } 
+        }
     }
     function montarLinhaOpcaoCriterio(idName) {
         return  "<div class='col-sm-7'>" +
@@ -523,7 +551,7 @@
                 $("#restricoes-resumo-texto").show();
             } else {
                 $("#restricoes-resumo-texto").hide();
-            }          
+            }
         });
         $('.incluir-resumo-edit').on("change", function() {
             if (this.checked) {
@@ -687,6 +715,10 @@
             $("#etiqueta-templates-trabalho").toggle(500);
         });
     });
+
+    $(document).ready(function() {
+        $('#dropdownSubmeterTrabalho').hide();
+    });
     // Fim
 
   function habilitarEvento() {
@@ -734,7 +766,15 @@
             $('#dropdownProgramacao').slideToggle(200);
     });
     $('#trabalhos').click(function(){
+            $('#dropdownTrabalhosModalidades').hide();
+            $('#dropdownSubmeterTrabalho').hide();
             $('#dropdownTrabalhos').slideToggle(200);
+    });
+    $('#trabalhosModalidades').click(function(){
+            $('#dropdownTrabalhosModalidades').slideToggle(100);
+    });
+    $('#submeterTrabalho').click(function(){
+            $('#dropdownSubmeterTrabalho').slideToggle(100);
     });
     $('#publicar').click(function(){
             $('#dropdownPublicar').slideToggle(200);
@@ -907,7 +947,7 @@
 
     //     if (modalidade.value != "") {
     //         form.submit();
-    //     } 
+    //     }
     // }
 
     function myFunction(item, index) {
@@ -956,12 +996,12 @@
                       "Option 3": "value3"
                      };
     var $el = $("#testeId");
-    
+
     $("#testeId").change(function(){
       alert("The text has been changed.");
     });
 
-    
+
     // Marcar a visibilidade da atividade para participantes
     // Estudar como fazer
     function setVisibilidadeAtv(id) {
@@ -985,8 +1025,8 @@
                 type: 'get',
                 data: {
                     _token: '{{csrf_token()}}',
-                    name: $('#nomeTipo').val(),  
-                    evento_id: "{{$evento->id}}",  
+                    name: $('#nomeTipo').val(),
+                    evento_id: "{{$evento->id}}",
                 },
                 statusCode: {
                     404: function() {
@@ -1037,7 +1077,7 @@
                 data: {
                     _token: '{{csrf_token()}}',
                     name: $('#nomeTipo'+id).val(),
-                    evento_id: "{{$evento->id}}",  
+                    evento_id: "{{$evento->id}}",
                 },
                 statusCode: {
                     404: function() {
@@ -1227,7 +1267,7 @@
     // Variavel para definios os ids das divs dos cantidatos
     var contadorConvidados = 1;
 
-    
+
     $(document).ready(function() {
         //Função que submete o form uma nova atividade
         $('#submitNovaAtividade').click(function(){
@@ -1244,7 +1284,7 @@
             }
         });
 
-        
+
     });
 
     //Função para controlar a exibição da div para cadastro de um novo tipo de atividade
@@ -1286,7 +1326,7 @@
                                 "<label for='nome'>Nome:</label>" +
                                 "<input class='form-control apenasLetras' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
                             "</div>" +
-                            "<div class='col-sm-6'>" + 
+                            "<div class='col-sm-6'>" +
                                 "<label for='email'>E-mail:</label>" +
                                 "<input class='form-control' type='email' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
                             "</div>" +
@@ -1306,7 +1346,7 @@
                                 "<label for='Outra'>Qual?</label>"+
                                 "<input type='text' class='form-control apenasLetras' name='outra[]' id='outraFuncao'>"+
                             "</div>"+
-                            "<div class='col-sm-4'>" + 
+                            "<div class='col-sm-4'>" +
                                 "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
                             "</div>" +
                         "</div>" +
@@ -1324,7 +1364,7 @@
                                 "<label for='nome'>Nome:</label>" +
                                 "<input class='form-control apenasLetras' type='text' name='nomeDoConvidado[]' id='nome'  value='{{ old('nomeConvidado') }}' placeholder='Nome do convidado'>" +
                             "</div>" +
-                            "<div class='col-sm-6'>" + 
+                            "<div class='col-sm-6'>" +
                                 "<label for='email'>E-mail:</label>" +
                                 "<input class='form-control' type='email' name='emailDoConvidado[]' id='email' value='{{ old('emailConvidado') }}' placeholder='E-mail do convidado'>" +
                             "</div>" +
@@ -1344,7 +1384,7 @@
                                 "<label for='Outra'>Qual?</label>"+
                                 "<input type='text' class='form-control apenasLetras' name='outra[]' id='outraFuncao'>"+
                             "</div>"+
-                            "<div class='col-sm-4'>" + 
+                            "<div class='col-sm-4'>" +
                                 "<button type='button' onclick='removerConvidadoNovaAtividade("+ contadorConvidados +")' style='border:none; background-color: rgba(0,0,0,0);'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='50px' height='auto'  alt='remover convidade' style='padding-top: 28px;'></button>" +
                             "</div>" +
                         "</div>" +
@@ -1359,7 +1399,7 @@
         contadorConvidados--;
         $("#novoConvidadoAtividade"+id).remove();
     }
-    
+
     //Função que subemete o form de edição de uma atividade
     function editarAtividade(id) {
         var form = document.getElementById('formEdidarAtividade' + id);
@@ -1371,14 +1411,14 @@
         if (id == 0) {
             var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade");
             var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais");
-            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"); 
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais");
             divDadosAdicionais.style.display = "block";
             buttonAbrir.style.display = "none";
             buttonFechar.style.display = "block";
         } else if (id > 0) {
             var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade"+id);
             var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais"+id);
-            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"+id); 
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"+id);
             divDadosAdicionais.style.display = "block";
             buttonAbrir.style.display = "none";
             buttonFechar.style.display = "block";
@@ -1390,14 +1430,14 @@
         if (id == 0) {
             var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade");
             var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais");
-            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"); 
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais");
             divDadosAdicionais.style.display = "none";
             buttonAbrir.style.display = "block";
             buttonFechar.style.display = "none";
         } else if (id > 0) {
             var divDadosAdicionais = document.getElementById("dadosAdicionaisNovaAtividade"+id);
             var buttonAbrir = document.getElementById("buttonAbrirDadosAdicionais"+id);
-            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"+id); 
+            var buttonFechar = document.getElementById("buttonFecharDadosAdicionais"+id);
             divDadosAdicionais.style.display = "none";
             buttonAbrir.style.display = "block";
             buttonFechar.style.display = "none";
@@ -1462,13 +1502,13 @@
         $('#exibir_calendario').click(function() {
             if (this.checked) {
                 document.getElementById('exibir_pdf').checked = false;
-            } 
+            }
         });
 
         $('#exibir_pdf').click(function() {
             if (this.checked) {
                 document.getElementById('exibir_calendario').checked = false;
-            } 
+            }
         });
     });
 
@@ -1559,7 +1599,7 @@
                                             "<label for='modalidade'>Modalidade:</label>" +
                                             "<p id='modalidade'>"+ obj.modalidade +"</p>" +
                                             "<a href='#' class='card-link' data-toggle='modal' data-target='#modalResultados"+ obj.id +"'>Resultado</a>" +
-                                            "<a href='"+obj.rota_download+"' class='card-link'>Baixar</a>" +    
+                                            "<a href='"+obj.rota_download+"' class='card-link'>Baixar</a>" +
                                         "</div>" +
                                     "</div>";
                         } else {
@@ -1575,7 +1615,7 @@
                                         "</div>" +
                                     "</div>";
                         }
-                        
+
                     })
                     $('#cards_com_trabalhos').html(cards);
                 }
@@ -1622,7 +1662,7 @@
                         "<label for='dataDeFim'>Data de fim</label>" +
                         "<input id='dataDeFim' name='dataDeFim[]' class='form-control' type='date'>" +
                     "</div>" +
-                    "<div class='col-sm-3'>" + 
+                    "<div class='col-sm-3'>" +
                         "<label for='quantidade'>Disponibilidade</label>" +
                         "<input id='quantidade' name='disponibilidade[]' class='form-control' type='number' placeholder='10'>" +
                     "</div>" +
@@ -1642,7 +1682,7 @@
                         "<label for='dataDeFim'>Data de fim</label>" +
                         "<input id='dataDeFim' name='dataDeFim_"+id+"[]' class='form-control' type='date'>" +
                     "</div>" +
-                    "<div class='col-sm-3'>" + 
+                    "<div class='col-sm-3'>" +
                         "<label for='quantidade'>Disponibilidade</label>" +
                         "<input id='quantidade' name='disponibilidade_"+id+"[]' class='form-control' type='number' placeholder='10'>" +
                     "</div>" +
@@ -1723,7 +1763,7 @@
                     "</div>";
             }
         }
-        
+
         if (id == 0) {
             html += "<div class='peridodoDesconto'>" +
                     "<div class='row form-group'>" +
@@ -1743,7 +1783,7 @@
                     "</div>" +
                     "<div class='row form-group'>" +
                         "<div class='col-sm-5'> " +
-                            "<label for='inicio'>Data de início*</label>" + 
+                            "<label for='inicio'>Data de início*</label>" +
                             "<input id='inicio' name='inícioDesconto[]' class='form-control' type='date' value='' required>" +
                         "</div>" +
                         "<div class='col-sm-5'>" +
@@ -1753,7 +1793,7 @@
                         "<div class='col-sm-2' style='position: relative; top: 35px;'>" +
                             "<a type='button' onclick='removerPeriodoDesconto(this,"+id+")'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>" +
                         "</div>" +
-                    "</div>"+ 
+                    "</div>"+
                 "</div>";
         } else {
             html += "<div class='peridodoDesconto'>" +
@@ -1774,7 +1814,7 @@
                     "</div>" +
                     "<div class='row form-group'>" +
                         "<div class='col-sm-5'> " +
-                            "<label for='inicio'>Data de início*</label>" + 
+                            "<label for='inicio'>Data de início*</label>" +
                             "<input id='inicio' name='inícioDesconto_"+id+"[]' class='form-control' type='date' value='' required>" +
                         "</div>" +
                         "<div class='col-sm-5'>" +
@@ -1784,7 +1824,7 @@
                         "<div class='col-sm-2' style='position: relative; top: 35px;'>" +
                             "<a type='button' onclick='removerPeriodoDesconto(this,"+id+")'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>" +
                         "</div>" +
-                    "</div>"+ 
+                    "</div>"+
                 "</div>";
         }
 
@@ -1882,9 +1922,9 @@
         botoes.style.display = "none";
         inputs.style.display = "block";
         botoesSubmissao.style.display = "block";
-        
+
         switch (tipoCampo) {
-            case 'file': 
+            case 'file':
                 inputTipoCampo.value = tipoCampo;
                 $('#labelCampoExemplo').html("");
                 $('#labelCampoExemplo').append("Comprovante de matrícula");
@@ -1930,7 +1970,7 @@
                     }
                 });
                 break;
-            case 'email': 
+            case 'email':
                 inputTipoCampo.value = tipoCampo;
                 $('#labelCampoExemplo').html("");
                 $('#labelCampoExemplo').append("E-mail para contato");
@@ -2066,7 +2106,7 @@
             } else {
                 document.getElementById('checkboxCategoria'+id).style.display = "block";
             }
-        }       
+        }
     }
 
   </script>
@@ -2077,7 +2117,7 @@
         });
     </script>
   @endif
-  @if (old('criarCampo') != null) 
+  @if (old('criarCampo') != null)
     <script>
         $(document).ready(function() {
             $("#modalCriarCampo").modal('show');
@@ -2089,18 +2129,18 @@
                 case 'text':
                     $("#btn-tipo-text").click();
                     break;
-                case 'file': 
+                case 'file':
                     $("#btn-tipo-file").click();
                     break;
-                case 'date': 
+                case 'date':
                     $("#btn-tipo-date").click();
                     break;
                 case 'endereco':
                     $("#btn-tipo-endereco").click();
                     break;
-                case 'cpf': 
+                case 'cpf':
                     $("#btn-tipo-cpf").click();
-                    break; 
+                    break;
                 case 'contato':
                     $("#btn-tipo-contato").click();
                     break;
@@ -2108,14 +2148,14 @@
         })
     </script>
   @endif
-  @if (old('editarCupom') != null) 
+  @if (old('editarCupom') != null)
     <script>
         $(document).ready(function() {
             $("#modalEditarCupom"+"{{old('editarCupom')}}").modal('show');
         })
     </script>
   @endif
-  @if (old('editarPromocao') != null) 
+  @if (old('editarPromocao') != null)
     <script>
         $(document).ready(function() {
             $("#modalPromocaoEdit"+"{{old('editarPromocao')}}").modal('show');
@@ -2137,27 +2177,27 @@
     </script>
   @endif
   @if (old('criarCupom') != null)
-    <script>        
+    <script>
         $(document).ready(function() {
             $("#modalCriarCupom").modal('show');
         })
     </script>
   @endif
-  @if (old('novaPromocao') != null) 
+  @if (old('novaPromocao') != null)
     <script>
         $(document).ready(function() {
             $("#modalCriarPromocao").modal('show');
         })
     </script>
   @endif
-  @if(old('editarAreaId') != null) 
+  @if(old('editarAreaId') != null)
     <script>
         $(document).ready(function() {
             $("#modalEditarArea{{old('editarAreaId')}}").modal('show');
         })
     </script>
   @endif
-  @if(old('modalidadeEditId') != null) 
+  @if(old('modalidadeEditId') != null)
     <script>
         $(document).ready(function() {
             $("#modalEditarModalidade{{old('modalidadeEditId')}}").modal('show');
@@ -2171,7 +2211,7 @@
         });
     </script>
   @endif
-  @if (old('distribuirTrabalhosAutomaticamente') != null) 
+  @if (old('distribuirTrabalhosAutomaticamente') != null)
     <script>
         $(document).ready(function() {
             $('#modalDistribuicaoAutomatica').modal('show');
@@ -2267,8 +2307,8 @@
         });
     </script>
   @endif
-@endsection 
+@endsection
 
 @hasSection ('javascript')
     @yield('javascript')
-@endif                     
+@endif
