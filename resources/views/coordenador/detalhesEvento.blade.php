@@ -34,20 +34,34 @@
                                 <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Resultado</h5>
                             </li>
                         </a>
+                        <a id="submeterTrabalho">
+                            <li>
+                                <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Submeter Trabalho</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                            </li>
+                            <div id="dropdownSubmeterTrabalho"  @if(request()->is('coord/evento/submeterTrabalho*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                                @foreach ($evento->modalidades()->get() as $modalidade)
+                                    <a id="submeterTrabalho{{$modalidade->id}}" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">
+                                        <li>
+                                            <h5>{{$modalidade->nome}}</h5>
+                                        </li>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </a>
                         <a id="trabalhosModalidades">
                             <li>
                                 <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                             </li>
-                            <div id="dropdownTrabalhosModalidades"  @if(request()->is('coord/evento/trabalhosModalidades*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                            <div  class="dropdown" id="dropdownTrabalhosModalidades"  @if(request()->is('coord/evento/trabalhosModalidades*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                                 <a id="listarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
                                     <li>
-                                        <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Todos os Trabalhos</h5>
+                                        <h5>Todos os Trabalhos</h5>
                                     </li>
                                 </a>
                                 @foreach ($evento->modalidades()->get() as $modalidade)
                                     <a id="listarTrabalhosModalidade{{$modalidade->id}}" href="{{ route('coord.listarTrabalhosModalidades',  ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
                                         <li>
-                                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>{{$modalidade->nome}}</h5>
+                                            <h5>{{$modalidade->nome}}</h5>
                                         </li>
                                     </a>
                                 @endforeach
@@ -701,6 +715,10 @@
             $("#etiqueta-templates-trabalho").toggle(500);
         });
     });
+
+    $(document).ready(function() {
+        $('#dropdownSubmeterTrabalho').hide();
+    });
     // Fim
 
   function habilitarEvento() {
@@ -748,10 +766,15 @@
             $('#dropdownProgramacao').slideToggle(200);
     });
     $('#trabalhos').click(function(){
+            $('#dropdownTrabalhosModalidades').hide();
+            $('#dropdownSubmeterTrabalho').hide();
             $('#dropdownTrabalhos').slideToggle(200);
     });
     $('#trabalhosModalidades').click(function(){
             $('#dropdownTrabalhosModalidades').slideToggle(100);
+    });
+    $('#submeterTrabalho').click(function(){
+            $('#dropdownSubmeterTrabalho').slideToggle(100);
     });
     $('#publicar').click(function(){
             $('#dropdownPublicar').slideToggle(200);
@@ -2288,4 +2311,4 @@
 
 @hasSection ('javascript')
     @yield('javascript')
-@endif                     
+@endif
