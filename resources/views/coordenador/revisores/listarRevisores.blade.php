@@ -31,6 +31,7 @@
                             <thead>
                               <tr>
                                 <th scope="col">Nome</th>
+                                <th scope="col">E-mail</th>
                                 <th scope="col" style="text-align:center">Em Andamento</th>
                                 <th scope="col" style="text-align:center">Finalizados</th>
                                 <th scope="col" style="text-align:center">Visualizar</th>
@@ -42,6 +43,7 @@
                             <tbody>
                               @foreach($revisores as $revisor)
                                 <tr>
+                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->name}}</td>
                                   <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
                                   <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">{{$revisor->revisor()->sum('correcoesEmAndamento')}}</td>
                                   <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">{{$revisor->revisor()->sum('trabalhosCorrigidos')}}</td>
