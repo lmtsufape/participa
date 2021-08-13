@@ -476,6 +476,8 @@ class RevisorController extends Controller
 
         Mail::to($coord_comissao_cientifica->email)->send(new EmailNotificacaoTrabalhoAvaliado($coord_comissao_cientifica, $autor, $evento->nome, $trabalho, $revisor));
       }
+      $coordenador = User::find($evento->coordenadorId);
+      Mail::to($coordenador->email)->send(new EmailNotificacaoTrabalhoAvaliado($coordenador, $autor, $evento->nome, $trabalho, $revisor));
 
       return redirect()->route('revisor.index')->with(['message' => 'Avaliação enviada com sucesso.']);
 
