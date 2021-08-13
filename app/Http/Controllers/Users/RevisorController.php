@@ -482,4 +482,22 @@ class RevisorController extends Controller
 
 
     }
+
+    public function editarRespostasFormulario(Request $request)
+    {
+
+        $data = $request->all();
+        $trabalho = Trabalho::find($data['trabalho_id']);
+        $this->authorize('isCoordenadorOrComissao', $trabalho->evento);
+        foreach ($data['pergunta_id'] as $key => $value) {
+            $pergunta = Pergunta::find($value);
+            if($pergunta->respostas->first()->paragrafo->count()){
+                $resposta = Paragrafo::find($data['resposta_paragrafo_id'][$key]);
+                $resposta->resposta = $data['resposta'.$resposta->id];
+                $resposta->save();
+            }
+        }
+        return redirect()->back()->with(['message' => 'Parecer editado com sucesso.']);
+
+    }
 }

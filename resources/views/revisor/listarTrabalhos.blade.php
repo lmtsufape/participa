@@ -87,6 +87,9 @@
                                         Avaliar
                                       </button>
                                     </form>
+                                    {{--<h6 class="card-subtitle mb-2 text-muted">Avaliar trabalho
+                                        <a href="#" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Avaliar trabalho final" width="15px" title="Avaliar trabalho final"></a>
+                                    </h6>--}}
                                   </td>
                                 @else
 

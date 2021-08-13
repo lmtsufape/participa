@@ -104,6 +104,7 @@ class EventoController extends Controller
     }
     public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
     {
+        //dd($status);
         $evento = Evento::find($request->eventoId);
         // $this->authorize('isCoordenadorOrComissao', $evento);
         // $users = $evento->usuariosDaComissao;
@@ -115,18 +116,32 @@ class EventoController extends Controller
         $trabalhos = NULL;
 
         if($column == "autor") {
-            // Não tem como ordenar os trabalhos por nome do autor automaticamente
-            // Já que na tabale a de trabalhos não existe o nome do autor
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where('status', '!=', $status)->get()->sortBy(
-                function($trabalho) {
-                    return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
-                },
-                SORT_REGULAR, // Usa o método padrão de ordenação
-                $direction == "desc"); // Se true, então ordena decrescente
-        } else {
-            // Como aqui é um else, então $trabalhos nunca vai ser null
-            // Busca os trabalhos da forma como era feita antes
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where('status', '!=', $status)->orderBy($column, $direction)->get();
+            //Pela logica da implementacao de status, rascunho eh o parametro para encontrar todos os trabalhos diferentes de arquivado
+            if($status == "rascunho"){
+                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where('status', '!=', 'arquivado')->get()->sortBy(
+                    function($trabalho) {
+                        return $trabalho->autor->name;
+                    },
+                    SORT_REGULAR,
+                    $direction == "desc");
+            }else{
+                // Não tem como ordenar os trabalhos por nome do autor automaticamente
+                // Já que na tabale a de trabalhos não existe o nome do autor
+                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where('status', '=', $status)->get()->sortBy(
+                    function($trabalho) {
+                        return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
+                    },
+                    SORT_REGULAR, // Usa o método padrão de ordenação
+                    $direction == "desc"); // Se true, então ordena decrescente
+            }
+        }else{
+            if($status == "rascunho"){
+                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where('status', '!=', 'arquivado')->orderBy($column, $direction)->get();
+            }else{
+                // Como aqui é um else, então $trabalhos nunca vai ser null
+                // Busca os trabalhos da forma como era feita antes
+                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where('status', '=', $status)->orderBy($column, $direction)->get();
+            }
         }
 
 
@@ -151,14 +166,32 @@ class EventoController extends Controller
         $trabalhos = NULL;
 
         if($column == "autor") {
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId]])->get()->sortBy(
-                function($trabalho) {
-                    return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
-                },
-                SORT_REGULAR, // Usa o método padrão de ordenação
-                $direction == "desc"); // Se true, então ordena decrescente
-        } else {
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId]])->orderBy($column, $direction)->get();
+            //Pela logica da implementacao de status, rascunho eh o parametro para encontrar todos os trabalhos diferentes de arquivado
+            if($status == "rascunho"){
+                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', 'arquivado'], ['modalidadeId', $request->modalidadeId]])->get()->sortBy(
+                    function($trabalho) {
+                        return $trabalho->autor->name;
+                    },
+                    SORT_REGULAR,
+                    $direction == "desc");
+            }else{
+                // Não tem como ordenar os trabalhos por nome do autor automaticamente
+                // Já que na tabale a de trabalhos não existe o nome do autor
+                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId]])->get()->sortBy(
+                    function($trabalho) {
+                        return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
+                    },
+                    SORT_REGULAR, // Usa o método padrão de ordenação
+                    $direction == "desc"); // Se true, então ordena decrescente
+            }
+        }else{
+            if($status == "rascunho"){
+                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', 'arquivado'], ['modalidadeId', $request->modalidadeId]])->orderBy($column, $direction)->get();
+            }else{
+                // Como aqui é um else, então $trabalhos nunca vai ser null
+                // Busca os trabalhos da forma como era feita antes
+                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId]])->orderBy($column, $direction)->get();
+            }
         }
         return view('coordenador.trabalhos.listarTrabalhosModalidades', [
                                                     'evento'            => $evento,

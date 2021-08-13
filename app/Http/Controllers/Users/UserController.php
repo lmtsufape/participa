@@ -9,7 +9,10 @@ use App\Models\Submissao\Area;
 use App\Models\Users\User;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Trabalho;
+use App\Models\Submissao\Evento;
+use App\Models\Submissao\Modalidade;
 use App\Models\Users\Coautor;
+use App\Models\Users\Revisor;
 use App\Models\Users\ComissaoEvento;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
@@ -166,6 +169,20 @@ class UserController extends Controller
                                             'trabalhosCoautor'    => $trabalhosCoautor,
                                             'agora'               => $agora,
                                         ]);
+    }
+
+    public function visualizarParecer(Request $request)
+    {
+
+        $evento = Evento::find($request->eventoId);
+        $modalidade = Modalidade::find($request->modalidadeId);
+        $trabalho = Trabalho::find($request->trabalhoId);
+        $revisor = Revisor::find($request->revisorId);
+        $revisorUser = User::find($revisor->user_id);
+        $this->authorize('permissaoVisualizarParecer', $trabalho);
+
+        return view('user.visualizarParecer', compact('evento', 'modalidade', 'trabalho', 'revisorUser'));
+
     }
 
     public function searchUser(Request $request)

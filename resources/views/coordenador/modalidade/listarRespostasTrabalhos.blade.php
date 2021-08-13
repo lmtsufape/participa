@@ -6,7 +6,7 @@
 
       <div class="row ">
         <div class="col-sm-6">
-            <h1 class="">Trabalhos</h1>
+            <h1 class="">Avaliações</h1>
         </div>
       </div>
 
@@ -35,8 +35,17 @@
           <table class="table table-hover table-responsive-lg table-sm table-striped">
             <thead>
               <tr>
+                <th scope="col" style="width:15%">
+                    Modalidade
+                    <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'asc'])}}">
+                      <i class="fas fa-arrow-alt-circle-up"></i>
+                    </a>
+                    <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'desc'])}}">
+                      <i class="fas fa-arrow-alt-circle-down"></i>
+                    </a>
+                </th>
                 <th scope="col">
-                  Título
+                  Trabalho
                   <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc'])}}">
                     <i class="fas fa-arrow-alt-circle-up"></i>
                   </a>
@@ -44,7 +53,7 @@
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>
-                <th scope="col">
+                {{--<th scope="col">
                   Área
                   <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'asc'])}}">
                     <i class="fas fa-arrow-alt-circle-up"></i>
@@ -52,7 +61,7 @@
                   <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
-                </th>
+                </th>--}}
                  <th scope="col">
                   Autor
                   <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'asc'])}}">
@@ -62,25 +71,18 @@
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>
-                <th scope="col" style="width:15%">
-                  Modalidade
-                  <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'asc'])}}">
-                    <i class="fas fa-arrow-alt-circle-up"></i>
-                  </a>
-                  <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'desc'])}}">
-                    <i class="fas fa-arrow-alt-circle-down"></i>
-                  </a>
-                </th>
-                <th scope="col">
+                {{--<th scope="col">
                   Revisores
                   {{-- <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
                     <i class="fas fa-arrow-alt-circle-up"></i>
                   </a>
                   <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
                     <i class="fas fa-arrow-alt-circle-down"></i>
-                  </a> --}}
-                </th>
-                <th scope="col" style="text-align:center">Revisões</th>
+                  </a>
+                </th>--}}
+                <th scope="col" style="text-align:center">Avaliador(es)</th>
+                <th scope="col" style="text-align:center">Status</th>
+                <th scope="col" style="text-align:center">Parecer</th>
               </tr>
             </thead>
 
@@ -89,6 +91,12 @@
               @foreach($trabalhos as $trabalho)
 
               <tr>
+                  <td>
+                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->modalidade->nome}}" style="max-width: 150px;">
+                      {{$trabalho->modalidade->nome}}
+                    </span>
+
+                  </td>
                   <td>
                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
@@ -102,27 +110,38 @@
                         </span>
                     @endif
                   </td>
-                  <td>
+                  {{--<td>
                     <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
                       {{$trabalho->area->nome}}
                     </span>
 
-                  </td>
+                  </td>--}}
                   <td>{{$trabalho->autor->name}}</td>
-                  <td>
-                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->modalidade->nome}}" style="max-width: 150px;">
-                      {{$trabalho->modalidade->nome}}
-                    </span>
-
-                  </td>
-                  <td>
+                  {{--<td>
                     {{count($trabalho->atribuicoes)}}
+                  </td>--}}
+                  <td style="text-align:center">
+                    @foreach ($trabalho->atribuicoes as $revisor)
+                        {{$revisor->user->name}}
+                        <br>
+                    @endforeach
                   </td>
 
                   <td style="text-align:center">
-                    <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}">
-                      <i class="fas fa-file-alt"></i>
-                    </a>
+                    @if($trabalho->avaliado == 'processando')
+                        Processando
+                    @else
+                        {{$trabalho->avaliado}}
+                    @endif
+                  </td>
+
+                  <td style="text-align:center">
+                    @foreach ($trabalho->atribuicoes as $revisor)
+                        <a href="{{route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id])}}">
+                            <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
+                        </a>
+                        <br>
+                    @endforeach
                   </td>
 
                 </tr>
