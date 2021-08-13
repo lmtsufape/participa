@@ -230,6 +230,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
   });
   // Visualizar trabalhos do usuário
   Route::get('/user/trabalhos', 'Users\UserController@meusTrabalhos')->name('user.meusTrabalhos');
+  Route::get('/user/trabalho/{id}/parecer/', 'Users\UserController@visualizarParecer')->name('user.visualizarParecer');
 
   // Cadastrar Comissão
   Route::post('/evento/cadastrarComissao','Users\ComissaoController@store'                   )->name('cadastrar.comissao');

@@ -44,14 +44,60 @@
 
                 @endforeach
             </p>
-            @if ($trabalho->arquivoAvaliacao != null)
-                <a href="{{route('downloadAvaliacao', ['trabalhoId' => $trabalho->id, 'revisorUserId' => $revisorUser->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
-            @endif
-
             </div>
         </div>
 
     @endforeach
+    @if ($trabalho->arquivoAvaliacao()->first() !== null)
+        <div class="d-flex justify-content-left">
+            <a class="btn btn-primary" href="{{route('downloadAvaliacao', ['trabalhoId' => $trabalho->id, 'revisorUserId' => $revisorUser->id])}}">
+                <div class="btn-group">
+                    <img src="{{asset('img/icons/file-download-solid.svg')}}" style="width:15px">
+                    <h6 style="margin-left: 5px; margin-top:1px; margin-bottom: 1px;">Baixar trabalho corrigido</h6>
+                </div>
+            </a>
+            @can('isCoordenadorOrComissao', $evento)
+                <div class="col-md-4" style="padding-ridht:0">
+                    @if ($trabalho->status == 'rascunho')
+                        <a href="{{ route('trabalho.status', [$trabalho->id, 'avaliado']) }}" class="btn btn-secondary">
+                            Encaminhar parecer ao autor
+                        </a>
+                    @elseif ($trabalho->status == 'avaliado')
+                        <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" class="btn btn-secondary">
+                            Desfazer encaminhamento do parecer
+                        </a>
+                    @endif
+                </div>
+            @endcan
+        </div>
+    @else
+        <div class="d-flex justify-content-left">
+            <div>
+                <a class="btn btn-primary">
+                    <div class="btn-group">
+                        <img src="{{asset('img/icons/file-download-solid.svg')}}" style="width:15px">
+                        <h6 style="margin-left: 5px; margin-top:1px; margin-bottom: 1px; color:#fff">Baixar trabalho corrigido</h6>
+                    </div>
+                </a>
+            </div>
+            @can('isCoordenadorOrComissao', $evento)
+                <div class="col-md-4" style="padding-ridht:0">
+                    @if ($trabalho->status == 'rascunho')
+                        <a href="{{ route('trabalho.status', [$trabalho->id, 'avaliado']) }}" class="btn btn-secondary">
+                            Encaminhar parecer ao autor
+                        </a>
+                    @elseif ($trabalho->status == 'avaliado')
+                        <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" class="btn btn-secondary">
+                            Desfazer encaminhamento do parecer
+                        </a>
+                    @endif
+                </div>
+            @endcan
+        </div>
+        <div style="margin-left:10px">
+            <h6 style="color: red">A correção não foi <br> enviada pelo parecerista.</h6>
+        </div>
+    @endif
 
 
 @endsection
