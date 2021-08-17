@@ -21,7 +21,7 @@
             </div>
         </div>
     @endif
-    <form action="{{route('revisor.editar.respostas')}}" method="post">
+    <form id="editarRespostas" action="{{route('revisor.editar.respostas')}}" method="post">
         @csrf
         <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
         @foreach ($modalidade->forms as $form)
@@ -34,7 +34,9 @@
                     @foreach ($form->perguntas as $pergunta)
                         <div class="card">
                             <div class="card-body">
-                                <p><strong>{{$pergunta->pergunta}}</strong></p>
+                                <p><strong>{{$pergunta->pergunta}}</strong> <span><small style="float: right">Pergunta visível para o autor? <input type="checkbox" name="pergunta_checkBox[]" value="{{$pergunta->id}}" {{  ($pergunta->visibilidade == true ? ' checked' : '') }} disabled></small></span>
+                                </p>
+
                                 @if($pergunta->respostas->first()->opcoes->count())
                                     Resposta com Multipla escolha:
                                 @elseif($pergunta->respostas->first()->paragrafo->count() )
@@ -47,6 +49,9 @@
                                                     <input type="hidden" name="resposta_paragrafo_id[]" value="{{$resposta->paragrafo->id}}">
                                                     <textarea id="resposta{{$resposta->paragrafo->id}}" type="text" class="form-control @error('resposta'.$resposta->paragrafo->id) is-invalid @enderror" name="resposta{{$resposta->paragrafo->id}}" required>@if(old('resposta'.$resposta->paragrafo->id)!=null){{old('resposta'.$resposta->paragrafo->id)}}@else{{($resposta->paragrafo->resposta)}}@endif</textarea>
                                                 </p>
+                                                <div class="col-form-label text-md-left">
+                                                    <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="paragrafo_checkBox[]" value="{{$resposta->paragrafo->id}}" {{  ($resposta->paragrafo->visibilidade == true ? ' checked' : '') }} {{$pergunta->visibilidade == true ? '' : 'disabled' }}>
+                                                </div>
                                             @endif
                                         @endif
                                         @empty
@@ -57,6 +62,9 @@
                         </div>
 
                     @endforeach
+                    <div class="col-form-label text-md-left">
+                        <small>Selecionar todas as respostas </small><input id="selecionarTodas" type="checkbox" onclick="select_all()">
+                    </div>
 
                 </p>
                 </div>
@@ -123,4 +131,29 @@
     @endif
 
 
+@endsection
+
+@section('javascript')
+    <script type="text/javascript">
+        var respostas;
+
+        function select_all() {
+            respostas = document.getElementsByName('paragrafo_checkBox[]');
+            if (document.getElementById('selecionarTodas').checked)
+            {
+                for (i = 0; i < respostas.length; i++) {
+                    if(!respostas[i].checked & !respostas[i].disabled){
+                        respostas[i].checked = true;
+                    }
+                }
+            } else {
+                for (i = 0; i < respostas.length; i++) {
+                    if(respostas[i].checked){
+                        respostas[i].checked = false;
+                    }
+                }
+            }
+        }
+
+    </script>
 @endsection

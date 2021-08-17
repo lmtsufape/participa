@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Paragrafo extends Model
 {
-    protected $fillable = ['resposta', 'resposta_id'];
+    protected $fillable = ['resposta', 'resposta_id', 'visibilidade'];
 
     public function respostaModel()
     {

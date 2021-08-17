@@ -476,6 +476,8 @@ class RevisorController extends Controller
 
         Mail::to($coord_comissao_cientifica->email)->send(new EmailNotificacaoTrabalhoAvaliado($coord_comissao_cientifica, $autor, $evento->nome, $trabalho, $revisor));
       }
+      $coordenador = User::find($evento->coordenadorId);
+      Mail::to($coordenador->email)->send(new EmailNotificacaoTrabalhoAvaliado($coordenador, $autor, $evento->nome, $trabalho, $revisor));
 
       return redirect()->route('revisor.index')->with(['message' => 'Avaliação enviada com sucesso.']);
 
@@ -487,14 +489,22 @@ class RevisorController extends Controller
     {
 
         $data = $request->all();
+        $paragrafo_checkBox = $request->paragrafo_checkBox;
         $trabalho = Trabalho::find($data['trabalho_id']);
         $this->authorize('isCoordenadorOrComissao', $trabalho->evento);
-        foreach ($data['pergunta_id'] as $key => $value) {
-            $pergunta = Pergunta::find($value);
-            if($pergunta->respostas->first()->paragrafo->count()){
-                $resposta = Paragrafo::find($data['resposta_paragrafo_id'][$key]);
-                $resposta->resposta = $data['resposta'.$resposta->id];
-                $resposta->save();
+        if($request->pergunta_id != null){
+            foreach ($data['pergunta_id'] as $key => $value) {
+                $pergunta = Pergunta::find($value);
+                if($pergunta->respostas->first()->paragrafo->count()){
+                    $resposta = Paragrafo::find($data['resposta_paragrafo_id'][$key]);
+                    $resposta->resposta = $data['resposta'.$resposta->id];
+                    if($paragrafo_checkBox != null && in_array($resposta->id, $paragrafo_checkBox)){
+                        $resposta->visibilidade = true;
+                    }else{
+                        $resposta->visibilidade = false;
+                    }
+                    $resposta->save();
+                }
             }
         }
         return redirect()->back()->with(['message' => 'Parecer editado com sucesso.']);

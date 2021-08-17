@@ -119,37 +119,39 @@
                         <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor[0]->modalidade->nome}}</span>
                             <a href="#" data-toggle="modal" data-target="#modalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Visualizar regras da modalidade" width="15px" title="Visualizar regras da modalidade"></a>
                         </h5>
+                        <h5 class="card-title">Período de avaliação: <span class="card-subtitle mb-2 text-muted" >De {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->fimRevisao))}}</span></h5>
                         <p class="card-text">
                             <div class="col-sm-12">
                             <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
                                 <tr>
-                                <th scope="col">Código</th>
-                                <th scope="col">Título</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Resumo</th>
-                                <th scope="col">Baixar</th>
+                                <th scope="col" style="text-align:center">Código</th>
+                                <th scope="col" style="text-align:center">Título</th>
+                                <th scope="col" style="text-align:center">Status</th>
+                                <th scope="col" style="text-align:center">Resumo</th>
+                                <th scope="col" style="text-align:center">Baixar</th>
                                 {{-- <th scope="col">Avaliar</th> --}}
-                                <th scope="col">Questionário</th>
+                                <th scope="col" style="text-align:center">Questionário</th>
+                                <th scope="col" style="text-align:center">Atribuído em</th>
                                 </tr>
                             </thead>
                             @foreach($trabalhosDoRevisor as $trabalho)
                                 <tr>
-                                    <td>{{$trabalho->id}}</td>
-                                    <td>{{$trabalho->titulo}}</td>
+                                    <td style="text-align:center">{{$trabalho->id}}</td>
+                                    <td style="text-align:center">{{$trabalho->titulo}}</td>
                                     @if ($trabalho->avaliado == "Avaliado")
-                                    <td>Avaliado</td>
+                                    <td style="text-align:center">Avaliado</td>
                                     @else
-                                    <td>Pendente</td>
+                                    <td style="text-align:center">Pendente</td>
                                     @endif
-                                    <td>
+                                    <td style="text-align:center">
                                     @if ($trabalho->resumo != null)
                                         <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
                                     @else
                                         Sem resumo
                                     @endif
                                     </td>
-                                    <td>
+                                    <td style="text-align:center">
                                     @if ($trabalho->arquivo != null && $trabalho->arquivo->count() > 0)
                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                                     @endif
@@ -166,28 +168,31 @@
                                             <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
                                             <input type="hidden" name="evento_id" value="{{$eventos[$key]->id}}">
                                             <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
-                                            <button type="submit" class="btn btn-success">
-                                            Avaliar
-                                            </button>
+                                            <div class="d-flex justify-content-center">
+                                                <button type="submit" class="btn btn-success">
+                                                Avaliar
+                                                </button>
+                                            </div>
                                         </form>
                                         </td>
                                     @else
-
-                                        <td>
-                                        <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
-                                        </td>
+                                        <div class="d-flex justify-content-center">
+                                            <td style="text-align:center">
+                                                <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
+                                            </td>
+                                        </div>
                                     @endif
                                     {{-- {{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}} --}}
-                                    <td>
-
-
-
-                                    </td>
                                     @else
-                                    <td>
-                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Trabalho já avaliado">
-                                    </td>
+                                        <div class="d-flex justify-content-center">
+                                            <td style="text-align:center">
+                                                <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Trabalho já avaliado">
+                                            </td>
+                                        </div>
                                     @endif
+                                    <td style="text-align:center">
+                                        {{date('d/m/Y H:i',strtotime($trabalho->atribuicoes->first()->pivot->created_at))}}
+                                    </td>
                                 </tr>
                             @endforeach
                             </table>

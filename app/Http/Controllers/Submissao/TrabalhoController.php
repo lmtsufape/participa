@@ -360,7 +360,15 @@ class TrabalhoController extends Controller
 
     public function statusTrabalho($id, $status)
     {
-        $trabalho = Trabalho::where('id', $id)->update(['status' => $status]);
+        $trabalho = Trabalho::find($id);
+        if($trabalho->status == 'avaliado' && $status == 'rascunho'){
+            $trabalho->update(['status' => $status]);
+            return redirect()->back()->with(['message' => "Encaminhamento desfeito com sucesso!",'class' => 'success']);
+        }
+        $trabalho->update(['status' => $status]);
+        if($status == 'avaliado'){
+            return redirect()->back()->with(['message' => "Trabalho encaminhado ao autor com sucesso!",'class' => 'success']);
+        }
         return back();
     }
 
