@@ -200,7 +200,12 @@
                                                                             </select>
                                                                         </div>
                                                                     </div> --}}
-                                                                    <div class="col-md-5"></div>
+                                                                    <div class="col-md-5">
+                                                                        <div class="col-form-label text-md-left">
+                                                                            <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="pergunta_checkBox[]" value="{{$pergunta->id}}" {{  ($pergunta->visibilidade == true ? ' checked' : '') }}>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-5">
                                                                         <div class="col-sm-7">
                                                                             {{-- <a href="#" class="delete pr-2 mr-2">
                                                                                 <i class="fas fa-trash-alt fa-2x"></i>

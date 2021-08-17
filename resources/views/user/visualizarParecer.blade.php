@@ -22,26 +22,29 @@
             <p class="card-text">
 
                 @foreach ($form->perguntas as $pergunta)
-                    <div class="card">
-                        <div class="card-body">
-                            <p><strong>{{$pergunta->pergunta}}</strong></p>
-                            @if($pergunta->respostas->first()->opcoes->count())
-                                Resposta com Multipla escolha:
-                            @elseif($pergunta->respostas->first()->paragrafo->count() )
-                                @forelse ($pergunta->respostas as $resposta)
-                                    @if($resposta->revisor != null || $resposta->trabalho != null)
-                                        @if($resposta->trabalho->id == $trabalho->id)
-                                            <p class="card-text">
-                                                <p>{{$resposta->paragrafo->resposta}}</p>
-                                            </p>
-                                        @endif
+                    @if($pergunta->visibilidade == true)
+                        @if($pergunta->respostas->first()->opcoes->count())
+                            Resposta com Multipla escolha:
+                        @elseif($pergunta->respostas->first()->paragrafo->count())
+                            @forelse ($pergunta->respostas as $resposta)
+                                @if($resposta->revisor != null || $resposta->trabalho != null)
+                                    @if(($resposta->trabalho->id == $trabalho->id) && $resposta->paragrafo->visibilidade == true)
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <p><strong>{{$pergunta->pergunta}}</strong></p>
+                                                <p class="card-text">
+                                                    <p>{{$resposta->paragrafo->resposta}}</p>
+                                                </p>
+                                            </div>
+                                        </div>
                                     @endif
-                                    @empty
-                                    <p>Sem respostas</p>
-                                @endforelse
-                            @endif
-                        </div>
-                    </div>
+                                @endif
+                                @empty
+                                <p>Sem respostas</p>
+                            @endforelse
+                        @endif
+
+                    @endif
 
                 @endforeach
             </p>

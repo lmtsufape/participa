@@ -456,14 +456,21 @@ class EventoController extends Controller
     {
         $form = Form::find($request->formEditId);
         $data = $request->all();
+        //dd($data);
+        $pergunta_checkBox = $request->pergunta_checkBox;
 
         foreach ($data as $key => $value) {
             if(strpos($key, 'pergunta') === 0){
                 $string = 'pergunta';
                 $id = substr($key, strpos($key, $string) + strlen($string));
-                if(strlen($id)>0){
+                if(strlen($id)>0 && is_numeric($id)){
                     $pergunta = Pergunta::find($id);
                     $pergunta->pergunta = $value;
+                    if($pergunta_checkBox != null && in_array($id, $pergunta_checkBox)){
+                        $pergunta->visibilidade = true;
+                    }else{
+                        $pergunta->visibilidade = false;
+                    }
                     $pergunta->update();
                 }
             }elseif(strpos($key, 'titulo') === 0){
