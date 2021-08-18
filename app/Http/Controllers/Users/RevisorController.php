@@ -469,15 +469,8 @@ class RevisorController extends Controller
         ]);
       }
 
-      if(isset($evento->coord_comissao_cientifica_id)){
-        $coord_comissao_cientifica = User::find($evento->coord_comissao_cientifica_id);
-        $autor = User::find($trabalho->autorId);
-        $revisor = User::find($revisores->first()->user_id);
-
-        Mail::to($coord_comissao_cientifica->email)->send(new EmailNotificacaoTrabalhoAvaliado($coord_comissao_cientifica, $autor, $evento->nome, $trabalho, $revisor));
-      }
       $coordenador = User::find($evento->coordenadorId);
-      Mail::to($coordenador->email)->send(new EmailNotificacaoTrabalhoAvaliado($coordenador, $autor, $evento->nome, $trabalho, $revisor));
+      Mail::to($coordenador->email)->send(new EmailNotificacaoTrabalhoAvaliado($coordenador, $trabalho->autor, $evento->nome, $trabalho, $revisor));
 
       return redirect()->route('revisor.index')->with(['message' => 'Avaliação enviada com sucesso.']);
 

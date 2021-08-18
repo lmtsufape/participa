@@ -137,12 +137,12 @@
 
                 <td style="text-align:center">
                     @forelse ($trabalho->atribuicoes as $revisor)
-                        <a @if (($trabalho->status == 'avaliado') && (now() >= $trabalho->modalidade->inicioCorrecao)) href="{{route('user.visualizarParecer', ['eventoId' => $trabalho->evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id,'id' => $trabalho->id])}}" @else data-toggle="popover" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível a partir da data de início de correção. {{date('d/m/Y H:i', strtotime($trabalho->modalidade->inicioCorrecao))}}" @endif>
+                        <a @if ($trabalho->status == 'avaliado') href="{{route('user.visualizarParecer', ['eventoId' => $trabalho->evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id,'id' => $trabalho->id])}}" @else data-toggle="popover" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível assim que revisado." @endif>
                             <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                         </a>
                         <br>
                     @empty
-                        <a data-toggle="popover" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível quando for revisado por um parecerista.">
+                        <a data-toggle="popover" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível assim que revisado.">
                             <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                         </a>
                     @endforelse

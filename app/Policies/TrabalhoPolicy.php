@@ -27,6 +27,6 @@ class TrabalhoPolicy
 
     public function permissaoVisualizarParecer(User $user, Trabalho $trabalho)
     {
-        return $this->isAutorTrabalho($user, $trabalho) && $trabalho->status == 'avaliado' && now() >= $trabalho->modalidade->inicioCorrecao;
+        return $this->isAutorTrabalho($user, $trabalho) && $trabalho->status == 'avaliado';
     }
 }

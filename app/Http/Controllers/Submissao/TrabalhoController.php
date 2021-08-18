@@ -30,6 +30,7 @@ use App\Models\Submissao\AreaModalidade;
 use App\Models\Submissao\ComissaoEvento;
 use App\Models\Submissao\TemplateSubmis;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
+use App\Mail\EmailParecerDisponivel;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\SubmissaoTrabalhoNotification;
 
@@ -367,6 +368,7 @@ class TrabalhoController extends Controller
         }
         $trabalho->update(['status' => $status]);
         if($status == 'avaliado'){
+            Mail::to($trabalho->autor->email)->send(new EmailParecerDisponivel($trabalho->evento, $trabalho));
             return redirect()->back()->with(['message' => "Trabalho encaminhado ao autor com sucesso!",'class' => 'success']);
         }
         return back();
