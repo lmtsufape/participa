@@ -31,6 +31,7 @@ use App\Models\Submissao\ComissaoEvento;
 use App\Models\Submissao\TemplateSubmis;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailParecerDisponivel;
+use App\Models\Submissao\TrabalhoAprovado;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\SubmissaoTrabalhoNotification;
 
@@ -894,6 +895,25 @@ class TrabalhoController extends Controller
             return abort(403);
         }
         return abort(403);
+    }
+
+    public function aprovacaoTrabalho(Request $request)
+    {
+        $trabalho = Trabalho::find($request->trabalho_id);
+        $mensagem = "";
+
+        if ($request->aprovacao == "true") {
+            $trabalho->aprovado = true;
+            $mensagem = "Trabalho aprovado com sucesso!";
+        } else if ($request->aprovacao == "false") {
+            $trabalho->aprovado = false;
+            $mensagem = "Trabalho reprovado com sucesso!";
+        }
+
+        $trabalho->update();
+
+        return redirect()->back()->with(['message' => $mensagem,'class' => 'success']);
+
     }
 
     public function resultados($id) {
