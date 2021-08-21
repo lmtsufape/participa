@@ -168,6 +168,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::post(  '/trabalho/{id}/editar',   'TrabalhoController@update'                 )->name('editar.trabalho');
     Route::get(  '/trabalho/status/{id}/{status}',  'TrabalhoController@statusTrabalho'  )->name('trabalho.status');
     Route::post(  '/trabalho/{id}/aprovar-reprovar',  'TrabalhoController@aprovacaoTrabalho'  )->name('trabalho.aprovar-reprovar');
+    Route::post(  '/trabalho/{id}/correcao',  'TrabalhoController@correcaoTrabalho'  )->name('trabalho.correcao');
     //Atribuição
     Route::get(   '/atribuir',              'AtribuicaoController@distribuicaoAutomatica')->name('distribuicao');
     Route::get(   '/atribuirPorArea',       'AtribuicaoController@distribuicaoPorArea'   )->name('distribuicaoAutomaticaPorArea');
@@ -181,6 +182,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::get(   '/download-trabalho/{id}',     'TrabalhoController@downloadArquivo'    )->name('downloadTrabalho');
     //rota download do arquivo do trabalho
     Route::get(   '/download-avaliacao',     'TrabalhoController@downloadArquivoAvaliacao'    )->name('downloadAvaliacao');
+    Route::get(   '/trabalho/{id}/download-correcao',     'TrabalhoController@downloadArquivoCorrecao'    )->name('downloadCorrecao');
     // rota download da foto do evento
     Route::get(   '/download-logo-evento/{id}',   'EventoController@downloadFotoEvento'  )->name('download.foto.evento');
 

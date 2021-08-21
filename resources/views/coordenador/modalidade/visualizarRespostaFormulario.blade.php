@@ -25,13 +25,13 @@
         <div class="col-md-6 form-group" style="margin-bottom: 9px;">
             <button class="btn btn-danger" style="width: 100%;"
             data-toggle="modal" data-target="#reprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == true ? '' : 'disabled' }}>
-                Reprovar trabalho
+                Reprovar para correção
             </button>
         </div>
         <div class="col-md-6 form-group" style="margin-bottom: 9px;">
             <button class="btn btn-success" style="width: 100%;"
             data-toggle="modal" data-target="#aprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == false ? '' : 'disabled' }}>
-                Aprovar trabalho
+                Aprovar para correção
             </button>
         </div>
     </div>
