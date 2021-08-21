@@ -382,6 +382,31 @@ class EventoController extends Controller
 
     }
 
+    public function listarCorrecoes(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
+
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
+        $trabalhos = collect();
+        foreach($modalidades as $modalidade){
+            $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado'], ['aprovado', true]])->get()->sortBy(
+                function($trabalho) {
+                    return $trabalho->autor->name;
+                },
+                SORT_REGULAR));
+        }
+
+
+        return view('coordenador.trabalhos.listarTrabalhosCorrecoes', [
+            'evento'                  => $evento,
+            'trabalhosPorModalidade'  => $trabalhos,
+            'agora'                   => now(),
+        ]);
+
+    }
+
     public function cadastrarCriterio(Request $request)
     {
         $evento = Evento::find($request->eventoId);

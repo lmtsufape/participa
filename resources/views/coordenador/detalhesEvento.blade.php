@@ -203,6 +203,11 @@
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Formulário</h5>
                         </li>
                     </a>
+                    <a id="correcoesTrabalhos" href="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id])}}">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Correções</h5>
+                        </li>
+                    </a>
                     <a id="avaliacoesModalidades">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Avaliações</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">

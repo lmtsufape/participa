@@ -71,13 +71,6 @@
 <div class="container content" style="margin-top: 80px;">
     {{-- titulo da página --}}
     <div class="row justify-content-center titulo-detalhes">
-      @if(session('mensagem'))
-        <div class="col-md-12" style="margin-top: 5px;">
-            <div class="alert alert-success">
-              <p>{{session('mensagem')}}</p>
-            </div>
-        </div>
-      @endif
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-12">
@@ -88,6 +81,26 @@
         </div>
     </div>
     <br>
+    @if(session('mensagem'))
+        <div class="col-md-12" style="margin-top: 5px;">
+            <div class="alert alert-success">
+              <p>{{session('mensagem')}}</p>
+            </div>
+        </div>
+    @endif
+    <div class="row">
+        <div class="col-sm-12">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </div>
+    </div>
     <div class="row margin">
         <div class="col-sm-12 info-evento">
             <h4>Como Autor</h4>
@@ -846,7 +859,7 @@
         </div>
       </div>
     </div>
-    <!-- Fim Modal editar trabalho -->
+    <!-- Fim Modal correcao trabalho -->
   @endif
 @endforeach
 

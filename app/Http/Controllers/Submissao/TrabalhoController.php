@@ -923,6 +923,14 @@ class TrabalhoController extends Controller
         $this->authorize('permissaoCorrecao', $trabalho);
         if($request->arquivoCorrecao != null){
 
+            if($this->validarTipoDoArquivo($request->arquivoCorrecao, $trabalho->modalidade)) {
+                return redirect()->back()->withErrors(['mensagem' => 'Extensão de arquivo enviado é diferente do permitido.']);
+            }
+
+            $validatedData = $request->validate([
+                'arquivoCorrecao' => ['required', 'file', 'max:2048'],
+            ]);
+
             $arquivoCorrecao = $trabalho->arquivoCorrecao()->first();
             if($arquivoCorrecao != null){
                 if (Storage::disk()->exists($arquivoCorrecao->caminho)) {

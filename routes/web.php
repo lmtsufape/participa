@@ -112,6 +112,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');
       Route::get('modalidade/cadastrarCriterio', 'EventoController@cadastrarCriterio')->name('cadastrarCriterio');
       Route::get('modalidade/listarCriterios', 'EventoController@listarCriterios')->name('listarCriterios');
+      Route::get('modalidade/listarCorrecoes', 'EventoController@listarCorrecoes')->name('listarCorrecoes');
       Route::get('modalidade/forms', 'EventoController@forms')->name('forms');
       Route::get('modalidade/atribuir/form', 'EventoController@atribuirForm')->name('atribuir.form');
       Route::get('modalidade/form/salvar', 'EventoController@salvarForm')->name('salvar.form');
