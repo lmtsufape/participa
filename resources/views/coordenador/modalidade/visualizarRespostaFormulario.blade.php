@@ -35,9 +35,10 @@
             </button>
         </div>
     </div>
-    <form id="editarRespostas" action="{{route('revisor.editar.respostas')}}" method="post">
+    <form id="editarRespostas" action="{{route('revisor.editar.respostas')}}" method="post" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
+        <input type="hidden" name="revisor_id" value="{{$revisor->id}}">
         @foreach ($modalidade->forms as $form)
             <div class="card" style="width: 48rem;">
                 <div class="card-body">
@@ -78,6 +79,28 @@
                     @endforeach
                     <div class="col-form-label text-md-left">
                         <small>Selecionar todas as respostas </small><input id="selecionarTodas" type="checkbox" onclick="select_all()">
+                    </div>
+
+                    <div class="col-sm-12" style="margin-top: 20px;">
+                        <small>Para trocar o arquivo de avaliação do revisor, envie um novo.</small><br>
+                        <div class="custom-file">
+                            <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoAvaliacao">
+                        </div>
+                        <small>Arquivos aceitos nos formatos
+                            @if($modalidade->pdf == true)<span> - pdf</span>@endif
+                            @if($modalidade->jpg == true)<span> - jpg</span>@endif
+                            @if($modalidade->jpeg == true)<span> - jpeg</span>@endif
+                            @if($modalidade->png == true)<span> - png</span>@endif
+                            @if($modalidade->docx == true)<span> - docx</span>@endif
+                            @if($modalidade->odt == true)<span> - odt</span>@endif
+                            @if($modalidade->zip == true)<span> - zip</span>@endif
+                            @if($modalidade->svg == true)<span> - svg</span>@endif.
+                        </small>
+                        @error('arquivo'.$trabalho->id)
+                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                <strong>{{ $message }}</strong>
+                             </span>
+                        @enderror
                     </div>
 
                 </p>

@@ -500,6 +500,27 @@ class RevisorController extends Controller
                 }
             }
         }
+        if($request->arquivoAvaliacao != null){
+            $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->first();
+            if($arquivoAvaliacao != null){
+                if (Storage::disk()->exists($arquivoAvaliacao->nome)) {
+                    Storage::delete($arquivoAvaliacao->nome);
+                }
+                $arquivoAvaliacao->delete();
+            }
+
+            $file = $request->arquivoAvaliacao;
+            $path = 'avaliacoes/' . $trabalho->evento->id . '/' . $trabalho->id .'/';
+            $nome = $request->arquivoAvaliacao->getClientOriginalName();
+            Storage::putFileAs($path, $file, $nome);
+
+            $arquivo = ArquivoAvaliacao::create([
+                'nome'  => $path . $nome,
+                'revisorId' => $request->revisor_id,
+                'trabalhoId'  => $trabalho->id,
+                'versaoFinal' => true,
+            ]);
+        }
         return redirect()->back()->with(['message' => 'Parecer editado com sucesso.']);
 
     }

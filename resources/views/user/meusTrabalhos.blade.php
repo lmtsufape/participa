@@ -708,7 +708,7 @@
 
 
 @foreach ($trabalhos as $trabalho)
-  @if($agora <= $trabalho->modalidade->fimSubmissao || $agora >= $trabalho->modalidade->fimSubmissao)
+  @if($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao)
     <!-- Modal  correcao trabalho -->
     <div class="modal fade" id="modalCorrecaoTrabalho_{{$trabalho->id}}" tabindex="-1" aria-labelledby="modalCorrecaoTrabalho_{{$trabalho->id}}Label" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">

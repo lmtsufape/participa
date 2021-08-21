@@ -37,10 +37,6 @@ class Trabalho extends Model
     return $this->hasOne('App\Models\Submissao\ArquivoCorrecao', 'trabalhoId');
   }
 
-  public function trabalhoAprovado(){
-    return $this->hasOne('App\Models\Submissao\TrabalhoAprovado', 'trabalhoId');
-  }
-
   public function modalidade(){
       return $this->belongsTo('App\Models\Submissao\Modalidade', 'modalidadeId');
   }

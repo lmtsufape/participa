@@ -632,7 +632,7 @@ class EventoController extends Controller
       $revisor = Revisor::find($request->revisorId);
       $revisorUser = User::find($revisor->user_id);
 
-      return view('coordenador.modalidade.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser'));
+      return view('coordenador.modalidade.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor'));
 
     }
 
