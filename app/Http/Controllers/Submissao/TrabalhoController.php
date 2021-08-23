@@ -13,6 +13,7 @@ use App\Models\Submissao\Area;
 use App\Mail\SubmissaoTrabalho;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Arquivo;
+use App\Models\Submissao\ArquivoCorrecao;
 use App\Models\Submissao\Parecer;
 use App\Models\Submissao\Trabalho;
 use App\Models\Submissao\Avaliacao;
@@ -894,6 +895,73 @@ class TrabalhoController extends Controller
             return abort(403);
         }
         return abort(403);
+    }
+
+    public function aprovacaoTrabalho(Request $request)
+    {
+        $trabalho = Trabalho::find($request->trabalho_id);
+        $mensagem = "";
+
+        if ($request->aprovacao == "true") {
+            $trabalho->aprovado = true;
+            $mensagem = "Trabalho aprovado com sucesso!";
+        } else if ($request->aprovacao == "false") {
+            $trabalho->aprovado = false;
+            $mensagem = "Trabalho reprovado com sucesso!";
+        }
+
+        $trabalho->update();
+
+        return redirect()->back()->with(['message' => $mensagem,'class' => 'success']);
+
+    }
+
+    public function correcaoTrabalho(Request $request)
+    {
+        $trabalho = Trabalho::find($request->trabalhoCorrecaoId);
+        $this->authorize('permissaoCorrecao', $trabalho);
+        if($request->arquivoCorrecao != null){
+
+            if($this->validarTipoDoArquivo($request->arquivoCorrecao, $trabalho->modalidade)) {
+                return redirect()->back()->withErrors(['mensagem' => 'Extensão de arquivo enviado é diferente do permitido.']);
+            }
+
+            $validatedData = $request->validate([
+                'arquivoCorrecao' => ['required', 'file', 'max:2048'],
+            ]);
+
+            $arquivoCorrecao = $trabalho->arquivoCorrecao()->first();
+            if($arquivoCorrecao != null){
+                if (Storage::disk()->exists($arquivoCorrecao->caminho)) {
+                    Storage::delete($arquivoCorrecao->caminho);
+                }
+                $arquivoCorrecao->delete();
+            }
+
+            $file = $request->arquivoCorrecao;
+            $path = 'correcoes/' . $trabalho->evento->id . '/' . $trabalho->id .'/';
+            $nome = $request->arquivoCorrecao->getClientOriginalName();
+            Storage::putFileAs($path, $file, $nome);
+
+            $arquivo = ArquivoCorrecao::create([
+            'caminho'  => $path . $nome,
+            'trabalhoId'  => $trabalho->id,
+            ]);
+        }
+        return redirect()->back()->with(['mensagem' => 'Correção de '. $trabalho->titulo . ' enviada com sucesso!']);
+
+    }
+
+    public function downloadArquivoCorrecao(Request $request)
+    {
+        $trabalho = Trabalho::find($request->id);
+        $this->authorize('permissaoCorrecao', $trabalho);
+        $arquivo = $trabalho->arquivoCorrecao()->first();
+        if ($arquivo != null && Storage::disk()->exists($arquivo->caminho)) {
+            return Storage::download($arquivo->caminho);
+        }else{
+            return abort(404);
+        }
     }
 
     public function resultados($id) {

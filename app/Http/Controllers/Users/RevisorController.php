@@ -425,6 +425,17 @@ class RevisorController extends Controller
       // $comment = $post->comments()->create([
       //     'message' => 'A new comment.',
       // ]);
+      $trabalho = Trabalho::find($data['trabalho_id']);
+      if(isset($request->arquivo)){
+
+        if($this->validarTipoDoArquivo($request->arquivo, $trabalho->modalidade)) {
+            return redirect()->back()->withErrors(['message' => 'Extensão de arquivo enviado é diferente do permitido.']);
+        }
+
+        $validatedData = $request->validate([
+            'arquivo' => ['required', 'file', 'max:2048'],
+        ]);
+       }
 
       foreach ($data['pergunta_id'] as $key => $value) {
         $pergunta = Pergunta::find($value);
@@ -437,7 +448,6 @@ class RevisorController extends Controller
             'resposta' => $data['resposta'][$key],
           ]);
 
-          $trabalho = Trabalho::find($data['trabalho_id']);
           $evento_id = $trabalho->eventoId;
           $trabalho->avaliado = "Avaliado";
           $trabalho->save();
@@ -485,6 +495,15 @@ class RevisorController extends Controller
         $paragrafo_checkBox = $request->paragrafo_checkBox;
         $trabalho = Trabalho::find($data['trabalho_id']);
         $this->authorize('isCoordenadorOrComissao', $trabalho->evento);
+        if($request->arquivoAvaliacao != null){
+            if($this->validarTipoDoArquivo($request->arquivoAvaliacao, $trabalho->modalidade)) {
+                return redirect()->back()->withErrors(['message' => 'Extensão de arquivo enviado é diferente do permitido.']);
+            }
+
+            $validatedData = $request->validate([
+                'arquivoAvaliacao' => ['required', 'file', 'max:2048'],
+            ]);
+        }
         if($request->pergunta_id != null){
             foreach ($data['pergunta_id'] as $key => $value) {
                 $pergunta = Pergunta::find($value);
@@ -500,7 +519,64 @@ class RevisorController extends Controller
                 }
             }
         }
+        if($request->arquivoAvaliacao != null){
+            $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->first();
+            if($arquivoAvaliacao != null){
+                if (Storage::disk()->exists($arquivoAvaliacao->nome)) {
+                    Storage::delete($arquivoAvaliacao->nome);
+                }
+                $arquivoAvaliacao->delete();
+            }
+
+            $file = $request->arquivoAvaliacao;
+            $path = 'avaliacoes/' . $trabalho->evento->id . '/' . $trabalho->id .'/';
+            $nome = $request->arquivoAvaliacao->getClientOriginalName();
+            Storage::putFileAs($path, $file, $nome);
+
+            $arquivo = ArquivoAvaliacao::create([
+                'nome'  => $path . $nome,
+                'revisorId' => $request->revisor_id,
+                'trabalhoId'  => $trabalho->id,
+                'versaoFinal' => true,
+            ]);
+        }
         return redirect()->back()->with(['message' => 'Parecer editado com sucesso.']);
 
+    }
+    public function validarTipoDoArquivo($arquivo, $tiposExtensao) {
+        if($tiposExtensao->arquivo == true){
+
+          $tiposcadastrados = [];
+          if($tiposExtensao->pdf == true){
+            array_push($tiposcadastrados, "pdf");
+          }
+          if($tiposExtensao->jpg == true){
+            array_push($tiposcadastrados, "jpg");
+          }
+          if($tiposExtensao->jpeg == true){
+            array_push($tiposcadastrados, "jpeg");
+          }
+          if($tiposExtensao->png == true){
+            array_push($tiposcadastrados, "png");
+          }
+          if($tiposExtensao->docx == true){
+            array_push($tiposcadastrados, "docx");
+          }
+          if($tiposExtensao->odt == true){
+            array_push($tiposcadastrados, "odt");
+          }
+          if($tiposExtensao->zip == true) {
+            array_push($tiposcadastrados, "zip");
+          }
+          if($tiposExtensao->svg == true) {
+            array_push($tiposcadastrados, "svg");
+          }
+
+          $extensao = $arquivo->getClientOriginalExtension();
+          if(!in_array($extensao, $tiposcadastrados)){
+            return true;
+          }
+          return false;
+        }
     }
 }

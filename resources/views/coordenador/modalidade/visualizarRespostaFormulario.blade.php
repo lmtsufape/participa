@@ -21,9 +21,37 @@
             </div>
         </div>
     @endif
-    <form id="editarRespostas" action="{{route('revisor.editar.respostas')}}" method="post">
+    <div class="row">
+        <div class="col-sm-12">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-6 form-group" style="margin-bottom: 9px;">
+            <button class="btn btn-danger" style="width: 100%;"
+            data-toggle="modal" data-target="#reprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == true ? '' : 'disabled' }}>
+                Reprovar para correção
+            </button>
+        </div>
+        <div class="col-md-6 form-group" style="margin-bottom: 9px;">
+            <button class="btn btn-success" style="width: 100%;"
+            data-toggle="modal" data-target="#aprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == false ? '' : 'disabled' }}>
+                Aprovar para correção
+            </button>
+        </div>
+    </div>
+    <form id="editarRespostas" action="{{route('revisor.editar.respostas')}}" method="post" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
+        <input type="hidden" name="revisor_id" value="{{$revisor->id}}">
         @foreach ($modalidade->forms as $form)
             <div class="card" style="width: 48rem;">
                 <div class="card-body">
@@ -64,6 +92,28 @@
                     @endforeach
                     <div class="col-form-label text-md-left">
                         <small>Selecionar todas as respostas </small><input id="selecionarTodas" type="checkbox" onclick="select_all()">
+                    </div>
+
+                    <div class="col-sm-12" style="margin-top: 20px;">
+                        <small>Para trocar o arquivo de avaliação do revisor, envie um novo.</small><br>
+                        <div class="custom-file">
+                            <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoAvaliacao">
+                        </div>
+                        <small>Arquivos aceitos nos formatos
+                            @if($modalidade->pdf == true)<span> - pdf</span>@endif
+                            @if($modalidade->jpg == true)<span> - jpg</span>@endif
+                            @if($modalidade->jpeg == true)<span> - jpeg</span>@endif
+                            @if($modalidade->png == true)<span> - png</span>@endif
+                            @if($modalidade->docx == true)<span> - docx</span>@endif
+                            @if($modalidade->odt == true)<span> - odt</span>@endif
+                            @if($modalidade->zip == true)<span> - zip</span>@endif
+                            @if($modalidade->svg == true)<span> - svg</span>@endif.
+                        </small>
+                        @error('arquivo'.$trabalho->id)
+                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                <strong>{{ $message }}</strong>
+                             </span>
+                        @enderror
                     </div>
 
                 </p>
@@ -129,6 +179,57 @@
             <h6 style="color: red">A correção não foi <br> enviada pelo parecerista.</h6>
         </div>
     @endif
+
+
+    <div class="modal fade" id="reprovar-trabalho-{{$trabalho->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Reprovar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-reprovar-trabalho-{{$trabalho->id}}" method="POST" action="{{route('trabalho.aprovar-reprovar', $trabalho->id)}}">
+                        <input type="hidden" name="trabalho_id" value={{$trabalho->id}}>
+                        <input type="hidden" name="aprovacao" value="false">
+                        @csrf
+                        Tem certeza que deseja reprovar este trabalho {{$trabalho->titulo}}?
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                    <button type="submit" class="btn btn-danger" form="form-reprovar-trabalho-{{$trabalho->id}}">Sim</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="aprovar-trabalho-{{$trabalho->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Aprovar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-aprovar-trabalho-{{$trabalho->id}}" method="POST" action="{{route('trabalho.aprovar-reprovar', $trabalho->id)}}">
+                        <input type="hidden" name="trabalho_id" value={{$trabalho->id}}>
+                        <input type="hidden" name="aprovacao" value="true">
+                        @csrf
+                        Tem certeza que deseja aprovar este trabalho {{$trabalho->titulo}}?
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                    <button type="submit" class="btn btn-danger" form="form-aprovar-trabalho-{{$trabalho->id}}">Sim</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 @endsection

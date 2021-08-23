@@ -71,13 +71,6 @@
 <div class="container content" style="margin-top: 80px;">
     {{-- titulo da página --}}
     <div class="row justify-content-center titulo-detalhes">
-      @if(session('mensagem'))
-        <div class="col-md-12" style="margin-top: 5px;">
-            <div class="alert alert-success">
-              <p>{{session('mensagem')}}</p>
-            </div>
-        </div>
-      @endif
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-12">
@@ -88,6 +81,26 @@
         </div>
     </div>
     <br>
+    @if(session('mensagem'))
+        <div class="col-md-12" style="margin-top: 5px;">
+            <div class="alert alert-success">
+              <p>{{session('mensagem')}}</p>
+            </div>
+        </div>
+    @endif
+    <div class="row">
+        <div class="col-sm-12">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </div>
+    </div>
     <div class="row margin">
         <div class="col-sm-12 info-evento">
             <h4>Como Autor</h4>
@@ -110,6 +123,7 @@
                   <th style="text-align:center">Editar</th>
                   <th style="text-align:center">Excluir</th>
                   <th style="text-align:center">Pareceres</th>
+                  <th style="text-align:center">Correção</th>
                   {{-- <th style="text-align:center">Arquivar</th> --}}
               </tr>
               </thead>
@@ -146,6 +160,18 @@
                             <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                         </a>
                     @endforelse
+                </td>
+
+                <td style="text-align:center">
+                    @if($trabalho->aprovado !== false)
+                        <a href="#" @if($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao && $trabalho->aprovado == true) data-toggle="modal" data-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A correção do trabalho só é permitida durante o período de correção. {{date('d/m/Y H:i', strtotime($trabalho->modalidade->inicioCorrecao))}} a {{date('d/m/Y H:i', strtotime($trabalho->modalidade->fimCorrecao))}}" @endif>
+                            <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
+                        </a>
+                    @else
+                        <a data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A correção não está disponível para o seu trabalho.">
+                            <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
+                        </a>
+                    @endif
                 </td>
 
                   {{-- <td style="text-align:center">
@@ -694,6 +720,148 @@
 @endforeach
 
 
+@foreach ($trabalhos as $trabalho)
+  @if($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao)
+    <!-- Modal  correcao trabalho -->
+    <div class="modal fade" id="modalCorrecaoTrabalho_{{$trabalho->id}}" tabindex="-1" aria-labelledby="modalCorrecaoTrabalho_{{$trabalho->id}}Label" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalCorrecaoTrabalho_{{$trabalho->id}}Label">Correção do trabalho {{$trabalho->titulo}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="formCorrecaoTrabalho{{$trabalho->id}}" action="{{route('trabalho.correcao', ['id' => $trabalho->id])}}" method="POST" enctype="multipart/form-data">
+              @csrf
+
+              @php
+                $formSubTraba = $trabalho->evento->formSubTrab;
+                $ordem = explode(",", $formSubTraba->ordemCampos);
+                $modalidade = $trabalho->modalidade;
+              @endphp
+              <input type="hidden" name="trabalhoCorrecaoId" value="{{$trabalho->id}}">
+              @error('numeroMax'.$trabalho->id)
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="alert alert-danger" role="alert">
+                      {{ $message }}
+                    </div>
+                  </div>
+                </div>
+              @enderror
+              @foreach ($ordem as $indice)
+                @if ($indice == "etiquetatitulotrabalho")
+                  <div class="row justify-content-center">
+                    {{-- Nome Trabalho  --}}
+                    <div class="col-sm-12">
+                        <label for="nomeTrabalho_{{$trabalho->id}}" class="col-form-label">{{ $formSubTraba->etiquetatitulotrabalho }}</label>
+                        <input id="nomeTrabalho_{{$trabalho->id}}" type="text" class="form-control @error('nomeTrabalho'.$trabalho->id) is-invalid @enderror" name="nomeTrabalho{{$trabalho->id}}" value="@if(old('nomeTrabalho'.$trabalho->id)!=null){{old('nomeTrabalho'.$trabalho->id)}}@else{{$trabalho->titulo}}@endif"  autocomplete="nomeTrabalho" autofocus disabled>
+
+                        @error('nomeTrabalho'.$trabalho->id)
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                  </div>
+                  <div class="row justify-content-center">
+                    {{-- Autor Trabalho  --}}
+                    <div class="col-sm-12">
+                        <label for="autorTrabalho_{{$trabalho->autor->id}}" class="col-form-label">Autor</label>
+                        <input id="autorTrabalho_{{$trabalho->autor->id}}" type="text" class="form-control @error('autorTrabalho'.$trabalho->autor->id) is-invalid @enderror" name="autorTrabalho{{$trabalho->autor->id}}" value="@if(old('autorTrabalho'.$trabalho->autor->id)!=null){{old('autorTrabalho'.$trabalho->autor->id)}}@else{{$trabalho->autor->name}}@endif"  autocomplete="autorTrabalho" autofocus disabled>
+                    </div>
+                  </div>
+                @endif
+                @if ($indice == "etiquetacoautortrabalho")
+                  <div class="flexContainer" style="margin-top:20px">
+
+                        <div id="coautores_{{$trabalho->id}}" class="flexContainer " >
+                            @if($trabalho->coautors->first() != null)
+                                <h4>Co-autores</h4>
+                                @foreach ($trabalho->coautors as $i => $coautor)
+                                <div class="item card">
+                                    <div class="row card-body">
+                                        <div class="col-sm-4">
+                                            <label>E-mail</label>
+                                            <input type="email" style="margin-bottom:10px" value="{{$coautor->user->email}}" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" disabled>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Nome Completo</label>
+                                            <input type="text" style="margin-bottom:10px" value="{{$coautor->user->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            @endif
+                        </div>
+
+                    </div>
+                @endif
+                @if ($indice == "etiquetaareatrabalho")
+                  <!-- Areas -->
+                  <div class="row justify-content-center">
+                      <div class="col-sm-12">
+                          <label for="area_{{$trabalho->id}}" class="col-form-label">{{$formSubTraba->etiquetaareatrabalho}}</label>
+                          <select id="area_{{$trabalho->id}}" class="form-control @error('area'.$trabalho->id) is-invalid @enderror" name="area{{$trabalho->id}}" required>
+                              <option value="{{$trabalho->area->nome}}" selected disabled>{{$trabalho->area->nome}}</option>
+                          </select>
+                          @error('area'.$trabalho->id)
+                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                          @enderror
+                      </div>
+                  </div>
+                @endif
+                @if ($indice == "etiquetauploadtrabalho")
+                  <div class="row justify-content-center">
+                    {{-- Submeter trabalho corrigido --}}
+
+                    @if ($modalidade->arquivo == true)
+                      <div class="col-sm-12" style="margin-top: 20px;">
+                        @if($trabalho->arquivoCorrecao()->first() != null)
+                            <label for="nomeTrabalho" class="col-form-label">Upload de Correção do Trabalho:</label>
+                                <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}">Arquivo atual</a>
+                            <br>
+                            <small>Para trocar o arquivo envie um novo.</small>
+                        @endif
+                        <div class="custom-file">
+                          <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoCorrecao" required>
+                        </div>
+                        <small>Arquivos aceitos nos formatos
+                          @if($modalidade->pdf == true)<span> - pdf</span>@endif
+                          @if($modalidade->jpg == true)<span> - jpg</span>@endif
+                          @if($modalidade->jpeg == true)<span> - jpeg</span>@endif
+                          @if($modalidade->png == true)<span> - png</span>@endif
+                          @if($modalidade->docx == true)<span> - docx</span>@endif
+                          @if($modalidade->odt == true)<span> - odt</span>@endif
+                          @if($modalidade->zip == true)<span> - zip</span>@endif
+                          @if($modalidade->svg == true)<span> - svg</span>@endif.
+                        </small>
+                        @error('arquivo'.$trabalho->id)
+                          <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror
+                      </div>
+                    @endif
+                  </div>
+                @endif
+              @endforeach
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" form="formCorrecaoTrabalho{{$trabalho->id}}">Enviar correção</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Fim Modal correcao trabalho -->
+  @endif
+@endforeach
 
 @endsection
 

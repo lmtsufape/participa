@@ -29,4 +29,17 @@ class TrabalhoPolicy
     {
         return $this->isAutorTrabalho($user, $trabalho) && $trabalho->status == 'avaliado';
     }
+
+    public function permissaoCorrecao(User $user, Trabalho $trabalho)
+    {
+        $membro = $trabalho->evento->usuariosDaComissao()->where([['user_id', $user->id], ['evento_id', $trabalho->evento->id]])->first();
+        $resultado = false;
+        if($user->id == $trabalho->evento->coordenadorId || !(is_null($membro)))
+        {
+            $resultado = true;
+        }else if($trabalho->autorId == $user->id && $trabalho->aprovado == true && ($trabalho->modalidade->inicioCorrecao <= now() && now() <= $trabalho->modalidade->fimCorrecao)){
+            $resultado = true;
+        }
+        return $resultado;
+    }
 }
