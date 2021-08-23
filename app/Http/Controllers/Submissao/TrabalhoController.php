@@ -32,7 +32,6 @@ use App\Models\Submissao\ComissaoEvento;
 use App\Models\Submissao\TemplateSubmis;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailParecerDisponivel;
-use App\Models\Submissao\TrabalhoAprovado;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\SubmissaoTrabalhoNotification;
 
