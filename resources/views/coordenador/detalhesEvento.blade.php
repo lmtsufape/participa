@@ -48,24 +48,41 @@
                                 @endforeach
                             </div>
                         </a>
-                        <a id="trabalhosModalidades">
-                            <li>
-                                <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
-                            </li>
-                            <div  class="dropdown" id="dropdownTrabalhosModalidades"  @if(request()->is('coord/evento/trabalhosModalidades*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                                <a id="listarTrabalhos" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}">
-                                    <li>
-                                        <h5>Todos os Trabalhos</h5>
-                                    </li>
+                        <div class="dropdown show">
+                            <a class="btn btn-secondary dropdown-toggle" style="width: 100%" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <li>
+                                    <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Trabalhos</h5>
+                                </li>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="width: 100%">
+                                <a class="dropdown-item" id="listarAvaliacoesModalidade{{$modalidade->id}}" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}">
+                                    <h5>Todos os Trabalhos</h5>
                                 </a>
                                 @foreach ($evento->modalidades()->get() as $modalidade)
-                                    <a id="listarTrabalhosModalidade{{$modalidade->id}}" href="{{ route('coord.listarTrabalhosModalidades',  ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho']) }}">
-                                        <li>
+                                    <a class="dropdown-item" id="listarAvaliacoesModalidade{{$modalidade->id}}" href="{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
                                             <h5>{{$modalidade->nome}}</h5>
-                                        </li>
                                     </a>
                                 @endforeach
                             </div>
+                        </div>
+                        <div class="dropdown show">
+                            <a class="btn btn-secondary dropdown-toggle" style="width: 100%" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <li>
+                                    <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Avaliações</h5>
+                                </li>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="width: 100%">
+                                @foreach ($evento->modalidades()->get() as $modalidade)
+                                    <a class="dropdown-item" id="listarAvaliacoesModalidade{{$modalidade->id}}" href="{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
+                                            <h5>{{$modalidade->nome}}</h5>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                        <a id="correcoesTrabalhos" href="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id])}}" class="row justify-content-center">
+                            <li>
+                                <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Correções</h5>
+                            </li>
                         </a>
                     @endcan
                     @can('isRevisorComAtribuicao')
@@ -202,25 +219,6 @@
                         <li>
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Formulário</h5>
                         </li>
-                    </a>
-                    <a id="correcoesTrabalhos" href="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id])}}">
-                        <li>
-                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Correções</h5>
-                        </li>
-                    </a>
-                    <a id="avaliacoesModalidades">
-                        <li>
-                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Avaliações</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
-                        </li>
-                        <div  id="dropdownAvaliacoesModalidades"  @if(request()->is('coord/evento/avaliacoesModalidades*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                            @foreach ($evento->modalidades()->get() as $modalidade)
-                                <a id="listarAvaliacoesModalidade{{$modalidade->id}}" href="{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
-                                    <li>
-                                        <h5>{{$modalidade->nome}}</h5>
-                                    </li>
-                                </a>
-                            @endforeach
-                        </div>
                     </a>
                 </div>
             </a>
