@@ -640,7 +640,7 @@ class EventoController extends Controller
             ->orWhere([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->orderBy($column, $direction)->get();
         }
 
-        return view('coordenador.modalidade.listarRespostasTrabalhos', [
+        return view('coordenador.trabalhos.listarRespostasTrabalhos', [
                                                     'evento'            => $evento,
                                                     'areas'             => $areas,
                                                     'trabalhos'         => $trabalhos,
@@ -657,7 +657,7 @@ class EventoController extends Controller
       $revisor = Revisor::find($request->revisorId);
       $revisorUser = User::find($revisor->user_id);
 
-      return view('coordenador.modalidade.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor'));
+      return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor'));
 
     }
 

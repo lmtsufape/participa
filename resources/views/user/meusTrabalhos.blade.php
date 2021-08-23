@@ -140,7 +140,7 @@
                   </td>
                   <td style="text-align:center">
                       <a href="#" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A edição do trabalho só é permitida durante o periodo de submissão." @endif>
-                        <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
+                        <img class="" src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px">
                       </a>
                   </td>
                   <td style="text-align:center">

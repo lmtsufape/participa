@@ -93,6 +93,10 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('trabalhos/{id}/resultados', 'TrabalhoController@resultados')->name('resultados');
       Route::get('trabalhos/edit/{id}', 'TrabalhoController@edit')->name('trabalho.edit');
 
+      Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', 'EventoController@listarRespostasTrabalhos')->name('respostasTrabalhos');
+      Route::get('trabalhos/form/visualizarRespostaFormulario', 'EventoController@visualizarRespostaFormulario')->name('visualizarRespostaFormulario');
+      Route::get('trabalhos/listarCorrecoes', 'EventoController@listarCorrecoes')->name('listarCorrecoes');
+
       Route::get('areas/cadastrarAreas', 'EventoController@cadastrarAreas')->name('cadastrarAreas');
       Route::get('areas/listarAreas', 'EventoController@listarAreas')->name('listarAreas');
 
@@ -112,15 +116,12 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');
       Route::get('modalidade/cadastrarCriterio', 'EventoController@cadastrarCriterio')->name('cadastrarCriterio');
       Route::get('modalidade/listarCriterios', 'EventoController@listarCriterios')->name('listarCriterios');
-      Route::get('modalidade/listarCorrecoes', 'EventoController@listarCorrecoes')->name('listarCorrecoes');
       Route::get('modalidade/forms', 'EventoController@forms')->name('forms');
       Route::get('modalidade/atribuir/form', 'EventoController@atribuirForm')->name('atribuir.form');
       Route::get('modalidade/form/salvar', 'EventoController@salvarForm')->name('salvar.form');
       Route::get('modalidade/form/update', 'EventoController@updateForm')->name('update.form');
       Route::get('modalidade/form/visualizar', 'EventoController@visualizarForm')->name('visualizar.form');
-      Route::get('modalidade/form/visualizarRespostaFormulario', 'EventoController@visualizarRespostaFormulario')->name('visualizarRespostaFormulario');
       Route::get('modalidade/form/respostas', 'EventoController@respostas')->name('respostas');
-      Route::get('modalidade/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', 'EventoController@listarRespostasTrabalhos')->name('respostasTrabalhos');
       Route::get('modalidade/form/{id}/excluir', 'EventoController@destroyForm')->name('deletar.form');
 
       Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');
