@@ -163,15 +163,16 @@
                 </td>
 
                 <td style="text-align:center">
-                    @if($trabalho->aprovado !== false)
-                        <a href="#" @if($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao && $trabalho->aprovado == true) data-toggle="modal" data-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A correção do trabalho só é permitida durante o período de correção. {{date('d/m/Y H:i', strtotime($trabalho->modalidade->inicioCorrecao))}} a {{date('d/m/Y H:i', strtotime($trabalho->modalidade->fimCorrecao))}}" @endif>
+                    {{--Desabilitando temporariamente a restricao de aprovacao para correcao--}}
+                    {{--@if($trabalho->aprovado !== false)--}}
+                        <a href="#" @if($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao) data-toggle="modal" data-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A correção do trabalho só é permitida durante o período de correção. {{date('d/m/Y H:i', strtotime($trabalho->modalidade->inicioCorrecao))}} a {{date('d/m/Y H:i', strtotime($trabalho->modalidade->fimCorrecao))}}" @endif>
                             <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
                         </a>
-                    @else
+                    {{--@else
                         <a data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A correção não está disponível para o seu trabalho.">
                             <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
                         </a>
-                    @endif
+                    @endif--}}
                 </td>
 
                   {{-- <td style="text-align:center">
