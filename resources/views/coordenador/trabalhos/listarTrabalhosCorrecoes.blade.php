@@ -61,7 +61,7 @@
                                         @foreach($trabalhos as $trabalho)
                                             <tr>
                                                 <td>
-                                                    @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
+                                                    @if ($trabalho->arquivoCorrecao)
                                                         <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}">
                                                             <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                                                 {{$trabalho->titulo}}
@@ -102,7 +102,6 @@
 
 @foreach ($trabalhosPorModalidade as $trabalhos)
     @foreach ($trabalhos as $trabalho)
-        @if($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao)
             <!-- Modal  correcao trabalho -->
             <div class="modal fade" id="modalCorrecaoTrabalho_{{$trabalho->id}}" tabindex="-1" aria-labelledby="modalCorrecaoTrabalho_{{$trabalho->id}}Label" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -241,7 +240,6 @@
             </div>
             </div>
             <!-- Fim Modal correcao trabalho -->
-        @endif
     @endforeach
 @endforeach
 

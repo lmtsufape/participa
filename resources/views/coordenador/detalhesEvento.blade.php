@@ -59,7 +59,7 @@
                                     <h5>Todos os Trabalhos</h5>
                                 </a>
                                 @foreach ($evento->modalidades()->get() as $modalidade)
-                                    <a class="dropdown-item" id="listarAvaliacoesModalidade{{$modalidade->id}}" href="{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
+                                    <a class="dropdown-item" id="listarAvaliacoesModalidade{{$modalidade->id}}" href="{{ route('coord.listarTrabalhosModalidades',  ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho']) }}">
                                             <h5>{{$modalidade->nome}}</h5>
                                     </a>
                                 @endforeach

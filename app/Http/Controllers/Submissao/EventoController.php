@@ -391,7 +391,7 @@ class EventoController extends Controller
 
         $trabalhos = collect();
         foreach($modalidades as $modalidade){
-            $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado'], ['aprovado', true]])->get()->sortBy(
+            $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
                 function($trabalho) {
                     return $trabalho->autor->name;
                 },
