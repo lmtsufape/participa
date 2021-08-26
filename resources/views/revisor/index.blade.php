@@ -115,7 +115,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-body">
-                        <h5 class="card-title">Área: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor[0]->area->nome}}</span></h5>
+                        <h5 class="card-title">{{$trabalhosDoRevisor[0]->evento->formSubTrab->etiquetaareatrabalho}}: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor[0]->area->nome}}</span></h5>
                         <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor[0]->modalidade->nome}}</span>
                             <a href="#" data-toggle="modal" data-target="#modalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Visualizar regras da modalidade" width="15px" title="Visualizar regras da modalidade"></a>
                         </h5>
