@@ -386,7 +386,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome', 'desc')->get();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
 
         $this->authorize('isCoordenadorOrComissao', $evento);
         $trabalhos = collect();
