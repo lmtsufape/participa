@@ -386,28 +386,39 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
 
         $this->authorize('isCoordenadorOrComissao', $evento);
         $trabalhos = collect();
         if($column == 'titulo'){
             foreach($modalidades as $modalidade){
-                $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
-                    function($trabalho) {
-                        return $trabalho->autor->name;
-                    },
-                    SORT_REGULAR));
+                $trabalhosArea = collect();
+                foreach($areas as $area){
+                    $trabalhosArea->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado'], ['areaId', $area->id]])->get()->sortBy(
+                        function($trabalho) {
+                            return $trabalho->autor->name;
+                        },
+                        SORT_REGULAR));
+                }
+                $trabalhos->push($trabalhosArea);
+                //dd($trabalhosArea);
             }
         }elseif($column == 'data'){
             foreach($modalidades as $modalidade){
-                $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
-                    function($trabalho) {
-                        return $trabalho->created_at;
-                    },
-                    SORT_REGULAR,
-                    $direction == "asc"));
+                $trabalhosArea = collect();
+                foreach($areas as $area){
+                    $trabalhosArea->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado'], ['areaId', $area->id]])->get()->sortBy(
+                        function($trabalho) {
+                            return $trabalho->created_at;
+                        },
+                        SORT_REGULAR,
+                        $direction == "asc"));
+                }
+                $trabalhos->push($trabalhosArea);
             }
         }
 
+        //dd($trabalhos);
 
 
 
