@@ -382,21 +382,33 @@ class EventoController extends Controller
 
     }
 
-    public function listarCorrecoes(Request $request)
+    public function listarCorrecoes(Request $request, $column = 'titulo', $direction = 'asc')
     {
         $evento = Evento::find($request->eventoId);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
 
         $this->authorize('isCoordenadorOrComissao', $evento);
-
         $trabalhos = collect();
-        foreach($modalidades as $modalidade){
-            $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
-                function($trabalho) {
-                    return $trabalho->autor->name;
-                },
-                SORT_REGULAR));
+        if($column == 'titulo'){
+            foreach($modalidades as $modalidade){
+                $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
+                    function($trabalho) {
+                        return $trabalho->autor->name;
+                    },
+                    SORT_REGULAR));
+            }
+        }elseif($column == 'data'){
+            foreach($modalidades as $modalidade){
+                $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
+                    function($trabalho) {
+                        return $trabalho->created_at;
+                    },
+                    SORT_REGULAR,
+                    $direction == "asc"));
+            }
         }
+
+
 
 
         return view('coordenador.trabalhos.listarTrabalhosCorrecoes', [

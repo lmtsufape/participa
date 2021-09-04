@@ -53,6 +53,15 @@
                                             <th scope="col" >Título</th>
                                             <th scope="col" >Área</th>
                                             <th scope="col" >Autor</th>
+                                            <th scope="col">
+                                                Data
+                                                <a href="{{route('coord.listarCorrecoes', ['eventoId' => $evento->id, 'data', 'asc'])}}">
+                                                    <i class="fas fa-arrow-alt-circle-up"></i>
+                                                </a>
+                                                <a href="{{route('coord.listarCorrecoes',[ 'eventoId' => $evento->id, 'data', 'desc'])}}">
+                                                    <i class="fas fa-arrow-alt-circle-down"></i>
+                                                </a>
+                                            </th>
                                             <th scope="col" style="text-align:center;">Editar</th>
                                         </tr>
                                     </thead>
@@ -79,6 +88,9 @@
                                                     </span>
                                                 </td>
                                                 <td>{{$trabalho->autor->name}}</td>
+
+                                                <td>{{ date("d/m/Y H:i", strtotime($trabalho->created_at) ) }}</td>
+
                                                 <td style="text-align:center">
                                                     <a href="#" data-toggle="modal" data-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                                                         <i class="fas fa-edit"></i>
