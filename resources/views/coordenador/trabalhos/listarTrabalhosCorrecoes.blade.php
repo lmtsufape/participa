@@ -41,6 +41,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos[0]->modalidade->nome}}</span>
+                            <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >{{date("d/m/Y H:i", strtotime($trabalhos[0]->modalidade->inicioCorrecao))}} - {{date("d/m/Y H:i",strtotime($trabalhos[0]->modalidade->fimCorrecao))}}</span></h5>
                             <div class="row table-trabalhos">
                             <div class="col-sm-12">
                                 @csrf
@@ -89,7 +90,11 @@
                                                 </td>
                                                 <td>{{$trabalho->autor->name}}</td>
 
-                                                <td>{{ date("d/m/Y H:i", strtotime($trabalho->created_at) ) }}</td>
+                                                <td>
+                                                    @if ($trabalho->arquivoCorrecao)
+                                                        {{ date("d/m/Y H:i", strtotime($trabalho->arquivoCorrecao->created_at) ) }}
+                                                    @endif
+                                                </td>
 
                                                 <td style="text-align:center">
                                                     <a href="#" data-toggle="modal" data-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
