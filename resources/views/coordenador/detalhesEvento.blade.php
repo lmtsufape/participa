@@ -79,7 +79,7 @@
                                 @endforeach
                             </div>
                         </div>
-                        <a id="correcoesTrabalhos" href="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id])}}" class="row justify-content-center">
+                        <a id="correcoesTrabalhos" href="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id, 'titulo', 'asc'])}}" class="row justify-content-center">
                             <li>
                                 <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Correções</h5>
                             </li>

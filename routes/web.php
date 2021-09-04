@@ -95,7 +95,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
 
       Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', 'EventoController@listarRespostasTrabalhos')->name('respostasTrabalhos');
       Route::get('trabalhos/form/visualizarRespostaFormulario', 'EventoController@visualizarRespostaFormulario')->name('visualizarRespostaFormulario');
-      Route::get('trabalhos/listarCorrecoes', 'EventoController@listarCorrecoes')->name('listarCorrecoes');
+      Route::get('trabalhos/listarCorrecoes/{column?}/{direction?}', 'EventoController@listarCorrecoes')->name('listarCorrecoes');
 
       Route::get('areas/cadastrarAreas', 'EventoController@cadastrarAreas')->name('cadastrarAreas');
       Route::get('areas/listarAreas', 'EventoController@listarAreas')->name('listarAreas');
