@@ -34,14 +34,17 @@
         </div>
 
     {{-- Tabela Trabalhos --}}
-    @foreach ($trabalhosPorModalidade as $trabalhos)
+    @foreach ($trabalhosPorModalidade as $trabalhosPorArea)
+        @foreach ($trabalhosPorArea as $trabalhos)
+
         @if(!is_null($trabalhos->first()))
             <div class="row justify-content-center" style="width: 100%;">
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos[0]->modalidade->nome}}</span>
-                            <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >{{date("d/m/Y H:i", strtotime($trabalhos[0]->modalidade->inicioCorrecao))}} - {{date("d/m/Y H:i",strtotime($trabalhos[0]->modalidade->fimCorrecao))}}</span></h5>
+                            <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos->first()->modalidade->nome}}</span>
+                            <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >{{date("d/m/Y H:i", strtotime($trabalhos->first()->modalidade->inicioCorrecao))}} - {{date("d/m/Y H:i",strtotime($trabalhos->first()->modalidade->fimCorrecao))}}</span></h5>
+                            <h5 class="card-title">{{$trabalhos->first()->evento->formSubTrab->etiquetaareatrabalho}}: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos->first()->area->nome}}</span></h5>
                             <div class="row table-trabalhos">
                             <div class="col-sm-12">
                                 @csrf
@@ -51,8 +54,8 @@
                                 <table class="table table-hover table-responsive-lg table-sm table-striped">
                                     <thead>
                                         <tr>
-                                            <th scope="col" >Título</th>
-                                            <th scope="col" >Área</th>
+                                            <th scope="col" >Trabalhos inicial</th>
+                                            <th scope="col" >Trabalhos revisado</th>
                                             <th scope="col" >Autor</th>
                                             <th scope="col">
                                                 Data
@@ -63,6 +66,7 @@
                                                     <i class="fas fa-arrow-alt-circle-down"></i>
                                                 </a>
                                             </th>
+                                            <th scope="col" >Parecer</th>
                                             <th scope="col" style="text-align:center;">Editar</th>
                                         </tr>
                                     </thead>
@@ -70,6 +74,19 @@
                                         @php $i = 0; @endphp
                                         @foreach($trabalhos as $trabalho)
                                             <tr>
+                                                <td>
+                                                    @if ($trabalho->arquivo)
+                                                        <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
+                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                                {{$trabalho->titulo}}
+                                                            </span>
+                                                        </a>
+                                                    @else
+                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                            {{$trabalho->titulo}}
+                                                        </span>
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     @if ($trabalho->arquivoCorrecao)
                                                         <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}">
@@ -83,17 +100,21 @@
                                                         </span>
                                                     @endif
                                                 </td>
-                                                <td>
-                                                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
-                                                        {{$trabalho->area->nome}}
-                                                    </span>
-                                                </td>
                                                 <td>{{$trabalho->autor->name}}</td>
 
                                                 <td>
                                                     @if ($trabalho->arquivoCorrecao)
                                                         {{ date("d/m/Y H:i", strtotime($trabalho->arquivoCorrecao->created_at) ) }}
                                                     @endif
+                                                </td>
+
+                                                <td style="text-align:center">
+                                                    @foreach ($trabalho->atribuicoes as $revisor)
+                                                        <a href="{{route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id])}}">
+                                                            <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
+                                                        </a>
+                                                        <br>
+                                                    @endforeach
                                                 </td>
 
                                                 <td style="text-align:center">
@@ -112,13 +133,15 @@
                 </div>
             </div>
         @endif
+        @endforeach
     @endforeach
 
 </div>
 <!-- End Trabalhos -->
 
-@foreach ($trabalhosPorModalidade as $trabalhos)
-    @foreach ($trabalhos as $trabalho)
+@foreach ($trabalhosPorModalidade as $trabalhosPorArea)
+        @foreach ($trabalhosPorArea as $trabalhos)
+        @foreach ($trabalhos as $trabalho)
             <!-- Modal  correcao trabalho -->
             <div class="modal fade" id="modalCorrecaoTrabalho_{{$trabalho->id}}" tabindex="-1" aria-labelledby="modalCorrecaoTrabalho_{{$trabalho->id}}Label" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -257,6 +280,7 @@
             </div>
             </div>
             <!-- Fim Modal correcao trabalho -->
+    @endforeach
     @endforeach
 @endforeach
 
