@@ -409,7 +409,11 @@ class EventoController extends Controller
                 foreach($areas as $area){
                     $trabalhosArea->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado'], ['areaId', $area->id]])->get()->sortBy(
                         function($trabalho) {
-                            return $trabalho->created_at;
+                            if($trabalho->arquivoCorrecao){
+                                return $trabalho->arquivoCorrecao->created_at;
+                            }else{
+                                return date('1900-01-30');
+                            }
                         },
                         SORT_REGULAR,
                         $direction == "asc"));
