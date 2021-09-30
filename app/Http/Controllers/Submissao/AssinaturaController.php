@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Submissao;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AssinaturaRequest;
 use App\Models\Submissao\Assinatura;
+use App\Models\Submissao\Evento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AssinaturaController extends Controller
 {
@@ -13,9 +16,17 @@ class AssinaturaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+        $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
+        //dd(Storage::get('public/'.$assinaturas->first()->caminho));
+
+        return view('coordenador.certificado.indexAssinatura', [
+            'evento'=> $evento,
+            'assinaturas' => $assinaturas,
+        ]);
     }
 
     /**
@@ -23,9 +34,14 @@ class AssinaturaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
+        return view('coordenador.certificado.createAssinatura', [
+            'evento'=> $evento,
+        ]);
     }
 
     /**
@@ -34,9 +50,22 @@ class AssinaturaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AssinaturaRequest $request)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $request->validated();
+        $assinatura = new Assinatura();
+        $assinatura->setAtributes($request);
+        $assinatura->evento_id = $evento->id;
+
+        $imagem = $request->fotoAssinatura;
+        $path = 'assinaturas/'.$evento->id.'/';
+        $nome = $imagem->getClientOriginalName();
+        $nomeSemEspaco = str_replace(' ', '', $nome);
+        Storage::putFileAs($path, $imagem, $nomeSemEspaco);
+        $assinatura->caminho = $path . $nomeSemEspaco;
+        $assinatura->save();
+        return redirect(route('coord.listarAssinaturas', ['eventoId' => $evento->id]))->with(['success' => 'Assinatura cadastrada com sucesso.']);
     }
 
     /**

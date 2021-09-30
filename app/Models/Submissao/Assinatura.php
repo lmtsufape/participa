@@ -3,6 +3,7 @@
 namespace App\Models\Submissao;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Assinatura extends Model
 {
@@ -11,5 +12,11 @@ class Assinatura extends Model
     public function certificados()
     {
         return $this->belongsToMany(Certificado::class, 'assinatura_certificado', 'assinatura_id', 'certificado_id');
+    }
+
+    public function setAtributes(Request $request)
+    {
+        $this->nome = $request->nome;
+        $this->cargo = $request->cargo;
     }
 }

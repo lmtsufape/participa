@@ -18,6 +18,8 @@ class CreateAssinaturasTable extends Migration
             $table->string('caminho');
             $table->string('cargo');
             $table->string('nome');
+            $table->unsignedBigInteger('evento_id');
+            $table->foreign('evento_id')->references('id')->on('eventos');
             $table->timestamps();
         });
     }

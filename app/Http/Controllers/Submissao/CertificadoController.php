@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Submissao;
 
 use App\Http\Controllers\Controller;
 use App\Models\Submissao\Certificado;
+use App\Models\Submissao\Evento;
 use Illuminate\Http\Request;
 
 class CertificadoController extends Controller
@@ -23,9 +24,14 @@ class CertificadoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
+        return view('coordenador.certificado.create', [
+            'evento'=> $evento,
+        ]);
     }
 
     /**
