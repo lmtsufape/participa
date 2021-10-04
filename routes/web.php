@@ -124,6 +124,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::post('certificados/{id}/deleteAssinatura',  'AssinaturaController@destroy')->name('assinatura.destroy');
       //Certificados
       Route::get('certificados/cadastrarCertificado', 'CertificadoController@create')->name('cadastrarCertificado');
+      Route::get('certificados/{id}/modelo', 'CertificadoController@modelo')->name('modeloCertificado');
       Route::get('certificados/listarCertificado', 'CertificadoController@index')->name('listarCertificados');
       Route::post('certificados/cadastrarCertificado',      'CertificadoController@store')->name('certificado.store');
       Route::post('certificados/{id}/deleteCertificado',  'CertificadoController@destroy')->name('certificado.destroy');

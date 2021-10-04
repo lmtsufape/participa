@@ -7,6 +7,7 @@ use App\Http\Requests\CertificadoRequest;
 use App\Models\Submissao\Assinatura;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Evento;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -53,6 +54,7 @@ class CertificadoController extends Controller
     public function store(CertificadoRequest $request)
     {
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
         $request->validated();
         $certificado = new Certificado();
         $certificado->setAtributes($request);
@@ -117,10 +119,22 @@ class CertificadoController extends Controller
     {
         $certificado = Certificado::find($id);
         $evento = $certificado->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento);
         foreach($certificado->assinaturas()->get() as $modelo){
             $modelo->pivot->delete();
         }
         $certificado->delete();
         return redirect(route('coord.listarCertificados', ['eventoId' => $evento->id]))->with(['success' => 'Certificado deletado com sucesso.']);
     }
+
+    public function modelo($id)
+    {
+        $certificado = Certificado::find($id);
+        $evento = $certificado->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento);
+        $pdf = PDF::loadView('coordenador.certificado.modelo', ['certificado' => $certificado])->setPaper('a4', 'landscape');
+
+        return $pdf->stream('modelo.pdf');
+    }
+
 }

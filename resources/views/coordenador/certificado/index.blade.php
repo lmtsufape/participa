@@ -56,6 +56,7 @@
                                                         <img src="{{asset('img/icons/eye-regular.svg')}}" class="icon-card" alt="">
                                                         Editar
                                                     </a>
+                                                    <a class="dropdown-item" href="{{route('coord.modeloCertificado', $certificado->id)}}">Visualizar modelo</a>
                                                     <a class="dropdown-item" data-toggle="modal" data-target="#modalStaticDeletarCertificado_{{$certificado->id}}" style="color: red; cursor: pointer;">Deletar certificado</a>
                                                 </div>
                                             </div>
