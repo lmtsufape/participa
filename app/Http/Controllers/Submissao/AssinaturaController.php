@@ -21,8 +21,6 @@ class AssinaturaController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrComissao', $evento);
         $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
-        //dd(Storage::get('public/'.$assinaturas->first()->caminho));
-
         return view('coordenador.certificado.indexAssinatura', [
             'evento'=> $evento,
             'assinaturas' => $assinaturas,
@@ -62,7 +60,7 @@ class AssinaturaController extends Controller
         $path = 'assinaturas/'.$evento->id.'/';
         $nome = $imagem->getClientOriginalName();
         $nomeSemEspaco = str_replace(' ', '', $nome);
-        Storage::putFileAs($path, $imagem, $nomeSemEspaco);
+        Storage::putFileAs('public/'.$path, $imagem, $nomeSemEspaco);
         $assinatura->caminho = $path . $nomeSemEspaco;
         $assinatura->save();
         return redirect(route('coord.listarAssinaturas', ['eventoId' => $evento->id]))->with(['success' => 'Assinatura cadastrada com sucesso.']);
@@ -108,8 +106,15 @@ class AssinaturaController extends Controller
      * @param  \App\Models\Submissao\Assinatura  $assinatura
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Assinatura $assinatura)
+    public function destroy($id)
     {
-        //
+        $assinatura = Assinatura::find($id);
+        $evento = $assinatura->evento;
+        if($assinatura->certificados()->first() != null){
+            return redirect(route('coord.listarAssinaturas', ['eventoId' => $evento->id]))->with(['error' => 'Esta assinatura está presente em um modelo de certificado, e ela não pode ser deletada.']);
+        }else{
+            $assinatura->delete();
+            return redirect(route('coord.listarAssinaturas', ['eventoId' => $evento->id]))->with(['success' => 'Assinatura deletada com sucesso.']);
+        }
     }
 }

@@ -14,6 +14,11 @@ class Assinatura extends Model
         return $this->belongsToMany(Certificado::class, 'assinatura_certificado', 'assinatura_id', 'certificado_id');
     }
 
+    public function evento()
+    {
+        return $this->belongsTo(Evento::class, 'evento_id');
+    }
+
     public function setAtributes(Request $request)
     {
         $this->nome = $request->nome;
