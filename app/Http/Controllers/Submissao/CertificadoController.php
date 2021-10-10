@@ -138,7 +138,9 @@ class CertificadoController extends Controller
         $certificado = Certificado::find($id);
         $evento = $certificado->evento;
         $this->authorize('isCoordenadorOrComissao', $evento);
-        $pdf = PDF::loadView('coordenador.certificado.modelo', ['certificado' => $certificado])->setPaper('a4', 'landscape');
+        setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+        date_default_timezone_set('America/Recife');
+        $pdf = PDF::loadView('coordenador.certificado.modelo', ['certificado' => $certificado, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
 
         return $pdf->stream('modelo.pdf');
     }
@@ -203,25 +205,36 @@ class CertificadoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrComissao', $evento);
         $certificado = Certificado::find($request->certificado);
+        setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+        date_default_timezone_set('America/Recife');
         switch($request->destinatario){
             case(1):
                 foreach($request->destinatarios as $destinarioId){
                     $user = User::find($destinarioId);
-                    dd($user);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Autor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    Mail::to($user->email)->send(new EmailCertificado($user, 'Comissão Científica', $evento->nome, $pdf));
                 }
                 break;
             case(2):
                 foreach($request->destinatarios as $destinarioId){
                     $user = User::find($destinarioId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Científica', 'evento' => $evento])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Científica', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, 'Comissão Científica', $evento->nome, $pdf));
                 }
                 break;
             case(3):
-                dd($request->destinatario);
+                foreach($request->destinatarios as $destinarioId){
+                    $user = User::find($destinarioId);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Organizadora', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    Mail::to($user->email)->send(new EmailCertificado($user, 'Comissão Científica', $evento->nome, $pdf));
+                }
                 break;
             case(4):
-                dd($request->destinatario);
+                foreach($request->destinatarios as $destinarioId){
+                    $user = User::find($destinarioId);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Revisor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    Mail::to($user->email)->send(new EmailCertificado($user, 'Comissão Científica', $evento->nome, $pdf));
+                }
                 break;
         }
         return redirect(route('coord.emitirCertificado', ['eventoId' => $evento->id]))->with(['success' => 'Certificados enviados com sucesso.']);

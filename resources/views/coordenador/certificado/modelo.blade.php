@@ -5,70 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <style type="text/css">
+        body{
+            background-image: url({{('storage/'.$certificado->caminho)}});
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
         @page {
-            margin: 30px 30px 30px 30px;
+            margin: 30px 30px 0px 30px;
         }
         .container {
-            position: relative;
             text-align: center;
             color: white;
         }
-        .certificado {
-            position: absolute;
-            width: 100%;
-            transform: translate(0%, 0%);
-        }
         .certificado-texto {
-            color: rgb(3, 85, 71);
-            position: absolute;
-            top: 25%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            color: rgb(15, 3, 85);
+            position: relative;
+            margin-top: 180px;
         }
         .texto {
             font-family: 'Times New Roman', Times, serif;
             color: rgb(12, 14, 13);
             position: relative;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            margin-top: 70px;
+            font-size: 20px;
         }
 
-        .assinatura-img {
-            position: absolute;
-            width: 30%;
-            bottom: 10%;
+        .linha {
+            text-align: center;
+            margin-left: 200px;
         }
 
-        .assinatura-nome {
-            color: rgb(1, 17, 14);
-            position: absolute;
-            bottom: 0%;
-        }
-
-        .frame {
-            height: 560px; /* Can be anything */
-            width: 560px; /* Can be anything */
+        .linha .assinatura-img {
             position: relative;
-            bottom: 20%;
+            display: inline-block;
+            width: 200px;
+        }
+
+        .linha #linha-meio {
+            width: 100%;
         }
     </style>
 
 </head>
     <body>
+
         <div class="container">
-            <img class="certificado" src="{{asset('storage/'.$certificado->caminho)}}">
-            <h1 style="font-size: 40px;" class="certificado-texto" >Certificado </h1><br><br><br>
+            <h1 style="font-size: 40px;" class="certificado-texto" >Certificado </h1>
             <p class="texto" >Certificamos que <strong> Nome da pessoa </strong>  participou do evento  <strong> Nome do evento </strong>,
-            como  <strong> Cargo da pessoa </strong> do dia  <strong> Datas do eventos </strong></p><br>
+            como  <strong> Cargo da pessoa </strong> do dia  <strong> Datas do eventos </strong></p>
+
+            <p class="texto" style="margin-top: 120px">Garanhuns, {{$dataHoje}}.</p>
 
         </div>
-        @foreach ($certificado->assinaturas as $assinatura)
-            <div class="frame">
-                <img class="assinatura-img" src="{{asset('storage/'.$assinatura->caminho)}}"><br>
-                <p class="assinatura-nome">{{$assinatura->nome}}</p>
-                <p class="assinatura-nome">{{$assinatura->cargo}}</p>
-            </div>
-        @endforeach
+        <div style="margin-top: 70px;">
+            <table>
+                <tbody>
+                    <tr>
+                        @foreach ($certificado->assinaturas as $assinatura)
+                            <td>
+                                <div class="linha">
+                                    <img class="assinatura-img" src="{{asset('./storage/'.$assinatura->caminho)}}" ><br>
+                                </div>
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        @foreach ($certificado->assinaturas as $i => $assinatura)
+                            <td>
+                                <div class="linha">
+                                    <hr id="linha-meio">
+                                    <p class="assinatura-nome" style="font-size: 20px;" >{{$assinatura->nome}}<br>{{$assinatura->cargo}}</p>
+                                </div>
+                            </td>
+                        @endforeach
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>
