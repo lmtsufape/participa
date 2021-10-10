@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Submissao;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CertificadoRequest;
+use App\Mail\EmailCertificado;
 use App\Models\Submissao\Assinatura;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Evento;
@@ -11,7 +12,9 @@ use App\Models\Submissao\Trabalho;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Barryvdh\DomPDF\Facade as PDF;
+use geekcom\ValidatorDocs\Rules\Certidao;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class CertificadoController extends Controller
@@ -199,7 +202,29 @@ class CertificadoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrComissao', $evento);
-        dd($request->destinatarios);
+        $certificado = Certificado::find($request->certificado);
+        switch($request->destinatario){
+            case(1):
+                foreach($request->destinatarios as $destinarioId){
+                    $user = User::find($destinarioId);
+                    dd($user);
+                }
+                break;
+            case(2):
+                foreach($request->destinatarios as $destinarioId){
+                    $user = User::find($destinarioId);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Científica', 'evento' => $evento])->setPaper('a4', 'landscape');
+                    Mail::to($user->email)->send(new EmailCertificado($user, 'Comissão Científica', $evento->nome, $pdf));
+                }
+                break;
+            case(3):
+                dd($request->destinatario);
+                break;
+            case(4):
+                dd($request->destinatario);
+                break;
+        }
+        return redirect(route('coord.emitirCertificado', ['eventoId' => $evento->id]))->with(['success' => 'Certificados enviados com sucesso.']);
     }
 
 }
