@@ -227,6 +227,11 @@
                     <img src="{{asset('img/icons/publish.svg')}}" alt=""><h5>Certificados</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownCertificados" @if(request()->is('coord/evento/certificado*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                    <a id="emitirCertificado" href="{{ route('coord.emitirCertificado', ['eventoId' => $evento->id]) }}">
+                        <li>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Emitir Certificado</h5>
+                        </li>
+                    </a>
                     <a id="cadastrarCertificado" href="{{ route('coord.cadastrarCertificado', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Cadastrar Certificado</h5>

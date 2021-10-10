@@ -19,4 +19,11 @@ class ComissaoEvento extends Pivot
         'user_id',
     ];
 
+    public function user(){
+        return $this->belongsTo('App\Models\Users\User', 'user_id');
+    }
+
+    public function evento(){
+        return $this->belongsTo('App\Models\Submissao\Evento', 'evento_id');
+    }
 }

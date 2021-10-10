@@ -125,9 +125,12 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       //Certificados
       Route::get('certificados/cadastrarCertificado', 'CertificadoController@create')->name('cadastrarCertificado');
       Route::get('certificados/{id}/modelo', 'CertificadoController@modelo')->name('modeloCertificado');
+      Route::get('certificados/emitir', 'CertificadoController@emitir')->name('emitirCertificado');
+      Route::post('certificados/enviar-certificado', 'CertificadoController@enviarCertificacao')->name('enviarCertificado');
       Route::get('certificados/listarCertificado', 'CertificadoController@index')->name('listarCertificados');
       Route::post('certificados/cadastrarCertificado',      'CertificadoController@store')->name('certificado.store');
       Route::post('certificados/{id}/deleteCertificado',  'CertificadoController@destroy')->name('certificado.destroy');
+      Route::get('certificados/ajax-listar-destinatarios', 'CertificadoController@ajaxDestinatarios')->name('ajax.listar.destinatarios');
 
       Route::get('modalidade/cadastrarModalidade', 'EventoController@cadastrarModalidade')->name('cadastrarModalidade');
       Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');
