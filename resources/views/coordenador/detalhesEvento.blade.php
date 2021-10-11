@@ -29,11 +29,6 @@
                                 <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Definir Submissões</h5>
                             </li>
                         </a>
-                        <a id="resultadosTrabalhos" href="{{ route('coord.resultados', ['id' => $evento->id]) }}">
-                            <li>
-                                <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Resultado</h5>
-                            </li>
-                        </a>
                         <a id="submeterTrabalho">
                             <li>
                                 <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Submeter Trabalho</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -47,6 +42,11 @@
                                     </a>
                                 @endforeach
                             </div>
+                        </a>
+                        <a id="resultadosTrabalhos" href="{{ route('coord.resultados', ['id' => $evento->id]) }}">
+                            <li>
+                                <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Resultado</h5>
+                            </li>
                         </a>
                         <a id="listarTrabalhos">
                             <li>
