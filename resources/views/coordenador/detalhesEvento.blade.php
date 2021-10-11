@@ -250,7 +250,7 @@
 
             <a id="eventos">
               <li>
-                  <img src="{{asset('img/icons/palestrante.svg')}}" alt=""><h5>Evento</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                  <img src="{{asset('img/icons/palestrante.svg')}}" alt=""><h5>Outras configurações</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
               </li>
               <div id="dropdownEvento" @if(request()->is('coord/evento/eventos*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                   <a id="editarEtiqueta" href="{{ route('coord.editarEtiqueta', ['eventoId' => $evento->id]) }}">
