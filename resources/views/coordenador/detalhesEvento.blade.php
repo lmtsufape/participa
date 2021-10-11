@@ -55,7 +55,7 @@
                                 </li>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="width: 100%">
-                                <a class="dropdown-item" id="listarAvaliacoesModalidade{{$modalidade->id}}" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}">
+                                <a class="dropdown-item" id="listarAvaliacoesModalidade{{$modalidade->id ?? ''}}" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}">
                                     <h5>Todos os Trabalhos</h5>
                                 </a>
                                 @foreach ($evento->modalidades()->get() as $modalidade)
