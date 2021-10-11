@@ -1,8 +1,8 @@
-<div class="footer">
+<div class="footer" style="padding-bottom: 0px;">
   <div class="row justify-content-center links-rodape">
-      <a href="{{ route('index') }}">Inicio</a>  |  
-      <a href="#">Eventos Acadêmicos</a>  |  
-      <a hfer="#" data-toggle="modal" data-target="#modalInfo" >Sobre</a> 
+      <a href="{{ route('index') }}">Inicio</a>  |
+      <a href="#">Eventos Acadêmicos</a>  |
+      <a hfer="#" data-toggle="modal" data-target="#modalInfo" >Sobre</a>
   </div>
   <div class="row" style="margin-bottom: -3.5rem;">
     <div class="col-sm-12 separador">
