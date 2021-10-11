@@ -80,8 +80,8 @@
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>--}}
-                <th scope="col" style="text-align:center">Avaliador(es)</th>
-                <th scope="col" style="text-align:center">Status</th>
+                <th scope="col">Avaliador(es)</th>
+                <th scope="col">Status</th>
                 <th scope="col" style="text-align:center">Parecer</th>
               </tr>
             </thead>
@@ -120,14 +120,14 @@
                   {{--<td>
                     {{count($trabalho->atribuicoes)}}
                   </td>--}}
-                  <td style="text-align:center">
+                  <td>
                     @foreach ($trabalho->atribuicoes as $revisor)
                         {{$revisor->user->name}}
                         <br>
                     @endforeach
                   </td>
 
-                  <td style="text-align:center">
+                  <td>
                     @if($trabalho->avaliado == 'processando')
                         Processando
                     @else
