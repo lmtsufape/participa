@@ -25,7 +25,7 @@
                                 Resposta com Multipla escolha:
                             @elseif($pergunta->respostas->first()->paragrafo->count() )
                                 {{-- {{dd($pergunta->respostas->first())}} --}}
-                                <p>Resposta com paragrafo: </p>
+                                <p>Resposta com parágrafo: </p>
                                 <table class="table table-striped table-dark">
                                     <thead>
                                     <tr>

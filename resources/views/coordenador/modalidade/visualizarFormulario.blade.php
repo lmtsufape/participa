@@ -49,7 +49,7 @@
                                 Resposta com Multipla escolha:
                             @elseif($pergunta->respostas->first()->paragrafo->count() )
 
-                                <p>Resposta com paragrafo: </p>
+                                <p>Resposta com parágrafo: </p>
 
                             @endif
                         </div>
