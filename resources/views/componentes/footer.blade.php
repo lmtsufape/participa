@@ -11,7 +11,7 @@
   </div>
 
     <!-- rodapé -->
-    <div style="display: flex; flex-wrap: wrap; justify-content: center;padding-bottom:1rem">
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;padding-bottom:1rem; ">
       <div class="row" style="margin-top:5rem;text-align:center">
           <div class="col-md-4">
               <div class="row justify-content-center" style="text-align:center; margin-bottom:1rem;">
