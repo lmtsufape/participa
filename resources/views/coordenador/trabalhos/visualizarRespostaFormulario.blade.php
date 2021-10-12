@@ -34,26 +34,12 @@
         @endif
         </div>
     </div>
-    <div class="form-row">
-        <div class="col-md-6 form-group" style="margin-bottom: 9px;">
-            <button class="btn btn-danger" style="width: 100%;"
-            data-toggle="modal" data-target="#reprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == true ? '' : 'disabled' }}>
-                Reprovar para correção
-            </button>
-        </div>
-        <div class="col-md-6 form-group" style="margin-bottom: 9px;">
-            <button class="btn btn-success" style="width: 100%;"
-            data-toggle="modal" data-target="#aprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == false ? '' : 'disabled' }}>
-                Aprovar para correção
-            </button>
-        </div>
-    </div>
     <form id="editarRespostas" action="{{route('revisor.editar.respostas')}}" method="post" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
         <input type="hidden" name="revisor_id" value="{{$revisor->id}}">
         @foreach ($modalidade->forms as $form)
-            <div class="card" style="width: 48rem;">
+            <div class="card">
                 <div class="card-body">
                 <h5 class="card-title">{{$form->titulo}}</h5>
 
@@ -180,6 +166,21 @@
         </div>
     @endif
 
+
+    <div class="form-row">
+        <div class="col-md-6 form-group" style="margin-bottom: 9px;">
+            <button class="btn {{$trabalho->aprovado == true ? 'btn-primary' : 'btn-secondary'}}" style="width: 100%;"
+            data-toggle="modal" data-target="#reprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == true ? '' : 'disabled' }}>
+                Reprovar para correção
+            </button>
+        </div>
+        <div class="col-md-6 form-group" style="margin-bottom: 9px;">
+            <button class="btn {{$trabalho->aprovado == false ? 'btn-primary' : 'btn-secondary'}}" style="width: 100%;"
+            data-toggle="modal" data-target="#aprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == false ? '' : 'disabled' }}>
+                Aprovar para correção
+            </button>
+        </div>
+    </div>
 
     <div class="modal fade" id="reprovar-trabalho-{{$trabalho->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
