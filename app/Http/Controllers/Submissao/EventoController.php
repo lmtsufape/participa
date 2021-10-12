@@ -179,6 +179,56 @@ class EventoController extends Controller
                                                   ]);
 
     }
+    public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
+    {
+        $evento = Evento::find($request->eventoId);
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
+        $trabalhos = NULL;
+        if($column == "autor") {
+            if($status == "rascunho"){
+                $trabalhos = collect();
+                foreach($modalidades as $modalidade){
+                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
+                        function($trabalho) {
+                            return $trabalho->autor->name;
+                        },
+                        SORT_REGULAR,
+                        $direction == "desc"));
+                }
+            }else{
+                $trabalhos = collect();
+                foreach($modalidades as $modalidade){
+                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
+                        function($trabalho) {
+                            return $trabalho->autor->name;
+                        },
+                        SORT_REGULAR,
+                        $direction == "desc"));
+                }
+            }
+        }else{
+            if($status == "rascunho"){
+                $trabalhos = collect();
+                foreach($modalidades as $modalidade){
+                    //dd($modalidadeId->id);
+                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get());
+                }
+
+            }else{
+                $trabalhos = collect();
+                foreach($modalidades as $modalidade){
+                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->orderBy($column, $direction)->get());
+                }
+            }
+        }
+        return view(
+            'coordenador.trabalhos.listarRespostas',
+            [
+                'evento'                 => $evento,
+                'trabalhosPorModalidade' => $trabalhos,
+            ]
+        );
+    }
     public function listarTrabalhosModalidades(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
     {
         $evento = Evento::find($request->eventoId);

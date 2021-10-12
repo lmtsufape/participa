@@ -72,6 +72,11 @@
                                 <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Avaliações</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                             </li>
                             <div id="dropdownListarAvaliacoes" style='background-color: #545b62'>
+                                <a href="{{route('coord.listarAvaliacoes',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}">
+                                    <li>
+                                        <h5>Todas as Avaliações</h5>
+                                    </li>
+                                </a>
                                 @foreach ($evento->modalidades()->get() as $modalidade)
                                     <a id="listarAvaliacoesModalidade{{$modalidade->id}}" href="{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
                                         <li>
@@ -739,7 +744,7 @@
         $('#dropdownSubmeterTrabalho').hide();
         if (!$(location).attr('pathname').includes('coord/evento/trabalhos/listarTrabalhos'))
             $('#dropdownListarTrabalhos').hide();
-        if (!$(location).attr('pathname').includes('coord/evento/trabalhos/form/listarRepostasTrabalhos'))
+        if (!$(location).attr('pathname').includes('coord/evento/trabalhos/form/listarRepostasTrabalhos') && !$(location).attr('pathname').includes('coord/evento/trabalhos/listarAvaliacoes'))
             $('#dropdownListarAvaliacoes').hide();
     });
     // Fim
