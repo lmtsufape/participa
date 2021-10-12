@@ -112,6 +112,7 @@
         @endif
     </div>
     <!-- TITULO: PROXIMOS EVENTOS -->
+    @if (count($proximosEventos) > 0)
     <div class="col-md-12" style="font-size: 20px; margin-top:5rem; margin-bottom:20px; text-align:center">Próximos eventos</div>
     <div class="col-md-11">
       <div class="row justify-content-center" style="padding-left:10px">
@@ -146,6 +147,7 @@
 
       </div>
     </div>
+    @endif
     <!-- MAIS EVENTOS-->
     @if(count($proximosEventos) > 0)
     <div id="btn-mais-eventos" class="row justify-content-center" style="padding-top:100px">
