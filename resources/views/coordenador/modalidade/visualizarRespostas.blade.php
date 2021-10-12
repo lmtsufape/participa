@@ -7,16 +7,16 @@
             <div class="col-sm-12">
                 <h3 class="titulo-detalhes">Formulário(s) da modalidade: <strong> {{$modalidade->nome}}</strong> </h3>
             </div>
-        </div> 
+        </div>
     </div>
     {{-- {{dd($modalidade->forms)}} --}}
     @foreach ($modalidade->forms as $form)
-        <div class="card" style="width: 48rem;">
+        <div class="card">
             <div class="card-body">
             <h5 class="card-title">{{$form->titulo}}</h5>
-            
+
             <p class="card-text">
-                
+
                 @foreach ($form->perguntas as $pergunta)
                     <div class="card">
                         <div class="card-body">
@@ -40,7 +40,7 @@
                                             <tr>
                                                 <td>{{$resposta->revisor->user->name}}</td>
                                                 <td>{{$resposta->trabalho->titulo}} </td>
-                                                <td>{{$resposta->paragrafo->resposta}}</td>                                                
+                                                <td>{{$resposta->paragrafo->resposta}}</td>
                                             </tr>
                                             @endif
                                         @empty
@@ -51,20 +51,20 @@
                             @endif
                         </div>
                     </div>
-                    
+
                 @endforeach
             </p>
-            
+
             </div>
         </div>
-        
+
     @endforeach
-   
+
 
 @endsection
 
 {{-- <div class="row">
-    <div class="col-md-12">                                
+    <div class="col-md-12">
         <div id="coautores" class="flexContainer " >
             <div class="item card" style="order:1">
                 <div class="row card-body">
@@ -77,7 +77,7 @@
                         <div class="row" id="row1">
                             <div class="col-md-12">
                                 <input type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]" required>
-                            </div>                                
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -86,7 +86,7 @@
                             <select onchange="escolha(this.value)" name="tipo[]" class="form-control" id="FormControlSelect">
                                 <option value="paragrafo">Parágrafo</option>
                                 <option value="checkbox">Multipla escolha</option>
-                                
+
                             </select>
                         </div>
                     </div>
@@ -101,7 +101,7 @@
                         <a href="#" onclick="myFunction(event)">
                         <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
                         </a>
-                        
+
                     </div>
                 </div>
             </div>

@@ -48,13 +48,16 @@
                                         <input type="hidden" name="evento_id" value="{{$evento->id}}">
                                         <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
                                         <button type="submit" class="btn btn-secondary">
-                                            Ver respostas
+                                            Ver respostas antigo
                                         </button>
-
                                     </form>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}'">Ver respostas por trabalho</button>
+                                    <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
+                                    <a class="btn btn-secondary" href=" {{route('coord.respostasToPdf', $modalidade)}} " >
+                                        Ver respostas
+                                    </a>
+
                                 </td>
                             @endif
                         </td>

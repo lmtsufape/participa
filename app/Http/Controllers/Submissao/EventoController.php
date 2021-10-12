@@ -35,6 +35,7 @@ use App\Models\Submissao\Opcao;
 use App\Models\Submissao\Pergunta;
 use App\Models\Submissao\Resposta;
 use App\Models\Submissao\Paragrafo;
+use PDF;
 use PhpParser\Node\Expr\AssignOp\Mod;
 
 // dd($request->all());
@@ -686,6 +687,12 @@ class EventoController extends Controller
 
       return view('coordenador.modalidade.visualizarRespostas', compact('evento', 'modalidade'));
 
+    }
+
+    public function respostasToPdf(Modalidade $modalidade)
+    {
+        $pdf = PDF::loadView('coordenador.modalidade.respostasPdf', ['modalidade' => $modalidade])->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->stream("respostas-{$modalidade->nome}.pdf");
     }
 
     public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')

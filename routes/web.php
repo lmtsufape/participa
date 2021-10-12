@@ -123,6 +123,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('modalidade/form/update', 'EventoController@updateForm')->name('update.form');
       Route::get('modalidade/form/visualizar', 'EventoController@visualizarForm')->name('visualizar.form');
       Route::get('modalidade/form/respostas', 'EventoController@respostas')->name('respostas');
+      Route::get('modalidade/form/respostasToPdf/{modalidade}', 'EventoController@respostasToPdf')->name('respostasToPdf');
       Route::get('modalidade/form/{id}/excluir', 'EventoController@destroyForm')->name('deletar.form');
 
       Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');
