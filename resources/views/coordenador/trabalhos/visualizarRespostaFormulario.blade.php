@@ -235,6 +235,7 @@
 @endsection
 
 @section('javascript')
+    @parent
     <script type="text/javascript">
         var respostas;
 
