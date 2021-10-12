@@ -439,7 +439,7 @@ class RevisorController extends Controller
 
       foreach ($data['pergunta_id'] as $key => $value) {
         $pergunta = Pergunta::find($value);
-        if($pergunta->respostas->first()->paragrafo->count()){
+        if($pergunta->respostas->first()->paragrafo != null){
           $resposta =  $pergunta->respostas()->create([
             'revisor_id' => $data['revisor_id'],
             'trabalho_id' => $data['trabalho_id']
