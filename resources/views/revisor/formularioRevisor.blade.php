@@ -6,7 +6,7 @@
     <div id="divListarCriterio" class="comissao">
         <div class="row">
             <div class="col-sm-12">
-                <h3 class="titulo-detalhes">Formulário(s) da molidade: <br> <strong> {{$data['modalidade']->nome}}</strong> </h3>
+                <h3 class="titulo-detalhes">Formulário(s) da modalidade: <strong> {{$data['modalidade']->nome}}</strong> </h3>
             </div>
         </div>
     </div>
