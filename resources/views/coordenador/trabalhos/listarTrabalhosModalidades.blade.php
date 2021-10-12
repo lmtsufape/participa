@@ -370,10 +370,13 @@
     </div>
   </div>
 @endforeach
-<script>
-    function marcarCheckboxes() {
-        $(".trabalhos").prop('checked', $('#selectAllCheckboxes').is(":checked"));
-    }
-</script>
 @endsection
 
+@section('javascript')
+  @parent
+  <script>
+      function marcarCheckboxes() {
+          $(".trabalhos").prop('checked', $('#selectAllCheckboxes').is(":checked"));
+      }
+  </script>
+@endsection

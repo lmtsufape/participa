@@ -404,10 +404,13 @@
     </div>
     @endforeach
 @endforeach
-<script>
-    function marcarCheckboxes(id) {
-        $(".modalidade" + id).prop('checked', $('#selectAllCheckboxes'+id).is(":checked"));
-    }
-</script>
 @endsection
 
+@section('javascript')
+    @parent
+    <script>
+        function marcarCheckboxes(id) {
+            $(".modalidade" + id).prop('checked', $('#selectAllCheckboxes'+id).is(":checked"));
+        }
+    </script>
+@endsection
