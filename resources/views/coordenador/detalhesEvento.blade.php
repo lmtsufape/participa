@@ -141,11 +141,11 @@
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Revisores</h5>
                         </li>
                     </a>
-                    <a id="listarUsuarios" href="{{ route('coord.listarUsuarios', ['evento_id' => $evento->id]) }}">
+                    {{-- <a id="listarUsuarios" href="{{ route('coord.listarUsuarios', ['evento_id' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Usuários</h5>
                         </li>
-                    </a>
+                    </a> --}}
                 </div>
             </a>
             {{-- @endcan --}}
