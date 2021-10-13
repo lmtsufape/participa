@@ -115,6 +115,8 @@
                   <td>
                     @if($trabalho->avaliado == 'processando')
                         Processando
+                    @elseif($trabalho->avaliado == 'nao')
+                        Sem avaliador
                     @else
                         {{$trabalho->avaliado}}
                     @endif

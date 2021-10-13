@@ -13,7 +13,7 @@ class UsersSeed extends Seeder
     {
         DB::table('users')->insert([  //
           'name' => 'Administrador',
-          'email' => 'admin@ufrpe.br',
+          'email' => 'admin@admin.com',
           'password' => bcrypt('12345678'),
           'cpf' => 123132131,
           'instituicao'     => 'd',
@@ -23,7 +23,7 @@ class UsersSeed extends Seeder
           'enderecoId' => 1,
         ]);
 
-         
+
 
         DB::table('users')->insert([  //
           'name' => 'Participante',
@@ -59,6 +59,6 @@ class UsersSeed extends Seeder
           'especProfissional' => 'e',
           'email_verified_at' => '2020-02-15',
           'enderecoId' => 1,
-        ]);   
+        ]);
     }
 }
