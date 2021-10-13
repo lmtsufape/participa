@@ -204,8 +204,8 @@
                           <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
                               <tr>
-                                <th scope="col">Título</th>
-                                <th scope="col">Status</th>
+                                <th scope="col" class="col-7">Título</th>
+                                <th scope="col" class="col-5">Status</th>
 
                               </tr>
                             </thead>

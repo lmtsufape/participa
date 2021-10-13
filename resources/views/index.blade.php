@@ -112,6 +112,7 @@
         @endif
     </div>
     <!-- TITULO: PROXIMOS EVENTOS -->
+    @if (count($proximosEventos) > 0)
     <div class="col-md-12" style="font-size: 20px; margin-top:5rem; margin-bottom:20px; text-align:center">Próximos eventos</div>
     <div class="col-md-11">
       <div class="row justify-content-center" style="padding-left:10px">
@@ -146,6 +147,43 @@
 
       </div>
     </div>
+    @endif
+    @if (count($eventosPassados) > 0)
+    <div class="col-md-12" style="font-size: 20px; margin-top:5rem; margin-bottom:20px; text-align:center">Eventos passados</div>
+    <div class="col-md-11">
+      <div class="row justify-content-center" style="padding-left:10px">
+
+        @foreach($eventosPassados as $evento)
+          <div class="card" style="width: 16rem; margin:8px; border: 0px solid #1492E6; border-radius: 12px;">
+            @if ($evento->fotoEvento != null)
+              <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
+            @else
+              <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
+            @endif
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12" style="height:80px">
+                  @auth
+                    <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
+                      <h5 class="card-title">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</h5>
+                    </a>
+                  @else
+                    <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="color: black;">
+                      <h5 class="card-title">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</h5>
+                    </a>
+                  @endauth
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        @endforeach
+
+
+      </div>
+    </div>
+    @endif
     <!-- MAIS EVENTOS-->
     @if(count($proximosEventos) > 0)
     <div id="btn-mais-eventos" class="row justify-content-center" style="padding-top:100px">

@@ -1,8 +1,8 @@
-<div class="footer">
+<div class="footer" style="padding-bottom: 0px;">
   <div class="row justify-content-center links-rodape">
-      <a href="{{ route('index') }}">Inicio</a>  |  
-      <a href="#">Eventos Acadêmicos</a>  |  
-      <a hfer="#" data-toggle="modal" data-target="#modalInfo" >Sobre</a> 
+      <a href="{{ route('index') }}">Inicio</a>  |
+      {{-- <a href="#">Eventos Acadêmicos</a>  | --}}
+      <a hfer="#" data-toggle="modal" data-target="#modalInfo" >Sobre</a>
   </div>
   <div class="row" style="margin-bottom: -3.5rem;">
     <div class="col-sm-12 separador">
@@ -11,7 +11,7 @@
   </div>
 
     <!-- rodapé -->
-    <div style="display: flex; flex-wrap: wrap; justify-content: center;padding-bottom:1rem">
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;padding-bottom:1rem; ">
       <div class="row" style="margin-top:5rem;text-align:center">
           <div class="col-md-4">
               <div class="row justify-content-center" style="text-align:center; margin-bottom:1rem;">

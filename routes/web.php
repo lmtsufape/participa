@@ -93,6 +93,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('trabalhos/{id}/resultados', 'TrabalhoController@resultados')->name('resultados');
       Route::get('trabalhos/edit/{id}', 'TrabalhoController@edit')->name('trabalho.edit');
 
+      Route::get('trabalhos/listarAvaliacoes/{column?}/{direction?}/{status?}', 'EventoController@listarAvaliacoes')->name('listarAvaliacoes');
       Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', 'EventoController@listarRespostasTrabalhos')->name('respostasTrabalhos');
       Route::get('trabalhos/form/visualizarRespostaFormulario', 'EventoController@visualizarRespostaFormulario')->name('visualizarRespostaFormulario');
       Route::get('trabalhos/listarCorrecoes/{column?}/{direction?}', 'EventoController@listarCorrecoes')->name('listarCorrecoes');
@@ -122,6 +123,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('modalidade/form/update', 'EventoController@updateForm')->name('update.form');
       Route::get('modalidade/form/visualizar', 'EventoController@visualizarForm')->name('visualizar.form');
       Route::get('modalidade/form/respostas', 'EventoController@respostas')->name('respostas');
+      Route::get('modalidade/form/respostasToPdf/{modalidade}', 'EventoController@respostasToPdf')->name('respostasToPdf');
       Route::get('modalidade/form/{id}/excluir', 'EventoController@destroyForm')->name('deletar.form');
 
       Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');

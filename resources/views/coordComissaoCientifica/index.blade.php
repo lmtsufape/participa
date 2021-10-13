@@ -35,26 +35,12 @@
                                 <h5 class="card-title">
                                     <div class="row">
                                         <div class="col-sm-10">
-                                            {{$evento->nome}}
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <div class="btn-group dropright dropdown-options">
-                                                    
-                                                <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
-                                                        <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
-                                                    </div>
-                                                </a>
-                                                <div class="dropdown-menu">
-                                                    <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}" class="dropdown-item">
-                                                        <img src="{{asset('img/icons/eye-regular.svg')}}" class="icon-card" alt="">
-                                                        Detalhes
-                                                    </a>
-                                                </div>
-                                            </div>
+                                            <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="text-decoration: inherit;">
+                                                {{$evento->nome}}
+                                            </a>
                                         </div>
                                     </div>
-                                    
+
                                 </h5>
                             </div>
                         </div>
@@ -72,9 +58,18 @@
                                     </div>
                                 </div>
                             </p>
-                            <p>
-                                <a href="{{  route('evento.visualizar',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
-                            </p>
+                            <div>
+                                <div>
+                                    <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
+                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
+                                        <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
