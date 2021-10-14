@@ -13,7 +13,8 @@ class Evento extends Model
    */
   protected $fillable = [
       'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim', 'fotoEvento',
-      'enderecoId', 'coordenadorId', 'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo', 'coord_comissao_organizadora_id'
+      'enderecoId', 'coordenadorId', 'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo', 'coord_comissao_organizadora_id',
+      'evento_pai_id',
   ];
 
   public function endereco(){
@@ -91,6 +92,14 @@ class Evento extends Model
 
   public function inscricaos() {
     return $this->hasMany('App\Models\Inscricao\Inscricao');
+  }
+
+  public function subeventos() {
+    return $this->hasMany('App\Models\Submissao\Evento', 'evento_pai_id');
+  }
+
+  public function eventoPai() {
+    return $this->belongsTo('App\Models\Submissao\Evento', 'evento_pai_id');
   }
 
 

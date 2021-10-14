@@ -806,8 +806,14 @@ class EventoController extends Controller
      */
     public function create()
     {
-        //
         return view('evento.criarEvento');
+    }
+
+    public function createSubEvento($id)
+    {
+        $eventoPai = Evento::find($id);
+        $this->authorize('isCoordenador', $eventoPai);
+        return view('evento.criarEvento', compact('eventoPai'));
     }
 
     /**
@@ -826,6 +832,9 @@ class EventoController extends Controller
 
       $evento->coordenadorId = auth()->user()->id;
       $evento->deletado = false;
+      if ($request->eventoPai != null) {
+        $evento->evento_pai_id = $request->eventoPai;
+      }
       $evento->save();
       // Se o evento tem foto
       if ($request->fotoEvento != null) {
