@@ -20,6 +20,7 @@ class ComissaoOrganizadoraController extends Controller
     public function index($id)
     {
         $evento = Evento::find($id);
+        $this->authorize('isCoordenadorOrComissao', $evento);
 
         $usuariosDaComissao = $evento->usuariosDaComissaoOrganizadora;
         return view('coordenador.comissaoOrganizadora.listarComissao', ['evento' => $evento,
@@ -34,6 +35,8 @@ class ComissaoOrganizadoraController extends Controller
     public function create($id)
     {
         $evento = Evento::find($id);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         return view('coordenador.comissaoOrganizadora.cadastrarComissao', ['evento' => $evento]);
     }
 
@@ -46,6 +49,8 @@ class ComissaoOrganizadoraController extends Controller
     public function store(Request $request)
     {
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         $validationData = $request->validate([
             'emailMembroComissao' => 'required|email',
         ]);
@@ -116,6 +121,7 @@ class ComissaoOrganizadoraController extends Controller
     public function destroy(Request $request, $id)
     {
         $evento = Evento::find($request->evento_id);
+        $this->authorize('isCoordenadorOrComissao', $evento);
 
         $evento->usuariosDaComissaoOrganizadora()->detach($id);
 
@@ -124,6 +130,8 @@ class ComissaoOrganizadoraController extends Controller
 
     public function definirCoordenador($id) {
         $evento = Evento::find($id);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         $usuariosDaComissao = $evento->usuariosDaComissaoOrganizadora;
         return view('coordenador.comissaoOrganizadora.definirCoordComissao', ['evento' => $evento,
                                                                               'users' => $usuariosDaComissao]);
@@ -131,6 +139,7 @@ class ComissaoOrganizadoraController extends Controller
 
     public function salvarCoordenador(Request $request) {
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
 
         $validationData = $request->validate([
             'coordComissaoId' => 'required',

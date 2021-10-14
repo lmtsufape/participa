@@ -96,6 +96,8 @@ class RevisorController extends Controller
 
         $usuario = User::where('email', $request->emailRevisor)->first();
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         // dd(count($usuario->revisor()->where('evento_id', $evento->id)->get()));
         if($usuario == null){
           $passwordTemporario = Str::random(8);
@@ -174,6 +176,9 @@ class RevisorController extends Controller
     {
       $user = User::find($request->editarRevisor);
       $evento = Evento::find($request->eventoId);
+      $this->authorize('isCoordenadorOrComissao', $evento);
+
+
       $validatedData = $request->validate([
         'editarRevisor'   => 'required',
         'areasEditadas_'.$user->id => 'required',
@@ -245,6 +250,7 @@ class RevisorController extends Controller
     {
       $user = User::find($id);
       $evento = Evento::find($evento_id);
+      $this->authorize('isCoordenadorOrComissao', $evento);
 
       foreach ($user->revisor()->where('evento_id', '=', $evento->id)->get() as $revisor) {
         if (count($revisor->trabalhosAtribuidos) > 0) {
@@ -266,6 +272,8 @@ class RevisorController extends Controller
     {
         $user = User::find($id);
         $evento = Evento::find($evento_id);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+        
         if($user->usuarioTemp){
             $passwordTemporario = Str::random(8);
             $coord = User::find($evento->coordenadorId);

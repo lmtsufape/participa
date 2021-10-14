@@ -34,4 +34,8 @@ class Modalidade extends Model
     return $this->hasMany('App\Models\Submissao\Form', 'modalidadeId');
   }
   
+  public function evento() 
+  {
+    return $this->belongsTo('App\Models\Submissao\Evento', 'evento_id');
+  }
 }

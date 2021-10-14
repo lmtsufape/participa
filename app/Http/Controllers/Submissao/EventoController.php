@@ -108,7 +108,7 @@ class EventoController extends Controller
     {
         //dd($status);
         $evento = Evento::find($request->eventoId);
-        // $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrComissaoOrRevisorComAtribuicao', $evento);
         // $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
@@ -183,6 +183,7 @@ class EventoController extends Controller
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $trabalhos = NULL;
         if($column == "autor") {
@@ -233,6 +234,7 @@ class EventoController extends Controller
     public function listarTrabalhosModalidades(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
     {
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
         $modalidade = Modalidade::find($request->modalidadeId);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
@@ -436,10 +438,10 @@ class EventoController extends Controller
     public function listarCorrecoes(Request $request, $column = 'titulo', $direction = 'asc')
     {
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-
-        $this->authorize('isCoordenadorOrComissao', $evento);
         $trabalhos = collect();
         if($column == 'titulo'){
             foreach($modalidades as $modalidade){
@@ -529,6 +531,8 @@ class EventoController extends Controller
     public function forms(Request $request)
     {
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
 
         return view('coordenador.modalidade.formulario', compact(
@@ -541,6 +545,8 @@ class EventoController extends Controller
     public function atribuirForm(Request $request)
     {
       $evento = Evento::find($request->evento_id);
+      $this->authorize('isCoordenadorOrComissao', $evento);
+
       $modalidade = Modalidade::find($request->modalidade_id);
 
       return view('coordenador.modalidade.atribuirFormulario', compact('evento', 'modalidade'));
@@ -550,6 +556,8 @@ class EventoController extends Controller
     public function salvarForm(Request $request)
     {
       $evento = Evento::find($request->evento_id);
+      $this->authorize('isCoordenadorOrComissao', $evento);
+
       $modalidade = Modalidade::find($request->modalidade_id);
       $data = $request->all();
       // dd($data);
@@ -586,6 +594,9 @@ class EventoController extends Controller
     public function updateForm(Request $request)
     {
         $form = Form::find($request->formEditId);
+        $evento = $form->modalidade->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         $data = $request->all();
         //dd($data);
         $pergunta_checkBox = $request->pergunta_checkBox;
@@ -640,6 +651,9 @@ class EventoController extends Controller
     public function destroyForm($id)
     {
         $form = Form::find($id);
+        $evento = $form->modalidade->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         $temRespostas = false;
         foreach($form->perguntas as $pergunta){
             if($pergunta->respostas->first()->opcoes->count()){
@@ -670,6 +684,8 @@ class EventoController extends Controller
     public function visualizarForm(Request $request)
     {
       $evento = Evento::find($request->evento_id);
+      $this->authorize('isCoordenadorOrComissao', $evento);
+
       $modalidade = Modalidade::find($request->modalidade_id);
       // $form = $modalidade->forms;
       $data = $request->all();
@@ -691,14 +707,16 @@ class EventoController extends Controller
 
     public function respostasToPdf(Modalidade $modalidade)
     {
-        $pdf = PDF::loadView('coordenador.modalidade.respostasPdf', ['modalidade' => $modalidade])->setOptions(['defaultFont' => 'sans-serif']);
-        return $pdf->stream("respostas-{$modalidade->nome}.pdf");
+      $evento = $modalidade->evento;
+      $this->authorize('isCoordenadorOrComissao', $evento);
+      $pdf = PDF::loadView('coordenador.modalidade.respostasPdf', ['modalidade' => $modalidade])->setOptions(['defaultFont' => 'sans-serif']);
+      return $pdf->stream("respostas-{$modalidade->nome}.pdf");
     }
 
     public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
     {
         $evento = Evento::find($request->eventoId);
-        // $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrComissao', $evento);
         // $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
@@ -1020,7 +1038,8 @@ class EventoController extends Controller
     public function destroy($id)
     {
         $evento = Evento::find($id);
-        // dd($evento);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         $evento->deletado = true;
         $evento->update();
 
@@ -1085,6 +1104,7 @@ class EventoController extends Controller
 
     public function numTrabalhos(Request $request){
       $evento = Evento::find($request->eventoId);
+      $this->authorize('isCoordenadorOrComissao', $evento);
 
       $validatedData = $request->validate([
         'eventoId'                => ['required', 'integer'],
@@ -1119,7 +1139,8 @@ class EventoController extends Controller
 
     public function setFotoEvento(Request $request){
       $evento = Evento::find($request->eventoId);
-
+      $this->authorize('isCoordenadorOrComissao', $evento);
+      
       // dd($request);
       $validatedData = $request->validate([
         'eventoId'                => ['required', 'integer'],
@@ -1137,6 +1158,7 @@ class EventoController extends Controller
 
     public function habilitar($id) {
       $evento = Evento::find($id);
+      $this->authorize('isCoordenadorOrComissao', $evento);
       $evento->publicado = true;
       $evento->update();
       return redirect()->back()->with('mensagem', 'O evento foi exposto ao público.');
@@ -1144,6 +1166,7 @@ class EventoController extends Controller
 
     public function desabilitar($id) {
       $evento = Evento::find($id);
+      $this->authorize('isCoordenadorOrComissao', $evento);
       $evento->publicado = false;
       $evento->update();
       return redirect()->back()->with('mensagem', 'O evento foi ocultado ao público.');
@@ -1159,6 +1182,7 @@ class EventoController extends Controller
 
     public function pdfProgramacao(Request $request, $id) {
       $evento = Evento::find($id);
+      $this->authorize('isCoordenador', $evento);
 
       $request->validate([
         'pdf_programacao' => ['file', 'mimetypes:application/pdf']

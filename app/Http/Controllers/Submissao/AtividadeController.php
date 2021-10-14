@@ -63,7 +63,9 @@ class AtividadeController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+
         $validated = $request->validate([
             'idNovaAtividade'       => ['required', 'integer'],
             'título'                => ['required', 'max:50'],
@@ -261,7 +263,9 @@ class AtividadeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenador', $evento);
+
         $validated = $request->validate([
             'idAtividade'           => ['required', 'integer'],
             'titulo'                => ['required', 'max:50'],
@@ -522,6 +526,7 @@ class AtividadeController extends Controller
     // Salva a visibilidade da atividade para participantes
     public function setVisibilidadeAjax($id) {
         $atividade = Atividade::find($id);
+        $this->authorize('isCoordenador', $atividade->evento);
 
         if ($atividade->visibilidade_participante) {
             $atividade->visibilidade_participante = false;
