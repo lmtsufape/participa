@@ -151,6 +151,9 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::post(  '/evento/numTrabalhos',   'EventoController@numTrabalhos'             )->name('trabalho.numTrabalhos');
     Route::get(  '/evento/habilitar/{id}',  'EventoController@habilitar'                )->name('evento.habilitar');
     Route::get(  '/evento/desabilitar/{id}', 'EventoController@desabilitar'             )->name('evento.desabilitar');
+
+    //Sub-Evento
+    Route::get('/subevento/criar/{id}',          'EventoController@createSubEvento'                    )->name('subevento.criar');
     //Modalidade
     Route::post(  '/modalidade/criar',      'ModalidadeController@store'                 )->name('modalidade.store');
     Route::post(  '/modalidade/{id}/delete',  'ModalidadeController@destroy'             )->name('modalidade.destroy');
