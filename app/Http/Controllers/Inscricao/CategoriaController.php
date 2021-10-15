@@ -46,7 +46,7 @@ class CategoriaController extends Controller
             'nome'                  => 'required',
             'valor_total'           => 'required',
             'tipo_valor.*'          => 'nullable',
-            'valorDesconto.*'       => 'required_with:tipo_valor.*',  
+            'valorDesconto.*'       => 'required_with:tipo_valor.*',
             'inícioDesconto.*'      => 'required_with:tipo_valor.*|date',
             'fimDesconto.*'         => 'required_with:tipo_valor.*|date|after:inícioDesconto.*',
         ]);
@@ -54,10 +54,12 @@ class CategoriaController extends Controller
         if ($request->valor_total < 0) {
             return redirect()->back()->withErrors(['valor_total' => 'Digite um valor positivo ou 0 para gratuito.'])->withInput($validateData);
         }
-        
-        foreach ($request->input('valorDesconto') as $i => $valor) {
-            if ($valor <= 0) {
-                return redirect()->back()->withErrors(['valorDesconto.'.$i => 'Digite um valor positivo.'])->withInput($validateData);
+
+        if ($request->tipo_valor != null) {
+            foreach ($request->input('valorDesconto') as $i => $valor) {
+                if ($valor <= 0) {
+                    return redirect()->back()->withErrors(['valorDesconto.'.$i => 'Digite um valor positivo.'])->withInput($validateData);
+                }
             }
         }
 
@@ -119,7 +121,7 @@ class CategoriaController extends Controller
     {
         // dd($request);
         $categoria = CategoriaParticipante::find($id);
-        
+
         $validateData = $request->validate([
             'editarCategoria'                       => 'required',
             'nome_'.$categoria->id                  => 'required',
@@ -147,7 +149,7 @@ class CategoriaController extends Controller
         $categoria->nome        = $request->input('nome_'.$categoria->id);
         $categoria->valor_total = $request->input('valor_total_'.$categoria->id);
         $categoria->update();
-        
+
         if ($request->input('tipo_valor_'.$categoria->id) != null) {
             foreach ($request->input('tipo_valor_'.$categoria->id) as $key => $tipo_valor) {
                 $valor = new ValorCategoria();
@@ -204,7 +206,7 @@ class CategoriaController extends Controller
                 }
             }
         }
-        
+
         return response()->json(collect(['valor' => $categoria->valor_total]));
     }
 }

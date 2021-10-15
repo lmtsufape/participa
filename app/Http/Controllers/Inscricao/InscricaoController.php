@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Submissao\EventoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Submissao\Evento;
@@ -25,7 +26,7 @@ class InscricaoController extends Controller
     {
         $evento = Evento::find($id);
         $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
-        
+
         $promocoes = Promocao::where('evento_id', $id)->get();
         $atividades = Atividade::where('eventoId', $id)->get();
         $cuponsDeDescontro = CupomDeDesconto::where('evento_id', $id)->get();
@@ -49,13 +50,13 @@ class InscricaoController extends Controller
     {
         $evento = Evento::find($id);
         $inscricoes = auth()->user()->inscricaos()->where([['evento_id', '=', $evento->id], ['finalizada', '=', false]])->get();
-        
+
         foreach ($inscricoes as $inscricao){
             if ($inscricao != null) {
                 $this->destroy($inscricao->id);
             }
         }
-        
+
         return view('evento.nova_inscricao', ['evento'              => $evento,
                                               'eventoVoltar'        => null,
                                               'valorTotalVoltar'    => null,
@@ -147,7 +148,7 @@ class InscricaoController extends Controller
     }
 
     public function checarDados(Request $request, $id) {
-        
+
         // dd($request);
         $validatorData = $request->validate([
             'categoria'         => 'required',
@@ -163,8 +164,13 @@ class InscricaoController extends Controller
         $categoria = CategoriaParticipante::find($request->categoria);
         // dd($categoria->camposNecessarios()->orderBy('tipo')->get());
         $validatorData = $this->validarCamposExtras($request, $categoria, $validatorData);
-        
+
         $evento = Evento::find($id);
+
+        if ($evento->recolhimento == 'gratuito' && $request->valorTotal * 1 == 0) {
+            return $this->cadastrarInscricaoRetornarProEvento($evento, $request, $categoria);
+        }
+
         $valorDaInscricao = $request->valorTotal;
         $promocao = null;
         $atividades = null;
@@ -185,7 +191,7 @@ class InscricaoController extends Controller
                 $valorComDesconto -= $cupom->valor;
             }
         }
-        
+
         if ($request->promocao != null) {
             $promocao = Promocao::find($request->promocao);
         }
@@ -245,17 +251,30 @@ class InscricaoController extends Controller
                                                 'inscricao'         => $inscricao]);
     }
 
+    public function cadastrarInscricaoRetornarProEvento(Evento $evento, Request $request, CategoriaParticipante $categoria)
+    {
+        $inscricao = new Inscricao();
+        $inscricao->user_id = auth()->user()->id;
+        $inscricao->evento_id = $evento->id;
+        $inscricao->categoria_participante_id = $categoria->id;
+        $inscricao->finalizada = true;
+        $inscricao->save();
+        $this->salvarCamposExtras($inscricao, $request, $categoria);
+
+        return redirect()->action([EventoController::class, 'show'], ['id' => $evento->id])->with('message', 'Inscrição realizada com sucesso');
+    }
+
     public function voltarTela(Request $request, $id) {
         $atividadeExtras = null;
         $inscricao = Inscricao::find($id);
         // dd($inscricao->camposPreenchidos()->where('campo_formulario_id', '=', 1)->first()->id);
-        
+
         if ($request->atividades != null) {
             $atividadeExtras = Atividade::whereIn('id', $request->atividades)->get();
         }
-        
+
         $valorTotal = $request->valorTotal;
-        
+
         return view('evento.nova_inscricao', ['evento'              => $inscricao->evento,
                                               'inscricao'           => $inscricao,
                                               'atividadesExtras'    => $atividadeExtras,
@@ -273,7 +292,7 @@ class InscricaoController extends Controller
     public function validarCamposExtras(Request $request, $categoria, $validate) {
         foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo) {
             switch ($campo->tipo) {
-                case "email": 
+                case "email":
                     $validatorData = $request->validate([
                         'email-'.$campo->id => $campo->obrigatorio ? 'required|string|email' : 'nullable|string|email',
                     ]);
@@ -329,13 +348,13 @@ class InscricaoController extends Controller
     public function salvarCamposExtras($inscricao, Request $request, $categoria) {
         if ($request->revisandoInscricao != null) {
             foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo) {
-            
+
                 if ($campo->tipo == "email" && $request->input('email-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('email-'.$campo->id)]);
-                
+
                 } else if ($campo->tipo == "text" && $request->input('text-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('text-'.$campo->id)]);
-                
+
                 } else if ($campo->tipo == "file" && $request->file("file-".$campo->id) != null) {
                     $campoSalvo = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $campo->id)->first();
                     if ($campoSalvo != null && Storage::disk()->exists($campoSalvo->pivot->valor)) {
@@ -343,65 +362,65 @@ class InscricaoController extends Controller
                     }
 
                     $path = Storage::putFileAs('public/eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.".pdf");
-    
+
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $path]);
-                
+
                 } else if ($campo->tipo == "date" && $request->input('date-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('date-'.$campo->id)]);
-                
+
                 } else if ($campo->tipo == "endereco" && $request->input('endereco-cep-'.$campo->id) != null) {
                     $campoSalvo = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $campo->id)->first();
                     $endereco               = Endereco::find($campoSalvo->pivot->valor);
                     $endereco->cep          = $request->input('endereco-cep-'.$campo->id);
-                    $endereco->bairro       = $request->input('endereco-bairro-'.$campo->id);      
-                    $endereco->rua          = $request->input('endereco-rua-'.$campo->id);         
-                    $endereco->complemento  = $request->input('endereco-complemento-'.$campo->id);  
-                    $endereco->cidade       = $request->input('endereco-cidade-'.$campo->id);       
-                    $endereco->uf           = $request->input('endereco-uf-'.$campo->id);          
+                    $endereco->bairro       = $request->input('endereco-bairro-'.$campo->id);
+                    $endereco->rua          = $request->input('endereco-rua-'.$campo->id);
+                    $endereco->complemento  = $request->input('endereco-complemento-'.$campo->id);
+                    $endereco->cidade       = $request->input('endereco-cidade-'.$campo->id);
+                    $endereco->uf           = $request->input('endereco-uf-'.$campo->id);
                     $endereco->numero       = $request->input('endereco-numero-'.$campo->id);
                     $endereco->update();
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $endereco->id]);
-                
+
                 } else if ($campo->tipo == "cpf" && $request->input('cpf-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('cpf-'.$campo->id)]);
-                
+
                 } else if ($campo->tipo == "contato" && $request->input('contato-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('contato-'.$campo->id)]);
                 }
             }
         } else {
             foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo) {
-            
+
                 if ($campo->tipo == "email" && $request->input('email-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('email-'.$campo->id)]);
-                
+
                 } else if ($campo->tipo == "text" && $request->input('text-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('text-'.$campo->id)]);
-                
+
                 } else if ($campo->tipo == "file" && $request->file("file-".$campo->id) != null) {
-                    
+
                     $path = Storage::putFileAs('public/eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.".pdf");
-    
+
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $path]);
-                
+
                 } else if ($campo->tipo == "date" && $request->input('date-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('date-'.$campo->id)]);
-                
+
                 } else if ($campo->tipo == "endereco" && $request->input('endereco-cep-'.$campo->id) != null) {
                     $endereco               = new Endereco();
                     $endereco->cep          = $request->input('endereco-cep-'.$campo->id);
-                    $endereco->bairro       = $request->input('endereco-bairro-'.$campo->id);      
-                    $endereco->rua          = $request->input('endereco-rua-'.$campo->id);         
-                    $endereco->complemento  = $request->input('endereco-complemento-'.$campo->id);  
-                    $endereco->cidade       = $request->input('endereco-cidade-'.$campo->id);       
-                    $endereco->uf           = $request->input('endereco-uf-'.$campo->id);          
+                    $endereco->bairro       = $request->input('endereco-bairro-'.$campo->id);
+                    $endereco->rua          = $request->input('endereco-rua-'.$campo->id);
+                    $endereco->complemento  = $request->input('endereco-complemento-'.$campo->id);
+                    $endereco->cidade       = $request->input('endereco-cidade-'.$campo->id);
+                    $endereco->uf           = $request->input('endereco-uf-'.$campo->id);
                     $endereco->numero       = $request->input('endereco-numero-'.$campo->id);
                     $endereco->save();
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $endereco->id]);
-                
+
                 } else if ($campo->tipo == "cpf" && $request->input('cpf-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('cpf-'.$campo->id)]);
-                
+
                 } else if ($campo->tipo == "contato" && $request->input('contato-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('contato-'.$campo->id)]);
                 }

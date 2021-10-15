@@ -33,10 +33,10 @@
                     </div>
                 @enderror
                 <br>
-                   
+
                 <form id="form-inscricao" action="{{route('inscricao.checar', ['id' => $evento->id])}}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    
+
                     @if ($inscricao != null)
                         <input type="hidden" name="revisandoInscricao" value="{{$inscricao->id}}">
                         <div id="formulario">
@@ -67,7 +67,7 @@
                                                         <div class="col-sm-6">
                                                             <label for="endereco-cep-{{$campo->id}}">CEP</label>
                                                             <input id="endereco-cep-{{$campo->id}}" name="endereco-cep-{{$campo->id}}" onblur="pesquisacep(this.value, '{{$campo->id}}');" type="text" class="form-control cep @error('endereco-cep-'.$campo->id) is-invalid @enderror" placeholder="00000-000" @if($campo->obrigatorio) required @endif value="@if(old('endereco-cep-'.$campo->id) != null){{old('endereco-cep-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$enderecoPreenchido->cep}}@endif">
-                                                        
+
                                                             @error('endereco-cep-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -77,7 +77,7 @@
                                                         <div class="col-sm-6">
                                                             <label for="endereco-bairro-{{$campo->id}}">Bairro</label>
                                                             <input type="text" class="form-control @error('endereco-bairro-'.$campo->id) is-invalid @enderror" id="endereco-bairro-{{$campo->id}}" name="endereco-bairro-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-bairro-'.$campo->id) != null){{old('endereco-bairro-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$enderecoPreenchido->bairro}}@endif">
-                                                        
+
                                                             @error('endereco-bairro-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -89,7 +89,7 @@
                                                         <div class="col-sm-9">
                                                             <label for="endereco-rua-{{$campo->id}}">Rua</label>
                                                             <input type="text" class="form-control @error('endereco-rua-'.$campo->id) is-invalid @enderror" id="endereco-rua-{{$campo->id}}" name="endereco-rua-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-rua-'.$campo->id) != null){{old('endereco-rua-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$enderecoPreenchido->rua}}@endif">
-                                                        
+
                                                             @error('endereco-rua-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -99,7 +99,7 @@
                                                         <div class="col-sm-3">
                                                             <label for="endereco-complemento-{{$campo->id}}">Complemento</label>
                                                             <input type="text" class="form-control @error('endereco-complemento-'.$campo->id) is-invalid @enderror" id="endereco-complemento-{{$campo->id}}" name="endereco-complemento-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-complemento-'.$campo->id) != null){{old('endereco-complemento-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$enderecoPreenchido->complemento}}@endif">
-                                                        
+
                                                             @error('endereco-complemento-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -111,7 +111,7 @@
                                                         <div class="col-sm-6">
                                                             <label for="endereco-cidade-{{$campo->id}}">Cidade</label>
                                                             <input type="text" class="form-control @error('endereco-cidade-'.$campo->id) is-invalid @enderror" id="endereco-cidade-{{$campo->id}}" name="endereco-cidade-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-cidade-'.$campo->id) != null){{old('endereco-cidade-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$enderecoPreenchido->cidade}}@endif">
-                                                        
+
                                                             @error('endereco-cidade-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -121,7 +121,7 @@
                                                         <div class="col-sm-3">
                                                             <label for="endereco-uf-{{$campo->id}}">UF</label>
                                                             <select class="form-control @error('endereco-uf-'.$campo->id) is-invalid @enderror" id="endereco-uf-{{$campo->id}}" name="endereco-uf-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
-                                                                @if (old('endereco-uf-'.$campo->id) == null && $inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id) 
+                                                                @if (old('endereco-uf-'.$campo->id) == null && $inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id)
                                                                     <option value="" disabled selected hidden>-- UF --</option>
                                                                     <option @if($enderecoPreenchido->uf == "AC") selected @endif value="AC">AC</option>
                                                                     <option @if($enderecoPreenchido->uf == "AL") selected @endif value="AL">AL</option>
@@ -191,7 +191,7 @@
                                                         <div class="col-sm-3">
                                                             <label for="endereco-numero-{{$campo->id}}">Número</label>
                                                             <input type="number" class="form-control numero @error('endereco-numero-'.$campo->id) is-invalid @enderror" id="endereco-numero-{{$campo->id}}" name="endereco-numero-{{$campo->id}}" placeholder="10" @if($campo->obrigatorio) required @endif value="@if(old('endereco-numero-'.$campo->id) != null){{old('endereco-numero-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$enderecoPreenchido->numero}}@endif">
-                                                            
+
                                                             @error('endereco-numero-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -200,11 +200,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            @elseif($campo->tipo == "date") 
+                                            @elseif($campo->tipo == "date")
                                                 <div class="col-sm-4" style="margin-top:10px;">
                                                     <label for="date-{{$campo->id}}">{{$campo->titulo}}</label>
                                                     <input class="form-control @error('date-'.$campo->id) is-invalid @enderror" type="date" name="date-{{$campo->id}}" id="date-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('date-'.$campo->id) != null){{old('date-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$campoPreechido->pivot->valor}}@endif">
-                                                
+
                                                     @error('date-'.$campo->id)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -215,7 +215,7 @@
                                                 <div class="col-sm-4" style="margin-top:10px;">
                                                     <label for="email-{{$campo->id}}">{{$campo->titulo}}</label>
                                                     <input class="form-control @error('email-'.$campo->id) is-invalid @enderror" type="email" name="email-{{$campo->id}}" id="email-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('email-'.$campo->id) != null){{old('email-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$campoPreechido->pivot->valor}}@endif">
-                                                
+
                                                     @error('email-'.$campo->id)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -226,7 +226,7 @@
                                                 <div class="col-sm-4" style="margin-top:10px;">
                                                     <label for="text-{{$campo->id}}">{{$campo->titulo}}</label>
                                                     <input class="form-control @error('text-'.$campo->id) is-invalid @enderror" type="text" name="text-{{$campo->id}}" id="text-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('text-'.$campo->id) != null){{old('text-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$campoPreechido->pivot->valor}}@endif">
-                                                
+
                                                     @error('text-'.$campo->id)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -237,7 +237,7 @@
                                                 <div class="col-sm-4"  style="margin-top:10px;">
                                                     <label for="cpf-{{$campo->id}}">{{$campo->titulo}}</label>
                                                     <input id="cpf-{{$campo->id}}" type="text" class="form-control cpf @error('cpf-'.$campo->id) is-invalid @enderror" name="cpf-{{$campo->id}}" autocomplete="cpf" autofocus  @if($campo->obrigatorio) required @endif value="@if(old('cpf-'.$campo->id) != null){{old('cpf-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$campoPreechido->pivot->valor}}@endif">
-                                                
+
                                                     @error('cpf-'.$campo->id)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -248,7 +248,7 @@
                                                 <div class="col-sm-4" style="margin-top:10px;">
                                                     <label for="contato-{{$campo->id}}">{{$campo->titulo}}</label>
                                                     <input id="contato-{{$campo->id}}" type="text" class="form-control celular @error('contato-'.$campo->id) is-invalid @enderror" name="contato-{{$campo->id}}" autocomplete="contato" autofocus  @if($campo->obrigatorio) required @endif value="@if(old('contato-'.$campo->id) != null){{old('contato-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$campoPreechido->pivot->valor}}@endif">
-                                                
+
                                                     @error('contato-'.$campo->id)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -260,7 +260,7 @@
                                                     <label for="file-{{$campo->id}}" class="">{{$campo->titulo}}</label>@if($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id) <a href="{{route('download.arquivo.inscricao', ['idInscricao' => $inscricao->id,'idCampo' => $campoPreechido->id])}}">Arquivo atual</a> @endif<br>
                                                     <input type="file" id="file-{{$campo->id}}" class="form-control-file  @error('file-'.$campo->id) is-invalid @enderror" name="file-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
                                                     <br>
-                                                    @if($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id) 
+                                                    @if($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id)
                                                         <small>Para substituir o arquivo envie outro</small>
                                                     @endif
                                                     @error('file-'.$campo->id)
@@ -272,9 +272,9 @@
                                             @endif
                                         @endforeach
                                     </div>
-                                </div> 
+                                </div>
                             @endforeach
-                            
+
                             @foreach($evento->categoriasParticipantes as $categoria)
                                 <div id="extra-form-pkt-atv-{{$categoria->id}}" class="extra-form-pkt-atv" @if(old('categoria') == $categoria->id)style="display: block;"@elseif(old('categoria') == null && $inscricao->categoria->id == $categoria->id) style="display: block;" @else style="display: none;" @endif>
                                     <div class="row form-group">
@@ -287,15 +287,15 @@
                                                         <option value="{{$pacote->id}}" @if(old('promocao') == $pacote->id) selected @elseif(old('promocao')==null && $inscricao->promocao != null && $inscricao->promocao->id == $pacote->id) selected @endif>{{$pacote->identificador}}</option>
                                                     @endforeach
                                                 </select>
-                                            @else 
+                                            @else
                                                 <label for="promocao">Pacote</label>
-                                                <input type="text" disabled class="form-control" value="Não existe pacotes para essa categoria"> 
+                                                <input type="text" disabled class="form-control" value="Não existe pacotes para essa categoria">
                                             @endif
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="cupomDesconto">Cupom de desconto</label>
                                             <input oninput="deixarMaiusculo(event)" id="cupomDesconto-{{$categoria->id}}" type="text" class="form-control" placeholder="" onchange="checarCupom(this)" value="@if(old('cupom') != null){{old('cupom')}}@elseif(old('cupom')==null && $inscricao->cupomDesconto != null){{$inscricao->cupomDesconto->identificador}}@endif">
-                                        
+
                                             <div id="retorno200" class="valid-feedback" style="display: none;">
                                                 Cupom valido!
                                             </div>
@@ -307,11 +307,11 @@
                                             </div>
                                         </div>
                                         <div id="cupom">
-                            
+
                                         </div>
                                     </div>
 
-                                    @if ($inscricao->promocao != null) 
+                                    @if ($inscricao->promocao != null)
                                         <div class="row form-group">
                                             <div id="descricaoPromo" class="col-sm-12">
                                                 @if ($inscricao->promocao->descricao != null)
@@ -346,7 +346,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                        </div> 
+                                        </div>
                                     @else
                                         @if ($categoria->promocoes()->count() > 0)
                                             <div class="row form-group">
@@ -383,10 +383,10 @@
                                                         @endif
                                                     </div>
                                                 </div>
-                                            </div> 
+                                            </div>
                                         @endif
                                     @endif
-                                    
+
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <hr>
@@ -400,7 +400,7 @@
                                                 </div>
                                                 <div class="col-sm-6" style="text-align: right;">
                                                     <a href="#" class="btn btn-secondary" style="font-size: 14px; text-align: right;" data-toggle="modal" data-target="#modalAdicionarAtividade">Adicionar atividade</a>
-                                                </div> 
+                                                </div>
                                             </div>
                                             <div id="atividadesAdicionadas" class="row">
                                                 @if ($atividadesExtras != null)
@@ -412,9 +412,9 @@
                                                                 <div class="card-body">
                                                                     <h4 class="card-title">{{$atv->titulo}}</h4>
                                                                     <h5 class="card-subtitle mb-2 text-muted">{{$atv->tipoAtividade->descricao}}</h5>
-                                                                    @if ($atv->valor == null || $atv->valor <= 0) 
+                                                                    @if ($atv->valor == null || $atv->valor <= 0)
                                                                         <h5 class="card-subtitle mb-2 text-muted">Grátis</h5>
-                                                                    @else 
+                                                                    @else
                                                                         <h5 class="card-subtitle mb-2 text-muted">R$ {{number_format($atv->valor, 2,',','.')}}</h5>
                                                                     @endif
                                                                     <h6 class="card-subtitle mb-2 text-muted">{{$atv->local}}</h6>
@@ -430,17 +430,17 @@
                                                 @else
                                                     <span id="padrao" style="margin: 20px;">Nenhuma atividade adicionada.</span>
                                                 @endif
-                                                
+
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    
+
+
                                 </div>
                             @endforeach
                             <div class="row form-group" style="position: relative; top: 50px;">
                                 <div class="col-sm-6">
-                                    
+
                                 </div>
                                 <div class="col-sm-6" style="text-align: right; position: relative; right: 50px;">
                                     <h5>Total</h5>
@@ -450,19 +450,19 @@
                                                 <span id="spanValorTotal">Gratuita</span>
                                                 <input type="hidden" name="valorTotal" id="valorTotal" value="0">
                                             </p>
-                                        @else 
+                                        @else
                                             <p>
                                                 <span id="spanValorTotal">R$ {{number_format(old('valorTotal'), 2,',','.')}}</span>
                                                 <input type="hidden" name="valorTotal" id="valorTotal" value="{{old('valorTotal')}}">
                                             </p>
                                         @endif
-                                    @else 
+                                    @else
                                         @if ($valorTotal <= 0)
                                             <p>
                                                 <span id="spanValorTotal">Gratuita</span>
                                                 <input type="hidden" name="valorTotal" id="valorTotal" value="0">
                                             </p>
-                                        @else 
+                                        @else
                                             <p>
                                                 <span id="spanValorTotal">R$ {{number_format($valorTotal, 2,',','.')}}</span>
                                                 <input type="hidden" name="valorTotal" id="valorTotal" value="{{$valorTotal}}">
@@ -480,7 +480,7 @@
                                 </div>
                             </div>
                         </div>
-                    @else 
+                    @else
                         <div id="formulario">
                             <div class="row form-group">
                                 <div class="col-sm-12">
@@ -503,7 +503,7 @@
                                                         <div class="col-sm-6">
                                                             <label for="endereco-cep-{{$campo->id}}">CEP</label>
                                                             <input id="endereco-cep-{{$campo->id}}" name="endereco-cep-{{$campo->id}}" onblur="pesquisacep(this.value, '{{$campo->id}}');" type="text" class="form-control cep @error('endereco-cep-'.$campo->id) is-invalid @enderror" placeholder="00000-000" @if($campo->obrigatorio) required @endif value="@if(old('endereco-cep-'.$campo->id) != null){{old('endereco-cep-'.$campo->id)}}@endif">
-                                                        
+
                                                             @error('endereco-cep-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -513,7 +513,7 @@
                                                         <div class="col-sm-6">
                                                             <label for="endereco-bairro-{{$campo->id}}">Bairro</label>
                                                             <input type="text" class="form-control @error('endereco-bairro-'.$campo->id) is-invalid @enderror" id="endereco-bairro-{{$campo->id}}" name="endereco-bairro-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-bairro-'.$campo->id) != null){{old('endereco-bairro-'.$campo->id)}}@endif">
-                                                        
+
                                                             @error('endereco-bairro-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -525,7 +525,7 @@
                                                         <div class="col-sm-9">
                                                             <label for="endereco-rua-{{$campo->id}}">Rua</label>
                                                             <input type="text" class="form-control @error('endereco-rua-'.$campo->id) is-invalid @enderror" id="endereco-rua-{{$campo->id}}" name="endereco-rua-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-rua-'.$campo->id) != null){{old('endereco-rua-'.$campo->id)}}@endif">
-                                                        
+
                                                             @error('endereco-rua-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -535,7 +535,7 @@
                                                         <div class="col-sm-3">
                                                             <label for="endereco-complemento-{{$campo->id}}">Complemento</label>
                                                             <input type="text" class="form-control @error('endereco-complemento-'.$campo->id) is-invalid @enderror" id="endereco-complemento-{{$campo->id}}" name="endereco-complemento-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-complemento-'.$campo->id) != null){{old('endereco-complemento-'.$campo->id)}}@endif">
-                                                        
+
                                                             @error('endereco-complemento-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -547,7 +547,7 @@
                                                         <div class="col-sm-6">
                                                             <label for="endereco-cidade-{{$campo->id}}">Cidade</label>
                                                             <input type="text" class="form-control @error('endereco-cidade-'.$campo->id) is-invalid @enderror" id="endereco-cidade-{{$campo->id}}" name="endereco-cidade-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-cidade-'.$campo->id) != null){{old('endereco-cidade-'.$campo->id)}}@endif">
-                                                        
+
                                                             @error('endereco-cidade-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -596,7 +596,7 @@
                                                         <div class="col-sm-3">
                                                             <label for="endereco-numero-{{$campo->id}}">Número</label>
                                                             <input type="number" class="form-control numero @error('endereco-numero-'.$campo->id) is-invalid @enderror" id="endereco-numero-{{$campo->id}}" name="endereco-numero-{{$campo->id}}" placeholder="10" @if($campo->obrigatorio) required @endif value="@if(old('endereco-numero-'.$campo->id) != null){{old('endereco-numero-'.$campo->id)}}@endif">
-                                                            
+
                                                             @error('endereco-numero-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -605,11 +605,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            @elseif($campo->tipo == "date") 
+                                            @elseif($campo->tipo == "date")
                                                 <div class="col-sm-4" style="margin-top:10px;">
                                                     <label for="date-{{$campo->id}}">{{$campo->titulo}}</label>
                                                     <input class="form-control @error('date-'.$campo->id) is-invalid @enderror" type="date" name="date-{{$campo->id}}" id="date-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('date-'.$campo->id) != null){{old('date-'.$campo->id)}}@endif">
-                                                
+
                                                     @error('date-'.$campo->id)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -620,7 +620,7 @@
                                                 <div class="col-sm-4" style="margin-top:10px;">
                                                     <label for="email-{{$campo->id}}">{{$campo->titulo}}</label>
                                                     <input class="form-control @error('email-'.$campo->id) is-invalid @enderror" type="email" name="email-{{$campo->id}}" id="email-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('email-'.$campo->id) != null){{old('email-'.$campo->id)}}@endif">
-                                                
+
                                                     @error('email-'.$campo->id)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -631,7 +631,7 @@
                                                 <div class="col-sm-4" style="margin-top:10px;">
                                                     <label for="text-{{$campo->id}}">{{$campo->titulo}}</label>
                                                     <input class="form-control @error('text-'.$campo->id) is-invalid @enderror" type="text" name="text-{{$campo->id}}" id="text-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('text-'.$campo->id) != null){{old('text-'.$campo->id)}}@endif">
-                                                
+
                                                     @error('text-'.$campo->id)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -642,7 +642,7 @@
                                                 <div class="col-sm-4"  style="margin-top:10px;">
                                                     <label for="cpf-{{$campo->id}}">{{$campo->titulo}}</label>
                                                     <input id="cpf-{{$campo->id}}" type="text" class="form-control cpf @error('cpf-'.$campo->id) is-invalid @enderror" name="cpf-{{$campo->id}}" autocomplete="cpf" autofocus  @if($campo->obrigatorio) required @endif value="@if(old('cpf-'.$campo->id) != null){{old('cpf-'.$campo->id)}}@endif">
-                                                
+
                                                     @error('cpf-'.$campo->id)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -653,7 +653,7 @@
                                                 <div class="col-sm-4" style="margin-top:10px;">
                                                     <label for="contato-{{$campo->id}}">{{$campo->titulo}}</label>
                                                     <input id="contato-{{$campo->id}}" type="text" class="form-control celular @error('contato-'.$campo->id) is-invalid @enderror" name="contato-{{$campo->id}}" autocomplete="contato" autofocus  @if($campo->obrigatorio) required @endif value="@if(old('contato-'.$campo->id) != null){{old('contato-'.$campo->id)}}@endif">
-                                                
+
                                                     @error('contato-'.$campo->id)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -674,9 +674,9 @@
                                             @endif
                                         @endforeach
                                     </div>
-                                </div> 
+                                </div>
                             @endforeach
-                            
+
                             @foreach($evento->categoriasParticipantes as $categoria)
                                 <div id="extra-form-pkt-atv-{{$categoria->id}}" class="extra-form-pkt-atv" @if(old('categoria') == $categoria->id)style="display: block;"@else style="display: none;" @endif>
                                     <div class="row form-group">
@@ -689,15 +689,15 @@
                                                         <option value="{{$pacote->id}}" @if(old('promocao') == $pacote->id) selected @endif>{{$pacote->identificador}}</option>
                                                     @endforeach
                                                 </select>
-                                            @else 
+                                            @else
                                                 <label for="promocao">Pacote</label>
-                                                <input type="text" disabled class="form-control" value="Não existe pacotes para essa categoria"> 
+                                                <input type="text" disabled class="form-control" value="Não existe pacotes para essa categoria">
                                             @endif
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="cupomDesconto">Cupom de desconto</label>
                                             <input oninput="deixarMaiusculo(event)" id="cupomDesconto-{{$categoria->id}}" type="text" class="form-control" placeholder="" onchange="checarCupom(this)" value="{{old('cupom')}}">
-                                        
+
                                             <div id="retorno200" class="valid-feedback" style="display: none;">
                                                 Cupom valido!
                                             </div>
@@ -709,7 +709,7 @@
                                             </div>
                                         </div>
                                         <div id="cupom">
-                            
+
                                         </div>
                                     </div>
                                     @if ($categoria->promocoes()->count() > 0)
@@ -747,7 +747,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                        </div> 
+                                        </div>
                                     @endif
                                     <div class="row">
                                         <div class="col-sm-12">
@@ -762,20 +762,20 @@
                                                 </div>
                                                 <div class="col-sm-6" style="text-align: right;">
                                                     <a href="#" class="btn btn-secondary" style="font-size: 14px; text-align: right;" data-toggle="modal" data-target="#modalAdicionarAtividade">Adicionar atividade</a>
-                                                </div> 
+                                                </div>
                                             </div>
                                             <div id="atividadesAdicionadas" class="row">
                                                 <span id="padrao" style="margin: 20px;">Nenhuma atividade adicionada.</span>
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    
+
+
                                 </div>
                             @endforeach
                             <div class="row form-group" style="position: relative; top: 50px;">
                                 <div class="col-sm-6">
-                                    
+
                                 </div>
                                 <div class="col-sm-6" style="text-align: right; position: relative; right: 50px;">
                                     <h5>Total</h5>
@@ -785,19 +785,19 @@
                                                 <span id="spanValorTotal">Gratuita</span>
                                                 <input type="hidden" name="valorTotal" id="valorTotal" value="0">
                                             </p>
-                                        @else 
+                                        @else
                                             <p>
                                                 <span id="spanValorTotal">R$ {{number_format(old('valorTotal'), 2,',','.')}}</span>
                                                 <input type="hidden" name="valorTotal" id="valorTotal" value="{{old('valorTotal')}}">
                                             </p>
                                         @endif
-                                    @else 
+                                    @else
                                         @if ($evento->valorTaxa <= 0)
                                             <p>
                                                 <span id="spanValorTotal">Gratuita</span>
                                                 <input type="hidden" name="valorTotal" id="valorTotal" value="0">
                                             </p>
-                                        @else 
+                                        @else
                                             <p>
                                                 <span id="spanValorTotal">R$ {{number_format($evento->valorTaxa, 2,',','.')}}</span>
                                                 <input type="hidden" name="valorTotal" id="valorTotal" value="{{$evento->valorTaxa}}">
@@ -807,11 +807,11 @@
                                 </div>
                             </div>
                             <div class="row" style="position: relative; margin-top:70px; margin-bottom:50px;">
-                                <div class="col-sm-6" style="top:5px;">
-                                <a href="{{route('evento.visualizar', ['id' => $evento->id])}}" class="btn btn-secondary" style="width: 100%; padding: 25px;">Voltar</a>
+                                <div class="col-sm-6" >
+                                <a href="{{route('evento.visualizar', ['id' => $evento->id])}}" class="btn btn-secondary" style="width: 100%">Voltar</a>
                                 </div>
                                 <div class="col-sm-6">
-                                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 30px;" form="form-inscricao">Avançar</button>
+                                    <button type="submit" class="btn btn-primary" style="width: 100%" form="form-inscricao">Avançar</button>
                                 </div>
                             </div>
                         </div>
@@ -836,7 +836,7 @@
                                                 <div class="col-sm-12">
                                                     <span id="padraoModal" style="display: none;">Este evento não possue atividades.</span>
                                                 </div>
-                                                @foreach ($evento->atividade as $atv)                            
+                                                @foreach ($evento->atividade as $atv)
                                                     @if ($inscricao != null && $atividadesExtras != null)
                                                         @if ($atv->visibilidade_participante && !($atividadesExtras->contains($atv)))
                                                             <div id="atv{{$atv->id}}" class="col-sm-3 atvAdicionais">
@@ -846,9 +846,9 @@
                                                                     <div class="card-body">
                                                                         <h4 class="card-title">{{$atv->titulo}}</h4>
                                                                         <h5 class="card-subtitle mb-2 text-muted">{{$atv->tipoAtividade->descricao}}</h5>
-                                                                        @if ($atv->valor == null || $atv->valor <= 0) 
+                                                                        @if ($atv->valor == null || $atv->valor <= 0)
                                                                             <h5 class="card-subtitle mb-2 text-muted">Grátis</h5>
-                                                                        @else 
+                                                                        @else
                                                                             <h5 class="card-subtitle mb-2 text-muted">R$ {{number_format($atv->valor, 2,',','.')}}</h5>
                                                                         @endif
                                                                         <h6 class="card-subtitle mb-2 text-muted">{{$atv->local}}</h6>
@@ -869,9 +869,9 @@
                                                                     <div class="card-body">
                                                                         <h4 class="card-title">{{$atv->titulo}}</h4>
                                                                         <h5 class="card-subtitle mb-2 text-muted">{{$atv->tipoAtividade->descricao}}</h5>
-                                                                        @if ($atv->valor == null || $atv->valor <= 0) 
+                                                                        @if ($atv->valor == null || $atv->valor <= 0)
                                                                             <h5 class="card-subtitle mb-2 text-muted">Grátis</h5>
-                                                                        @else 
+                                                                        @else
                                                                             <h5 class="card-subtitle mb-2 text-muted">R$ {{number_format($atv->valor, 2,',','.')}}</h5>
                                                                         @endif
                                                                         <h6 class="card-subtitle mb-2 text-muted">{{$atv->local}}</h6>
@@ -885,9 +885,9 @@
                                                         @endif
                                                     @endif
                                                 @endforeach
-                                            @else 
+                                            @else
                                                 <div class="col-sm-12">
-                                                    <span id="padraoModal" style="display: inline;">Este evento não possue atividades.</span>        
+                                                    <span id="padraoModal" style="display: inline;">Este evento não possue atividades.</span>
                                                 </div>
                                             @endif
                                         </div>
@@ -897,7 +897,7 @@
                         </div>
                     </div>
                 <!-- Fim do modal adicionar atividade -->
-                
+
                 <!-- Modal detalhes da atividade -->
                 @foreach ($evento->atividade as $atv)
                     <div class="modal fade" id="modalDetalheAtividade{{$atv->id}}" tabindex="-1" role="dialog" aria-labelledby="modalDetalheAtividade{{$atv->id}}Label" aria-hidden="true">
@@ -923,8 +923,8 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 @if ($atv->valor <= 0)
-                                                    <label for="text-{{$atv->id}}"></label> 
-                                                    <input type="text-{{$atv->id}}" disabled class="form-control" value="Gratuita">  
+                                                    <label for="text-{{$atv->id}}"></label>
+                                                    <input type="text-{{$atv->id}}" disabled class="form-control" value="Gratuita">
                                                 @else
                                                     <label for="valor">Valor</label>
                                                     <input id="valor-{{$atv->id}}" type="text" disabled class="form-control" value="R$ {{number_format($atv->valor, 2,',','.')}}">
@@ -937,7 +937,7 @@
                                                 <textarea id="descricao-{{$atv->id}}" disabled class="form-control">{{$atv->descricao}}</textarea>
                                             </div>
                                         </div>
-                                        <div class="row">                                
+                                        <div class="row">
                                             <div class="col-sm-12">
                                                 <hr>
                                                 Quando ocorre?
@@ -959,13 +959,13 @@
                                                 </div>
                                             @endforeach
                                         </div>
-                                        <div class="row">                                
+                                        <div class="row">
                                             <div class="col-sm-12">
                                                 <hr>
                                                 Aonde ocorre?
                                             </div>
                                         </div>
-                                        <div class="row">                                
+                                        <div class="row">
                                             <div class="col-sm-12">
                                                 <input type="text" value="{{$atv->local}}" disabled class="form-control">
                                             </div>
@@ -1008,8 +1008,8 @@
                                                             <h5 class="convidadoNome">{{$convidado->nome}}</h5>
                                                             <small class="convidadoFuncao">{{$convidado->funcao}}</small>
                                                         </div>
-                                                        @endforeach  
-                                                    </div>    
+                                                        @endforeach
+                                                    </div>
                                                 </div>
                                             @endif
                                         @endif
@@ -1024,12 +1024,12 @@
         </div>
     </div>
 </div>
- 
+
 @include('componentes.footer')
 @endsection
 @section('javascript')
 <script type="text/javascript">
-    @if (old('valorTotal') != null) 
+    @if (old('valorTotal') != null)
         $(document).ready(function() {
             var select = document.getElementById('promocao');
             carregarAtividadesDoPacote(select);
@@ -1078,7 +1078,7 @@
         }
 
         adicionarLinksDaAtividade(id);
-        
+
         if (valorTotal > 0) {
             $('#spanValorTotal').html("");
             $('#spanValorTotal').append(valorTotal.toLocaleString("pt-BR", { style: "currency" , currency:"BRL"}));
@@ -1155,7 +1155,7 @@
             type: 'get',
             data: {
                 _token: '{{csrf_token()}}',
-                id: select.value,  
+                id: select.value,
             },
             statusCode: {
                 404: function() {
@@ -1262,7 +1262,7 @@
                 type: 'get',
                 data: {
                     _token: '{{csrf_token()}}',
-                    nome: input.value,  
+                    nome: input.value,
                     evento_id: '{{$evento->id}}',
                 },
                 statusCode: {
@@ -1304,7 +1304,7 @@
 
             document.getElementById("campos-extras-"+select.value).style.display = "block";
             document.getElementById("extra-form-pkt-atv-"+select.value).style.display = "block";
-            
+
             $.ajax({
                 url: "{{route('ajax.valor.categoria')}}",
                 method: 'get',
