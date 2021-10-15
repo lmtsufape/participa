@@ -875,6 +875,7 @@ class EventoController extends Controller
     public function show($id)
     {
         $evento = Evento::find($id);
+        $subeventos = Evento::where('deletado',false)->where('publicado', true)->where('evento_pai_id', $id)->get();
         $hasTrabalho = false;
         $hasTrabalhoCoautor = false;
         $hasFile = false;
@@ -923,12 +924,14 @@ class EventoController extends Controller
                                                 'atividades'          => $atividades,
                                                 'dataInicial'         => $primeiraAtividade,
                                                 'isInscrito'          => $isInscrito,
+                                                'subeventos'          => $subeventos,
                                                ]);
     }
 
     public function showNaoLogado($id)
     {
         $evento = Evento::find($id);
+        $subeventos = Evento::where('deletado',false)->where('publicado', true)->where('evento_pai_id', $id)->get();
         $hasTrabalho = false;
         $hasTrabalhoCoautor = false;
         $hasFile = false;
@@ -960,6 +963,7 @@ class EventoController extends Controller
                                                 'dataInicial'         => $primeiraAtividade,
                                                 'modalidades'         => $modalidades,
                                                 'isInscrito'          => $isInscrito,
+                                                'subeventos'          => $subeventos,
                                                ]);
     }
 
