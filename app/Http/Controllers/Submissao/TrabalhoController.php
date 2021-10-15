@@ -363,6 +363,8 @@ class TrabalhoController extends Controller
     public function statusTrabalho($id, $status)
     {
         $trabalho = Trabalho::find($id);
+        $evento = $trabalho->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento);
         if($trabalho->status == 'avaliado' && $status == 'rascunho'){
             $trabalho->update(['status' => $status]);
             return redirect()->back()->with(['message' => "Encaminhamento desfeito com sucesso!",'class' => 'success']);
@@ -397,6 +399,8 @@ class TrabalhoController extends Controller
         $trabalho = Trabalho::find($id);
         $modalidades = Modalidade::where('evento_id', $trabalho->eventoId)->get();
         $evento = Evento::find($trabalho->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         return view('coordenador.trabalhos.trabalho_edit', compact('trabalho', 'modalidades', 'evento'));
     }
 
@@ -410,6 +414,8 @@ class TrabalhoController extends Controller
     public function update(Request $request, $id)
     {
       //dd($request)
+
+      
 
       $validatedData = $request->validate([
         'trabalhoEditId'        => ['required'],
@@ -439,6 +445,14 @@ class TrabalhoController extends Controller
 
       $trabalho = Trabalho::find($id);
       $evento = $trabalho->evento;
+
+      $mytime = Carbon::now('America/Recife');
+      if($mytime > $trabalho->modalidade->fimSubmissao){
+        $this->authorize('isCoordenadorOrComissao', $evento);
+      } else {
+        $this->authorize('isCoordenadorOrComissaoOrAutor', $trabalho);
+      }
+
       $arquivo = $request->file('arquivo'.$id);
       if ($arquivo != null && $this->validarTipoDoArquivo($arquivo, $trabalho->modalidade)) {
         return redirect()->back()->withErrors(['arquivo'.$id => 'Extensão de arquivo enviado é diferente do permitido.
@@ -976,7 +990,7 @@ class TrabalhoController extends Controller
                                                              'areas' => $areas]);
     }
 
-    public function pesquisaAjax(Request $request) {
+    public function pesquisaAjax(Request $request) {    
       if ($request->areaId != null) {
         $area_id = $request->areaId;
       } else {
@@ -993,7 +1007,11 @@ class TrabalhoController extends Controller
 
       $trabalhoJson = collect();
 
-      foreach ($trabalhos as $trab) {
+      foreach ($trabalhos as $i => $trab) {
+        if ($i == 0) {
+          $evento = $trab->evento;
+          $this->authorize('isCoordenadorOrComissao', $evento);
+        }
         $trabalho = [
           'id'          => $trab->id,
           'titulo'      => $trab->titulo,

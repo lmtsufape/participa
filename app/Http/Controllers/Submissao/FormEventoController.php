@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 class FormEventoController extends Controller
 {
     public function update(Request $request, $id){
+        $evento = Evento::find($id);
+        $this->authorize('isCoordenador', $evento);
 
         $validatedData = $request->validate([
 
@@ -71,6 +73,8 @@ class FormEventoController extends Controller
         
         $formevento = FormEvento::where('eventoId',$id)->first();
         $evento = Evento::find($id);
+        $this->authorize('isCoordenador', $evento);
+
         // dd($evento);
         if(isset($request->modinscricao)){
             $formevento->modinscricao       = $request->modinscricao;

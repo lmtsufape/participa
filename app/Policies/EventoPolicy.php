@@ -66,4 +66,9 @@ class EventoPolicy
       } 
       return false;
     }
+
+    public function isCoordenadorOrComissaoOrRevisorComAtribuicao(User $user, Evento $evento) 
+    {
+      return $this->isCoordenadorOrComissao($user, $evento) || $this->isRevisorComAtribuicao($user);
+    }
 }

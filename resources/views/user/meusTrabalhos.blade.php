@@ -279,7 +279,7 @@
           <div class="modal-body">
             <form id="formEditarTrab{{$trabalho->id}}" action="{{route('editar.trabalho', ['id' => $trabalho->id])}}" method="POST" enctype="multipart/form-data">
               @csrf
-
+              <input type="hidden" name="modalidade{{$trabalho->id}}" value="{{$trabalho->modalidade->id}}">
               @php
                 $formSubTraba = $trabalho->evento->formSubTrab;
                 $ordem = explode(",", $formSubTraba->ordemCampos);

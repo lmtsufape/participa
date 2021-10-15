@@ -114,6 +114,9 @@ class CupomDeDescontoController extends Controller
     {
         // dd($request);
         $cupom = CupomDeDesconto::find($id);
+        $evento = $cupom->evento;
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+
         $validadeData = $request->validate([
             'editarCupom'                       => 'required',
             'identificador_cupom_'.$cupom->id   => 'required',

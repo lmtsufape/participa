@@ -143,6 +143,8 @@ class PromocaoController extends Controller
     {
         // dd($request);
         $evento = Evento::find($request->evento_id);
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+
         $promocao = Promocao::find($id);
 
         $validateData = $request->validate([
