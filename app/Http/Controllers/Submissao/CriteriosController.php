@@ -12,6 +12,10 @@ class CriteriosController extends Controller
 {
     public function store(Request $request)
     {   
+        $modalidade = Modalidade::find($request->modalidade);
+        $evento = $modalidade->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         $validatedData = $request->validate([
             'nomeCriterioUpdate' => ['string'],
             'pesoCriterioUpdate' => ['integer'],
@@ -59,19 +63,21 @@ class CriteriosController extends Controller
                 $c++;
             }
         }
-        $modalidade = Modalidade::find($request->modalidade);
+        
         return redirect()->back()->with(['mensagem' => 'Critério salvo para a modalidade ' . $modalidade->nome . '.']);
     }
 
     public function update(Request $request, $id)
     {
-        // dd($request);
+        $criterio = Criterio::find($id);
+        $modalidade = $criterio->modalidade;
+        $evento = $modalidade->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento); 
+
         $validatedData = $request->validate([
             'nomeCriterioUpdate' => ['string'],
             'pesoCriterioUpdate' => ['integer'],
         ]);
-
-        $criterio = Criterio::find($id);
         
         $criterio->nome = $request->nomeCriterioUpdate;
         $criterio->peso = $request->pesoCriterioUpdate;

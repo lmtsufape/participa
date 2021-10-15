@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Submissao;
 use App\Models\Submissao\Area;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Submissao\Evento;
 
 class AreaController extends Controller
 {
@@ -36,6 +37,9 @@ class AreaController extends Controller
      */
     public function store(Request $request)
     {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         $validatedData = $request->validate([
           'nome'  =>  'required|string',
         ]);
@@ -84,6 +88,8 @@ class AreaController extends Controller
         ]);
 
         $area = Area::find($id);
+        $evento = $area->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento);
 
         $area->nome = $request->input('nome_da_área');
         $area->update();
@@ -101,6 +107,8 @@ class AreaController extends Controller
     {
 
         $area = Area::find($id);
+        $evento = $area->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento);
         
         if (count($area->revisor) > 0) {
             return redirect()->back()->withErrors(['excluirAtividade' => 'Não é possível excluir, existem revisores ligados a essa área.']);

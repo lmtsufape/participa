@@ -41,6 +41,8 @@ class CategoriaController extends Controller
     {
         // dd($request);
         $evento = Evento::find($request->evento_id);
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+
         $validateData = $request->validate([
             'criarCategoria'        => 'required',
             'nome'                  => 'required',
@@ -117,9 +119,10 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
         $categoria = CategoriaParticipante::find($id);
-        
+        $evento = $categoria->evento;
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+
         $validateData = $request->validate([
             'editarCategoria'                       => 'required',
             'nome_'.$categoria->id                  => 'required',
@@ -178,6 +181,8 @@ class CategoriaController extends Controller
         // LEMBRETE
         //checar se está aplicado em alguma inscrição futuramente
         $categoria = CategoriaParticipante::find($id);
+        $evento = $categoria->evento;
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
 
         foreach ($categoria->valores as $valor) {
             $valor->delete();

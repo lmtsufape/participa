@@ -39,6 +39,7 @@ class CampoFormularioController extends Controller
     public function store(Request $request)
     {
         $evento = Evento::find($request->evento_id);
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
 
         $validateData = $request->validate([
             'criarCampo'      => 'required',
@@ -112,6 +113,7 @@ class CampoFormularioController extends Controller
     public function update(Request $request, $id)
     {
         $evento = Evento::find($request->evento_id);
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
 
         $validateData = $request->validate([
             'campo_id'        => 'required',
@@ -164,6 +166,8 @@ class CampoFormularioController extends Controller
     {
         // Checar erros futuros após a criação da inscrição
         $campo = CampoFormulario::find($id);
+        $evento = $campo->evento;
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
 
         if(count($campo->inscricoesFeitas) > 0) {
             return redirect()->back()->with(['excluirCampoExtra' => 'Não foi possivel excluir, há inscrições realizadas que utilizam o campo.']);

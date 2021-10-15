@@ -42,4 +42,10 @@ class TrabalhoPolicy
         }
         return $resultado;
     }
+
+    public function isCoordenadorOrComissaoOrAutor(User $user, Trabalho $trabalho) 
+    {
+        $eventoPolicy = new EventoPolicy();
+        return $this->isAutorTrabalho($user, $trabalho) || $eventoPolicy->isCoordenadorOrComissao($user, $trabalho->evento);
+    }
 }
