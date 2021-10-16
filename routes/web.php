@@ -259,6 +259,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
 
   // ROTAS DO MODULO DE INSCRIÇÃO
   Route::get('{id}/inscricoes/nova-inscricao',  'Inscricao\InscricaoController@create')->name('inscricao.create');
+  Route::post('/inscricoes/inscrever',  'Inscricao\InscricaoController@inscrever')->name('inscricao.inscrever');
   Route::get('inscricoes/atividades-da-promocao','Inscricao\PromocaoController@atividades')->name('promocao.atividades');
   Route::get('inscricoes/checar-cupom',          'Inscricao\CupomDeDescontoController@checar')->name('checar.cupom');
   Route::post('{id}/inscricoes/nova-inscricao/checar', 'Inscricao\InscricaoController@checarDados')->name('inscricao.checar');
