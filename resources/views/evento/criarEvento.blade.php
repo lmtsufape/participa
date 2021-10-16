@@ -45,6 +45,11 @@
                     <div class="row subtitulo">
                         <div class="col-sm-12">
                             <p>Informações Gerais</p>
+                            @error('eventoPai')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
                     {{-- nome | Participantes | Tipo--}}
