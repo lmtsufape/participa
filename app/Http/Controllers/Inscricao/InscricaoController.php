@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Submissao\EventoController;
+use App\Http\Requests\InscricaoRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Submissao\Evento;
@@ -262,6 +263,18 @@ class InscricaoController extends Controller
         $this->salvarCamposExtras($inscricao, $request, $categoria);
 
         return redirect()->action([EventoController::class, 'show'], ['id' => $evento->id])->with('message', 'Inscrição realizada com sucesso');
+    }
+
+    public function inscrever(InscricaoRequest $request)
+    {
+        $request->validated();
+        $inscricao = new Inscricao();
+        $inscricao->user_id = auth()->user()->id;
+        $inscricao->evento_id = $request->evento_id;
+        $inscricao->finalizada = true;
+        $inscricao->save();
+
+        return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição realizada com sucesso');
     }
 
     public function voltarTela(Request $request, $id) {

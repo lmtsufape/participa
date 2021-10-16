@@ -353,12 +353,34 @@
                         @if ($isInscrito)
                           Você já está inscrito nesse evento.
                         @else
-                          <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a>
+                          <a class="btn btn-primary" href="" data-toggle="modal" data-target="#modalInscrever">Realizar inscrição</a>
                         @endif
                         {{-- <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a> --}}
                     </p>
                 </div>
               </div>
+              <div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #114048ff; color: white;">
+                    <h5 class="modal-title" id="#label">Confirmação</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <form action="{{route('inscricao.inscrever', ['evento_id' => $evento->id])}}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            Tem certeza que deseja se inscrever nesse evento?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                            <button type="submit" class="btn btn-primary">Sim</button>
+                        </div>
+                    </form>
+                </div>
+                </div>
+            </div>
             @endif
             {{-- Modulo Organização --}}
             @if ($etiquetas->modorganizacao == true)
