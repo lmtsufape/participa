@@ -526,6 +526,126 @@
   </div>
 </div>
 
+@if(count($subeventos) > 0)
+    <div class="container"  style="position: relative; top: 80px;">
+        <div class="row justify-content-center titulo-detalhes">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <h1>Subeventos</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if(session('message'))
+            <div class="row">
+                <div class="col-md-12" style="margin-top: 5px;">
+                    <div class="alert alert-success">
+                        <p>{{session('message')}}</p>
+                    </div>
+                </div>
+            </div>
+        @endif
+        <div class="row cards-eventos-index">
+            @foreach ($subeventos as $evento)
+                <div class="card" style="width: 16rem;">
+                    @if(isset($evento->fotoEvento))
+                        <img class="img-card" src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+                    @else
+                        <img class="img-card" src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
+                    @endif
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5 class="card-title">
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            @auth()
+                                                <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="text-decoration: inherit;">
+                                                    {{$evento->nome}}
+                                                </a>
+                                            @else
+                                                <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="text-decoration: inherit;">
+                                                    {{$evento->nome}}
+                                                </a>
+                                            @endauth
+                                        </div>
+                                    </div>
+
+                                </h5>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="card-text">
+                                <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px;" style="position: relative; top: -2px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
+                            </p>
+                            <p>
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-12">
+                                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="18px" height="auto">
+                                        {{$evento->endereco->rua}}, {{$evento->endereco->numero}} - {{$evento->endereco->cidade}} / {{$evento->endereco->uf}}.
+                                    </div>
+                                </div>
+                            </p>
+                            <div>
+                                <div>
+                                    @auth
+                                        <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
+                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                        </a>
+                                    @else
+                                    <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}">
+                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                    </a>
+                                    @endauth
+                                </div>
+                                @can('isCoordenador', $evento)
+                                    <div>
+                                        <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
+                                            <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
+                                            {{ csrf_field() }}
+                                            {{ method_field('DELETE') }}
+                                            <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
+                                                <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar
+                                            </a>
+                                        </form>
+                                    </div>
+                                @endcan
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Modal de exclusão do evento -->
+                <div class="modal fade" id="modalExcluirEvento{{$evento->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: #114048ff; color: white;">
+                        <h5 class="modal-title" id="#label">Confirmação</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                            <div class="modal-body">
+                                Tem certeza de deseja excluir esse evento?
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                            <button type="submit" class="btn btn-primary" form="formExcluirEvento{{$evento->id}}">Sim</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- fim do modal -->
+            @endforeach
+        </div>
+    </div>
+@endif
+
 @include('componentes.footer')
 
 @endsection

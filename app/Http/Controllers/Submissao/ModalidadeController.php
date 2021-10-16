@@ -63,15 +63,15 @@ class ModalidadeController extends Controller
             'nomeModalidade'    => ['required', 'string'],
             'inícioDaSubmissão' => ['required', 'date'],
             'fimDaSubmissão'    => ['required', 'date', 'after:inícioDaSubmissão'],
-            'inícioDaRevisão'   => ['required', 'date', 'after:inícioDaSubmissão'],
-            'fimDaRevisão'      => ['required', 'date', 'after:inícioDaRevisão'],
+            'inícioDaRevisão'   => ['nullable', 'date', 'after:inícioDaSubmissão'],
+            'fimDaRevisão'      => ['nullable', 'date', 'after:inícioDaRevisão'],
 
             'inícioCorreção'   => ['nullable','date', 'after:fimDaRevisão', 'required_with:fimCorreção'],
             'fimCorreção'      => ['nullable','date', 'after:inícioCorreção', 'required_with:inícioCorreção'],
             'inícioValidação'   => ['nullable','date', 'after:fimCorreção', 'required_with:fimValidação'],
             'fimValidação'      => ['nullable','date', 'after:inícioValidação', 'required_with:inícioValidação'],
 
-            'resultado'         => ['required', 'date', 'after:fimDaRevisão'],
+            'resultado'         => ['required', 'date', 'after:fimDaSubmissão'],
 
             'texto'             => ['nullable'],
             'limit'             => ['nullable'],
