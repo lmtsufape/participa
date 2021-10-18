@@ -30,7 +30,7 @@ class StoreEventoRequest extends FormRequest
             'descricao'   => ['required', 'string'],
             'tipo'        => ['required', 'string'],
             'dataInicio'  => ['required', 'date', 'after:yesterday'],
-            'dataFim'     => ['required', 'date', 'after:dataInicio'],
+            'dataFim'     => ['required', 'date'],
             'fotoEvento'  => ['file', 'mimes:png, jpg,jpeg'],
             'rua'         => ['required', 'string'],
             'numero'      => ['required', 'string'],
