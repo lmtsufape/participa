@@ -404,7 +404,8 @@
                 <p>
                     {{-- LOCAL DA PROGRAMAÇÃO --}}
                     @if (!($evento->exibir_calendario_programacao) && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null)
-                      <iframe src="{{asset('storage/' . $evento->pdf_programacao)}}" width="100%" height="500" style="border: none;"></iframe>
+                      {{-- <iframe src="{{asset('storage/' . $evento->pdf_programacao)}}" width="100%" height="500" style="border: none;"></iframe> --}}
+                      <a href="{{asset('storage/' . $evento->pdf_programacao)}}" target="_black"><img src="{{asset('img/icons/file-pdf-solid.svg')}}" alt="PDF icone" style="display: inline-block; width: 15px; margin-right: 5px;">{{$etiquetas->etiquetamoduloprogramacao}}</a>
                     @elseif ($evento->exibir_calendario_programacao && $etiquetas->modprogramacao == true)
                       @if ($atividades != null && count($atividades) > 0)
                         <div id="wrap">
