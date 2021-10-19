@@ -38,6 +38,11 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-5">
+                            <div class="col-form-label text-md-left">
+                                <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="checkboxVisibilidade[]" value="0">
+                            </div>
+                        </div>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="exampleFormControlSelect1">Tipo</label>
@@ -191,6 +196,11 @@
                                 <div class="col-md-12">
                                     <input type="text" style="margin-bottom:10px" disabled='true' class="form-control " name="resposta[]">
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="col-form-label text-md-left">
+                                <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="checkboxVisibilidade[]" value="${order-1}">
                             </div>
                         </div>
                         <div class="col-sm-4">

@@ -452,9 +452,17 @@ class RevisorController extends Controller
             'revisor_id' => $data['revisor_id'],
             'trabalho_id' => $data['trabalho_id']
           ]);
-          $resposta->paragrafo()->create([
-            'resposta' => $data['resposta'][$key],
-          ]);
+          if($pergunta->visibilidade == true){
+                $resposta->paragrafo()->create([
+                    'resposta' => $data['resposta'][$key],
+                    'visibilidade' => true,
+                ]);
+          }else{
+                $resposta->paragrafo()->create([
+                    'resposta' => $data['resposta'][$key],
+                    'visibilidade' => false,
+                ]);
+          }
 
           $evento_id = $trabalho->eventoId;
           $trabalho->avaliado = "Avaliado";
