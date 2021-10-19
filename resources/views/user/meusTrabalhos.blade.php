@@ -134,9 +134,11 @@
                   <td>{{$trabalho->id}}</td>
                   <td>{{$trabalho->titulo}}</td>
                   <td style="text-align:center">
+                    @if($trabalho->arquivo()->where('versaoFinal', true)->first() != null && Storage::disk()->exists($trabalho->arquivo()->where('versaoFinal', true)->first()->nome))
                       <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
                           <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                       </a>
+                    @endif
                   </td>
                   <td style="text-align:center">
                       <a href="#" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A edição do trabalho só é permitida durante o periodo de submissão." @endif>
