@@ -232,8 +232,8 @@ class ModalidadeController extends Controller
             'nome'.$request->modalidadeEditId                   => ['required', 'string'],
             'inícioSubmissão'.$request->modalidadeEditId        => ['required', 'date'],
             'fimSubmissão'.$request->modalidadeEditId           => ['required', 'date', 'after:inícioSubmissão'.$request->modalidadeEditId],
-            'inícioRevisão'.$request->modalidadeEditId          => ['required', 'date', 'after:inícioSubmissão'.$request->modalidadeEditId],
-            'fimRevisão'.$request->modalidadeEditId             => ['required', 'date', 'after:inícioRevisão'.$request->modalidadeEditId],
+            'inícioRevisão'.$request->modalidadeEditId          => ['nullable', 'date', 'after:inícioSubmissão'.$request->modalidadeEditId],
+            'fimRevisão'.$request->modalidadeEditId             => ['nullable', 'date', 'after:inícioRevisão'.$request->modalidadeEditId],
 
             'inícioCorreção'.$request->modalidadeEditId         => ['nullable','date', 'after:fimDaRevisão'.$request->modalidadeEditId, 'required_with:fimCorreção'.$request->modalidadeEditId],
             'fimCorreção'.$request->modalidadeEditId            => ['nullable','date', 'after:inícioCorreção'.$request->modalidadeEditId, 'required_with:inícioCorreção'.$request->modalidadeEditId],
