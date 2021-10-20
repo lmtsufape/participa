@@ -139,7 +139,7 @@
                           <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                       </a>
                     @else
-                        <a href="#" data-toggle="popover" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;" >
+                        <a href="#" onclick="return false;" id="download-{{$trabalho->id}}" data-toggle="popover" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;" >
                             <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                         </a>
                     @endif
@@ -237,7 +237,7 @@
                             <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                         </a>
                     @else
-                        <a href="#" data-toggle="popover" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;" >
+                        <a href="#" onclick="return false;" data-toggle="popover" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;" >
                             <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                         </a>
                     @endif
