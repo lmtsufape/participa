@@ -670,7 +670,7 @@ class TrabalhoController extends Controller
         }
       }
 
-      if ($trabalho->arquivo != null && Storage::disk()->exists($trabalho->arquivo->nome)) {
+      if ($trabalho->arquivo != null && !$trabalho->arquivo->isEmpty() != null && Storage::disk()->exists($trabalho->arquivo->nome)) {
         Storage::delete($trabalho->arquivo->nome);
         $trabalho->arquivo->delete();
       }
