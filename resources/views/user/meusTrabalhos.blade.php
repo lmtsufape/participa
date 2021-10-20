@@ -138,6 +138,10 @@
                       <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
                           <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                       </a>
+                    @else
+                        <a href="#" data-toggle="popover" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;" >
+                            <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                        </a>
                     @endif
                   </td>
                   <td style="text-align:center">
@@ -228,9 +232,15 @@
                     <td>{{$trabalho->titulo}}</td>
                     <td>{{$trabalho->autor->name}}</td>
                     <td style="text-align:center">
+                    @if($trabalho->arquivo()->where('versaoFinal', true)->first() != null && Storage::disk()->exists($trabalho->arquivo()->where('versaoFinal', true)->first()->nome))
                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
                             <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                         </a>
+                    @else
+                        <a href="#" data-toggle="popover" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;" >
+                            <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                        </a>
+                    @endif
                     </td>
                   </tr>
               @endforeach
