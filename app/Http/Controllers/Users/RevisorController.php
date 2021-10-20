@@ -217,8 +217,8 @@ class RevisorController extends Controller
 
       // Adicionando os novos revisores
       foreach ($request->input('areasEditadas_'.$user->id) as $area) {
-        $encontrado = false;
         foreach ($request->input('modalidadesEditadas_'.$user->id) as $modalidade) {
+          $encontrado = false;
           foreach ($revisores as $revisor) {
             if ($revisor->areaId == $area && $revisor->modalidadeId == $modalidade) {
               $encontrado = true;

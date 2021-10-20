@@ -160,14 +160,14 @@
       <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
       <a href="#" class="btn btn-primary">Go somewhere</a> --}}
       <div class="container" style="margin-top:20px">
-        @if(!Auth::check())
+        {{-- @if(!Auth::check())
           <div class="alert alert-warning alert-dismissible fade show" role="alert">
             <strong> A submissão de um trabalho é possível apenas quando cadastrado no sistema. </strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-        @endif
+        @endif --}}
 
         {{-- <div class="row margin">
             <div class="col-sm-12">
