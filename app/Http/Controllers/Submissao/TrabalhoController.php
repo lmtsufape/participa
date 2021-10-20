@@ -19,6 +19,8 @@ use App\Models\Submissao\Trabalho;
 use App\Models\Submissao\Avaliacao;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TrabalhoPostRequest;
+use App\Http\Requests\TrabalhoUpdateRequest;
 use App\Models\Submissao\Atribuicao;
 use App\Models\Submissao\Modalidade;
 use Illuminate\Support\Facades\Mail;
@@ -97,10 +99,10 @@ class TrabalhoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\TrabalhoPostRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $modalidadeId){
+    public function store(TrabalhoPostRequest $request, $modalidadeId){
 
       //Obtendo apenas os tipos de extensões selecionadas
       $modalidade = Modalidade::find($modalidadeId);
@@ -117,31 +119,7 @@ class TrabalhoController extends Controller
               return redirect()->route('home');
           }
         }
-        $validatedData = $request->validate([
-          'nomeTrabalho'      => ['required', 'string',],
-          'areaId'            => ['required', 'integer'],
-          'modalidadeId'      => ['required', 'integer'],
-          'eventoId'          => ['required', 'integer'],
-          'resumo'            => ['nullable','string'],
-          'nomeCoautor.*'     => ['string'],
-          'emailCoautor.*'    => ['string'],
-          'arquivo'           => ['nullable', 'file', 'max:2000000'],
-          'campoextra1arquivo' => ['nullable', 'file', 'max:2000000'],
-          'campoextra2arquivo' => ['nullable', 'file', 'max:2000000'],
-          'campoextra3arquivo' => ['nullable', 'file', 'max:2000000'],
-          'campoextra4arquivo' => ['nullable', 'file', 'max:2000000'],
-          'campoextra5arquivo' => ['nullable', 'file', 'max:2000000'],
-          'campoextra1simples' => ['nullable', 'string'],
-          'campoextra2simples' => ['nullable', 'string'],
-          'campoextra3simples' => ['nullable', 'string'],
-          'campoextra4simples' => ['nullable', 'string'],
-          'campoextra5simples' => ['nullable', 'string'],
-          'campoextra1grande' => ['nullable', 'string'],
-          'campoextra2grande' => ['nullable', 'string'],
-          'campoextra3grande' => ['nullable', 'string'],
-          'campoextra4grande' => ['nullable', 'string'],
-          'campoextra5grande' => ['nullable', 'string'],
-        ]);
+        $validatedData = $request->validated();
       //   dd($request->all());
 
         if ($this->validarTipoDoArquivo($request->arquivo, $modalidade)) {
@@ -353,7 +331,7 @@ class TrabalhoController extends Controller
         return redirect()->route('evento.visualizar',['id'=>$request->eventoId])
                          ->with(['message' => 'Submissão concluída com sucesso!','class' => 'success']);
       } catch (\Throwable $th) {
-          \Log::info("message".$th->getMessage());
+          Log::info("message".$th->getMessage());
         return redirect()->back()->with(['message' => "Submissão não foi concluída!",'class' => 'danger']);
       }
 
@@ -407,41 +385,17 @@ class TrabalhoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\TrabalhoUpdateRequest  $request
      * @param  \App\Trabalho  $trabalho
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TrabalhoUpdateRequest $request, $id)
     {
       //dd($request)
 
-      
 
-      $validatedData = $request->validate([
-        'trabalhoEditId'        => ['required'],
-        'nomeTrabalho'.$id      => ['required', 'string',],
-        'area'.$id              => ['required', 'integer'],
-        'modalidade'.$id      => ['required', 'integer'],
-        'resumo'.$id            => ['nullable','string'],
-        'nomeCoautor_'.$id.'.*'  => ['string'],
-        'emailCoautor_'.$id.'.*' => ['string'],
-        'arquivo'.$id           => ['nullable', 'file', 'max:2000000'],
-        'campoextra1arquivo'    => ['nullable', 'file', 'max:2000000'],
-        'campoextra2arquivo'    => ['nullable', 'file', 'max:2000000'],
-        'campoextra3arquivo'    => ['nullable', 'file', 'max:2000000'],
-        'campoextra4arquivo'    => ['nullable', 'file', 'max:2000000'],
-        'campoextra5arquivo'    => ['nullable', 'file', 'max:2000000'],
-        'campoextra1simples'    => ['nullable', 'string'],
-        'campoextra2simples'    => ['nullable', 'string'],
-        'campoextra3simples'    => ['nullable', 'string'],
-        'campoextra4simples'    => ['nullable', 'string'],
-        'campoextra5simples'    => ['nullable', 'string'],
-        'campoextra1grande'     => ['nullable', 'string'],
-        'campoextra2grande'     => ['nullable', 'string'],
-        'campoextra3grande'     => ['nullable', 'string'],
-        'campoextra4grande'     => ['nullable', 'string'],
-        'campoextra5grande'     => ['nullable', 'string'],
-      ]);
+
+      $validatedData = $request->validated();
 
       $trabalho = Trabalho::find($id);
       $evento = $trabalho->evento;
@@ -990,7 +944,7 @@ class TrabalhoController extends Controller
                                                              'areas' => $areas]);
     }
 
-    public function pesquisaAjax(Request $request) {    
+    public function pesquisaAjax(Request $request) {
       if ($request->areaId != null) {
         $area_id = $request->areaId;
       } else {
