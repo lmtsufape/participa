@@ -153,150 +153,236 @@
     </div>
 </div>
 
-<div class="card-visualizar-evento justify-content-center">
-  <div class="card" style="width: 80%;">
-    <div class="card-body">
-      {{-- <h5 class="card-title">Special title treatment</h5>
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a> --}}
-      <div class="container" style="margin-top:20px">
-        {{-- @if(!Auth::check())
-          <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong> A submissão de um trabalho é possível apenas quando cadastrado no sistema. </strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        @endif --}}
-
-        {{-- <div class="row margin">
-            <div class="col-sm-12">
-                <h4>{{$etiquetas->etiquetanomeevento}}:</h4>
+<div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+                <h5 class="modal-title" id="#label">Confirmação</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-        </div> --}}
-        @if (session('message'))
-            <div class="alert alert-{{ session('class') }}">
-                {{ session('message') }}
-            </div>
-        @endif
-        <div class="row margin">
-            <div class="col-sm-12">
-                <h1>
-                    {{$evento->nome}}
-                </h1>
-            </div>
+            <form action="{{route('inscricao.inscrever', ['evento_id' => $evento->id])}}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    Tem certeza que deseja se inscrever nesse evento?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                    <button type="submit" class="btn btn-primary">Sim</button>
+                </div>
+            </form>
         </div>
+    </div>
+</div>
 
-        {{-- <div class="row margin">
-            <div class="col-sm-12">
-                <h4>{{$etiquetas->etiquetadescricaoevento}}:</h4>
-            </div>
-        </div> --}}
-        <div class="row margin">
-            <div class="col-sm-12">
-                <p>{{$evento->descricao}}</p>
-            </div>
-        </div>
-
-        {{-- <div class="row margin">
-          <div class="col-sm-12">
-              <h4>{{$etiquetas->etiquetatipoevento}}:</h4>
-          </div>
-        </div> --}}
+<div class="div-informacoes-evento container" style="margin-top: -200px;">
+  <div class="row justify-content-center">
+    <div class="col-sm-10">
         <div class="row">
-          <div class="col-sm-6">
-            <div class="container">
-
-
-              <hr>
-              <div class="row">
-                @if ($etiquetas->modsubmissao == true)
-                  <div class="col-sm-12 info-evento">
-                    <h5>{{$etiquetas->etiquetasubmissoes}}</h5>
-											<div class="accordion" id="accordion_modalidades">
-												@foreach ($modalidades as $modalidade)
-                                                    @if (Carbon\Carbon::parse($modalidade->inicioResultado) >= $mytime)
-                                                        <div class="accordion-group">
-
-
-                                                            <div class="accordion-heading accordion-modadalidade">
-                                                                <a class="accordion-button accordion-toggle titulo-modalidade" data-toggle="collapse" data-parent="#accordion_modalidades" href="{{ '#collapse_' . $modalidade->id }}">
-                                                                    <h6>Modalidade: {{$modalidade->nome}}</h6>
-                                                                </a>
-                                                            </div>
-
-                                                            <div id="{{ 'collapse_' . $modalidade->id }}" class="accordion-body in collapse" style="height: auto;">
-                                                                <div class="accordion-inner">
-                                                                    <table class="mb-1">
+            <div class="col-sm-8">
+               <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-sm-12">
+                        <div class="card sombra-card" style="width: 100%;">
+                            <div class="card-body">
+                                <div class="container">
+                                    {{-- @if(!Auth::check())
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <strong> A submissão de um trabalho é possível apenas quando cadastrado no sistema. </strong>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    @endif --}}
+                                    @if (session('message'))
+                                        <div class="alert alert-success">
+                                            {{ session('message') }}
+                                        </div>
+                                    @endif
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h2 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{$evento->nome}}</h2>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-sm-12" style="text-align: justify;">
+                                            {{$evento->descricao}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+               @if ($etiquetas->modprogramacao == true && $evento->exibir_calendario_programacao)
+                    <div class="row" style="margin-bottom: 10px;">
+                        <div class="col-sm-12">
+                            <div class="card sombra-card" style="width: 100%;">
+                                <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="col-sm-12 form-group">
+                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">Programação</h4>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-sm-12 form-group">
+                                            <div id="wrap">
+                                                <div id='calendar-wrap' style="width: 100%;">
+                                                  <div id='calendar'></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </div>
+            <div class="col-sm-4">
+                @if ($etiquetas->modinscricao == true)
+                    <div class="row" style="margin-bottom: 10px;">
+                        <div class="col-sm-12">
+                            <div class="card sombra-card" style="width: 100%;">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{$etiquetas->etiquetamoduloinscricao}}</h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <button id="btn-inscrevase" class="btn btn-primary" data-toggle="modal" data-target="#modalInscrever" @if ($isInscrito) disabled @endif>@if ($isInscrito) Já inscrito @else Inscreva-se @endif</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-sm-12">
+                        <div class="card sombra-card" style="width: 100%;">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-sm-12 form-group">
+                                        <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">Informações</h4>
+                                    </div>
+                                </div>
+                                @if (!($evento->exibir_calendario_programacao) && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null)
+                                    <div class="form-row justify-content-center">
+                                        <div class="col-sm-3 form-group " style="position: relative; text-align: center;">
+                                            <div class="div-icon-programacao">
+                                                <img class="icon-programacao" src="{{asset('img/icons/Icon awesome-file-pdf.svg')}}" alt="PDF com a programação">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8 form-inline">
+                                            <span class="titulo">
+                                                <a href="{{asset('storage/' . $evento->pdf_programacao)}}" target="_black">{{$etiquetas->etiquetamoduloprogramacao}}</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+                                @if ($etiquetas->modsubmissao == true)
+                                  <div class="row">
+                                    <div class="col-sm-12">
+                                      {{-- <h5>{{$etiquetas->etiquetasubmissoes}}</h5> --}}
+                                        <div class="accordion" id="accordion_modalidades" style="font-size: 10px;">
+                                          @foreach ($modalidades as $modalidade)
+                                              @if (Carbon\Carbon::parse($modalidade->inicioResultado) >= $mytime)
+                                                  <div class="accordion-group">
+                                                      <div class="accordion-heading">
+                                                            <a class="accordion-button accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion_modalidades" href="{{'#collapse_' . $modalidade->id}}">
+                                                                <div class="row">
+                                                                    <div class="col-sm-10">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-3">
+                                                                                <img class="enviar-trabalho" src="{{asset('img/icons/Icon awesome-arrow-up.svg')}}" alt="Enviar trabalho">
+                                                                            </div>
+                                                                            <div class="col-sm-9" style="position: relative; left: 8px; margin-top: 8px; ">
+                                                                                <span style="font-size: 14px;">Envio de trabalhos</span><br>
+                                                                                <span style="font-size: 12px;">(modalidade <strong>{{$modalidade->nome}}</strong>)</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-2" style="margin-top: 15px;">
+                                                                        <img src="{{asset('img/icons/Icon ionic-ios-arrow-down.svg')}}" alt="Seta que abre o accordion" width="15px;">
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                      </div>
+                                                      <div id="{{'collapse_' . $modalidade->id}}" class="accordion-body in collapse" style="height: auto;">
+                                                        {{-- <div class="accordion-inner"> --}}
+                                                            <div class="row">
+                                                                <div class="col-sm-12">
+                                                                    <table>
                                                                         <tr>
-                                                                                {{-- @php
-                                                                                                                                                            date_default_timezone_set('America/Recife');
-                                                                                                                                                            @endphp --}}
-                                                                            <td><img class="" src="{{asset('img/icons/calendar-pink.png')}}" alt=""></td>
+                                                                            <td><img class="" src="{{asset('img/icons/calendar-pink.png')}}" alt="" style="width:20px;"></td>
                                                                             <td>Envio:</td>
                                                                             <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioSubmissao))}}</td>
                                                                             <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimSubmissao))}}</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
+                                                                            <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt="" style="width:20px;"></td>
                                                                             <td>Avaliação:</td>
                                                                             <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioRevisao))}}</td>
                                                                             <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimRevisao))}}</td>
                                                                         </tr>
                                                                         @if($modalidade->inicioCorrecao && $modalidade->fimCorrecao)
                                                                             <tr>
-                                                                                <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
+                                                                                <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt="" style="width:20px;"></td>
                                                                                 <td>Correção:</td>
                                                                                 <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioCorrecao))}}</td>
                                                                                 <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimCorrecao))}}</td>
                                                                             </tr>
                                                                         @endif
-
+            
                                                                         @if($modalidade->inicioValidacao && $modalidade->fimValidacao)
                                                                             <tr>
-                                                                                <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt=""></td>
+                                                                                <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt="" style="width:20px;"></td>
                                                                                 <td>Validação:</td>
                                                                                 <td>{{date('d/m/Y H:i',strtotime($modalidade->inicioValidacao))}}</td>
                                                                                 <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimValidacao))}}</td>
                                                                             </tr>
                                                                         @endif
                                                                         <tr>
-                                                                            <td><img class="" src="{{asset('img/icons/calendar-green.png')}}" alt=""></td>
+                                                                            <td><img class="" src="{{asset('img/icons/calendar-green.png')}}" alt="" style="width:20px;"></td>
                                                                             <td>Resultado:</td>
                                                                             <td>{{date('d/m/Y  H:i',strtotime($modalidade->inicioResultado))}}</td>
                                                                         </tr>
                                                                     </table>
-
-                                                                    {{-- {{dd(Carbon\Carbon::parse($modalidade->inicioSubmissao))}} --}}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-sm-12">
                                                                     @if(Carbon\Carbon::parse($modalidade->inicioSubmissao) <= $mytime)
                                                                         @if($mytime <= Carbon\Carbon::parse($modalidade->fimSubmissao))
                                                                             @if ($modalidade->arquivo == true)
                                                                                 @if(isset($modalidade->regra))
                                                                                     <div style="margin-top: 20px; margin-bottom: 10px;">
                                                                                         <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
-                                                                                            <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
+                                                                                            <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px;">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
                                                                                         </a>
                                                                                     </div>
                                                                                 @endif
                                                                                 @if (isset($modalidade->template))
                                                                                     <div style="margin-top: 20px; margin-bottom: 10px;">
                                                                                         <a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
-                                                                                            <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixartemplate}}
+                                                                                            <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px;">&nbsp;{{$evento->formEvento->etiquetabaixartemplate}}
                                                                                         </a>
                                                                                     </div>
                                                                                 @endif
                                                                             @else
                                                                                 @if(isset($modalidade->regra))
                                                                                     <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                            <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
-                                                                                                    <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
-                                                                                            </a>
+                                                                                        <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                                                                        <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px;">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
+                                                                                        </a>
                                                                                     </div>
                                                                                 @endif
                                                                             @endif
-                                                                            <div class="col-md-12 botao-form-left" style="">
-                                                                                <a class="btn button-card-visualizar-evento white-color" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">SUBMETER TRABALHO</a>
-                                                                            </div>
+                                                                            <a class="btn button-card-visualizar-evento" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
                                                                         @else
                                                                         {{-- Permitindo Coordenador ou Comissao Cientifica submeter trabalhos mesmo passada a data de submissao --}}
                                                                             @can('isCoordenadorOrComissao', $evento)
@@ -318,356 +404,150 @@
                                                                                 @else
                                                                                     @if(isset($modalidade->regra))
                                                                                         <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                                <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
-                                                                                                        <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
-                                                                                                </a>
+                                                                                            <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                                                                                <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">&nbsp;{{$evento->formEvento->etiquetabaixarregra}}
+                                                                                            </a>
                                                                                         </div>
                                                                                     @endif
                                                                                 @endif
-                                                                                <div class="col-md-12 botao-form-left" style="">
-                                                                                    <a class="btn button-card-visualizar-evento white-color" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}">SUBMETER TRABALHO</a>
-                                                                                </div>
+                                                                                <a class="btn button-card-visualizar-evento white-color" href="{{route('trabalho.index',['id'=>$evento->id, 'idModalidade' => $modalidade->id])}}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
                                                                             @endcan
                                                                         @endif
                                                                     @endif
                                                                 </div>
-                                                                <hr>
                                                             </div>
-                                                        </div>
-                                                    @endif
-
-                                                @endforeach
-											</div>
-                  </div>
-                @endif
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            {{-- Modulo de inscrição --}}
-            @if ($etiquetas->modinscricao == true)
-              <div class="row margin">
-                <div class="col-sm-12 info-evento">
-                    <h5>{{$etiquetas->etiquetamoduloinscricao}}:</h5>
-                    <p>
-                        @if ($isInscrito)
-                          Você já está inscrito nesse evento.
-                        @else
-                          <a class="btn btn-primary" href="" data-toggle="modal" data-target="#modalInscrever">Realizar inscrição</a>
-                        @endif
-                        {{-- <a class="btn btn-primary" href="{{route('inscricao.create', ['id' => $evento->id])}}">Realizar inscrição</a> --}}
-                    </p>
-                </div>
-              </div>
-              <div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="background-color: #114048ff; color: white;">
-                    <h5 class="modal-title" id="#label">Confirmação</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                                                        {{-- </div> --}}
+                                                      </div>
+                                                  </div>
+                                              @endif
+                                          @endforeach
+                                        </div>
+                                    </div>
+                                  </div>
+                                @endif
+                            </div>
+                        </div>
                     </div>
-                    <form action="{{route('inscricao.inscrever', ['evento_id' => $evento->id])}}" method="POST">
-                        @csrf
-                        <div class="modal-body">
-                            Tem certeza que deseja se inscrever nesse evento?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                            <button type="submit" class="btn btn-primary">Sim</button>
-                        </div>
-                    </form>
-                </div>
                 </div>
             </div>
-            @endif
-            {{-- Modulo Organização --}}
-            @if ($etiquetas->modorganizacao == true)
-              <div class="row margin">
-                <div class="col-sm-12 info-evento">
-                    <h5>{{$etiquetas->etiquetamoduloorganizacao}}:</h5>
-                    <p>
-                        LOCAL DA ORGANIZAÇÃO
-                    </p>
-                </div>
-              </div>
-            @endif
-          </div>
         </div>
 
         <div class="row">
-          {{-- Modulo Programação --}}
-          @if ($etiquetas->modprogramacao == true)
-            <div class="col-sm-12 info-evento">
-                <h5>{{$etiquetas->etiquetamoduloprogramacao}}</h5>
-                <p>
-                    {{-- LOCAL DA PROGRAMAÇÃO --}}
-                    @if (!($evento->exibir_calendario_programacao) && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null)
-                      {{-- <iframe src="{{asset('storage/' . $evento->pdf_programacao)}}" width="100%" height="500" style="border: none;"></iframe> --}}
-                      <a href="{{asset('storage/' . $evento->pdf_programacao)}}" target="_black"><img src="{{asset('img/icons/file-pdf-solid.svg')}}" alt="PDF icone" style="display: inline-block; width: 15px; margin-right: 5px;">{{$etiquetas->etiquetamoduloprogramacao}}</a>
-                    @elseif ($evento->exibir_calendario_programacao && $etiquetas->modprogramacao == true)
-                      @if ($atividades != null && count($atividades) > 0)
-                        <div id="wrap">
-                          <div id='calendar-wrap' style="width: 100%;">
-                            <div id='calendar'></div>
-                          </div>
+            <div class="col-sm-12">
+                <div class="card sombra-card" style="width: 100%;">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">Subeventos</h4>
+                            </div>
                         </div>
-                      @else
-                        Nenhuma atividade programada
-                      @endif
-                    @else
-                        Nenhuma atividade programada
-                    @endif
-                </p>
+                        <div class="row">
+                        @foreach ($subeventos as $subevento)
+                            <div class="col-sm-4">
+                                <div class="card" style="width: 15rem;">
+                                    @if(isset($subevento->fotoEvento))
+                                        <img class="img-card" src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+                                    @else
+                                        <img class="img-card" src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
+                                    @endif
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h5 class="card-title">
+                                                    <div class="row">
+                                                        <div class="col-sm-10">
+                                                            @auth()
+                                                                <a href="{{route('evento.visualizar',['id'=>$subevento->id])}}" style="text-decoration: inherit;">
+                                                                    {{$subevento->nome}}
+                                                                </a>
+                                                            @else
+                                                                <a href="{{route('evento.visualizarNaoLogado',['id'=>$subevento->id])}}" style="text-decoration: inherit;">
+                                                                    {{$subevento->nome}}
+                                                                </a>
+                                                            @endauth
+                                                        </div>
+                                                    </div>
+
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="card-text">
+                                                <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px;" style="position: relative; top: -2px;"> {{date('d/m/Y',strtotime($subevento->dataInicio))}} - {{date('d/m/Y',strtotime($subevento->dataFim))}}<br>
+                                            </p>
+                                            <p>
+                                                <div class="row justify-content-center">
+                                                    <div class="col-sm-12">
+                                                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="18px" height="auto">
+                                                        {{$subevento->endereco->rua}}, {{$subevento->endereco->numero}} - {{$subevento->endereco->cidade}} / {{$subevento->endereco->uf}}.
+                                                    </div>
+                                                </div>
+                                            </p>
+                                            <div>
+                                                <div>
+                                                    @auth
+                                                        <a href="{{route('evento.visualizar',['id'=>$subevento->id])}}">
+                                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                                        </a>
+                                                    @else
+                                                    <a href="{{route('evento.visualizarNaoLogado',['id'=>$subevento->id])}}">
+                                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                                    </a>
+                                                    @endauth
+                                                </div>
+                                                @can('isCoordenador', $subevento)
+                                                    <div>
+                                                        <a href="{{ route('coord.detalhesEvento', ['eventoId' => $subevento->id]) }}">
+                                                            <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
+                                                        </a>
+                                                    </div>
+                                                    <div>
+                                                        <form id="formExcluirEvento{{$subevento->id}}" method="POST" action="{{route('evento.deletar',$subevento->id)}}">
+                                                            {{ csrf_field() }}
+                                                            {{ method_field('DELETE') }}
+                                                            <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$subevento->id}}">
+                                                                <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar
+                                                            </a>
+                                                        </form>
+                                                    </div>
+                                                @endcan
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Modal de exclusão do evento -->
+                            <div class="modal fade" id="modalExcluirEvento{{$subevento->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #114048ff; color: white;">
+                                    <h5 class="modal-title" id="#label">Confirmação</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                        <div class="modal-body">
+                                            Tem certeza de deseja excluir esse evento?
+                                        </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                                        <button type="submit" class="btn btn-primary" form="formExcluirEvento{{$subevento->id}}">Sim</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <!-- fim do modal -->
+                        @endforeach
+                        </div>
+                    </div>
+                </div>
             </div>
-          @endif
         </div>
-
-        {{-- @if($hasFile == true)
-          <div class="row margin">
-              <div class="col-sm-12">
-                  <h1>
-                      Meus Trabalhos
-                  </h1>
-              </div>
-          </div>
-          @if($hasTrabalho)
-            <div class="row margin">
-                <div class="col-sm-12 info-evento">
-                    <h4>Como Autor</h4>
-                </div>
-            </div>
-
-            <!-- Tabela de trabalhos -->
-
-            <div class="row justify-content-center">
-              <div class="col-sm-12">
-
-                <table class="table table-responsive-lg table-hover">
-                  <thead>
-                    <tr>
-                      <th>Título</th>
-                      <th style="text-align:center">Baixar</th>
-                      <th style="text-align:center">Nova Versão</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach($trabalhos as $trabalho)
-                      <tr>
-                        <td>{{$trabalho->titulo}}</td>
-                        <td style="text-align:center">
-                          @php $arquivo = ""; @endphp
-                          @foreach($trabalho->arquivo as $key)
-                            @php
-                              if($key->versaoFinal == true){
-                                $arquivo = $key->nome;
-                              }
-                            @endphp
-                          @endforeach
-                          <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                              <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                          </a>
-                        </td>
-                        <td style="text-align:center">
-                          @if($evento->inicioSubmissao <= $mytime)
-                            @if($mytime < $evento->fimSubmissao)
-                              <a href="#" onclick="changeTrabalho({{$trabalho->id}})" data-toggle="modal" data-target="#modalTrabalho" style="color:#114048ff">
-                                <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
-                              </a>
-                            @endif
-                          @endif
-                        </td>
-                      </tr>
-                    @endforeach
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          @endif
-
-          @if($hasTrabalhoCoautor)
-            <div class="row margin">
-                <div class="col-sm-12 info-evento">
-                    <h4>Como Coautor</h4>
-                </div>
-            </div>
-
-            <div class="row justify-content-center">
-              <div class="col-sm-12">
-
-                <table class="table table-responsive-lg table-hover">
-                  <thead>
-                    <tr>
-                      <th>Título</th>
-                      <th  style="text-align:center">Baixar</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach($trabalhosCoautor as $trabalho)
-                      <tr>
-                        <td>{{$trabalho->titulo}}</td>
-                        <td style="text-align:center">
-                          @php $arquivo = ""; @endphp
-                          @foreach($trabalho->arquivo as $key)
-                            @php
-                              if($key->versaoFinal == true){
-                                $arquivo = $key->nome;
-                              }
-                            @endphp
-                          @endforeach
-                          <a href="{{route('download', ['file' => $arquivo])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
-                              <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                          </a>
-                        </td>
-                      </tr>
-                    @endforeach
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          @endif
-        @endif --}}
-
-        {{-- <div class="row justify-content-center" style="margin: 20px 0 20px 0"> --}}
-
-            {{-- <div class="col-md-6 botao-form-left" style="">
-                <a class="btn btn-secondary botao-form" href="{{route('cancelarCadastro')}}" style="width:100%">Voltar</a>
-            </div> --}}
-
-            {{-- @if($evento->inicioSubmissao <= $mytime)
-              @if($mytime < $evento->fimSubmissao)
-                <div class="col-md-6 botao-form-right" style="">
-                  <a class="btn btn-primary botao-form" href="{{route('trabalho.index',['id'=>$evento->id])}}" style="width:100%">Submeter Trabalho</a>
-                </div>
-              @endif
-            @endif --}}
-
-        {{-- </div> --}}
-      </div>
     </div>
   </div>
 </div>
 
-@if(count($subeventos) > 0)
-    <div class="container"  style="position: relative; top: 80px;">
-        <div class="row justify-content-center titulo-detalhes">
-            <div class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-10">
-                        <h1>Subeventos</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @if(session('message'))
-            <div class="row">
-                <div class="col-md-12" style="margin-top: 5px;">
-                    <div class="alert alert-success">
-                        <p>{{session('message')}}</p>
-                    </div>
-                </div>
-            </div>
-        @endif
-        <div class="row cards-eventos-index">
-            @foreach ($subeventos as $evento)
-                <div class="card" style="width: 16rem;">
-                    @if(isset($evento->fotoEvento))
-                        <img class="img-card" src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
-                    @else
-                        <img class="img-card" src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
-                    @endif
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <h5 class="card-title">
-                                    <div class="row">
-                                        <div class="col-sm-10">
-                                            @auth()
-                                                <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="text-decoration: inherit;">
-                                                    {{$evento->nome}}
-                                                </a>
-                                            @else
-                                                <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="text-decoration: inherit;">
-                                                    {{$evento->nome}}
-                                                </a>
-                                            @endauth
-                                        </div>
-                                    </div>
-
-                                </h5>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="card-text">
-                                <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px;" style="position: relative; top: -2px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
-                            </p>
-                            <p>
-                                <div class="row justify-content-center">
-                                    <div class="col-sm-12">
-                                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="18px" height="auto">
-                                        {{$evento->endereco->rua}}, {{$evento->endereco->numero}} - {{$evento->endereco->cidade}} / {{$evento->endereco->uf}}.
-                                    </div>
-                                </div>
-                            </p>
-                            <div>
-                                <div>
-                                    @auth
-                                        <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
-                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
-                                        </a>
-                                    @else
-                                    <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}">
-                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
-                                    </a>
-                                    @endauth
-                                </div>
-                                @can('isCoordenador', $evento)
-                                    <div>
-                                        <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
-                                            <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
-                                        </a>
-                                    </div>
-                                    <div>
-                                        <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-                                            <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
-                                                <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar
-                                            </a>
-                                        </form>
-                                    </div>
-                                @endcan
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- Modal de exclusão do evento -->
-                <div class="modal fade" id="modalExcluirEvento{{$evento->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" style="background-color: #114048ff; color: white;">
-                        <h5 class="modal-title" id="#label">Confirmação</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        </div>
-                            <div class="modal-body">
-                                Tem certeza de deseja excluir esse evento?
-                            </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                            <button type="submit" class="btn btn-primary" form="formExcluirEvento{{$evento->id}}">Sim</button>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <!-- fim do modal -->
-            @endforeach
-        </div>
-    </div>
-@endif
 
 @include('componentes.footer')
 
@@ -675,67 +555,79 @@
 
 @section('javascript')
 <script>
-  var botoes = document.getElementsByClassName('cor-aleatoria');
-  for (var i = 0; i < botoes.length; i++) {
-    botoes[i].style.backgroundColor = '#'+Math.floor(Math.random()*16777215).toString(16);
-  }
+    $(document).ready(function() {
+        $(".accordion-button").click(function(){
+            var img = this.children[0].children[1].children[0];
+            if (this.classList.contains("collapsed")) {
+                img.src = "{{asset('img/icons/Icon ionic-ios-arrow-up.svg')}}";
+            } else {
+                img.src = "{{asset('img/icons/Icon ionic-ios-arrow-down.svg')}}";
+            }
+        });
+    });
+    var botoes = document.getElementsByClassName('cor-aleatoria');
+    for (var i = 0; i < botoes.length; i++) {
+        botoes[i].style.backgroundColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+    }
 
-  function changeTrabalho(x){
-    document.getElementById('trabalhoNovaVersaoId').value = x;
-  }
+    function changeTrabalho(x){
+        document.getElementById('trabalhoNovaVersaoId').value = x;
+    }
 </script>
-  @if ($dataInicial != "" && $evento->exibir_calendario_programacao)
+@if ($dataInicial != "" && $evento->exibir_calendario_programacao)
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
 
-      /* initialize the external events
-      -----------------------------------------------------------------*/
+        /* initialize the external events
+        -----------------------------------------------------------------*/
 
-      // var containerEl = document.getElementById('external-events-list');
-      // new FullCalendar.Draggable(containerEl, {
-      //   itemSelector: '.fc-event',
-      //   eventData: function(eventEl) {
-      //     return {
-      //       title: eventEl.innerText.trim()
-      //     }
-      //   }
-      // });
+        // var containerEl = document.getElementById('external-events-list');
+        // new FullCalendar.Draggable(containerEl, {
+        //   itemSelector: '.fc-event',
+        //   eventData: function(eventEl) {
+        //     return {
+        //       title: eventEl.innerText.trim()
+        //     }
+        //   }
+        // });
 
-      //// the individual way to do it
-      // var containerEl = document.getElementById('external-events-list');
-      // var eventEls = Array.prototype.slice.call(
-      //   containerEl.querySelectorAll('.fc-event')
-      // );
-      // eventEls.forEach(function(eventEl) {
-      //   new FullCalendar.Draggable(eventEl, {
-      //     eventData: {
-      //       title: eventEl.innerText.trim(),
-      //     }
-      //   });
-      // });
+        //// the individual way to do it
+        // var containerEl = document.getElementById('external-events-list');
+        // var eventEls = Array.prototype.slice.call(
+        //   containerEl.querySelectorAll('.fc-event')
+        // );
+        // eventEls.forEach(function(eventEl) {
+        //   new FullCalendar.Draggable(eventEl, {
+        //     eventData: {
+        //       title: eventEl.innerText.trim(),
+        //     }
+        //   });
+        // });
 
-      /* initialize the calendar
-      -----------------------------------------------------------------*/
+        /* initialize the calendar
+        -----------------------------------------------------------------*/
 
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
         initialDate: "{{$dataInicial->data}}",
         headerToolbar: {
-          left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
-          center: 'title',
-          right: 'prev,next today'
+            left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+            center: 'title',
+            right: 'prev,next today'
         },
         locale: 'pt-br',
         editable: false,
         eventClick: function (info) {
-          var idModal = "#modalAtividadeShow"+info.event.id;
-          $(idModal).modal('show');
+            var idModal = "#modalAtividadeShow"+info.event.id;
+            $(idModal).modal('show');
         },
         events: "{{ route('atividades.json', ['id' => $evento->id]) }}",
 
-      });
-      calendar.render();
-      });
+        });
+            calendar.render();
+        });
+
+        
     </script>
-  @endif
+@endif
 @endsection
