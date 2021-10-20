@@ -217,8 +217,8 @@ class RevisorController extends Controller
 
       // Adicionando os novos revisores
       foreach ($request->input('areasEditadas_'.$user->id) as $area) {
-        $encontrado = false;
         foreach ($request->input('modalidadesEditadas_'.$user->id) as $modalidade) {
+          $encontrado = false;
           foreach ($revisores as $revisor) {
             if ($revisor->areaId == $area && $revisor->modalidadeId == $modalidade) {
               $encontrado = true;
@@ -273,7 +273,7 @@ class RevisorController extends Controller
         $user = User::find($id);
         $evento = Evento::find($evento_id);
         $this->authorize('isCoordenadorOrComissao', $evento);
-        
+
         if($user->usuarioTemp){
             $passwordTemporario = Str::random(8);
             $coord = User::find($evento->coordenadorId);
@@ -452,9 +452,17 @@ class RevisorController extends Controller
             'revisor_id' => $data['revisor_id'],
             'trabalho_id' => $data['trabalho_id']
           ]);
-          $resposta->paragrafo()->create([
-            'resposta' => $data['resposta'][$key],
-          ]);
+          if($pergunta->visibilidade == true){
+                $resposta->paragrafo()->create([
+                    'resposta' => $data['resposta'][$key],
+                    'visibilidade' => true,
+                ]);
+          }else{
+                $resposta->paragrafo()->create([
+                    'resposta' => $data['resposta'][$key],
+                    'visibilidade' => false,
+                ]);
+          }
 
           $evento_id = $trabalho->eventoId;
           $trabalho->avaliado = "Avaliado";

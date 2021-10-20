@@ -566,9 +566,17 @@ class EventoController extends Controller
       ]);
 
       foreach ($data['pergunta'] as $key => $value) {
-        $pergunta = $form->perguntas()->create([
-          'pergunta' => $value
-        ]);
+        if($request->checkboxVisibilidade != null && in_array($key, $request->checkboxVisibilidade)){
+            $pergunta = $form->perguntas()->create([
+                'pergunta' => $value,
+                'visibilidade' => true,
+            ]);
+        }else{
+            $pergunta = $form->perguntas()->create([
+                'pergunta' => $value,
+                'visibilidade' => false,
+            ]);
+        }
 
         $resposta = new Resposta();
         $resposta->pergunta_id = $pergunta->id;
@@ -1153,7 +1161,7 @@ class EventoController extends Controller
     public function setFotoEvento(Request $request){
       $evento = Evento::find($request->eventoId);
       $this->authorize('isCoordenadorOrComissao', $evento);
-      
+
       // dd($request);
       $validatedData = $request->validate([
         'eventoId'                => ['required', 'integer'],
