@@ -462,7 +462,7 @@
                                 <div class="col-sm-4">
                                     <div class="card" style="width: 15rem;">
                                         @if(isset($subevento->fotoEvento))
-                                            <img class="img-card" src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+                                            <img class="img-card" src="{{asset('storage/eventos/'.$subevento->id.'/logo.png')}}" class="card-img-top" alt="...">
                                         @else
                                             <img class="img-card" src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                                         @endif
