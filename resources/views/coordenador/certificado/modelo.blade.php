@@ -12,11 +12,11 @@
             background-size: 100% 100%;
         }
         @page {
-            margin: 30px 30px 0px 30px;
+            margin: 0px 0px 0px 0px;
         }
         .container {
             text-align: center;
-            color: white;
+            margin: 0px 60px 0px 60px;
         }
         .certificado-texto {
             color: rgb(15, 3, 85);
@@ -24,16 +24,16 @@
             margin-top: 180px;
         }
         .texto {
-            font-family: 'Times New Roman', Times, serif;
+            font-family:Arial, Helvetica, sans-serif;
             color: rgb(12, 14, 13);
             position: relative;
-            margin-top: 70px;
-            font-size: 20px;
+            margin-top: 44%;
+            font-size: 16px;
+            text-align: justify;
         }
 
         .linha {
             text-align: center;
-            margin-left: 200px;
         }
 
         .linha .assinatura-img {
@@ -51,14 +51,13 @@
     <body>
 
         <div class="container">
-            <h1 style="font-size: 40px;" class="certificado-texto" >Certificado </h1>
             <p class="texto" >Certificamos que <strong> Nome da pessoa </strong>  participou do evento  <strong> Nome do evento </strong>,
             como  <strong> Cargo da pessoa </strong> do dia  <strong> Datas do eventos </strong></p>
 
-            <p class="texto" style="margin-top: 120px">Garanhuns, {{$dataHoje}}.</p>
+            <p class="texto" style="text-align: right; margin-top: 0%;">Garanhuns, {{$dataHoje}}.</p>
 
         </div>
-        <div style="margin-top: 70px;">
+        <div style="position: absolute; bottom: 0; left:50%; margin-left:-180px;">
             <table>
                 <tbody>
                     <tr>
@@ -75,7 +74,7 @@
                             <td>
                                 <div class="linha">
                                     <hr id="linha-meio">
-                                    <p class="assinatura-nome" style="font-size: 20px;" >{{$assinatura->nome}}<br>{{$assinatura->cargo}}</p>
+                                    <p class="assinatura-nome" style="font-size: 16px; font-family:Arial, Helvetica, sans-serif;" >{{$assinatura->nome}}<br>{{$assinatura->cargo}}</p>
                                 </div>
                             </td>
                         @endforeach

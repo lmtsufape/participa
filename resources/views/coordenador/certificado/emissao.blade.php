@@ -42,7 +42,7 @@
                     <select class="form-control @error('destinatarios') is-invalid @enderror" id="idSelecionarDestinatario" onChange="selecionarDestinatario({{$evento->id}})" name="destinatario">
                         <option value="">-- Selecione os destinatários --</option>
                         @foreach ($destinatarios as $destinatario)
-                            @if ($destinatario == "Autores")
+                            @if ($destinatario == "Apresentadores")
                                 <option value="1">{{$destinatario}}</option>
                             @elseif($destinatario == "Comissão científica")
                                 <option value="2">{{$destinatario}}</option>
