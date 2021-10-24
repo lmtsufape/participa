@@ -32,7 +32,7 @@
                 <div class="row">
                   <div class="col-md-7 evento-image sizeImg">
                     @if ($evento->fotoEvento != null)
-                      <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="" alt="..." style="
+                      <img src="{{ asset('storage/'.$evento->fotoEvento) }}" class="" alt="..." style="
                       max-width:300px;
                       max-height:150px;
                       width: auto;
@@ -65,7 +65,7 @@
               <div class="row">
                 <div class="col-md-7 evento-image sizeImg">
                   @if ($evento->fotoEvento != null)
-                    <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="" alt="..." style="max-width:300px;
+                    <img src="{{ asset('storage/'.$evento->fotoEvento) }}" class="" alt="..." style="max-width:300px;
                     max-height:150px;
                     width: auto;
                     height: auto;background: no-repeat center;
@@ -120,7 +120,7 @@
         @foreach($proximosEventos as $evento)
           <div class="card" style="width: 16rem; margin:8px; border: 0px solid #1492E6; border-radius: 12px;">
             @if ($evento->fotoEvento != null)
-              <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
+              <img class="card-img-top" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap">
             @else
               <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
             @endif
@@ -156,7 +156,7 @@
         @foreach($eventosPassados as $evento)
           <div class="card" style="width: 16rem; margin:8px; border: 0px solid #1492E6; border-radius: 12px;">
             @if ($evento->fotoEvento != null)
-              <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
+              <img class="card-img-top" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap">
             @else
               <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
             @endif
@@ -246,7 +246,7 @@
               @foreach($proximosEventos as $evento)
                 <div class="card acessibilidade" style="width: 13rem;">
                   @if ($evento->fotoEvento != null)
-                    <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
+                    <img class="card-img-top" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap">
                   @else
                     <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
                   @endif
@@ -438,7 +438,7 @@
                 @if($evento->publicado && $evento->deletado == false)
                   <div class="card" style="width: 18rem;">
                       @if(isset($evento->fotoEvento))
-                        <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+                        <img src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
                       @else
                         <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                       @endif

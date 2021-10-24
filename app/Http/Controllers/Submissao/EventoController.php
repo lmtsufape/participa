@@ -1028,21 +1028,22 @@ class EventoController extends Controller
 
         $endereco = Endereco::find($evento->enderecoId);
         $evento->enderecoId           = $endereco->id;
-
+        $endereco->update($data);
+        
         if($request->fotoEvento != null){
           if(Storage::disk()->exists('public/'.$evento->fotoEvento)) {
-            Storage::delete($evento->fotoEvento);
+            Storage::delete('storage/'.$evento->fotoEvento);
           }
           $file = $request->fotoEvento;
           $path = 'public/eventos/' . $evento->id;
-          $nome = '/logo.png';
+          $nome = $request->file('fotoEvento')->getClientOriginalName();
           Storage::putFileAs($path, $file, $nome);
-          $evento->fotoEvento = 'eventos/' . $evento->id . $nome;
+          $evento->fotoEvento = 'eventos/' . $evento->id . '/' . $nome;
         }
 
-        $evento->save();
+        $evento->update();
 
-        $endereco->update($data);
+        
 
         return redirect()->route('home')->with(['message' => "Evento editado com sucesso!"]);
 
