@@ -176,7 +176,7 @@
     </div>
 </div>
 
-<div class="div-informacoes-evento container" style="margin-top: -200px;">
+<div class="div-informacoes-evento container" style="@if(isset($evento->fotoEvento))margin-top: -75px;@else margin-top: -200px; @endif">
   <div class="row justify-content-center">
     <div class="col-sm-10">
         <div class="row">
