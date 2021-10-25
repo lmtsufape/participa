@@ -137,7 +137,7 @@
                                 <label for="fotoEvento">Logo</label>
                                 <div id="imagem-loader" class="imagem-loader">
                                     @if ($evento->fotoEvento != null)
-                                        <img id="logo-preview" src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" alt="">
+                                        <img id="logo-preview" src="{{asset('storage/'.$evento->fotoEvento)}}" alt="">
                                     @else
                                         <img id="logo-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                     @endif

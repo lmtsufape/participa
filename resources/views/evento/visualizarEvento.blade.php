@@ -142,7 +142,7 @@
     <div class="row">
         @if(isset($evento->fotoEvento))
           <div class="banner-evento">
-              <img style="background-size: cover" src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" alt="">
+              <img style="background-size: cover" src="{{asset('storage/'. $evento->fotoEvento)}}" alt="">
           </div>
         @else
           <div class="banner-evento">
@@ -176,7 +176,7 @@
     </div>
 </div>
 
-<div class="div-informacoes-evento container" style="margin-top: -200px;">
+<div class="div-informacoes-evento container" style="@if(isset($evento->fotoEvento))margin-top: -75px;@else margin-top: -200px; @endif">
   <div class="row justify-content-center">
     <div class="col-sm-10">
         <div class="row">
@@ -462,7 +462,7 @@
                                 <div class="col-sm-4">
                                     <div class="card" style="width: 15rem;">
                                         @if(isset($subevento->fotoEvento))
-                                            <img class="img-card" src="{{asset('storage/eventos/'.$subevento->id.'/logo.png')}}" class="card-img-top" alt="...">
+                                            <img class="img-card" src="{{asset('storage/'.$subevento->fotoEvento)}}" class="card-img-top" alt="...">
                                         @else
                                             <img class="img-card" src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                                         @endif

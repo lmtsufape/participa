@@ -24,7 +24,7 @@
                 @can('isPublishOrIsCoordenador', $evento)
                 <div class="card" style="width: 16rem;">
                     @if(isset($evento->fotoEvento))
-                        <img class="img-card" src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+                        <img class="img-card" src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
                     @else
                         <img class="img-card" src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                     @endif
