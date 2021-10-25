@@ -207,7 +207,7 @@
                                     <br>
                                     <div class="row">
                                         <div class="col-sm-12" style="text-align: justify;">
-                                            {{$evento->descricao}}
+                                            {!! nl2br(e($evento->descricao)) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -337,7 +337,7 @@
                                                                                 <td>- {{date('d/m/Y H:i',strtotime($modalidade->fimCorrecao))}}</td>
                                                                             </tr>
                                                                         @endif
-            
+
                                                                         @if($modalidade->inicioValidacao && $modalidade->fimValidacao)
                                                                             <tr>
                                                                                 <td><img class="" src="{{asset('img/icons/calendar-yellow.png')}}" alt="" style="width:20px;"></td>
@@ -444,7 +444,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
         @if ($subeventos->count() > 0)
@@ -644,7 +644,7 @@
             calendar.render();
         });
 
-        
+
     </script>
 @endif
 @endsection
