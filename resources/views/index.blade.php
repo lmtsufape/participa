@@ -55,10 +55,15 @@
                         @endauth
                       </div>
                       <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">
-                        {{mb_strimwidth($evento->descricao, 0, 621, "...")}}
-                        @if (strlen($evento->descricao) > 621)
-                            <a href="#" onclick="event.preventDefault();" data-toggle="modal" data-target="#lerMais{{$evento->id}}">Saiba mais</a>
-                        @endif
+                        <div>
+                            @if (strlen($evento->descricao) > 621)
+                                {{ mb_strimwidth(strip_tags(html_entity_decode($evento->descricao, ENT_QUOTES)), 0, 621, "...") }}
+                                <br>
+                                <a href="#" onclick="event.preventDefault();" data-toggle="modal" data-target="#lerMais{{$evento->id}}">Saiba mais</a>
+                            @else
+                                {!! $evento->descricao !!}
+                            @endif
+                        </div>
                     </div>
                     </div>
                   </div>
@@ -92,9 +97,12 @@
                       @endauth
                     </div>
                     <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">
-                        {{mb_strimwidth($evento->descricao, 0, 621, "...")}}
                         @if (strlen($evento->descricao) > 621)
+                            {{ mb_strimwidth(strip_tags(html_entity_decode($evento->descricao, ENT_QUOTES)), 0, 621, "...") }}
+                            <br>
                             <a href="#" onclick="event.preventDefault();" data-toggle="modal" data-target="#lerMais{{$evento->id}}">Saiba mais</a>
+                        @else
+                            {!! $evento->descricao !!}
                         @endif
                     </div>
 
@@ -219,7 +227,7 @@
                 <div class="modal-body">
                     <div class="card-text">
                         <div class="container">
-                            {!! nl2br(e($evento->descricao)) !!}
+                            {!! $evento->descricao !!}
                         </div>
                     </div>
                 </div>

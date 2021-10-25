@@ -207,7 +207,7 @@
                                     <br>
                                     <div class="row">
                                         <div class="col-sm-12" style="text-align: justify;">
-                                            {!! nl2br(e($evento->descricao)) !!}
+                                            {!! $evento->descricao !!}
                                         </div>
                                     </div>
                                 </div>
