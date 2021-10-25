@@ -15,6 +15,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
         <script src="{{ asset('js/app.js') }}" defer></script>
 
+        <!-- CKEditor -->
+        <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -114,7 +117,7 @@
                 background-color: rgb(49, 167, 195);
                 padding: 10px;
                 border-radius: 50px;
-                transform: rotate(90deg); 
+                transform: rotate(90deg);
             }
 
             .div-informacoes-evento .accordion-body {
@@ -136,7 +139,7 @@
                 /* margin-top: 3px; */
                 height: 35px;
             }
-        </style> 
+        </style>
 
         <?php
             use App\Revisor;
