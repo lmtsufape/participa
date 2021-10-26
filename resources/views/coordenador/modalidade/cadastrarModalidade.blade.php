@@ -130,7 +130,7 @@
                                     <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i>
                                 </label>
                                 <input id="inicioValidacao" type="datetime-local" class="form-control @error('inícioValidação') is-invalid @enderror" name="inícioValidação" value="{{ old('inícioValidação') }}" autocomplete="inicioValidacao" autofocus>
-                                
+
                                 @error('inícioValidação')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -183,7 +183,7 @@
                                 </div>
                                 <div id="restricoes-resumo-texto" @if (old('texto') == true) style="display: block;" @else style="display: none;" @endif>
                                     <label class="col-form-label">{{ __('Restrições de resumo:') }}</label>
-    
+
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1" @if (old('limit') == "limit-option1") checked @endif>
                                         <label class="form-check-label" for="texto">
@@ -196,7 +196,7 @@
                                             Quantidade de palavras
                                         </label>
                                     </div>
-    
+
                                     <div class="row">
                                         <div class="col-sm-6" id="min-max-caracteres" @if (old('limit') == "limit-option1") style="display: block" @else style="display: none" @endif>
                                             <div class="form-group">
@@ -205,7 +205,7 @@
                                                   <input class="form-control" type="number" id="min_caracteres" name="mincaracteres" value="{{old('mincaracteres')}}">
                                                 </div>
                                             </div>
-    
+
                                             <div class="form-group">
                                                 <label class="col-form-label">{{ __('Máximo') }}</label>
                                                 <div>
@@ -214,7 +214,7 @@
                                             </div>
                                         </div>
                                     </div>
-    
+
                                     <div class="row">
                                         <div class="col-sm-6" id="min-max-palavras" @if (old('limit') == "limit-option2") style="display: block" @else style="display: none" @endif>
                                             <div class="form-group">
@@ -223,7 +223,7 @@
                                                   <input class="form-control" type="number" id="min_palavras" name="minpalavras" value="{{old('minpalavras')}}">
                                                 </div>
                                             </div>
-    
+
                                             <div class="form-group">
                                                 <label class="col-form-label">{{ __('Máximo') }}</label>
                                                 <div>
@@ -246,7 +246,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            
+
                         </div>
 
                         <div class="row">
@@ -306,6 +306,20 @@
                             </div>
                         </div>
                         <div class="row justify-content-center">
+                            {{-- Arquivo de Modelos --}}
+                            <div class="col-sm-12" style="margin-top: 20px;" >
+                                <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar modelo de apresentação:') }}</label>
+
+                                <div class="custom-file">
+                                  <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoModelos">
+                                </div>
+                                <small>O arquivo selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF ou PDF de até 2 MB.</small>
+                                @error('arquivoModelos')
+                                <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                  <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                             {{-- Arquivo de Regras  --}}
                             <div class="col-sm-12" style="margin-top: 20px;">
                               <label for="arquivoRegras" class="col-form-label">{{ __('Enviar regras:') }}</label>

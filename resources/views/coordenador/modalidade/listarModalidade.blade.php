@@ -1,7 +1,7 @@
 @extends('coordenador.detalhesEvento')
 
 @section('menu')
-    @error('excluirModalidade')  
+    @error('excluirModalidade')
         @include('componentes.mensagens')
     @enderror
     <div id="divListarModalidades" class="modalidades" style="display: block">
@@ -97,7 +97,7 @@
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title" id="#label">Confirmação</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"> 
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
@@ -191,7 +191,7 @@
 
                                             <div class="col-sm-6">
                                                 <label for="inicioRevisaoEdit" class="col-form-label">{{ __('Início da Revisão') }}</label>
-                                                <input id="inicioRevisaoEdit" type="datetime-local" class="form-control @error('inícioRevisão'.$modalidade->id) is-invalid @enderror" name="inícioRevisão{{$modalidade->id}}" value="@if(old('inícioRevisão'.$modalidade->id)!=null){{old('inícioRevisão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioRevisao))}}@endif" autocomplete="inícioRevisão" autofocus>
+                                                <input id="inicioRevisaoEdit" type="datetime-local" class="form-control @error('inícioRevisão'.$modalidade->id) is-invalid @enderror" name="inícioRevisão{{$modalidade->id}}" value="@if(old('inícioRevisão'.$modalidade->id)!=null){{old('inícioRevisão'.$modalidade->id)}}@else @if($modalidade->inicioRevisao != null){{date('Y-m-d\TH:i',strtotime($modalidade->inicioRevisao))}} @endif @endif" autocomplete="inícioRevisão" autofocus>
 
                                                 @error('inícioRevisão'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert">
@@ -201,7 +201,7 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label for="fimRevisaoEdit" class="col-form-label">{{ __('Fim da Revisão') }}</label>
-                                                <input id="fimRevisaoEdit" type="datetime-local" class="form-control @error('fimRevisão'.$modalidade->id) is-invalid @enderror" name="fimRevisão{{$modalidade->id}}" value="@if(old('fimRevisão'.$modalidade->id)!=null){{old('fimRevisão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimRevisao))}}@endif" autocomplete="fimRevisão" autofocus>
+                                                <input id="fimRevisaoEdit" type="datetime-local" class="form-control @error('fimRevisão'.$modalidade->id) is-invalid @enderror" name="fimRevisão{{$modalidade->id}}" value="@if(old('fimRevisão'.$modalidade->id)!=null){{old('fimRevisão'.$modalidade->id)}}@else @if($modalidade->fimRevisao != null){{date('Y-m-d\TH:i',strtotime($modalidade->fimRevisao))}} @endif @endif" autocomplete="fimRevisão" autofocus>
 
                                                 @error('fimRevisão'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert">
@@ -240,7 +240,7 @@
                                         @endif
                                         {{-- end Data: inicioCorrecao | fimCorrecao --}}
 
-                                        
+
                                         {{-- Data: inicioValidacao | fimValidacao --}}
                                         @if($modalidade->inicioValidacao && $modalidade->fimValidacao)
                                         <div class="row justify-content-center">
@@ -325,7 +325,7 @@
                                                                 <input class="form-control" type="number" id="min_caracteres" name="mincaracteres{{$modalidade->id}}" value="@if(old('mincaracteres'.$modalidade->id)!=null){{old('mincaracteres'.$modalidade->id)}}@else{{$modalidade->mincaracteres}}@endif">
                                                                 </div>
                                                             </div>
-                    
+
                                                             <div class="form-group">
                                                                 <label class="col-form-label">{{ __('Máximo') }}</label>
                                                                 <div>
@@ -334,7 +334,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                    
+
                                                     <div class="row">
                                                         <div class="col-sm-6" id="min-max-palavras" style="@if (old('limit'.$modalidade->id) == 'limit-option2')display:block;@elseif($modalidade->palavras && old('limit'.$modalidade->id) == null)display:block;@else display:none; @endif">
                                                             <div class="form-group">
@@ -343,7 +343,7 @@
                                                                 <input class="form-control" type="number" id="min_palavras" name="minpalavras{{$modalidade->id}}" value="@if(old('minpalavras'.$modalidade->id)!=null){{old('minpalavras'.$modalidade->id)}}@else{{$modalidade->minpalavras}}@endif">
                                                                 </div>
                                                             </div>
-                    
+
                                                             <div class="form-group">
                                                                 <label class="col-form-label">{{ __('Máximo') }}</label>
                                                                 <div>
@@ -426,6 +426,21 @@
                                             </div>
                                         </div>
                                         <div class="row justify-content-center">
+                                            {{-- Arquivo de Modelos  --}}
+                                            <div class="col-sm-12" style="margin-top: 20px;">
+                                                <label for="arquivoModelos" class="col-form-label">{{ __('Enviar modelo de apresentação:') }}</label> @if ($modalidade->modelo_apresentacao != null) <a href="{{route('modalidade.modelos.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
+
+                                            <div class="custom-file">
+                                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoModelos{{$modalidade->id}}">
+                                            </div>
+                                            <small>O arquivo selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF ou PDF de até 2 MB.</small><br>
+                                            <small>Se deseja alterar o arquivo, envie a nova versão.</small>
+                                            @error('arquivoModelos')
+                                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                            </div>
                                             {{-- Arquivo de Regras  --}}
                                             <div class="col-sm-12" style="margin-top: 20px;">
                                                 <label for="arquivoRegras" class="col-form-label">{{ __('Enviar regras:') }}</label> @if ($modalidade->regra != null) <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif

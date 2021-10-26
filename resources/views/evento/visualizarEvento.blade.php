@@ -366,6 +366,13 @@
                                                                                         </a>
                                                                                     </div>
                                                                                 @endif
+                                                                                @if(isset($modalidade->modelo_apresentacao))
+                                                                                    <div style="margin-top: 20px; margin-bottom: 10px;">
+                                                                                        <a href="{{route('modalidade.modelos.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >
+                                                                                            <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px;">Modelo de apresentação
+                                                                                        </a>
+                                                                                    </div>
+                                                                                @endif
                                                                                 @if (isset($modalidade->template))
                                                                                     <div style="margin-top: 20px; margin-bottom: 10px;">
                                                                                         <a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;" >

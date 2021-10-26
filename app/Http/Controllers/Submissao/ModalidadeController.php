@@ -89,8 +89,9 @@ class ModalidadeController extends Controller
             'maxcaracteres'     => ['nullable', 'integer'],
             'minpalavras'       => ['nullable', 'integer'],
             'maxpalavras'       => ['nullable', 'integer'],
-            'arquivoRegras'     => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
-            'arquivoTemplates'  => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2000000'],
+            'arquivoRegras'     => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
+            'arquivoModelo'     => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,pdf', 'max:2048'],
+            'arquivoTemplates'  => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2048'],
         ]);
         // dd($request);
         $caracteres = false;
@@ -185,6 +186,16 @@ class ModalidadeController extends Controller
             $modalidade->template = $pathTemplates . $nomeTemplates;
         }
 
+        if (isset($request->arquivoModelos)) {
+            $fileModelos = $request->arquivoModelos;
+            $pathModelos = 'modelos/' . $modalidade->nome . '/';
+            $nomeModelos = $request->arquivoModelos->getClientOriginalName();
+
+            Storage::putFileAs($pathModelos, $fileModelos, $nomeModelos);
+
+            $modalidade->modelo_apresentacao = $pathModelos . $nomeModelos;
+        }
+
         $modalidade->save();
 
         return redirect()->back()->with(['mensagem' => 'Modalidade cadastrada com sucesso!']);
@@ -258,6 +269,7 @@ class ModalidadeController extends Controller
             'minpalavras'.$request->modalidadeEditId            => ['nullable', 'integer'],
             'maxpalavras'.$request->modalidadeEditId            => ['nullable', 'integer'],
             'arquivoRegras'.$request->modalidadeEditId          => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
+            'arquivoModelos'.$request->modalidadeEditId         => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,pdf', 'max:2048'],
             'arquivoTemplates'.$request->modalidadeEditId       => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2000000'],
 
         ]);
@@ -391,6 +403,22 @@ class ModalidadeController extends Controller
 
             $modalidadeEdit->save();
         }
+
+        if ($request->file('arquivoModelos'.$request->modalidadeEditId)) {
+
+            $path = $modalidadeEdit->modelo;
+            Storage::delete($path);
+
+            $fileModelos = $request->file('arquivoModelos'.$request->modalidadeEditId);
+            $pathModelos = 'modelos/' . $modalidadeEdit->nome . '/';
+            $nomeModelos = $request->file('arquivoModelos'.$request->modalidadeEditId)->getClientOriginalName();
+
+            Storage::putFileAs($pathModelos, $fileModelos, $nomeModelos);
+
+            $modalidadeEdit->modelo_apresentacao = $pathModelos . $nomeModelos;
+
+            $modalidadeEdit->save();
+        }
         $modalidadeEdit->save();
         // dd($modalidadeEdit);
 
@@ -427,6 +455,16 @@ class ModalidadeController extends Controller
 
         if (Storage::disk()->exists($modalidade->regra)) {
             return Storage::download($modalidade->regra, "Regras." . explode(".", $modalidade->regra)[1]);
+        }
+
+        return abort(404);
+    }
+
+    public function downloadModelos($id) {
+        $modalidade = Modalidade::find($id);
+
+        if (Storage::disk()->exists($modalidade->modelo_apresentacao)) {
+            return Storage::download($modalidade->modelo_apresentacao, "Modelos." . explode(".", $modalidade->modelo_apresentacao)[1]);
         }
 
         return abort(404);
