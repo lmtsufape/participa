@@ -30,7 +30,7 @@
             @if ($i == 0)
               <div class="carousel-item active" style="background-color:white">
                 <div class="row">
-                  <div class="col-md-7 evento-image sizeImg">
+                  <div class="col-lg-7 evento-image sizeImg">
                     @if ($evento->fotoEvento != null)
                       <img src="{{ asset('storage/'.$evento->fotoEvento) }}" class="" alt="..." style="
                       max-width:300px;
@@ -45,7 +45,7 @@
                       height: auto;background: no-repeat center;background-size: cover;">
                     @endif
                   </div>
-                  <div class="col-md-5" style=" height: 350px;">
+                  <div class="col-lg-5">
                     <div class="row container" style="margin-left: 0px; margin-top:15px;">
                       <div class="col-md-12" style="text-align:center; margin-top:20px;margin-bottom:10px;">
                         @auth

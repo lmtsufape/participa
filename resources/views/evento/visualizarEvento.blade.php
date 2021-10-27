@@ -168,7 +168,7 @@
         <div class="row justify-content-center">
             <div class="col-sm-10">
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-xl-8">
                         <div class="row" style="margin-bottom: 10px;">
                             <div class="col-sm-12">
                                 <div class="card sombra-card" style="width: 100%;">
@@ -228,7 +228,7 @@
                             </div>
                         @endif
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-xl-4">
                         @if ($etiquetas->modinscricao == true)
                             <div class="row" style="margin-bottom: 10px;">
                                 <div class="col-sm-12">
@@ -419,8 +419,8 @@
                                                 </div>
                                             </div>
                                         @endif
-                                        <div class="form-row justify-content-center" style="margin-top: 15px;">
-                                            <div class="col-sm-3" style="position: relative; text-align: center;">
+                                        <div class="row" style="margin-top: 15px;">
+                                            <div class="col-sm-3" style="text-align: center;padding-left: 23px;">
                                                 <div class="div-icon-programacao">
                                                     <img src="{{ asset('img/icons/Icon material-email.svg') }}" alt="PDF com a programação" style="margin-top: 5px;">
                                                 </div>
