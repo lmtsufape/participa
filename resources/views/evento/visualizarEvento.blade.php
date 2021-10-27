@@ -452,7 +452,7 @@
                                     </div>
                                     <div class="row">
                                         @foreach ($subeventos as $subevento)
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-12 col-md-6 col-xl-4 d-flex align-items-stretch justify-content-center">
                                                 <div class="card" style="width: 15rem;">
                                                     @if (isset($subevento->fotoEvento))
                                                         <img class="img-card" src="{{ asset('storage/' . $subevento->fotoEvento) }}" class="card-img-top" alt="...">
