@@ -433,7 +433,7 @@
                                             <div class="custom-file">
                                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoModelos{{$modalidade->id}}">
                                             </div>
-                                            <small>O arquivo selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF ou PDF de até 2 MB.</small><br>
+                                            <small>O arquivo selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF, PDF, PPT, PPTX ou ODP de até 2 MB.</small><br>
                                             <small>Se deseja alterar o arquivo, envie a nova versão.</small>
                                             @error('arquivoModelos')
                                             <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
