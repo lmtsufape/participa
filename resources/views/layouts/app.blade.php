@@ -368,7 +368,8 @@
             })
             $(function () {
                 $('[data-toggle="popover"]').popover()
-            })
+            });
         </script>
+        <script src="{{ asset('js/submit.js') }}"></script>
     </body>
 </html>

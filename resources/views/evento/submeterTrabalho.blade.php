@@ -13,7 +13,7 @@
                   <br>
                   <h4 class="card-title">Enviar Trabalho</h4>
                   <p class="card-text">
-                    <form method="POST" action="{{route('trabalho.store', $modalidade->id)}}" enctype="multipart/form-data">
+                    <form method="POST" action="{{route('trabalho.store', $modalidade->id)}}" enctype="multipart/form-data" class="form-prevent-multiple-submits">
                         @csrf
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
                         <input type="hidden" name="modalidadeId" value="{{$modalidade->id}}">
@@ -444,8 +444,8 @@
                             <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" class="btn btn-secondary" style="width:100%">Cancelar</a>
                         </div>
                         <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary" style="width:100%">
-                                {{ __('Enviar') }}
+                            <button type="submit" class="btn btn-primary button-prevent-multiple-submits" style="width:100%">
+                                <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i> {{ __('Enviar') }}
                             </button>
                         </div>
                     </div>
