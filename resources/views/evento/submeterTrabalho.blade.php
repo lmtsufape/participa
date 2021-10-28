@@ -136,7 +136,7 @@
                                 <div class="col-sm-12">
                                     <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
                                     <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
-                                    <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: {{$modalidade->minpalavras}} - Max Palavras: {{$modalidade->maxpalavras}}</p>
+                                    <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: <span id="minpalavras">{{$modalidade->minpalavras}}</span> - Max Palavras: <span id="maxpalavras">{{$modalidade->maxpalavras}}</span></p>
                                     @error('resumo')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -478,21 +478,18 @@
 
   $(document).ready(function(){
     $('.palavra').keyup(function() {
-        var maxLength = parseInt($(this).attr('maxlength'));
-        var texto = $(this).val().length;
-        // console.log(texto);
-        if ($(this).val()[length - 1] == " ") {
-          var cont = $(this).val().length;
-          // console.log("Contador:");
-          // console.log(cont);
+        var myText = this.value.trim();
+        var wordsArray = myText.split(/\s+/g);
+        var words = wordsArray.length;
+        var min = parseInt(($('#minpalavras').text()));
+        var max = parseInt(($('#maxpalavras').text()));
+        if(words < min || words > max) {
+            this.setCustomValidity('Número de palavras não permitido. Você possui atualmente '+words+' palavras.');
+        } else {
+            this.setCustomValidity('');
         }
 
-        // console.log("Texto:");
-        // console.log(texto);
-
-        var name = $(this).attr('name');
-
-        $('span[name="'+name+'"]').text(length);
+        $('#numpalavra').text(words);
     });
   });
 
