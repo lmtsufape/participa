@@ -68,7 +68,7 @@
                                               Enviar e-mail
                                           </button>
                                       </form> --}}
-                                      @component('componentes.modal', ['email' => $revisor->email, 'evento' => $evento])
+                                      @component('componentes.modal', ['email' => $revisor->email, 'evento' => $evento, 'count' => $loop->index])
 
                                       @endcomponent
                                   </td>
