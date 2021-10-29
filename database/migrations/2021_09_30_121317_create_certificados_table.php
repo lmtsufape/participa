@@ -16,7 +16,9 @@ class CreateCertificadosTable extends Migration
         Schema::create('certificados', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('caminho');
+            $table->string('local');
             $table->string('nome');
+            $table->text('texto');
             $table->unsignedBigInteger('evento_id');
             $table->foreign('evento_id')->references('id')->on('eventos');
             $table->timestamps();

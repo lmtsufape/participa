@@ -27,6 +27,27 @@
                     @enderror
                 </div>
 
+                <div class="col-sm-6 form-group">
+                    <label for="texto">{{ __('Texto') }}</label>
+                    <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" value="{{old('texto')}}" required autofocus autocomplete="texto"></textarea>
+
+                    @error('texto')
+                        <div id="validationServer03Feedback" class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label for="local">{{ __('Local') }}</label>
+                    <input id="local" class="form-control @error('local') is-invalid @enderror" type="text" name="local" value="{{old('local')}}" required autofocus autocomplete="local">
+
+                    @error('local')
+                        <div id="validationServer03Feedback" class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+
                 <div class="col-sm-12 form-group">
                     <label for="assinatura">{{ __('Assinaturas') }}</label>
                     <input type="hidden" class="checkbox_assinatura @error('assinaturas') is-invalid @enderror">

@@ -51,13 +51,12 @@
     <body>
 
         <div class="container">
-            <p class="texto" >Certificamos que <strong> Nome da pessoa </strong>  participou do evento  <strong> Nome do evento </strong>,
-            como  <strong> Cargo da pessoa </strong> do dia  <strong> Datas do eventos </strong></p>
+            <p class="texto" >Certificamos que <strong>Nome da pessoa</strong> apresentou <strong>Nome da modalidade - Nome da área,</strong>
+            com o trabalho <strong>Nome do trabalho,</strong> <strong>{{$certificado->texto}}</strong></p>
 
-            <p class="texto" style="text-align: right; margin-top: 0%;">Garanhuns, {{$dataHoje}}.</p>
-
+            <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
         </div>
-        <div style="position: absolute; bottom: 0; left:50%; margin-left:-180px;">
+        <div style="position: absolute; bottom: 10%; left:50%; margin-left:-180px;">
             <table>
                 <tbody>
                     <tr>

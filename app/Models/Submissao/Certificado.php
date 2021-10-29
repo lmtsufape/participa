@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class Certificado extends Model
 {
-    protected $fillable = ['caminho', 'nome'];
+    protected $fillable = ['caminho', 'local', 'nome', 'texto'];
 
     public function assinaturas()
     {
@@ -21,6 +21,8 @@ class Certificado extends Model
 
     public function setAtributes(Request $request)
     {
+        $this->local = $request->local;
         $this->nome = $request->nome;
+        $this->texto = $request->texto;
     }
 }

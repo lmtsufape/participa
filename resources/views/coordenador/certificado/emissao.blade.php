@@ -50,6 +50,8 @@
                                 <option value="3">{{$destinatario}}</option>
                             @elseif($destinatario == "Revisores")
                                 <option value="4">{{$destinatario}}</option>
+                            @elseif($destinatario == "Participantes")
+                                <option value="5">{{$destinatario}}</option>
                             @endif
 
                         @endforeach

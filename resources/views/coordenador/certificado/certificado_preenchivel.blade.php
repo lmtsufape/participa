@@ -51,13 +51,38 @@
     <body>
 
         <div class="container">
-            <p class="texto" >Certificamos que <strong>{{$user->name}}</strong>  participou do evento  <strong>{{$evento->nome}}</strong>,
-            como  <strong>{{$cargo}}</strong> do dia  <strong>{{date('d/m/Y',strtotime($evento->dataInicio))}}</strong> ao dia <strong>{{date('d/m/Y',strtotime($evento->dataFim))}}.</strong></p>
+            @if ($cargo == 'Apresentador')
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> apresentou <strong>{{$trabalho->modalidade->nome}} - {{$trabalho->area->nome}},</strong>
+                com o trabalho <strong>{{$trabalho->titulo}},</strong> <strong>{{$certificado->texto}}</strong></p>
 
-            <p class="texto"  style="text-align: right; margin-top: 0%;">Garanhuns, {{$dataHoje}}.</p>
+                <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
+            @elseif($cargo == 'Comissão Científica')
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou <strong>da COMISSÃO CIENTÍFICA</strong>
+                <strong>{{$certificado->texto}}</strong></p>
 
+                <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
+            @elseif($cargo == 'Comissão Organizadora')
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou <strong>da COMISSÃO ORGANIZADORA</strong>
+                <strong>{{$certificado->texto}}</strong></p>
+
+                <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
+            @elseif($cargo == 'Revisor')
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como <strong>avaliador(a)</strong>
+                de trabalhos na <strong>COMISSÃO CIENTÍFICA {{$certificado->texto}}</strong></p>
+
+                <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
+            @elseif($cargo == 'Participante')
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou do <strong>{{$certificado->texto}}</strong></p>
+
+                <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
+            @else
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong>  participou do evento  <strong>{{$evento->nome}}</strong>,
+                como  <strong>{{$cargo}}</strong> do dia  <strong>{{date('d/m/Y',strtotime($evento->dataInicio))}}</strong> ao dia <strong>{{date('d/m/Y',strtotime($evento->dataFim))}}.</strong></p>
+
+                <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
+            @endif
         </div>
-        <div style="position: absolute; bottom: 0; left:50%; margin-left:-180px;">
+        <div style="position: absolute; bottom: 10%; left:50%; margin-left:-180px;">
             <table>
                 <tbody>
                     <tr>
