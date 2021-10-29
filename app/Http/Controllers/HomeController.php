@@ -26,58 +26,58 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function home()
-    {   
+    {
         $user = Auth::user();
-        if($user->administradors != null){    
-            $eventos = Evento::all(); 
-            // dd('adm');       
+        if($user->administradors != null){
+            $eventos = Evento::all();
+            // dd('adm');
             return view('administrador.index', ['eventos' => $eventos]);
 
-          }else if($user->coordComissaoCientifica != null){ 
-            $eventos = $user->coordComissaoCientifica->eventos; 
-            // dd('CCC');          
+          }else if($user->coordComissaoCientifica != null){
+            $eventos = $user->coordComissaoCientifica->eventos;
+            // dd('CCC');
             return view('coordenador.index', ['eventos' => $eventos]);
 
-          }else if($user->coordComissaoOrganizadora != null){ 
+          }else if($user->coordComissaoOrganizadora != null){
             $eventos = $user->coordComissaoOrganizadora->eventos;
-            // dd('CCO');   
+            // dd('CCO');
             return view('coordenador.index', ['eventos' => $eventos]);
 
-          }else if($user->membroComissao != null){    
+          }else if($user->membroComissao != null){
             $eventos = $user->membroComissao->eventos;
-            // dd('MC');        
+            // dd('MC');
             return view('coordenador.index', ['eventos' => $eventos]);
 
-          }else if($user->revisor != null){   
-            $eventos = Evento::all();  
-            // dd('R');    
+          }else if($user->revisor != null){
+            $eventos = Evento::all();
+            // dd('R');
             return view('coordenador.index', ['eventos' => $eventos]);
 
           }else if($user->coautor != null){
-            $eventos = $user->coautor->eventos;            
+            $eventos = $user->coautor->eventos;
             // dd('CA');
             return view('coordenador.index', compact('eventos'));
-            
+
           }else if($user->coordEvento != null){
-            // $eventos = $user->coordEvento->evento;  
-            $eventos = Evento::all(); 
-            // dd('CE');     
+            // $eventos = $user->coordEvento->evento;
+            $eventos = Evento::all();
+            // dd('CE');
             return view('coordenador.index', compact('eventos'));
-            
+
           }else if($user->participante != null){
 
-            $eventos = Evento::all();  
-            // dd('P');          
+            $eventos = Evento::all();
+            // dd('P');
             return view('coordenador.index', compact('eventos'));
-            
+
           }else {
             return view('home');
-          } 
+          }
     }
 
     public function index() {
       $eventosDestaque = Inscricao::join("eventos", "inscricaos.evento_id", "=", "eventos.id")->select("eventos.id", DB::raw('count(inscricaos.evento_id) as total'))->groupBy("eventos.id")->orderBy("total", "desc")->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->limit(6)->get();
-      
+
       $eventos = collect();
       if (count($eventosDestaque) > 0) {
         foreach ($eventosDestaque as $ev) {
@@ -85,12 +85,14 @@ class HomeController extends Controller
         }
       } else {
         $eventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->get();
-      } 
-      
-      $proximosEventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '>=', today()]])->get();
-      
+      }
+
+      $proximosEventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '>=', today()]])->whereNull('evento_pai_id')->get();
+
+      $eventosPassados = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '<', today()]])->whereNull('evento_pai_id')->get();
+
       $tiposEvento = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->selectRaw('DISTINCT tipo')->get();
-      
-      return view('index',['eventos'=>$eventos, 'tipos' => $tiposEvento, 'proximosEventos' => $proximosEventos]);
+
+      return view('index',['eventos'=>$eventos, 'tipos' => $tiposEvento, 'proximosEventos' => $proximosEventos, 'eventosPassados' => $eventosPassados]);
     }
 }

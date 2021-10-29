@@ -56,20 +56,22 @@ class ModalidadeController extends Controller
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         // dd($request->eventoId);
         $validatedData = $request->validate([
             'nomeModalidade'    => ['required', 'string'],
             'inícioDaSubmissão' => ['required', 'date'],
             'fimDaSubmissão'    => ['required', 'date', 'after:inícioDaSubmissão'],
-            'inícioDaRevisão'   => ['required', 'date', 'after:inícioDaSubmissão'],
-            'fimDaRevisão'      => ['required', 'date', 'after:inícioDaRevisão'],
+            'inícioDaRevisão'   => ['nullable', 'date', 'after:inícioDaSubmissão'],
+            'fimDaRevisão'      => ['nullable', 'date', 'after:inícioDaRevisão'],
 
             'inícioCorreção'   => ['nullable','date', 'after:fimDaRevisão', 'required_with:fimCorreção'],
             'fimCorreção'      => ['nullable','date', 'after:inícioCorreção', 'required_with:inícioCorreção'],
             'inícioValidação'   => ['nullable','date', 'after:fimCorreção', 'required_with:fimValidação'],
             'fimValidação'      => ['nullable','date', 'after:inícioValidação', 'required_with:inícioValidação'],
 
-            'resultado'         => ['required', 'date', 'after:fimDaRevisão'],
+            'resultado'         => ['required', 'date', 'after:fimDaSubmissão'],
 
             'texto'             => ['nullable'],
             'limit'             => ['nullable'],
@@ -87,8 +89,9 @@ class ModalidadeController extends Controller
             'maxcaracteres'     => ['nullable', 'integer'],
             'minpalavras'       => ['nullable', 'integer'],
             'maxpalavras'       => ['nullable', 'integer'],
-            'arquivoRegras'     => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
-            'arquivoTemplates'  => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2000000'],
+            'arquivoRegras'     => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
+            'arquivoModelo'     => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,pdf,ppt,pptx,odp', 'max:2048'],
+            'arquivoTemplates'  => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2048'],
         ]);
         // dd($request);
         $caracteres = false;
@@ -183,6 +186,16 @@ class ModalidadeController extends Controller
             $modalidade->template = $pathTemplates . $nomeTemplates;
         }
 
+        if (isset($request->arquivoModelos)) {
+            $fileModelos = $request->arquivoModelos;
+            $pathModelos = 'modelos/' . $modalidade->nome . '/';
+            $nomeModelos = $request->arquivoModelos->getClientOriginalName();
+
+            Storage::putFileAs($pathModelos, $fileModelos, $nomeModelos);
+
+            $modalidade->modelo_apresentacao = $pathModelos . $nomeModelos;
+        }
+
         $modalidade->save();
 
         return redirect()->back()->with(['mensagem' => 'Modalidade cadastrada com sucesso!']);
@@ -221,14 +234,17 @@ class ModalidadeController extends Controller
     {
 
         $modalidadeEdit = Modalidade::find($request->modalidadeEditId);
+        $evento = $modalidadeEdit->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         // dd($request);
         $validatedData = $request->validate([
 
             'nome'.$request->modalidadeEditId                   => ['required', 'string'],
             'inícioSubmissão'.$request->modalidadeEditId        => ['required', 'date'],
             'fimSubmissão'.$request->modalidadeEditId           => ['required', 'date', 'after:inícioSubmissão'.$request->modalidadeEditId],
-            'inícioRevisão'.$request->modalidadeEditId          => ['required', 'date', 'after:inícioSubmissão'.$request->modalidadeEditId],
-            'fimRevisão'.$request->modalidadeEditId             => ['required', 'date', 'after:inícioRevisão'.$request->modalidadeEditId],
+            'inícioRevisão'.$request->modalidadeEditId          => ['nullable', 'date', 'after:inícioSubmissão'.$request->modalidadeEditId],
+            'fimRevisão'.$request->modalidadeEditId             => ['nullable', 'date', 'after:inícioRevisão'.$request->modalidadeEditId],
 
             'inícioCorreção'.$request->modalidadeEditId         => ['nullable','date', 'after:fimDaRevisão'.$request->modalidadeEditId, 'required_with:fimCorreção'.$request->modalidadeEditId],
             'fimCorreção'.$request->modalidadeEditId            => ['nullable','date', 'after:inícioCorreção'.$request->modalidadeEditId, 'required_with:inícioCorreção'.$request->modalidadeEditId],
@@ -253,6 +269,7 @@ class ModalidadeController extends Controller
             'minpalavras'.$request->modalidadeEditId            => ['nullable', 'integer'],
             'maxpalavras'.$request->modalidadeEditId            => ['nullable', 'integer'],
             'arquivoRegras'.$request->modalidadeEditId          => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
+            'arquivoModelos'.$request->modalidadeEditId         => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,pdf,ppt,pptx,odp', 'max:2048'],
             'arquivoTemplates'.$request->modalidadeEditId       => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2000000'],
 
         ]);
@@ -386,6 +403,22 @@ class ModalidadeController extends Controller
 
             $modalidadeEdit->save();
         }
+
+        if ($request->file('arquivoModelos'.$request->modalidadeEditId)) {
+
+            $path = $modalidadeEdit->modelo;
+            Storage::delete($path);
+
+            $fileModelos = $request->file('arquivoModelos'.$request->modalidadeEditId);
+            $pathModelos = 'modelos/' . $modalidadeEdit->nome . '/';
+            $nomeModelos = $request->file('arquivoModelos'.$request->modalidadeEditId)->getClientOriginalName();
+
+            Storage::putFileAs($pathModelos, $fileModelos, $nomeModelos);
+
+            $modalidadeEdit->modelo_apresentacao = $pathModelos . $nomeModelos;
+
+            $modalidadeEdit->save();
+        }
         $modalidadeEdit->save();
         // dd($modalidadeEdit);
 
@@ -401,6 +434,8 @@ class ModalidadeController extends Controller
     public function destroy($id)
     {
         $modalidade = Modalidade::find($id);
+        $evento = $modalidade->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento);
 
         if (count($modalidade->revisores) > 0) {
             return redirect()->back()->withErrors(['excluirModalidade' => 'Não é possível excluir, existem revisores ligados a essa modalidade.']);
@@ -420,6 +455,16 @@ class ModalidadeController extends Controller
 
         if (Storage::disk()->exists($modalidade->regra)) {
             return Storage::download($modalidade->regra, "Regras." . explode(".", $modalidade->regra)[1]);
+        }
+
+        return abort(404);
+    }
+
+    public function downloadModelos($id) {
+        $modalidade = Modalidade::find($id);
+
+        if (Storage::disk()->exists($modalidade->modelo_apresentacao)) {
+            return Storage::download($modalidade->modelo_apresentacao, "Modelos." . explode(".", $modalidade->modelo_apresentacao)[1]);
         }
 
         return abort(404);

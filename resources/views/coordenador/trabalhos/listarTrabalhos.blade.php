@@ -90,7 +90,14 @@
                             <table class="table table-hover table-responsive-lg table-sm table-striped">
                                 <thead>
                                 <tr>
-                                    <th scope="col" style="text-align:center">Check</th>
+                                    <th scope="col" style="text-align:center">
+                                        @if(!is_null($trabalhos->first()))
+                                        <input type="checkbox" id="selectAllCheckboxes{{$trabalhos[0]->modalidade->id}}" onclick="marcarCheckboxes({{$trabalhos[0]->modalidade->id}})">
+                                        <label for="selectAllCheckboxes{{$trabalhos[0]->modalidade->id}}" style="margin-bottom: 0px;">Selecionar</label>
+                                        @else
+                                        Selecionar
+                                        @endif
+                                    </th>
                                     <th scope="col">
                                     Título
                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc'])}}">
@@ -127,10 +134,10 @@
                                         <i class="fas fa-arrow-alt-circle-down"></i>
                                     </a> --}}
                                     </th>
-                                    <th scope="col" style="text-align:center">Data</th>
-                                    <th scope="col" style="text-align:center">Atribuir</th>
-                                    <th scope="col" style="text-align:center">Arquivar</th>
-                                    <th scope="col" style="text-align:center">Editar</th>
+                                    <th scope="col">Data</th>
+                                    <th scope="col">Atribuir</th>
+                                    <th scope="col">Arquivar</th>
+                                    <th scope="col">Editar</th>
                                 </tr>
                                 </thead>
 
@@ -140,7 +147,7 @@
 
                                 <tr>
                                     <td style="text-align:center">
-                                        <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" value="{{$trabalho->id}}">
+                                        <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" class="modalidade{{$trabalho->modalidade->id}}" value="{{$trabalho->id}}">
                                     </td>
                                     <td>
                                         @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
@@ -218,7 +225,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #114048ff; color: white;">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Distrbuir trabalhos automaticamente</h5>
+        <h5 class="modal-title" id="exampleModalCenterTitle">Distribuir trabalhos automaticamente</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -336,7 +343,6 @@
             @else
                 <div class="row justify-content-center">
                 <div class="col-sm-12">
-                    <h5>0</h5>
                 </div>
             @endif
             @foreach ($trabalho->atribuicoes as $i => $revisor)
@@ -399,3 +405,11 @@
 @endforeach
 @endsection
 
+@section('javascript')
+    @parent
+    <script>
+        function marcarCheckboxes(id) {
+            $(".modalidade" + id).prop('checked', $('#selectAllCheckboxes'+id).is(":checked"));
+        }
+    </script>
+@endsection

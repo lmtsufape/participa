@@ -12,10 +12,10 @@ class Modalidade extends Model
    * @var array
    */
   protected $fillable = [
-      'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao', 
+      'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao',
       'inicioResultado', 'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres',
       'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg',
-      'regra', 'template',
+      'regra', 'template', 'modelo_apresentacao'
   ];
 
   public function trabalho(){
@@ -33,5 +33,9 @@ class Modalidade extends Model
   public function forms(){
     return $this->hasMany('App\Models\Submissao\Form', 'modalidadeId');
   }
-  
+
+  public function evento()
+  {
+    return $this->belongsTo('App\Models\Submissao\Evento', 'evento_id');
+  }
 }

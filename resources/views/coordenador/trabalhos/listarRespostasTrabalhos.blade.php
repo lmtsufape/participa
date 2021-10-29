@@ -5,8 +5,8 @@
     <div id="divListarTrabalhos" style="display: block">
 
       <div class="row ">
-        <div class="col-sm-6">
-            <h1 class="">Avaliações</h1>
+        <div class="col-sm-12">
+            <h2 class="">Avaliações da modalidade {{$trabalhos->first()->modalidade->nome ?? ''}} </h2>
         </div>
       </div>
 
@@ -35,15 +35,6 @@
           <table class="table table-hover table-responsive-lg table-sm table-striped">
             <thead>
               <tr>
-                <th scope="col" style="width:15%">
-                    Modalidade
-                    <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'asc'])}}">
-                      <i class="fas fa-arrow-alt-circle-up"></i>
-                    </a>
-                    <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId', 'desc'])}}">
-                      <i class="fas fa-arrow-alt-circle-down"></i>
-                    </a>
-                </th>
                 <th scope="col">
                   Trabalho
                   <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc'])}}">
@@ -80,8 +71,8 @@
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>--}}
-                <th scope="col" style="text-align:center">Avaliador(es)</th>
-                <th scope="col" style="text-align:center">Status</th>
+                <th scope="col">Avaliador(es)</th>
+                <th scope="col">Status</th>
                 <th scope="col" style="text-align:center">Parecer</th>
               </tr>
             </thead>
@@ -91,12 +82,6 @@
               @foreach($trabalhos as $trabalho)
 
               <tr>
-                  <td>
-                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->modalidade->nome}}" style="max-width: 150px;">
-                      {{$trabalho->modalidade->nome}}
-                    </span>
-
-                  </td>
                   <td>
                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
@@ -120,16 +105,18 @@
                   {{--<td>
                     {{count($trabalho->atribuicoes)}}
                   </td>--}}
-                  <td style="text-align:center">
+                  <td>
                     @foreach ($trabalho->atribuicoes as $revisor)
                         {{$revisor->user->name}}
                         <br>
                     @endforeach
                   </td>
 
-                  <td style="text-align:center">
+                  <td>
                     @if($trabalho->avaliado == 'processando')
                         Processando
+                    @elseif($trabalho->avaliado == 'nao')
+                        Sem avaliador
                     @else
                         {{$trabalho->avaliado}}
                     @endif

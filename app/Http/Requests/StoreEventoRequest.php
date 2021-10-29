@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\NaoESubEvento;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 class StoreEventoRequest extends FormRequest
@@ -25,19 +26,20 @@ class StoreEventoRequest extends FormRequest
     {
         // Log::info("Final");
         return [
-            'nome'                => ['required', 'string'],
-            'descricao'           => ['required', 'string'],
-            'tipo'                => ['required', 'string'],
-            'dataInicio'          => ['required', 'date', 'after:yesterday'],
-            'dataFim'             => ['required', 'date', 'after:dataInicio'],
-            'fotoEvento'          => ['file', 'mimes:png, jpg,jpeg'],
-            'rua'                 => ['required', 'string'],
-            'numero'              => ['required', 'string'],
-            'bairro'              => ['required', 'string'],
-            'cidade'              => ['required', 'string'],
-            'uf'                  => ['required', 'string'],
-            'cep'                 => ['required', 'string'],
-            'complemento'         => ['nullable', 'string'],
+            'nome'        => ['required', 'string'],
+            'descricao'   => ['required', 'string'],
+            'tipo'        => ['required', 'string'],
+            'dataInicio'  => ['required', 'date', 'after:yesterday'],
+            'dataFim'     => ['required', 'date'],
+            'fotoEvento'  => ['file', 'mimes:png, jpg,jpeg'],
+            'rua'         => ['required', 'string'],
+            'numero'      => ['required', 'string'],
+            'bairro'      => ['required', 'string'],
+            'cidade'      => ['required', 'string'],
+            'uf'          => ['required', 'string'],
+            'cep'         => ['required', 'string'],
+            'complemento' => ['nullable', 'string'],
+            'eventoPai'   => ['nullable', new NaoESubEvento]
         ];
     }
 

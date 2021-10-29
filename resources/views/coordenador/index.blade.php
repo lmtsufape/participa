@@ -32,7 +32,7 @@
                 @can('isCoordenador', $evento)
                     <div class="card" style="width: 16rem;">
                         @if(isset($evento->fotoEvento))
-                            <img class="img-card" src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+                            <img class="img-card" src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
                         @else
                             <img class="img-card" src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                         @endif
@@ -42,37 +42,9 @@
                                     <h5 class="card-title">
                                         <div class="row">
                                             <div class="col-sm-10">
-                                                {{$evento->nome}}
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <div class="btn-group dropright dropdown-options">
-
-                                                    <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {{-- <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
-                                                            <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
-
-                                                        </div> --}}
-                                                        <a  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><i class="fas fa-cog "></i></a>
-                                                    </a>
-                                                    <div class="dropdown-menu">
-                                                        <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}" class="dropdown-item">
-                                                            <img src="{{asset('img/icons/eye-regular.svg')}}" class="icon-card" alt="">
-                                                            Detalhes
-                                                        </a>
-                                                        {{-- <a href="{{route('evento.editar',$evento->id)}}" class="dropdown-item">
-                                                            <img src="{{asset('img/icons/edit-regular.svg')}}" class="icon-card" alt="">
-                                                            Editar
-                                                        </a> --}}
-                                                        <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
-                                                            {{ csrf_field() }}
-                                                            {{ method_field('DELETE') }}
-                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
-                                                                <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt="">
-                                                                Deletar
-                                                            </a>
-                                                        </form>
-                                                    </div>
-                                                </div>
+                                                <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="text-decoration: inherit;">
+                                                    {{$evento->nome}}
+                                                </a>
                                             </div>
                                         </div>
 
@@ -93,9 +65,27 @@
                                         </div>
                                     </div>
                                 </p>
-                                <p>
-                                    <a href="{{  route('evento.visualizar',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
-                                </p>
+                                <div>
+                                    <div>
+                                        <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
+                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
+                                            <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
+                                            {{ csrf_field() }}
+                                            {{ method_field('DELETE') }}
+                                            <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
+                                                <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar
+                                            </a>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

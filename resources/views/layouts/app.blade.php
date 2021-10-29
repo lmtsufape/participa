@@ -15,6 +15,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
         <script src="{{ asset('js/app.js') }}" defer></script>
 
+        <!-- CKEditor -->
+        <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -43,7 +46,99 @@
                 margin-bottom: 4px;
             }
 
+            .div-informacoes-evento #btn-inscrevase {
+                width: 100%;
+                height: 50px;
+                font-size: 21px;
+                font-weight: bold;
+                background-color: #114048ff;
+                border-color: #114048ff;
+            }
 
+            .div-informacoes-evento #btn-inscrevase:hover {
+                background-color: rgb(29, 106, 119);
+                border-color: rgb(29, 106, 119);
+            }
+
+            .div-informacoes-evento #btn-inscrevase:focus {
+                background-color: rgb(29, 106, 119);
+                border-color: rgb(29, 106, 119);
+            }
+
+            .div-informacoes-evento .titulo {
+                font-size: 16px;
+                font-weight: bold;
+                padding-top: -10px;
+                margin-top: -10px;
+            }
+
+            .div-informacoes-evento .subtitulo {
+                padding-top: -40px;
+                margin-top: -40px;
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .div-informacoes-evento .sombra-card {
+                border-radius: 7px;
+                box-shadow: 1px 1px 3px rgb(160, 160, 160);
+                transition: 0.5s;
+                margin: 0px;
+            }
+
+            .div-informacoes-evento .sombra-card:hover {
+                border-radius: 7px;
+                box-shadow: 1px 1px 4px rgb(24, 24, 24);
+                transition: 0.5s;
+            }
+
+            .button-card-visualizar-evento {
+                color: white;
+                text-align: center;
+                width: 100%;
+                background-color: rgb(0, 132, 255);
+                margin-top: 10px;
+            }
+
+            .button-card-visualizar-evento:hover {
+                color: white;
+                background-color: rgb(0, 109, 211);
+                box-shadow: 1px 3px 3px rgb(85, 85, 85);
+                margin-top: 10px;
+            }
+
+            .div-informacoes-evento .accordion-group .accordion-heading {
+                border-radius: 1px;
+                padding: 10px;
+                background-color: white;
+            }
+
+            .div-informacoes-evento .enviar-trabalho {
+                background-color: rgb(49, 167, 195);
+                padding: 10px;
+                border-radius: 50px;
+                transform: rotate(90deg);
+            }
+
+            .div-informacoes-evento .accordion-body {
+                background-color: white;
+                border-top: none;
+                padding: 10px;
+
+            }
+
+            .div-informacoes-evento .div-icon-programacao {
+                background-color: rgb(43, 131, 155);
+                width: 55px;
+                height: 55px;
+                padding: 10px;
+                border-radius: 50px;
+            }
+
+            .div-informacoes-evento .div-icon-programacao .icon-programacao {
+                /* margin-top: 3px; */
+                height: 35px;
+            }
         </style>
 
         <?php
@@ -273,7 +368,8 @@
             })
             $(function () {
                 $('[data-toggle="popover"]').popover()
-            })
+            });
         </script>
+        <script src="{{ asset('js/submit.js') }}"></script>
     </body>
 </html>

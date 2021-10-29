@@ -74,7 +74,10 @@
           <table class="table table-hover table-responsive-lg table-sm table-striped">
             <thead>
               <tr>
-                <th scope="col" style="text-align:center">Check</th>
+                <th scope="col">
+                    <input type="checkbox" id="selectAllCheckboxes" onclick="marcarCheckboxes()">
+                    <label for="selectAllCheckboxes" style="margin-bottom: 0px;">Selecionar</label>
+                </th>
                 <th scope="col">
                   Título
                   <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc'])}}">
@@ -93,7 +96,7 @@
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>
-                 <th scope="col">
+                <th scope="col">
                   Autor
                   <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'autor', 'asc'])}}">
                     <i class="fas fa-arrow-alt-circle-up"></i>
@@ -102,20 +105,11 @@
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>
-                <th scope="col" style="width:15%">
-                  Modalidade
-                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'modalidadeId', 'asc'])}}">
-                    <i class="fas fa-arrow-alt-circle-up"></i>
-                  </a>
-                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'modalidadeId', 'desc'])}}">
-                    <i class="fas fa-arrow-alt-circle-down"></i>
-                  </a>
-                </th>
                 <th scope="col">
                   Revisores
 
                 </th>
-                <th scope="col" style="text-align:center">Data</th>
+                <th scope="col">Data</th>
                 <th scope="col" style="text-align:center">Atribuir</th>
                 <th scope="col" style="text-align:center">Arquivar</th>
                 <th scope="col" style="text-align:center">Editar</th>
@@ -128,34 +122,28 @@
 
               <tr>
                   <td style="text-align:center">
-                    <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" value="{{$trabalho->id}}">
+                    <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" value="{{$trabalho->id}}" class="trabalhos">
                   </td>
                   <td>
                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
-                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                            <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                 {{$trabalho->titulo}}
                             </span>
                         </a>
                     @else
-                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                        <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                             {{$trabalho->titulo}}
                         </span>
                     @endif
                   </td>
                   <td>
-                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
+                    <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
                       {{$trabalho->area->nome}}
                     </span>
 
                   </td>
                   <td>{{$trabalho->autor->name}}</td>
-                  <td>
-                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->modalidade->nome}}" style="max-width: 150px;">
-                      {{$trabalho->modalidade->nome}}
-                    </span>
-
-                  </td>
                   <td>
                     {{count($trabalho->atribuicoes)}}
 
@@ -205,7 +193,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #114048ff; color: white;">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Distrbuir trabalhos automaticamente</h5>
+        <h5 class="modal-title" id="exampleModalCenterTitle">Distribuir trabalhos automaticamente</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -384,3 +372,11 @@
 @endforeach
 @endsection
 
+@section('javascript')
+  @parent
+  <script>
+      function marcarCheckboxes() {
+          $(".trabalhos").prop('checked', $('#selectAllCheckboxes').is(":checked"));
+      }
+  </script>
+@endsection

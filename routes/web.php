@@ -98,6 +98,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('trabalhos/{id}/resultados', 'TrabalhoController@resultados')->name('resultados');
       Route::get('trabalhos/edit/{id}', 'TrabalhoController@edit')->name('trabalho.edit');
 
+      Route::get('trabalhos/listarAvaliacoes/{column?}/{direction?}/{status?}', 'EventoController@listarAvaliacoes')->name('listarAvaliacoes');
       Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', 'EventoController@listarRespostasTrabalhos')->name('respostasTrabalhos');
       Route::get('trabalhos/form/visualizarRespostaFormulario', 'EventoController@visualizarRespostaFormulario')->name('visualizarRespostaFormulario');
       Route::get('trabalhos/listarCorrecoes/{column?}/{direction?}', 'EventoController@listarCorrecoes')->name('listarCorrecoes');
@@ -142,6 +143,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('modalidade/form/update', 'EventoController@updateForm')->name('update.form');
       Route::get('modalidade/form/visualizar', 'EventoController@visualizarForm')->name('visualizar.form');
       Route::get('modalidade/form/respostas', 'EventoController@respostas')->name('respostas');
+      Route::get('modalidade/form/respostasToPdf/{modalidade}', 'EventoController@respostasToPdf')->name('respostasToPdf');
       Route::get('modalidade/form/{id}/excluir', 'EventoController@destroyForm')->name('deletar.form');
 
       Route::get('atividades/{id}', 'AtividadeController@index')->name('atividades');
@@ -172,6 +174,9 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::post(  '/evento/numTrabalhos',   'EventoController@numTrabalhos'             )->name('trabalho.numTrabalhos');
     Route::get(  '/evento/habilitar/{id}',  'EventoController@habilitar'                )->name('evento.habilitar');
     Route::get(  '/evento/desabilitar/{id}', 'EventoController@desabilitar'             )->name('evento.desabilitar');
+
+    //Sub-Evento
+    Route::get('/subevento/criar/{id}',          'EventoController@createSubEvento'                    )->name('subevento.criar');
     //Modalidade
     Route::post(  '/modalidade/criar',      'ModalidadeController@store'                 )->name('modalidade.store');
     Route::post(  '/modalidade/{id}/delete',  'ModalidadeController@destroy'             )->name('modalidade.destroy');
@@ -277,6 +282,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
 
   // ROTAS DO MODULO DE INSCRIÇÃO
   Route::get('{id}/inscricoes/nova-inscricao',  'Inscricao\InscricaoController@create')->name('inscricao.create');
+  Route::post('/inscricoes/inscrever',  'Inscricao\InscricaoController@inscrever')->name('inscricao.inscrever');
   Route::get('inscricoes/atividades-da-promocao','Inscricao\PromocaoController@atividades')->name('promocao.atividades');
   Route::get('inscricoes/checar-cupom',          'Inscricao\CupomDeDescontoController@checar')->name('checar.cupom');
   Route::post('{id}/inscricoes/nova-inscricao/checar', 'Inscricao\InscricaoController@checarDados')->name('inscricao.checar');
@@ -324,6 +330,7 @@ Route::get('/home', 'HomeController@home')->name('home')->middleware('verified',
 
 Route::namespace('Submissao')->group(function () {
   Route::get('{id}/modalidade-arquivo-regras',  'ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
+  Route::get('{id}/modalidade-arquivo-modelos',  'ModalidadeController@downloadModelos'  )->name('modalidade.modelos.download');
   Route::get('{id}/modalidade-template',      'ModalidadeController@downloadTemplate'  )->name('modalidade.template.download');
 
 });

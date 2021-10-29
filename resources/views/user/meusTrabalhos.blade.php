@@ -134,29 +134,35 @@
                   <td>{{$trabalho->id}}</td>
                   <td>{{$trabalho->titulo}}</td>
                   <td style="text-align:center">
+                    @if($trabalho->arquivo()->where('versaoFinal', true)->first() != null && Storage::disk()->exists($trabalho->arquivo()->where('versaoFinal', true)->first()->nome))
                       <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
                           <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                       </a>
+                    @else
+                        <a href="#" onclick="return false;" id="download-{{$trabalho->id}}" data-trigger="focus" data-toggle="popover" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;" >
+                            <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                        </a>
+                    @endif
                   </td>
                   <td style="text-align:center">
-                      <a href="#" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A edição do trabalho só é permitida durante o periodo de submissão." @endif>
+                      <a href="#" onclick="return false;" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A edição do trabalho só é permitida durante o periodo de submissão." @endif>
                         <img class="" src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px">
                       </a>
                   </td>
                   <td style="text-align:center">
-                    <a href="#" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A exclusão do trabalho só é permitida durante o periodo de submissão." @endif>
+                    <a href="#" onclick="return false;" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A exclusão do trabalho só é permitida durante o periodo de submissão." @endif>
                       <img class="" src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:20px">
                     </a>
                   </td>
 
                 <td style="text-align:center">
                     @forelse ($trabalho->atribuicoes as $revisor)
-                        <a @if ($trabalho->status == 'avaliado') href="{{route('user.visualizarParecer', ['eventoId' => $trabalho->evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id,'id' => $trabalho->id])}}" @else data-toggle="popover" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível assim que revisado." @endif>
+                        <a @if ($trabalho->status == 'avaliado') href="{{route('user.visualizarParecer', ['eventoId' => $trabalho->evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id,'id' => $trabalho->id])}}" @else href="#" onclick="return false;" data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível assim que revisado." @endif>
                             <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                         </a>
                         <br>
                     @empty
-                        <a data-toggle="popover" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível assim que revisado.">
+                        <a href="#" onclick="return false;" data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível assim que revisado.">
                             <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                         </a>
                     @endforelse
@@ -165,9 +171,15 @@
                 <td style="text-align:center">
                     {{--Desabilitando temporariamente a restricao de aprovacao para correcao--}}
                     {{--@if($trabalho->aprovado !== false)--}}
-                        <a href="#" @if($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao) data-toggle="modal" data-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A correção do trabalho só é permitida durante o período de correção. {{date('d/m/Y H:i', strtotime($trabalho->modalidade->inicioCorrecao))}} a {{date('d/m/Y H:i', strtotime($trabalho->modalidade->fimCorrecao))}}" @endif>
+                    @if($trabalho->modalidade->inicioCorrecao > date(01-01-2021))
+                        <a href="#" @if($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao) data-toggle="modal" data-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else onclick="return false;" data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A correção do trabalho só é permitida durante o período de correção. De {{date('d/m/Y H:i', strtotime($trabalho->modalidade->inicioCorrecao))}} a {{date('d/m/Y H:i', strtotime($trabalho->modalidade->fimCorrecao))}}" @endif>
                             <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
                         </a>
+                    @else
+                        <a href="#" @if($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao) data-toggle="modal" data-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else onclick="return false;" data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A correção não está habilitada para este trabalho." @endif>
+                            <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
+                        </a>
+                    @endif
                     {{--@else
                         <a data-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A correção não está disponível para o seu trabalho.">
                             <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
@@ -220,9 +232,15 @@
                     <td>{{$trabalho->titulo}}</td>
                     <td>{{$trabalho->autor->name}}</td>
                     <td style="text-align:center">
+                    @if($trabalho->arquivo()->where('versaoFinal', true)->first() != null && Storage::disk()->exists($trabalho->arquivo()->where('versaoFinal', true)->first()->nome))
                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
                             <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                         </a>
+                    @else
+                        <a href="#" onclick="return false;" data-toggle="popover" data-trigger="focus" data-trigger="focus" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;" >
+                            <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                        </a>
+                    @endif
                     </td>
                   </tr>
               @endforeach
@@ -279,7 +297,7 @@
           <div class="modal-body">
             <form id="formEditarTrab{{$trabalho->id}}" action="{{route('editar.trabalho', ['id' => $trabalho->id])}}" method="POST" enctype="multipart/form-data">
               @csrf
-
+              <input type="hidden" name="modalidade{{$trabalho->id}}" value="{{$trabalho->modalidade->id}}">
               @php
                 $formSubTraba = $trabalho->evento->formSubTrab;
                 $ordem = explode(",", $formSubTraba->ordemCampos);

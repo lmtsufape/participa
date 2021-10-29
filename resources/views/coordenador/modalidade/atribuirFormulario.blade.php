@@ -7,7 +7,7 @@
             <div class="col-sm-12">
                 <h3 class="titulo-detalhes">Adicionar formulario na molidade: <br> <strong> {{$modalidade->nome}}</strong> </h3>
             </div>
-        </div> 
+        </div>
     </div>
     <form action="{{route('coord.salvar.form')}}" method="get">
         <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
@@ -19,10 +19,10 @@
                     <label> <strong> Titulo do Formulário*:</strong></label>
                 <input type="text" syle="margin-bottom:10px"   class="form-control " name="tituloForm" required>
                 </div>
-            </div>            
+            </div>
         </div>
-        <div class="col-md-12">                                
-            
+        <div class="col-md-12">
+
             <div id="coautores" class="flexContainer " >
                 <div class="item card" style="order:1">
                     <div class="row card-body">
@@ -35,7 +35,12 @@
                             <div class="row" id="row1">
                                 <div class="col-md-12">
                                     <input type="text" style="margin-bottom:10px" disabled='true' class="form-control " name="resposta[]">
-                                </div>                                
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="col-form-label text-md-left">
+                                <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="checkboxVisibilidade[]" value="0">
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -59,81 +64,82 @@
                             <a href="#" onclick="myFunction(event)">
                             <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
                             </a>
-                            
+
                         </div>
                     </div>
                 </div>
             </div>
             <a href="#" onclick="addLinha(event)" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">Adicionar pergunta</a>
             <button type="submit" class="btn btn-success" style="width:100%;margin-top:10px">
-                Salvar 
+                Salvar
             </button>
         </div>
         </div>
     </div>
     </form>
-   
+
 
 @endsection
 @section('javascript')
+    @parent
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script type="text/javascript">
-       
-            let order = 1;  
-            let pergunta = 1;  
+
+            let order = 1;
+            let pergunta = 1;
 
         function escolha(select){
             if('paragrafo' == select){
                 console.log('paragrafo')
                 console.log(event)
                 event.path[3].children[1].children[1].innerHTML = addParagrafo();
-                
+
             }else if('checkbox' == select){
                 console.log('checkbox')
                 console.log(event.path[3].children[1].children[1].id)
                 let id = event.path[3].children[1].children[1].id;
-                
+
                 event.path[3].children[1].children[1].innerHTML = montarOpcao(id);
-                
+
             }else if('radio' == select){
 
             }
         }
 
-        
+
 
         function myFunction(event) {
             event.preventDefault();
             el = event.srcElement.id
             // console.log( event.path['5'].childNodes)
-            arr = event.path['5'].childNodes;    
-            
-            if(el == "arrow-up"){      
+            arr = event.path['5'].childNodes;
+
+            if(el == "arrow-up"){
             number = event.path['4'].style.order;
             if(number == 1) return
 
             for (var i = 0; i < arr.length; i++) {
                 if(event.path['5'].childNodes[i].style['order'] == parseInt(event.path['4'].style.order, 10) - 1 ){
                 event.path['5'].childNodes[i].style['order'] = parseInt(event.path['5'].childNodes[i].style['order'], 10) + parseInt(1, 10);
-                
+
                 event.path['4'].style.order =  parseInt(event.path['4'].style.order, 10) - parseInt(1, 10);
-                
+
                 break;
                 }
             }
 
-            
-                
+
+
             }else if(el == "arrow-down"){
             number = event.path['4'].style.order;
             if(number == order) return
-            
+
             for (var i = 0; i < arr.length; i++) {
                 if(event.path['5'].childNodes[i].style['order'] == parseInt(event.path['4'].style.order, 10) + 1 ){
                 event.path['5'].childNodes[i].style['order'] = parseInt(event.path['5'].childNodes[i].style['order'], 10) - parseInt(1, 10);
-                
+
                 event.path['4'].style.order =  parseInt(event.path['4'].style.order, 10) + parseInt(1, 10);
-                
+
                 break;
                 }
             }
@@ -145,21 +151,21 @@
         function addLinha(event){
             event.preventDefault();
             order += 1;
-            linha = montarLinhaInput(order);
+            linha = montarLinhaInputForm(order);
             $('#coautores').append(linha);
         }
         $(document).ready(function(){
-            
+
         });
         function addCheckbox(event){
             event.preventDefault();
             console.log(event.path[3].childNodes[3].parentElement.id);
             let id = event.path[3].childNodes[3].parentElement.id;
-            
+
             let div = document.createElement('div');
             console.log(div)
             div.classList.add("col-md-10");
-            
+
             div.innerHTML = addCheckboxInput(id);
             let find = document.querySelector("#"+id);
             find.appendChild(div);
@@ -169,14 +175,14 @@
             $(this).closest('.itemRadio').remove();
                 return false;
         });
-        
+
         // Remover Coautor
         $(document).on('click','.delete',function(){
             $(this).closest('.item').remove();
                 return false;
         });
 
-        function montarLinhaInput(order){
+        function montarLinhaInputForm(order){
 
         return `<div class="item card" style="order:${order}">
                     <div class="row card-body">
@@ -189,7 +195,12 @@
                             <div class="row" id="row${order}">
                                 <div class="col-md-12">
                                     <input type="text" style="margin-bottom:10px" disabled='true' class="form-control " name="resposta[]">
-                                </div>                                
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="col-form-label text-md-left">
+                                <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="checkboxVisibilidade[]" value="${order-1}">
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -213,7 +224,7 @@
                             <a href="#" onclick="myFunction(event)">
                             <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
                             </a>
-                            
+
                         </div>
                     </div>
                 </div>`;

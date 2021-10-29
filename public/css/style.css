@@ -321,17 +321,6 @@ body{
     text-align: left;
 }
 
-.info-evento .button-card-visualizar-evento {
-    text-align: center;
-    width: 100%;
-    background-color: rgb(0, 132, 255);
-}
-
-.info-evento .button-card-visualizar-evento:hover {
-    background-color: rgb(1, 195, 195);
-    box-shadow: 1px 3px 3px rgb(85, 85, 85);
-}
-
 .info-evento .titulo-modalidade {
     color: rgb(0, 132, 255);
 }

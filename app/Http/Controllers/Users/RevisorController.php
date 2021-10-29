@@ -96,6 +96,8 @@ class RevisorController extends Controller
 
         $usuario = User::where('email', $request->emailRevisor)->first();
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         // dd(count($usuario->revisor()->where('evento_id', $evento->id)->get()));
         if($usuario == null){
           $passwordTemporario = Str::random(8);
@@ -174,6 +176,9 @@ class RevisorController extends Controller
     {
       $user = User::find($request->editarRevisor);
       $evento = Evento::find($request->eventoId);
+      $this->authorize('isCoordenadorOrComissao', $evento);
+
+
       $validatedData = $request->validate([
         'editarRevisor'   => 'required',
         'areasEditadas_'.$user->id => 'required',
@@ -212,8 +217,8 @@ class RevisorController extends Controller
 
       // Adicionando os novos revisores
       foreach ($request->input('areasEditadas_'.$user->id) as $area) {
-        $encontrado = false;
         foreach ($request->input('modalidadesEditadas_'.$user->id) as $modalidade) {
+          $encontrado = false;
           foreach ($revisores as $revisor) {
             if ($revisor->areaId == $area && $revisor->modalidadeId == $modalidade) {
               $encontrado = true;
@@ -245,6 +250,7 @@ class RevisorController extends Controller
     {
       $user = User::find($id);
       $evento = Evento::find($evento_id);
+      $this->authorize('isCoordenadorOrComissao', $evento);
 
       foreach ($user->revisor()->where('evento_id', '=', $evento->id)->get() as $revisor) {
         if (count($revisor->trabalhosAtribuidos) > 0) {
@@ -266,6 +272,8 @@ class RevisorController extends Controller
     {
         $user = User::find($id);
         $evento = Evento::find($evento_id);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+
         if($user->usuarioTemp){
             $passwordTemporario = Str::random(8);
             $coord = User::find($evento->coordenadorId);
@@ -439,14 +447,22 @@ class RevisorController extends Controller
 
       foreach ($data['pergunta_id'] as $key => $value) {
         $pergunta = Pergunta::find($value);
-        if($pergunta->respostas->first()->paragrafo->count()){
+        if($pergunta->respostas->first()->paragrafo != null){
           $resposta =  $pergunta->respostas()->create([
             'revisor_id' => $data['revisor_id'],
             'trabalho_id' => $data['trabalho_id']
           ]);
-          $resposta->paragrafo()->create([
-            'resposta' => $data['resposta'][$key],
-          ]);
+          if($pergunta->visibilidade == true){
+                $resposta->paragrafo()->create([
+                    'resposta' => $data['resposta'][$key],
+                    'visibilidade' => true,
+                ]);
+          }else{
+                $resposta->paragrafo()->create([
+                    'resposta' => $data['resposta'][$key],
+                    'visibilidade' => false,
+                ]);
+          }
 
           $evento_id = $trabalho->eventoId;
           $trabalho->avaliado = "Avaliado";

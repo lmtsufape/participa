@@ -30,9 +30,9 @@
             @if ($i == 0)
               <div class="carousel-item active" style="background-color:white">
                 <div class="row">
-                  <div class="col-md-7 evento-image sizeImg">
+                  <div class="col-lg-7 evento-image sizeImg">
                     @if ($evento->fotoEvento != null)
-                      <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="" alt="..." style="
+                      <img src="{{ asset('storage/'.$evento->fotoEvento) }}" class="" alt="..." style="
                       max-width:300px;
                       max-height:150px;
                       width: auto;
@@ -45,7 +45,7 @@
                       height: auto;background: no-repeat center;background-size: cover;">
                     @endif
                   </div>
-                  <div class="col-md-5" style=" height: 350px;">
+                  <div class="col-lg-5">
                     <div class="row container" style="margin-left: 0px; margin-top:15px;">
                       <div class="col-md-12" style="text-align:center; margin-top:20px;margin-bottom:10px;">
                         @auth
@@ -54,8 +54,17 @@
                           <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
                         @endauth
                       </div>
-                      <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 621, "...")}}</div>
-
+                      <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">
+                        <div>
+                            @if (strlen($evento->descricao) > 621)
+                                {{ mb_strimwidth(strip_tags(html_entity_decode($evento->descricao, ENT_QUOTES)), 0, 621, "...") }}
+                                <br>
+                                <a href="#" onclick="event.preventDefault();" data-toggle="modal" data-target="#lerMais{{$evento->id}}">Saiba mais</a>
+                            @else
+                                {!! $evento->descricao !!}
+                            @endif
+                        </div>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -65,7 +74,7 @@
               <div class="row">
                 <div class="col-md-7 evento-image sizeImg">
                   @if ($evento->fotoEvento != null)
-                    <img src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" class="" alt="..." style="max-width:300px;
+                    <img src="{{ asset('storage/'.$evento->fotoEvento) }}" class="" alt="..." style="max-width:300px;
                     max-height:150px;
                     width: auto;
                     height: auto;background: no-repeat center;
@@ -87,7 +96,15 @@
                         <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
                       @endauth
                     </div>
-                    <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 621, "...")}}</div>
+                    <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">
+                        @if (strlen($evento->descricao) > 621)
+                            {{ mb_strimwidth(strip_tags(html_entity_decode($evento->descricao, ENT_QUOTES)), 0, 621, "...") }}
+                            <br>
+                            <a href="#" onclick="event.preventDefault();" data-toggle="modal" data-target="#lerMais{{$evento->id}}">Saiba mais</a>
+                        @else
+                            {!! $evento->descricao !!}
+                        @endif
+                    </div>
 
                   </div>
                 </div>
@@ -112,6 +129,7 @@
         @endif
     </div>
     <!-- TITULO: PROXIMOS EVENTOS -->
+    @if (count($proximosEventos) > 0)
     <div class="col-md-12" style="font-size: 20px; margin-top:5rem; margin-bottom:20px; text-align:center">Próximos eventos</div>
     <div class="col-md-11">
       <div class="row justify-content-center" style="padding-left:10px">
@@ -119,7 +137,7 @@
         @foreach($proximosEventos as $evento)
           <div class="card" style="width: 16rem; margin:8px; border: 0px solid #1492E6; border-radius: 12px;">
             @if ($evento->fotoEvento != null)
-              <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
+              <img class="card-img-top" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap">
             @else
               <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
             @endif
@@ -146,6 +164,43 @@
 
       </div>
     </div>
+    @endif
+    @if (count($eventosPassados) > 0)
+    <div class="col-md-12" style="font-size: 20px; margin-top:5rem; margin-bottom:20px; text-align:center">Eventos passados</div>
+    <div class="col-md-11">
+      <div class="row justify-content-center" style="padding-left:10px">
+
+        @foreach($eventosPassados as $evento)
+          <div class="card" style="width: 16rem; margin:8px; border: 0px solid #1492E6; border-radius: 12px;">
+            @if ($evento->fotoEvento != null)
+              <img class="card-img-top" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap">
+            @else
+              <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
+            @endif
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12" style="height:80px">
+                  @auth
+                    <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
+                      <h5 class="card-title">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</h5>
+                    </a>
+                  @else
+                    <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="color: black;">
+                      <h5 class="card-title">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</h5>
+                    </a>
+                  @endauth
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        @endforeach
+
+
+      </div>
+    </div>
+    @endif
     <!-- MAIS EVENTOS-->
     @if(count($proximosEventos) > 0)
     <div id="btn-mais-eventos" class="row justify-content-center" style="padding-top:100px">
@@ -158,9 +213,32 @@
 </div>
 
 
-
-
-
+@if(count($proximosEventos)>0)
+    @foreach ($proximosEventos as $i => $evento)
+    <div class="modal fade" id="lerMais{{$evento->id}}" tabindex="-1" role="dialog" aria-labelledby="labelLerMais" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #114048ff; color: white;">
+                    <h5 class="modal-title" id="labelLerMais">{{$evento->nome}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-text">
+                        <div class="container">
+                            {!! $evento->descricao !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+@endif
 
 
 
@@ -208,7 +286,7 @@
               @foreach($proximosEventos as $evento)
                 <div class="card acessibilidade" style="width: 13rem;">
                   @if ($evento->fotoEvento != null)
-                    <img class="card-img-top" src="{{ asset('storage/eventos/'.$evento->id.'/logo.png') }}" alt="Card image cap">
+                    <img class="card-img-top" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap">
                   @else
                     <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
                   @endif
@@ -400,7 +478,7 @@
                 @if($evento->publicado && $evento->deletado == false)
                   <div class="card" style="width: 18rem;">
                       @if(isset($evento->fotoEvento))
-                        <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+                        <img src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
                       @else
                         <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                       @endif

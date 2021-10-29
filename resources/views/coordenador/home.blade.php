@@ -34,7 +34,7 @@
                 @can('isPublishOrIsCoordenador', $evento)
                     <div class="card" style="width: 18rem;">
                         @if(isset($evento->fotoEvento))
-                        <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+                        <img src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
                         @else
                         <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                         @endif
@@ -44,31 +44,9 @@
                                     <h4 class="card-title">
                                         <div class="row justify-content-center">
                                             <div class="col-sm-12">
-                                                {{$evento->nome}}
-                                                @can('isCoordenador', $evento)
-                                                    <div class="btn-group dropright dropdown-options">
-                                                        <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
-                                                                <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
-                                                            </div>
-                                                        </a>
-                                                        <div class="dropdown-menu">
-                                                            <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}" class="dropdown-item">
-                                                                <img src="{{asset('img/icons/eye-regular.svg')}}" class="icon-card" alt="">
-                                                                Detalhes
-                                                            </a>
-
-                                                            <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
-                                                                {{ csrf_field() }}
-                                                                {{ method_field('DELETE') }}
-                                                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
-                                                                    <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt="">
-                                                                    Deletar
-                                                                </a>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                @endcan
+                                                <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="text-decoration: inherit;">
+                                                    {{$evento->nome}}
+                                                </a>
                                             </div>
 
                                         </div>
@@ -90,9 +68,29 @@
                                     </div>
                                 </div>
                             </p>
-                            <p>
-                                <a href="{{  route('evento.visualizar',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
-                            </p>
+                            <div>
+                                <div>
+                                    <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
+                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                    </a>
+                                </div>
+                                @can('isCoordenador', $evento)
+                                <div>
+                                    <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
+                                        <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
+                                    </a>
+                                </div>
+                                <div>
+                                    <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+                                        <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
+                                            <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar
+                                        </a>
+                                    </form>
+                                </div>
+                                @endcan
+                            </div>
                         </div>
 
                     </div>

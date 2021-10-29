@@ -8,7 +8,7 @@
     <div id="divListarCriterio" class="comissao">
         <div class="row">
             <div class="col-sm-12">
-                <h3 class="titulo-detalhes">Formulário(s) da molidade: <br> <strong> {{$modalidade->nome}}</strong> </h3>
+                <h3 class="titulo-detalhes">Formulário(s) da modalidade: <strong> {{$modalidade->nome}}</strong> </h3>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
                                 Resposta com Multipla escolha:
                             @elseif($pergunta->respostas->first()->paragrafo->count() )
 
-                                <p>Resposta com paragrafo: </p>
+                                <p>Resposta com parágrafo: </p>
 
                             @endif
                         </div>
@@ -280,6 +280,7 @@
 
 
 @section('javascript')
+    @parent
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script type="text/javascript">
 

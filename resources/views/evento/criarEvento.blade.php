@@ -4,9 +4,9 @@
 
 <div class="banner-perfil"  style="position: relative; top: 65px;">
     <div class="row justify-content-center curved" style="margin-bottom:-5px">
-    
+
     </div>
-    
+
     <div class="row justify-content-center">
         <div class="col-sm-12">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#114048ff"
@@ -21,14 +21,22 @@
     <div class="card card-change-mode" style="width: 80%;">
         <div class="card-body">
             <div class="container">
-                
+
 
                 <div class="row justify-content-center titulo">
-                    <h1>Novo Evento</h1>
+                    @if ($eventoPai ?? '')
+                        <h1>Novo Subevento</h1>
+                    @else
+                        <h1>Novo Evento</h1>
+                    @endif
+
                 </div>
 
                 <form action="{{route('evento.criar')}}" method="POST" enctype="multipart/form-data">
                 @csrf
+                    @if ($eventoPai ?? '')
+                        <input type="hidden" name="eventoPai" value="{{$eventoPai->id}}">
+                    @endif
                     {{-- <input type="hidden" name="" value="">
                     <input type="hidden" name="" value="">
                     <input type="hidden" name="" value="">
@@ -37,6 +45,11 @@
                     <div class="row subtitulo">
                         <div class="col-sm-12">
                             <p>Informações Gerais</p>
+                            @error('eventoPai')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
                     {{-- nome | Participantes | Tipo--}}
@@ -98,7 +111,7 @@
                                     <option @if(old('recolhimento') == "apoiado") selected @endif value="apoiado">Apoiado</option>
                                     <option @if(old('recolhimento') == "gratuito") selected @endif value="gratuito">Gratuito</option>
                                     <option @if(old('recolhimento') == "pago") selected @endif value="pago">Pago</option>
-                                @else 
+                                @else
                                     <option value="">-- Recolhimento --</option>
                                     <option value="apoiado">Apoiado</option>
                                     <option value="gratuito">Gratuito</option>
@@ -193,7 +206,7 @@
 
                     {{-- Foto Evento --}}
                     <div class="row justify-content-center" style="margin-top:10px">
-                        
+
                     </div>
 
                     <div class="row subtitulo" style="margin-top:20px">
@@ -261,7 +274,7 @@
                         <div class="col-sm-4">
                             <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
                             <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="{{ old('complemento') }}" autocomplete="complemento" autofocus>
-            
+
                             @error('complemento')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -318,7 +331,11 @@
                         </div>
                         <div class="col-md-5" style="padding-right:0">
                             <button type="submit" class="btn btn-atualizar-perfil botao-form" style="width:100%">
-                                {{ __('Criar Evento') }}
+                                @if ($eventoPai ?? '')
+                                    {{ __('Criar Subevento') }}
+                                @else
+                                    {{ __('Criar Evento') }}
+                                @endif
                             </button>
                         </div>
                     </div>
@@ -341,7 +358,12 @@
                 '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
             }
         });
-        $('#numero').mask('0000000000000');
+        $('#numero').mask('#', {
+            maxlength: false,
+            translation: {
+                '#': {pattern: /[0-9\\s/n]/, recursive: true}
+            }
+        });
 
         $('#imagem-loader').click(function() {
             $('#logo-input').click();
@@ -350,13 +372,13 @@
                     var file = new FileReader();
                     file.onload = function(e) {
                         document.getElementById("logo-preview").src = e.target.result;
-                    };       
+                    };
                     file.readAsDataURL(this.files[0]);
                 }
             })
         });
     });
-    
+
 
     function limpa_formulário_cep() {
             //Limpa valores do formulário de cep.
