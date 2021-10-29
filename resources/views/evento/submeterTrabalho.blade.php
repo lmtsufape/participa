@@ -13,7 +13,7 @@
                   <br>
                   <h4 class="card-title">Enviar Trabalho</h4>
                   <p class="card-text">
-                    <form method="POST" action="{{route('trabalho.store', $modalidade->id)}}" enctype="multipart/form-data">
+                    <form method="POST" action="{{route('trabalho.store', $modalidade->id)}}" enctype="multipart/form-data" class="form-prevent-multiple-submits">
                         @csrf
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
                         <input type="hidden" name="modalidadeId" value="{{$modalidade->id}}">
@@ -136,7 +136,7 @@
                                 <div class="col-sm-12">
                                     <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
                                     <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
-                                    <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: {{$modalidade->minpalavras}} - Max Palavras: {{$modalidade->maxpalavras}}</p>
+                                    <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: <span id="minpalavras">{{$modalidade->minpalavras}}</span> - Max Palavras: <span id="maxpalavras">{{$modalidade->maxpalavras}}</span></p>
                                     @error('resumo')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -444,8 +444,8 @@
                             <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" class="btn btn-secondary" style="width:100%">Cancelar</a>
                         </div>
                         <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary" style="width:100%">
-                                {{ __('Enviar') }}
+                            <button type="submit" class="btn btn-primary button-prevent-multiple-submits" style="width:100%">
+                                <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i> {{ __('Enviar') }}
                             </button>
                         </div>
                     </div>
@@ -478,21 +478,18 @@
 
   $(document).ready(function(){
     $('.palavra').keyup(function() {
-        var maxLength = parseInt($(this).attr('maxlength'));
-        var texto = $(this).val().length;
-        // console.log(texto);
-        if ($(this).val()[length - 1] == " ") {
-          var cont = $(this).val().length;
-          // console.log("Contador:");
-          // console.log(cont);
+        var myText = this.value.trim();
+        var wordsArray = myText.split(/\s+/g);
+        var words = wordsArray.length;
+        var min = parseInt(($('#minpalavras').text()));
+        var max = parseInt(($('#maxpalavras').text()));
+        if(words < min || words > max) {
+            this.setCustomValidity('Número de palavras não permitido. Você possui atualmente '+words+' palavras.');
+        } else {
+            this.setCustomValidity('');
         }
 
-        // console.log("Texto:");
-        // console.log(texto);
-
-        var name = $(this).attr('name');
-
-        $('span[name="'+name+'"]').text(length);
+        $('#numpalavra').text(words);
     });
   });
 

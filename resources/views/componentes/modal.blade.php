@@ -1,8 +1,9 @@
 <!-- Button trigger modal -->
+
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#email_lembrar_{{$revisor->id}}">
     Enviar e-mail
   </button>
-  
+
   <!-- Modal -->
   <div class="modal fade" id="email_lembrar_{{$revisor->id}}" tabindex="-1" aria-labelledby="#email_lembrar_{{$revisor->id}}_label" aria-hidden="true">
     <div class="modal-dialog">
@@ -15,7 +16,7 @@
         </div>
         <div class="modal-body">
             <div class="row ">
-                <div class="col-sm-12">                    
+                <div class="col-sm-12">
                     <h6 class="card-subtitle mb-2 text-muted">Edite o texto do email para o envio</h6>
                     <br>
                     <h6 class="card-subtitle mb-2 text-muted">Para: {{$revisor->email}}</h6>

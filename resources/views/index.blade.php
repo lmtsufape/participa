@@ -30,7 +30,7 @@
             @if ($i == 0)
               <div class="carousel-item active" style="background-color:white">
                 <div class="row">
-                  <div class="col-md-7 evento-image sizeImg">
+                  <div class="col-lg-7 evento-image sizeImg">
                     @if ($evento->fotoEvento != null)
                       <img src="{{ asset('storage/'.$evento->fotoEvento) }}" class="" alt="..." style="
                       max-width:300px;
@@ -45,7 +45,7 @@
                       height: auto;background: no-repeat center;background-size: cover;">
                     @endif
                   </div>
-                  <div class="col-md-5" style=" height: 350px;">
+                  <div class="col-lg-5">
                     <div class="row container" style="margin-left: 0px; margin-top:15px;">
                       <div class="col-md-12" style="text-align:center; margin-top:20px;margin-bottom:10px;">
                         @auth
@@ -54,8 +54,17 @@
                           <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
                         @endauth
                       </div>
-                      <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 621, "...")}}</div>
-
+                      <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">
+                        <div>
+                            @if (strlen($evento->descricao) > 621)
+                                {{ mb_strimwidth(strip_tags(html_entity_decode($evento->descricao, ENT_QUOTES)), 0, 621, "...") }}
+                                <br>
+                                <a href="#" onclick="event.preventDefault();" data-toggle="modal" data-target="#lerMais{{$evento->id}}">Saiba mais</a>
+                            @else
+                                {!! $evento->descricao !!}
+                            @endif
+                        </div>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -87,7 +96,15 @@
                         <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
                       @endauth
                     </div>
-                    <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">{{mb_strimwidth($evento->descricao, 0, 621, "...")}}</div>
+                    <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">
+                        @if (strlen($evento->descricao) > 621)
+                            {{ mb_strimwidth(strip_tags(html_entity_decode($evento->descricao, ENT_QUOTES)), 0, 621, "...") }}
+                            <br>
+                            <a href="#" onclick="event.preventDefault();" data-toggle="modal" data-target="#lerMais{{$evento->id}}">Saiba mais</a>
+                        @else
+                            {!! $evento->descricao !!}
+                        @endif
+                    </div>
 
                   </div>
                 </div>
@@ -196,9 +213,32 @@
 </div>
 
 
-
-
-
+@if(count($proximosEventos)>0)
+    @foreach ($proximosEventos as $i => $evento)
+    <div class="modal fade" id="lerMais{{$evento->id}}" tabindex="-1" role="dialog" aria-labelledby="labelLerMais" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #114048ff; color: white;">
+                    <h5 class="modal-title" id="labelLerMais">{{$evento->nome}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-text">
+                        <div class="container">
+                            {!! $evento->descricao !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+@endif
 
 
 

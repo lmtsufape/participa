@@ -3,9 +3,9 @@
 @section('content')
 <div class="banner-perfil"  style="position: relative; top: 65px;">
     <div class="row justify-content-center curved" style="margin-bottom:-5px">
-    
+
     </div>
-    
+
     <div class="row justify-content-center">
         <div class="col-sm-12">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#114048ff"
@@ -104,7 +104,7 @@
                                     <option @if(old('recolhimento') == "apoiado") selected @endif value="apoiado">Apoiado</option>
                                     <option @if(old('recolhimento') == "gratuito") selected @endif value="gratuito">Gratuito</option>
                                     <option @if(old('recolhimento') == "pago") selected @endif value="pago">Pago</option>
-                                @else 
+                                @else
                                     <option @if($evento->recolhimento == "apoiado") selected @endif value="apoiado">Apoiado</option>
                                     <option @if($evento->recolhimento == "gratuito") selected @endif value="gratuito">Gratuito</option>
                                     <option @if($evento->recolhimento == "pago") selected @endif value="pago">Pago</option>
@@ -252,7 +252,7 @@
                         <div class="col-sm-4">
                             <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
                             <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="@if(old('complemento') != null){{old('complemento')}}@else{{$evento->endereco->complemento}}@endif" autocomplete="complemento" autofocus>
-            
+
                             @error('complemento')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -292,7 +292,7 @@
                                     <option @if(old('uf') == 'SP') selected @endif value="SP">São Paulo</option>
                                     <option @if(old('uf') == 'SE') selected @endif value="SE">Sergipe</option>
                                     <option @if(old('uf') == 'TO') selected @endif value="TO">Tocantins</option>
-                                @else 
+                                @else
                                     <option value="" disabled selected hidden>-- UF --</option>
                                     <option @if($endereco->uf == 'AC') selected @endif value="AC">Acre</option>
                                     <option @if($endereco->uf == 'AL') selected @endif value="AL">Alagoas</option>
@@ -354,6 +354,9 @@
 @section('javascript')
   <script type="text/javascript" >
     $(document).ready(function($){
+
+        CKEDITOR.replace( 'descricao' );
+
         $('#cep').mask('00000-000');
         $(".apenasLetras").mask("#", {
             maxlength: false,
@@ -370,7 +373,7 @@
                     var file = new FileReader();
                     file.onload = function(e) {
                         document.getElementById("logo-preview").src = e.target.result;
-                    };       
+                    };
                     file.readAsDataURL(this.files[0]);
                 }
             })
