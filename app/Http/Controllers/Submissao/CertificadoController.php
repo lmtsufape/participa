@@ -212,23 +212,17 @@ class CertificadoController extends Controller
     {
 
        if($request->destinatario == '1' || $request->destinatario == '6'){
-            $destinatarios = User::join('trabalhos', 'users.id', '=', 'trabalhos.autorId')->where('trabalhos.eventoId', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
-                function($autor) {
-                    return $autor->name;
-                },
-                SORT_REGULAR);
-            $coautores = User::join('coautors', 'users.id', '=', 'coautors.autorId')->where('coautors.eventos_id', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
-                function($coautor) {
-                    return $coautor->name;
-                },
-                SORT_REGULAR);
-
-            foreach($coautores as $dest){
-                if(!$destinatarios->contains($dest)){
-                    $destinatarios->push($dest);
+            $destinatarios = collect();
+            $trab = Trabalho::where('eventoId', '=', $request->eventoId)->orderBy('titulo')->get();
+            $trabalhos = collect();
+            foreach($trab as $trabalho){
+                $destinatarios->push($trabalho->autor);
+                $trabalhos->push($trabalho);
+                foreach($trabalho->coautors as $coautor){
+                    $destinatarios->push($coautor->user);
+                    $trabalhos->push($trabalho);
                 }
             }
-            $destinatarios = $destinatarios->sortBy('name');
         }elseif($request->destinatario == '2'){
             $destinatarios = User::join('comissao_cientifica_eventos', 'users.id', '=', 'comissao_cientifica_eventos.user_id')->where('comissao_cientifica_eventos.evento_id', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
                 function($membro) {
@@ -314,11 +308,20 @@ class CertificadoController extends Controller
             $desti->push($dest);
         }
 
-        $data = array(
-            'success'   => true,
-            'destinatarios'     => $desti,
-        );
-        echo json_encode($data);
+        if($request->destinatario == '1' || $request->destinatario == '6'){
+            $data = array(
+                'success'   => true,
+                'destinatarios'     => $desti,
+                'trabalhos' => $trabalhos,
+            );
+            echo json_encode($data);
+        }else{
+            $data = array(
+                'success'   => true,
+                'destinatarios'     => $desti,
+            );
+            echo json_encode($data);
+        }
     }
 
     public function enviarCertificacao(Request $request)
@@ -330,13 +333,11 @@ class CertificadoController extends Controller
         date_default_timezone_set('America/Recife');
         switch($request->destinatario){
             case(1):
-                foreach($request->destinatarios as $destinarioId){
+                foreach($request->destinatarios as $i => $destinarioId){
                     $user = User::find($destinarioId);
-                    $trabalhos = Trabalho::where([['autorId', $user->id], ['eventoId', $evento->id]])->get();
-                    foreach($trabalhos as $trabalho){
-                        $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
-                        Mail::to($user->email)->send(new EmailCertificado($user, 'apresentador de trabalho', $evento->nome, $pdf));
-                    }
+                    $trabalho = Trabalho::find($request->trabalhos[$i]);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    Mail::to($user->email)->send(new EmailCertificado($user, 'apresentador de trabalho', $evento->nome, $pdf));
                 }
                 break;
             case(2):
@@ -368,13 +369,11 @@ class CertificadoController extends Controller
                 }
                 break;
             case(6):
-                foreach($request->destinatarios as $destinarioId){
+                foreach($request->destinatarios as $i => $destinarioId){
                     $user = User::find($destinarioId);
-                    $trabalhos = Trabalho::where([['autorId', $user->id], ['eventoId', $evento->id]])->get();
-                    foreach($trabalhos as $trabalho){
-                        $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
-                        Mail::to($user->email)->send(new EmailCertificado($user, 'expositor(a)', $evento->nome, $pdf));
-                    }
+                    $trabalho = Trabalho::find($request->trabalhos[$i]);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    Mail::to($user->email)->send(new EmailCertificado($user, 'expositor(a)', $evento->nome, $pdf));
                 }
                 break;
         }

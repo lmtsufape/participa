@@ -116,8 +116,8 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary" style="width:100%">
-                        {{ __('Enviar') }}
+                    <button type="submit" class="btn btn-primary  button-prevent-multiple-submits" style="width:100%">
+                        <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i> {{ __('Enviar') }}
                     </button>
                 </div>
             </div>
@@ -140,24 +140,46 @@
 
             complete: function(data) {
                 if(data.responseJSON.success){
-                    var selectDest = `<hr><div id="destinatarioSelectCard_" class="d-flex justify-content-center">
+                    if($destinatario == '1' || $destinatario == '6'){
+                        var selectDest = `<hr><div id="destinatarioSelectCard_" class="d-flex justify-content-center">
+                                        <div class="form-check">
+                                                <input type="checkbox" id="chk_marcar_desmarcar_todos_destinatarios" onclick="marcar_desmarcar_todos_checkbox_por_classe_double(this, 'checkbox_destinatario')">
+                                                <label for="btn_marcar_desmarcar_todos_destinatarios"><b>Selecionar todos</b></label>
+                                            </div>
+                                        </div><hr>`;
+                        $('#tabelaDestinatarios tbody').append(selectDest);
+                    }else{
+                        var selectDest = `<hr><div id="destinatarioSelectCard_" class="d-flex justify-content-center">
                                         <div class="form-check">
                                                 <input type="checkbox" id="chk_marcar_desmarcar_todos_destinatarios" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_destinatario')">
                                                 <label for="btn_marcar_desmarcar_todos_destinatarios"><b>Selecionar todos</b></label>
                                             </div>
                                         </div><hr>`;
-                    $('#tabelaDestinatarios tbody').append(selectDest);
+                        $('#tabelaDestinatarios tbody').append(selectDest);
+                    }
                     for(var i = 0; i < data.responseJSON.destinatarios.length; i++){
                         var naLista = document.getElementById('listaDestinatarios');
-                        var html = `<hr><div id="destinatarioCard_`+$destinatario+`_`+data.responseJSON.destinatarios[i].id+`" class="d-flex justify-content-left">
+                        if($destinatario == '1' || $destinatario == '6'){
+                            var html = `<hr><div id="destinatarioCard_`+$destinatario+`_`+i+`" class="d-flex justify-content-left">
+                                            <div id="destinatarioForm_`+i+`" class="form-check">
+                                                <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+i+`}}" onChange="selecionarTrabalho(`+i+`)">
+                                                <input style="display: none;" type="checkbox" name="trabalhos[]" value="`+data.responseJSON.trabalhos[i].id+`" id="trabalho_{{`+i+`}}">
+                                                <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.trabalhos[i].titulo+' - '+data.responseJSON.destinatarios[i].name+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
+                                            </div>
+                                    </div><hr>`;
+                            $('#tabelaDestinatarios tbody').append(html);
+                        }else{
+                            var html = `<hr><div id="destinatarioCard_`+$destinatario+`_`+data.responseJSON.destinatarios[i].id+`" class="d-flex justify-content-left">
                                             <div class="form-check">
                                                 <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+data.responseJSON.destinatarios[i].id+`}}">
                                                 <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.destinatarios[i].name+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
                                             </div>
                                     </div><hr>`;
-                        if(document.getElementById('destinatarioCard_'+$destinatario+'_'+data.responseJSON.destinatarios[i].id) == null){
-                            $('#tabelaDestinatarios tbody').append(html);
+                            if(document.getElementById('destinatarioCard_'+$destinatario+'_'+data.responseJSON.destinatarios[i].id) == null){
+                                $('#tabelaDestinatarios tbody').append(html);
+                            }
                         }
+
                     }
                 }
             }
@@ -167,6 +189,21 @@
     function limparLista() {
         var destinatarios = document.getElementById('tabelaDestinatarios').children[0];
         destinatarios.innerHTML = "";
+    }
+
+    function marcar_desmarcar_todos_checkbox_por_classe_double(checkbox_marcar_desmarcar, nome_classe)  {
+        let valor_da_marcacao = checkbox_marcar_desmarcar.checked;
+        let checkboxes_areas = document.getElementsByClassName(nome_classe);
+
+        for(let checkbox of checkboxes_areas) {
+            checkbox.checked = valor_da_marcacao;
+            checkbox.parentElement.children[1].checked = valor_da_marcacao;
+        }
+
+    }
+
+    function selecionarTrabalho(ele) {
+        document.getElementById('destinatarioForm_'+ele).children[1].checked = document.getElementById('destinatarioForm_'+ele).children[0].checked;
     }
 
 </script>
