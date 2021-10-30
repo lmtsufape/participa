@@ -71,8 +71,9 @@
 @endsection
 
 @section('javascript')
+    @parent
     <script type="text/javascript" >
-        $(document).ready(function($){
+        $(document).ready(function(){
             $('#imagem-loader').click(function() {
                 $('#logo-input').click();
                 $('#logo-input').change(function() {
@@ -83,7 +84,7 @@
                         };
                         file.readAsDataURL(this.files[0]);
                     }
-                })
+                });
             });
         });
     </script>

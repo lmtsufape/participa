@@ -2,7 +2,7 @@
 
 @section('menu')
 
-<div class="container"  style="position: relative; top: 80px;">
+<div class="container"  style="position: relative;">
     <div class="row justify-content-center titulo-detalhes">
         <div class="col-sm-12">
             <div class="row">
@@ -46,22 +46,20 @@
                                         <div class="col-sm-10">
                                             {{$assinatura->nome}}
                                         </div>
-                                        <div class="col-sm-2">
-                                            <div class="btn-group dropright dropdown-options">
-                                                <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <a  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><i class="fas fa-cog "></i></a>
-                                                </a>
-                                                <div class="dropdown-menu">
-                                                    <a href="" class="dropdown-item">
-                                                        <img src="{{asset('img/icons/eye-regular.svg')}}" class="icon-card" alt="">
-                                                        Editar
-                                                    </a>
-                                                    <a class="dropdown-item" data-toggle="modal" data-target="#modalStaticDeletarAssinatura_{{$assinatura->id}}" style="color: red; cursor: pointer;">Deletar assinatura</a>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </h5>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <a >
+                                    <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Editar
+                                </a>
+                            </div>
+                            <div>
+                                <a data-toggle="modal" data-target="#modalStaticDeletarAssinatura_{{$assinatura->id}}" style="color: red; cursor: pointer;">
+                                    <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar assinatura
+                                </a>
                             </div>
                         </div>
                     </div>

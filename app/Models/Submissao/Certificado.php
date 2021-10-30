@@ -23,6 +23,8 @@ class Certificado extends Model
     {
         $this->local = $request->local;
         $this->nome = $request->nome;
-        $this->texto = $request->texto;
+        $texto = substr($request->texto, 3);
+        $texto = substr_replace($texto ,"", -4);
+        $this->texto =  $texto;
     }
 }

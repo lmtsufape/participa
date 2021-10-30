@@ -75,6 +75,11 @@
                 <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou do <strong>{{$certificado->texto}}</strong></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
+            @elseif($cargo == 'Expositor')
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como expositor(a) da <strong>{{$trabalho->modalidade->nome}} -
+                {{$trabalho->area->nome}} </strong> <strong>{{$certificado->texto}}</strong></p>
+
+                <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @else
                 <p class="texto" >Certificamos que <strong>{{$user->name}}</strong>  participou do evento  <strong>{{$evento->nome}}</strong>,
                 como  <strong>{{$cargo}}</strong> do dia  <strong>{{date('d/m/Y',strtotime($evento->dataInicio))}}</strong> ao dia <strong>{{date('d/m/Y',strtotime($evento->dataFim))}}.</strong></p>

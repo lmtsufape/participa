@@ -51,8 +51,8 @@
     <body>
 
         <div class="container">
-            <p class="texto" >Certificamos que <strong>Nome da pessoa</strong> apresentou <strong>Nome da modalidade - Nome da área,</strong>
-            com o trabalho <strong>Nome do trabalho,</strong> <strong>{{$certificado->texto}}</strong></p>
+            <p class="texto">Certificamos que <strong>Nome da pessoa</strong> apresentou <strong>Nome da modalidade - Nome da área,</strong>
+            com o trabalho <strong>Nome do trabalho,</strong><span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
             <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
         </div>

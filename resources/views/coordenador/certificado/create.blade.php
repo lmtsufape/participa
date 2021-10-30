@@ -110,8 +110,10 @@
 @endsection
 
 @section('javascript')
+    @parent
     <script type="text/javascript" >
         $(document).ready(function($){
+            CKEDITOR.replace('texto');
             $('#imagem-loader').click(function() {
                 $('#logo-input').click();
                 $('#logo-input').change(function() {

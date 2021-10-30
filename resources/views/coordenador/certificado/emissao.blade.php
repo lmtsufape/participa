@@ -48,6 +48,8 @@
                                 <option value="2">{{$destinatario}}</option>
                             @elseif($destinatario == "Comissão organizadora")
                                 <option value="3">{{$destinatario}}</option>
+                            @elseif($destinatario == "Expositor")
+                                <option value="6">{{$destinatario}}</option>
                             @elseif($destinatario == "Revisores")
                                 <option value="4">{{$destinatario}}</option>
                             @elseif($destinatario == "Participantes")
@@ -85,7 +87,7 @@
                     <div class="row cards-eventos-index">
                         @foreach ($certificados as $certificado)
                             @can('isCoordenador', $evento)
-                                <div class="card" style="height: 8rem; width: 8rem;">
+                                <div class="card" style="height: 10rem; width: 10rem;">
                                     <img class="img-card" src="{{asset('storage/'.$certificado->caminho)}}" class="card-img-top" alt="...">
                                     <div class="card-body">
                                         <div class="row">
