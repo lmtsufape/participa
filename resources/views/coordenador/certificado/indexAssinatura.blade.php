@@ -52,7 +52,7 @@
                         </div>
                         <div>
                             <div>
-                                <a >
+                                <a href="{{route('coord.editarAssinatura', ['eventoId' => $assinatura->evento->id, 'id' => $assinatura->id])}}">
                                     <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Editar
                                 </a>
                             </div>

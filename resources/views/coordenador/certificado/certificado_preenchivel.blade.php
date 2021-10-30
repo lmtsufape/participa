@@ -53,31 +53,31 @@
         <div class="container">
             @if ($cargo == 'Apresentador')
                 <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> apresentou <strong>{{$trabalho->modalidade->nome}} - {{$trabalho->area->nome}},</strong>
-                com o trabalho <strong>{{$trabalho->titulo}},</strong> <strong>{{$certificado->texto}}</strong></p>
+                com o trabalho <strong>{{$trabalho->titulo}}, </strong><span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Comissão Científica')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou <strong>da COMISSÃO CIENTÍFICA</strong>
-                <strong>{{$certificado->texto}}</strong></p>
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou <strong>da COMISSÃO CIENTÍFICA </strong>
+                <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Comissão Organizadora')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou <strong>da COMISSÃO ORGANIZADORA</strong>
-                <strong>{{$certificado->texto}}</strong></p>
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou <strong>da COMISSÃO ORGANIZADORA </strong>
+                <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Revisor')
                 <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como <strong>avaliador(a)</strong>
-                de trabalhos na <strong>COMISSÃO CIENTÍFICA {{$certificado->texto}}</strong></p>
+                de trabalhos na <strong>COMISSÃO CIENTÍFICA </strong><span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Participante')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou do <strong>{{$certificado->texto}}</strong></p>
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Expositor')
                 <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como expositor(a) da <strong>{{$trabalho->modalidade->nome}} -
-                {{$trabalho->area->nome}} </strong> <strong>{{$certificado->texto}}</strong></p>
+                {{$trabalho->area->nome}} </strong> <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @else

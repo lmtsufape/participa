@@ -121,16 +121,20 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       //Assinaturas
       Route::get('certificados/cadastrarAssinatura', 'AssinaturaController@create')->name('cadastrarAssinatura');
       Route::get('certificados/listarAssinatura', 'AssinaturaController@index')->name('listarAssinaturas');
+      Route::get('certificados/{id}/editarAssinatura', 'AssinaturaController@edit')->name('editarAssinatura');
       Route::post('certificados/cadastrarAssinatura',      'AssinaturaController@store')->name('assinatura.store');
       Route::post('certificados/{id}/deleteAssinatura',  'AssinaturaController@destroy')->name('assinatura.destroy');
+      Route::post('certificados/{id}/editAssinatura',  'AssinaturaController@update')->name('assinatura.update');
       //Certificados
       Route::get('certificados/cadastrarCertificado', 'CertificadoController@create')->name('cadastrarCertificado');
       Route::get('certificados/{id}/modelo', 'CertificadoController@modelo')->name('modeloCertificado');
+      Route::get('certificados/{id}/editarCertificado', 'CertificadoController@edit')->name('editarCertificado');
       Route::get('certificados/emitir', 'CertificadoController@emitir')->name('emitirCertificado');
       Route::post('certificados/enviar-certificado', 'CertificadoController@enviarCertificacao')->name('enviarCertificado');
       Route::get('certificados/listarCertificado', 'CertificadoController@index')->name('listarCertificados');
       Route::post('certificados/cadastrarCertificado',      'CertificadoController@store')->name('certificado.store');
       Route::post('certificados/{id}/deleteCertificado',  'CertificadoController@destroy')->name('certificado.destroy');
+      Route::post('certificados/{id}/editCertificado',  'CertificadoController@update')->name('certificado.update');
       Route::get('certificados/ajax-listar-destinatarios', 'CertificadoController@ajaxDestinatarios')->name('ajax.listar.destinatarios');
 
       Route::get('modalidade/cadastrarModalidade', 'EventoController@cadastrarModalidade')->name('cadastrarModalidade');

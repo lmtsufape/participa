@@ -52,12 +52,12 @@
                         </div>
                         <div>
                             <div>
-                                <a href="{{route('coord.modeloCertificado', $certificado->id)}}">
+                                <a href="{{route('coord.modeloCertificado', $certificado->id)}}" target="_blank">
                                     <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar modelo
                                 </a>
                             </div>
                             <div>
-                                <a >
+                                <a href="{{route('coord.editarCertificado', ['eventoId' => $certificado->evento->id, 'id' => $certificado->id])}}">
                                     <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Editar
                                 </a>
                             </div>

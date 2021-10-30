@@ -98,9 +98,17 @@ class CertificadoController extends Controller
      * @param  \App\Models\Submissao\Certificado  $certificado
      * @return \Illuminate\Http\Response
      */
-    public function edit(Certificado $certificado)
+    public function edit(Request $request, $id)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+        $certificado = Certificado::find($id);
+        $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
+        return view('coordenador.certificado.edit', [
+            'assinaturas' => $assinaturas,
+            'certificado' => $certificado,
+            'evento'=> $evento,
+        ]);
     }
 
     /**
@@ -110,9 +118,51 @@ class CertificadoController extends Controller
      * @param  \App\Models\Submissao\Certificado  $certificado
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Certificado $certificado)
+    public function update(Request $request, $id)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+        $validatedData = $request->validate([
+            'local'              => 'required|string|min:3|max:40',
+            'nome'              => 'required|string|min:5|max:290',
+            'texto'              => 'required|string|min:5|max:500',
+            'assinaturas' => 'required',
+        ]);
+        $certificado = Certificado::find($id);
+        $certificado->setAtributes($request);
+
+        if($request->fotoCertificado != null){
+            $validatedData = $request->validate([
+                'fotoCertificado'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
+            ]);
+            if(Storage::disk()->exists('public/'.$certificado->caminho)) {
+                Storage::delete('storage/'.$certificado->caminho);
+            }
+
+            $imagem = $request->fotoCertificado;
+            $path = 'certificados/'.$evento->id.'/';
+            $nome = $imagem->getClientOriginalName();
+            $nomeSemEspaco = str_replace(' ', '', $nome);
+            Storage::putFileAs('public/'.$path, $imagem, $nomeSemEspaco);
+            $certificado->caminho = $path . $nomeSemEspaco;
+
+        }
+
+        foreach($request->assinaturas as $assinatura_id){
+            if ($certificado->assinaturas()->where('assinatura_id', $assinatura_id)->first() == null) {
+                $certificado->assinaturas()->attach(Assinatura::find($assinatura_id));
+            }
+        }
+
+        foreach ($certificado->assinaturas as $assinatura) {
+            if (!(in_array($assinatura->id, $request->assinaturas))) {
+                $certificado->assinaturas()->detach($assinatura->id);
+            }
+        }
+
+        $certificado->update();
+
+        return redirect(route('coord.listarCertificados', ['eventoId' => $evento->id]))->with(['success' => 'Certificado editado com sucesso.']);
     }
 
     /**

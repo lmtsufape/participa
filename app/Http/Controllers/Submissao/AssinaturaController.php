@@ -83,9 +83,15 @@ class AssinaturaController extends Controller
      * @param  \App\Models\Submissao\Assinatura  $assinatura
      * @return \Illuminate\Http\Response
      */
-    public function edit(Assinatura $assinatura)
+    public function edit(Request $request, $id)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+        $assinatura = Assinatura::find($id);
+        return view('coordenador.certificado.editAssinatura', [
+            'assinatura' => $assinatura,
+            'evento'=> $evento,
+        ]);
     }
 
     /**
@@ -95,9 +101,33 @@ class AssinaturaController extends Controller
      * @param  \App\Models\Submissao\Assinatura  $assinatura
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Assinatura $assinatura)
+    public function update(Request $request, $id)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrComissao', $evento);
+        $validatedData = $request->validate([
+            'nome'              => 'required|string|min:10|max:290',
+            'cargo'              => 'required|string|max:290',
+        ]);
+        $assinatura = Assinatura::find($id);
+        $assinatura->setAtributes($request);
+
+        if($request->fotoAssinatura != null){
+            $validatedData = $request->validate([
+                'fotoAssinatura'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
+            ]);
+            if(Storage::disk()->exists('public/'.$assinatura->caminho)) {
+                Storage::delete('storage/'.$assinatura->caminho);
+            }
+            $imagem = $request->fotoAssinatura;
+            $path = 'assinaturas/'.$evento->id.'/';
+            $nome = $imagem->getClientOriginalName();
+            $nomeSemEspaco = str_replace(' ', '', $nome);
+            Storage::putFileAs('public/'.$path, $imagem, $nomeSemEspaco);
+            $assinatura->caminho = $path . $nomeSemEspaco;
+        }
+        $assinatura->update();
+        return redirect(route('coord.listarAssinaturas', ['eventoId' => $evento->id]))->with(['success' => 'Assinatura editada com sucesso.']);
     }
 
     /**
