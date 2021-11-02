@@ -105,21 +105,11 @@ class TrabalhoController extends Controller
     public function store(TrabalhoPostRequest $request, $modalidadeId){
 
       //Obtendo apenas os tipos de extensões selecionadas
-      $modalidade = Modalidade::find($modalidadeId);
 
       try {
-        $mytime = Carbon::now('America/Recife');
-        //$mytime = $mytime->toDateString();
-        $evento = Evento::find($request->eventoId);
-        if($mytime > $modalidade->fimSubmissao){
-            $this->authorize('isCoordenadorOrComissao', $evento);
-        }
-        if($evento->inicioSubmissao > $mytime){
-          if($mytime >= $evento->fimSubmissao){
-              return redirect()->route('home');
-          }
-        }
         $validatedData = $request->validated();
+        $evento = Evento::find($request->eventoId);
+        $modalidade = Modalidade::find($modalidadeId);
       //   dd($request->all());
 
         if ($this->validarTipoDoArquivo($request->arquivo, $modalidade)) {
@@ -399,13 +389,6 @@ class TrabalhoController extends Controller
 
       $trabalho = Trabalho::find($id);
       $evento = $trabalho->evento;
-
-      $mytime = Carbon::now('America/Recife');
-      if($mytime > $trabalho->modalidade->fimSubmissao){
-        $this->authorize('isCoordenadorOrComissao', $evento);
-      } else {
-        $this->authorize('isCoordenadorOrComissaoOrAutor', $trabalho);
-      }
 
       $arquivo = $request->file('arquivo'.$id);
       if ($arquivo != null && $this->validarTipoDoArquivo($arquivo, $trabalho->modalidade)) {
