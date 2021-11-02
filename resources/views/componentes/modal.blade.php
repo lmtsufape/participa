@@ -1,14 +1,15 @@
 <!-- Button trigger modal -->
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$count}}">
+
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#email_lembrar_{{$revisor->id}}">
     Enviar e-mail
   </button>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal{{$count}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="email_lembrar_{{$revisor->id}}" tabindex="-1" aria-labelledby="#email_lembrar_{{$revisor->id}}_label" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Enviar E-mail</h5>
+          <h5 class="modal-title" id="email_lembrar_{{$revisor->id}}_label">Enviar E-mail</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -18,40 +19,43 @@
                 <div class="col-sm-12">
                     <h6 class="card-subtitle mb-2 text-muted">Edite o texto do email para o envio</h6>
                     <br>
-                    <h6 class="card-subtitle mb-2 text-muted">Para: {{$email}}</h6>
-                    <form method="POST" action="{{route('area.store')}}">
-                        @csrf
-                    <p class="card-text">
-                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                    <h6 class="card-subtitle mb-2 text-muted">Para: {{$revisor->email}}</h6>
+                    <form id="form-enviar-email-revisor-{{$revisor->id}}" method="POST" action="{{route('revisor.email')}}">
+                      @csrf
+                      <p class="card-text">
+                        <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                        <input type="hidden" name="revisor_id" value="{{$revisor->id}}">
                         <div class="row ">
-                            <div class="col-sm-12">
-                                <label for="nome" class="col-form-label">{{ __('Assunto') }}</label>
-                                <input id="nome" type="text" value="Revisor de evento" class="form-control  @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
+                          <div class="col-sm-12">
+                            <label for="assunto" class="col-form-label">{{ __('Assunto') }}</label>
+                            <input id="assunto" type="text" class="form-control  @error('assunto') is-invalid @enderror" name="assunto" value="{{old('assunto', "Revisor do evento")}}" required autocomplete="nome" autofocus>
+                            @error('assunto')
+                              <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                              </span>
+                            @enderror
 
-                                <label for="nome" class="col-form-label">{{ __('Texto') }}</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">Convidamos vossa senhoria, para ser revisor do evento {{$evento->nome}}.
-                                </textarea>
+                            <label for="texto_do_email" class="col-form-label">{{ __('Texto') }}</label>
+                            <textarea class="form-control" id="texto_do_email" name="texto_do_email" rows="3">{{old('texto_do_email', "Convidamos vossa senhoria, para ser revisor do evento " . $evento->nome . ".")}}</textarea>
 
-                                @error('nome')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
+                            @error('texto_do_email')
+                              <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                              </span>
+                            @enderror
+                          </div>
                         </div>
-                    </p>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                        <button type="submit" class="btn btn-primary" >
-                            {{ __('Finalizar') }}
-                        </button>
-                    </div>
-
+                      </p>
                     </form>
                 </div>
             </div>
         </div>
-
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" >Fechar</button>
+          <button type="submit" class="btn btn-primary" form="form-enviar-email-revisor-{{$revisor->id}}" >
+              {{ __('Finalizar') }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
