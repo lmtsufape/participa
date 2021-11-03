@@ -18,6 +18,7 @@ class CreateCertificadosTable extends Migration
             $table->string('caminho');
             $table->string('local');
             $table->string('nome');
+            $table->integer('tipo');
             $table->text('texto');
             $table->unsignedBigInteger('evento_id');
             $table->foreign('evento_id')->references('id')->on('eventos');

@@ -51,8 +51,34 @@
     <body>
 
         <div class="container">
-            <p class="texto">Certificamos que <strong>Nome da pessoa</strong> fez <strong>atividade realizada</strong>
-            em <span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
+            @switch($certificado->tipo)
+                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador'])
+                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> apresentou <strong>NOME DA MODALIDADE - NOME DA ÁREA/EIXO,
+                    com o trabalho "NOME DO TRABALHO", </strong><span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
+                    @break
+                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica'])
+                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou <strong>da COMISSÃO CIENTÍFICA </strong>
+                    <span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
+                    @break
+                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora'])
+                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou <strong>da COMISSÃO ORGANIZADORA </strong>
+                    <span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
+                    @break
+                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['revisor'])
+                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como <strong>avaliador(a)</strong> de trabalhos na
+                    <strong> COMISSÃO CIENTÍFICA </strong><span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
+                    @break
+                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['participante'])
+                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou
+                    <span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
+                    @break
+                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['expositor'])
+                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como expositor(a) da <strong>NOME DA MODALIDADE - NOME DA ÁREA/EIXO,
+                    </strong><span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
+                    @break
+                @default
+
+            @endswitch
 
             <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
         </div>

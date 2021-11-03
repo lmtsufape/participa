@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Cadastrar Certificado</h1>
-                <h6 class="titulo-detalhes">Cadastre um novo modelo de certificado</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Cadastre um novo modelo de certificado</h6>
             </div>
         </div>
     </div>
@@ -17,7 +17,7 @@
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
             <div class="form-row">
                 <div class="col-sm-12 form-group">
-                    <label for="nome">{{ __('Nome') }}</label>
+                    <label for="nome"><b>{{ __('Nome') }}</b></label>
                     <input id="nome" class="form-control @error('nome') is-invalid @enderror" type="text" name="nome" value="{{old('nome')}}" required autofocus autocomplete="nome">
 
                     @error('nome')
@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="col-sm-6 form-group">
-                    <label for="texto">{{ __('Texto') }}</label>
+                    <label for="texto"><b>{{ __('Texto') }}</b></label>
                     <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" value="{{old('texto')}}" required autofocus autocomplete="texto"></textarea>
 
                     @error('texto')
@@ -38,7 +38,7 @@
                     @enderror
                 </div>
                 <div class="col-sm-6 form-group">
-                    <label for="local">{{ __('Local') }}</label>
+                    <label for="local"><b>{{ __('Local') }}</b></label>
                     <input id="local" class="form-control @error('local') is-invalid @enderror" type="text" name="local" value="{{old('local')}}" required autofocus autocomplete="local">
 
                     @error('local')
@@ -47,9 +47,30 @@
                         </div>
                     @enderror
                 </div>
+            </div>
+            <div class="form-row">
+                <div class="col-sm-6 form-group">
+                    <label for="tipo"><b>{{__('Tipo')}}</b></label>
+                    <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required>
+                        <option value="">-- Selecionar o tipo do certificado --</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador']}}">Apresentador</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica']}}">Comissão Científica</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora']}}">Comissão Organizadora</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['expositor']}}">Expositor</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['participante']}}">Participante</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['revisor']}}">Revisor</option>
+                    </select>
 
+                    @error('tipo')
+                        <div id="validationServer03Feedback" class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div>
+            <div class="form-row">
                 <div class="col-sm-12 form-group">
-                    <label for="assinatura">{{ __('Assinaturas') }}</label>
+                    <label for="assinatura"><b>{{ __('Assinaturas') }}</b></label>
                     <input type="hidden" class="checkbox_assinatura @error('assinaturas') is-invalid @enderror">
                     <div class="row cards-eventos-index">
                         @foreach ($assinaturas as $assinatura)
@@ -78,16 +99,17 @@
                         </div>
                     @enderror
                 </div>
-
+            </div>
+            <div class="form-row">
                 <div class="col-sm-12 form-group">
-                    <label for="fotoCertificado">Certificado</label>
+                    <label for="fotoCertificado"><b>Imagem do Certificado</b></label>
                     <div id="imagem-loader" class="imagem-loader">
                         <img id="logo-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                     </div>
                     <div style="display: none;">
                         <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoCertificado') is-invalid @enderror" name="fotoCertificado" value="{{ old('fotoCertificado') }}">
                     </div>
-                    <small style="position: relative; top: 5px;">Tamanho minimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
+                    <small style="position: relative; top: 5px;">Tamanho recomendado: 1268 x 792;<br>Formato: JPEG, JPG, PNG</small>
                     <br>
                     @error('fotoCertificado')
                         <span class="invalid-feedback" role="alert">

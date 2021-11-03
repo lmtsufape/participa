@@ -7,7 +7,16 @@ use Illuminate\Http\Request;
 
 class Certificado extends Model
 {
-    protected $fillable = ['caminho', 'local', 'nome', 'texto'];
+    protected $fillable = ['caminho', 'local', 'nome', 'texto', 'tipo'];
+
+    public const TIPO_ENUM = [
+        'apresentador'          => 1,
+        'comissao_cientifica'   => 2,
+        'comissao_organizadora' => 3,
+        'revisor'               => 4,
+        'participante'          => 5,
+        'expositor'             => 6,
+    ];
 
     public function assinaturas()
     {
@@ -26,5 +35,6 @@ class Certificado extends Model
         $texto = substr($request->texto, 3);
         $texto = substr_replace($texto ,"", -4);
         $this->texto =  $texto;
+        $this->tipo =  $request->tipo;
     }
 }

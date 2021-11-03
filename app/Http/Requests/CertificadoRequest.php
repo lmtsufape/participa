@@ -27,6 +27,7 @@ class CertificadoRequest extends FormRequest
             'local'              => 'required|string|min:3|max:40',
             'nome'              => 'required|string|min:5|max:290',
             'texto'              => 'required|string|min:5|max:500',
+            'tipo'              => 'required',
             'fotoCertificado'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
             'assinaturas' => 'required',
         ];
