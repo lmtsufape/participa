@@ -5,7 +5,7 @@
 
 Agradecemos a sua contribuição como {{ $cargo }} no evento {{ $nomeEvento }}.
 
-Segue em anexo sua certificação.
+Segue anexo da sua certificação.
 
 @component('mail::button', ['url' => 'http://sistemas.ufape.edu.br/easy'])
 Acessar o sistema

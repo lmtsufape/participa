@@ -195,6 +195,44 @@ class CertificadoController extends Controller
         return $pdf->stream('modelo.pdf');
     }
 
+    public function previewCertificado($certificadoId, $destinatarioId, $trabalhoId)
+    {
+        $certificado = Certificado::find($certificadoId);
+        $evento = $certificado->evento;
+        $this->authorize('isCoordenadorOrComissao', $evento);
+        setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+        date_default_timezone_set('America/Recife');
+        switch($certificado->tipo){
+            case(Certificado::TIPO_ENUM['apresentador']):
+                    $user = User::find($destinatarioId);
+                    $trabalho = Trabalho::find($trabalhoId);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                break;
+            case(Certificado::TIPO_ENUM['comissao_cientifica']):
+                    $user = User::find($destinatarioId);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Científica', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    break;
+            case(Certificado::TIPO_ENUM['comissao_organizadora']):
+                    $user = User::find($destinatarioId);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Organizadora', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    break;
+            case(Certificado::TIPO_ENUM['revisor']):
+                    $user = User::find($destinatarioId);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Revisor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    break;
+            case(Certificado::TIPO_ENUM['participante']):
+                    $user = User::find($destinatarioId);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Participante', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    break;
+            case(Certificado::TIPO_ENUM['expositor']):
+                    $user = User::find($destinatarioId);
+                    $trabalho = Trabalho::find($trabalhoId);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    break;
+        }
+        return $pdf->stream('preview.pdf');
+    }
+
     public function emitir(Request $request)
     {
         $evento = Evento::find($request->eventoId);
@@ -308,17 +346,57 @@ class CertificadoController extends Controller
             $desti->push($dest);
         }
 
+        switch ($request->destinatario) {
+            case Certificado::TIPO_ENUM['apresentador']:
+                $modeloCertificado = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['apresentador']]])->first();
+                $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['apresentador']]])->get();
+                break;
+
+            case Certificado::TIPO_ENUM['comissao_cientifica']:
+                $modeloCertificado = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['comissao_cientifica']]])->first();
+                $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['comissao_cientifica']]])->get();
+                break;
+
+            case Certificado::TIPO_ENUM['comissao_organizadora']:
+                $modeloCertificado = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['comissao_organizadora']]])->first();
+                $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['comissao_organizadora']]])->get();
+                break;
+
+            case Certificado::TIPO_ENUM['revisor']:
+                $modeloCertificado = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['revisor']]])->first();
+                $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['revisor']]])->get();
+                break;
+
+            case Certificado::TIPO_ENUM['participante']:
+                $modeloCertificado = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['participante']]])->first();
+                $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['participante']]])->get();
+                break;
+
+            case Certificado::TIPO_ENUM['expositor']:
+                $modeloCertificado = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['expositor']]])->first();
+                $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['expositor']]])->get();
+                break;
+
+            default:
+                break;
+        }
+
+
         if($request->destinatario == '1' || $request->destinatario == '6'){
             $data = array(
                 'success'   => true,
                 'destinatarios'     => $desti,
                 'trabalhos' => $trabalhos,
+                'certificado' => $modeloCertificado,
+                'certificados' => $certificados,
             );
             echo json_encode($data);
         }else{
             $data = array(
                 'success'   => true,
                 'destinatarios'     => $desti,
+                'certificado' => $modeloCertificado,
+                'certificados' => $certificados,
             );
             echo json_encode($data);
         }

@@ -52,7 +52,7 @@
                 <div class="col-sm-6 form-group">
                     <label for="tipo"><b>{{__('Tipo')}}</b></label>
                     <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required>
-                        <option value="">-- Selecionar o tipo do certificado --</option>
+                        <option value="">-- Selecione o tipo do certificado --</option>
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador']}}">Apresentador</option>
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica']}}">Comissão Científica</option>
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora']}}">Comissão Organizadora</option>

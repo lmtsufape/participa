@@ -66,7 +66,7 @@
                     @enderror
                 </div>
                 <div class="col-sm-12">
-                    <h4>Lista de Distinatários</h4>
+                    <h4>Lista de Destinatários</h4>
                 </div>
                 <div class="form-row col-md-12">
                     <div style="width:100%; height:250px; display: inline-block; border: 1.5px solid #f2f2f2; border-radius: 2px; overflow:auto;">
@@ -84,28 +84,7 @@
                         <h4>Certificados</h4>
                     </div>
                     <input type="hidden" class="checkbox_certificado @error('certificado') is-invalid @enderror">
-                    <div class="row cards-eventos-index">
-                        @foreach ($certificados as $certificado)
-                            @can('isCoordenador', $evento)
-                                <div class="card" style="height: 10rem; width: 10rem;">
-                                    <img class="img-card" src="{{asset('storage/'.$certificado->caminho)}}" class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <h5 class="card-title">
-                                                    <div class="row">
-                                                        <div class="form-check">
-                                                            <input class="checkbox_certificado" type="radio" name="certificado" value="{{$certificado->id}}" id="certificado_{{$certificado->id}}">
-                                                            {{$certificado->nome}}
-                                                        </div>
-                                                    </div>
-                                                </h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endcan
-                        @endforeach
+                    <div id="listaCertificados" class="row cards-eventos-index">
                     </div>
                     @error('certificados')
                         <div id="validationServer03Feedback" class="invalid-feedback">
@@ -131,6 +110,7 @@
         var historySelectList = $('select#idSelecionarDestinatario');
         var $destinatario = $('option:selected', historySelectList).val();
         limparLista();
+        limparCertificados();
 
         $.ajax({
             url:'ajax-listar-destinatarios',
@@ -165,6 +145,11 @@
                                                 <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+i+`}}" onChange="selecionarTrabalho(`+i+`)">
                                                 <input style="display: none;" type="checkbox" name="trabalhos[]" value="`+data.responseJSON.trabalhos[i].id+`" id="trabalho_{{`+i+`}}">
                                                 <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.trabalhos[i].titulo+' - '+data.responseJSON.destinatarios[i].name+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
+                                                @if(`+data.responseJSON.certificado+` != null)
+                                                    <a style="cursor: pointer" onclick="atualizarInputs(`+data.responseJSON.certificado.id+`, `+data.responseJSON.destinatarios[i].id+`, `+data.responseJSON.trabalhos[i].id+`)" target="_blank">
+                                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;
+                                                    </a>
+                                                @endif
                                             </div>
                                     </div><hr>`;
                             $('#tabelaDestinatarios tbody').append(html);
@@ -173,6 +158,11 @@
                                             <div class="form-check">
                                                 <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+data.responseJSON.destinatarios[i].id+`}}">
                                                 <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.destinatarios[i].name+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
+                                                @if(`+data.responseJSON.certificado+` != null)
+                                                    <a style="cursor: pointer" onclick="atualizarInputs(`+data.responseJSON.certificado.id+`, `+data.responseJSON.destinatarios[i].id+`, -1)" target="_blank">
+                                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;
+                                                    </a>
+                                                @endif
                                             </div>
                                     </div><hr>`;
                             if(document.getElementById('destinatarioCard_'+$destinatario+'_'+data.responseJSON.destinatarios[i].id) == null){
@@ -180,6 +170,26 @@
                             }
                         }
 
+                    }
+                    for(var i = 0; i < data.responseJSON.certificados.length; i++){
+                        var htmlCertificados =`<div class="card" style="height: 10rem; width: 10rem;">
+                            <img class="img-card" src="{{asset('storage/'."`+data.responseJSON.certificados[i].caminho+`")}}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h5 class="card-title">
+                                            <div class="row">
+                                                <div class="form-check">
+                                                    <input class="checkbox_certificado" type="radio" name="certificado" value="{{`+data.responseJSON.certificados[i].id+`}}" id="certificado_{{`+data.responseJSON.certificados[i].id+`}}">
+                                                    `+data.responseJSON.certificados[i].nome+`
+                                                </div>
+                                            </div>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`
+                        $('#listaCertificados').append(htmlCertificados);
                     }
                 }
             }
@@ -189,6 +199,11 @@
     function limparLista() {
         var destinatarios = document.getElementById('tabelaDestinatarios').children[0];
         destinatarios.innerHTML = "";
+    }
+
+    function limparCertificados() {
+        var certificados = document.getElementById('listaCertificados');
+        certificados.innerHTML = "";
     }
 
     function marcar_desmarcar_todos_checkbox_por_classe_double(checkbox_marcar_desmarcar, nome_classe)  {
@@ -204,6 +219,14 @@
 
     function selecionarTrabalho(ele) {
         document.getElementById('destinatarioForm_'+ele).children[1].checked = document.getElementById('destinatarioForm_'+ele).children[0].checked;
+    }
+
+    function atualizarInputs(certificado, destinatario, trabalho){
+        var url ='{{route("coord.previewCertificado", [":certificadoId", ":destinatarioId", ":trabalhoId"])}}';
+        url = url.replace(':certificadoId', certificado);
+        url = url.replace(':destinatarioId', destinatario);
+        url = url.replace(':trabalhoId', trabalho);
+        window.open(url, '_blank');
     }
 
 </script>

@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Cadastrar Assinatura</h1>
-                <h6 class="titulo-detalhes">Cadastre uma nova assinatura para certificados</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova assinatura para certificados</h6>
             </div>
         </div>
     </div>
