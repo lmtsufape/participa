@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Submissao\Trabalho;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +16,14 @@ class TrabalhoUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user()->id == Trabalho::find(request()->id)->autorId;
+        $trabalho = Trabalho::find($this->route('id'));
+        $evento = $trabalho->evento;
+        $mytime = Carbon::now('America/Recife');
+        if($mytime > $trabalho->modalidade->fimSubmissao){
+            return $this->user()->can('isCoordenadorOrComissao', $evento);
+        } else {
+            return $this->user()->can('isCoordenadorOrComissaoOrAutor', $trabalho);
+        }
     }
 
     /**

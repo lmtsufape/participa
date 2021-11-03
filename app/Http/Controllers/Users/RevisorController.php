@@ -296,16 +296,13 @@ class RevisorController extends Controller
     }
 
     public function enviarEmailRevisor(Request $request){
-        $subject = "Lembrete ";
+      $user = User::find($request->revisor_id);
+      $evento = Evento::find($request->evento_id);
 
-        $user = json_decode($request->input('user'));
-        //Log::debug('Revisores ' . gettype($user));
-        //Log::debug('Revisores ' . $request->input('user'));
+      Mail::to($user->email)
+          ->send(new EmailLembrete($user, $request->assunto, ' ', ' ', ' ', $evento, $evento->coordenador));
 
-        Mail::to($user->email)
-            ->send(new EmailLembrete($user, $subject, ' ', ' ', ' ', ' ', ' '));
-
-        return redirect()->back()->with(['mensagem' => 'E-mail de lembrete de revisão enviado para ' . $user->email . '.']);
+      return redirect()->back()->with(['mensagem' => 'E-mail de lembrete de revisão enviado para ' . $user->email . '.']);
     }
     public function enviarEmailTodosRevisores(Request $request){
         $subject = "Sistema Easy - Lembrete  de trabalho";

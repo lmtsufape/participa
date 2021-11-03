@@ -361,7 +361,29 @@
                               </div>
                             @endforeach
                           @else
-
+                            <div class="item card">
+                                <div class="row card-body">
+                                    <div class="col-sm-4">
+                                        <label>E-mail</label>
+                                        <input type="email" style="margin-bottom:10px" value="{{$trabalho->autor->email}}" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <label>Nome Completo</label>
+                                        <input type="text" style="margin-bottom:10px" value="{{$trabalho->autor->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <a href="#" onclick="deletarCoautor(this)" class="delete pr-2">
+                                        <img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;">
+                                        </a>
+                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}})">
+                                        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                        </a>
+                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}})">
+                                        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                             @foreach ($trabalho->coautors as $i => $coautor)
                               <div class="item card">
                                 <div class="row card-body">
@@ -935,21 +957,18 @@
 
   $(document).ready(function(){
     $('.palavra').keyup(function() {
-        var maxLength = parseInt($(this).attr('maxlength'));
-        var texto = $(this).val().length;
-        // console.log(texto);
-        if ($(this).val()[length - 1] == " ") {
-          var cont = $(this).val().length;
-          // console.log("Contador:");
-          // console.log(cont);
+        var myText = this.value.trim();
+        var wordsArray = myText.split(/\s+/g);
+        var words = wordsArray.length;
+        var min = parseInt(($('#minpalavras').text()));
+        var max = parseInt(($('#maxpalavras').text()));
+        if(words < min || words > max) {
+            this.setCustomValidity('Número de palavras não permitido. Você possui atualmente '+words+' palavras.');
+        } else {
+            this.setCustomValidity('');
         }
-
-        // console.log("Texto:");
-        // console.log(texto);
-
-        var name = $(this).attr('name');
-
-        $('span[name="'+name+'"]').text(length);
+        var name = $(this).attr("name");
+        $('#'+name).text(words);
     });
   });
 

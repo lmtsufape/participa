@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Submissao\Evento;
+use App\Models\Submissao\Modalidade;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class TrabalhoPostRequest extends FormRequest
 {
@@ -14,7 +16,18 @@ class TrabalhoPostRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user() != null;
+        $modalidade = Modalidade::find($this->route('id'));
+        $mytime = Carbon::now('America/Recife');
+        $evento = Evento::find(request()->eventoId);
+        if ($mytime > $modalidade->fimSubmissao) {
+            return $this->user()->can('isCoordenadorOrComissao', $evento);
+        }
+        if ($evento->inicioSubmissao > $mytime) {
+            if ($mytime >= $evento->fimSubmissao) {
+                return redirect()->route('home');
+            }
+        }
+        return 1;
     }
 
     /**
@@ -29,7 +42,7 @@ class TrabalhoPostRequest extends FormRequest
             'areaId'             => ['required', 'integer'],
             'modalidadeId'       => ['required', 'integer'],
             'eventoId'           => ['required', 'integer'],
-            'resumo'             => ['nullable','string'],
+            'resumo'             => ['nullable', 'string'],
             'nomeCoautor.*'      => ['string'],
             'emailCoautor.*'     => ['string'],
             'arquivo'            => ['nullable', 'max:2048'],

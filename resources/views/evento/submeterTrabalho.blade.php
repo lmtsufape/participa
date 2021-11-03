@@ -135,14 +135,13 @@
                               <div class="row justify-content-center">
                                 <div class="col-sm-12">
                                     <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                                    <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5"></textarea>
+                                    <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5" required></textarea>
                                     <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: <span id="minpalavras">{{$modalidade->minpalavras}}</span> - Max Palavras: <span id="maxpalavras">{{$modalidade->maxpalavras}}</span></p>
                                     @error('resumo')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-
                                 </div>
                               </div>
                             @endif
