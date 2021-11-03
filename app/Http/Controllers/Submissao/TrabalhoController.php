@@ -485,7 +485,7 @@ class TrabalhoController extends Controller
             $autor = User::where('email', $email)->first();
             $trabalho->autorId = $autor->id;
             // checa se o usuário passou de coautor para autor
-            if($autor->coautor != null && $trabalho->coautors()->contains($autor->coautor->id)) {
+            if($autor->coautor != null && $trabalho->coautors->contains($autor->coautor->id)) {
                 $trabalho->coautors()->detach($autor->coautor->id);
             }
           }
