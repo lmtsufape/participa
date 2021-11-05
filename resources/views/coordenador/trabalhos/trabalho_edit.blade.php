@@ -52,7 +52,7 @@
                     {{-- Nome Trabalho  --}}
                     <div class="col-sm-12">
                         <label for="nomeTrabalho_{{$trabalho->id}}" class="col-form-label">{{ $formSubTraba->etiquetatitulotrabalho }}</label>
-                        <input id="nomeTrabalho_{{$trabalho->id}}" type="text" class="form-control @error('nomeTrabalho'.$trabalho->id) is-invalid @enderror" name="nomeTrabalho{{$trabalho->id}}" value="@if(old('nomeTrabalho'.$trabalho->id)!=null){{old('nomeTrabalho'.$trabalho->id)}}@else{{$trabalho->titulo}}@endif" required autocomplete="nomeTrabalho" autofocus>
+                        <input id="nomeTrabalho_{{$trabalho->id}}" type="text" class="form-control @error('nomeTrabalho'.$trabalho->id) is-invalid @enderror" name="nomeTrabalho{{$trabalho->id}}" value="{{old('nomeTrabalho'.$trabalho->id, $trabalho->titulo)}}" autocomplete="nomeTrabalho" autofocus>
 
                         @error('nomeTrabalho'.$trabalho->id)
                         <span class="invalid-feedback" role="alert">
@@ -64,33 +64,44 @@
                 @endif
                 @if ($indice == "etiquetacoautortrabalho")
                   <div class="flexContainer" style="margin-top:20px">
-                      <h4>Autor {{ ':'.$trabalho->autor->email }}</h4>
-                        <div id="coautores_{{$trabalho->id}}" class="flexContainer " >
-                          @if (old('nomeCoautor') != null)
-                            @foreach (old('nomeCoautor') as $i => $nomeCoautor)
-                              <div class="item card">
-                                <div class="row card-body">
-                                    <div class="col-sm-4">
-                                        <label>E-mail</label>
-                                        <input type="email" style="margin-bottom:10px" value="{{old('emailCoautor.'.$i)}}" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" disabled>
-                                    </div>
-                                    <div class="col-sm-5">
-                                        <label>Nome Completo</label>
-                                        <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" disabled>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <a href="#" class="delete pr-2">
-                                          <img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;">
-                                        </a>
-                                        <a href="#" onclick="myFunction(event)">
-                                          <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                                        </a>
-                                        <a href="#" onclick="myFunction(event)">
-                                          <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                                        </a>
+                    <div class="row">
+                        <div class="col">
+                            <h4>Autor(a)</h4>
+                        </div>
+                        <div class="col mr-5">
+                            <div class="float-right">
+                                <a href="#" style="color: #196572ff;text-decoration: none;" title="Clique aqui para adicionar coautor(es), se houver" onclick="montarLinhaInput(this, {{$trabalho->id}}, event)" id="addCoautor_{{$trabalho->id}}">
+                                    <i class="fas fa-user-plus fa-2x"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                        <div id="coautores{{$trabalho->id}}" class="flexContainer " >
+                          @if (old('nomeCoautor_'.$trabalho->id) != null)
+                            @foreach (old('nomeCoautor_'.$trabalho->id) as $i => $nomeCoautor)
+                                <div class="item card">
+                                    <div class="row card-body">
+                                        <div class="col-sm-4">
+                                            <label>E-mail</label>
+                                            <input type="email" style="margin-bottom:10px" value="{{old('emailCoautor_'.$trabalho->id)[$i]}}" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail">
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Nome Completo</label>
+                                            <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome">
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete pr-2">
+                                                <i class="fas fa-user-times fa-2x"></i>
+                                            </a>
+                                            <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
+                                                <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                            </a>
+                                            <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
+                                                <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                              </div>
                             @endforeach
                           @else
                             <div class="item card">
@@ -104,49 +115,48 @@
                                         <input type="text" style="margin-bottom:10px" value="{{$trabalho->autor->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
                                     </div>
                                     <div class="col-sm-3">
-                                        <a href="#" onclick="deletarCoautor(this)" class="delete pr-2">
-                                        <img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;">
+                                        <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete pr-2">
+                                            <i class="fas fa-user-times fa-2x"></i>
                                         </a>
-                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}})">
-                                        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
+                                            <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
                                         </a>
-                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}})">
-                                        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
+                                            <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
                                         </a>
                                     </div>
                                 </div>
                             </div>
+                            @if(! $trabalho->coautors->isEmpty())
+                                <h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">Coautor(es)</h4>
+                            @endif
                             @foreach ($trabalho->coautors as $i => $coautor)
-                              <div class="item card">
-                                <div class="row card-body">
-                                    <div class="col-sm-4">
-                                        <label>E-mail</label>
-                                        <input type="email" style="margin-bottom:10px" value="{{$coautor->user->email}}" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
-                                    </div>
-                                    <div class="col-sm-5">
-                                        <label>Nome Completo</label>
-                                        <input type="text" style="margin-bottom:10px" value="{{$coautor->user->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <a href="#" onclick="deletarCoautor(this)" class="delete pr-2">
-                                          <img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;">
-                                        </a>
-                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}})">
-                                          <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                                        </a>
-                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}})">
-                                          <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                                        </a>
+                                <div class="item card">
+                                    <div class="row card-body">
+                                        <div class="col-sm-4">
+                                            <label>E-mail</label>
+                                            <input type="email" style="margin-bottom:10px" value="{{$coautor->user->email}}" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Nome Completo</label>
+                                            <input type="text" style="margin-bottom:10px" value="{{$coautor->user->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <a h style="color: #d30909;" href="#" onclick="deletarCoautor(this, event)" class="delete pr-2">
+                                            <i class="fas fa-user-times fa-2x"></i>
+                                            </a>
+                                            <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
+                                            <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                            </a>
+                                            <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
+                                            <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                              </div>
                             @endforeach
                           @endif
                         </div>
-
-                    </div>
-                    <div class="col-sm-12">
-                      <a href="#" onclick="montarLinhaInput(this, {{$trabalho->id}})" class="btn btn-primary addCoautor" id="addCoautor_{{$trabalho->id}}" style="width:100%;margin-top:10px">{{$formSubTraba->etiquetacoautortrabalho}}</a>
                     </div>
                 @endif
                 @if ($modalidade->texto && $indice == "etiquetaresumotrabalho")
@@ -154,7 +164,7 @@
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
                           <label for="resumo_{{$trabalho->id}}" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                          <textarea id="resumo_{{$trabalho->id}}" class="char-count form-control @error('resumo'.$trabalho->id) is-invalid @enderror" data-ls-module="charCounter" minlength="{{$modalidade->mincaracteres}}" maxlength="{{$modalidade->maxcaracteres}}" name="resumo{{$trabalho->id}}"  autocomplete="resumo" autofocusrows="5">@if(old('resumo'.$trabalho->id) != null){{old('resumo'.$trabalho->id)}}@else{{$trabalho->resumo}}@endif</textarea>
+                          <textarea id="resumo_{{$trabalho->id}}" class="char-count form-control @error('resumo'.$trabalho->id) is-invalid @enderror" data-ls-module="charCounter" minlength="{{$modalidade->mincaracteres}}" maxlength="{{$modalidade->maxcaracteres}}" name="resumo{{$trabalho->id}}"  autocomplete="resumo" autofocusrows="5">{{old('resumo'.$trabalho->id, $trabalho->resumo)}}</textarea>
                           <p class="text-muted"><small><span id="resumo{{$trabalho->id}}">{{strlen($trabalho->resumo)}}</span></small> - Min Caracteres: {{$modalidade->mincaracteres}} - Max Caracteres: {{$modalidade->maxcaracteres}}</p>
                           @error('resumo'.$trabalho->id)
                           <span class="invalid-feedback" role="alert">
@@ -168,8 +178,8 @@
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
                           <label for="resumo_{{$trabalho->id}}" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                          <textarea id="resumo_{{$trabalho->id}}" class="form-control palavra @error('resumo'.$trabalho->id) is-invalid @enderror" name="resumo{{$trabalho->id}}" autocomplete="resumo" autofocusrows="5">@if(old('resumo'.$trabalho->id) != null){{old('resumo'.$trabalho->id)}}@else{{$trabalho->resumo}}@endif</textarea>
-                          <p class="text-muted"><small><span id="resumo{{$trabalho->id}}">{{count(explode(" ", $trabalho->resumo))}}</span></small> - Min Palavras: {{$modalidade->minpalavras}} - Max Palavras: {{$modalidade->maxpalavras}}</p>
+                          <textarea id="resumo_{{$trabalho->id}}" class="form-control palavra @error('resumo'.$trabalho->id) is-invalid @enderror" name="resumo{{$trabalho->id}}" required autocomplete="resumo" autofocusrows="5">{{old('resumo'.$trabalho->id, $trabalho->resumo)}}</textarea>
+                          <p class="text-muted"><small><span id="resumo{{$trabalho->id}}">{{count(explode(" ", $trabalho->resumo))}}</span></small> - Min Palavras: <span id="minpalavras">{{$modalidade->minpalavras}}</span> - Max Palavras: <span id="maxpalavras">{{$modalidade->maxpalavras}}</span></p>
                           @error('resumo'.$trabalho->id)
                           <span class="invalid-feedback" role="alert">
                               <strong>{{ $message }}</strong>
@@ -190,7 +200,7 @@
                               {{-- Apenas um teste abaixo --}}
                               @if (old('area'.$trabalho->id) != null)
                                 @foreach($areas as $area)
-                                  <option value="{{$area->id}}" @if(old('area') == $area->id) selected @endif>{{$area->nome}}</option>
+                                  <option value="{{$area->id}}" @if(old('area'.$trabalho->id) == $area->id) selected @endif>{{$area->nome}}</option>
                                 @endforeach
                               @else
                                 @foreach($areas as $area)
@@ -214,7 +224,7 @@
                             <option value="" disabled selected hidden>-- Modalidade --</option>
                             @if (old('modalidade'.$trabalho->id) != null)
                               @foreach($modalidades as $modalidade)
-                                <option value="{{$modalidade->id}}" @if(old('modalidade') == $modalidade->id) selected @endif>{{$modalidade->nome}}</option>
+                                <option value="{{$modalidade->id}}" @if(old('modalidade'.$trabalho->id) == $modalidade->id) selected @endif>{{$modalidade->nome}}</option>
                               @endforeach
                             @else
                               @foreach($modalidades as $modalidade)
@@ -528,31 +538,51 @@
 @endif
 
 <script>
-  function montarLinhaInput(div, id){
+  function montarLinhaInput(div, id, event){
+    var coautores = document.getElementById("coautores"+id);
+    var html = "";
+    if (coautores.children.length==1){
+        html = '<h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">Coautor(es)</h4>'
+    }
+    event.preventDefault();
+    html += `
+    <div class="item card">
+        <div class="row card-body">
+            <div class="col-sm-4">
+                <label>E-mail</label>
+                <input type="email" style="margin-bottom:10px" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail">
+            </div>
+            <div class="col-sm-5">
+                <label>Nome Completo</label>
+                <input type="text" style="margin-bottom:10px" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome">
+            </div>
+            <div class="col-sm-3">
+                <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete pr-2">
+                    <i class="fas fa-user-times fa-2x"></i>
+                </a>
+                <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
+                    <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                </a>
+                <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
+                    <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    `;
 
-    var html = `<div class="item card">
-                  <div class="row card-body">
-                    <div class="col-sm-4">
-                        <label>E-mail</label>
-                        <input type="email" style="margin-bottom:10px" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_${id}[]" placeholder="E-mail" required>
-                    </div>
-                    <div class="col-sm-5">
-                        <label>Nome Completo</label>
-                        <input type="text" style="margin-bottom:10px" value="" class="form-control emailCoautor" name="nomeCoautor_${id}[]" placeholder="Nome" required>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="#" onclick="deletarCoautor(this)" class="delete pr-2"><img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;"></a>
-                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, ${id})"><i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i></a>
-                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, ${id})"><i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i></a>
-                    </div>
-                  </div>
-                </div>`;
-
-    $('#coautores_'+id).append(html);
+    $('#coautores'+id).append(html);
   }
 
-  function deletarCoautor(div) {
+  function deletarCoautor(div, id, event) {
+    event.preventDefault();
+    var titulo = document.getElementById("title-coautores"+id);
+    var coautores = document.getElementById("coautores"+id);
+    $('#title-coautores'+id).remove();
     div.parentElement.parentElement.parentElement.remove();
+    if(coautores.children.length >= 2) {
+        coautores.insertBefore(titulo, coautores.children[1]);
+    }
   }
 
   $(document).ready(function(){
@@ -585,17 +615,23 @@
   });
 
 
-  function mover(div, direcao, id) {
-    var coautores = document.getElementById("coautores_"+id);
+  function mover(div, direcao, id, event) {
+    event.preventDefault();
+    var coautores = document.getElementById("coautores"+id);
 
+    var hcoautores;
+    if(coautores.children.length > 2) {
+        hcoautores = coautores.children[1];
+        coautores.children[1].remove();
+    }
     if(direcao == 0) {
       for(var i = 0; i < coautores.children.length; i++) {
         if (coautores.children[i] == div && coautores.children[i+1] != null) {
           var baixo = coautores.children[i+1];
           var cima = coautores.children[i];
           coautores.children[i+1].remove();
-          cima.parentNode.insertBefore(baixo, cima);
-          return
+          coautores.insertBefore(baixo, cima);
+          break;
         }
       }
     } else if (direcao == 1) {
@@ -604,10 +640,14 @@
           var baixo = coautores.children[i];
           var cima = coautores.children[i-1];
           coautores.children[i].remove();
-          cima.parentNode.insertBefore(baixo, cima);
-          return
+          coautores.insertBefore(baixo, cima);
+          break;
         }
       }
+    }
+    if(coautores.children.length >= 2){
+        coautores.insertBefore(hcoautores, coautores.children[1]);
+        console.log('');
     }
   }
 
