@@ -142,7 +142,7 @@
                                             <input type="text" style="margin-bottom:10px" value="{{$coautor->user->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
                                         </div>
                                         <div class="col-sm-3">
-                                            <a h style="color: #d30909;" href="#" onclick="deletarCoautor(this, event)" class="delete pr-2">
+                                            <a h style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete pr-2">
                                             <i class="fas fa-user-times fa-2x"></i>
                                             </a>
                                             <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
