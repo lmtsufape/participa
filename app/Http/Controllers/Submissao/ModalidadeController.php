@@ -454,6 +454,7 @@ class ModalidadeController extends Controller
         $modalidade = Modalidade::find($id);
 
         if (Storage::disk()->exists($modalidade->regra)) {
+            ob_end_clean();
             return Storage::download($modalidade->regra, "Regras." . explode(".", $modalidade->regra)[1]);
         }
 
