@@ -145,7 +145,7 @@ body{
   margin-top: 50px;
   align-items: center;
   align-content: center;
-  
+
   /* background-color: white; */
 }
 
@@ -198,24 +198,25 @@ body{
   top: 10px;
   left: 30%;
   border-radius: none;
-  background-image: linear-gradient( to right, rgb(0, 60, 255), rgb(85, 2, 180)); 
+  background-image: linear-gradient( to right, rgb(0, 60, 255), rgb(85, 2, 180));
 }
 
 .descricao-evento .botao-inscricao:hover {
-  background-image: linear-gradient( to right, rgb(0, 36, 155), rgb(50, 1, 105)); 
+  background-image: linear-gradient( to right, rgb(0, 36, 155), rgb(50, 1, 105));
   transition: 0.3s;
   border-radius: 5px;
   box-shadow: 1px 3px 3px black;
 }
 
 .evento-image img {
-  min-width: 100%;
-  min-height: 100%;
   height: 100%;
   width: 100%;
   max-width: 100%;
   max-height: 100%;
-  border-radius: 10px 0px 0px 10px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
 }
 
 .carousel-inner {
@@ -227,12 +228,12 @@ body{
 }
 
 .pago {
-  background-image: linear-gradient( to right, red, rgb(230, 46, 0), rgb(255, 153, 0)); 
+  background-image: linear-gradient( to right, red, rgb(230, 46, 0), rgb(255, 153, 0));
   box-shadow: 1px 3px 3px rgb(32, 32, 32);
 }
 
 .gratuito {
-  background-image: linear-gradient( to right, rgb(40, 199, 0), rgb(0, 195, 65), rgb(0, 182, 112)); 
+  background-image: linear-gradient( to right, rgb(40, 199, 0), rgb(0, 195, 65), rgb(0, 182, 112));
   box-shadow: 1px 3px 3px rgb(32, 32, 32);
 }
 
@@ -288,7 +289,7 @@ body{
   padding-bottom: 50px;
 }
 
-.wrapper-barra-horizontal { 
+.wrapper-barra-horizontal {
   width: 95%;
   position: relative;
   left: 2.5%;
@@ -309,7 +310,7 @@ body{
 .wrapper-barra-horizontal .scroll-horizontal {
   display: grid;
   grid-template-columns: min(1rem, 5vw) [center-start] 1fr [center-end] min(1rem, 5vw);
-} 
+}
 
 .wrapper-barra-horizontal .scroll-horizontal > * {
   grid-column: center;
@@ -452,7 +453,7 @@ body{
 .conteudo-superior .scroll-horizontal-next-icon {
   position: relative;
   left: 93%;
-} 
+}
 
 .tipo-evento-circular {
   position: relative;
@@ -531,12 +532,12 @@ body{
   color: white;
   font-weight: bolder;
   font-size: 20px;
-  background-image: linear-gradient( to right, rgb(255, 187, 0),  rgb(226, 166, 0),  rgb(192, 141, 0)); 
+  background-image: linear-gradient( to right, rgb(255, 187, 0),  rgb(226, 166, 0),  rgb(192, 141, 0));
   box-shadow:1px 3px 3px 3px rgb(200, 200, 200);
 }
 
 #btn-mais-eventos button:hover {
-  background-image: linear-gradient( to right, rgb(255, 187, 0),  rgb(226, 166, 0),  rgb(192, 141, 0)); 
+  background-image: linear-gradient( to right, rgb(255, 187, 0),  rgb(226, 166, 0),  rgb(192, 141, 0));
   box-shadow: 1px 3px 3px 3px rgb(110, 110, 110);
 }
 
