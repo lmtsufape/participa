@@ -46,6 +46,13 @@
                   </div>
                 </div>
               @enderror
+            @if($errors->any())
+                <div class="alert alert-danger">
+                @foreach ($errors->all() as $error)
+                    <p>{{$error}}</p>
+                @endforeach
+                </div>
+            @endif
               @foreach ($ordem as $indice)
                 @if ($indice == "etiquetatitulotrabalho")
                   <div class="row justify-content-center">
@@ -79,15 +86,18 @@
                         <div id="coautores{{$trabalho->id}}" class="flexContainer " >
                           @if (old('nomeCoautor_'.$trabalho->id) != null)
                             @foreach (old('nomeCoautor_'.$trabalho->id) as $i => $nomeCoautor)
+                                @if($i == 1)
+                                    <h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">Coautor(es)</h4>
+                                @endif
                                 <div class="item card">
                                     <div class="row card-body">
                                         <div class="col-sm-4">
                                             <label>E-mail</label>
-                                            <input type="email" style="margin-bottom:10px" value="{{old('emailCoautor_'.$trabalho->id)[$i]}}" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail">
+                                            <input type="email" style="margin-bottom:10px" value="{{old('emailCoautor_'.$trabalho->id)[$i]}}" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" required placeholder="E-mail">
                                         </div>
                                         <div class="col-sm-5">
                                             <label>Nome Completo</label>
-                                            <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome">
+                                            <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" required placeholder="Nome">
                                         </div>
                                         <div class="col-sm-3">
                                             <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete pr-2">
@@ -550,11 +560,11 @@
         <div class="row card-body">
             <div class="col-sm-4">
                 <label>E-mail</label>
-                <input type="email" style="margin-bottom:10px" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail">
+                <input type="email" style="margin-bottom:10px" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" required placeholder="E-mail">
             </div>
             <div class="col-sm-5">
                 <label>Nome Completo</label>
-                <input type="text" style="margin-bottom:10px" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome">
+                <input type="text" style="margin-bottom:10px" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" required placeholder="Nome">
             </div>
             <div class="col-sm-3">
                 <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete pr-2">

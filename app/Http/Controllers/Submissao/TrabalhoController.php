@@ -371,10 +371,6 @@ class TrabalhoController extends Controller
      */
     public function update(TrabalhoUpdateRequest $request, $id)
     {
-      //dd($request)
-
-
-
       $validatedData = $request->validated();
 
       $trabalho = Trabalho::find($id);
@@ -384,14 +380,6 @@ class TrabalhoController extends Controller
       if ($arquivo != null && $this->validarTipoDoArquivo($arquivo, $trabalho->modalidade)) {
         return redirect()->back()->withErrors(['arquivo'.$id => 'Extensão de arquivo enviado é diferente do permitido.
                                                                   Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
-      }
-
-      if($request->input('emailCoautor_'.$id) != null){
-        if($evento->numMaxCoautores != null && count($request->input('emailCoautor_'.$id)) > $evento->numMaxCoautores){
-          return redirect()->back()->withErrors(['numeroMax'.$id => 'Número de coautores deve ser menor igual a '.$evento->numMaxCoautores])->withInput($validatedData);
-        }
-      } else {
-        return redirect()->back()->withErrors(['numeroMax'.$id => 'O trabalho deve conter pelo menos o seu autor'])->withInput($validatedData);
       }
 
       $trabalho->titulo = $request->input('nomeTrabalho'.$id);

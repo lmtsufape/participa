@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Models\Submissao\Trabalho;
+use App\Rules\MaxTrabalhosAutorUpdate;
+use App\Rules\MaxTrabalhosCoautorUpdate;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -33,15 +35,19 @@ class TrabalhoUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        $id = request()->id;
+        $evento = Trabalho::find($id)->evento;
         return [
             'trabalhoEditId'                       => ['required'],
-            'nomeTrabalho' . request()->id         => ['required', 'string',],
-            'area' . request()->id                 => ['required', 'integer'],
-            'modalidade' . request()->id           => ['required', 'integer'],
-            'resumo' . request()->id               => ['nullable', 'string'],
-            'nomeCoautor_' . request()->id . '.*'  => ['string'],
-            'emailCoautor_' . request()->id . '.*' => ['string'],
-            'arquivo' . request()->id              => ['nullable', 'file', 'max:2048'],
+            'nomeTrabalho' . $id                   => ['required', 'string',],
+            'area' . $id                           => ['required', 'integer'],
+            'modalidade' . $id                     => ['required', 'integer'],
+            'resumo' . $id                         => ['nullable', 'string'],
+            'emailCoautor_' . $id                  => ['required', 'array', 'min:1'],
+            'nomeCoautor_' . $id . '.*'            => ['string'],
+            'emailCoautor_' . $id . '.0'           => ['string', new MaxTrabalhosAutorUpdate($evento->numMaxTrabalhos)],
+            'emailCoautor_' . $id . '.*'           => ['string', new MaxTrabalhosCoautorUpdate($evento->numMaxCoautores)],
+            'arquivo' . $id                        => ['nullable', 'file', 'max:2048'],
             'campoextra1arquivo'                   => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo'                   => ['nullable', 'file', 'max:2048'],
             'campoextra3arquivo'                   => ['nullable', 'file', 'max:2048'],
@@ -62,8 +68,10 @@ class TrabalhoUpdateRequest extends FormRequest
 
     public function messages()
     {
+        $id = request()->id;
         return [
-            'arquivo*.max' => 'O tamanho máximo permitido é de 2mb'
+            'arquivo*.max' => 'O tamanho máximo permitido é de 2mb',
+            'emailCoautor_' . $id . '*.required' => 'O trabalho deve conter pelo seu autor.'
         ];
     }
 }
