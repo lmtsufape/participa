@@ -124,7 +124,7 @@ class TrabalhoController extends Controller
         // $areaModalidade = AreaModalidade::where('areaId', $request->araeaId)->where('modalidadeId', $request->modalidadeId)->first();
         Log::debug('Numero de trabalhos' . $evento);
         if($evento->numMaxTrabalhos != null && $trabalhosDoAutor >= $evento->numMaxTrabalhos){
-          return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.']);
+          return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.'])->withInput($validatedData);
         }
 
         if($request->emailCoautor != null){
