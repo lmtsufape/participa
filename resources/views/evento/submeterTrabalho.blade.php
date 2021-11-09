@@ -27,6 +27,11 @@
                             @include('componentes.mensagens')
                           @enderror
                         </div>
+                        <div>
+                            @error('emailCoautor.*')
+                              @include('componentes.mensagens')
+                            @enderror
+                          </div>
                         @foreach ($ordemCampos as $indice)
                           @if ($indice == "etiquetatitulotrabalho")
                             <div class="row justify-content-center">

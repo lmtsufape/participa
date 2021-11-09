@@ -123,14 +123,8 @@ class TrabalhoController extends Controller
         $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->where('status', '!=','arquivado' )->count();
         // $areaModalidade = AreaModalidade::where('areaId', $request->araeaId)->where('modalidadeId', $request->modalidadeId)->first();
         Log::debug('Numero de trabalhos' . $evento);
-        if($trabalhosDoAutor >= $evento->numMaxTrabalhos){
+        if($evento->numMaxTrabalhos != null && $trabalhosDoAutor >= $evento->numMaxTrabalhos){
           return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.']);
-        }
-
-        if($request->emailCoautor != null){
-          if(count($request->emailCoautor) > $evento->numMaxCoautores){
-            return redirect()->back()->withErrors(['numeroMax' => 'Número de coautores deve ser menor igual a '.$evento->numMaxCoautores]);
-          }
         }
 
         if($request->emailCoautor != null){
@@ -393,11 +387,7 @@ class TrabalhoController extends Controller
       }
 
       if($request->input('emailCoautor_'.$id) != null){
-        $i = 0;
-        foreach ($request->input('emailCoautor_'.$id) as $key) {
-          $i++;
-        }
-        if($i > $evento->numMaxCoautores){
+        if($evento->numMaxCoautores != null && count($request->input('emailCoautor_'.$id)) > $evento->numMaxCoautores){
           return redirect()->back()->withErrors(['numeroMax'.$id => 'Número de coautores deve ser menor igual a '.$evento->numMaxCoautores])->withInput($validatedData);
         }
       } else {
