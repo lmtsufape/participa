@@ -440,8 +440,8 @@
                                                 </div>
                                             </div>
                                         @endif
-                                        <div class="row" style="margin-top: 15px;">
-                                            <div class="col-sm-3" style="text-align: center;padding-left: 23px;">
+                                        <div class="form-row" style="margin-top: 15px; justify-content: center;">
+                                            <div class="col-sm-3" style="text-align: center;">
                                                 <div class="div-icon-programacao">
                                                     <img src="{{ asset('img/icons/Icon material-email.svg') }}" alt="PDF com a programação" style="margin-top: 5px;">
                                                 </div>

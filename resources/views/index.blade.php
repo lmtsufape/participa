@@ -33,8 +33,6 @@
                   <div class="col-lg-7 evento-image sizeImg">
                     @if ($evento->fotoEvento != null)
                       <img src="{{ asset('storage/'.$evento->fotoEvento) }}" class="" alt="..." style="
-                      max-width:300px;
-                      max-height:150px;
                       width: auto;
                       height: auto;background: no-repeat center;
                       background-size: cover;">
@@ -74,10 +72,10 @@
               <div class="row">
                 <div class="col-md-7 evento-image sizeImg">
                   @if ($evento->fotoEvento != null)
-                    <img src="{{ asset('storage/'.$evento->fotoEvento) }}" class="" alt="..." style="max-width:300px;
-                    max-height:150px;
+                    <img src="{{ asset('storage/'.$evento->fotoEvento) }}" class="" alt="..." style="
                     width: auto;
-                    height: auto;background: no-repeat center;
+                    height: auto;
+                    background: no-repeat center;
                     background-size: cover;">
                   @else
                     <img src="{{ asset('img/colorscheme.png') }}" class="" alt="..." style="max-width:300px;

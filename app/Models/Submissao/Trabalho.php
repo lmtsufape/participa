@@ -50,7 +50,7 @@ class Trabalho extends Model
   }
 
   public function coautors(){
-      return $this->belongsToMany('App\Models\Users\Coautor', 'coautor_trabalho', 'trabalho_id', 'coautor_id');
+      return $this->belongsToMany('App\Models\Users\Coautor', 'coautor_trabalho', 'trabalho_id', 'coautor_id')->orderBy('ordem');
   }
 
   public function pareceres(){

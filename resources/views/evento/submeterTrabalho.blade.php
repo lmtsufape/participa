@@ -27,13 +27,18 @@
                             @include('componentes.mensagens')
                           @enderror
                         </div>
+                        <div>
+                            @error('emailCoautor.*')
+                              @include('componentes.mensagens')
+                            @enderror
+                          </div>
                         @foreach ($ordemCampos as $indice)
                           @if ($indice == "etiquetatitulotrabalho")
                             <div class="row justify-content-center">
                               {{-- Nome Trabalho  --}}
                               <div class="col-sm-12">
                                   <label for="nomeTrabalho" class="col-form-label"><strong>{{ $formSubTraba->etiquetatitulotrabalho }}</strong> </label>
-                                  <input id="nomeTrabalho" type="text" class="form-control @error('nomeTrabalho') is-invalid @enderror" name="nomeTrabalho" value="{{ old('nomeTrabalho') }}" required autocomplete="nomeTrabalho" autofocus>
+                                  <input id="nomeTrabalho" type="text" class="form-control @error('nomeTrabalho') is-invalid @enderror" name="nomeTrabalho" value="{{ old('nomeTrabalho') }}" autocomplete="nomeTrabalho" autofocus>
 
                                   @error('nomeTrabalho')
                                   <span class="invalid-feedback" role="alert">
@@ -55,64 +60,95 @@
                           @if ($indice == "etiquetacoautortrabalho")
                             <div class="row " style="margin-top:20px">
                               <div class="col-sm-12">
-                                <h4>Autor(a)</h4>
-                                  <div id="coautores" class="row " >
+                                <div class="row">
+                                    <div class="col">
+                                        <h4>Autor(a)</h4>
+                                    </div>
+                                    <div class="col mr-5">
+                                        <div class="float-right">
+                                            <a href="#" onclick="addLinha(event)" id="addCoautor" style="color: #196572ff;text-decoration: none;" title="Clique aqui para adicionar coautor(es), se houver">
+                                                <i class="fas fa-user-plus fa-2x"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="coautores" class="row " >
                                     @if (old('nomeCoautor') != null)
-                                      @foreach (old('nomeCoautor') as $i => $nomeCoautor)
-                                        <div class="item card " id="{{$i+1}}" style="order: {{$i+1}};width:100%;">
+                                        <div class="item card" id="1" style="width:100%;">
+                                            <div class="row card-body">
+                                                <div class="col-sm-4">
+                                                    <label>E-mail</label>
+                                                    <input type="email" style="margin-bottom:10px" id="email${order}" value="{{Auth::user()->email}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" disabled>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <label>Nome Completo</label>
+                                                    <input type="text" style="margin-bottom:10px" value="{{Auth::user()->name}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" disabled>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <a href="#" @if(!Auth::check()) class=" delete pr-2" @else onclick="return false;" class=" pr-2" @endif style="color: #d30909;">
+                                                        <i class="fas fa-user-times fa-2x"></i>
+                                                    </a>
+                                                    <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, event)">
+                                                        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                                    </a>
+                                                    <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, event)">
+                                                        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h4 class="col-sm-12" id="title-coautores" style="margin-top:20px">Coautor(es)</h4>
+                                        @foreach (old('nomeCoautor') as $i => $nomeCoautor)
+                                        <div class="item card " id="{{$i+1}}" style="width:100%;">
                                           <div class="row card-body">
                                               <div class="col-sm-4">
                                                   <label>E-mail</label>
-                                                  <input   type="email" style="margin-bottom:10px" id="email{{$i+1}}" value="{{old('emailCoautor.'.$i)}}" onclick="digitarEmail(email{{$i+1}})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" disabled>
+                                                  <input type="email" style="margin-bottom:10px" id="email{{$i+1}}" value="{{old('emailCoautor')[$i]}}" onclick="digitarEmail(email{{$i+1}})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail">
                                               </div>
                                               <div class="col-sm-5">
                                                   <label>Nome Completo</label>
-                                                  <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" disabled>
+                                                  <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome">
                                               </div>
                                               <div class="col-sm-3">
-                                                  <a href="#" class="delete pr-2">
-                                                    <img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;">
+                                                  <a href="#" style="color: #d30909;" class="delete pr-2">
+                                                    <i class="fas fa-user-times fa-2x"></i>
                                                   </a>
-                                                  <a href="#" onclick="myFunction(event)">
+                                                  <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, event)">
                                                     <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
                                                   </a>
-                                                  <a href="#" onclick="myFunction(event)">
+                                                  <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, event)">
                                                     <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
                                                   </a>
-
                                               </div>
                                           </div>
                                         </div>
-                                      @endforeach
+                                        @endforeach
                                     @else
-                                    <div class="item card" id="1" style="order:1;width:100%;">
-                                      <div class="row card-body">
-                                          <div class="col-sm-4">
-                                              <label>E-mail</label>
-                                              <input type="email" style="margin-bottom:10px" id="email${order}" value="{{Auth::user()->email}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" disabled>
-                                          </div>
-                                          <div class="col-sm-5">
-                                              <label>Nome Completo</label>
-                                              <input type="text" style="margin-bottom:10px" value="{{Auth::user()->name}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" disabled>
-                                          </div>
-                                          <div class="col-sm-3">
-
-                                              <a href="#" @if(!Auth::check()) class=" delete  pr-2" @else class="  pr-2" @endif>
-                                                <img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;">
-                                              </a>
-                                              <a href="#" onclick="myFunction(event)">
-                                                <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                                              </a>
-                                              <a href="#" onclick="myFunction(event)">
-                                                <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                                              </a>
-
-                                          </div>
-                                      </div>
-                                    </div>
+                                        <div class="item card" id="1" style="width:100%;">
+                                            <div class="row card-body">
+                                                <div class="col-sm-4">
+                                                    <label>E-mail</label>
+                                                    <input type="email" style="margin-bottom:10px" id="email${order}" value="{{Auth::user()->email}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" disabled>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <label>Nome Completo</label>
+                                                    <input type="text" style="margin-bottom:10px" value="{{Auth::user()->name}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" disabled>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <a href="#" @if(!Auth::check()) class=" delete pr-2" @else onclick="return false;" class=" pr-2" @endif style="color: #d30909;">
+                                                        <i class="fas fa-user-times fa-2x"></i>
+                                                    </a>
+                                                    <a href="#" onclick="return false;">
+                                                        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                                    </a>
+                                                    <a href="#" onclick="return false;">
+                                                        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endif
                                   </div>
-                                <a href="#" onclick="addLinha(event)" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">{{$formSubTraba->etiquetacoautortrabalho}}</a>
                               </div>
                             </div>
                           @endif
@@ -135,7 +171,7 @@
                               <div class="row justify-content-center">
                                 <div class="col-sm-12">
                                     <label for="resumo" class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                                    <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5" required></textarea>
+                                    <textarea id="palavra" class="form-control palavra @error('resumo') is-invalid @enderror" name="resumo" value="{{ old('resumo') }}"  autocomplete="resumo" autofocusrows="5" required>{{old('resumo')}}</textarea>
                                     <p class="text-muted"><small><span id="numpalavra">0</span></small> - Min Palavras: <span id="minpalavras">{{$modalidade->minpalavras}}</span> - Max Palavras: <span id="maxpalavras">{{$modalidade->maxpalavras}}</span></p>
                                     @error('resumo')
                                     <span class="invalid-feedback" role="alert">
@@ -501,42 +537,39 @@
 
   let order = 1;
 
-  function myFunction(event) {
+  function mover(div, direcao, event) {
     event.preventDefault();
-    el = event.srcElement.id
-    // console.log( event.path['5'].childNodes)
-    arr = event.path['5'].childNodes;
+    var coautores = document.getElementById("coautores");
 
-    if(el == "arrow-up"){
-      number = event.path['4'].style.order;
-      if(number == 1) return
-
-      for (var i = 0; i < arr.length; i++) {
-        if(event.path['5'].childNodes[i].style['order'] == parseInt(event.path['4'].style.order, 10) - 1 ){
-          event.path['5'].childNodes[i].style['order'] = parseInt(event.path['5'].childNodes[i].style['order'], 10) + parseInt(1, 10);
-
-          event.path['4'].style.order =  parseInt(event.path['4'].style.order, 10) - parseInt(1, 10);
-
+    var hcoautores;
+    if(coautores.children.length > 2) {
+        hcoautores = coautores.children[1];
+        coautores.children[1].remove();
+    }
+    if(direcao == 0) {
+      for(var i = 1; i < coautores.children.length; i++) {
+        if (coautores.children[i] == div && coautores.children[i+1] != null) {
+          var baixo = coautores.children[i+1];
+          var cima = coautores.children[i];
+          coautores.children[i+1].remove();
+          coautores.insertBefore(baixo, cima);
           break;
         }
       }
-
-
-
-    }else if(el == "arrow-down"){
-      number = event.path['4'].style.order;
-      if(number == order) return
-
-      for (var i = 0; i < arr.length; i++) {
-        if(event.path['5'].childNodes[i].style['order'] == parseInt(event.path['4'].style.order, 10) + 1 ){
-          event.path['5'].childNodes[i].style['order'] = parseInt(event.path['5'].childNodes[i].style['order'], 10) - parseInt(1, 10);
-
-          event.path['4'].style.order =  parseInt(event.path['4'].style.order, 10) + parseInt(1, 10);
-
+    } else if (direcao == 1) {
+      for(var i = 2; i < coautores.children.length; i++) {
+        if (coautores.children[i] == div && coautores.firstChild != div) {
+          var baixo = coautores.children[i];
+          var cima = coautores.children[i-1];
+          coautores.children[i].remove();
+          coautores.insertBefore(baixo, cima);
           break;
         }
       }
-
+    }
+    if(coautores.children.length >= 2){
+        coautores.insertBefore(hcoautores, coautores.children[1]);
+        console.log('');
     }
   }
 
@@ -544,6 +577,9 @@
   function addLinha(event){
     event.preventDefault();
     order += 1;
+    if ($("#title-coautores").length == 0) {
+        $('#coautores').append('<h4 class="col-sm-12" id="title-coautores" style="margin-top:20px">Coautor(es)</h4>');
+    }
       linha = montarLinhaInput(order);
       $('#coautores').append(linha);
   }
@@ -562,9 +598,9 @@
 
   });
   // Remover Coautor
-  $(document).on('click','.delete',function(){
+  $(document).on('click','.delete', function(e){
     $(this).closest('.item').remove();
-          return false;
+    e.preventDefault();
   });
 
   function addModalidade(areaId){
@@ -579,7 +615,7 @@
   }
   function montarLinhaInput(order){
 
-    return `<div class="item card" id="${order}" style="order:${order};width:100%;">
+    return `<div class="item card" id="${order}" style="width:100%;">
               <div class="row card-body">
                   <div class="col-sm-4">
                       <label>E-mail</label>
@@ -590,9 +626,9 @@
                       <input type="text" style="margin-bottom:10px" value="" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" required>
                   </div>
                   <div class="col-sm-3">
-                      <a href="#" class="delete pr-2"><img src="{{asset('/img/icons/user-times-solid.svg')}}" style="margin-bottom:15px;width:25px;"></a>
-                      <a href="#" onclick="myFunction(event)"><i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i></a>
-                      <a href="#" onclick="myFunction(event)"><i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i></a>
+                      <a href="#" style="color: #d30909;" class="delete pr-2"><i class="fas fa-user-times fa-2x"></i></a>
+                      <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, event)"><i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i></a>
+                      <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, event)"><i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i></a>
                   </div>
               </div>
             </div>`;

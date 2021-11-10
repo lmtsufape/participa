@@ -882,12 +882,13 @@ class EventoController extends Controller
       return redirect()->route('home')->with(['message' => "Evento criado com sucesso!"]);
     }
 
-    public function uploadFile($request,$evento){
+    public function uploadFile($request, $evento){
       if($request->hasFile('fotoEvento')){
-        $image = $request->file('fotoEvento');
+        $file = $request->fotoEvento;
         $path = 'public/eventos/' . $evento->id;
-        $path = Storage::putFileAs($path, $image,"logo.png");
-        return $path;
+        $nome = $request->file('fotoEvento')->getClientOriginalName();
+        Storage::putFileAs($path, $file, $nome);
+        return 'eventos/' . $evento->id . '/' . $nome;
       }
       return null;
     }
@@ -1029,7 +1030,7 @@ class EventoController extends Controller
         $endereco = Endereco::find($evento->enderecoId);
         $evento->enderecoId           = $endereco->id;
         $endereco->update($data);
-        
+
         if($request->fotoEvento != null){
           if(Storage::disk()->exists('public/'.$evento->fotoEvento)) {
             Storage::delete('storage/'.$evento->fotoEvento);
@@ -1043,7 +1044,7 @@ class EventoController extends Controller
 
         $evento->update();
 
-        
+
 
         return redirect()->route('home')->with(['message' => "Evento editado com sucesso!"]);
 
@@ -1168,12 +1169,7 @@ class EventoController extends Controller
         'eventoId'                => ['required', 'integer'],
         'fotoEvento'              => ['required', 'file', 'mimes:png']
       ]);
-
-      $file = $request->fotoEvento;
-      $path = 'public/eventos/' . $evento->id;
-      $nome = '/logo.png';
-      Storage::putFileAs($path, $file, $nome);
-      $evento->fotoEvento = $path . $nome;
+      $evento->fotoEvento = $this->uploadFile($request, $evento);
       $evento->save();
       return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }

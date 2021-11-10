@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Models\Submissao\Evento;
 use App\Http\Controllers\Controller;
+use Dompdf\Dompdf;
+use Illuminate\Support\Facades\Response;
 
 class ModalidadeController extends Controller
 {
@@ -454,7 +456,15 @@ class ModalidadeController extends Controller
         $modalidade = Modalidade::find($id);
 
         if (Storage::disk()->exists($modalidade->regra)) {
-            return Storage::download($modalidade->regra, "Regras." . explode(".", $modalidade->regra)[1]);
+            $file = Storage::get($modalidade->regra);
+            $tipo = Storage::mimeType($modalidade->regra);
+
+            $response = Response::make($file, 200, [
+                'Content-Type' => $tipo,
+                'Content-Disposition' => 'inline; filename='.$modalidade->nome.' regras.pdf',
+            ]);
+
+            return $response;
         }
 
         return abort(404);

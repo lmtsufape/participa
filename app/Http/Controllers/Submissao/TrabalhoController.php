@@ -123,18 +123,8 @@ class TrabalhoController extends Controller
         $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->where('status', '!=','arquivado' )->count();
         // $areaModalidade = AreaModalidade::where('areaId', $request->araeaId)->where('modalidadeId', $request->modalidadeId)->first();
         Log::debug('Numero de trabalhos' . $evento);
-        if($trabalhosDoAutor >= $evento->numMaxTrabalhos){
-          return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.']);
-        }
-
-        if($request->emailCoautor != null){
-          $i = 0;
-          foreach ($request->emailCoautor as $key) {
-            $i++;
-          }
-          if($i > $evento->numMaxCoautores){
-            return redirect()->back()->withErrors(['numeroMax' => 'Número de coautores deve ser menor igual a '.$evento->numMaxCoautores]);
-          }
+        if($evento->numMaxTrabalhos != null && $trabalhosDoAutor >= $evento->numMaxTrabalhos){
+          return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.'])->withInput($validatedData);
         }
 
         if($request->emailCoautor != null){
@@ -213,7 +203,7 @@ class TrabalhoController extends Controller
                   $coauntor = $userCoautor->coautor;
                   if ($coauntor == null) {
                     $coauntor = Coautor::create([
-                      'ordem' => '-',
+                      'ordem' => $key,
                       'autorId' => $userCoautor->id,
                       // 'trabalhoId'  => $trabalho->id,
                       'eventos_id' => $evento->id
@@ -381,10 +371,6 @@ class TrabalhoController extends Controller
      */
     public function update(TrabalhoUpdateRequest $request, $id)
     {
-      //dd($request)
-
-
-
       $validatedData = $request->validated();
 
       $trabalho = Trabalho::find($id);
@@ -394,18 +380,6 @@ class TrabalhoController extends Controller
       if ($arquivo != null && $this->validarTipoDoArquivo($arquivo, $trabalho->modalidade)) {
         return redirect()->back()->withErrors(['arquivo'.$id => 'Extensão de arquivo enviado é diferente do permitido.
                                                                   Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
-      }
-
-      if($request->input('emailCoautor_'.$id) != null){
-        $i = 0;
-        foreach ($request->input('emailCoautor_'.$id) as $key) {
-          $i++;
-        }
-        if($i > $evento->numMaxCoautores){
-          return redirect()->back()->withErrors(['numeroMax'.$id => 'Número de coautores deve ser menor igual a '.$evento->numMaxCoautores])->withInput($validatedData);
-        }
-      } else {
-        return redirect()->back()->withErrors(['numeroMax'.$id => 'O trabalho deve conter pelo menos o seu autor'])->withInput($validatedData);
       }
 
       $trabalho->titulo = $request->input('nomeTrabalho'.$id);
@@ -420,15 +394,15 @@ class TrabalhoController extends Controller
       }
 
 
-      $coautores = collect();
+      $usuarios_dos_coautores = collect();
       foreach ($trabalho->coautors as $coautor_id) {
-        $coautores->push(User::find($coautor_id->autorId));
+        $usuarios_dos_coautores->push(User::find($coautor_id->autorId));
       }
 
       $coautoresExcluidos = collect();
       // TODO Checando a mudança do autor do trabalho, a inclusão e exclusão de coautores
       foreach ($request->input('emailCoautor_'.$id) as $i => $email) {
-        $coautor = User::where('email', $email)->first();
+        $usuario_do_coautor = User::where('email', $email)->first();
         // Chegando se existe do usuário cadastrado no sistema
         // Se existir é checado se o usario já é coautor do trabalho e adicionado nos coautores
         // excluidos para diff futuro. Se o usuário é existente no sistema mas não é coautor do trabalho
@@ -436,23 +410,23 @@ class TrabalhoController extends Controller
         // se não é criado um coautor com o id do user e o trabalho é adicionado
 
 
-        if ($coautor != null) {
-          if ($coautores->contains($coautor)) {
-            $coautoresExcluidos->contains($coautor);
+        if ($usuario_do_coautor != null) {
+          if ($usuarios_dos_coautores->contains($usuario_do_coautor)) {
+            $coautoresExcluidos->contains($usuario_do_coautor);
           } else {
-            $coautorExistente = $coautor->coautor;
+            $coautorExistente = $usuario_do_coautor->coautor;
             if ($coautorExistente != null && $i != 0) {
               $coautorExistente->trabalhos()->attach($trabalho);
             } else if ($i != 0) {
               $coauntorAdicional = Coautor::create([
-                'ordem' => '-',
-                'autorId' => $coautor->id,
+                'ordem' => $i,
+                'autorId' => $usuario_do_coautor->id,
                 'eventos_id' => $evento->id
               ]);
               $coauntorAdicional->trabalhos()->attach($trabalho);
             }
           }
-        } else if ($coautor == null) {
+        } else if ($usuario_do_coautor == null) {
           // Se o usuário não existir eu crio um usuário temporário um coautor para o usuário criado
           // e relaciono o trabalho a ele
 
@@ -470,7 +444,7 @@ class TrabalhoController extends Controller
             $coauntorAdicional = $usuario->coautor;
             if ($coauntorAdicional == null) {
               $coauntorAdicional = Coautor::create([
-                'ordem' => '-',
+                'ordem' => $i,
                 'autorId' => $usuario->id,
                 'eventos_id' => $evento->id
               ]);
@@ -485,7 +459,7 @@ class TrabalhoController extends Controller
             $autor = User::where('email', $email)->first();
             $trabalho->autorId = $autor->id;
             // checa se o usuário passou de coautor para autor
-            if($autor->coautor != null && $trabalho->coautors()->contains($autor->coautor->id)) {
+            if($autor->coautor != null && $trabalho->coautors->contains($autor->coautor->id)) {
                 $trabalho->coautors()->detach($autor->coautor->id);
             }
           }
@@ -495,10 +469,24 @@ class TrabalhoController extends Controller
       // TODO comparando os autores existentes com os excluidos
       // os que restarem são os excluidos do trabalho
 
-      $coautoresExcluidos = $coautores->diff($coautoresExcluidos);
-      foreach ($coautoresExcluidos as $coautor) {
-        if (!(in_array($coautor->email, $request->input('emailCoautor_'.$id)))) {
-          $coautor->coautor->trabalhos()->detach($id);
+      $coautoresExcluidos = $usuarios_dos_coautores->diff($coautoresExcluidos);
+      foreach ($coautoresExcluidos as $usuario_do_coautor) {
+        if (!(in_array($usuario_do_coautor->email, $request->input('emailCoautor_'.$id)))) {
+          $usuario_do_coautor->coautor->trabalhos()->detach($id);
+        }
+      }
+
+      // atualizando a ordem dos coautores
+      $email_dos_coautores = $validatedData['emailCoautor_'.$id];
+      unset($email_dos_coautores[0]);
+      foreach ($email_dos_coautores as $ordem => $email) {
+        $id_autor = User::where('email', $email)->get()->first()->id;
+        $coautor = $trabalho->coautors()->where('autorId', $id_autor)->get()->first();
+        if($coautor != null) {
+            $coautor->ordem = $ordem;
+            if($coautor->isDirty()) {
+              $coautor->save();
+            }
         }
       }
 

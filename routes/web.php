@@ -334,7 +334,7 @@ Route::get('/demo', function () {
 Route::get('/home', 'HomeController@home')->name('home')->middleware('verified', 'isTemp');
 
 Route::namespace('Submissao')->group(function () {
-  Route::get('{id}/modalidade-arquivo-regras',  'ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
+  Route::get('{id}/regras',  'ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
   Route::get('{id}/modalidade-arquivo-modelos',  'ModalidadeController@downloadModelos'  )->name('modalidade.modelos.download');
   Route::get('{id}/modalidade-template',      'ModalidadeController@downloadTemplate'  )->name('modalidade.template.download');
 
