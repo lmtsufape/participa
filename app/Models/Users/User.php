@@ -73,7 +73,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
 
     public function comissaoEvento(){
-        return $this->hasMany('App\Models\Submissao\ComissaoEvento');
+        return $this->hasMany('App\Models\Users\ComissaoEvento');
     }
 
     public function coautor(){

@@ -10,6 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Submissao\Assinatura;
+use App\Models\Submissao\Certificado;
 use Illuminate\Support\Facades\Log;
 use App\Models\Submissao\Evento;
 
@@ -113,6 +118,26 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('comissaoCientifica/cadastrarComissao', 'EventoController@cadastrarComissao')->name('cadastrarComissao');
       Route::get('comissaoCientifica/definirCoordComissao', 'EventoController@definirCoordComissao')->name('definirCoordComissao');
       Route::get('comissaoCientifica/listarComissao', 'EventoController@listarComissao')->name('listarComissao');
+      //Assinaturas
+      Route::get('certificados/cadastrarAssinatura', 'AssinaturaController@create')->name('cadastrarAssinatura');
+      Route::get('certificados/listarAssinatura', 'AssinaturaController@index')->name('listarAssinaturas');
+      Route::get('certificados/{id}/editarAssinatura', 'AssinaturaController@edit')->name('editarAssinatura');
+      Route::post('certificados/cadastrarAssinatura',      'AssinaturaController@store')->name('assinatura.store');
+      Route::post('certificados/{id}/deleteAssinatura',  'AssinaturaController@destroy')->name('assinatura.destroy');
+      Route::post('certificados/{id}/editAssinatura',  'AssinaturaController@update')->name('assinatura.update');
+      //Certificados
+      Route::get('certificados/cadastrarCertificado', 'CertificadoController@create')->name('cadastrarCertificado');
+      Route::get('certificados/{id}/modelo', 'CertificadoController@modelo')->name('modeloCertificado');
+      Route::get('certificados/{id}/editarCertificado', 'CertificadoController@edit')->name('editarCertificado');
+      Route::get('certificados/emitir', 'CertificadoController@emitir')->name('emitirCertificado');
+      Route::post('certificados/enviar-certificado', 'CertificadoController@enviarCertificacao')->name('enviarCertificado');
+      Route::get('certificados/listarCertificado', 'CertificadoController@index')->name('listarCertificados');
+      Route::post('certificados/cadastrarCertificado',      'CertificadoController@store')->name('certificado.store');
+      Route::post('certificados/{id}/deleteCertificado',  'CertificadoController@destroy')->name('certificado.destroy');
+      Route::post('certificados/{id}/editCertificado',  'CertificadoController@update')->name('certificado.update');
+      Route::get('certificados/ajax-listar-destinatarios', 'CertificadoController@ajaxDestinatarios')->name('ajax.listar.destinatarios');
+      Route::get('certificados/{certificadoId}/preview-destinatario/{destinatarioId}/trabalho/{trabalhoId}', 'CertificadoController@previewCertificado')->name('previewCertificado');
+
       Route::get('modalidade/cadastrarModalidade', 'EventoController@cadastrarModalidade')->name('cadastrarModalidade');
       Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');
       Route::get('modalidade/cadastrarCriterio', 'EventoController@cadastrarCriterio')->name('cadastrarCriterio');
@@ -137,6 +162,9 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('eventos/editarEtiqueta', 'EventoController@editarEtiqueta')->name('editarEtiqueta');
       Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
       Route::get('{id}/modulos',              'FormEventoController@indexModulo'            )->name('modulos');
+
+
+
 
     });
     //Evento
