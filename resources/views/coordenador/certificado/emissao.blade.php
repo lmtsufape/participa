@@ -196,7 +196,7 @@
                                         <h5 class="card-title">
                                             <div class="row">
                                                 <div class="form-check">
-                                                    <input class="checkbox_certificado" type="radio" name="certificado" value="{{`+data.responseJSON.certificados[i].id+`}}" id="certificado_{{`+data.responseJSON.certificados[i].id+`}}">
+                                                    <input class="checkbox_certificado" type="radio" name="certificado" value="{{`+data.responseJSON.certificados[i].id+`}}" id="certificadoID" onclick="atualizarInputCertificado(`+data.responseJSON.certificado.id+`)">
                                                     `+data.responseJSON.certificados[i].nome+`
                                                 </div>
                                             </div>
@@ -243,6 +243,10 @@
         url = url.replace(':destinatarioId', destinatario);
         url = url.replace(':trabalhoId', trabalho);
         window.open(url, '_blank');
+    }
+
+    function atualizarInputCertificado(certificado){
+        document.getElementById('certificadoID').value = certificado;
     }
 
 </script>

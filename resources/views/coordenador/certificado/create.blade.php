@@ -67,6 +67,16 @@
                         </div>
                     @enderror
                 </div>
+                <div class="col-sm-6 form-group">
+                    <label for="data" ><b>{{ __('Data') }}</b></label>
+                    <input id="data" type="date" class="form-control @error('data') is-invalid @enderror" name="data" value="{{ old('data') }}" autocomplete="data" autofocus autocomplete="data">
+
+                    @error('data')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
             </div>
             <div class="form-row">
                 <div class="col-sm-12 form-group">

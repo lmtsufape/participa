@@ -236,30 +236,30 @@
                 <li>
                     <img src="{{asset('img/icons/publish.svg')}}" alt=""><h5>Certificados</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
-                <div id="dropdownCertificados" @if(request()->is('coord/evento/certificado*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                <div id="dropdownCertificados" @if(request()->is('coord/evento/certificado*')) style='background-color: gray;display: block;' @else  style='background-color: gray; display: none' @endif>
                     <a id="emitirCertificado" href="{{ route('coord.emitirCertificado', ['eventoId' => $evento->id]) }}">
                         <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Emitir Certificado</h5>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5 style="font-size: 80%"> Emitir Certificado</h5>
                         </li>
                     </a>
                     <a id="cadastrarCertificado" href="{{ route('coord.cadastrarCertificado', ['eventoId' => $evento->id]) }}">
                         <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Cadastrar Certificado</h5>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5 style="font-size: 80%"> Cadastrar Certificado</h5>
                         </li>
                     </a>
                     <a id="listarCertificados" href="{{ route('coord.listarCertificados', ['eventoId' => $evento->id]) }}">
                         <li>
-                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Certificados</h5>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 80%"> Listar Certificados</h5>
                         </li>
                     </a>
                     <a id="cadastrarAssinatura" href="{{ route('coord.cadastrarAssinatura', ['eventoId' => $evento->id]) }}">
                         <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Cadastrar Assinatura</h5>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5 style="font-size: 80%"> Cadastrar Assinatura</h5>
                         </li>
                     </a>
                     <a id="listarAssinaturas" href="{{ route('coord.listarAssinaturas', ['eventoId' => $evento->id]) }}">
                         <li>
-                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Assinaturas</h5>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 80%"> Listar Assinaturas</h5>
                         </li>
                     </a>
                 </div>

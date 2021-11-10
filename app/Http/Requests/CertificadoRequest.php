@@ -30,6 +30,7 @@ class CertificadoRequest extends FormRequest
             'tipo'              => 'required',
             'fotoCertificado'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
             'assinaturas' => 'required',
+            'data' => 'required|date',
         ];
     }
 

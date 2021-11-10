@@ -127,6 +127,7 @@ class CertificadoController extends Controller
             'nome'              => 'required|string|min:5|max:290',
             'texto'              => 'required|string|min:5|max:500',
             'assinaturas' => 'required',
+            'data' => 'required|date',
         ]);
         $certificado = Certificado::find($id);
         $certificado->setAtributes($request);
@@ -190,7 +191,7 @@ class CertificadoController extends Controller
         $this->authorize('isCoordenadorOrComissao', $evento);
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
         date_default_timezone_set('America/Recife');
-        $pdf = PDF::loadView('coordenador.certificado.modelo', ['certificado' => $certificado, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+        $pdf = PDF::loadView('coordenador.certificado.modelo', ['certificado' => $certificado, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
 
         return $pdf->stream('modelo.pdf');
     }
@@ -206,28 +207,28 @@ class CertificadoController extends Controller
             case(Certificado::TIPO_ENUM['apresentador']):
                     $user = User::find($destinatarioId);
                     $trabalho = Trabalho::find($trabalhoId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                 break;
             case(Certificado::TIPO_ENUM['comissao_cientifica']):
                     $user = User::find($destinatarioId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Científica', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Científica', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     break;
             case(Certificado::TIPO_ENUM['comissao_organizadora']):
                     $user = User::find($destinatarioId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Organizadora', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Organizadora', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     break;
             case(Certificado::TIPO_ENUM['revisor']):
                     $user = User::find($destinatarioId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Revisor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Revisor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     break;
             case(Certificado::TIPO_ENUM['participante']):
                     $user = User::find($destinatarioId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Participante', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Participante', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     break;
             case(Certificado::TIPO_ENUM['expositor']):
                     $user = User::find($destinatarioId);
                     $trabalho = Trabalho::find($trabalhoId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     break;
         }
         return $pdf->stream('preview.pdf');
