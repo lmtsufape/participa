@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     <div class="row justify-content-center">
-                        <div class="col-sm-12">
+                        <div class="col-sm-6">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao) checked @endif name="modprogramacao" id="modprogramacao">
                                 <label class="form-check-label" for="modprogramacao">
@@ -64,6 +64,15 @@
                             </span>
                             @enderror
                         </div>
+                        <input type="hidden" name="modarquivo" value="false">
+                        <div class="col-sm-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" @if($evento->modarquivo) checked @endif name="modarquivo" id="modarquivo">
+                                <label class="form-check-label" for="modarquivo">
+                                Exibir arquivo adicional
+                                </label>
+                            </div>
+                        </div>
 
                         </div>
                         <div class="row justify-content-center">
@@ -71,7 +80,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao == true && $evento->exibir_calendario_programacao) checked @endif name="exibir_calendario" id="exibir_calendario">
                                     <label class="form-check-label" for="exibir_calendario">
-                                    Exibir com calendário                                    
+                                    Exibir com calendário
                                     </label>
                                 </div>
                             </div>
@@ -80,7 +89,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao == true && !($evento->exibir_calendario_programacao)) checked @endif name="exibir_pdf" id="exibir_pdf">
                                     <label class="form-check-label" for="exibir_pdf">
-                                    Exibir o pdf enviado                                    
+                                    Exibir o pdf enviado
                                     </label>
                                 </div>
                             </div>

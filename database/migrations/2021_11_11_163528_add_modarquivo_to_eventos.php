@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddArquivoToEventos extends Migration
+class AddModarquivoToEventos extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddArquivoToEventos extends Migration
     public function up()
     {
         Schema::table('eventos', function (Blueprint $table) {
-            $table->string('pdf_arquivo')->nullable();
+            $table->boolean('modarquivo')->default(false);
         });
     }
 
@@ -26,7 +26,7 @@ class AddArquivoToEventos extends Migration
     public function down()
     {
         Schema::table('eventos', function (Blueprint $table) {
-            $table->dropColumn('pdf_arquivopsql');
+            $table->dropColumn('modarquivo');
         });
     }
 }

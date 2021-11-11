@@ -272,7 +272,7 @@
                                                 </div>
                                             </div>
                                         @endif
-                                        @if ($evento->pdf_arquivo != null)
+                                        @if ($evento->pdf_arquivo != null && $evento->modarquivo)
                                             <div class="form-row justify-content-center">
                                                 <div class="col-sm-3 form-group " style="position: relative; text-align: center;">
                                                     <div class="div-icon-programacao">
