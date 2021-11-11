@@ -272,6 +272,20 @@
                                                 </div>
                                             </div>
                                         @endif
+                                        @if ($evento->pdf_arquivo != null)
+                                            <div class="form-row justify-content-center">
+                                                <div class="col-sm-3 form-group " style="position: relative; text-align: center;">
+                                                    <div class="div-icon-programacao">
+                                                        <img class="icon-programacao" src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}" alt="PDF com a programação">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8 form-inline">
+                                                    <span class="titulo">
+                                                        <a href="{{ asset('storage/' . $evento->pdf_arquivo) }}" target="_black">{{ $etiquetas->etiquetaarquivo }}</a>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        @endif
                                         @if ($etiquetas->modsubmissao == true)
                                             <div class="row">
                                                 <div class="col-sm-12">

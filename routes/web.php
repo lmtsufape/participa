@@ -158,6 +158,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::post('atividade/{id}/editar', 'AtividadeController@update')->name('atividades.update');
       Route::post('atividade/{id}/excluir', 'AtividadeController@destroy')->name('atividade.destroy');
       Route::post('{id}/atividade/salvar-pdf-programacao', 'EventoController@pdfProgramacao')->name('evento.pdf.programacao');
+      Route::post('{id}/atividade/salvar-pdf-adicional', 'EventoController@pdfAdicional')->name('evento.pdf.adicional');
       Route::get('tipo-de-atividade/new', 'TipoAtividadeController@storeAjax')->name('tipo.store.ajax');
       Route::get('eventos/editarEtiqueta', 'EventoController@editarEtiqueta')->name('editarEtiqueta');
       Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');

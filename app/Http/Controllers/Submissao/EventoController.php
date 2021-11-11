@@ -1228,6 +1228,30 @@ class EventoController extends Controller
       return redirect()->back()->with(['mensagem' => 'PDF salvo com sucesso!']);
     }
 
+    public function pdfAdicional(Request $request, $id) {
+        $evento = Evento::find($id);
+        $this->authorize('isCoordenador', $evento);
+
+        $request->validate([
+          'pdf_arquivo' => ['file', 'mimetypes:application/pdf']
+        ]);
+
+        if ($evento->pdf_arquivo != null) {
+          Storage::delete('public/' . $evento->pdf_arquivo);
+        }
+
+        if($request->pdf_arquivo != null){
+          $file = $request->pdf_arquivo;
+          $path = 'public/eventos/' . $evento->id;
+          $nome = '/pdf-arquivo.pdf';
+          Storage::putFileAs($path, $file, $nome);
+          $evento->pdf_arquivo = 'eventos/' . $evento->id . $nome;
+          $evento->save();
+        }
+
+        return redirect()->back()->with(['mensagem' => 'PDF salvo com sucesso!']);
+      }
+
     public function buscaLivre() {
       return view('evento.busca_eventos');
     }

@@ -26,51 +26,55 @@ class FormEventoController extends Controller
             'etiquetamoduloorganizacao' => ['nullable', 'string'],
             'etiquetabaixarregra'       => ['nullable', 'string'],
             'etiquetabaixartemplate'    => ['nullable', 'string'],
+            'etiquetaarquivo'           => ['nullable', 'string'],
         ]);
 
         $formevento = FormEvento::where('eventoId',$id)->first();
-        
+
         if(isset($request->etiquetanomeevento)){
-            $formevento->etiquetanomeevento              = $request->etiquetanomeevento;
+            $formevento->etiquetanomeevento = $request->etiquetanomeevento;
         }
         if(isset($request->etiquetatipoevento)){
-            $formevento->etiquetatipoevento              = $request->etiquetatipoevento;
+            $formevento->etiquetatipoevento = $request->etiquetatipoevento;
         }
         if(isset($request->etiquetadescricaoevento)){
-            $formevento->etiquetadescricaoevento         = $request->etiquetadescricaoevento;
+            $formevento->etiquetadescricaoevento = $request->etiquetadescricaoevento;
         }
         if(isset($request->etiquetadatas)){
-            $formevento->etiquetadatas                   = $request->etiquetadatas;
+            $formevento->etiquetadatas = $request->etiquetadatas;
         }
         if(isset($request->etiquetasubmissoes)){
-            $formevento->etiquetasubmissoes              = $request->etiquetasubmissoes;
+            $formevento->etiquetasubmissoes = $request->etiquetasubmissoes;
         }
         if(isset($request->etiquetaenderecoevento)){
-            $formevento->etiquetaenderecoevento          = $request->etiquetaenderecoevento;
+            $formevento->etiquetaenderecoevento = $request->etiquetaenderecoevento;
         }
         if(isset($request->etiquetamoduloinscricao)){
-            $formevento->etiquetamoduloinscricao         = $request->etiquetamoduloinscricao;
+            $formevento->etiquetamoduloinscricao = $request->etiquetamoduloinscricao;
         }
         if(isset($request->etiquetamoduloprogramacao)){
-            $formevento->etiquetamoduloprogramacao       = $request->etiquetamoduloprogramacao;
+            $formevento->etiquetamoduloprogramacao = $request->etiquetamoduloprogramacao;
         }
         if(isset($request->etiquetamoduloorganizacao)){
-            $formevento->etiquetamoduloorganizacao       = $request->etiquetamoduloorganizacao;
+            $formevento->etiquetamoduloorganizacao = $request->etiquetamoduloorganizacao;
         }
         if(isset($request->etiquetabaixarregra)){
-            $formevento->etiquetabaixarregra             = $request->etiquetabaixarregra;
+            $formevento->etiquetabaixarregra = $request->etiquetabaixarregra;
         }
         if(isset($request->etiquetabaixartemplate)){
-            $formevento->etiquetabaixartemplate          = $request->etiquetabaixartemplate;
+            $formevento->etiquetabaixartemplate = $request->etiquetabaixartemplate;
         }
-        
+        if(isset($request->etiquetaarquivo)){
+            $formevento->etiquetaarquivo = $request->etiquetaarquivo;
+        }
+
         $formevento->save();
 
         return redirect()->back()->with(['mensagem' => 'Etiquetas salvas com sucesso!']);
     }
 
     public function exibirModulo(Request $request, $id) {
-        
+
         $formevento = FormEvento::where('eventoId',$id)->first();
         $evento = Evento::find($id);
         $this->authorize('isCoordenador', $evento);
@@ -83,11 +87,11 @@ class FormEventoController extends Controller
             $formevento->modprogramacao       = $request->modprogramacao;
             if ($request->exibir_pdf != null && $request->exibir_pdf == "on") {
                 $evento->exibir_calendario_programacao = false;
-            } 
+            }
 
             if ($request->exibir_calendario != null && $request->exibir_calendario == "on") {
                 $evento->exibir_calendario_programacao = true;
-            } 
+            }
         }
         if(isset($request->modorganizacao)){
             $formevento->modorganizacao       = $request->modorganizacao;

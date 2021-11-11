@@ -308,6 +308,11 @@
                         <img src="{{asset('img/icons/modulos.png')}}" alt=""><h5>Módulos</h5>
                     </li>
                   </a>
+                  <a id="pdfadicional" data-toggle="modal" data-target="#modalAdicionarPdf">
+                    <li>
+                        <img src="http://eventos.site/img/icons/file-alt-regular.svg" alt=""><h5>Arquivo adicional</h5>
+                    </li>
+                  </a>
               </div>
             </a>
             <a id="publicar">
@@ -337,6 +342,38 @@
         </ul>
     </div>
 
+    <!-- Modal para adicionar o pdf de arquivo adicional -->
+    <div class="modal fade" id="modalAdicionarPdf" tabindex="-1" role="dialog" aria-labelledby="modalAdicionarPdfLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title" id="modalAdicionarPdfLabel">Adicionar PDF de arquivo adicional</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <form method="POST" action="{{ route('coord.evento.pdf.adicional', ['id' => $evento->id]) }}" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                <label for="pdf_arquivo">Arquivo adicional:</label>
+                                <input type="file" name="pdf_arquivo" id="pdf_arquivo" >
+                                <br>
+                                <small>Para mudar o arquivo presente enviar um novo*</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
 
 </div>
 @endsection
@@ -704,6 +741,12 @@
     $(document).ready(function() {
         $('#botao-editar-modulo-programacao').on("click", function() {
             $("#etiqueta-modulo-programacao-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
+        $('#botao-editar-arquivo').on("click", function() {
+            $("#etiqueta-arquivo-evento").toggle(500);
         });
     });
 
