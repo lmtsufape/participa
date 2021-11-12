@@ -29,6 +29,10 @@ class Evento extends Model
       return $this->hasMany('App\Models\Submissao\Area', 'eventoId');
   }
 
+  public function arquivoInfos(){
+    return $this->hasMany('App\Models\Submissao\ArquivoInfo', 'evento_id');
+  }
+
   public function modalidades(){
     return $this->hasMany('App\Models\Submissao\Modalidade', 'evento_id');
 }
