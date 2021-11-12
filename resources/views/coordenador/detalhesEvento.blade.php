@@ -19,7 +19,7 @@
                 </a>
 
             @endcan
-            @can('isCoordenador', $evento)
+            @can('isCoordenadorOrComissao', $evento)
 
 
             <a id="trabalhos">
