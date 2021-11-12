@@ -163,7 +163,10 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('eventos/editarEtiqueta', 'EventoController@editarEtiqueta')->name('editarEtiqueta');
       Route::get('eventos/etiquetasTrabalhos', 'EventoController@etiquetasTrabalhos')->name('etiquetasTrabalhos');
       Route::get('{id}/modulos',              'FormEventoController@indexModulo'            )->name('modulos');
-
+      Route::get('{evento}/arquivos', 'ArquivoInfoController@index')->name('arquivos-adicionais');
+      Route::post('{evento}/arquivos', 'ArquivoInfoController@store')->name('arquivos-adicionais.store');
+      Route::delete('{arquivoInfo}/arquivos', 'ArquivoInfoController@delete')->name('arquivos-adicionais.delete');
+      Route::put('{arquivoInfo}/arquivos', 'ArquivoInfoController@update')->name('arquivos-adicionais.update');
 
 
 
