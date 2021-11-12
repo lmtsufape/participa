@@ -645,9 +645,13 @@ class TrabalhoController extends Controller
         }
       }
 
-      if ($trabalho->arquivo != null && !$trabalho->arquivo->isEmpty() != null && Storage::disk()->exists($trabalho->arquivo->nome)) {
-        Storage::delete($trabalho->arquivo->nome);
-        $trabalho->arquivo->delete();
+      if ($trabalho->arquivo != null) {
+        foreach ($trabalho->arquivo as $key => $value) {
+            if(Storage::disk()->exists($value->nome)) {
+                Storage::delete($value->nome);
+            }
+        }
+        $trabalho->arquivo()->delete();
       }
 
       if ($trabalho->atribuicoes != null && $trabalho->atribuicoes->count() > 0) {

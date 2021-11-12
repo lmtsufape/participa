@@ -26,7 +26,7 @@ class AddArquivoToFormEventos extends Migration
     public function down()
     {
         Schema::table('form_eventos', function (Blueprint $table) {
-            //
+            $table->dropColumn('etiquetaarquivo');
         });
     }
 }
