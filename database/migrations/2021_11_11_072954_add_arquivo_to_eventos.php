@@ -26,7 +26,7 @@ class AddArquivoToEventos extends Migration
     public function down()
     {
         Schema::table('eventos', function (Blueprint $table) {
-            $table->dropColumn('pdf_arquivopsql');
+            $table->dropColumn('pdf_arquivo');
         });
     }
 }

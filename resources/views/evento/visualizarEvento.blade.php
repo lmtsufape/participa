@@ -286,6 +286,20 @@
                                                 </div>
                                             </div>
                                         @endif
+                                        @foreach ($evento->arquivoInfos as $arquivo)
+                                            <div class="form-row justify-content-center">
+                                                <div class="col-sm-3 form-group " style="position: relative; text-align: center;">
+                                                    <div class="div-icon-programacao">
+                                                        <img class="icon-programacao" src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}" alt="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8 form-inline">
+                                                    <span class="titulo">
+                                                        <a href="{{ asset('storage/'.$arquivo->path) }}" target="_black">{{ $arquivo->nome }}</a>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                         @if ($etiquetas->modsubmissao == true)
                                             <div class="row">
                                                 <div class="col-sm-12">
