@@ -270,9 +270,9 @@ class ModalidadeController extends Controller
             'maxcaracteres'.$request->modalidadeEditId          => ['nullable', 'integer'],
             'minpalavras'.$request->modalidadeEditId            => ['nullable', 'integer'],
             'maxpalavras'.$request->modalidadeEditId            => ['nullable', 'integer'],
-            'arquivoRegras'.$request->modalidadeEditId          => ['nullable', 'file', 'mimes:pdf', 'max:2000000'],
+            'arquivoRegras'.$request->modalidadeEditId          => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
             'arquivoModelos'.$request->modalidadeEditId         => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,pdf,ppt,pptx,odp', 'max:2048'],
-            'arquivoTemplates'.$request->modalidadeEditId       => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2000000'],
+            'arquivoTemplates'.$request->modalidadeEditId       => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2048'],
 
         ]);
 
