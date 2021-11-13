@@ -30,6 +30,7 @@ use App\Mail\EventoCriado;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
+use App\Http\Requests\UpdateEventoRequest;
 use App\Models\Submissao\Form;
 use App\Models\Submissao\Opcao;
 use App\Models\Submissao\Pergunta;
@@ -283,7 +284,7 @@ class EventoController extends Controller
     public function cadastrarComissao(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenador', $evento);
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
@@ -361,7 +362,7 @@ class EventoController extends Controller
     public function listarUsuarios(Request $request)
     {
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenador', $evento);
         $usuarios = User::doesntHave('administradors')->get();
 
         return view('coordenador.revisores.listarUsuarios', compact('usuarios', 'evento'));
@@ -388,7 +389,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
 
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenador', $evento);
         $users = $evento->usuariosDaComissao;
 
 
@@ -774,7 +775,7 @@ class EventoController extends Controller
     public function editarEtiqueta(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenador', $evento);
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
         $modalidades = Modalidade::all();
@@ -801,7 +802,7 @@ class EventoController extends Controller
     public function etiquetasTrabalhos(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenador', $evento);
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
         $modalidades = Modalidade::all();
@@ -1002,8 +1003,8 @@ class EventoController extends Controller
      */
     public function edit($id)
     {
-        // dd($id);
         $evento = Evento::find($id);
+        $this->authorize('isCoordenador', $evento);
         $endereco = Endereco::find($evento->enderecoId);
         return view('evento.editarEvento',['evento'=>$evento,'endereco'=>$endereco]);
     }
@@ -1015,7 +1016,7 @@ class EventoController extends Controller
      * @param  \App\Evento  $evento
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreEventoRequest $request, $id)
+    public function update(UpdateEventoRequest $request, $id)
     {
         // $mytime = Carbon::now('America/Recife');
         // $this->authorize('isCoordenador', $evento);
@@ -1061,7 +1062,7 @@ class EventoController extends Controller
     public function destroy($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenador', $evento);
 
         $evento->deletado = true;
         $evento->update();
@@ -1162,7 +1163,7 @@ class EventoController extends Controller
 
     public function setFotoEvento(Request $request){
       $evento = Evento::find($request->eventoId);
-      $this->authorize('isCoordenadorOrComissao', $evento);
+      $this->authorize('isCoordenador', $evento);
 
       // dd($request);
       $validatedData = $request->validate([
@@ -1176,7 +1177,7 @@ class EventoController extends Controller
 
     public function habilitar($id) {
       $evento = Evento::find($id);
-      $this->authorize('isCoordenadorOrComissao', $evento);
+      $this->authorize('isCoordenador', $evento);
       $evento->publicado = true;
       $evento->update();
       return redirect()->back()->with('mensagem', 'O evento foi exposto ao público.');
@@ -1184,7 +1185,7 @@ class EventoController extends Controller
 
     public function desabilitar($id) {
       $evento = Evento::find($id);
-      $this->authorize('isCoordenadorOrComissao', $evento);
+      $this->authorize('isCoordenador', $evento);
       $evento->publicado = false;
       $evento->update();
       return redirect()->back()->with('mensagem', 'O evento foi ocultado ao público.');

@@ -121,7 +121,7 @@ class ComissaoOrganizadoraController extends Controller
     public function destroy(Request $request, $id)
     {
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenador', $evento);
 
         $evento->usuariosDaComissaoOrganizadora()->detach($id);
 
@@ -130,7 +130,7 @@ class ComissaoOrganizadoraController extends Controller
 
     public function definirCoordenador($id) {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenador', $evento);
 
         $usuariosDaComissao = $evento->usuariosDaComissaoOrganizadora;
         return view('coordenador.comissaoOrganizadora.definirCoordComissao', ['evento' => $evento,
@@ -139,7 +139,7 @@ class ComissaoOrganizadoraController extends Controller
 
     public function salvarCoordenador(Request $request) {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenador', $evento);
 
         $validationData = $request->validate([
             'coordComissaoId' => 'required',

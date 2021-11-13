@@ -4,14 +4,16 @@
 <div class="wrapper">
     <div class="sidebar">
         <h2>{{{$evento->nome}}}
-            <a href="{{route('evento.editar',$evento->id)}}" class="edit-evento" onmouseover="this.children[0].src='{{asset('img/icons/edit-regular.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/edit-regular-white.svg')}}'"><img src="{{asset('img/icons/edit-regular-white.svg')}}"  alt="" width="20px;"></a>
-            @if($evento->eventoPai == null)
-                <a href="{{route('subevento.criar',$evento->id)}}" onmouseover="this.children[0].src='{{asset('img/icons/plus-square-solid_black.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/plus-square-solid.svg')}}'"><img src="{{asset('img/icons/plus-square-solid.svg')}}"  alt="" width="20px;"></a>
-            @endif
+            @can('isCoordenador', $evento)
+                <a href="{{route('evento.editar',$evento->id)}}" class="edit-evento" onmouseover="this.children[0].src='{{asset('img/icons/edit-regular.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/edit-regular-white.svg')}}'"><img src="{{asset('img/icons/edit-regular-white.svg')}}"  alt="" width="20px;"></a>
+                @if($evento->eventoPai == null)
+                    <a href="{{route('subevento.criar',$evento->id)}}" onmouseover="this.children[0].src='{{asset('img/icons/plus-square-solid_black.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/plus-square-solid.svg')}}'"><img src="{{asset('img/icons/plus-square-solid.svg')}}"  alt="" width="20px;"></a>
+                @endif
+            @endcan
         </h2>
 
         <ul>
-            @can('isCoordenador', $evento)
+            @can('isCoordenadorOrComissao', $evento)
                 <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}" style="text-decoration:none;">
                     <li>
                         <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
@@ -152,6 +154,7 @@
                     </div>
                 </a>
             @endcan
+            @can('isCoordenador', $evento)
             <a id="comissao" >
                 <li>
                     <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão Cientifica</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -200,6 +203,7 @@
                     </a>
                 </div>
             </a>
+            @endcan
             <a id="modalidades">
                 <li>
                     <img src="{{asset('img/icons/sitemap-solid.svg')}}" alt=""><h5>Modalidades</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -264,7 +268,7 @@
                     </a>
                 </div>
             </a>
-            {{-- @can('isCoordenador', $evento) --}}
+            @can('isCoordenador', $evento)
             <a id="programacao">
                 <li>
                     <img src="{{asset('img/icons/slideshow.svg')}}" alt=""><h5>Programação</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -338,7 +342,7 @@
                     </a>
                 </div>
             </a>
-            {{-- @endcan --}}
+            @endcan
         </ul>
     </div>
 

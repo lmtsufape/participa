@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\NaoESubEvento;
+use App\Models\Submissao\Evento;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-class StoreEventoRequest extends FormRequest
+
+class UpdateEventoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +15,8 @@ class StoreEventoRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user() != null;
+        $evento = Evento::find(request()->id);
+        return auth()->user()->can('isCoordenador', $evento);
     }
 
     /**
@@ -25,14 +26,13 @@ class StoreEventoRequest extends FormRequest
      */
     public function rules()
     {
-        // Log::info("Final");
         return [
             'nome'        => ['required', 'string'],
             'descricao'   => ['required', 'string'],
             'tipo'        => ['required', 'string'],
-            'dataInicio'  => ['required', 'date', 'after:yesterday'],
+            'dataInicio'  => ['required', 'date'],
             'dataFim'     => ['required', 'date'],
-            'fotoEvento'  => ['file', 'mimes:png, jpg,jpeg'],
+            'fotoEvento'  => ['file', 'mimes:png,jpg,jpeg'],
             'rua'         => ['required', 'string'],
             'numero'      => ['required', 'string'],
             'bairro'      => ['required', 'string'],
@@ -40,33 +40,6 @@ class StoreEventoRequest extends FormRequest
             'uf'          => ['required', 'string'],
             'cep'         => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
-            'eventoPai'   => ['nullable', new NaoESubEvento]
         ];
     }
-
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            // 'title.required' => 'A title is required',
-            // 'body.required' => 'A message is required',
-        ];
-    }
-
-    /**
-     * Get custom attributes for validator errors.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            // 'email' => 'email address',
-        ];
-    }
-
-    }
+}

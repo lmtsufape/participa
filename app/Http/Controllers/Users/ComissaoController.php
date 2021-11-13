@@ -84,7 +84,7 @@ class ComissaoController extends Controller
 
         $user = User::where('email',$request->input('emailMembroComissao'))->first();
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenador', $evento);
 
         if($user == null){
           $passwordTemporario = Str::random(8);
@@ -122,7 +122,7 @@ class ComissaoController extends Controller
 
     public function coordenadorComissao(Request $request){
         $evento = Evento::find($request->input('eventoId'));
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenador', $evento);
 
         $evento->coord_comissao_cientifica_id = $request->input('coordComissaoId');
         $evento->save();
@@ -177,8 +177,8 @@ class ComissaoController extends Controller
     public function destroy(Request $request, $id)
     {
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrComissao', $evento);
-        
+        $this->authorize('isCoordenador', $evento);
+
         $evento->usuariosDaComissao()->detach($id);
 
         return redirect()->back()->with(['mensagem' => 'Membro da comissão removido com sucesso!']);
