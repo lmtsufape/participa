@@ -131,9 +131,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div>
-                                            @error('marcarextensao')
-                                                @include('componentes.mensagens')
-                                            @enderror
+                                            @include('componentes.mensagens')
                                         </div>
                                         <form method="POST" action="{{route('modalidade.update')}}" enctype="multipart/form-data">
                                         @csrf
@@ -435,7 +433,7 @@
                                             </div>
                                             <small>O arquivo selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF, PDF, PPT, PPTX ou ODP de até 2 MB.</small><br>
                                             <small>Se deseja alterar o arquivo, envie a nova versão.</small>
-                                            @error('arquivoModelos')
+                                            @error('arquivoModelos'.$modalidade->id)
                                             <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -450,7 +448,7 @@
                                             </div>
                                             <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small><br>
                                             <small>Se deseja alterar o arquivo, envie a nova versão.</small>
-                                            @error('arquivoRegras')
+                                            @error('arquivoRegras'.$modalidade->id)
                                             <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -465,7 +463,7 @@
                                                 </div>
                                                 <small>O arquivo Selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF, TXT ou PDF de até 2mb.</small><br>
                                                 <small>Se deseja alterar o arquivo, envie a nova versão.</small>
-                                                @error('arquivoTemplates')
+                                                @error('arquivoTemplates'.$modalidade->id)
                                                 <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                                 <strong>{{ $message }}</strong>
                                                 </span>
