@@ -27,7 +27,7 @@ class CertificadoController extends Controller
     public function index(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $certificados = Certificado::where('evento_id', $evento->id)->get();
         return view('coordenador.certificado.index', [
             'evento'=> $evento,
@@ -43,7 +43,7 @@ class CertificadoController extends Controller
     public function create(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
         return view('coordenador.certificado.create', [
             'evento'=> $evento,
@@ -60,7 +60,7 @@ class CertificadoController extends Controller
     public function store(CertificadoRequest $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $request->validated();
         $certificado = new Certificado();
         $certificado->setAtributes($request);
@@ -101,7 +101,7 @@ class CertificadoController extends Controller
     public function edit(Request $request, $id)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $certificado = Certificado::find($id);
         $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
         return view('coordenador.certificado.edit', [
@@ -121,7 +121,7 @@ class CertificadoController extends Controller
     public function update(Request $request, $id)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $validatedData = $request->validate([
             'local'              => 'required|string|min:3|max:40',
             'nome'              => 'required|string|min:5|max:290',
@@ -176,7 +176,7 @@ class CertificadoController extends Controller
     {
         $certificado = Certificado::find($id);
         $evento = $certificado->evento;
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         foreach($certificado->assinaturas()->get() as $modelo){
             $modelo->pivot->delete();
         }
@@ -188,7 +188,7 @@ class CertificadoController extends Controller
     {
         $certificado = Certificado::find($id);
         $evento = $certificado->evento;
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
         date_default_timezone_set('America/Recife');
         $pdf = PDF::loadView('coordenador.certificado.modelo', ['certificado' => $certificado, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
@@ -200,7 +200,7 @@ class CertificadoController extends Controller
     {
         $certificado = Certificado::find($certificadoId);
         $evento = $certificado->evento;
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
         date_default_timezone_set('America/Recife');
         switch($certificado->tipo){
@@ -237,7 +237,7 @@ class CertificadoController extends Controller
     public function emitir(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $certificados = Certificado::where('evento_id', $evento->id)->get();
         $destinatarios = array('Apresentadores', 'Comissão científica', 'Comissão organizadora', 'Expositor', 'Participantes', 'Revisores');
         return view('coordenador.certificado.emissao', [
@@ -406,7 +406,7 @@ class CertificadoController extends Controller
     public function enviarCertificacao(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $certificado = Certificado::find($request->certificado);
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
         date_default_timezone_set('America/Recife');

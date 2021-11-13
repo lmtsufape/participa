@@ -84,7 +84,7 @@ class ComissaoController extends Controller
 
         $user = User::where('email',$request->input('emailMembroComissao'))->first();
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         if($user == null){
           $passwordTemporario = Str::random(8);

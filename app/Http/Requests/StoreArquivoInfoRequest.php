@@ -13,7 +13,7 @@ class StoreArquivoInfoRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('isCoordenadorOrComissao', request()->evento);
+        return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', request()->evento);
     }
 
     /**

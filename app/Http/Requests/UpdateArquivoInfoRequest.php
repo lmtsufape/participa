@@ -13,7 +13,7 @@ class UpdateArquivoInfoRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('isCoordenadorOrComissao', request()->arquivoInfo->evento);
+        return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', request()->arquivoInfo->evento);
     }
 
     /**

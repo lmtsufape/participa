@@ -20,7 +20,7 @@ class ComissaoOrganizadoraController extends Controller
     public function index($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $usuariosDaComissao = $evento->usuariosDaComissaoOrganizadora;
         return view('coordenador.comissaoOrganizadora.listarComissao', ['evento' => $evento,
@@ -35,7 +35,7 @@ class ComissaoOrganizadoraController extends Controller
     public function create($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         return view('coordenador.comissaoOrganizadora.cadastrarComissao', ['evento' => $evento]);
     }
@@ -49,7 +49,7 @@ class ComissaoOrganizadoraController extends Controller
     public function store(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $validationData = $request->validate([
             'emailMembroComissao' => 'required|email',

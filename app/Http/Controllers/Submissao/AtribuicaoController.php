@@ -113,7 +113,7 @@ class AtribuicaoController extends Controller
       ]);
 
       $evento = Evento::find($request->eventoId);
-      $this->authorize('isCoordenadorOrComissao', $evento);
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
       $areas = Area::where('eventoId', $evento->id)->get();
       $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
       $revisores = Revisor::where('eventoId', $evento->id)->get();
@@ -144,7 +144,7 @@ class AtribuicaoController extends Controller
       ]);
 
       $evento = Evento::find($request->eventoId);
-      $this->authorize('isCoordenadorOrComissao', $evento);
+      $this->authorize('isCoordenadorisCoordenadorOrCoordenadorDasComissoesOrComissao', $evento);
 
 
       $evento = Evento::find($request->eventoId);

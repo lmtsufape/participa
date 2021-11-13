@@ -57,7 +57,7 @@ class TrabalhoController extends Controller
 
         $mytime = Carbon::now('America/Recife');
         if($mytime > $modalidade->fimSubmissao){
-            $this->authorize('isCoordenadorOrComissao', $evento);
+            $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         }
         // dd($formSubTraba);
         return view('evento.submeterTrabalho',[
@@ -322,7 +322,7 @@ class TrabalhoController extends Controller
     {
         $trabalho = Trabalho::find($id);
         $evento = $trabalho->evento;
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         if($trabalho->status == 'avaliado' && $status == 'rascunho'){
             $trabalho->update(['status' => $status]);
             return redirect()->back()->with(['message' => "Encaminhamento desfeito com sucesso!",'class' => 'success']);
@@ -357,7 +357,7 @@ class TrabalhoController extends Controller
         $trabalho = Trabalho::find($id);
         $modalidades = Modalidade::where('evento_id', $trabalho->eventoId)->get();
         $evento = Evento::find($trabalho->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         return view('coordenador.trabalhos.trabalho_edit', compact('trabalho', 'modalidades', 'evento'));
     }
@@ -913,7 +913,7 @@ class TrabalhoController extends Controller
 
     public function resultados($id) {
       $evento = Evento::find($id);
-      $this->authorize('isCoordenadorOrComissao', $evento);
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
       $trabalhos = Trabalho::where('eventoId', $id)->orderBy('titulo')->get();
       $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
@@ -943,7 +943,7 @@ class TrabalhoController extends Controller
       foreach ($trabalhos as $i => $trab) {
         if ($i == 0) {
           $evento = $trab->evento;
-          $this->authorize('isCoordenadorOrComissao', $evento);
+          $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         }
         $trabalho = [
           'id'          => $trab->id,

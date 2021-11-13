@@ -123,7 +123,7 @@
                     <h6 style="margin-left: 5px; margin-top:1px; margin-bottom: 1px;">Baixar trabalho corrigido</h6>
                 </div>
             </a>
-            @can('isCoordenadorOrComissao', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                 <div class="col-md-4" style="padding-ridht:0">
                     @if ($trabalho->status == 'rascunho')
                         <a href="{{ route('trabalho.status', [$trabalho->id, 'avaliado']) }}" class="btn btn-secondary">
@@ -147,7 +147,7 @@
                     </div>
                 </a>
             </div>
-            @can('isCoordenadorOrComissao', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                 <div class="col-md-4" style="padding-ridht:0">
                     @if ($trabalho->status == 'rascunho')
                         <a href="{{ route('trabalho.status', [$trabalho->id, 'avaliado']) }}" class="btn btn-secondary">

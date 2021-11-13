@@ -414,7 +414,7 @@
                                                                                         <a class="btn button-card-visualizar-evento" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
                                                                                     @else
                                                                                         {{-- Permitindo Coordenador ou Comissao Cientifica submeter trabalhos mesmo passada a data de submissao --}}
-                                                                                        @can('isCoordenadorOrComissao', $evento)
+                                                                                        @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                                                                                             @if (isset($modalidade->modelo_apresentacao))
                                                                                                 <div style="margin-top: 20px; margin-bottom: 10px;">
                                                                                                     <a href="{{ route('modalidade.modelos.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">

@@ -11,10 +11,10 @@ use App\Http\Controllers\Controller;
 class CriteriosController extends Controller
 {
     public function store(Request $request)
-    {   
+    {
         $modalidade = Modalidade::find($request->modalidade);
         $evento = $modalidade->evento;
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $validatedData = $request->validate([
             'nomeCriterioUpdate' => ['string'],
@@ -35,7 +35,7 @@ class CriteriosController extends Controller
                 //     'valor_real_opcao_'.$c  => ['string'],
                 //     'modalidade'            => ['string'],
                 // ]);
-                
+
                 $criterio = new Criterio();
                 $criterio->nome             = $request->input('nomeCriterio'.$c);
                 $criterio->peso             = $request->input('pesoCriterio'.$c);
@@ -63,7 +63,7 @@ class CriteriosController extends Controller
                 $c++;
             }
         }
-        
+
         return redirect()->back()->with(['mensagem' => 'Critério salvo para a modalidade ' . $modalidade->nome . '.']);
     }
 
@@ -72,13 +72,13 @@ class CriteriosController extends Controller
         $criterio = Criterio::find($id);
         $modalidade = $criterio->modalidade;
         $evento = $modalidade->evento;
-        $this->authorize('isCoordenadorOrComissao', $evento); 
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $validatedData = $request->validate([
             'nomeCriterioUpdate' => ['string'],
             'pesoCriterioUpdate' => ['integer'],
         ]);
-        
+
         $criterio->nome = $request->nomeCriterioUpdate;
         $criterio->peso = $request->pesoCriterioUpdate;
 
@@ -101,7 +101,7 @@ class CriteriosController extends Controller
 
     public function destroy($evento_id, $id) {
         $criterio = Criterio::find($id);
-        
+
         foreach ($criterio->opcoes as $opcao) {
             $opcao->delete();
         }

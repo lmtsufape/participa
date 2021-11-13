@@ -13,7 +13,7 @@
         </h2>
 
         <ul>
-            @can('isCoordenadorOrComissao', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                 <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}" style="text-decoration:none;">
                     <li>
                         <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
@@ -21,7 +21,7 @@
                 </a>
 
             @endcan
-            @can('isCoordenadorOrComissao', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
 
 
             <a id="trabalhos">
@@ -30,7 +30,7 @@
                 </li>
 
                 <div id="dropdownTrabalhos"  @if(request()->is('coord/evento/trabalhos*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
-                    @can('isCoordenadorOrComissao', $evento)
+                    @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                         <a id="submissoesTrabalhos" href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
                             <li>
                                 <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Definir Submissões</h5>
@@ -110,7 +110,7 @@
             </a>
 
             @endcan
-            @can('isCoordenadorOrComissao', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                 <a id="areas">
 
                     <li>
@@ -154,7 +154,7 @@
                     </div>
                 </a>
             @endcan
-            @can('isCoordenador', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
             <a id="comissao" >
                 <li>
                     <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão Cientifica</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -165,13 +165,13 @@
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar membro</h5>
                         </li>
                     </a>
-                    {{-- @can('isCoordenador', $evento) --}}
+                    @can('isCoordenador', $evento)
                     <a id="definirCoordComissao" href="{{ route('coord.definirCoordComissao', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/crown-solid.svg')}}" alt=""><h5> Definir Coordenador</h5>
                         </li>
                     </a>
-                    {{-- @endif --}}
+                    @endif
                     <a id="listarComissao" href="{{ route('coord.listarComissao', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Comissão</h5>
@@ -179,6 +179,8 @@
                     </a>
                 </div>
             </a>
+            @endcan
+            @can('isCoordenador', $evento)
             <a id="comissaoOrganizadora" >
                 <li>
                     <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão Organizadora</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -189,13 +191,13 @@
                             <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar membro</h5>
                         </li>
                     </a>
-                    {{-- @can('isCoordenador', $evento) --}}
+                    @can('isCoordenador', $evento)
                     <a id="definirCoordComissaoOrganizadora" href="{{route('coord.definir.coordComissaoOrganizadora', ['id' => $evento])}}">
                         <li>
                             <img src="{{asset('img/icons/crown-solid.svg')}}" alt=""><h5> Definir Coordenador</h5>
                         </li>
                     </a>
-                    {{-- @endif --}}
+                    @endif
                     <a id="listarComissaoOrganizadora" href="{{route('coord.listar.comissaoOrganizadora', ['id' => $evento])}}">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Comissão</h5>

@@ -58,7 +58,7 @@ class ModalidadeController extends Controller
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         // dd($request->eventoId);
         $validatedData = $request->validate([
@@ -237,7 +237,7 @@ class ModalidadeController extends Controller
 
         $modalidadeEdit = Modalidade::find($request->modalidadeEditId);
         $evento = $modalidadeEdit->evento;
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         // dd($request);
         $validatedData = $request->validate([
@@ -437,7 +437,7 @@ class ModalidadeController extends Controller
     {
         $modalidade = Modalidade::find($id);
         $evento = $modalidade->evento;
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         if (count($modalidade->revisores) > 0) {
             return redirect()->back()->withErrors(['excluirModalidade' => 'Não é possível excluir, existem revisores ligados a essa modalidade.']);

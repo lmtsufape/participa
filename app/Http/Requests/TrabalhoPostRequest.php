@@ -21,7 +21,7 @@ class TrabalhoPostRequest extends FormRequest
         $mytime = Carbon::now('America/Recife');
         $evento = Evento::find(request()->eventoId);
         if ($mytime > $modalidade->fimSubmissao) {
-            return $this->user()->can('isCoordenadorOrComissao', $evento);
+            return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
         }
         if ($evento->inicioSubmissao > $mytime) {
             if ($mytime >= $evento->fimSubmissao) {

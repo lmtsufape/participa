@@ -19,7 +19,7 @@ class AssinaturaController extends Controller
     public function index(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
         return view('coordenador.certificado.indexAssinatura', [
             'evento'=> $evento,
@@ -35,7 +35,7 @@ class AssinaturaController extends Controller
     public function create(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         return view('coordenador.certificado.createAssinatura', [
             'evento'=> $evento,
@@ -86,7 +86,7 @@ class AssinaturaController extends Controller
     public function edit(Request $request, $id)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOisCoordenadorOrCoordenadorDasComissoesrComissao', $evento);
         $assinatura = Assinatura::find($id);
         return view('coordenador.certificado.editAssinatura', [
             'assinatura' => $assinatura,
@@ -104,7 +104,7 @@ class AssinaturaController extends Controller
     public function update(Request $request, $id)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $validatedData = $request->validate([
             'nome'              => 'required|string|min:10|max:290',
             'cargo'              => 'required|string|max:290',

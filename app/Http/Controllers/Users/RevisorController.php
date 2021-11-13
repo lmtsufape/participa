@@ -96,7 +96,7 @@ class RevisorController extends Controller
 
         $usuario = User::where('email', $request->emailRevisor)->first();
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         // dd(count($usuario->revisor()->where('evento_id', $evento->id)->get()));
         if($usuario == null){
@@ -176,7 +176,7 @@ class RevisorController extends Controller
     {
       $user = User::find($request->editarRevisor);
       $evento = Evento::find($request->eventoId);
-      $this->authorize('isCoordenadorOrComissao', $evento);
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
 
       $validatedData = $request->validate([
@@ -250,7 +250,7 @@ class RevisorController extends Controller
     {
       $user = User::find($id);
       $evento = Evento::find($evento_id);
-      $this->authorize('isCoordenadorOrComissao', $evento);
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
       foreach ($user->revisor()->where('evento_id', '=', $evento->id)->get() as $revisor) {
         if (count($revisor->trabalhosAtribuidos) > 0) {
@@ -272,7 +272,7 @@ class RevisorController extends Controller
     {
         $user = User::find($id);
         $evento = Evento::find($evento_id);
-        $this->authorize('isCoordenadorOrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         if($user->usuarioTemp){
             $passwordTemporario = Str::random(8);
@@ -507,7 +507,7 @@ class RevisorController extends Controller
         $data = $request->all();
         $paragrafo_checkBox = $request->paragrafo_checkBox;
         $trabalho = Trabalho::find($data['trabalho_id']);
-        $this->authorize('isCoordenadorOrComissao', $trabalho->evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $trabalho->evento);
         if($request->arquivoAvaliacao != null){
             if($this->validarTipoDoArquivo($request->arquivoAvaliacao, $trabalho->modalidade)) {
                 return redirect()->back()->withErrors(['message' => 'Extensão de arquivo enviado é diferente do permitido.']);
