@@ -54,9 +54,10 @@
                     <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required>
                         <option value="">-- Selecione o tipo do certificado --</option>
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador']}}">Apresentador</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica']}}">Comissão Científica</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora']}}">Comissão Organizadora</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['expositor']}}">Expositor</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica']}}">Membro da comissão Científica</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['coordenador_comissao_cientifica']}}">Coordenador da Comissão Científica</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora']}}">Membro da comissão Organizadora</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['expositor']}}">Palestrante</option>
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['participante']}}">Participante</option>
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['revisor']}}">Revisor</option>
                     </select>
