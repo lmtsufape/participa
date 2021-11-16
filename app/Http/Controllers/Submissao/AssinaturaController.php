@@ -86,7 +86,7 @@ class AssinaturaController extends Controller
     public function edit(Request $request, $id)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOisCoordenadorOrCoordenadorDasComissoesrComissao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $assinatura = Assinatura::find($id);
         return view('coordenador.certificado.editAssinatura', [
             'assinatura' => $assinatura,
