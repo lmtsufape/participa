@@ -871,7 +871,7 @@ class EventoController extends Controller
 
       $user = Auth::user();
       $subject = "Evento Criado";
-      Mail::to($user->email)->send(new EventoCriado($user, $subject));
+      Mail::to($user->email)->send(new EventoCriado($user, $subject, $evento));
 
       $FormEvento = FormEvento::create([
         'eventoId' => $evento->id,

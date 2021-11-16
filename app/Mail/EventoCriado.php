@@ -21,10 +21,11 @@ class EventoCriado extends Mailable
      *
      * @return void
      */
-    public function __construct($user, $subject, $informacoes = "")
+    public function __construct($user, $subject, $evento, $informacoes = "")
     {
         $this->user = $user;
         $this->subject = $subject;
+        $this->evento = $evento;
         $this->informacoes = $informacoes;
 
     }
@@ -36,14 +37,15 @@ class EventoCriado extends Mailable
      */
     public function build()
     {
-        
+
         return $this->from('lmtsteste@gmail.com', 'Eventos - LMTS')
                     ->subject($this->subject)
-                    ->view('emails.emailEventoCriado')
+                    ->markdown('emails.emailEventoCriado')
                     ->with([
                         'user' => $this->user,
                         'info' => $this->informacoes,
-                        
+                        'evento' => $this->evento,
+
                     ]);
     }
 }

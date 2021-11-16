@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-	
-</head>
-<body>
-	<div class="row">
-		<div class="col-md 12">
+@component('mail::message')
+# Olá {{ $user->name }}!
 
-		</div>
-		<div class="col-md 12">
-			
-		</div>
-	</div>
-		
-	<h4> Evento criado com sucesso! {{$user->email}} </h4>
-</body>
-</html>
+
+
+O evento intitulado '{{$evento->titulo}}' foi criado com sucesso!
+
+@component('mail::button', ['url' => 'http://sistemas.ufape.edu.br/easy'])
+Acessar o sistema
+@endcomponent
+
+Atenciosamente,<br>
+{{ config('app.name') }}<br>
+Laboratório Multidisciplinar de Tecnologias Sociais<br>
+Universidade Federal do Agreste de Pernambuco
+@endcomponent
+
 

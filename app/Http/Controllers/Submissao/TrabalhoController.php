@@ -303,7 +303,7 @@ class TrabalhoController extends Controller
               }else{
                   $userCoautor = User::where('email', $value)->first();
                   Mail::to($userCoautor->email)
-                    ->send(new SubmissaoTrabalho($userCoautor, $subject));
+                    ->send(new SubmissaoTrabalho($userCoautor, $subject, $trabalho));
               }
           }
         }
