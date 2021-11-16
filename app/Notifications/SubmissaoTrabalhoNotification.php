@@ -47,6 +47,7 @@ class SubmissaoTrabalhoNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
+                    ->from('lmtsteste@gmail.com', 'Easy ')
                     ->subject($this->subject)
                     ->greeting("Olá {$this->user->name}!")
                     ->line("O sistema Easy recebeu o seu trabalho intitulado '{$this->trabalho->titulo }' com sucesso!")
