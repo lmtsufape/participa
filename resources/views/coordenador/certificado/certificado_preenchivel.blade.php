@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <style type="text/css">
         body{
-            background-image: url({{('storage/'.$certificado->caminho)}});
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: 100% 100%;
@@ -48,7 +47,7 @@
     </style>
 
 </head>
-    <body>
+    <body style="background-image: url({{asset('storage/'.$certificado->caminho)}});">
 
         <div class="container">
             @if ($cargo == 'Apresentador')
@@ -57,18 +56,23 @@
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Comissão Científica')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou <strong>da COMISSÃO CIENTÍFICA </strong>
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como membro da COMISSÃO CIENTÍFICA </strong>
+                <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
+
+                <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
+            @elseif($cargo == 'Coordenador comissão científica')
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como coordenador/a da COMISSÃO CIENTÍFICA </strong>
                 <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Comissão Organizadora')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou <strong>da COMISSÃO ORGANIZADORA </strong>
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como membro da COMISSÃO ORGANIZADORA </strong>
                 <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Revisor')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como <strong>avaliador(a)</strong>
-                de trabalhos na <strong>COMISSÃO CIENTÍFICA </strong><span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como avaliador/a de trabalhos na
+                 <strong>COMISSÃO CIENTÍFICA </strong><span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Participante')
@@ -76,8 +80,7 @@
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Expositor')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como expositor(a) da <strong>{{$trabalho->modalidade->nome}} -
-                {{$trabalho->area->nome}} </strong> <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
+                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como PALESTRANTE da <strong>Mesa de Diálogo</strong> <strong>"{{$trabalho->titulo}}"</strong>, no {{$trabalho->evento->formSubTrab->etiquetaareatrabalho}} {{$trabalho->area->nome}} <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @else

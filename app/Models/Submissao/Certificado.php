@@ -16,6 +16,7 @@ class Certificado extends Model
         'revisor'               => 4,
         'participante'          => 5,
         'expositor'             => 6,
+        'coordenador_comissao_cientifica' => 7,
     ];
 
     public function assinaturas()

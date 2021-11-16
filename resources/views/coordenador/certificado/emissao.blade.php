@@ -44,11 +44,13 @@
                         @foreach ($destinatarios as $destinatario)
                             @if ($destinatario == "Apresentadores")
                                 <option value="1">{{$destinatario}}</option>
-                            @elseif($destinatario == "Comissão científica")
+                            @elseif($destinatario == "Coordenador da comissão científica")
+                                <option value="7">{{$destinatario}}</option>
+                            @elseif($destinatario == "Membro da comissão científica")
                                 <option value="2">{{$destinatario}}</option>
-                            @elseif($destinatario == "Comissão organizadora")
+                            @elseif($destinatario == "Membro da comissão organizadora")
                                 <option value="3">{{$destinatario}}</option>
-                            @elseif($destinatario == "Expositor")
+                            @elseif($destinatario == "Palestrante")
                                 <option value="6">{{$destinatario}}</option>
                             @elseif($destinatario == "Revisores")
                                 <option value="4">{{$destinatario}}</option>
