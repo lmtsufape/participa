@@ -783,11 +783,25 @@ class TrabalhoController extends Controller
       /*
         O usuário só tera permissão para baixar o arquivo se for revisor do trabalho
         ou se for coordenador do evento, coordenador da comissão, se pertencer a comissão
-        do evento ou se for autor do trabalho.
+        do evento, se for autor do trabalho ou se for coautor.
       */
       $arquivo = $trabalho->arquivo()->where('versaoFinal', true)->first();
 
-      if ($trabalho->evento->coordenadorId == auth()->user()->id || $trabalho->evento->coordComissaoId == auth()->user()->id || $trabalho->autorId == auth()->user()->id) {
+      $comoCoautor = Coautor::where('autorId', auth()->user()->id)->first();
+      $trabalhosCoautor = collect();
+      if ($comoCoautor != null) {
+        $trabalhosC = $comoCoautor->trabalhos;
+        foreach ($trabalhosC as $trab) {
+          if ($trab->autorId != auth()->user()->id) {
+              $trabalhosCoautor->push($trab->id);
+          }
+        }
+      }
+
+      if ($trabalho->evento->coordenadorId == auth()->user()->id
+        || $trabalho->evento->coordComissaoId == auth()->user()->id
+        || $trabalho->autorId == auth()->user()->id
+        || $trabalhosCoautor->contains($trabalho->id)) {
         // dd($arquivo);
         if ($arquivo != null && Storage::disk()->exists($arquivo->nome)) {
           return Storage::download($arquivo->nome);
