@@ -44,9 +44,7 @@
 {{ $salutation }}
 @else
 @lang('Obrigado'),<br>
-{{ config('app.name') /*.' - Eventos Acadêmicos
-Laboratório Multidisciplinar de Tecnologias Sociais
-Universidade Federal do Agreste de Pernambuco'*/ }}
+Easy - Sistema de Gestão de Eventos Técnico-Científicos
 @endif
 
 {{-- Subcopy --}}

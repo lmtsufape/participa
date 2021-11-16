@@ -16,6 +16,5 @@ Senha temporária: {{$senha}}
 Fazer login
 @endcomponent
 
-Obrigado,<br>
-{{ config('app.name') }}
+@include('emails.footer')
 @endcomponent

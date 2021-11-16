@@ -14,6 +14,5 @@ Agradecemos de antemão pela sua disponibilidade para colaborar com a realizaç�
 Acessar site
 @endcomponent
 
-Obrigado,<br>
-{{ config('app.name') }}
+@include('emails.footer')
 @endcomponent

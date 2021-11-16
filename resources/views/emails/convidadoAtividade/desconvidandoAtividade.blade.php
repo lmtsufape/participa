@@ -9,7 +9,7 @@
         Informamos que vosse senhoria foi removido da atividade {{$convidado->atividade->titulo}} do evento {{$convidado->atividade->evento->nome}} como {{$convidado->funcao}}.
     </p>
     <p>
-        Att, Coordenador do evento.
+        @include('emails.footer')
     </p>
 </body>
 </html>
