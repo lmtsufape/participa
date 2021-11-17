@@ -663,31 +663,14 @@ class EventoController extends Controller
         $evento = $form->modalidade->evento;
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
-        $temRespostas = false;
         foreach($form->perguntas as $pergunta){
-            if($pergunta->respostas->first()->opcoes->count()){
-                //Resposta com Multipla escolha:
-            }elseif($pergunta->respostas->first()->paragrafo->count()){
-                foreach($pergunta->respostas as $resposta){
-                    if($resposta->revisor != null || $resposta->trabalho != null){
-                        $temRespostas = true;
-                        break;
-                    }
-                }
-            }elseif($temRespostas){
-                break;
-            }
-        }
-        //dd($temRespostas);
-
-        if(!$temRespostas){
-            $form->delete();
-            return redirect()->back()->with(['mensagem' => 'Formulário excluído com sucesso!']);
-        }else{
-            return redirect()->back()->withErrors(['excluirFormulario' => 'Não é possível excluir. Existem respostas submetidas ligadas a este formulário.']);
+          foreach ($pergunta->respostas as $resposta) {
+            $resposta->delete();
+          }
         }
 
-
+        $form->delete();
+        return redirect()->back()->with(['mensagem' => 'Formulário excluído com sucesso!']);
     }
 
     public function visualizarForm(Request $request)
