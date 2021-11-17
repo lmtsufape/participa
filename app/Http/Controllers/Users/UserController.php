@@ -17,6 +17,8 @@ use App\Models\Users\ComissaoEvento;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller
 {
@@ -100,6 +102,7 @@ class UserController extends Controller
             if ($request->passaporte != null &&  $request->cpf != null) {
                 $request->merge(['passaporte' => null]);
             }
+            // dd($request);
             $user = User::find($request->id);
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
@@ -115,9 +118,29 @@ class UserController extends Controller
                 'cidade' => 'required|string|max:255',
                 'uf' => 'required|string',
                 'cep' => 'required|string',
+
+                'senha_atual'       => 'nullable|string|min:8',
+                'password'          => 'nullable|string|min:8',
+                'password-confirm'  => 'nullable|string|min:8',
             ]);
 
             // User
+            
+            if ($request->senha_atual != null) {
+                if (!(Hash::check($request->senha_atual, $user->password))) {
+                    return redirect()->back()->withErrors(['senha_atual' => "A senha digitada não correspondente a senha cadastrada."])->withInput($validator);
+                }
+
+                if ($request->password != null && $request->input("password-confirm") != null) {
+                    if (!($request->password == $request->input("password-confirm"))) {
+                        return redirect()->back()->withErrors(['password' => "A confirmação não confere com a nova senha."])->withInput($validator);
+                    }
+                    
+                    $password = Hash::make($request->password);
+
+                    $user->password = $password;
+                }
+            }
 
             $user->name = $request->input('name');
             $user->cpf = $request->input('cpf');

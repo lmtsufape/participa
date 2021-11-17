@@ -95,14 +95,14 @@
                         <div class="row justify-content-center">
 
                             <div class="col-md-7">
-                            <label for="instituicao" class="col-form-label">{{ __('Instituição de Ensino') }}</label>
-                            <input id="instituicao" type="text" class="form-control @error('instituicao') is-invalid @enderror" name="instituicao" @if(old('instituicao') != null) value="{{ old('instituicao') }}" @else value="{{$user->instituicao}}" @endif required autocomplete="instituicao" autofocus>
+                                <label for="instituicao" class="col-form-label">{{ __('Instituição de Ensino') }}</label>
+                                <input id="instituicao" type="text" class="form-control @error('instituicao') is-invalid @enderror" name="instituicao" @if(old('instituicao') != null) value="{{ old('instituicao') }}" @else value="{{$user->instituicao}}" @endif required autocomplete="instituicao" autofocus>
 
-                            @error('instituicao')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                                @error('instituicao')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
 
                             <div class="col-md-5">
@@ -116,6 +116,40 @@
                                 @enderror
                             </div>
 
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="senha_atual" class="col-form-label">{{__('Senha atual')}}</label>
+                                <input type="password" class="form-control @error('senha_atual') is-invalid @enderror" name="senha_atual" id="senha_atual">
+
+                                @error('senha_atual')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                                <small>Para alterar a senha digite a atual e a nova</small>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="password" class="col-form-label">{{__('Nova senha')}}</label>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password">
+
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="password-confirm" class="col-form-label">{{__('Confirme a nova senha')}}</label>
+                                <input type="password" class="form-control @error('password-confirm') is-invalid @enderror" name="password-confirm" id="password-confirm">
+
+                                @error('password-confirm')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
 
                         @if($end != null)
