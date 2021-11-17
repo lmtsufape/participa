@@ -131,15 +131,21 @@ class UserController extends Controller
                     return redirect()->back()->withErrors(['senha_atual' => "A senha digitada não correspondente a senha cadastrada."])->withInput($validator);
                 }
 
-                if ($request->password != null && $request->input("password-confirm") != null) {
-                    if (!($request->password == $request->input("password-confirm"))) {
-                        return redirect()->back()->withErrors(['password' => "A confirmação não confere com a nova senha."])->withInput($validator);
-                    }
-                    
-                    $password = Hash::make($request->password);
-
-                    $user->password = $password;
+                if (!($request->password != null)) {
+                    return redirect()->back()->withErrors(['password' => "Digite a nova senha."])->withInput($validator);
                 }
+
+                if (!($request->input("password-confirm") != null)) {
+                    return redirect()->back()->withErrors(['password-confirm' => "Digite a confirmação da senha."])->withInput($validator);
+                }
+
+                if (!($request->password == $request->input("password-confirm"))) {
+                    return redirect()->back()->withErrors(['password' => "A confirmação não confere com a nova senha."])->withInput($validator);
+                }
+                
+                $password = Hash::make($request->password);
+
+                $user->password = $password;
             }
 
             $user->name = $request->input('name');
