@@ -144,7 +144,7 @@ class AtribuicaoController extends Controller
       ]);
 
       $evento = Evento::find($request->eventoId);
-      $this->authorize('isCoordenadorisCoordenadorOrCoordenadorDasComissoesOrComissao', $evento);
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
 
       $evento = Evento::find($request->eventoId);
