@@ -194,7 +194,7 @@ class AtribuicaoController extends Controller
       ]);
 
       $evento = Evento::find($request->eventoId);
-      $this->authorize('isCoordenador', $evento);
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
       $trabalho = Trabalho::find($request->trabalhoId);
       $trabalho->avaliado = 'processando';
@@ -224,7 +224,7 @@ class AtribuicaoController extends Controller
       ]);
 
       $evento = Evento::find($request->eventoId);
-      $this->authorize('isCoordenador', $evento);
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
       $revisor = Revisor::find($id);
       $revisor->correcoesEmAndamento -= 1;
