@@ -119,6 +119,7 @@ class UserController extends Controller
                 'uf' => 'required|string',
                 'cep' => 'required|string',
 
+                'email'             => 'required|string|email|max:255',
                 'senha_atual'       => 'nullable|string|min:8',
                 'password'          => 'nullable|string|min:8',
                 'password-confirm'  => 'nullable|string|min:8',
@@ -146,6 +147,16 @@ class UserController extends Controller
                 $password = Hash::make($request->password);
 
                 $user->password = $password;
+            }
+
+            if ($user->email != $request->email) {
+                $check_user_email = User::where('email', $request->email)->first();
+                if ($check_user_email == null) {
+                    $user->email = $request->email;
+                    $user->email_verified_at = null;
+                } else {
+                    return redirect()->back()->withErrors(['email' => "Já existe uma conta registrada com esse e-mail."])->withInput($validator);
+                }
             }
 
             $user->name = $request->input('name');
