@@ -56,11 +56,11 @@
                     com o trabalho "NOME DO TRABALHO"</strong><span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
                     @break
                 @case(\App\Models\Submissao\Certificado::TIPO_ENUM['coordenador_comissao_cientifica'])
-                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como membro da <strong>COMISSÃO CIENTÍFICA </strong>
+                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como coordenador/a da <strong>COMISSÃO CIENTÍFICA </strong>
                     <span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
                     @break
                 @case(\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica'])
-                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como coordenador/a da <strong>COMISSÃO CIENTÍFICA </strong>
+                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como membro da <strong>COMISSÃO CIENTÍFICA </strong>
                     <span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
                     @break
                 @case(\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora'])
