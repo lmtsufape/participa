@@ -86,7 +86,7 @@
 
             <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
         </div>
-        <div style="position: absolute; bottom: 10%; left:50%; margin-left:-180px;">
+        <div style="position: absolute; bottom: 10%; left:50%; margin-left:-205px;">
             <table>
                 <tbody>
                     <tr>
