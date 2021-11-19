@@ -11,11 +11,11 @@
             background-size: 100% 100%;
         }
         @page {
-            margin: 0px 0px 0px 0px;
+            margin: 2cm 2cm 0px 2cm;
         }
         .container {
             text-align: center;
-            margin: 0px 60px 0px 60px;
+            margin: 0px 0px 0px 0px;
         }
         .certificado-texto {
             color: rgb(15, 3, 85);
@@ -51,46 +51,46 @@
 
         <div class="container">
             @if ($cargo == 'Apresentador')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> apresentou <strong>{{$trabalho->modalidade->nome}} - {{$trabalho->area->nome}},</strong>
-                com o trabalho <strong>{{$trabalho->titulo}}, </strong><span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
+                <p class="texto" >Certificamos que <span style="text-transform:uppercase"><strong>{{$user->name}}</strong></span> apresentou {{$trabalho->modalidade->nome}} - {{$trabalho->evento->formSubTrab->etiquetaareatrabalho}}:<strong> {{$trabalho->area->nome}},
+                com o trabalho <span style="text-transform:uppercase"><strong>"{{$trabalho->titulo}}"</strong></span></strong></strong><span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Comissão Científica')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como membro da COMISSÃO CIENTÍFICA </strong>
+                <p class="texto" >Certificamos que <span style="text-transform:uppercase"><strong>{{$user->name}}</strong></span> participou como membro da </strong>COMISSÃO CIENTÍFICA </strong>
                 <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Coordenador comissão científica')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como coordenador/a da COMISSÃO CIENTÍFICA </strong>
+                <p class="texto" >Certificamos que <span style="text-transform:uppercase"><strong>{{$user->name}}</strong></span> participou como coordenador/a da <strong>COMISSÃO CIENTÍFICA </strong>
                 <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Comissão Organizadora')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como membro da COMISSÃO ORGANIZADORA </strong>
+                <p class="texto" >Certificamos que <span style="text-transform:uppercase"><strong>{{$user->name}}</strong></span> participou como membro da </strong>COMISSÃO ORGANIZADORA </strong>
                 <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Revisor')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como avaliador/a de trabalhos na
+                <p class="texto" >Certificamos que <span style="text-transform:uppercase"><strong>{{$user->name}}</strong></span> participou como avaliador/a de trabalhos na
                  <strong>COMISSÃO CIENTÍFICA </strong><span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Participante')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
+                <p class="texto" >Certificamos que <span style="text-transform:uppercase"><strong>{{$user->name}}</strong></span> participou <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Expositor')
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong> participou como PALESTRANTE da <strong>Mesa de Diálogo</strong> <strong>"{{$trabalho->titulo}}"</strong>, no {{$trabalho->evento->formSubTrab->etiquetaareatrabalho}} {{$trabalho->area->nome}} <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
+                <p class="texto" >Certificamos que <span style="text-transform:uppercase"><strong>{{$user->name}}</strong></span> participou como PALESTRANTE da <strong>Mesa de Diálogo</strong> <strong>"{{$trabalho->titulo}}"</strong>, no {{$trabalho->evento->formSubTrab->etiquetaareatrabalho}}: {{$trabalho->area->nome}} <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @else
-                <p class="texto" >Certificamos que <strong>{{$user->name}}</strong>  participou do evento  <strong>{{$evento->nome}}</strong>,
+                <p class="texto" >Certificamos que <span style="text-transform:uppercase"><strong>{{$user->name}}</strong></span> participou do evento  <strong>{{$evento->nome}}</strong>,
                 como  <strong>{{$cargo}}</strong> do dia  <strong>{{date('d/m/Y',strtotime($evento->dataInicio))}}</strong> ao dia <strong>{{date('d/m/Y',strtotime($evento->dataFim))}}.</strong></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @endif
         </div>
-        <div style="position: absolute; bottom: 10%; left:50%; margin-left:-180px;">
+        <div style="position: absolute; bottom: 10%; left:50%; margin-left:-205px;">
             <table>
                 <tbody>
                     <tr>

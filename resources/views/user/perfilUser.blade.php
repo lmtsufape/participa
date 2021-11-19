@@ -119,6 +119,19 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-sm-6">
+                                <label for="email" class="col-form-label">{{ __('E-Mail') }}</label>
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email',$user->email)}}"  autocomplete="email" required>
+
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-sm-4">
                                 <label for="senha_atual" class="col-form-label">{{__('Senha atual')}}</label>
                                 <input type="password" class="form-control @error('senha_atual') is-invalid @enderror" name="senha_atual" id="senha_atual">
