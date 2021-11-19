@@ -347,40 +347,6 @@
             @endcan
         </ul>
     </div>
-
-    <!-- Modal para adicionar o pdf de arquivo adicional -->
-    <div class="modal fade" id="modalAdicionarPdf" tabindex="-1" role="dialog" aria-labelledby="modalAdicionarPdfLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #114048ff; color: white;">
-            <h5 class="modal-title" id="modalAdicionarPdfLabel">Adicionar PDF de arquivo adicional</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <form method="POST" action="{{ route('coord.evento.pdf.adicional', ['id' => $evento->id]) }}" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row form-group">
-                            <div class="col-sm-12">
-                                <label for="pdf_arquivo">Arquivo adicional:</label>
-                                <input type="file" name="pdf_arquivo" id="pdf_arquivo" >
-                                <br>
-                                <small>Para mudar o arquivo presente enviar um novo*</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                </div>
-            </form>
-        </div>
-        </div>
-    </div>
-
 </div>
 @endsection
 @section('content')
