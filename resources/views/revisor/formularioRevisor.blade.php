@@ -52,14 +52,19 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <p><b>{{$pergunta->pergunta}}</b></p>
-                                        {{-- @if(!isset($pergunta->respostas->opcoes))
-                                            Resposta com Multipla escolha:
-                                        @else --}}
-                                                <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
-                                                <p><b>Resposta: </b></p>
-                                                <textarea type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]" required></textarea>
-
-                                        {{-- @endif --}}
+                                        <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
+                                        @if($pergunta->respostas->first()->opcoes->count())
+                                            @foreach ($pergunta->respostas->first()->opcoes as $opcao)
+                                            <div class="form-check">
+                                                <input class="form-check-input" required type="radio" name="{{$pergunta->id}}" value="{{$opcao->titulo}}" id="{{$opcao->id}}">
+                                                <label class="form-check-label" for="{{$opcao->id}}">
+                                                  {{$opcao->titulo}}
+                                                </label>
+                                              </div>
+                                            @endforeach
+                                        @else
+                                            <textarea type="text" style="margin-bottom:10px"  class="form-control " name="{{$pergunta->id}}" required></textarea>
+                                        @endif
                                     </div>
                                 </div>
                             @endforeach

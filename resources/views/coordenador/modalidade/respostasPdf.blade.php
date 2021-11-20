@@ -734,6 +734,28 @@
                                 <p>Pergunta: {{ $pergunta->pergunta }}</p>
                                 @if ($pergunta->respostas->first()->opcoes->count())
                                     Resposta com Multipla escolha:
+                                    <table class="table table-striped table-dark">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Revisor</th>
+                                                <th scope="col">Trabalho</th>
+                                                <th scope="col">Resposta</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($pergunta->respostas as $resposta)
+                                                @if ($resposta->revisor != null || $resposta->trabalho != null)
+                                                    <tr>
+                                                        <td>{{ $resposta->revisor->user->name }}</td>
+                                                        <td>{{ $resposta->trabalho->titulo }} </td>
+                                                        <td>{{ $resposta->opcoes[0]->titulo }}</td>
+                                                    </tr>
+                                                @endif
+                                            @empty
+                                                <p>Sem respostas</p>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
                                 @elseif($pergunta->respostas->first()->paragrafo->count() )
                                     {{-- {{dd($pergunta->respostas->first())}} --}}
                                     <p>Resposta com parágrafo: </p>

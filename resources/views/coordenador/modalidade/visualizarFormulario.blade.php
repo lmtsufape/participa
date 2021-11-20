@@ -46,12 +46,30 @@
                         <div class="card-body">
                             <p>Pergunta: {{$pergunta->pergunta}}</p>
                             @if($pergunta->respostas->first()->opcoes->count())
-                                Resposta com Multipla escolha:
-                            @elseif($pergunta->respostas->first()->paragrafo->count() )
-
+                                <p>Resposta com Multipla escolha:</p>
+                                @foreach ($pergunta->respostas->first()->opcoes as $opcao)
+                                    <div class="col-md-10 itemRadio">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <input type="checkbox" disabled>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" value=" {{$opcao->titulo}}" disabled>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @elseif($pergunta->respostas->first()->paragrafo)
                                 <p>Resposta com parágrafo: </p>
-
+                                <div class="col-md-10">
+                                    <input type="text" style="margin-bottom:10px" disabled='true' class="form-control">
+                                </div>
                             @endif
+                            <div class="col-md-5">
+                                <div class="col-form-label text-md-left">
+                                    <small>Visível para o autor? </small><input disabled type="checkbox" @if ($pergunta->visibilidade) checked @endif>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -155,74 +173,81 @@
                                                     @enderror
                                                 </div>
 
-                                                @foreach ($form->perguntas as $pergunta)
-                                                    <div class="col-sm-12">
-                                                        <div id="coautores" class="flexContainer " >
-                                                            <div class="item card" style="order:1">
-                                                                <div class="row card-body">
-                                                                    <div class="col-sm-12">
-                                                                        <label>Pergunta</label>
-
-                                                                        <input id="perguntaFormEdit" type="text" class="form-control @error('pergunta'.$pergunta->id) is-invalid @enderror" name="pergunta{{$pergunta->id}}" value="@if(old('pergunta'.$pergunta->id)!=null){{old('pergunta'.$pergunta->id)}}@else{{$pergunta->pergunta}}@endif" required autocomplete="titulos" autofocus>
-                                                                        @error('pergunta'.$pergunta->id)
-                                                                            <span class="invalid-feedback" role="alert">
-                                                                                <strong>{{ $message }}</strong>
-                                                                            </span>
-                                                                        @enderror
-                                                                    </div>
-                                                                    <div class="col-sm-8" >
-                                                                        <label>Resposta</label>
-                                                                        <div class="row" id="row1">
+                                                @foreach ($form->perguntas as $index => $pergunta)
+                                                <div class="col-md-12">
+                                                    <div id="coautores" class="flexContainer">
+                                                        <div class="item card" style="order:{{$index}}">
+                                                            <div class="row card-body">
+                                                                <div class="col-sm-12">
+                                                                    <label>Pergunta</label>
+                                                                    <input type="text" syle="margin-bottom:10px" value="{{old('pergunta['.$index.']', $pergunta->pergunta)}}"  class="form-control " name="pergunta[]" required>
+                                                                </div>
+                                                                <div class="col-sm-12" >
+                                                                    <label>Resposta</label>
+                                                                    <div class="row" id="row{{$index}}">
+                                                                        @if ($pergunta->respostas->first()->opcoes->count())
+                                                                        <div class="col-sm-12 opcoes itemRadio">
+                                                                            @foreach ($pergunta->respostas->first()->opcoes as $indice => $opcao)
+                                                                            <div class="opcao col-sm-12">
+                                                                                <div class="row">
+                                                                                    <div class="input-group pl-0 col-sm-10 mb-3">
+                                                                                        <div class="input-group-prepend">
+                                                                                            <div class="input-group-text">
+                                                                                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control">
+                                                                                    </div>
+                                                                                    <div class="col-sm-1 mt-2">
+                                                                                        <a href="#" onclick="addRadioToResposta(event)"><i class="fas fa-plus"></i></a>
+                                                                                    </div>
+                                                                                    <div class="col-sm-1 mt-2">
+                                                                                        <a href="#" class="radioDelete" onclick="removerOpcao(event)"><i class="fas fa-trash-alt"></i></a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            @endforeach
+                                                                        </div>
+                                                                        @elseif ($pergunta->respostas->first()->paragrafo)
                                                                             <div class="col-md-12">
                                                                                 <input type="text" style="margin-bottom:10px" disabled='true' class="form-control " name="resposta[]">
                                                                             </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="col-sm-4">
-                                                                        @if($pergunta->respostas->first()->opcoes->count())
-                                                                            {{-- {{dd($pergunta->respostas->first()->opcoes)}} --}}
-                                                                            {{--Resposta com Multipla escolha:--}}
-                                                                        @elseif($pergunta->respostas->first()->paragrafo->count() )
-                                                                            {{--<p>Resposta com paragrafo: </p>--}}
-
                                                                         @endif
                                                                     </div>
-
-
-                                                                    {{-- <div class="col-sm-4">
-                                                                        <div class="form-group">
-                                                                            <label for="exampleFormControlSelect1">Tipo</label>
-                                                                            <select onchange="escolha(this.value)" name="tipo[]" class="form-control" id="FormControlSelect">
-                                                                                <option value="paragrafo">Parágrafo</option>
-                                                                                <option value="checkbox">Múltipla escolha</option>
-                                                                                 <option value="radio">Seleção</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div> --}}
-                                                                    <div class="col-md-5">
-                                                                        <div class="col-form-label text-md-left">
-                                                                            <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="pergunta_checkBox[]" value="{{$pergunta->id}}" {{  ($pergunta->visibilidade == true ? ' checked' : '') }}>
-                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="col-form-label text-md-left">
+                                                                        <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="checkboxVisibilidade[]" value="0">
                                                                     </div>
-                                                                    <div class="col-md-5">
-                                                                        <div class="col-sm-7">
-                                                                            {{-- <a href="#" class="delete pr-2 mr-2">
-                                                                                <i class="fas fa-trash-alt fa-2x"></i>
-                                                                            </a> --}}
-                                                                            <a href="#" onclick="myFunction(event)">
-                                                                            <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                                                                            </a>
-                                                                            <a href="#" onclick="myFunction(event)">
-                                                                            <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                                                                            </a>
-
-                                                                        </div>
+                                                                </div>
+                                                                <div class="col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label for="exampleFormControlSelect1">Tipo</label>
+                                                                        <select onchange="escolha(this.value, event)" name="tipo[]" class="form-control" id="FormControlSelect">
+                                                                            <option @if($pergunta->respostas->first()->opcoes->count()) selected @endif value="radio">Multipla escolha</option>
+                                                                            <option @if($pergunta->respostas->first()->paragrafo) selected @endif value="paragrafo">Parágrafo</option>
+                                                                            {{-- <option value="radio">Seleção</option> --}}
+                                                                        </select>
                                                                     </div>
+                                                                </div>
+                                                                <div class="col-md-5"></div>
+                                                                <div class="col-sm-7">
+                                                                    <a href="#" class="delete pr-2 mr-2">
+                                                                        <i class="fas fa-trash-alt fa-2x"></i>
+                                                                    </a>
+                                                                    <a href="#" onclick="moverElementoAF(event)">
+                                                                        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                                                    </a>
+                                                                    <a href="#" onclick="moverElementoAF(event)">
+                                                                        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                                                    </a>
+
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <a href="#" onclick="addLinha(event)" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">Adicionar pergunta</a>
+                                                </div>
                                                 @endforeach
                                             </div>{{-- end row--}}
 

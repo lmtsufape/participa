@@ -566,37 +566,50 @@ class EventoController extends Controller
           'titulo' => $data['tituloForm']
       ]);
 
-      foreach ($data['pergunta'] as $key => $value) {
-        if($request->checkboxVisibilidade != null && in_array($key, $request->checkboxVisibilidade)){
-            $pergunta = $form->perguntas()->create([
-                'pergunta' => $value,
-                'visibilidade' => true,
-            ]);
-        }else{
-            $pergunta = $form->perguntas()->create([
-                'pergunta' => $value,
-                'visibilidade' => false,
-            ]);
+      $keys = array_keys($data['tituloRadio']);
+      $radioCont = 0;
+      $checkRqst = $request->checkboxVisibilidade;
+      $i = 0;
+      $checks = [];
+      while ($i < count($checkRqst)) {
+        if($i + 1 < count($checkRqst)) {
+          if ($checkRqst[$i] == "false" && $checkRqst[$i+1] == "false") {
+            array_push($checks, false);
+            $i++;
+          } else {
+            array_push($checks, true);
+            $i+=2;
+          }
+        } else {
+          array_push($checks, false);
+          break;
         }
+      }
+      foreach ($data['pergunta'] as $index => $value) {
+        $pergunta = $form->perguntas()->create([
+            'pergunta' => $value,
+            'visibilidade' => $checks[$index],
+        ]);
 
         $resposta = new Resposta();
         $resposta->pergunta_id = $pergunta->id;
         $resposta->save();
 
-        if($data['tipo'][$key] == 'paragrafo'){
+        if($data['tipo'][$index] == 'paragrafo'){
           $paragrafo = new Paragrafo();
           $resposta->paragrafo()->save($paragrafo);
 
-        }else if($data['tipo'][$key] == 'checkbox'){
-          $resposta = $resposta->opcoes()->create([
-            'titulo' => "titulo do checkbox",
-            'tipo' => 'checkbox',
-          ]);
-
+        }else if($data['tipo'][$index] == 'radio'){
+          foreach ($data['tituloRadio'][$keys[$radioCont++]] as $titulo) {
+            $resposta->opcoes()->create([
+              'titulo' => $titulo,
+              'tipo' => 'radio',
+            ]);
+          }
         }
       }
 
-      return view('coordenador.modalidade.atribuirFormulario', compact('evento','modalidade'));
+      return view('coordenador.modalidade.atribuirFormulario', compact('evento','modalidade'))->with('message', 'Formulário cadastrado com sucesso');
 
     }
 
@@ -644,12 +657,13 @@ class EventoController extends Controller
                   $paragrafo = new Paragrafo();
                   $resposta->paragrafo()->save($paragrafo);
 
-                }else if($data['tipo'][$key] == 'checkbox'){
-                  $resposta = $resposta->opcoes()->create([
-                    'titulo' => "titulo do checkbox",
-                    'tipo' => 'checkbox',
-                  ]);
-
+                }else if($data['tipo'][$key] == 'radio'){
+                    foreach ($data['tituloRadio']['row'.$key] as $titulo) {
+                        $resposta->opcoes()->create([
+                          'titulo' => $titulo,
+                          'tipo' => 'radio',
+                        ]);
+                    }
                 }
             }
         }
@@ -765,8 +779,14 @@ class EventoController extends Controller
       $trabalho = Trabalho::find($request->trabalhoId);
       $revisor = Revisor::find($request->revisorId);
       $revisorUser = User::find($revisor->user_id);
-
-      return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor'));
+      $respostas = collect();
+      foreach ($modalidade->forms as $form) {
+        foreach ($form->perguntas as $pergunta) {
+          $respostas->push($pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first());
+        }
+      }
+    //   dd($respostas, $trabalho->id, $revisor->id, $modalidade->id);
+      return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'respostas'));
 
     }
 

@@ -214,14 +214,19 @@ class UserController extends Controller
     public function visualizarParecer(Request $request)
     {
 
+        $trabalho = Trabalho::find($request->trabalhoId);
+        $this->authorize('permissaoVisualizarParecer', $trabalho);
         $evento = Evento::find($request->eventoId);
         $modalidade = Modalidade::find($request->modalidadeId);
-        $trabalho = Trabalho::find($request->trabalhoId);
         $revisor = Revisor::find($request->revisorId);
         $revisorUser = User::find($revisor->user_id);
-        $this->authorize('permissaoVisualizarParecer', $trabalho);
-
-        return view('user.visualizarParecer', compact('evento', 'modalidade', 'trabalho', 'revisorUser'));
+        $respostas = collect();
+        foreach ($modalidade->forms as $form) {
+          foreach ($form->perguntas as $pergunta) {
+            $respostas->push($pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first());
+          }
+        }
+        return view('user.visualizarParecer', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'respostas'));
 
     }
 

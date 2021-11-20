@@ -426,11 +426,13 @@ class RevisorController extends Controller
 
     public function salvarRespostas(Request $request)
     {
+        // dd($request);
       $data = $request->all();
       // $comment = $post->comments()->create([
       //     'message' => 'A new comment.',
       // ]);
       $trabalho = Trabalho::find($data['trabalho_id']);
+      $evento_id = $trabalho->eventoId;
       if(isset($request->arquivo)){
 
         if($this->validarTipoDoArquivo($request->arquivo, $trabalho->modalidade)) {
@@ -444,32 +446,33 @@ class RevisorController extends Controller
 
       foreach ($data['pergunta_id'] as $key => $value) {
         $pergunta = Pergunta::find($value);
+        $resposta =  $pergunta->respostas()->create([
+          'revisor_id' => $data['revisor_id'],
+          'trabalho_id' => $data['trabalho_id']
+        ]);
         if($pergunta->respostas->first()->paragrafo != null){
-          $resposta =  $pergunta->respostas()->create([
-            'revisor_id' => $data['revisor_id'],
-            'trabalho_id' => $data['trabalho_id']
-          ]);
           if($pergunta->visibilidade == true){
                 $resposta->paragrafo()->create([
-                    'resposta' => $data['resposta'][$key],
+                    'resposta' => $data[$value],
                     'visibilidade' => true,
                 ]);
           }else{
                 $resposta->paragrafo()->create([
-                    'resposta' => $data['resposta'][$key],
+                    'resposta' => $data[$value],
                     'visibilidade' => false,
                 ]);
           }
 
-          $evento_id = $trabalho->eventoId;
-          $trabalho->avaliado = "Avaliado";
-          $trabalho->save();
-
         }else if($pergunta->respostas->first()->opcoes->count()){
-          $pergunta;
-
+            $resposta->opcoes()->create([
+                'titulo' => $data[$value],
+                'check' => true,
+                'tipo' => 'radio',
+            ]);
         }
       }
+      $trabalho->avaliado = "Avaliado";
+      $trabalho->save();
       $evento = Evento::find($evento_id);
       $revisores = Revisor::where([['user_id', auth()->user()->id],['evento_id', $evento_id]])->get();
       $trabalhos = collect();
@@ -505,6 +508,7 @@ class RevisorController extends Controller
     {
 
         $data = $request->all();
+        // dd($data);
         $paragrafo_checkBox = $request->paragrafo_checkBox;
         $trabalho = Trabalho::find($data['trabalho_id']);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $trabalho->evento);
@@ -517,11 +521,13 @@ class RevisorController extends Controller
                 'arquivoAvaliacao' => ['required', 'file', 'max:2048'],
             ]);
         }
+        $opcaoCont = 0;
+        $paraCont = 0;
         if($request->pergunta_id != null){
             foreach ($data['pergunta_id'] as $key => $value) {
                 $pergunta = Pergunta::find($value);
-                if($pergunta->respostas->first()->paragrafo->count()){
-                    $resposta = Paragrafo::find($data['resposta_paragrafo_id'][$key]);
+                if($pergunta->respostas->first()->paragrafo != null){
+                    $resposta = Paragrafo::find($data['resposta_paragrafo_id'][$paraCont++]);
                     $resposta->resposta = $data['resposta'.$resposta->id];
                     if($paragrafo_checkBox != null && in_array($resposta->id, $paragrafo_checkBox)){
                         $resposta->visibilidade = true;
@@ -529,6 +535,10 @@ class RevisorController extends Controller
                         $resposta->visibilidade = false;
                     }
                     $resposta->save();
+                } elseif ($pergunta->respostas->first()->opcoes->count()) {
+                    $opcao = Opcao::find($data["opcao_id"][$opcaoCont++]);
+                    $opcao->titulo = $data[$value];
+                    $opcao->save();
                 }
             }
         }

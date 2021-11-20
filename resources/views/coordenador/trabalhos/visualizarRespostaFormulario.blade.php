@@ -44,22 +44,33 @@
                 <h5 class="card-title">{{$form->titulo}}</h5>
 
                 <p class="card-text">
-
-                    @foreach ($form->perguntas as $pergunta)
+                    @foreach ($form->perguntas as $index => $pergunta)
+                    <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
                         <div class="card">
                             <div class="card-body">
                                 <p><strong>{{$pergunta->pergunta}}</strong> <span><small style="float: right">Pergunta visível para o autor? <input type="checkbox" name="pergunta_checkBox[]" value="{{$pergunta->id}}" {{  ($pergunta->visibilidade == true ? ' checked' : '') }} disabled></small></span>
                                 </p>
 
                                 @if($pergunta->respostas->first()->opcoes->count())
-                                    Resposta com Multipla escolha:
-                                @elseif($pergunta->respostas->first()->paragrafo->count() )
+                                    @foreach ($pergunta->respostas->first()->opcoes as $opcao)
+                                    <div class="form-check">
+                                        @if ($respostas[$index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo))
+                                            <input class="form-check-input" type="radio" name="{{$pergunta->id}}" checked value="{{$respostas[$index]->opcoes[0]->titulo}}" id="{{$opcao->id}}">
+                                            <input type="hidden" name="opcao_id[]" value="{{$respostas[$index]->opcoes[0]->id}}">
+                                        @else
+                                            <input class="form-check-input" type="radio" name="{{$pergunta->id}}" value="{{$opcao->titulo}}" id="{{$opcao->id}}">
+                                        @endif
+                                        <label class="form-check-label" for="{{$opcao->id}}">
+                                            {{$opcao->titulo}}
+                                        </label>
+                                    </div>
+                                    @endforeach
+                                @elseif($pergunta->respostas->first()->paragrafo != null)
                                     @forelse ($pergunta->respostas as $resposta)
                                         @if($resposta->revisor != null || $resposta->trabalho != null)
                                             @if($resposta->revisor->user_id == $revisorUser->id && $resposta->trabalho->id == $trabalho->id)
 
                                                 <p class="card-text">
-                                                    <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
                                                     <input type="hidden" name="resposta_paragrafo_id[]" value="{{$resposta->paragrafo->id}}">
                                                     <textarea id="resposta{{$resposta->paragrafo->id}}" type="text" class="form-control @error('resposta'.$resposta->paragrafo->id) is-invalid @enderror" name="resposta{{$resposta->paragrafo->id}}" required>@if(old('resposta'.$resposta->paragrafo->id)!=null){{old('resposta'.$resposta->paragrafo->id)}}@else{{($resposta->paragrafo->resposta)}}@endif</textarea>
                                                 </p>
