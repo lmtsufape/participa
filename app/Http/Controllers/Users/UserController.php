@@ -42,8 +42,8 @@ class UserController extends Controller
 
             $validator = $request->validate([
                 'name' => 'bail|required|string|max:255',
-                'cpf'           => ($request->passaporte ==null ? ['bail','required','cpf','unique:users'] : 'nullable'),
-                'passaporte'    => ($request->cpf ==null ? 'bail|required|max:10|unique:users' : 'nullable'),
+                'cpf'           => ($request->passaporte ==null ? ['bail','required','cpf'] : 'nullable'),
+                'passaporte'    => ($request->cpf ==null ? 'bail|required|max:10' : 'nullable'),
                 'celular' => 'required|string|max:16',
                 'instituicao' => 'required|string| max:255',
                 'especialidade' => 'nullable|string',
@@ -106,8 +106,8 @@ class UserController extends Controller
             $user = User::find($request->id);
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
-                'cpf'           => ($request->passaporte  ==null ? ['bail','required','cpf',Rule::unique('users')->ignore($user->id)] : 'nullable'),
-                'passaporte'    => ($request->cpf == null && $request->cpf ==null? ['bail','required','max:10',Rule::unique('users')->ignore($user->id)] : ['nullable']),
+                'cpf'           => ($request->passaporte  ==null ? ['bail','required','cpf'] : 'nullable'),
+                'passaporte'    => ($request->cpf == null && $request->cpf ==null? ['bail','required','max:10'] : ['nullable']),
                 'celular' => 'required|string|max:16',
                 'instituicao' => 'required|string| max:255',
                 // 'especProfissional' => 'nullable|string',
@@ -126,7 +126,7 @@ class UserController extends Controller
             ]);
 
             // User
-            
+
             if ($request->senha_atual != null) {
                 if (!(Hash::check($request->senha_atual, $user->password))) {
                     return redirect()->back()->withErrors(['senha_atual' => "A senha digitada não correspondente a senha cadastrada."])->withInput($validator);
@@ -143,7 +143,7 @@ class UserController extends Controller
                 if (!($request->password == $request->input("password-confirm"))) {
                     return redirect()->back()->withErrors(['password' => "A confirmação não confere com a nova senha."])->withInput($validator);
                 }
-                
+
                 $password = Hash::make($request->password);
 
                 $user->password = $password;

@@ -130,8 +130,8 @@ class AdministradorController extends Controller
         if($user->usuarioTemp == true){
             $validator = $request->validate([
                 'name' => 'bail|required|string|max:255',
-                'cpf'           => ($request->passaporte ==null ? ['bail','required','cpf','unique:users'] : 'nullable'),
-                'passaporte'    => ($request->cpf ==null ? 'bail|required|max:10|unique:users' : 'nullable'),
+                'cpf'           => ($request->passaporte ==null ? ['bail','required','cpf'] : 'nullable'),
+                'passaporte'    => ($request->cpf ==null ? 'bail|required|max:10' : 'nullable'),
                 'celular' => 'required|string|max:16',
                 'instituicao' => 'required|string| max:255',
                 'especialidade' => 'nullable|string',
