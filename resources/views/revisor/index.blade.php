@@ -277,6 +277,67 @@
         @endforeach
     @endforeach
 
+
+    <!-- Modal Resumo-->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="resumoModalLongTitle"></h5>
+            </div>
+            <div class="modal-body" name="resumoTrabalhoModal" id="resumoTrabalhoModal">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
 </div>
 
+<input type="hidden" name="resumoModalAjax" value="1" id="resumoModalAjax">
+@endsection
+
+@section('javascript')
+  @if (old('avaliar_trabalho_id') != null)
+  <script>
+      $(document).ready(function() {
+          $('#modalAvaliarTrabalho{{old('avaliar_trabalho_id')}}').modal('show');
+      });
+  </script>
+  @endif
+
+  <script type="text/javascript" >
+      function resumoModal(x){
+        console.log(x);
+        document.getElementById('resumoModalAjax').value = x;
+      }
+
+      $(function(){
+        $('.resumoTrabalho').click(function(e){
+          e.preventDefault();
+          $.ajaxSetup({
+              headers: {
+                  // 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                  'Content-Type': 'application/json',
+                  'X-Requested-With': 'XMLHttpRequest'
+              }
+          });
+
+          jQuery.ajax({
+            url: "{{ route('trabalhoResumo') }}",
+            method: 'get',
+            data: {
+              trabalhoId: $('#resumoModalAjax').val()
+            },
+            success: function(result){
+              console.log(result.resumo);
+              $('#resumoModalLongTitle').html('Resumo de ' + result.titulo);
+              $('#resumoTrabalhoModal').html(result.resumo);
+          }});
+        });
+      });
+
+  </script>
 @endsection
