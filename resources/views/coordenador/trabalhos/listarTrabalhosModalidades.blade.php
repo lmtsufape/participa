@@ -310,7 +310,6 @@
           @else
             <div class="row justify-content-center">
               <div class="col-sm-12">
-                <h5>0</h5>
               </div>
           @endif
           @foreach ($trabalho->atribuicoes as $i => $revisor)
