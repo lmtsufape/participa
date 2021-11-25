@@ -68,7 +68,7 @@
                                 @elseif($pergunta->respostas->first()->paragrafo != null)
                                     @forelse ($pergunta->respostas as $resposta)
                                         @if($resposta->revisor != null || $resposta->trabalho != null)
-                                            @if($resposta->revisor->user_id == $revisorUser->id && $resposta->trabalho->id == $trabalho->id)
+                                            @if($resposta->revisor->user_id == $revisorUser->id && $resposta->trabalho->id == $trabalho->id && $resposta->paragrafo != null)
 
                                                 <p class="card-text">
                                                     <input type="hidden" name="resposta_paragrafo_id[]" value="{{$resposta->paragrafo->id}}">
