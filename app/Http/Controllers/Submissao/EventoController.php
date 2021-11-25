@@ -346,6 +346,13 @@ class EventoController extends Controller
             },
             SORT_REGULAR);
         // $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
+        $contadores = DB::table('revisors AS r')
+            ->select(array('r.user_id', 't.avaliado', DB::raw('COUNT(r.user_id) AS count')))
+            ->join('atribuicaos AS a', 'r.id', 'a.revisor_id')
+            ->join('trabalhos AS t', 't.id', 'a.trabalho_id')
+            ->where('r.evento_id', $evento->id)
+            ->groupBy('r.user_id', 't.avaliado')
+            ->get();
         $areas = Area::where('eventoId', $evento->id)->get();
         $modalidades = Modalidade::where('evento_id', $evento->id)->get();
 
@@ -355,6 +362,7 @@ class EventoController extends Controller
                                                     // 'revs'                    => $revisores,
                                                     'areas'                   => $areas,
                                                     'modalidades'             => $modalidades,
+                                                    'contadores' => $contadores,
                                                   ]);
 
     }

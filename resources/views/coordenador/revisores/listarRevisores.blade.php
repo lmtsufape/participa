@@ -45,8 +45,20 @@
                                 <tr>
                                   <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->name}}</td>
                                   <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
-                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">{{$revisor->revisor()->sum('correcoesEmAndamento')}}</td>
-                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">{{$revisor->revisor()->sum('trabalhosCorrigidos')}}</td>
+                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
+                                    @if($contadores->where('user_id', $revisor->id)->where('avaliado', 'processando')->first())
+                                        {{$contadores->where('user_id', $revisor->id)->where('avaliado', 'processando')->first()->count}}
+                                    @else
+                                        0
+                                    @endif
+                                </td>
+                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
+                                    @if($contadores->where('user_id', $revisor->id)->where('avaliado', 'Avaliado')->first())
+                                        {{$contadores->where('user_id', $revisor->id)->where('avaliado', 'Avaliado')->first()->count}}
+                                    @else
+                                        0
+                                    @endif
+                                </td>
                                   <td style="text-align:center">
                                     <a href="#" data-toggle="modal" data-target="#modalRevisor{{$revisor->id}}">
                                       <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
@@ -194,8 +206,8 @@
               </div> --}}
               <div class="row justify-content-center">
                 <div class="col-sm-12">
-                  @foreach ($revisor->revisor as $revisorDosTrabalhos)
-                    @if (count($revisorDosTrabalhos->trabalhosAtribuidos) > 0)
+                  @foreach ($revisor->revisor()->where('evento_id', $evento->id)->get() as $revisorDosTrabalhos)
+                  @if (count($revisorDosTrabalhos->trabalhosAtribuidos) > 0)
                       <div class="container">
                         <div class="row">
                           <h4 style="text-align: left;">Trabalhos da área de {{$revisorDosTrabalhos->area->nome}} na modalidade {{$revisorDosTrabalhos->modalidade->nome}}</h4>
