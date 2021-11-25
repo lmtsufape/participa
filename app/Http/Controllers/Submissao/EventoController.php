@@ -566,7 +566,6 @@ class EventoController extends Controller
           'titulo' => $data['tituloForm']
       ]);
 
-      $keys = array_keys($data['tituloRadio']);
       $radioCont = 0;
       $checkRqst = $request->checkboxVisibilidade;
       $i = 0;
@@ -600,6 +599,7 @@ class EventoController extends Controller
           $resposta->paragrafo()->save($paragrafo);
 
         }else if($data['tipo'][$index] == 'radio'){
+          $keys = array_keys($data['tituloRadio']);
           foreach ($data['tituloRadio'][$keys[$radioCont++]] as $titulo) {
             $resposta->opcoes()->create([
               'titulo' => $titulo,
