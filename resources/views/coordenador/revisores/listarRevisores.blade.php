@@ -262,7 +262,7 @@
                             <div class="col-sm-6">
                               <h6 for="areaRevisor" class="col-form-label">{{ __('Selecione as áreas') }}</h6>
                             <input type="checkbox" id="chk_marcar_desmarcar_todas_areas" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_area_{{ $revisor->id }}')">
-                            <label for="btn_marcar_desmarcar_todas_areas"><b>Selecionar todas</b></label>
+                            <label for="chk_marcar_desmarcar_todas_areas"><b>Selecionar todas</b></label>
                               @php
                                   $areasRevisor = $revisor->revisor()->distinct('areaId')->get();
                                   $modalidadesRevisor = $revisor->revisor()->distinct('modalidadeId')->get();
@@ -297,7 +297,7 @@
                             <div class="col-sm-6">
                               <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidades') }}</h6>
                               <input type="checkbox" id="chk_marcar_desmarcar_todas_modalidades" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_modalidade_{{ $revisor->id }}')">
-                              <label for="btn_marcar_desmarcar_todas_modalidades"><b>Selecionar todas</b></label>
+                              <label for="chk_marcar_desmarcar_todas_modalidades"><b>Selecionar todas</b></label>
                               @if (old('modalidadesEditadas_'.$revisor->id) != null)
                                 @foreach ($modalidades as $modalidade)
                                     <div class="row">
@@ -371,7 +371,7 @@
                         <div  class="row">
                           <div class="col-sm-6">
                             <h6 for="areaRevisor" class="col-form-label">{{ __('Selecione as áreas') }}</h6>
-                            <input type="checkbox" id="chk_marcar_desmarcar_todas_areas" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_area')">
+                            <input type="checkbox" id="btn_marcar_desmarcar_todas_areas" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_area')">
                             <label for="btn_marcar_desmarcar_todas_areas"><b>Selecionar todas</b></label>
                             @if (old('areas') != null)
                               @foreach ($areas as $area)
@@ -401,7 +401,7 @@
                           </div>
                           <div class="col-sm-6">
                               <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidades') }}</h6>
-                              <input type="checkbox" id="chk_marcar_desmarcar_todas_modalidades" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_modalidade')">
+                              <input type="checkbox" id="btn_marcar_desmarcar_todas_modalidades" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_modalidade')">
                               <label for="btn_marcar_desmarcar_todas_modalidades"><b>Selecionar todas</b></label>
                               @if (old('modalidades') != null)
                                 @foreach ($modalidades as $modalidade)
