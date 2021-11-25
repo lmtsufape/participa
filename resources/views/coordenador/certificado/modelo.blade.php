@@ -53,7 +53,7 @@
             @switch($certificado->tipo)
                 @case(\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador'])
                     <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> apresentou nome da modalidade - nome da etiqueta do trabalho (área/eixo):<strong> nome da área/eixo,
-                    com o trabalho "NOME DO TRABALHO"</strong><span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
+                    </strong>com o trabalho <strong>"NOME DO TRABALHO"</strong><span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
                     @break
                 @case(\App\Models\Submissao\Certificado::TIPO_ENUM['coordenador_comissao_cientifica'])
                     <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como coordenador/a da <strong>COMISSÃO CIENTÍFICA </strong>
