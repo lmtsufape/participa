@@ -52,7 +52,7 @@
         <div class="container">
             @if ($cargo == 'Apresentador')
                 <p class="texto" >Certificamos que <span style="text-transform:uppercase"><strong>{{$user->name}}</strong></span> apresentou {{$trabalho->modalidade->nome}} - {{$trabalho->evento->formSubTrab->etiquetaareatrabalho}}:<strong> {{$trabalho->area->nome}},
-                com o trabalho <span style="text-transform:uppercase"><strong>"{{$trabalho->titulo}}"</strong></span></strong></strong><span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
+                </strong>com o trabalho <span style="text-transform:uppercase"><strong>"{{$trabalho->titulo}}"</strong></span></strong></strong><span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Comissão Científica')
