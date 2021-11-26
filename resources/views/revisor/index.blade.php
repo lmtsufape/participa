@@ -99,14 +99,16 @@
         @endforeach
     </div>--}}
 
-    @foreach ($trabalhosPorEvento as $key=> $trabalhosPorRevisor)
-        <div class="row">
-            <div class="col-sm-12">
-                <h3 class="titulo-detalhes" style="text-align:center">
-                    <a href="{{  route('evento.visualizar',['id'=>$eventos[$key]->id])  }}"> {{$eventos[$key]->nome}} </a>
-                </h3>
+    @foreach ($trabalhosPorEvento as $key => $trabalhosPorRevisor)
+        @if(count($trabalhosPorRevisor) > 0)
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="titulo-detalhes" style="text-align:center">
+                        <a href="{{  route('evento.visualizar',['id'=>$eventos[count($eventos)-1-$key]->id])  }}"> {{$eventos[count($eventos)-1-$key]->nome}} </a>
+                    </h3>
+                </div>
             </div>
-        </div>
+        @endif
 
         {{-- Tabela Trabalhos --}}
         @foreach ($trabalhosPorRevisor as $trabalhosDoRevisor)
