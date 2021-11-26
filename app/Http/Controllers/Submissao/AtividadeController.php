@@ -26,11 +26,11 @@ class AtividadeController extends Controller
     {
         $duracaoAtividades = [];
         $ids = [];
-        
+
         $evento = Evento::find($id);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $atividades = Atividade::where('eventoId', $id)->orderBy('titulo')->get();
-        
+
         foreach ($atividades as $atv) {
             $datasAtividades = DatasAtividade::where('atividade_id', $atv->id)->get();
             array_push($ids, $atv->id);
@@ -64,7 +64,7 @@ class AtividadeController extends Controller
     public function store(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $validated = $request->validate([
             'idNovaAtividade'       => ['required', 'integer'],
@@ -87,7 +87,7 @@ class AtividadeController extends Controller
             'quintoDia'     => ($request->input("duraçãoDaAtividade") >= 5) ? ['required', 'date', 'after:quartoDia'] : [''],
             'sextoDia'      => ($request->input("duraçãoDaAtividade") >= 6) ? ['required', 'date', 'after:quintoDia'] : [''],
             'setimoDia'     => ($request->input("duraçãoDaAtividade") == 7) ? ['required', 'date', 'after:sextoDia'] : [''],
-            
+
             // Validação das horas
             'inicio'        => ($request->input("duraçãoDaAtividade") >= 1) ? ['required','time'] : [''],
             'segundoInicio' => ($request->input("duraçãoDaAtividade") >= 2) ? ['required','time'] : [''],
@@ -132,7 +132,7 @@ class AtividadeController extends Controller
         if ($request->setimoInicio != null && strtotime($request->setimoInicio) > strtotime($request->setimoFim)) {
             return redirect()->back()->withErrors(['idNovaAtividade' => 2, 'setimoFim' => 'Fim deve ser um horário após ' . $request->setimoInicio])->withInput();
         }
-        
+
         $validatedConvidados = $request->validate([
             'nomeDoConvidado.*'     => 'nullable',
             'emailDoConvidado.*'    => ($request->nomeDoConvidado[0] != null) ? 'required' : 'nullable',
@@ -143,7 +143,7 @@ class AtividadeController extends Controller
         // dd($request);
         $atividade = new Atividade();
         $atividade->eventoId                    = $request->eventoId;
-        $atividade->tipo_id                     = $request->tipo; 
+        $atividade->tipo_id                     = $request->tipo;
         $atividade->titulo                      = $request->input("título");
         $atividade->vagas                       = $request->vagas;
         $atividade->valor                       = $request->valor;
@@ -228,7 +228,7 @@ class AtividadeController extends Controller
                 Mail::to($convidado->email)->send(new EmailConvidadoAtividade($convidado, $subject));
             }
         }
-        
+
         return redirect()->back()->with(['mensagem' => 'Atividade cadastrada com sucesso!']);
     }
 
@@ -264,7 +264,7 @@ class AtividadeController extends Controller
     public function update(Request $request, $id)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $validated = $request->validate([
             'idAtividade'           => ['required', 'integer'],
@@ -287,7 +287,7 @@ class AtividadeController extends Controller
             'quintoDia'     => ($request->duracaoAtividade >= 5) ? ['required', 'date', 'after:quartoDia'] : [''],
             'sextoDia'      => ($request->duracaoAtividade >= 6) ? ['required', 'date', 'after:quintoDia'] : [''],
             'setimoDia'     => ($request->duracaoAtividade == 7) ? ['required', 'date', 'after:sextoDia'] : [''],
-            
+
             // Validação das horas
             'inicio'        => ($request->duracaoAtividade >= 1) ? ['required','time'] : [''],
             'segundoInicio' => ($request->duracaoAtividade >= 2) ? ['required','time'] : [''],
@@ -338,11 +338,11 @@ class AtividadeController extends Controller
             'emailDoConvidado.*'    => ($request->nomeDoConvidado[0] != null) ? 'required|email' : 'nullable',
             'funçãoDoConvidado.*'   => ($request->nomeDoConvidado[0] != null) ? 'required' : 'nullable',
         ]);
-            
-        
-        
+
+
+
         $atividade = Atividade::find($id);
-        $atividade->tipo_id                     = $request->tipo; 
+        $atividade->tipo_id                     = $request->tipo;
         $atividade->titulo                      = $request->titulo;
         $atividade->vagas                       = $request->vagas;
         $atividade->valor                       = $request->valor;
@@ -414,7 +414,7 @@ class AtividadeController extends Controller
         }
 
         $idsConvidados = Convidado::where('atividade_id', $id)->get('id');
-        
+
         $ids = [];
         foreach ($idsConvidados as $idsConv) {
             array_push($ids, $idsConv->id);
@@ -434,21 +434,21 @@ class AtividadeController extends Controller
                     }
                     $convidado->atividade_id    = $atividade->id;
                     $convidado->update();
-                    
+
                     if ($this->valida_email($convidado->email)) {
                         $subject = "Convite atualizado para atividade";
                         Mail::to($convidado->email)->send(new EmailAtualizandoConvidadoAtividade($convidado, $subject));
                     }
                 } else {
                     $convidado = Convidado::find($ids[$i]);
-                    
+
                     if ($this->valida_email($convidado->email)) {
                         $subject = "Você foi removido da atividade";
                         Mail::to($convidado->email)->send(new EmailDesconvidandoAtividade($convidado, $subject));
                     }
                     $convidado->delete();
                 }
-            }               
+            }
             for ($i = 0; $i < count($request->idConvidado); $i++) {
                 if ($request->idConvidado[$i] == 0) {
                     $convidado = new Convidado();
@@ -461,17 +461,17 @@ class AtividadeController extends Controller
                     }
                     $convidado->atividade_id    = $atividade->id;
                     $convidado->save();
-    
+
                     if ($this->valida_email($convidado->email)) {
                         $subject = "Convite na edição da atividade";
-                        Mail::to($convidado->email)->send(new EmailConvidadoAtividade($convidado, $subject)); 
+                        Mail::to($convidado->email)->send(new EmailConvidadoAtividade($convidado, $subject));
                     }
                 }
             }
         } else {
             for ($i = 0; $i < count($atividade->convidados); $i++) {
                 $convidado = Convidado::find($atividade->convidados[$i]->id);
-                
+
                 if ($this->valida_email($convidado->email)) {
                     $subject = "Você foi removido da atividade";
                     Mail::to($convidado->email)->send(new EmailDesconvidandoAtividade($convidado, $subject));
@@ -491,15 +491,15 @@ class AtividadeController extends Controller
                     }
                     $convidado->atividade_id    = $atividade->id;
                     $convidado->save();
-    
+
                     if ($this->valida_email($convidado->email)) {
                         $subject = "Convite na edição da atividade";
-                        Mail::to($convidado->email)->send(new EmailConvidadoAtividade($convidado, $subject)); 
+                        Mail::to($convidado->email)->send(new EmailConvidadoAtividade($convidado, $subject));
                     }
                 }
             }
         }
-        
+
         return redirect()->back()->with(['mensagem' => 'Atividade editada com sucesso!']);
     }
 
@@ -512,8 +512,8 @@ class AtividadeController extends Controller
     public function destroy($id)
     {
         $atividade = Atividade::find($id);
-        $this->authorize('isCoordenador', $atividade->evento);
-        
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $atividade->evento);
+
         foreach ($atividade->datasAtividade as $da) {
             $da->delete();
         }
@@ -526,7 +526,7 @@ class AtividadeController extends Controller
     // Salva a visibilidade da atividade para participantes
     public function setVisibilidadeAjax($id) {
         $atividade = Atividade::find($id);
-        $this->authorize('isCoordenador', $atividade->evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $atividade->evento);
 
         if ($atividade->visibilidade_participante) {
             $atividade->visibilidade_participante = false;
@@ -537,13 +537,13 @@ class AtividadeController extends Controller
     }
 
     public function atividadesJson($id) {
-        
+
         $evento = Evento::find($id);
         $atividades = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->orderBy('atividade_id')->orderBy('data')->where('eventoId', '=', $id)->get();
-        
+
         $eventsFC = collect();
         $idAtividade = 0;
-        
+
         if (auth()->user() != null && auth()->user()->id === $evento->coordenadorId) {
             foreach ($atividades as $atv) {
                 if ($idAtividade != $atv->atividade_id) {
@@ -577,7 +577,7 @@ class AtividadeController extends Controller
                 }
             }
         }
-        
+
         // dd(response()->json($eventsFC));
 
         return response()->json($eventsFC);

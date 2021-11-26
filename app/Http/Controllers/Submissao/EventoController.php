@@ -801,7 +801,7 @@ class EventoController extends Controller
     public function editarEtiqueta(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
         $modalidades = Modalidade::all();
@@ -828,7 +828,7 @@ class EventoController extends Controller
     public function etiquetasTrabalhos(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
         $modalidades = Modalidade::all();
@@ -1030,7 +1030,7 @@ class EventoController extends Controller
     public function edit($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $endereco = Endereco::find($evento->enderecoId);
         return view('evento.editarEvento',['evento'=>$evento,'endereco'=>$endereco]);
     }
@@ -1099,7 +1099,7 @@ class EventoController extends Controller
     public function detalhes(Request $request){
         $evento = Evento::find($request->eventoId);
 
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->get();
@@ -1189,7 +1189,7 @@ class EventoController extends Controller
 
     public function setFotoEvento(Request $request){
       $evento = Evento::find($request->eventoId);
-      $this->authorize('isCoordenador', $evento);
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
       // dd($request);
       $validatedData = $request->validate([
@@ -1203,7 +1203,7 @@ class EventoController extends Controller
 
     public function habilitar($id) {
       $evento = Evento::find($id);
-      $this->authorize('isCoordenador', $evento);
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
       $evento->publicado = true;
       $evento->update();
       return redirect()->back()->with('mensagem', 'O evento foi exposto ao público.');
@@ -1211,7 +1211,7 @@ class EventoController extends Controller
 
     public function desabilitar($id) {
       $evento = Evento::find($id);
-      $this->authorize('isCoordenador', $evento);
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
       $evento->publicado = false;
       $evento->update();
       return redirect()->back()->with('mensagem', 'O evento foi ocultado ao público.');
@@ -1227,7 +1227,7 @@ class EventoController extends Controller
 
     public function pdfProgramacao(Request $request, $id) {
       $evento = Evento::find($id);
-      $this->authorize('isCoordenador', $evento);
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
       $request->validate([
         'pdf_programacao' => ['file', 'mimetypes:application/pdf']
@@ -1257,7 +1257,7 @@ class EventoController extends Controller
 
     public function pdfAdicional(Request $request, $id) {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $request->validate([
           'pdf_arquivo' => ['file', 'mimetypes:application/pdf']

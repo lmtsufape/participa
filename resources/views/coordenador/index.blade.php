@@ -29,7 +29,7 @@
     <div class="row cards-eventos-index">
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
-                @can('isCoordenador', $evento)
+                @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                     <div class="card" style="width: 16rem;">
                         @if(isset($evento->fotoEvento))
                             <img class="img-card" src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
@@ -76,6 +76,7 @@
                                             <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
                                         </a>
                                     </div>
+                                    @can('isCoordenador', $evento)
                                     <div>
                                         <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
                                             {{ csrf_field() }}
@@ -85,6 +86,7 @@
                                             </a>
                                         </form>
                                     </div>
+                                    @endcan
                                 </div>
                             </div>
                         </div>

@@ -177,7 +177,7 @@ class ComissaoController extends Controller
     public function destroy(Request $request, $id)
     {
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $evento->usuariosDaComissao()->detach($id);
 

@@ -21,7 +21,7 @@
     <div class="row cards-eventos-index">
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
-                @can('isPublishOrIsCoordenador', $evento)
+                @can('isPublishOrIsCoordenadorOrCoordenadorDasComissoes', $evento)
                 <div class="card" style="width: 16rem;">
                     @if(isset($evento->fotoEvento))
                         <img class="img-card" src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">

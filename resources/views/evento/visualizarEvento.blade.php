@@ -552,12 +552,13 @@
                                                                         </a>
                                                                     @endauth
                                                                 </div>
-                                                                @can('isCoordenador', $subevento)
+                                                                @can('isCoordenadorOrCoordenadorDasComissoes', $subevento)
                                                                     <div>
                                                                         <a href="{{ route('coord.detalhesEvento', ['eventoId' => $subevento->id]) }}">
                                                                             <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
                                                                         </a>
                                                                     </div>
+                                                                    @can('isCoordenador', $subevento)
                                                                     <div>
                                                                         <form id="formExcluirEvento{{ $subevento->id }}" method="POST" action="{{ route('evento.deletar', $subevento->id) }}">
                                                                             {{ csrf_field() }}
@@ -567,6 +568,7 @@
                                                                             </a>
                                                                         </form>
                                                                     </div>
+                                                                    @endcan
                                                                 @endcan
                                                             </div>
                                                         </div>

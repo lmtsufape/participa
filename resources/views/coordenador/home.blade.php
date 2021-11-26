@@ -31,7 +31,7 @@
         {{-- {{dd($eventos)}} --}}
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
-                @can('isPublishOrIsCoordenador', $evento)
+                @can('isPublishOrIsCoordenadorOrCoordenadorDasComissoes', $evento)
                     <div class="card" style="width: 18rem;">
                         @if(isset($evento->fotoEvento))
                         <img src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
@@ -74,12 +74,13 @@
                                         <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
                                     </a>
                                 </div>
-                                @can('isCoordenador', $evento)
+                                @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                                 <div>
                                     <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
                                         <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
                                     </a>
                                 </div>
+                                @can('isCoordenador', $evento)
                                 <div>
                                     <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
                                         {{ csrf_field() }}
@@ -89,6 +90,7 @@
                                         </a>
                                     </form>
                                 </div>
+                                @endcan
                                 @endcan
                             </div>
                         </div>

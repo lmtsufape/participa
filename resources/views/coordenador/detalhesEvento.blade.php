@@ -4,11 +4,13 @@
 <div class="wrapper">
     <div class="sidebar">
         <h2>{{{$evento->nome}}}
-            @can('isCoordenador', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                 <a href="{{route('evento.editar',$evento->id)}}" class="edit-evento" onmouseover="this.children[0].src='{{asset('img/icons/edit-regular.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/edit-regular-white.svg')}}'"><img src="{{asset('img/icons/edit-regular-white.svg')}}"  alt="" width="20px;"></a>
+                @can('isCoordenador', $evento)
                 @if($evento->eventoPai == null)
                     <a href="{{route('subevento.criar',$evento->id)}}" onmouseover="this.children[0].src='{{asset('img/icons/plus-square-solid_black.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/plus-square-solid.svg')}}'"><img src="{{asset('img/icons/plus-square-solid.svg')}}"  alt="" width="20px;"></a>
                 @endif
+                @endcan
             @endcan
         </h2>
 
@@ -180,7 +182,7 @@
                 </div>
             </a>
             @endcan
-            @can('isCoordenador', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
             <a id="comissaoOrganizadora" >
                 <li>
                     <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão Organizadora</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -270,7 +272,7 @@
                     </a>
                 </div>
             </a>
-            @can('isCoordenador', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
             <a id="programacao">
                 <li>
                     <img src="{{asset('img/icons/slideshow.svg')}}" alt=""><h5>Programação</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">

@@ -35,7 +35,7 @@
     @endif
     <div class="row cards-eventos-index">
         @foreach ($certificados as $certificado)
-            @can('isCoordenador', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                 <div class="card" style="width: 16rem;">
                     <img class="img-card" src="{{asset('storage/'.$certificado->caminho)}}" class="card-img-top" alt="...">
                     <div class="card-body">

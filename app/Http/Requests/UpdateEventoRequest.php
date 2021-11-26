@@ -16,7 +16,7 @@ class UpdateEventoRequest extends FormRequest
     public function authorize()
     {
         $evento = Evento::find(request()->id);
-        return auth()->user()->can('isCoordenador', $evento);
+        return auth()->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
     }
 
     /**

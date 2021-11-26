@@ -61,7 +61,7 @@
                     </div>
                     </div>
             </div>
-            @can('isCoordenador', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
             <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
@@ -98,7 +98,7 @@
             </div>
             @endcan
         </div>
-        
+
     </div><!-- Definir Submissões -->
 
 @endsection
