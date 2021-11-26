@@ -104,7 +104,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <h3 class="titulo-detalhes" style="text-align:center">
-                        <a href="{{  route('evento.visualizar',['id'=>$eventos[count($eventos)-1-$key]->id])  }}"> {{$eventos[count($eventos)-1-$key]->nome}} </a>
+                        <a href="{{  route('evento.visualizar',['id'=>$eventos[$key]->id])  }}"> {{$eventos[$key]->nome}} </a>
                     </h3>
                 </div>
             </div>

@@ -39,10 +39,8 @@ class RevisorController extends Controller
      */
     public function index() {
         //eventos em que sou revisor
-      $eventosComoRevisor = Evento::join('revisors', 'eventos.id', '=', 'revisors.evento_id')->where('revisors.user_id', '=', auth()->user()->id)->selectRaw('DISTINCT eventos.*')->get()->sortByDesc(
-        function($evento) {
-            return $evento->created_at;
-        });
+        $idsEventos = Revisor::where('user_id', auth()->user()->id)->groupBy('evento_id')->select('evento_id')->get();
+        $eventosComoRevisor = Evento::whereIn('id', $idsEventos)->get();
       //return view('revisor.index')->with(['eventos' => $eventosComoRevisor]);
       //areas em que sou revirsor
       $revisores = collect();
