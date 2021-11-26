@@ -38,24 +38,31 @@ class RevisorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-      $idsEventos = Revisor::where('user_id', auth()->user()->id)->groupBy('evento_id')->select('evento_id')->get();
-      $eventosComoRevisor = Evento::whereIn('id', $idsEventos)->get();
-      // dd($eventosComoRevisor);
+        //eventos em que sou revisor
+      $eventosComoRevisor = Evento::join('revisors', 'eventos.id', '=', 'revisors.evento_id')->where('revisors.user_id', '=', auth()->user()->id)->selectRaw('DISTINCT eventos.*')->get()->sortByDesc(
+        function($evento) {
+            return $evento->created_at;
+        });
       //return view('revisor.index')->with(['eventos' => $eventosComoRevisor]);
-
+      //areas em que sou revirsor
       $revisores = collect();
       foreach ($eventosComoRevisor as $evento){
         $revisores->push(Revisor::where([['user_id', auth()->user()->id],['evento_id', $evento->id]])->get());
       }
 
+      //dd($revisores);
       $trabalhosPorEvento = collect();
       foreach ($revisores as $revisorEvento) {
         $trabalhos = collect();
         foreach($revisorEvento as $revisor){
-            $trabalhos->push($revisor->trabalhosAtribuidos()->orderBy('titulo')->get());
+            $trabalhosAtribuidos = $revisor->trabalhosAtribuidos()->orderBy('titulo')->get();
+            if(count($trabalhosAtribuidos)>0){
+                $trabalhos->push($trabalhosAtribuidos);
+            }
         }
         $trabalhosPorEvento->push($trabalhos);
       }
+      //dd($trabalhosPorEvento);
       return view('revisor.index')->with(['eventos' => $eventosComoRevisor, 'trabalhosPorEvento' => $trabalhosPorEvento]);
     }
 
