@@ -16,7 +16,7 @@
         <script src="{{ asset('js/app.js') }}" defer></script>
 
         <!-- CKEditor -->
-        <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+        <script src="{{asset('ckeditor/ckeditor.js')}}"></script>
 
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com">
