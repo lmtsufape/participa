@@ -100,17 +100,17 @@
     </div>--}}
 
     @foreach ($trabalhosPorEvento as $key => $trabalhosPorRevisor)
-        @if(count($trabalhosPorRevisor) > 0)
+        {{-- Tabela Trabalhos --}}
+        @if($trabalhosPorRevisor != null && count($trabalhosPorRevisor) > 0)
             <div class="row">
                 <div class="col-sm-12">
                     <h3 class="titulo-detalhes" style="text-align:center">
-                        <a href="{{  route('evento.visualizar',['id'=>$eventos[$key]->id])  }}"> {{$eventos[$key]->nome}} </a>
+                        <a href="{{  route('evento.visualizar',['id'=>$trabalhosPorRevisor[0][0]->evento->id])  }}"> {{$trabalhosPorRevisor[0][0]->evento->nome}} </a>
                     </h3>
                 </div>
             </div>
         @endif
 
-        {{-- Tabela Trabalhos --}}
         @foreach ($trabalhosPorRevisor as $trabalhosDoRevisor)
             @if ($trabalhosDoRevisor != null && count($trabalhosDoRevisor) > 0)
             <div class="row justify-content-center" style="width: 100%;">
