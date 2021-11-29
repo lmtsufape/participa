@@ -67,8 +67,8 @@
                                     @endforeach
                                 @elseif($pergunta->respostas->first()->paragrafo != null)
                                     @forelse ($pergunta->respostas as $resposta)
-                                        @if($resposta->revisor != null || $resposta->trabalho != null)
-                                            @if($resposta->revisor->user_id == $revisorUser->id && $resposta->trabalho->id == $trabalho->id && $resposta->paragrafo != null)
+                                        @if($resposta->revisor != null && $resposta->trabalho != null  && $resposta->paragrafo != null)
+                                            @if($resposta->revisor->user_id == $revisorUser->id && $resposta->trabalho->id == $trabalho->id)
 
                                                 <p class="card-text">
                                                     <input type="hidden" name="resposta_paragrafo_id[]" value="{{$resposta->paragrafo->id}}">
@@ -79,7 +79,7 @@
                                                 </div>
                                             @endif
                                         @endif
-                                        @empty
+                                    @empty
                                         <p>Sem respostas</p>
                                     @endforelse
                                 @endif
