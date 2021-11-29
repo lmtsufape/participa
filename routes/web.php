@@ -239,6 +239,8 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::post(   '/atualizarModalidade',   'ModalidadeController@update'                )->name('modalidade.update');
     //
 
+    Route::get('/evento/{evento}/downloadResumos', 'EventoController@resumosToPdf')->name('evento.downloadResumos');
+
     Route::get('/evento/{evento}/downloadInscritos', 'EventoController@exportInscritos')->name('evento.downloadInscritos');
 
     // Encontrar resumo especifico para trabalhos

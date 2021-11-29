@@ -753,6 +753,68 @@ class EventoController extends Controller
       return $pdf->stream("respostas-{$modalidade->nome}.pdf");
     }
 
+    public function resumosToPdf(Evento $evento, Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
+    {
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+      $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
+      $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
+      $trabalhos = NULL;
+
+      if($column == "autor") {
+          //Pela logica da implementacao de status, rascunho eh o parametro para encontrar todos os trabalhos diferentes de arquivado
+          if($status == "rascunho"){
+              //dd($modalidadesId);
+              $trabalhos = collect();
+              foreach($modalidades as $modalidade){
+                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
+                      function($trabalho) {
+                          return $trabalho->autor->name;
+                      },
+                      SORT_REGULAR,
+                      $direction == "desc"));
+              }
+
+
+          }else{
+              // Não tem como ordenar os trabalhos por nome do autor automaticamente
+              // Já que na tabale a de trabalhos não existe o nome do autor
+              $trabalhos = collect();
+              //dd($modalidadesId);
+              foreach($modalidades as $modalidade){
+                  //dd($modalidadeId->id);
+                  //dd(Trabalho::where([['modalidadeId', $modalidadeId->id], ['status', $status]])->get());
+                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
+                      function($trabalho) {
+                          return $trabalho->autor->name;
+                      },
+                      SORT_REGULAR,
+                      $direction == "desc"));
+              }
+              dd($trabalhos);
+          }
+      }else{
+          if($status == "rascunho"){
+              $trabalhos = collect();
+              foreach($modalidades as $modalidade){
+                  //dd($modalidadeId->id);
+                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get());
+              }
+
+          }else{
+              // Como aqui é um else, então $trabalhos nunca vai ser null
+              // Busca os trabalhos da forma como era feita antes
+              $trabalhos = collect();
+              foreach($modalidades as $modalidade){
+                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->orderBy($column, $direction)->get());
+              }
+              //
+          }
+      }
+
+      $pdf = PDF::loadView('coordenador.trabalhos.resumosPdf', ['trabalhosPorModalidade' => $trabalhos, 'evento' => $evento])->setOptions(['defaultFont' => 'sans-serif']);
+      return $pdf->download("resumos - {$evento->nome}.pdf");
+    }
+
     public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
     {
         $evento = Evento::find($request->eventoId);

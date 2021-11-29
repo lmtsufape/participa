@@ -17,7 +17,7 @@
               {{ __('Distribuir trabalhos') }}
             </button>
           </form>
-
+          <a class="btn btn-primary col-sm" href="{{route('evento.downloadResumos', $evento)}}">Baixar resumos</a>
         </div>
       </div>
 
