@@ -2,9 +2,13 @@
 <html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Resumos dos trabalhos do evento {{$evento->nome}}</title>
+    <meta http-equiv="Content-Type"
+        content="text/html; charset=utf-8" />
+    <title>Resumos dos trabalhos do evento {{ $evento->nome }}</title>
     <style>
+        hr.solid {
+            border-top: 3px solid #bbb;
+        }
         @import url(https://fonts.googleapis.com/css?family=Nunito);
 
         :root {
@@ -718,20 +722,28 @@
     <div id="divListarCriterio">
         <div class="row">
             <div class="col-sm-12">
-                <h3 >Resumos dos trabalhos do evento: {{$evento->nome}}</h3>
+                <h3>Resumos dos trabalhos do evento: {{ $evento->nome }}</h3>
             </div>
         </div>
     </div>
     @foreach ($trabalhosPorModalidade as $trabalhos)
-        <h4>Modalidade: {{$trabalhos[0]->modalidade->nome}}</h4>
+        <h4>Modalidade: {{ $trabalhos[0]->modalidade->nome }}</h4>
         @foreach ($trabalhos as $trabalho)
             <div class="card">
                 <div class="card-body">
-                    <p>Título: {{ $trabalho->titulo }}</p>
-                    <p>Autor: {{ $trabalho->autor->name }}</p>
-                    <p>Resumo: {{ $trabalho->resumo }}</p>
+                    <p><strong>Título:</strong> {{ $trabalho->titulo }}</p>
+                    <p><strong>Autor:</strong> {{ $trabalho->autor->name }}</p>
+                    @if ($trabalho->coautors->count())
+                    <p><strong>Coautores:</strong>
+                        @foreach ($trabalho->coautors as $coautor)
+                        {{$coautor->user->name}};
+                        @endforeach
+                    </p>
+                    @endif
+                    <p><strong>Resumo:</strong> {{ $trabalho->resumo }}</p>
                 </div>
             </div>
+            <hr>
         @endforeach
     @endforeach
 </body>
