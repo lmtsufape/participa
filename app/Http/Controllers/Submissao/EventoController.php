@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Submissao;
 
+use App\Exports\InscritosExport;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Evento;
@@ -36,8 +37,11 @@ use App\Models\Submissao\Opcao;
 use App\Models\Submissao\Pergunta;
 use App\Models\Submissao\Resposta;
 use App\Models\Submissao\Paragrafo;
+use Illuminate\Http\File;
+use Illuminate\Http\Response;
 use PDF;
 use PhpParser\Node\Expr\AssignOp\Mod;
+use Svg\Gradient\Stop;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -408,6 +412,13 @@ class EventoController extends Controller
 
                                                   ]);
 
+    }
+
+    public function exportInscritos(Evento $evento, Request $request)
+    {
+        return (new InscritosExport($evento))->download($evento->nome.'.csv', \Maatwebsite\Excel\Excel::CSV, [
+            'Content-Type' => 'text/csv',
+      ]);
     }
 
     public function cadastrarModalidade(Request $request)

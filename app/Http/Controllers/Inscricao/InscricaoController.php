@@ -15,6 +15,7 @@ use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\CampoFormulario;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Endereco;
+use Illuminate\Support\Facades\DB;
 
 class InscricaoController extends Controller
 {
@@ -33,12 +34,18 @@ class InscricaoController extends Controller
         $cuponsDeDescontro = CupomDeDesconto::where('evento_id', $id)->get();
         $categoriasParticipante = CategoriaParticipante::where('evento_id', $id)->get();
         $camposDoFormulario = CampoFormulario::where('evento_id', $id)->get();
+        $users = DB::table('inscricaos AS i')
+            ->join('users AS u', 'u.id', 'i.user_id')
+            ->where('i.evento_id', $evento->id)
+            ->select('u.name', 'u.email')
+            ->get();
 
         return view('coordenador.programacao.inscricoes', ['evento'     => $evento,
                                                            'promocoes'  => $promocoes,
                                                            'atividades' => $atividades,
                                                            'cupons'     => $cuponsDeDescontro,
                                                            'categorias' => $categoriasParticipante,
+                                                           'users'      => $users,
                                                            'campos'     => $camposDoFormulario,]);
     }
 
@@ -138,7 +145,7 @@ class InscricaoController extends Controller
                     }
                     break;
                 case "endereco":
-                    $endereco == Endereco::find($campo->pivot->valor);
+                    $endereco = Endereco::find($campo->pivot->valor);
                     $endereco->delete();
                     break;
             }

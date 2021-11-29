@@ -1727,21 +1727,31 @@
             document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
             document.getElementById("li_categoria_participante").className = "aba aba-tab";
             document.getElementById('li_formulario_inscricao').className = "aba aba-tab";
+            document.getElementById('li_inscritos').className = "aba aba-tab";
         } else if (elemento == document.getElementById("li_cuponsDeDesconto")) {
             elemento.className = "aba ativado";
             document.getElementById("li_promocoes").className = "aba aba-tab";
             document.getElementById("li_categoria_participante").className = "aba aba-tab";
             document.getElementById('li_formulario_inscricao').className = "aba aba-tab";
+            document.getElementById('li_inscritos').className = "aba aba-tab";
         } else if (elemento == document.getElementById("li_categoria_participante")) {
             elemento.className = "aba ativado";
             document.getElementById("li_promocoes").className = "aba aba-tab";
             document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
             document.getElementById('li_formulario_inscricao').className = "aba aba-tab";
+            document.getElementById('li_inscritos').className = "aba aba-tab";
         } else if (elemento == document.getElementById('li_formulario_inscricao')) {
             elemento.className = "aba ativado";
             document.getElementById("li_promocoes").className = "aba aba-tab";
             document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
             document.getElementById("li_categoria_participante").className = "aba aba-tab";
+            document.getElementById("li_inscritos").className = "aba aba-tab";
+        } else if (elemento == document.getElementById('li_inscritos')) {
+            elemento.className = "aba ativado";
+            document.getElementById("li_promocoes").className = "aba aba-tab";
+            document.getElementById("li_cuponsDeDesconto").className = "aba aba-tab";
+            document.getElementById("li_categoria_participante").className = "aba aba-tab";
+            document.getElementById('li_formulario_inscricao').className = "aba aba-tab";
         }
     }
 

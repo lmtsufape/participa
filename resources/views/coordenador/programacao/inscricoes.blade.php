@@ -2,13 +2,14 @@
 
 @section('menu')
 <div id="divInscricoes" class="comissao" style="display: block">
-    
-      
+
+
     <ul class="nav nav-tabs">
         <li id="li_categoria_participante" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#categoriaParticipante" style="text-decoration: none;">Catagorias de participantes</a></li>
         <li id="li_promocoes" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#promocoes" style="text-decoration: none;">Pacotes</a></li>
         <li id="li_cuponsDeDesconto" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#cuponsDeDesconto" style="text-decoration: none;">Cupons de desconto</a></li>
         <li id="li_formulario_inscricao" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#formularioInscricao" style="text-decoration: none;">Formulario de inscrição</a></li>
+        <li id="li_inscritos" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#tabelaInscritos" style="text-decoration: none;">Listar inscritos</a></li>
     </ul>
     @if(session('excluirCampoExtra'))
         <div class="row">
@@ -39,7 +40,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p class="card-text" style="position:relative; top: 30px;">  
+                                <p class="card-text" style="position:relative; top: 30px;">
                                     <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
                                         <thead>
                                             <th>
@@ -57,7 +58,7 @@
                                                     <td data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}">Pendencia para programar</td>
                                                     @if ($promocao->valor == null || $promocao->valor <= 0)
                                                         <td data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}">Grátis</td>
-                                                    @else 
+                                                    @else
                                                         <td data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}">R$ {{number_format($promocao->valor, 2,',','.')}} / R$ {{number_format($promocao->valor - $promocao->valor * 0.10, 2,',','.')}}</td>
                                                     @endif
                                                     <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalPromocaoShow{{$promocao->id}}" ><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a></td>
@@ -83,7 +84,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <h5 class="card-title">Cupons de desconto</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted">Cupons que podem ser aplicados na hora da inscrição.</h6> 
+                                            <h6 class="card-subtitle mb-2 text-muted">Cupons que podem ser aplicados na hora da inscrição.</h6>
                                             <small>Para editar clique em um cupom.</small>
                                         </div>
                                         <div class="col-sm-6">
@@ -91,7 +92,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p class="card-text">  
+                                <p class="card-text">
                                 <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
                                     <thead>
                                         <th>
@@ -107,7 +108,7 @@
                                         <tbody>
                                             <th>
                                                 <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">{{$cupom->identificador}}</td>
-                                                @if ($cupom->porcentagem) 
+                                                @if ($cupom->porcentagem)
                                                     <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">{{$cupom->valor}}% do valor da inscrição</td>
                                                 @else
                                                     <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">R$ {{number_format($cupom->valor, 2,',','.')}}</td>
@@ -161,7 +162,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <h5 class="card-title">Categorias de participantes</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted">Categorias dos participantes que seu evento irá receber.</h6> 
+                                            <h6 class="card-subtitle mb-2 text-muted">Categorias dos participantes que seu evento irá receber.</h6>
                                             <small>Para editar clique em uma categoria.</small>
                                         </div>
                                         <div class="col-sm-6">
@@ -169,7 +170,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p class="card-text">  
+                                <p class="card-text">
                                 <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
                                     <thead>
                                         <th>
@@ -238,7 +239,7 @@
                                                                             @if ($valor->porcentagem)
                                                                                 R$ {{number_format($categoria->valor_total * ($valor->valor / 100), 2,',','.')}} / R$ {{number_format($categoria->valor_total - $categoria->valor_total * ($valor->valor / 100), 2,',','.')}}
                                                                                 <br><small>Desconto de {{$valor->valor}}% do valor total</small>
-                                                                            @else   
+                                                                            @else
                                                                                 R$ {{number_format($valor->valor, 2,',','.')}} / R$ {{number_format($categoria->valor_total - $valor->valor, 2,',','.')}}
                                                                             @endif
                                                                         </div>
@@ -276,14 +277,14 @@
                                                 </div>
                                             </div>
                                         {{-- Fim modal excluir cupom --}}
-                                    @endforeach 
+                                    @endforeach
                                 </table>
                             </p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </p> 
+            </p>
         </div>
         <div id="formularioInscricao" class="tab-pane fade">
             <p>
@@ -295,14 +296,14 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <h5 class="card-title">Campos do formulário</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted">Campos que o formulário de inscrição vai ter.</h6> 
+                                            <h6 class="card-subtitle mb-2 text-muted">Campos que o formulário de inscrição vai ter.</h6>
                                         </div>
                                         <div class="col-sm-6">
                                             <button id="criarCampo" data-toggle="modal" data-target="#modalCriarCampo" class="btn btn-primary float-md-right">+ Novo campo</button>
                                         </div>
                                     </div>
                                 </div>
-                                <p class="card-text">  
+                                <p class="card-text">
                                     <div class="container">
                                         <div class="row" style="position: relative; right: 25px;">
                                             @if ($campos != null && count($campos) > 0)
@@ -316,9 +317,9 @@
                                                             @else
                                                                 <h6 class="card-subtitle mb-2 text-muted">Opcional</h6>
                                                             @endif
-                                                            @if ($campo->tipo == "text") 
+                                                            @if ($campo->tipo == "text")
                                                                 <h6 class="card-subtitle mb-2 text-muted">Campo de texto</h6>
-                                                            @elseif ($campo->tipo == "email") 
+                                                            @elseif ($campo->tipo == "email")
                                                                 <h6 class="card-subtitle mb-2 text-muted">E-mail</h6>
                                                             @elseif ($campo->tipo == "date")
                                                                 <h6 class="card-subtitle mb-2 text-muted">Calendario</h6>
@@ -336,7 +337,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                @endforeach 
+                                                @endforeach
                                             @else
                                                 <div class="col-sm-12" style="position: relative; left: 25px;">
                                                     Nenhum campo extra salvo.
@@ -345,6 +346,46 @@
                                         </div>
                                     </div>
                                 </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p>
+        </div>
+        <div id="tabelaInscritos" class="tab-pane fade">
+            <p>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card" style="width: 100%; right: 30px;">
+                            <div class="card-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h5 class="card-title pb-3">Inscritos no evento {{$evento->nome}}</h5>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary float-md-right">Exportar .csv</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="card-text">
+                                <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
+                                    <thead>
+                                        <th>
+                                            <th>Nome</th>
+                                            <th>Email</th>
+                                        </th>
+                                    </thead>
+                                    @foreach ($users as $user)
+                                        <tbody>
+                                            <th>
+                                                <td>{{$user->name}}</td>
+                                                <td>{{$user->email}}</td>
+                                            </th>
+                                        </tbody>
+                                    @endforeach
+                                </table>
+                            </p>
                             </div>
                         </div>
                     </div>
@@ -374,7 +415,7 @@
                             <div class="col-sm-8">
                                 <label for="identificador">Identificador*</label>
                                 <input id="identificador" name="identificador" class="form-control apenasLetras @error('identificador') is-invalid @enderror" type="text" placeholder="Pacote padrão" value="{{old('identificador')}}">
-                                
+
                                 @error('identificador')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -384,7 +425,7 @@
                             <div class="col-sm-4">
                                 <label for="valor">Valor do pacote*</label>
                                 <input id="valor" name="valor" class="form-control @error('valor') is-invalid @enderror" type="number" placeholder="0 para pacote grátis" value="{{old('valor')}}">
-                            
+
                                 @error('valor')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -396,7 +437,7 @@
                             <div class="col-sm-12">
                                 <label for="descricao">Descrição</label>
                                 <textarea class="form-control @error('descrição') is-invalid @enderror" name="descrição" id="descricao" cols="30" rows="3" placeholder="Pacote padrão para estudantes">{{old('descrição')}}</textarea>
-                                
+
                                 @error('descrição')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -416,30 +457,30 @@
                                 @foreach (old('dataDeInício') as $key => $dataInicio)
                                     @if ($key == 0)
                                         <div class="row">
-                                            <div class="col-sm-4"> 
+                                            <div class="col-sm-4">
                                                 <label for="dataDeInicio">Data de início*</label>
                                                 <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeInício.'.$key)}}">
-                                                
+
                                                 @error('dataDeInício.'.$key)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                                 @enderror
                                             </div>
-                                            <div class="col-sm-4"> 
+                                            <div class="col-sm-4">
                                                 <label for="dataDeFim">Data de fim*</label>
                                                 <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeFim.'.$key)}}">
-                                            
+
                                                 @error('dataDeFim.'.$key)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                                 @enderror
                                             </div>
-                                            <div class="col-sm-3"> 
+                                            <div class="col-sm-3">
                                                 <label for="quantidade">Disponibilidade*</label>
                                                 <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.'.$key) is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.'.$key)}}">
-                                            
+
                                                 @error('disponibilidade.'.$key)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -450,32 +491,32 @@
                                                 <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao(0)"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
                                             </div>
                                         </div>
-                                    @else 
+                                    @else
                                         <div class="row">
-                                            <div class="col-sm-4"> 
+                                            <div class="col-sm-4">
                                                 <label for="dataDeInicio">Data de início*</label>
                                                 <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeInício.'.$key)}}">
-                                                
+
                                                 @error('dataDeInício.'.$key)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                                 @enderror
                                             </div>
-                                            <div class="col-sm-4"> 
+                                            <div class="col-sm-4">
                                                 <label for="dataDeFim">Data de fim*</label>
                                                 <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeFim.'.$key)}}">
-                                            
+
                                                 @error('dataDeFim.'.$key)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                                 @enderror
                                             </div>
-                                            <div class="col-sm-3"> 
+                                            <div class="col-sm-3">
                                                 <label for="quantidade">Disponibilidade*</label>
                                                 <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.'.$key) is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade.'.$key)}}">
-                                            
+
                                                 @error('disponibilidade.'.$key)
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -488,32 +529,32 @@
                                         </div>
                                     @endif
                                 @endforeach
-                            @else 
+                            @else
                                 <div class="row">
-                                    <div class="col-sm-4"> 
+                                    <div class="col-sm-4">
                                         <label for="dataDeInicio">Data de início*</label>
                                         <input id="dataDeInicio" name="dataDeInício[]" class="form-control @error('dataDeInício.*') is-invalid @enderror" type="date">
-                                        
+
                                         @error('dataDeInício.*')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
                                     </div>
-                                    <div class="col-sm-4"> 
+                                    <div class="col-sm-4">
                                         <label for="dataDeFim">Data de fim*</label>
                                         <input id="dataDeFim" name="dataDeFim[]" class="form-control @error('dataDeFim.*') is-invalid @enderror" type="date">
-                                    
+
                                         @error('dataDeFim.*')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
                                     </div>
-                                    <div class="col-sm-3"> 
+                                    <div class="col-sm-3">
                                         <label for="quantidade">Disponibilidade* <img src="{{asset('img/icons/interrogacao.png')}}" alt="" width="15px;" style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Coloque 0 para a disponibilidade ser ilimitada.'></label>
                                         <input id="quantidade" name="disponibilidade[]" class="form-control  @error('disponibilidade.*') is-invalid @enderror" type="number" placeholder="10">
-                                    
+
                                         @error('disponibilidade.*')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -535,10 +576,10 @@
                         <div class="row">
                             @foreach ($atividades as $atv)
                                 <div class="col-sm-3">
-                                    @if (old('atividades') != null && in_array($atv->id, old('atividades'))) 
+                                    @if (old('atividades') != null && in_array($atv->id, old('atividades')))
                                         <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades[]" checked>
                                         <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
-                                    @else 
+                                    @else
                                         <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades[]">
                                         <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
                                     @endif
@@ -569,15 +610,15 @@
                                     Nenhuma categoria cadastrada.
                                 </div>
                             @endif
-                            
+
                         </div>
                         <div id="categoriasPromocao" class="row" style="display: block;">
                             @foreach ($categorias as $categoria)
                                 <div class="col-sm-3">
-                                    @if (old('categorias') != null && in_array($categoria->id, old('categorias'))) 
+                                    @if (old('categorias') != null && in_array($categoria->id, old('categorias')))
                                         <input id="atividade_{{$categoria->id}}" type="checkbox" value="{{$categoria->id}}" name="categorias[]" checked>
                                         <label for="atividade_{{$categoria->id}}">{{$categoria->nome}}</label>
-                                    @else 
+                                    @else
                                         <input id="atividade_{{$categoria->id}}" type="checkbox" value="{{$categoria->id}}" name="categorias[]">
                                         <label for="atividade_{{$categoria->id}}">{{$categoria->nome}}</label>
                                     @endif
@@ -617,7 +658,7 @@
                             <div class="col-sm-8">
                                 <label for="identificador_{{$promocao->id}}">Identificador*</label>
                                 <input id="identificador_{{$promocao->id}}" name="identificador_{{$promocao->id}}" class="form-control apenasLetras @error('identificador_'.$promocao->id) is-invalid @enderror" type="text" placeholder="Pacote padrão" value="@if(old('identificador_'.$promocao->id)!=null){{old('identificador_'.$promocao->id)}}@else{{$promocao->identificador}}@endif">
-                                
+
                                 @error('identificador_'.$promocao->id)
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -627,7 +668,7 @@
                             <div class="col-sm-4">
                                 <label for="valor_{{$promocao->id}}">Valor do pacote*</label>
                                 <input id="valor_{{$promocao->id}}" name="valor_{{$promocao->id}}" class="form-control @error('valor_'.$promocao->id) is-invalid @enderror" type="number" placeholder="0 para pacote grátis" value="@if(old('valor_'.$promocao->id) != null){{old('valor_'.$promocao->id)}}@else{{$promocao->valor}}@endif">
-                            
+
                                 @error('valor_'.$promocao->id)
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -639,7 +680,7 @@
                             <div class="col-sm-12">
                                 <label for="descricao_{{$promocao->id}}">Descrição</label>
                                 <textarea class="form-control @error('descrição_'.$promocao->id) is-invalid @enderror" name="descrição_{{$promocao->id}}" id="descricao" placeholder="Pacote padrão para estudantes">@if(old('descrição_'.$promocao->id)){{old('descrição_'.$promocao->id)}}@else{{$promocao->descricao}}@endif</textarea>
-                                
+
                                 @error('descrição_'.$promocao->id)
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -658,30 +699,30 @@
                             @if (old('dataDeInício_'.$promocao->id) != null || old('dataDeFim_'.$promocao->id) != null || old('disponibilidade_'.$promocao->id) != null)
                                 @foreach (old('dataDeInício_'.$promocao->id) as $key => $dataInicio)
                                     <div class="row">
-                                        <div class="col-sm-4"> 
+                                        <div class="col-sm-4">
                                             <label for="dataDeInicio">Data de início*</label>
                                             <input id="dataDeInicio" name="dataDeInício_{{$promocao->id}}[]" class="form-control @error('dataDeInício_'.$promocao->id.'.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeInício_'.$promocao->id.'.'.$key)}}">
-                                            
+
                                             @error('dataDeInício_'.$promocao->id.'.'.$key)
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                             @enderror
                                         </div>
-                                        <div class="col-sm-4"> 
+                                        <div class="col-sm-4">
                                             <label for="dataDeFim">Data de fim*</label>
                                             <input id="dataDeFim" name="dataDeFim_{{$promocao->id}}[]" class="form-control @error('dataDeFim_'.$promocao->id.'.'.$key) is-invalid @enderror" type="date" value="{{old('dataDeFim_'.$promocao->id.'.'.$key)}}">
-                                        
+
                                             @error('dataDeFim_'.$promocao->id.'.'.$key)
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                             @enderror
                                         </div>
-                                        <div class="col-sm-3"> 
+                                        <div class="col-sm-3">
                                             <label for="quantidade">Disponibilidade*</label>
                                             <input id="quantidade" name="disponibilidade_{{$promocao->id}}[]" class="form-control  @error('disponibilidade_'.$promocao->id.'.'.$key) is-invalid @enderror" type="number" placeholder="10" value="{{old('disponibilidade_'.$promocao->id.'.'.$key)}}">
-                                        
+
                                             @error('disponibilidade_'.$promocao->id.'.'.$key)
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -697,25 +738,25 @@
                                         </div>
                                     </div>
                                 @endforeach
-                            @else 
+                            @else
                                 @foreach ($promocao->lotes as $key => $lote)
                                     <div class="row">
-                                        <div class="col-sm-4"> 
+                                        <div class="col-sm-4">
                                             <label for="dataDeInicio{{$lote->id}}">Data de início*</label>
                                             <input id="dataDeInicio{{$lote->id}}" name="dataDeInício_{{$promocao->id}}[]" class="form-control" type="date" value="{{$lote->inicio_validade}}">
                                         </div>
-                                        <div class="col-sm-4"> 
+                                        <div class="col-sm-4">
                                             <label for="dataDeFim{{$lote->id}}">Data de fim*</label>
                                             <input id="dataDeFim{{$lote->id}}" name="dataDeFim_{{$promocao->id}}[]" class="form-control" type="date" value="{{$lote->fim_validade}}">
                                         </div>
-                                        <div class="col-sm-3"> 
+                                        <div class="col-sm-3">
                                             <label for="quantidade{{$lote->id}}">Disponibilidade* <img src="{{asset('img/icons/interrogacao.png')}}" alt="" width="15px;" style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Coloque 0 para a disponibilidade ser ilimitada.'></label>
                                             <input id="quantidade{{$lote->id}}" name="disponibilidade_{{$promocao->id}}[]" class="form-control" type="number" placeholder="10" value="@if($lote->quantidade_de_aplicacoes == -1){{0}}@else{{$lote->quantidade_de_aplicacoes}}@endif">
                                         </div>
                                         <div class="col-sm-1">
                                             @if ($key == 0)
                                                 <a href="#" title="Adicionar lote" onclick="adicionarLoteAhPromocao({{$promocao->id}})"><img src="{{asset('img/icons/plus-square-solid_black.svg')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
-                                            @else 
+                                            @else
                                                 <a href="#" title="Remover lote" onclick="removerLoteDaPromocao(this)"><img src="{{asset('img/icons/lixo.png')}}" alt="" width="35px" style="position: relative; top: 32px;"></a>
                                             @endif
                                         </div>
@@ -732,13 +773,13 @@
                         <div class="row">
                             @foreach ($atividades as $atv)
                                 <div class="col-sm-3">
-                                    @if (old('atividades') != null && in_array($atv->id, old('atividades'))) 
+                                    @if (old('atividades') != null && in_array($atv->id, old('atividades')))
                                         <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades_{{$promocao->id}}[]" checked>
                                         <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
-                                    @elseif ($promocao->atividades != null && $promocao->atividades->contains($atv)) 
+                                    @elseif ($promocao->atividades != null && $promocao->atividades->contains($atv))
                                         <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades_{{$promocao->id}}[]" checked>
                                         <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
-                                    @else 
+                                    @else
                                         <input id="atividade_{{$atv->id}}" type="checkbox" value="{{$atv->id}}" name="atividades_{{$promocao->id}}[]">
                                         <label for="atividade_{{$atv->id}}">{{$atv->titulo}}</label>
                                     @endif
@@ -773,13 +814,13 @@
                         <div id="categoriasPromocao{{$promocao->id}}" class="row" style="display:@if($promocao->categorias->diff($categorias)->isEmpty()) none;@else block;@endif">
                             @foreach ($categorias as $categoria)
                                 <div class="col-sm-3">
-                                    @if (old('categorias') != null && in_array($categoria->id, old('categorias'))) 
+                                    @if (old('categorias') != null && in_array($categoria->id, old('categorias')))
                                         <input id="atividade_{{$categoria->id}}" type="checkbox" value="{{$categoria->id}}" name="categorias_{{$promocao->id}}[]" checked>
                                         <label for="atividade_{{$categoria->id}}">{{$categoria->nome}}</label>
                                     @elseif ($promocao->categorias != null && $promocao->categorias->contains($categoria))
                                         <input id="atividade_{{$categoria->id}}" type="checkbox" value="{{$categoria->id}}" name="categorias_{{$promocao->id}}[]" checked>
                                         <label for="atividade_{{$categoria->id}}">{{$categoria->nome}}</label>
-                                    @else 
+                                    @else
                                         <input id="atividade_{{$categoria->id}}" type="checkbox" value="{{$categoria->id}}" name="categorias_{{$promocao->id}}[]">
                                         <label for="atividade_{{$categoria->id}}">{{$categoria->nome}}</label>
                                     @endif
@@ -795,7 +836,7 @@
             </div>
         </div>
         </div>
-    </div> 
+    </div>
 {{-- Fim do modal editar pacote --}}
 {{-- Modal visualizar promocao --}}
     <div class="modal fade modal-example-lg" id="modalPromocaoShow{{$promocao->id}}" tabindex="-1" role="dialog" aria-labelledby="modalPromocaoShow{{$promocao->id}}Label" aria-hidden="true">
@@ -897,7 +938,7 @@
                                             <td>{{$atv->local}}</td>
                                             @if ($atv->valor == null || $atv->valor <= 0)
                                                 <th>Grátis</th>
-                                            @else 
+                                            @else
                                                 <th>R$ {{number_format($atv->valor, 2,',','.')}}</th>
                                             @endif
                                         </th>
@@ -905,19 +946,19 @@
                                 @endforeach
                             </table>
                         </div>
-                    @else 
+                    @else
                         <div class="row">
                             <div class="col-sm-12">
                                 <strong>Nenhuma atividade inclusa.</strong>
                             </div>
                         </div>
                     @endif
-                    
+
                 </div>
             </div>
         </div>
         </div>
-    </div>    
+    </div>
 {{-- Fim modal visualizar promocao --}}
 {{-- Modal de confirmação para deletar a promoção --}}
     <div class="modal fade" id="modalPromocaoDelete{{$promocao->id}}" tabindex="-1" role="dialog" aria-labelledby="modalPromocaoDelete{{$promocao->id}}Label" aria-hidden="true">
@@ -964,17 +1005,17 @@
                             <div class="col-sm-8">
                                 <label for="identificadorCupom">Identificador*</label>
                                 <input id="identificadorCupom" name="identificador" type="text" class="form-control @error('identificador') is-invalid @enderror" value="{{old('identificador')}}" oninput="deixarMaiusculo(event)">
-                            
+
                                 @error('identificador')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                             </div>
-                            <div class="col-sm-4"> 
+                            <div class="col-sm-4">
                                 <label for="quantidadeCupom">Disponibilidade* <img src="{{asset('img/icons/interrogacao.png')}}" alt="" width="15px;" style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Coloque 0 para a disponibilidade ser ilimitada.'></label>
                                 <input id="quantidadeCupom" name="quantidade" class="form-control  @error('quantidade') is-invalid @enderror" type="number" placeholder="10" value="{{old('quantidade')}}">
-                            
+
                                 @error('quantidade')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -991,7 +1032,7 @@
                                     <label for="porcetagem">Porcentagem</label><br>
                                     <input id="real" type="radio" name="tipo_valor" value="real" onchange="alterarPlaceHolderDoNumero(this,0)" required @if(old('tipo_valor') == "real") checked @endif>
                                     <label for="real">Real</label>
-                                @else 
+                                @else
                                     <input id="porcetagem" type="radio" name="tipo_valor" value="porcentagem" onchange="alterarPlaceHolderDoNumero(this,0)" required >
                                     <label for="porcetagem">Porcentagem</label><br>
                                     <input id="real" type="radio" name="tipo_valor" value="real" onchange="alterarPlaceHolderDoNumero(this,0)" required>
@@ -1009,20 +1050,20 @@
                             </div>
                         </div>
                         <div class="row form-group">
-                            <div class="col-sm-6"> 
+                            <div class="col-sm-6">
                                 <label for="inicio">Data de início*</label>
                                 <input id="inicio" name="início" class="form-control @error('início') is-invalid @enderror" type="date" value="{{old('início')}}">
-                                
+
                                 @error('início')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                             </div>
-                            <div class="col-sm-6"> 
+                            <div class="col-sm-6">
                                 <label for="fim">Data de fim*</label>
                                 <input id="fim" name="fim" class="form-control @error('fim') is-invalid @enderror" type="date" value="{{old('fim')}}">
-                            
+
                                 @error('fim')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -1062,17 +1103,17 @@
                             <div class="col-sm-8">
                                 <label for="identificadorCupom{{$cupom->id}}">Identificador*</label>
                                 <input id="identificadorCupom{{$cupom->id}}" name="identificador_cupom_{{$cupom->id}}" type="text" class="form-control @error('identificador_cupom_'.$cupom->id) is-invalid @enderror" value="@if(old('identificador_cupom_'.$cupom->id) != null){{old('identificador_cupom_'.$cupom->id)}}@else{{$cupom->identificador}}@endif" oninput="deixarMaiusculo(event)">
-                            
+
                                 @error('identificador_cupom_'.$cupom->id)
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                             </div>
-                            <div class="col-sm-4"> 
+                            <div class="col-sm-4">
                                 <label for="quantidadeCupom{{$cupom->id}}">Disponibilidade* <img src="{{asset('img/icons/interrogacao.png')}}" alt="" width="15px;" style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Coloque 0 para a disponibilidade ser ilimitada.'></label>
                                 <input id="quantidadeCupom{{$cupom->id}}" name="quantidade_cupom_{{$cupom->id}}" class="form-control  @error('quantidade_cupom_'.$cupom->id) is-invalid @enderror" type="number" placeholder="10" value="@if(old('quantidade_cupom_'.$cupom->id) != null){{old('quantidade_cupom_'.$cupom->id)}}@elseif($cupom->quantidade_aplicacao == -1){{0}}@else{{$cupom->quantidade_aplicacao}}@endif">
-                            
+
                                 @error('quantidade_cupom_'.$cupom->id)
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -1089,7 +1130,7 @@
                                     <label for="porcetagem{{$cupom->id}}">Porcentagem</label><br>
                                     <input id="real{{$cupom->id}}" type="radio" name="tipo_valor_cupom_{{$cupom->id}}" value="real" onchange="alterarPlaceHolderDoNumero(this,{{$cupom->id}})" required @if(old('tipo_valor_cupom_'.$cupom->id) == "real") checked @endif>
                                     <label for="real{{$cupom->id}}">Real</label>
-                                @else 
+                                @else
                                     <input id="porcetagem{{$cupom->id}}" type="radio" name="tipo_valor_cupom_{{$cupom->id}}" value="porcentagem" onchange="alterarPlaceHolderDoNumero(this,{{$cupom->id}})" required @if($cupom->porcentagem) checked @endif>
                                     <label for="porcetagem{{$cupom->id}}">Porcentagem</label><br>
                                     <input id="real{{$cupom->id}}" type="radio" name="tipo_valor_cupom_{{$cupom->id}}" value="real" onchange="alterarPlaceHolderDoNumero(this,{{$cupom->id}})" required @if($cupom->porcentagem == false) checked @endif>
@@ -1107,20 +1148,20 @@
                             </div>
                         </div>
                         <div class="row form-group">
-                            <div class="col-sm-6"> 
+                            <div class="col-sm-6">
                                 <label for="inicio{{$cupom->id}}">Data de início*</label>
                                 <input id="inicio{{$cupom->id}}" name="início_cupom_{{$cupom->id}}" class="form-control @error('início_cupom_'.$cupom->id) is-invalid @enderror" type="date" value="@if(old('início_cupom_'.$cupom->id) != null){{old('início_cupom_'.$cupom->id)}}@else{{$cupom->inicio}}@endif">
-                                
+
                                 @error('início_cupom_'.$cupom->id)
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                             </div>
-                            <div class="col-sm-6"> 
+                            <div class="col-sm-6">
                                 <label for="fim{{$cupom->id}}">Data de fim*</label>
                                 <input id="fim{{$cupom->id}}" name="fim_cupom_{{$cupom->id}}" class="form-control @error('fim_cupom_'.$cupom->id) is-invalid @enderror" type="date" value="@if(old('fim_cupom_'.$cupom->id) != null){{old('fim_cupom_'.$cupom->id)}}@else{{$cupom->fim}}@endif">
-                            
+
                                 @error('fim_cupom_'.$cupom->id)
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -1161,7 +1202,7 @@
                             <div class="col-sm-6">
                                 <label for="nome">Nome*</label>
                                 <input id="nome" name="nome" type="text" class="form-control apenasLetras @error('nome') is-invalid @enderror" value="{{old('nome')}}" placeholder="Estudante">
-                            
+
                                 @error('nome')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -1171,7 +1212,7 @@
                             <div class="col-sm-6">
                                 <label for="valor_total">Valor da inscrição*</label>
                                 <input id="valor_total" name="valor_total" type="text" class="form-control @error('valor_total') is-invalid @enderror" value="{{old('valor_total')}}" placeholder="R$ 50,00">
-                            
+
                                 @error('valor_total')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -1209,7 +1250,7 @@
                                             <div class='col-sm-6'>
                                                 <label for="valorDesconto">Valor</label>
                                                 <input id='valorDesconto' name='valorDesconto[]' type='number' class='form-control real @error('valorDesconto.'.$i) is-invalid @enderror' placeholder='' value='{{old('valorDesconto.'.$i)}}' required>
-                                            
+
                                                 @error('valorDesconto.'.$i)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -1218,8 +1259,8 @@
                                             </div>
                                         </div>
                                         <div class='row form-group'>
-                                            <div class='col-sm-5'> 
-                                                <label for='inicio'>Data de início*</label> 
+                                            <div class='col-sm-5'>
+                                                <label for='inicio'>Data de início*</label>
                                                 <input id='inicio' name='inícioDesconto[]' class='form-control @error('inícioDesconto.'.$i) is-invalid @enderror' type='date' value='{{old('inícioDesconto.'.$i)}}' required>
                                                 @error('inícioDesconto.'.$i)
                                                     <span class="invalid-feedback" role="alert">
@@ -1237,13 +1278,13 @@
                                                     </span>
                                                 @enderror
                                             </div>
-                                            
+
                                             <div class='col-sm-2' style='position: relative; top: 35px;'>
                                                 <a type='button' onclick='removerPeriodoDesconto(this,0)'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
                                             </div>
                                         </div>
                                     </div>
-                                @else 
+                                @else
                                     <div class='peridodoDesconto'>
                                         <div class='row form-group'>
                                             <div class='col-sm-4'>
@@ -1264,7 +1305,7 @@
                                             <div class='col-sm-6'>
                                                 <label for="valorDesconto">Valor</label>
                                                 <input id='valorDesconto' name='valorDesconto[]' type='number' class='form-control real @error('valorDesconto.'.$i) is-invalid @enderror' placeholder='' value='{{old('valorDesconto.'.$i)}}' required>
-                                            
+
                                                 @error('valorDesconto.'.$i)
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -1273,8 +1314,8 @@
                                             </div>
                                         </div>
                                         <div class='row form-group'>
-                                            <div class='col-sm-5'> 
-                                                <label for='inicio'>Data de início*</label> 
+                                            <div class='col-sm-5'>
+                                                <label for='inicio'>Data de início*</label>
                                                 <input id='inicio' name='inícioDesconto[]' class='form-control @error('inícioDesconto.'.$i) is-invalid @enderror' type='date' value='{{old('inícioDesconto.'.$i)}}' required>
                                                 @error('inícioDesconto.'.$i)
                                                     <span class="invalid-feedback" role="alert">
@@ -1292,7 +1333,7 @@
                                                     </span>
                                                 @enderror
                                             </div>
-                                            
+
                                             <div class='col-sm-2' style='position: relative; top: 35px;'>
                                                 <a type='button' onclick='removerPeriodoDesconto(this,0)'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
                                             </div>
@@ -1338,7 +1379,7 @@
                         <div class="col-sm-6">
                             <label for="nome{{$categoria->id}}">Nome*</label>
                             <input id="nome{{$categoria->id}}" name="nome_{{$categoria->id}}" type="text" class="form-control apenasLetras @error('nome_'.$categoria->id) is-invalid @enderror" value="@if(old("nome_".$categoria->id) != null){{old("nome_".$categoria->id)}}@else{{$categoria->nome}}@endif">
-                        
+
                             @error("nome_".$categoria->id)
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -1348,7 +1389,7 @@
                         <div class="col-sm-6">
                             <label for="valor_total{{$categoria->id}}">Valor da inscrição*</label>
                             <input id="valor_total{{$categoria->id}}" name="valor_total_{{$categoria->id}}" type="text" class="form-control @error('valor_total_'.$categoria->id) is-invalid @enderror" value="@if(old('valor_total_'.$categoria->id) != null){{old('valor_total_'.$categoria->id)}}@else{{$categoria->valor_total}}@endif" placeholder="R$ 50,00">
-                        
+
                             @error('valor_total_'.$categoria->id)
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -1387,7 +1428,7 @@
                                     <div class='col-sm-6'>
                                         <label for="valorDesconto_{{$i}}">Valor</label>
                                         <input id='valorDesconto_{{$i}}' name='valorDesconto_{{$categoria->id}}[]' type='number' class='form-control real @error('valorDesconto_'.$categoria->id.'.'.$i) is-invalid @enderror' placeholder='' value='{{old('valorDesconto_'.$categoria->id.'.'.$i)}}' required>
-                                    
+
                                         @error('valorDesconto_'.$categoria->id.'.'.$i)
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1396,8 +1437,8 @@
                                     </div>
                                 </div>
                                 <div class='row form-group'>
-                                    <div class='col-sm-5'> 
-                                        <label for='inicio_{{$i}}'>Data de início*</label> 
+                                    <div class='col-sm-5'>
+                                        <label for='inicio_{{$i}}'>Data de início*</label>
                                         <input id='inicio_{{$i}}' name='inícioDesconto_{{$categoria->id}}[]' class='form-control @error('inícioDesconto_'.$categoria->id.'.'.$i) is-invalid @enderror' type='date' value='{{old('inícioDesconto_'.$categoria->id.'.'.$i)}}' required>
                                         @error('inícioDesconto_'.$categoria->id.'.'.$i)
                                             <span class="invalid-feedback" role="alert">
@@ -1415,14 +1456,14 @@
                                             </span>
                                         @enderror
                                     </div>
-                                    
+
                                     <div class='col-sm-2' style='position: relative; top: 35px;'>
                                         <a type='button' onclick='removerPeriodoDesconto(this,{{$categoria->id}})'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
                                     </div>
                                 </div>
                             </div>
                         @endforeach
-                        @else 
+                        @else
                         @foreach ($categoria->valores as $i => $valor)
                             @if ($i == 0)
                                 <div id='tituloDePeriodo{{$categoria->id}}' class='row form-group'>
@@ -1449,8 +1490,8 @@
                                     </div>
                                 </div>
                                 <div class='row form-group'>
-                                    <div class='col-sm-5'> 
-                                        <label for='inicio{{$valor->id}}'>Data de início*</label> 
+                                    <div class='col-sm-5'>
+                                        <label for='inicio{{$valor->id}}'>Data de início*</label>
                                         <input id='inicio{{$valor->id}}' name='inícioDesconto_{{$categoria->id}}[]' class='form-control' type='date' value='{{$valor->inicio_prazo}}' required>
                                     </div>
 
@@ -1458,7 +1499,7 @@
                                         <label for='fim{{$valor->id}}'>Data de fim*</label>
                                         <input id='fim{{$valor->id}}' name='fimDesconto_{{$categoria->id}}[]' class='form-control' type='date' value='{{$valor->fim_prazo}}' required>
                                     </div>
-                                    
+
                                     <div class='col-sm-2' style='position: relative; top: 35px;'>
                                         <a type='button' onclick='removerPeriodoDesconto(this,{{$categoria->id}})'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
                                     </div>
@@ -1499,7 +1540,7 @@
                     <input type="hidden" name="evento_id" id="" value="{{$evento->id}}">
                     <input type="hidden" name="criarCampo" id="" value="0">
                     <input type="hidden" id="tipo_campo" name="tipo_campo" value="">
-                    
+
                     <div class="container">
                         <div id="escolherInput">
                             <p>
@@ -1545,7 +1586,7 @@
                                 <div class="col-sm-12">
                                     <label for="titulo_do_campo">Titulo do campo*</label>
                                     <input type="text" id="titulo_do_campo" name="titulo_do_campo" class="form-control @error('titulo_do_campo') is-invalid @enderror" required value="{{old('titulo_do_campo')}}">
-                                
+
                                     @error('titulo_do_campo')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -1718,7 +1759,7 @@
                             <div class="col-sm-12">
                                 <label for="titulo_do_campo{{$campo->id}}">Titulo do campo*</label>
                                 <input type="text" id="titulo_do_campo{{$campo->id}}" name="titulo_do_campo" class="form-control @error('titulo_do_campo') is-invalid @enderror" required value="@if(old('titulo_do_campo') != null){{old('titulo_do_campo')}}@else{{$campo->titulo}}@endif">
-                            
+
                                 @error('titulo_do_campo')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -1730,7 +1771,7 @@
                             <div class="col-sm-12">
                                 <input type="checkbox" id="campo_obrigatorio{{$campo->id}}" name="campo_obrigatório" @if (old('campo_obrigatorio') != null) checked @elseif($campo->obrigatorio) checked @endif>
                                 <label for="campo_obrigatorio{{$campo->id}}">Campo obrigatório</label>
-    
+
                                 @error('campo_obrigatório')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -1740,7 +1781,7 @@
                             <div class="col-sm-12">
                                 <input type="checkbox" id="para_todas{{$campo->id}}" name="para_todas" @if (old('para_todas') == "on") checked @elseif($categorias->diff($campo->categorias)->isEmpty() && old('campo_id') == null) checked @endif onchange="mostrarCheckBoxCategoria(this, {{$campo->id}})">
                                 <label for="para_todas{{$campo->id}}">Necessário para todas as categorias de participante</label>
-    
+
                                 @error('para_todas')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -1754,7 +1795,7 @@
                                         <label for="categoria{{$campo->id}}">{{$categoria->nome}}</label>
                                     </div>
                                 @endforeach
-    
+
                                 @error('erroCategoriaEdit'.$campo->id)
                                     @include('componentes.mensagens')
                                 @enderror

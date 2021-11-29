@@ -135,7 +135,7 @@ return [
     */
 
     'providers' => [
-
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         PrettyRoutes\ServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
 
@@ -193,7 +193,7 @@ return [
     */
 
     'aliases' => [
-
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'App' => Illuminate\Support\Facades\App::class,
         'Arr' => Illuminate\Support\Arr::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
