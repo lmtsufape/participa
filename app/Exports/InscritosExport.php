@@ -31,6 +31,7 @@ class InscritosExport implements FromCollection, WithHeadings
         return new Collection(DB::table('inscricaos AS i')
             ->join('users AS u', 'u.id', 'i.user_id')
             ->where('i.evento_id', $this->evento->id)
+            ->distinct('u.email')
             ->select('u.name', 'u.email')
             ->get());
     }
