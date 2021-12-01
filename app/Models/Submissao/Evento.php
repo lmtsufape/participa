@@ -106,5 +106,32 @@ class Evento extends Model
     return $this->belongsTo('App\Models\Submissao\Evento', 'evento_pai_id');
   }
 
+  public function inscritos() {
+    $inscricoes = $this->inscricaos;  
+    $users = collect();
 
+    foreach ($inscricoes as $inscricao) {
+      $users->push([
+        'name' => $inscricao->user->name,
+        'evento' => $this->nome,
+        'email' => $inscricao->user->email,
+      ]);
+    }
+
+    if ($this->subeventos->count() > 0) {
+      foreach ($this->subeventos as $subevento) {
+        $inscricoes = $subevento->inscricaos;  
+
+        foreach ($inscricoes as $inscricao) {
+          $users->push([
+            'name' => $inscricao->user->name,
+            'evento' => $subevento->nome,
+            'email' => $inscricao->user->email,
+          ]);
+        }
+      }
+    }
+
+    return $users;
+  }
 }

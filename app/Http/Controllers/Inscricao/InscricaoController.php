@@ -34,11 +34,7 @@ class InscricaoController extends Controller
         $cuponsDeDescontro = CupomDeDesconto::where('evento_id', $id)->get();
         $categoriasParticipante = CategoriaParticipante::where('evento_id', $id)->get();
         $camposDoFormulario = CampoFormulario::where('evento_id', $id)->get();
-        $users = DB::table('inscricaos AS i')
-            ->join('users AS u', 'u.id', 'i.user_id')
-            ->where('i.evento_id', $evento->id)
-            ->select('u.name', 'u.email')
-            ->get();
+        $users = $evento->inscritos();
 
         return view('coordenador.programacao.inscricoes', ['evento'     => $evento,
                                                            'promocoes'  => $promocoes,
