@@ -3,6 +3,7 @@
 namespace App\Models\Submissao;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Evento extends Model
 {
@@ -106,32 +107,31 @@ class Evento extends Model
     return $this->belongsTo('App\Models\Submissao\Evento', 'evento_pai_id');
   }
 
-  public function inscritos() {
-    $inscricoes = $this->inscricaos;  
-    $users = collect();
 
-    foreach ($inscricoes as $inscricao) {
-      $users->push([
-        'name' => $inscricao->user->name,
-        'evento' => $this->nome,
-        'email' => $inscricao->user->email,
-      ]);
-    }
+
+  public function inscritos() {
+    $users_inscricoes = DB::table('inscricaos AS i')
+                ->join('users AS u', 'u.id', 'i.user_id')
+                ->join('eventos AS e', 'e.id', 'i.evento_id')
+                ->where('i.evento_id', $this->id)
+                ->distinct('u.email')
+                ->select('u.name AS nome', 'e.nome AS evento', 'u.email')
+                ->get();
+    
 
     if ($this->subeventos->count() > 0) {
       foreach ($this->subeventos as $subevento) {
-        $inscricoes = $subevento->inscricaos;  
-
-        foreach ($inscricoes as $inscricao) {
-          $users->push([
-            'name' => $inscricao->user->name,
-            'evento' => $subevento->nome,
-            'email' => $inscricao->user->email,
-          ]);
-        }
+        $users_inscricoes_sub = DB::table('inscricaos AS i')
+                            ->join('users AS u', 'u.id', 'i.user_id')
+                            ->join('eventos AS e', 'e.id', 'i.evento_id')
+                            ->where('i.evento_id', $subevento->id)
+                            ->distinct('u.email')
+                            ->select('u.name AS nome', 'e.nome AS evento', 'u.email')
+                            ->get();
+        $users_inscricoes = $users_inscricoes->merge($users_inscricoes_sub);              
       }
     }
 
-    return $users;
+    return $users_inscricoes;
   }
 }

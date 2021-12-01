@@ -382,11 +382,11 @@
                                     @foreach ($users as $user)
                                         <tbody>
                                             <th>
-                                                <td>{{$user["name"]}}</td>
+                                                <td>{{$user->nome}}</td>
                                                 @if ($evento->subeventos->count() > 0)
-                                                    <td>{{$user["evento"]}}</td>
+                                                    <td>{{$user->evento}}</td>
                                                 @endif
-                                                <td>{{$user["email"]}}</td>
+                                                <td>{{$user->email}}</td>
                                             </th>
                                         </tbody>
                                     @endforeach
