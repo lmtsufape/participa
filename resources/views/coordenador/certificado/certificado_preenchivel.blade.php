@@ -26,7 +26,7 @@
             font-family:Arial, Helvetica, sans-serif;
             color: rgb(12, 14, 13);
             position: relative;
-            margin-top: 44%;
+            margin-top: 34%;
             font-size: 16px;
             text-align: justify;
         }
