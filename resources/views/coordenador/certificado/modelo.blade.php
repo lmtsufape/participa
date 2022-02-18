@@ -33,12 +33,14 @@
 
         .linha {
             text-align: center;
+            margin-right: 15px;
         }
 
         .linha .assinatura-img {
             position: relative;
             display: inline-block;
             width: 200px;
+            margin-right: 15px;
         }
 
         .linha #linha-meio {
