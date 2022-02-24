@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Submissao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CertificadoRequest;
 use App\Mail\EmailCertificado;
+use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Assinatura;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Trabalho;
+use App\Models\Users\Coautor;
+use App\Models\Users\ComissaoEvento;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -287,64 +290,24 @@ class CertificadoController extends Controller
                 SORT_REGULAR);
         }elseif($request->destinatario == '5'){
 
-            $autores = User::join('trabalhos', 'users.id', '=', 'trabalhos.autorId')->where('trabalhos.eventoId', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
-                function($autor) {
-                    return $autor->name;
-                },
-                SORT_REGULAR);
+            $autores = Trabalho::where('eventoId', $request->eventoId)->get()->pluck('autor');
 
-            $cientifica = User::join('comissao_cientifica_eventos', 'users.id', '=', 'comissao_cientifica_eventos.user_id')->where('comissao_cientifica_eventos.evento_id', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
-                function($membro) {
-                    return $membro->name;
-                },
-                SORT_REGULAR);
+            $cientifica = Evento::find($request->eventoId)->usuariosDaComissao;
 
-            $organizadora = User::join('comissao_organizadora_eventos', 'users.id', '=', 'comissao_organizadora_eventos.user_id')->where('comissao_organizadora_eventos.evento_id', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
-                function($membro) {
-                    return $membro->name;
-                },
-                SORT_REGULAR);
+            $organizadora = Evento::find($request->eventoId)->usuariosDaComissaoOrganizadora;
 
-            $revisores = User::join('revisors', 'users.id', '=', 'revisors.user_id')->where('revisors.evento_id', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
-                function($revisor) {
-                    return $revisor->name;
-                },
-                SORT_REGULAR);
+            $revisores = Revisor::where('evento_id', $request->eventoId)->get()->pluck('user');
 
-            $coautores = User::join('coautors', 'users.id', '=', 'coautors.autorId')->where('coautors.eventos_id', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
-                function($coautor) {
-                    return $coautor->name;
-                },
-                SORT_REGULAR);
+            $coautores = Coautor::where('eventos_id', $request->eventoId)->get()->pluck('user');
 
-            $destinatarios = collect();
+            $inscritos = Inscricao::where('evento_id', $request->eventoId)->get()->pluck('user');
 
-            foreach($autores as $dest){
-                $destinatarios->push($dest);
-            }
-
-            foreach($coautores as $dest){
-                if(!$destinatarios->contains($dest)){
-                    $destinatarios->push($dest);
-                }
-            }
-
-            foreach($cientifica as $dest){
-                if(!$destinatarios->contains($dest)){
-                    $destinatarios->push($dest);
-                }
-            }
-            foreach($organizadora as $dest){
-                if(!$destinatarios->contains($dest)){
-                    $destinatarios->push($dest);
-                }
-            }
-            foreach($revisores as $dest){
-                if(!$destinatarios->contains($dest)){
-                    $destinatarios->push($dest);
-                }
-            }
-            $destinatarios = $destinatarios->sortBy('name');
+            $destinatarios = $autores->merge($cientifica)
+                ->merge($organizadora)
+                ->merge($revisores)
+                ->merge($coautores)
+                ->merge($inscritos)
+                ->sortBy('name');
         }
         $desti = collect();
 
