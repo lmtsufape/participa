@@ -88,14 +88,14 @@
 
             <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
         </div>
-        <div style="position: absolute; bottom: 10%; left:50%; margin-left:-205px;">
+        <div style="position: absolute; bottom: 10%; left:38%;">
             <table>
                 <tbody>
                     <tr>
                         @foreach ($certificado->assinaturas as $assinatura)
                             <td>
                                 <div class="linha">
-                                    <img class="assinatura-img" src="{{asset('./storage/'.$assinatura->caminho)}}" ><br>
+                                    <img class="assinatura-img" style="top: 33px;" src="{{asset('./storage/'.$assinatura->caminho)}}" ><br>
                                 </div>
                             </td>
                         @endforeach
