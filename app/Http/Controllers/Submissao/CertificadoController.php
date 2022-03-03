@@ -377,6 +377,7 @@ class CertificadoController extends Controller
 
     public function enviarCertificacao(Request $request)
     {
+        $request->validate(['certificado' => 'required']);
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $certificado = Certificado::find($request->certificado);
