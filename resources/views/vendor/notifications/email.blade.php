@@ -44,7 +44,7 @@
 {{ $salutation }}
 @else
 @lang('Obrigado'),<br>
-Easy - Sistema de Gestão de Eventos Técnico-Científicos
+Participa - Sistema de Gestão de Eventos Técnico-Científicos
 @endif
 
 {{-- Subcopy --}}
