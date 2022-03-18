@@ -49,7 +49,7 @@
     </style>
 
 </head>
-    <body style="background-image: url({{asset('storage/'.$certificado->caminho)}});">
+    <body style="background-image: url({{ storage_path('/app/public/'.$certificado->caminho) }});">
 
         <div class="container">
             @if ($cargo == 'Apresentador')
@@ -99,7 +99,7 @@
                         @foreach ($certificado->assinaturas as $assinatura)
                             <td>
                                 <div class="linha">
-                                    <img class="assinatura-img" style="top: 33px;" src="{{asset('./storage/'.$assinatura->caminho)}}" ><br>
+                                    <img class="assinatura-img" style="top: 33px;" src="{{ storage_path('/app/public/'.$assinatura->caminho) }}" ><br>
                                 </div>
                             </td>
                         @endforeach
