@@ -92,7 +92,7 @@
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @endif
         </div>
-        <div style="position: absolute; bottom: 10%; left:38%;">
+        <div style="position: absolute; bottom: 10%; left: @if($certificado->assinaturas->count() >= 3) 18% @else 38%; @endif ">
             <table>
                 <tbody>
                     <tr>
