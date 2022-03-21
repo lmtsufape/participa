@@ -88,7 +88,7 @@
                     <input type="hidden" class="checkbox_certificado @error('certificado') is-invalid @enderror">
                     <div id="listaCertificados" class="row cards-eventos-index">
                     </div>
-                    @error('certificados')
+                    @error('certificado')
                         <div id="validationServer03Feedback" class="invalid-feedback">
                             <strong>{{$message}}</strong>
                         </div>

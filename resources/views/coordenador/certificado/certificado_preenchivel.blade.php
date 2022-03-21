@@ -49,7 +49,7 @@
     </style>
 
 </head>
-    <body style="background-image: url({{asset('storage/'.$certificado->caminho)}});">
+    <body style="background-image: url({{ storage_path('/app/public/'.$certificado->caminho) }});">
 
         <div class="container">
             @if ($cargo == 'Apresentador')
@@ -92,14 +92,14 @@
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @endif
         </div>
-        <div style="position: absolute; bottom: 10%; left:38%;">
+        <div style="position: absolute; bottom: 10%; left: @if($certificado->assinaturas->count() >= 3) 18% @else 38%; @endif ">
             <table>
                 <tbody>
                     <tr>
                         @foreach ($certificado->assinaturas as $assinatura)
                             <td>
                                 <div class="linha">
-                                    <img class="assinatura-img" style="top: 33px;" src="{{asset('./storage/'.$assinatura->caminho)}}" ><br>
+                                    <img class="assinatura-img" style="top: 33px;" src="{{ storage_path('/app/public/'.$assinatura->caminho) }}" ><br>
                                 </div>
                             </td>
                         @endforeach

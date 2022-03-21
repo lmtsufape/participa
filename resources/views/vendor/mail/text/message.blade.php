@@ -2,7 +2,7 @@
     {{-- Header --}}
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
-            Easy - Sistema de Gestão de Eventos Técnico-Científicos
+            Participa - Sistema de Gestão de Eventos Técnico-Científicos
         @endcomponent
     @endslot
 
@@ -21,7 +21,7 @@
     {{-- Footer --}}
     @slot('footer')
         @component('mail::footer')
-            © {{ date('Y') }} Easy - Sistema de Gestão de Eventos Técnico-Científicos. @lang('All rights reserved.')
+            © {{ date('Y') }} Participa - Sistema de Gestão de Eventos Técnico-Científicos. @lang('All rights reserved.')
         @endcomponent
     @endslot
 @endcomponent

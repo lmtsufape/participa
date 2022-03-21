@@ -47,7 +47,7 @@
     </style>
 
 </head>
-    <body style="background-image: url({{asset('storage/'.$certificado->caminho)}});">
+    <body style="background-image: url({{ storage_path('/app/public/'.$certificado->caminho) }});">
 
         <div class="container">
             @switch($certificado->tipo)

@@ -377,6 +377,7 @@ class CertificadoController extends Controller
 
     public function enviarCertificacao(Request $request)
     {
+        $request->validate(['certificado' => 'required']);
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $certificado = Certificado::find($request->certificado);
@@ -402,7 +403,7 @@ class CertificadoController extends Controller
                 foreach($request->destinatarios as $destinarioId){
                     $user = User::find($destinarioId);
                     $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Organizadora', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
-                    Mail::to($user->email)->send(new EmailCertificado($user, 'membro da Comissão Organizador', $evento->nome, $pdf));
+                    Mail::to($user->email)->send(new EmailCertificado($user, 'membro da Comissão Organizadora', $evento->nome, $pdf));
                 }
                 break;
             case(4):
