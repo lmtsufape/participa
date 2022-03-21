@@ -72,8 +72,7 @@
                     <strong>COMISSÃO CIENTÍFICA </strong><span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
                     @break
                 @case(\App\Models\Submissao\Certificado::TIPO_ENUM['participante'])
-                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou
-                    <span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
+                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou<span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
                     @break
                 @case(\App\Models\Submissao\Certificado::TIPO_ENUM['expositor'])
                     <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como PALESTRANTE da <strong>Mesa de Diálogo</strong> <strong>"titulo do trabalho"</strong>, no etiqueta do trabalho (área/eixo): <strong>nome da área/eixo</strong>
@@ -102,7 +101,7 @@
                 }
                 $esquerda = $quantAssinaturas*$comeco + $comeco;
             @endphp
-            <div style="position: absolute; bottom: 8%; left:{{$esquerda}}%;"> 
+            <div style="position: absolute; bottom: 10%; left:{{$esquerda}}%;"> 
                 <table>
                     <tbody>
                         <tr>

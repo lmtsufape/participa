@@ -76,7 +76,7 @@
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Participante')
-                <p class="texto" >Certificamos que <span style="text-transform:uppercase"><strong>{{$user->name}}</strong></span> participou <span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
+                <p class="texto" >Certificamos que <span style="text-transform:uppercase"><strong>{{$user->name}}</strong></span> participou<span style="font-family:Arial, Helvetica, sans-serif;">{!!$certificado->texto!!}</span></p>
 
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @elseif($cargo == 'Expositor')
@@ -106,7 +106,7 @@
                 }
                 $esquerda = $quantAssinaturas*$comeco + $comeco;
             @endphp
-            <div style="position: absolute; bottom: 8%; left:{{$esquerda}}%;"> 
+            <div style="position: absolute; bottom: 10%; left:{{$esquerda}}%;"> 
                 <table>
                     <tbody>
                         <tr>
