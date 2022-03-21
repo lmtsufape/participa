@@ -94,15 +94,15 @@
         @while ($quantAssinaturas > 0)
             @php
                 if($quantAssinaturas >= 3)
-                    $comeco = 2.3;
+                    $comeco = 1.3;
                 elseif($quantAssinaturas == 2) {
-                    $comeco = 7.5;
+                    $comeco = 6.7;
                 }else{
-                    $comeco = 18.5;
+                    $comeco = 17.4;
                 }
                 $esquerda = $quantAssinaturas*$comeco + $comeco;
             @endphp
-            <div style="position: absolute; bottom: 6%; left:{{$esquerda}}%;"> 
+            <div style="position: absolute; bottom: 8%; left:{{$esquerda}}%;"> 
                 <table>
                     <tbody>
                         <tr>
@@ -110,7 +110,7 @@
                                 @if($i == $indice)
                                     <td>
                                         <div class="linha" style="margin-left: 60px;">
-                                            <img class="assinatura-img" style="top: 33px;" src="{{asset('./storage/'.$assinatura->caminho)}}" ><br>
+                                            <img class="assinatura-img" style="top: 33px;" src="{{ storage_path('/app/public/'.$assinatura->caminho)}}" ><br>
                                         </div>
                                     </td>
                                     @php
@@ -130,9 +130,10 @@
                                         $indice2 += 1;
                                     @endphp
                                     <td>
-                                        <div class="linha" style="max-width:200px; max-height:200px; margin-left: 60px;">
+                                        <div class="linha" style="margin-left: 60px;">
                                             <hr id="linha-meio">
-                                            <p class="assinatura-nome" style="font-size: 14px; font-family:Arial, Helvetica, sans-serif;" >{{$assinatura->nome}}<br>{{$assinatura->cargo}}</p>
+                                            <p class="assinatura-nome" style="max-width:250px; max-height:250px; font-size: 12px; font-family:Arial, Helvetica, sans-serif;" >{{$assinatura->nome}}</p>
+                                            <p class="assinatura-nome" style="max-width:200px; max-height:200px; font-size: 12px; font-family:Arial, Helvetica, sans-serif; margin-left: 23px; margin-top: -12px;">{{$assinatura->cargo}}</p>
                                         </div>
                                     </td>
                                     @if($j+1 >= 3)

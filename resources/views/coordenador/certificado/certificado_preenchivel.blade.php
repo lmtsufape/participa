@@ -10,12 +10,10 @@
             background-attachment: fixed;
             background-size: 100% 100%;
         }
-        @page {
-            margin: 2cm 2cm 0px 2cm;
-        }
+        @page { margin: 0; }
         .container {
             text-align: center;
-            margin: 0px 0px 0px 0px;
+            margin: 2cm 2cm 0px 2cm;
         }
         .certificado-texto {
             color: rgb(15, 3, 85);
@@ -92,30 +90,64 @@
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
             @endif
         </div>
-        <div style="position: absolute; bottom: 10%; left: @if($certificado->assinaturas->count() >= 3) 18% @else 38%; @endif ">
-            <table>
-                <tbody>
-                    <tr>
-                        @foreach ($certificado->assinaturas as $assinatura)
-                            <td>
-                                <div class="linha">
-                                    <img class="assinatura-img" style="top: 33px;" src="{{ storage_path('/app/public/'.$assinatura->caminho) }}" ><br>
-                                </div>
-                            </td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        @foreach ($certificado->assinaturas as $i => $assinatura)
-                            <td>
-                                <div class="linha">
-                                    <hr id="linha-meio">
-                                    <p class="assinatura-nome" style="font-size: 16px; font-family:Arial, Helvetica, sans-serif;"  >{{$assinatura->nome}}<br>{{$assinatura->cargo}}</p>
-                                </div>
-                            </td>
-                        @endforeach
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </body>
+        @php
+            $indice = 0;
+            $indice2 = 0;
+            $quantAssinaturas = $certificado->assinaturas->count();
+        @endphp
+        @while ($quantAssinaturas > 0)
+            @php
+                if($quantAssinaturas >= 3)
+                    $comeco = 1.3;
+                elseif($quantAssinaturas == 2) {
+                    $comeco = 6.7;
+                }else{
+                    $comeco = 17.4;
+                }
+                $esquerda = $quantAssinaturas*$comeco + $comeco;
+            @endphp
+            <div style="position: absolute; bottom: 8%; left:{{$esquerda}}%;"> 
+                <table>
+                    <tbody>
+                        <tr>
+                            @foreach ($certificado->assinaturas as $i => $assinatura)
+                                @if($i == $indice)
+                                    <td>
+                                        <div class="linha" style="margin-left: 60px;">
+                                            <img class="assinatura-img" style="top: 33px;" src="{{ storage_path('/app/public/'.$assinatura->caminho)}}" ><br>
+                                        </div>
+                                    </td>
+                                    @php
+                                        $indice += 1;
+                                        $quantAssinaturas -= 1;
+                                    @endphp
+                                    @if($i+1 >= 3 || $quantAssinaturas == 0)
+                                        @break;
+                                    @endif
+                                @endif
+                            @endforeach
+                        </tr>
+                        <tr>
+                            @foreach ($certificado->assinaturas as $j => $assinatura)
+                                @if($j == $indice2)
+                                    @php
+                                        $indice2 += 1;
+                                    @endphp
+                                    <td>
+                                        <div class="linha" style="margin-left: 60px;">
+                                            <hr id="linha-meio">
+                                            <p class="assinatura-nome" style="max-width:250px; max-height:250px; font-size: 12px; font-family:Arial, Helvetica, sans-serif;" >{{$assinatura->nome}}</p>
+                                            <p class="assinatura-nome" style="max-width:200px; max-height:200px; font-size: 12px; font-family:Arial, Helvetica, sans-serif; margin-left: 23px; margin-top: -12px;">{{$assinatura->cargo}}</p>
+                                        </div>
+                                    </td>
+                                    @if($j+1 >= 3)
+                                        @break;
+                                    @endif
+                                @endif
+                            @endforeach
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        @endwhile
 </html>
