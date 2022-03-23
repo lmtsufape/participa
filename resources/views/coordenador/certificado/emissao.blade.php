@@ -141,7 +141,7 @@
                     }
                     for(var i = 0; i < data.responseJSON.destinatarios.length; i++){
                         var naLista = document.getElementById('listaDestinatarios');
-                        if($destinatario == '1' || $destinatario == '6'){
+                        if($destinatario == '1'){
                             if(data.responseJSON.certificado != null){
                                 var html = `<hr><div id="destinatarioCard_`+$destinatario+`_`+i+`" class="d-flex justify-content-left">
                                                 <div id="destinatarioForm_`+i+`" class="form-check">
@@ -159,6 +159,28 @@
                                                     <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+i+`}}" onChange="selecionarTrabalho(`+i+`)">
                                                     <input style="display: none;" type="checkbox" name="trabalhos[]" value="`+data.responseJSON.trabalhos[i].id+`" id="trabalho_{{`+i+`}}">
                                                     <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.trabalhos[i].titulo+' - '+data.responseJSON.destinatarios[i].name+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
+                                                </div>
+                                        </div><hr>`;
+                            }
+                            $('#tabelaDestinatarios tbody').append(html);
+                        }else if($destinatario == '6'){
+                            if(data.responseJSON.certificado != null){
+                                var html = `<hr><div id="destinatarioCard_`+$destinatario+`_`+i+`" class="d-flex justify-content-left">
+                                                <div id="destinatarioForm_`+i+`" class="form-check">
+                                                    <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+i+`}}" onChange="selecionarTrabalho(`+i+`)">
+                                                    <input style="display: none;" type="checkbox" name="palestras[]" value="`+data.responseJSON.palestras[i].id+`" id="trabalho_{{`+i+`}}">
+                                                    <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.palestras[i].titulo+' - '+data.responseJSON.destinatarios[i].nome+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
+                                                        <a style="cursor: pointer" onclick="atualizarInputs(`+data.responseJSON.certificado.id+`, `+data.responseJSON.destinatarios[i].id+`, `+data.responseJSON.palestras[i].id+`)" target="_blank">
+                                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;
+                                                        </a>
+                                                </div>
+                                        </div><hr>`;
+                            }else{
+                                var html = `<hr><div id="destinatarioCard_`+$destinatario+`_`+i+`" class="d-flex justify-content-left">
+                                                <div id="destinatarioForm_`+i+`" class="form-check">
+                                                    <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+i+`}}" onChange="selecionarTrabalho(`+i+`)">
+                                                    <input style="display: none;" type="checkbox" name="palestras[]" value="`+data.responseJSON.palestras[i].id+`" id="trabalho_{{`+i+`}}">
+                                                    <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.palestras[i].titulo+' - '+data.responseJSON.destinatarios[i].nome+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
                                                 </div>
                                         </div><hr>`;
                             }

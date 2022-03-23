@@ -7,11 +7,13 @@ use App\Http\Requests\CertificadoRequest;
 use App\Mail\EmailCertificado;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Assinatura;
+use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
 use App\Models\Users\ComissaoEvento;
+use App\Models\Users\Convidado;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -229,9 +231,9 @@ class CertificadoController extends Controller
                     $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Participante', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     break;
             case(Certificado::TIPO_ENUM['expositor']):
-                    $user = User::find($destinatarioId);
-                    $trabalho = Trabalho::find($trabalhoId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
+                    $user = Convidado::find($destinatarioId);
+                    $palestra = Atividade::find($trabalhoId);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'palestra' => $palestra, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
                     break;
             case(Certificado::TIPO_ENUM['coordenador_comissao_cientifica']):
                 $user = User::find($destinatarioId);
@@ -258,7 +260,7 @@ class CertificadoController extends Controller
     public function ajaxDestinatarios(Request $request)
     {
 
-       if($request->destinatario == Certificado::TIPO_ENUM['apresentador'] || $request->destinatario == Certificado::TIPO_ENUM['expositor']){
+       if($request->destinatario == Certificado::TIPO_ENUM['apresentador']){
             $destinatarios = collect();
             $trab = Trabalho::where('eventoId', '=', $request->eventoId)->orderBy('titulo')->get();
             $trabalhos = collect();
@@ -308,6 +310,9 @@ class CertificadoController extends Controller
                 ->merge($coautores)
                 ->merge($inscritos)
                 ->sortBy('name');
+        }elseif($request->destinatario == Certificado::TIPO_ENUM['expositor']){
+            $destinatarios = Evento::find($request->eventoId)->palestrantes;
+            $palestras = $destinatarios->map(function($destinatario){ return $destinatario->atividade;});
         }
         $desti = collect();
 
@@ -355,11 +360,20 @@ class CertificadoController extends Controller
         }
 
 
-        if($request->destinatario == Certificado::TIPO_ENUM['apresentador'] || $request->destinatario == '6'){
+        if($request->destinatario == Certificado::TIPO_ENUM['apresentador']){
             $data = array(
                 'success'   => true,
                 'destinatarios'     => $desti,
                 'trabalhos' => $trabalhos,
+                'certificado' => $modeloCertificado,
+                'certificados' => $certificados,
+            );
+            echo json_encode($data);
+        }elseif($request->destinatario == Certificado::TIPO_ENUM['expositor']){
+            $data = array(
+                'success'   => true,
+                'destinatarios'     => $desti,
+                'palestras' => $palestras,
                 'certificado' => $modeloCertificado,
                 'certificados' => $certificados,
             );
@@ -422,9 +436,9 @@ class CertificadoController extends Controller
                 break;
             case(Certificado::TIPO_ENUM['expositor']):
                 foreach($request->destinatarios as $i => $destinarioId){
-                    $user = User::find($destinarioId);
-                    $trabalho = Trabalho::find($request->trabalhos[$i]);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
+                    $user = Convidado::find($destinarioId);
+                    $palestra = Atividade::find($request->palestras[$i]);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'palestra' => $palestra, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime('today'))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, 'palestrante', $evento->nome, $pdf));
                 }
                 break;
