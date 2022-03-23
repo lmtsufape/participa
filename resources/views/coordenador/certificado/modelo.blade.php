@@ -50,38 +50,7 @@
     <body style="background-image: url({{ storage_path('/app/public/'.$certificado->caminho) }});">
 
         <div class="container">
-            @switch($certificado->tipo)
-                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador'])
-                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> apresentou nome da modalidade - nome da etiqueta do trabalho (área/eixo):<strong> nome da área/eixo,
-                    </strong>com o trabalho <strong>"NOME DO TRABALHO"</strong><span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
-                    @break
-                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['coordenador_comissao_cientifica'])
-                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como coordenador/a da <strong>COMISSÃO CIENTÍFICA </strong>
-                    <span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
-                    @break
-                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica'])
-                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como membro da <strong>COMISSÃO CIENTÍFICA </strong>
-                    <span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
-                    @break
-                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora'])
-                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou <strong>da COMISSÃO ORGANIZADORA </strong>
-                    <span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
-                    @break
-                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['revisor'])
-                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como avaliador/a de trabalhos na
-                    <strong>COMISSÃO CIENTÍFICA </strong><span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
-                    @break
-                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['participante'])
-                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou<span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
-                    @break
-                @case(\App\Models\Submissao\Certificado::TIPO_ENUM['expositor'])
-                    <p class="texto">Certificamos que <strong>NOME DA PESSOA</strong> participou como PALESTRANTE da <strong>Mesa de Diálogo</strong> <strong>"titulo do trabalho"</strong>, no etiqueta do trabalho (área/eixo): <strong>nome da área/eixo</strong>
-                    <span style="font-family:Arial, Helvetica, sans-serif; color: red">{!!$certificado->texto!!}</span></p>
-                    @break
-
-                @default
-
-            @endswitch
+            <p class="texto">{!! $certificado->texto !!}</p>
 
             <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
         </div>
@@ -101,7 +70,7 @@
                 }
                 $esquerda = $quantAssinaturas*$comeco + $comeco;
             @endphp
-            <div style="position: absolute; bottom: 10%; left:{{$esquerda}}%;"> 
+            <div style="position: absolute; bottom: 10%; left:{{$esquerda}}%;">
                 <table>
                     <tbody>
                         <tr>
