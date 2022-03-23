@@ -1431,7 +1431,7 @@
                                 "<label for='funcao'>Função:</label>" +
                                 "<select class='form-control' name='funçãoDoConvidado[]' id='funcao' onchange='outraFuncaoConvidado(0, this,"+ contadorConvidados +")'>" +
                                     "<option value='' selected disabled>-- Função --</option>" +
-                                    "<option value='Palestrate'>Palestrate</option>" +
+                                    "<option value='Palestrante'>Palestrante</option>" +
                                     "<option value='Avaliador'>Avaliador</option>" +
                                     "<option value='Ouvinte'>Ouvinte</option>" +
                                     "<option value='Outra'>Outra</option>" +
@@ -1469,7 +1469,7 @@
                                 "<label for='funcao'>Função:</label>" +
                                 "<select class='form-control' name='funçãoDoConvidado[]' id='funcao' onchange='outraFuncaoConvidado("+contadorConvidados+", this,"+ contadorConvidados +")'>" +
                                     "<option value='' selected disabled>-- Função --</option>" +
-                                    "<option value='Palestrate'>Palestrate</option>" +
+                                    "<option value='Palestrante'>Palestrante</option>" +
                                     "<option value='Avaliador'>Avaliador</option>" +
                                     "<option value='Ouvinte'>Ouvinte</option>" +
                                     "<option value='Outra'>Outra</option>" +
