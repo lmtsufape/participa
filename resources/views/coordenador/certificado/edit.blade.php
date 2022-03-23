@@ -37,15 +37,25 @@
                         </div>
                     @enderror
                 </div>
-                <div class="col-sm-6 form-group">
-                    <label for="local"><b>{{ __('Local') }}</b></label>
-                    <input id="local" class="form-control @error('local') is-invalid @enderror" type="text" name="local" value="{{old('local')!=null ? old('local') : $certificado->local}}" required autofocus autocomplete="local">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="local"><b>{{ __('Local') }}</b></label>
+                        <input id="local" class="form-control @error('local') is-invalid @enderror" type="text" name="local" value="{{old('local')!=null ? old('local') : $certificado->local}}" required autofocus autocomplete="local">
 
-                    @error('local')
-                        <div id="validationServer03Feedback" class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                        @error('local')
+                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div>
+                        Tags que podem ser utilizadas para recuperar informações no certificado: <br>
+                        %NOME_PESSOA% para preencher o nome da pessoa que está sendo certificada <br>
+                        %CPF% para preencher o CPF da pessoa que está sendo certicidada <br>
+                        %TITULO_TRABALHO% para preencher o título do trabalho do autor ou coautor <br>
+                        %NOME_EVENTO% para preencher o nome do evento <br>
+                        %TITULO_PALESTRA% para preencher o título da palestra do palestrante <br>
+                    </div>
                 </div>
             </div>
 
