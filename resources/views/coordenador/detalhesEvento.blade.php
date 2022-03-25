@@ -270,6 +270,11 @@
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 80%"> Listar Assinaturas</h5>
                         </li>
                     </a>
+                    <a id="listarPalestrantes" href="{{ route('coord.listarPalestrantes', ['eventoId' => $evento->id]) }}">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 80%"> Listar Palestrantes</h5>
+                        </li>
+                    </a>
                 </div>
             </a>
             @can('isCoordenadorOrCoordenadorDasComissoes', $evento)

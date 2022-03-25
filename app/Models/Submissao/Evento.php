@@ -109,16 +109,13 @@ class Evento extends Model
 
   public function palestrantes()
   {
-    return $this
-      ->hasManyThrough('App\Models\Users\Convidado', 'App\Models\Submissao\Atividade', 'eventoId')
-      ->where(
-        [
-          ['tipo_id', TipoAtividade::where('descricao', 'palestra')->first()->id],
-          ['funcao', 'Palestrante']
-        ]
-      );
+    return $this->hasManyThrough('App\Models\Submissao\Palestrante', 'App\Models\Submissao\Palestra');
   }
 
+  public function palestras()
+  {
+      return $this->hasMany('App\Models\Submissao\Palestra');
+  }
 
   public function inscritos() {
     $users_inscricoes = DB::table('inscricaos AS i')

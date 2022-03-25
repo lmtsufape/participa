@@ -121,6 +121,10 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       //Assinaturas
       Route::get('certificados/cadastrarAssinatura', 'AssinaturaController@create')->name('cadastrarAssinatura');
       Route::get('certificados/listarAssinatura', 'AssinaturaController@index')->name('listarAssinaturas');
+      Route::get('certificados/listarPalestrantes', 'PalestranteController@index')->name('listarPalestrantes');
+      Route::post('certificados/cadastrarPalestrante',  'PalestranteController@store')->name('palestrantes.store');
+      Route::put('certificados/cadastrarPalestrante',  'PalestranteController@update')->name('palestrantes.update');
+      Route::delete('certificados/{palestra}/deletePalestra',  'PalestranteController@destroy')->name('palestrantes.destroy');
       Route::get('certificados/{id}/editarAssinatura', 'AssinaturaController@edit')->name('editarAssinatura');
       Route::post('certificados/cadastrarAssinatura',      'AssinaturaController@store')->name('assinatura.store');
       Route::post('certificados/{id}/deleteAssinatura',  'AssinaturaController@destroy')->name('assinatura.destroy');
