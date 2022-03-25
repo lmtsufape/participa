@@ -28,6 +28,37 @@
                 </div>
 
                 <div class="col-sm-6 form-group">
+                    <label for="tipo"><b>{{__('Tipo')}}</b></label>
+                    <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required onchange="mostrarTags()">
+                        <option value="">-- Selecione o tipo do certificado --</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador']}}">Apresentador</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica']}}">Membro da comissão Científica</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['coordenador_comissao_cientifica']}}">Coordenador da Comissão Científica</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora']}}">Membro da comissão Organizadora</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['expositor']}}">Palestrante</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['participante']}}">Participante</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['revisor']}}">Revisor</option>
+                    </select>
+
+                    @error('tipo')
+                        <div id="validationServer03Feedback" class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+
+                <div class="col-sm-6 form-group">
+                    <label for="data" ><b>{{ __('Data') }}</b></label>
+                    <input id="data" type="date" class="form-control @error('data') is-invalid @enderror" name="data" value="{{ old('data') }}" autocomplete="data" autofocus autocomplete="data">
+
+                    @error('data')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+
+                <div class="col-sm-6 form-group">
                     <label for="texto"><b>{{ __('Texto') }}</b></label>
                     <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" value="{{old('texto')}}" required autofocus autocomplete="texto"></textarea>
 
@@ -49,44 +80,13 @@
                         @enderror
                     </div>
                     <div>
-                        Tags que podem ser utilizadas para recuperar informações no certificado: <br>
-                        %NOME_PESSOA% para preencher o nome da pessoa que está sendo certificada <br>
-                        %CPF% para preencher o CPF da pessoa que está sendo certicidada <br>
-                        %TITULO_TRABALHO% para preencher o título do trabalho do autor ou coautor <br>
-                        %NOME_EVENTO% para preencher o nome do evento <br>
-                        %TITULO_PALESTRA% para preencher o título da palestra do palestrante <br>
+                        <p>Tags que podem ser utilizadas para recuperar informações no certificado:</p>
+                        <p style="display: none;" id="tagNOME_PESSOA">%NOME_PESSOA% para preencher o nome da pessoa que está sendo certificada</p>
+                        <p style="display: none;" id="tagCPF">%CPF% para preencher o CPF da pessoa que está sendo certicidada</p>
+                        <p style="display: none;" id="tagTITULO_TRABALHO">%TITULO_TRABALHO% para preencher o título do trabalho do autor ou coautor</p>
+                        <p style="display: none;" id="tagNOME_EVENTO">%NOME_EVENTO% para preencher o nome do evento</p>
+                        <p style="display: none;" id="tagTITULO_PALESTRA">%TITULO_PALESTRA% para preencher o título da palestra do palestrante</p>
                     </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="col-sm-6 form-group">
-                    <label for="tipo"><b>{{__('Tipo')}}</b></label>
-                    <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required>
-                        <option value="">-- Selecione o tipo do certificado --</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador']}}">Apresentador</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica']}}">Membro da comissão Científica</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['coordenador_comissao_cientifica']}}">Coordenador da Comissão Científica</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora']}}">Membro da comissão Organizadora</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['expositor']}}">Palestrante</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['participante']}}">Participante</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['revisor']}}">Revisor</option>
-                    </select>
-
-                    @error('tipo')
-                        <div id="validationServer03Feedback" class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="col-sm-6 form-group">
-                    <label for="data" ><b>{{ __('Data') }}</b></label>
-                    <input id="data" type="date" class="form-control @error('data') is-invalid @enderror" name="data" value="{{ old('data') }}" autocomplete="data" autofocus autocomplete="data">
-
-                    @error('data')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
                 </div>
             </div>
             <div class="form-row">
@@ -170,5 +170,60 @@
                 })
             });
         });
+
+        function mostrarTags() {
+            switch(document.getElementById("tipo").value){
+                case '1':
+                    console.log('11111111111');
+                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
+                    document.getElementById("tagCPF").style.display = 'block'
+                    document.getElementById("tagTITULO_TRABALHO").style.display = 'block'
+                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
+                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
+                    break;
+                case '2':
+                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
+                    document.getElementById("tagCPF").style.display = 'block'
+                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
+                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
+                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
+                    break;
+                case '3':
+                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
+                    document.getElementById("tagCPF").style.display = 'block'
+                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
+                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
+                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
+                    break;
+                case '4':
+                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
+                    document.getElementById("tagCPF").style.display = 'block'
+                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
+                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
+                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
+                    break;
+                case '5':
+                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
+                    document.getElementById("tagCPF").style.display = 'block'
+                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
+                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
+                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
+                    break;
+                case '6':
+                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
+                    document.getElementById("tagCPF").style.display = 'none'
+                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
+                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
+                    document.getElementById("tagTITULO_PALESTRA").style.display = 'block'
+                    break;
+                case '7':
+                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
+                    document.getElementById("tagCPF").style.display = 'block'
+                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
+                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
+                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
+                    break;
+            }
+        }
     </script>
 @endsection
