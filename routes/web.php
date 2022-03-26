@@ -118,13 +118,15 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('comissaoCientifica/cadastrarComissao', 'EventoController@cadastrarComissao')->name('cadastrarComissao');
       Route::get('comissaoCientifica/definirCoordComissao', 'EventoController@definirCoordComissao')->name('definirCoordComissao');
       Route::get('comissaoCientifica/listarComissao', 'EventoController@listarComissao')->name('listarComissao');
+      //Palestrantes
+      Route::get('palestrantes/listarPalestrantes', 'PalestranteController@index')->name('palestrantes.index');
+      Route::get('palestrantes/cadastrarPalestrante', 'PalestranteController@create')->name('palestrantes.create');
+      Route::post('palestrantes/cadastrarPalestrante',  'PalestranteController@store')->name('palestrantes.store');
+      Route::put('palestrantes/cadastrarPalestrante',  'PalestranteController@update')->name('palestrantes.update');
+      Route::delete('palestrantes/{palestra}/deletePalestra',  'PalestranteController@destroy')->name('palestrantes.destroy');
       //Assinaturas
       Route::get('certificados/cadastrarAssinatura', 'AssinaturaController@create')->name('cadastrarAssinatura');
       Route::get('certificados/listarAssinatura', 'AssinaturaController@index')->name('listarAssinaturas');
-      Route::get('certificados/listarPalestrantes', 'PalestranteController@index')->name('listarPalestrantes');
-      Route::post('certificados/cadastrarPalestrante',  'PalestranteController@store')->name('palestrantes.store');
-      Route::put('certificados/cadastrarPalestrante',  'PalestranteController@update')->name('palestrantes.update');
-      Route::delete('certificados/{palestra}/deletePalestra',  'PalestranteController@destroy')->name('palestrantes.destroy');
       Route::get('certificados/{id}/editarAssinatura', 'AssinaturaController@edit')->name('editarAssinatura');
       Route::post('certificados/cadastrarAssinatura',      'AssinaturaController@store')->name('assinatura.store');
       Route::post('certificados/{id}/deleteAssinatura',  'AssinaturaController@destroy')->name('assinatura.destroy');

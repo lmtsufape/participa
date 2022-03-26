@@ -299,21 +299,8 @@
                     <div class="card-body">
                         <h5 class="card-title">Palestras</h5>
                         <small>Clique em uma palestra para editar</small>
-
-                        <div class="container">
-                            <div class="row d-flex justify-content-end">
-                                <div class="col-sm-3">
-                                    <button id="criarPalestra"
-                                        data-toggle="modal"
-                                        data-target="#modalCriarPalestra"
-                                        class="btn btn-primary float-md-right"
-                                        style="position: relative; bottom: 50px; margin-left: 20px;">+ Criar palestra</button>
-                                </div>
-                            </div>
-                        </div>
                         <p class="card-text">
-                        <table class="table table-hover table-responsive-lg table-sm"
-                            style="position: relative; top: -22px;">
+                        <table class="table table-hover table-responsive-lg table-sm mt-3">
                             <thead>
                                 <th>
                                 <th>Titulo</th>

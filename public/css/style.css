@@ -200,6 +200,9 @@ body{
 #dropdownRevisores h5{
     font-size: 11px;
 }
+#dropdownPalestrantes h5{
+    font-size: 11px;
+}
 #dropdownComissao{
     display: none;
 }

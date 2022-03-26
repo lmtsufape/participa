@@ -14,12 +14,13 @@ class PalestranteController extends Controller
     public function index(Request $request) {
         $evento = Evento::find($request->eventoId);
         $palestras = $evento->palestras;
-        return view('coordenador.certificado.palestrante.index', compact('palestras', 'evento'));
+        return view('coordenador.palestrante.index', compact('palestras', 'evento'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('coord.certificados.palestrante.create');
+        $evento = Evento::find($request->eventoId);
+        return view('coordenador.palestrante.create', compact('evento'));
     }
 
     public function store(PalestranteStoreRequest $request)
@@ -32,7 +33,7 @@ class PalestranteController extends Controller
         foreach ($nomes as $index => $nome) {
             Palestrante::create(['nome' => $nome, 'email' => $emails[$index], 'palestra_id' => $palestra->id]);
         }
-        return redirect()->route('coord.listarPalestrantes', ['eventoId' => $validated['eventoId']]);
+        return redirect()->route('coord.palestrantes.index', ['eventoId' => $validated['eventoId']]);
     }
 
     public function update(Request $request)
@@ -77,7 +78,7 @@ class PalestranteController extends Controller
                 }
             }
         }
-        return redirect()->route('coord.listarPalestrantes', ['eventoId' => $request->eventoId]);
+        return redirect()->route('coord.palestrantes.index', ['eventoId' => $request->eventoId]);
     }
 
     public function destroy(Request $request, Palestra $palestra)
@@ -86,6 +87,6 @@ class PalestranteController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         Palestrante::destroy($palestra->palestrantes()->pluck('id'));
         $palestra->delete();
-        return redirect()->route('coord.listarPalestrantes', ['eventoId' => $evento->id]);
+        return redirect()->route('coord.palestrantes.index', ['eventoId' => $evento->id]);
     }
 }

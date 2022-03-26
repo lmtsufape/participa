@@ -208,6 +208,25 @@
                 </div>
             </a>
             @endcan
+            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
+            <a id="palestrantes" >
+                <li>
+                    <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Palestrantes</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                </li>
+                <div id="dropdownPalestrantes" @if(request()->is('coord/evento/palestrantes*')) style='background-color: gray;display: block;' @else  style='display: none;background-color: gray' @endif>
+                    <a id="cadastrarPalestrante" href="{{route('coord.palestrantes.create', ['eventoId' => $evento->id])}}">
+                        <li>
+                            <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar palestra</h5>
+                        </li>
+                    </a>
+                    <a id="listarPalestrantes" href="{{route('coord.palestrantes.index', ['eventoId' => $evento->id])}}">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar palestras</h5>
+                        </li>
+                    </a>
+                </div>
+            </a>
+            @endcan
             <a id="modalidades">
                 <li>
                     <img src="{{asset('img/icons/sitemap-solid.svg')}}" alt=""><h5>Modalidades</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -268,11 +287,6 @@
                     <a id="listarAssinaturas" href="{{ route('coord.listarAssinaturas', ['eventoId' => $evento->id]) }}">
                         <li>
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 80%"> Listar Assinaturas</h5>
-                        </li>
-                    </a>
-                    <a id="listarPalestrantes" href="{{ route('coord.listarPalestrantes', ['eventoId' => $evento->id]) }}">
-                        <li>
-                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 80%"> Listar Palestrantes</h5>
                         </li>
                     </a>
                 </div>
@@ -840,6 +854,9 @@
     });
     $('#comissaoOrganizadora').click(function(){
             $('#dropdownComissaoOrganizadora').slideToggle(200);
+    });
+    $('#palestrantes').click(function(){
+            $('#dropdownPalestrantes').slideToggle(200);
     });
     $('#modalidades').click(function(){
             $('#dropdownAvaliacoesModalidades').hide();
