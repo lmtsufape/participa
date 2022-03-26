@@ -112,6 +112,11 @@ class Evento extends Model
     return $this->hasManyThrough('App\Models\Submissao\Palestrante', 'App\Models\Submissao\Palestra');
   }
 
+  public function outrasComissoes()
+  {
+      return $this->hasMany('App\Models\Submissao\TipoComissao');
+  }
+
   public function palestras()
   {
       return $this->hasMany('App\Models\Submissao\Palestra');

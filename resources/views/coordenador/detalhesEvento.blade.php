@@ -207,6 +207,25 @@
                     </a>
                 </div>
             </a>
+            <a id="outrasComissoes">
+                <li>
+                    <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Outras comissões</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                </li>
+                <div id="dropdownOutrasComissoes"  @if(request()->is('coord/evento/*/tipocomissao*')) style='background-color: gray;display: block;' @else  style='background-color: gray; display: none;' @endif>
+                    <a id="cadastrarOutraComissao" href=" {{route('coord.tipocomissao.create', $evento)}} ">
+                        <li>
+                            <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5 style="font-size: 11px;">Cadastrar comissão</h5>
+                        </li>
+                    </a>
+                    @foreach ($evento->outrasComissoes as $comissao)
+                        <a href=" {{route('coord.tipocomissao.show', ['evento' => $evento, 'comissao' => $comissao])}} ">
+                            <li>
+                                <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 11px;"> {{$comissao->nome}} </h5>
+                            </li>
+                        </a>
+                    @endforeach
+                </div>
+            </a>
             @endcan
             @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
             <a id="palestrantes" >
@@ -845,6 +864,9 @@
   $(function(){
     $('#areas').click(function(){
         $('#dropdownAreas').slideToggle(200);
+    });
+    $('#outrasComissoes').click(function(){
+        $('#dropdownOutrasComissoes').slideToggle(200);
     });
     $('#revisores').click(function(){
             $('#dropdownRevisores').slideToggle(200);
