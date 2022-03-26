@@ -420,16 +420,16 @@
                                                         <select class="form-control" name="funçãoDoConvidado[]" id="funcao{{$atv->id}}{{$convidado->id}}" onchange="outraFuncaoConvidado({{$atv->id}}{{$convidado->id}}, this, 0)">
                                                             <option value="" selected disabled>-- Função --</option>
                                                             @if (old('funçãoDoConvidado[]'))
-                                                                <option @if(old('funçãoDoConvidado[]') == "Palestrate") selected @endif value="Palestrate">Palestrate</option>
+                                                                <option @if(old('funçãoDoConvidado[]') == "Palestrante") selected @endif value="Palestrante">Palestrante</option>
                                                                 <option @if(old('funçãoDoConvidado[]') == "Avaliador") selected @endif value="Avaliador">Avaliador</option>
                                                                 <option @if(old('funçãoDoConvidado[]') == "Ouvinte") selected @endif value="Ouvinte">Ouvinte</option>
                                                                 <option @if(old('funçãoDoConvidado[]') == "Outra") selected @endif value="Outra">Outra</option>
                                                             @else
-                                                                <option @if($convidado->funcao == "Palestrate") selected @endif value="Palestrate">Palestrate</option>
+                                                                <option @if($convidado->funcao == "Palestrante") selected @endif value="Palestrante">Palestrante</option>
                                                                 <option @if($convidado->funcao == "Avaliador") selected @endif value="Avaliador">Avaliador</option>
                                                                 <option @if($convidado->funcao == "Ouvinte") selected @endif value="Ouvinte">Ouvinte</option>
                                                                 <option @if($convidado->funcao == "Outra") selected @endif value="Outra">Outra</option>
-                                                                @if($convidado->funcao != "Ouvinte" && $convidado->funcao != "Avaliador" && $convidado->funcao != "Palestrate")
+                                                                @if($convidado->funcao != "Ouvinte" && $convidado->funcao != "Avaliador" && $convidado->funcao != "Palestrante")
                                                                     <option selected value="{{$convidado->funcao}}">{{$convidado->funcao}}</option>
                                                                 @endif
                                                             @endif
@@ -881,7 +881,7 @@
                                                 <label for="funcao">Função:</label>
                                                 <select class="form-control @error('funçãoDoConvidado[]') is-invalid @enderror" name="funçãoDoConvidado[]" id="funcaoConvidado" onchange="outraFuncaoConvidado(0, this, 0)">
                                                     <option value="" selected disabled>-- Função --</option>
-                                                    <option value="Palestrate">Palestrate</option>
+                                                    <option value="Palestrante">Palestrante</option>
                                                     <option value="Avaliador">Avaliador</option>
                                                     <option value="Ouvinte">Ouvinte</option>
                                                     <option value="Outra">Outra</option>

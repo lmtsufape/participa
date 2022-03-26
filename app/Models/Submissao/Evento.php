@@ -107,7 +107,15 @@ class Evento extends Model
     return $this->belongsTo('App\Models\Submissao\Evento', 'evento_pai_id');
   }
 
+  public function palestrantes()
+  {
+    return $this->hasManyThrough('App\Models\Submissao\Palestrante', 'App\Models\Submissao\Palestra');
+  }
 
+  public function palestras()
+  {
+      return $this->hasMany('App\Models\Submissao\Palestra');
+  }
 
   public function inscritos() {
     $users_inscricoes = DB::table('inscricaos AS i')
@@ -117,7 +125,7 @@ class Evento extends Model
                 ->distinct('u.email')
                 ->select('u.name AS nome', 'e.nome AS evento', 'u.email')
                 ->get();
-    
+
 
     if ($this->subeventos->count() > 0) {
       foreach ($this->subeventos as $subevento) {
@@ -128,7 +136,7 @@ class Evento extends Model
                             ->distinct('u.email')
                             ->select('u.name AS nome', 'e.nome AS evento', 'u.email')
                             ->get();
-        $users_inscricoes = $users_inscricoes->merge($users_inscricoes_sub);              
+        $users_inscricoes = $users_inscricoes->merge($users_inscricoes_sub);
       }
     }
 
