@@ -31,6 +31,14 @@ class CertificadoRequest extends FormRequest
             'fotoCertificado'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
             'assinaturas' => 'required',
             'data' => 'required|date',
+            'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8'
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'tipo_comissao_id' => 'tipo da comissão'
         ];
     }
 

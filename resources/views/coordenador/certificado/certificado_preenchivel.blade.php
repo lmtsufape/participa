@@ -50,7 +50,7 @@
     <body style="background-image: url({{ storage_path('/app/public/'.$certificado->caminho) }});">
 
         <div class="container">
-                <p class="texto"> {!! str_replace(['%NOME_PESSOA%', '%TITULO_TRABALHO%', '%NOME_EVENTO%', '%TITULO_PALESTRA%', '%CPF%'], [$user->name ?: $user->nome,$trabalho->titulo ?? "VARIAVEL INDEFINIDA", $evento->nome, $palestra->titulo ?? 'VARIAVEL INDEFINIDA', $user->cpf], $certificado->texto) !!} </p>
+                <p class="texto"> {!! str_replace(['%NOME_PESSOA%', '%TITULO_TRABALHO%', '%NOME_EVENTO%', '%TITULO_PALESTRA%', '%CPF%', '%NOME_COMISSAO%'], [$user->name ?: $user->nome,$trabalho->titulo ?? "VARIAVEL INDEFINIDA", $evento->nome, $palestra->titulo ?? 'VARIAVEL INDEFINIDA', $user->cpf, $comissao->nome ?? 'VARIAVEL INDEFINIDA'], $certificado->texto) !!} </p>
                 <p class="texto"  style="text-align: right; margin-top: 0%;">{{$certificado->local}}, {{$dataHoje}}.</p>
         </div>
         @php

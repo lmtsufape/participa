@@ -1,7 +1,7 @@
 @extends('coordenador.detalhesEvento')
 
 @section('menu')
-
+@include('componentes.mensagens')
     <div id="divCadastrarAssinatura" class="comissao">
         <div class="row">
             <div class="col-sm-12">
@@ -26,7 +26,8 @@
                         </div>
                     @enderror
                 </div>
-
+            </div>
+            <div class="form-row">
                 <div class="col-sm-6 form-group">
                     <label for="tipo"><b>{{__('Tipo')}}</b></label>
                     <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required onchange="mostrarTags()">
@@ -38,6 +39,7 @@
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['expositor']}}">Palestrante</option>
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['participante']}}">Participante</option>
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['revisor']}}">Revisor</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['outras_comissoes']}}">Membro de outra comissão</option>
                     </select>
 
                     @error('tipo')
@@ -57,7 +59,25 @@
                     </span>
                     @enderror
                 </div>
+            </div>
+            <div class="form-row" id="outrasComissoesDivSelect" style="display: none;">
+                <div class="col-sm-6 form-group">
+                    <label for="tipo_comissao_id"><b>{{__('Comissão')}}</b></label>
+                    <select name="tipo_comissao_id" id="tipo_comissao_id" class="form-control @error('tipo_comissao_id') is-invalid @enderror" required>
+                        <option value="">-- Selecione a comissão --</option>
+                        @foreach ($evento->outrasComissoes as $comissao)
+                            <option value=" {{$comissao->id}} "> {{$comissao->nome}} </option>
+                        @endforeach
+                    </select>
 
+                    @error('tipo_comissao_id')
+                        <div id="validationServer03Feedback" class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div>
+            <div class="form-row">
                 <div class="col-sm-6 form-group">
                     <label for="texto"><b>{{ __('Texto') }}</b></label>
                     <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" value="{{old('texto')}}" required autofocus autocomplete="texto"></textarea>
@@ -86,6 +106,7 @@
                         <p style="display: none;" id="tagTITULO_TRABALHO">%TITULO_TRABALHO% para preencher o título do trabalho do autor ou coautor</p>
                         <p style="display: none;" id="tagNOME_EVENTO">%NOME_EVENTO% para preencher o nome do evento</p>
                         <p style="display: none;" id="tagTITULO_PALESTRA">%TITULO_PALESTRA% para preencher o título da palestra do palestrante</p>
+                        <p style="display: none;" id="tagNOME_COMISSAO">%NOME_COMISSAO% para preencher o nome da comissão</p>
                     </div>
                 </div>
             </div>
@@ -174,40 +195,26 @@
         function mostrarTags() {
             switch(document.getElementById("tipo").value){
                 case '1':
-                    console.log('11111111111');
                     document.getElementById("tagNOME_PESSOA").style.display = 'block'
                     document.getElementById("tagCPF").style.display = 'block'
                     document.getElementById("tagTITULO_TRABALHO").style.display = 'block'
                     document.getElementById("tagNOME_EVENTO").style.display = 'block'
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
+                    document.getElementById("tagNOME_COMISSAO").style.display = 'none'
+                    document.getElementById("outrasComissoesDivSelect").style.display = 'none'
                     break;
                 case '2':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'block'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
-                    break;
                 case '3':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'block'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
-                    break;
                 case '4':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'block'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
-                    break;
                 case '5':
+                case '7':
                     document.getElementById("tagNOME_PESSOA").style.display = 'block'
                     document.getElementById("tagCPF").style.display = 'block'
                     document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
                     document.getElementById("tagNOME_EVENTO").style.display = 'block'
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
+                    document.getElementById("tagNOME_COMISSAO").style.display = 'none'
+                    document.getElementById("outrasComissoesDivSelect").style.display = 'none'
                     break;
                 case '6':
                     document.getElementById("tagNOME_PESSOA").style.display = 'block'
@@ -215,14 +222,17 @@
                     document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
                     document.getElementById("tagNOME_EVENTO").style.display = 'block'
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'block'
+                    document.getElementById("tagNOME_COMISSAO").style.display = 'none'
+                    document.getElementById("outrasComissoesDivSelect").style.display = 'none'
                     break;
-                case '7':
+                case '8':
                     document.getElementById("tagNOME_PESSOA").style.display = 'block'
                     document.getElementById("tagCPF").style.display = 'block'
                     document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
                     document.getElementById("tagNOME_EVENTO").style.display = 'block'
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
-                    break;
+                    document.getElementById("tagNOME_COMISSAO").style.display = 'block'
+                    document.getElementById("outrasComissoesDivSelect").style.display = 'block'
             }
         }
     </script>

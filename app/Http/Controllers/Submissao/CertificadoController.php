@@ -12,6 +12,7 @@ use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Palestra;
 use App\Models\Submissao\Palestrante;
+use App\Models\Submissao\TipoComissao;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
 use App\Models\Users\ComissaoEvento;
@@ -68,9 +69,9 @@ class CertificadoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        $request->validated();
+        $validated = $request->validated();
         $certificado = new Certificado();
-        $certificado->setAtributes($request);
+        $certificado->setAtributes($validated);
         $certificado->evento_id = $evento->id;
 
         $imagem = $request->fotoCertificado;
@@ -135,9 +136,11 @@ class CertificadoController extends Controller
             'texto'              => 'required|string|min:5|max:500',
             'assinaturas' => 'required',
             'data' => 'required|date',
+            'tipo' => 'required',
+            'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8'
         ]);
         $certificado = Certificado::find($id);
-        $certificado->setAtributes($request);
+        $certificado->setAtributes($validatedData);
 
         if($request->fotoCertificado != null){
             $validatedData = $request->validate([
@@ -242,6 +245,11 @@ class CertificadoController extends Controller
                 $trabalho = Trabalho::find($trabalhoId);
                 $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Coordenador comissão científica', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                 break;
+            case(Certificado::TIPO_ENUM['outras_comissoes']):
+                $user = User::find($destinatarioId);
+                $comissao = TipoComissao::find($trabalhoId);
+                $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'comissao' => $comissao, 'cargo' => "membro da comissao {$comissao->nome}", 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
+                break;
         }
         return $pdf->stream('preview.pdf');
     }
@@ -251,7 +259,7 @@ class CertificadoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $certificados = Certificado::where('evento_id', $evento->id)->get();
-        $destinatarios = array('Apresentadores', 'Coordenador da comissão científica', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Palestrante', 'Participantes', 'Revisores');
+        $destinatarios = array('Apresentadores', 'Coordenador da comissão científica', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Palestrante', 'Participantes', 'Revisores', 'Membro de outra comissão');
         return view('coordenador.certificado.emissao', [
             'evento'=> $evento,
             'certificados' => $certificados,
@@ -315,6 +323,9 @@ class CertificadoController extends Controller
         }elseif($request->destinatario == Certificado::TIPO_ENUM['expositor']){
             $destinatarios = Evento::find($request->eventoId)->palestrantes;
             $palestras = $destinatarios->map(function($destinatario){ return $destinatario->palestra;});
+        }elseif($request->destinatario == Certificado::TIPO_ENUM['outras_comissoes']){
+            $comissao = TipoComissao::find($request->tipo_comissao_id);
+            $destinatarios = $comissao->membros;
         }
         $desti = collect();
 
@@ -356,6 +367,10 @@ class CertificadoController extends Controller
                 $modeloCertificado = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['coordenador_comissao_cientifica']]])->first();
                 $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['coordenador_comissao_cientifica']]])->get();
                 break;
+            case Certificado::TIPO_ENUM['outras_comissoes']:
+                $modeloCertificado = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['outras_comissoes']], ['tipo_comissao_id', $request->tipo_comissao_id]])->first();
+                $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['outras_comissoes']], ['tipo_comissao_id', $request->tipo_comissao_id]])->get();
+                break;
 
             default:
                 break;
@@ -376,6 +391,15 @@ class CertificadoController extends Controller
                 'success'   => true,
                 'destinatarios'     => $desti,
                 'palestras' => $palestras,
+                'certificado' => $modeloCertificado,
+                'certificados' => $certificados,
+            );
+            echo json_encode($data);
+        }elseif($request->destinatario == Certificado::TIPO_ENUM['outras_comissoes']){
+            $data = array(
+                'success'   => true,
+                'destinatarios' => $desti,
+                'comissao' => $comissao,
                 'certificado' => $modeloCertificado,
                 'certificados' => $certificados,
             );
@@ -449,6 +473,14 @@ class CertificadoController extends Controller
                     $user = User::find($destinarioId);
                     $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Coordenador comissão científica', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, 'coordenador/a da comissão Científica', $evento->nome, $pdf));
+                }
+                break;
+            case(Certificado::TIPO_ENUM['outras_comissoes']):
+                foreach($request->destinatarios as $destinarioId){
+                    $user = User::find($destinarioId);
+                    $comissao = TipoComissao::find($request->tipo_comissao_id);
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => "membro da comissão {$comissao->nome}", 'evento' => $evento, 'comissao' => $comissao, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
+                    Mail::to($user->email)->send(new EmailCertificado($user, "membro da comissão {$comissao->nome}", $evento->nome, $pdf));
                 }
                 break;
         }
