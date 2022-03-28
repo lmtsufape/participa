@@ -56,6 +56,8 @@
                                 <option value="4">{{$destinatario}}</option>
                             @elseif($destinatario == "Participantes")
                                 <option value="5">{{$destinatario}}</option>
+                            @elseif($destinatario == "Membro de outra comissão")
+                                <option value="8">{{$destinatario}}</option>
                             @endif
 
                         @endforeach
@@ -66,6 +68,24 @@
                             {{ $message }}
                         </div>
                     @enderror
+                </div>
+
+                <div class="form-row" id="outrasComissoesDivSelect" style="display: none;">
+                    <div class="col-sm-12 form-group">
+                        <label for="tipo_comissao_id"><b>{{__('Comissão')}}</b></label>
+                        <select name="tipo_comissao_id" id="tipo_comissao_id" class="form-control @error('tipo_comissao_id') is-invalid @enderror" required onChange="selecionarDestinatario({{$evento->id}})">
+                            <option value="">-- Selecione a comissão --</option>
+                            @foreach ($evento->outrasComissoes as $comissao)
+                                <option value="{{$comissao->id}}"> {{$comissao->nome}} </option>
+                            @endforeach
+                        </select>
+
+                        @error('tipo_comissao_id')
+                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
                 <div class="col-sm-12">
                     <h4>Lista de Destinatários</h4>
@@ -111,13 +131,22 @@
     window.selecionarDestinatario = function($eventoId){
         var historySelectList = $('select#idSelecionarDestinatario');
         var $destinatario = $('option:selected', historySelectList).val();
+        var tipo_comissao_id = $('#tipo_comissao_id').find(":selected").val();
         limparLista();
         limparCertificados();
+
+        if ($destinatario == 8) {
+            document.getElementById("outrasComissoesDivSelect").style.display = 'block'
+            if(tipo_comissao_id.length == 0)
+                return;
+        } else {
+            document.getElementById("outrasComissoesDivSelect").style.display = 'none'
+        }
 
         $.ajax({
             url:'ajax-listar-destinatarios',
             type:"get",
-            data: {"destinatario": $destinatario, "eventoId" : $eventoId},
+            data: {"destinatario": $destinatario, "eventoId" : $eventoId, "tipo_comissao_id": tipo_comissao_id},
             dataType:'json',
 
             complete: function(data) {
@@ -181,6 +210,28 @@
                                                     <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+i+`}}" onChange="selecionarTrabalho(`+i+`)">
                                                     <input style="display: none;" type="checkbox" name="palestras[]" value="`+data.responseJSON.palestras[i].id+`" id="trabalho_{{`+i+`}}">
                                                     <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.palestras[i].titulo+' - '+data.responseJSON.destinatarios[i].nome+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
+                                                </div>
+                                        </div><hr>`;
+                            }
+                            $('#tabelaDestinatarios tbody').append(html);
+                        }else if($destinatario == '8'){
+                            if(data.responseJSON.certificado != null){
+                                var html = `<hr><div id="destinatarioCard_`+$destinatario+`_`+i+`" class="d-flex justify-content-left">
+                                                <div id="destinatarioForm_`+i+`" class="form-check">
+                                                    <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+i+`}}" onChange="selecionarTrabalho(`+i+`)">
+                                                    <input style="display: none;" type="checkbox" name="comissao" value="`+data.responseJSON.comissao.id+`" id="trabalho_{{`+i+`}}">
+                                                    <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.destinatarios[i].name+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
+                                                        <a style="cursor: pointer" onclick="atualizarInputs(`+data.responseJSON.certificado.id+`, `+data.responseJSON.destinatarios[i].id+`, `+data.responseJSON.comissao.id+`)" target="_blank">
+                                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;
+                                                        </a>
+                                                </div>
+                                        </div><hr>`;
+                            }else{
+                                var html = `<hr><div id="destinatarioCard_`+$destinatario+`_`+i+`" class="d-flex justify-content-left">
+                                                <div id="destinatarioForm_`+i+`" class="form-check">
+                                                    <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+i+`}}" onChange="selecionarTrabalho(`+i+`)">
+                                                    <input style="display: none;" type="checkbox" name="comissao" value="`+data.responseJSON.comissao.id+`" id="trabalho_{{`+i+`}}">
+                                                    <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.destinatarios[i].name+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
                                                 </div>
                                         </div><hr>`;
                             }

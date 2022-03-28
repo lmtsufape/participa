@@ -203,6 +203,9 @@ body{
 #dropdownPalestrantes h5{
     font-size: 11px;
 }
+#dropdownOutrasComissoes h5{
+    font-size: 11px;
+}
 #dropdownComissao{
     display: none;
 }
@@ -436,8 +439,8 @@ body{
 }
 
 .conteudoCentralizado {
-    text-align: center; 
-    position: relative; 
+    text-align: center;
+    position: relative;
     top: 150px;
     background-color: white;
 }
@@ -568,7 +571,7 @@ body{
 }
 
 .nav-link:hover, .nav-link:focus {
-    background-image: linear-gradient( to right, red, rgb(230, 46, 0), rgb(255, 153, 0) ); 
+    background-image: linear-gradient( to right, red, rgb(230, 46, 0), rgb(255, 153, 0) );
     border-radius: 10px;
     filter: alpha(opacity=100);
     -moz-opacity:1;
@@ -622,8 +625,8 @@ body{
 }
 
 .card-perfil .card {
-    position: relative; 
-    top: -500px; 
+    position: relative;
+    top: -500px;
     margin-left: 135px;
     margin-right: 135px;
     border-radius: 15px;
@@ -677,7 +680,7 @@ body{
 .btn-buscar-evento {
     width: 150px;
     font-weight: bolder;
-    background-image: linear-gradient( to right, red, rgb(230, 46, 0), rgb(255, 153, 0) ); 
+    background-image: linear-gradient( to right, red, rgb(230, 46, 0), rgb(255, 153, 0) );
     border-radius: 10px;
     color: white;
 }
@@ -751,12 +754,12 @@ body{
 .card-busca-livre-evento .botao-inscricao {
     position: relative;
     border-radius: none;
-    background-image: linear-gradient( to right, rgb(0, 60, 255), rgb(85, 2, 180)); 
+    background-image: linear-gradient( to right, rgb(0, 60, 255), rgb(85, 2, 180));
     box-shadow: 1px 3px 3px rgb(32, 32, 32);
 }
 
 .card-busca-livre-evento .botao-inscricao:hover {
-    background-image: linear-gradient( to right, rgb(0, 36, 155), rgb(50, 1, 105)); 
+    background-image: linear-gradient( to right, rgb(0, 36, 155), rgb(50, 1, 105));
     transition: 0.3s;
     border-radius: 5px;
     box-shadow: 1px 3px 3px black;
