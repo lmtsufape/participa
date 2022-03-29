@@ -6,8 +6,8 @@
         <div id="divCadastrarAssinatura" class="comissao">
             <div class="row">
                 <div class="col-sm-12">
-                    <h1 class="titulo-detalhes">Cadastrar Assinatura</h1>
-                    <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova assinatura para certificados</h6>
+                    <h1 class="titulo-detalhes">Cadastrar Palestras</h1>
+                    <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova palestra para certificação</h6>
                 </div>
             </div>
         </div>
