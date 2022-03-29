@@ -39,6 +39,8 @@ class Certificado extends Model
         $this->texto =  $texto;
         $this->tipo =  $request['tipo'];
         $this->data =  $request['data'];
-        $this->tipo_comissao_id =  $request['tipo_comissao_id'];
+        if (array_key_exists('tipo_comissao_id', $request)) {
+            $this->tipo_comissao_id =  $request['tipo_comissao_id'];
+        }
     }
 }
