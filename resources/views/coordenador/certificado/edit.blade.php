@@ -63,7 +63,7 @@
             <div class="form-row" id="outrasComissoesDivSelect" style="display: none;">
                 <div class="col-sm-6 form-group">
                     <label for="tipo_comissao_id"><b>{{__('Comissão')}}</b></label>
-                    <select name="tipo_comissao_id" id="tipo_comissao_id" class="form-control @error('tipo_comissao_id') is-invalid @enderror" required>
+                    <select name="tipo_comissao_id" id="tipo_comissao_id" class="form-control @error('tipo_comissao_id') is-invalid @enderror">
                         @foreach ($evento->outrasComissoes as $comissao)
                             <option @if ($certificado->tipo_comissao_id == $comissao->id) selected @endif  value="{{$comissao->id}}"> {{$comissao->nome}} </option>
                         @endforeach
