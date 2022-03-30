@@ -271,7 +271,7 @@
                                         <h5 class="card-title">
                                             <div class="row">
                                                 <div class="form-check">
-                                                    <input class="checkbox_certificado" type="radio" name="certificado" value="{{`+data.responseJSON.certificados[i].id+`}}" id="certificadoID" onclick="atualizarInputCertificado(`+data.responseJSON.certificados[i].id+`)">
+                                                    <input class="checkbox_certificado" type="radio" name="certificado" value="`+data.responseJSON.certificados[i].id+`" id="certificadoID" onclick="atualizarInputCertificado(`+data.responseJSON.certificados[i].id+`)">
                                                     `+data.responseJSON.certificados[i].nome+`
                                                 </div>
                                             </div>
