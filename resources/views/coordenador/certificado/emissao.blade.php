@@ -73,7 +73,7 @@
                 <div class="form-row" id="outrasComissoesDivSelect" style="display: none;">
                     <div class="col-sm-12 form-group">
                         <label for="tipo_comissao_id"><b>{{__('Comissão')}}</b></label>
-                        <select name="tipo_comissao_id" id="tipo_comissao_id" class="form-control @error('tipo_comissao_id') is-invalid @enderror" required onChange="selecionarDestinatario({{$evento->id}})">
+                        <select name="tipo_comissao_id" id="tipo_comissao_id" class="form-control @error('tipo_comissao_id') is-invalid @enderror" onChange="selecionarDestinatario({{$evento->id}})">
                             <option value="">-- Selecione a comissão --</option>
                             @foreach ($evento->outrasComissoes as $comissao)
                                 <option value="{{$comissao->id}}"> {{$comissao->nome}} </option>
@@ -271,7 +271,7 @@
                                         <h5 class="card-title">
                                             <div class="row">
                                                 <div class="form-check">
-                                                    <input class="checkbox_certificado" type="radio" name="certificado" value="{{`+data.responseJSON.certificados[i].id+`}}" id="certificadoID" onclick="atualizarInputCertificado(`+data.responseJSON.certificado.id+`)">
+                                                    <input class="checkbox_certificado" type="radio" name="certificado" value="{{`+data.responseJSON.certificados[i].id+`}}" id="certificadoID" onclick="atualizarInputCertificado(`+data.responseJSON.certificados[i].id+`)">
                                                     `+data.responseJSON.certificados[i].nome+`
                                                 </div>
                                             </div>
@@ -314,7 +314,11 @@
 
     function atualizarInputs(certificado, destinatario, trabalho){
         var url ='{{route("coord.previewCertificado", [":certificadoId", ":destinatarioId", ":trabalhoId"])}}';
-        url = url.replace(':certificadoId', certificado);
+        if($('input#certificadoID').val()) {
+            url = url.replace(':certificadoId', $('input#certificadoID').val());
+        } else {
+            url = url.replace(':certificadoId', certificado);
+        }
         url = url.replace(':destinatarioId', destinatario);
         url = url.replace(':trabalhoId', trabalho);
         window.open(url, '_blank');
