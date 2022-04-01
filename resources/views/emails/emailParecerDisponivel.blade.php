@@ -7,7 +7,7 @@ O parecer do seu trabalho ou atividade "{{ $trabalho->titulo }}", submetido no e
 
 Acesse o sistema para verificar o parecer.
 
-@component('mail::button', ['url' => 'http://sistemas.ufape.edu.br/easy'])
+@component('mail::button', ['url' => 'http://participa.ufape.edu.br'])
 Acessar o sistema
 @endcomponent
 

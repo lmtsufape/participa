@@ -36,7 +36,7 @@ class EmailConviteRevisor extends Mailable
      */
     public function build()
     {
-        $subject = 'Easy - Convite de Evento';
+        $subject = 'Participa - Convite de Evento';
         // return $this->markdown('emails.user.welcome')->with([
         //     'user' => $this->nomeUsuarioPai,
         //     'evento' => $this->nomeEvento,
@@ -49,7 +49,7 @@ class EmailConviteRevisor extends Mailable
         //     'info'      => $this->informacoes,
         //     'evento'    => $this->evento,
         // ]);
-        return  $this->from('lmtsteste@gmail.com', 'Easy')
+        return  $this->from('lmtsteste@gmail.com', 'Participa')
                     ->subject($this->subject)
                     ->markdown('emails.emailConviteRevisor', [
                         'user'      => $this->user,

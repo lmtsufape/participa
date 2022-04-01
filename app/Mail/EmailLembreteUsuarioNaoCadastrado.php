@@ -35,8 +35,8 @@ class EmailLembreteUsuarioNaoCadastrado extends Mailable
      */
     public function build()
     {
-      return  $this->from('lmtsteste@gmail.com', 'Easy ')
-                    ->subject("Sistema Easy - Lembrete de cadastro")
+      return  $this->from('lmtsteste@gmail.com', 'Participa ')
+                    ->subject("Sistema Participa - Lembrete de cadastro")
                     ->markdown('emails.emailLembreteCadastro')->with([
                       'evento' => $this->nomeEvento,
                       'senha' => $this->senhaTemporaria,

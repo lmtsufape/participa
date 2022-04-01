@@ -13,7 +13,7 @@ E-mail: {{$email}}
 
 Senha temporária: {{$senha}}
 
-@component('mail::button', ['url' => 'http://sistemas.ufape.edu.br/easy/login'])
+@component('mail::button', ['url' => 'http://participa.ufape.edu.br/login'])
 Fazer login
 @endcomponent
 

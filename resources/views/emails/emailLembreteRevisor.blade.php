@@ -10,7 +10,7 @@ Agradecemos de antemão pela sua disponibilidade para colaborar com a realizaç�
 
 
 
-@component('mail::button', ['url' => 'http://sistemas.ufape.edu.br/easy/login'])
+@component('mail::button', ['url' => 'http://participa.ufape.edu.br/login'])
 Acessar site
 @endcomponent
 

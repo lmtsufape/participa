@@ -30,8 +30,8 @@ class EmailParecerDisponivel extends Mailable
      */
     public function build()
     {
-      return  $this->from('lmtsteste@gmail.com', 'Easy ')
-                    ->subject("Sistema Easy - Parecer disponível")
+      return  $this->from('lmtsteste@gmail.com', 'Participa ')
+                    ->subject("Sistema Participa - Parecer disponível")
                     ->markdown('emails.emailParecerDisponivel')->with([
                       'evento' => $this->evento,
                       'senha'  => $this->trabalho,
