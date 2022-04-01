@@ -310,7 +310,7 @@ class RevisorController extends Controller
       return redirect()->back()->with(['mensagem' => 'E-mail de lembrete de revisão enviado para ' . $user->email . '.']);
     }
     public function enviarEmailTodosRevisores(Request $request){
-        $subject = "Sistema Easy - Lembrete  de trabalho";
+        $subject = "Sistema Participa - Lembrete  de trabalho";
 
         $revisores = json_decode($request->input('revisores'));
         foreach ($revisores as $revisor) {
@@ -357,7 +357,7 @@ class RevisorController extends Controller
     }
 
     public function conviteParaEvento(Request $request, $id) {
-      $subject = "Sistema Easy - Atribuição como avaliador(a) e/ou parecerista";
+      $subject = "Sistema Participa - Atribuição como avaliador(a) e/ou parecerista";
       $evento = Evento::find($id);
 
       $user = User::find($request->id);

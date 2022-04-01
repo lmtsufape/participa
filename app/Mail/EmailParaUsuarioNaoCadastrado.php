@@ -42,7 +42,7 @@ class EmailParaUsuarioNaoCadastrado extends Mailable
      */
     public function build()
     {
-      return  $this->from('lmtsteste@gmail.com', 'Easy ')
+      return  $this->from('lmtsteste@gmail.com', 'Participa ')
                     ->subject("Ative sua conta")
                     ->markdown('emails.usuarioNaoCadastrado')->with([
                       'user' => $this->nomeUsuarioPai,

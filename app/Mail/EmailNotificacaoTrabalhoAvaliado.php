@@ -36,8 +36,8 @@ class EmailNotificacaoTrabalhoAvaliado extends Mailable
      */
     public function build()
     {
-      return  $this->from('lmtsteste@gmail.com', 'Easy ')
-                    ->subject("Sistema Easy - Trabalho/Atividade avaliada")
+      return  $this->from('lmtsteste@gmail.com', 'Participa ')
+                    ->subject("Sistema Participa - Trabalho/Atividade avaliada")
                     ->markdown('emails.emailTrabalhoAvaliado')->with([
                       'user'     => $this->user,
                       'autor'    => $this->autor,

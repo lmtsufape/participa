@@ -1,4 +1,4 @@
-@component('mail::message',['url' => 'http://sistemas.ufape.edu.br/easy'])
+@component('mail::message',['url' => 'http://participa.ufape.edu.br'])
 # Seja Bem-Vindo!
 
 Você foi convidado a se cadastrar no evento {{$evento}} como {{$funcao}} pelo o usuário {{$user}},
@@ -12,7 +12,7 @@ E-mail: {{$email}}
 Senha temporária: {{$senha}}
 
 
-@component('mail::button', ['url' => 'http://sistemas.ufape.edu.br/easy/login'])
+@component('mail::button', ['url' => 'http://participa.ufape.edu.br/login'])
 Fazer login
 @endcomponent
 
