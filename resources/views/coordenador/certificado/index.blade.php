@@ -62,6 +62,11 @@
                                 </a>
                             </div>
                             <div>
+                                <a href="{{route('coord.listarEmissoes', $certificado)}}">
+                                    <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Listar certificados emitidos
+                                </a>
+                            </div>
+                            <div>
                                 <a data-toggle="modal" data-target="#modalStaticDeletarCertificado_{{$certificado->id}}" style="color: red; cursor: pointer;">
                                     <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar certificado
                                 </a>

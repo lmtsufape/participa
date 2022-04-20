@@ -4,6 +4,8 @@ namespace App\Models\Submissao;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use App\Models\Users\User;
+
 
 class Certificado extends Model
 {
@@ -25,6 +27,10 @@ class Certificado extends Model
         return $this->belongsToMany(Assinatura::class, 'assinatura_certificado', 'certificado_id', 'assinatura_id')->orderBy('nome');
     }
 
+    public function usuarios()
+    {
+        return $this->belongsToMany(User::class, 'certificado_user')->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id')->withTimestamps();
+    }
 
     public function medidas()
     {
@@ -34,6 +40,11 @@ class Certificado extends Model
     public function evento()
     {
         return $this->belongsTo(Evento::class, 'evento_id');
+    }
+
+    public function tipoComissao()
+    {
+        return $this->belongsTo(TipoComissao::class);
     }
 
     public function setAtributes($request)

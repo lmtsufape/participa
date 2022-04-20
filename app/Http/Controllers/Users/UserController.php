@@ -15,6 +15,9 @@ use App\Models\Users\Coautor;
 use App\Models\Users\Revisor;
 use App\Models\Users\ComissaoEvento;
 use App\Http\Controllers\Controller;
+use App\Models\Submissao\Certificado;
+use App\Models\Submissao\Palestra;
+use App\Models\Submissao\TipoComissao;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
@@ -183,6 +186,18 @@ class UserController extends Controller
             return back()->with(['message' => "Atualizado com sucesso!"]);
 
         }
+    }
+
+    public function meusCertificados()
+    {
+        $usuario = auth()->user();
+        $tiposView = ['Apresentador','Comissão científica','Comissão organizadora','Revisor','Participante','Palestrante','Coordenador da comissao científica','Outras comissoes'];
+        $certificadosPorTipo = $usuario->certificados->groupBy('tipo');
+        $tipos = array_flip(Certificado::TIPO_ENUM);
+        $comissoes = TipoComissao::find($usuario->certificados->pluck('pivot.comissao_id'));
+        $palestras = Palestra::find($usuario->certificados->pluck('pivot.palestra_id'));
+        $trabalhos = Trabalho::find($usuario->certificados->pluck('pivot.trabalho_id'));
+        return view('user.meusCertificados', compact('tiposView', 'usuario', 'certificadosPorTipo', 'tipos', 'comissoes', 'palestras', 'trabalhos',));
     }
 
     public function meusTrabalhos(){

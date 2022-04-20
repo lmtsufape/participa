@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use App\Notifications\recuperacaoSenha;
+use App\Models\Submissao\Certificado;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -122,5 +123,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function outrasComissoes() {
         return $this->belongsToMany('App\Models\Submissao\TipoComissao');
+    }
+
+    public function certificados()
+    {
+        return $this->belongsToMany(Certificado::class, 'certificado_user')->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id')->withTimestamps();
     }
 }
