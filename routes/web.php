@@ -140,6 +140,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::post('certificados/{id}/deleteAssinatura',  'AssinaturaController@destroy')->name('assinatura.destroy');
       Route::post('certificados/{id}/editAssinatura',  'AssinaturaController@update')->name('assinatura.update');
       //Certificados
+      Route::post('certificados/cadastrarmedida', 'CertificadoController@salvarMedida')->name('cadastrarmedida');
       Route::get('certificados/cadastrarCertificado', 'CertificadoController@create')->name('cadastrarCertificado');
       Route::get('certificados/{id}/modelo', 'CertificadoController@modelo')->name('modeloCertificado');
       Route::get('certificados/{id}/editarCertificado', 'CertificadoController@edit')->name('editarCertificado');

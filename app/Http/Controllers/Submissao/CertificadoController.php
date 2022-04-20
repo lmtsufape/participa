@@ -7,6 +7,7 @@ use App\Http\Requests\CertificadoRequest;
 use App\Mail\EmailCertificado;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Assinatura;
+use App\Models\Submissao\Medida;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Evento;
@@ -176,6 +177,50 @@ class CertificadoController extends Controller
         return redirect(route('coord.listarCertificados', ['eventoId' => $evento->id]))->with(['success' => 'Certificado editado com sucesso.']);
     }
 
+    public function salvarMedida(Request $request)
+    {
+        $certificado = Certificado::find($request->certificado_id);
+        $assinaturas = $certificado->assinaturas;
+        $assinaturas_id = $assinaturas->pluck('id');
+        $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['texto']]);
+        $medida->x = $request['texto-x'];
+        $medida->y = $request['texto-y'];
+        $medida->largura = $request['texto-largura'];
+        $medida->fontSize = intval($request['texto-fontSize']);
+        $medida->save();
+
+        $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['data']]);
+        $medida->x = $request['data-x'];
+        $medida->y = $request['data-y'];
+        $medida->largura = $request['data-largura'];
+        $medida->fontSize = intval($request['data-fontSize']);
+        $medida->save();
+
+        foreach ($assinaturas_id as $id) {
+            $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['cargo_assinatura'], 'assinatura_id' => $id]);
+            $medida->x = $request['cargo-x-'.$id];
+            $medida->y = $request['cargo-y-'.$id];
+            $medida->largura = $request['cargo-largura-'.$id];
+            $medida->fontSize = intval($request['cargo-fontSize-'.$id]);
+            $medida->save();
+
+            $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['nome_assinatura'], 'assinatura_id' => $id]);
+            $medida->x = $request['nome-x-'.$id];
+            $medida->y = $request['nome-y-'.$id];
+            $medida->largura = $request['nome-largura-'.$id];
+            $medida->fontSize = intval($request['nome-fontSize-'.$id]);
+            $medida->save();
+
+            $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['imagem_assinatura'], 'assinatura_id' => $id]);
+            $medida->x = $request['imagem-x-'.$id];
+            $medida->y = $request['imagem-y-'.$id];
+            $medida->largura = $request['imagem-largura-'.$id];
+            $medida->altura = $request['imagem-altura-'.$id];
+            $medida->save();
+        }
+        return redirect()->route('coord.listarCertificados', ['eventoId' => $certificado->evento->id]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -197,13 +242,13 @@ class CertificadoController extends Controller
     public function modelo($id)
     {
         $certificado = Certificado::find($id);
+        $medidas = $certificado->medidas()->with('assinatura')->get();
         $evento = $certificado->evento;
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
         date_default_timezone_set('America/Recife');
-        $pdf = PDF::loadView('coordenador.certificado.modelo', ['certificado' => $certificado, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
-
-        return $pdf->stream('modelo.pdf');
+        $dataHoje = strftime('%d de %B de %Y', strtotime($certificado->data));
+        return view('coordenador.certificado.modelo', compact('certificado', 'dataHoje', 'evento', 'medidas'));
     }
 
     public function previewCertificado($certificadoId, $destinatarioId, $trabalhoId)

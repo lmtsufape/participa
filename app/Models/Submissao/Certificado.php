@@ -25,6 +25,12 @@ class Certificado extends Model
         return $this->belongsToMany(Assinatura::class, 'assinatura_certificado', 'certificado_id', 'assinatura_id')->orderBy('nome');
     }
 
+
+    public function medidas()
+    {
+        return $this->hasMany(Medida::class);
+    }
+
     public function evento()
     {
         return $this->belongsTo(Evento::class, 'evento_id');
