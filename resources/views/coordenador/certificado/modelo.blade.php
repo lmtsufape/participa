@@ -7,7 +7,7 @@
     <script src="https://unpkg.com/konva@8.3.5/konva.min.js"></script>
     <style type="text/css">
         @page { margin: 0; }
-        #container {
+        #container, #back{
             background-image: url({{ "/storage/" .$certificado->caminho }});
             background-repeat: no-repeat;
             background-size: 100% 100%;
@@ -23,7 +23,8 @@
 </head>
     <body style="text-align: center;">
         <div id="container"></div>
-        <button onclick="send()">Click me</button>
+        <div id="back" style="margin-top: 10px"></div>
+        <button onclick="send()">Salvar</button>
         <form id="form" action="{{route('coord.cadastrarmedida')}}" class="d-none" method="POST">
             @csrf
             <input type="text" name="certificado_id" value="{{$certificado->id}}">
@@ -34,11 +35,15 @@
                     @endforeach
                 @endforeach
             @endforeach
-            @foreach (['texto', 'data'] as $objeto)
+            @foreach (['texto', 'data', 'hash'] as $objeto)
                 @foreach (['largura', 'x', 'y', 'fontSize'] as $medida)
                     <input type="text" name="{{$objeto}}-{{$medida}}" value="0">
                 @endforeach
             @endforeach
+            <input type="text" name="qrcode-x" value="0">
+            <input type="text" name="qrcode-y" value="0">
+            <input type="text" name="qrcode-largura" value="0">
+            <input type="text" name="qrcode-altura" value="0">
         </form>
         <script>
             var stage = new Konva.Stage({
@@ -64,7 +69,7 @@
                 y: parseInt(medida.y),
                 width: parseInt(medida.largura),
                 fontSize: medida.fontSize,
-                text: '{!! json_encode($certificado->texto) !!}',
+                text: '{!! json_encode(strip_tags($certificado->texto)) !!}',
                 draggable: true,
                 id: 'texto',
                 name: 'texto',
@@ -157,11 +162,10 @@
             }
             var i = 0;
             assinaturas.forEach((assinatura, index) => {
-                medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
-                console.log(parseInt(medida.altura))
                 var assinaturaArray = [];
                 var imageObj = new Image();
                 imageObj.onload = function () {
+                    medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     // add the shape to the layer
                     if(medida === undefined) {
                         yoda = new Konva.Image({
@@ -383,6 +387,169 @@
                 }
             });
 
+            var stage1 = new Konva.Stage({
+                container: 'back',
+                width: 1118,
+                height: 790,
+            });
+
+            var layer1 = new Konva.Layer();
+            stage1.add(layer1);
+
+            medida = medidas.find(m => m.tipo == 8);
+            if(medida === undefined)
+                medida = {x: 312, y: 667, largura: 500, fontSize: 14}
+
+            var hash = new Konva.Text({
+                x: parseInt(medida.x),
+                y: parseInt(medida.y),
+                width: parseInt(medida.largura),
+                fontSize: medida.fontSize,
+                text: '$2y$10$VN/cOnYHgsW/U5W16uH.Q.MKXDNa.3Z8QqeHl89qjp/TXNLP3yNO6', //exemplo de hash
+                draggable: true,
+                id: 'hash',
+                name: 'texto',
+            });
+
+            var textoTransformer1 = new Konva.Transformer({
+                padding: 5,
+                rotateEnabled: false,
+                keepRatio: true,
+                enabledAnchors: ['top-left', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-right'],
+                // enable only side anchors
+                // limit transformer size
+                boundBoxFunc: (oldBox, newBox) => {
+                if (newBox.width < MIN_WIDTH) {
+                    return oldBox;
+                }
+                return newBox;
+                },
+            });
+            layer1.add(textoTransformer1);
+
+            var imagemTransformer1 = new Konva.Transformer({
+                keepRatio: true,
+                enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+            });
+            layer1.add(imagemTransformer1);
+
+
+            var imageObj = new Image();
+            imageObj.onload = function () {
+                medida = medidas.find(m => m.tipo == 7);
+                // add the shape to the layer
+                if(medida === undefined) {
+                    yoda = new Konva.Image({
+                        x: 443,
+                        y: 272,
+                        image: imageObj,
+                        draggable: true,
+                        id: 'qrcode',
+                        scaleX: 0.2,
+                        scaleY: 0.2,
+                    });
+                    yoda.setAttrs({
+                        height: yoda.height() * yoda.scaleY(),
+                        width: yoda.width() * yoda.scaleX(),
+                        scaleX: 1,
+                        scaleY: 1,
+                    });
+                } else {
+                    medida = medidas.find(m => m.tipo == 7);
+                    yoda = new Konva.Image({
+                        x: parseInt(medida.x),
+                        y: parseInt(medida.y),
+                        image: imageObj,
+                        draggable: true,
+                        id: 'qrcode',
+                        height: parseInt(medida.altura),
+                        width: parseInt(medida.largura),
+                    });
+                }
+                layer1.add(yoda);
+                yoda.on('transform', (event) => {
+                    // with enabled anchors we can only change scaleX
+                    // so we don't need to reset height
+                    // just width
+                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                        event.target.setAttrs({
+                            height: event.target.height() * event.target.scaleY(),
+                            width: event.target.width() * event.target.scaleX(),
+                            scaleX: 1,
+                            scaleY: 1,
+                        });
+                    } else if ( ['middle-right', 'middle-left'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                        event.target.setAttrs({
+                            width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
+                            scaleX: 1,
+                            scaleY: 1,
+                        });
+                    }
+                });
+            };
+            imageObj.src = "/img/qrcode.png";
+
+
+            hash.on('transform', (event) => {
+                // with enabled anchors we can only change scaleX
+                // so we don't need to reset height
+                // just width
+                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer1.getActiveAnchor()) ) {
+                hash.setAttrs({
+                    fontSize: Math.max(hash.fontSize() * hash.scaleX(), 2),
+                    width: Math.max(hash.width() * hash.scaleX(), MIN_WIDTH),
+                    scaleX: 1,
+                    scaleY: 1,
+                });
+                } else if ( ['middle-right', 'middle-left'].includes(textoTransformer1.getActiveAnchor()) ) {
+                hash.setAttrs({
+                    width: Math.max(hash.width() * hash.scaleX(), MIN_WIDTH),
+                    scaleX: 1,
+                    scaleY: 1,
+                });
+                }
+            });
+            layer1.add(hash);
+            stage1.on('click tap', function (e) {
+
+                console.log(e.target.attrs);
+                // if click on empty area - remove all selections
+                if (e.target === stage1) {
+                    textoTransformer1.nodes([]);
+                    imagemTransformer1.nodes([]);
+                    return;
+                }
+
+                // do we pressed shift or ctrl?
+                const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
+                const isSelected = imagemTransformer1.nodes().indexOf(e.target) >= 0;
+
+                if (!metaPressed && !isSelected) {
+                    // if no key pressed and the node is not selected
+                    // select just one
+                    if(stage1.find('.texto').includes(e.target)) {
+                        textoTransformer1.nodes([e.target]);
+                    } else {
+                        imagemTransformer1.nodes([e.target]);
+                    }
+                } else if (metaPressed && isSelected) {
+                    // if we pressed keys and node was selected
+                    // we need to remove it from selection:
+                    const nodes = imagemTransformer1.nodes().slice(); // use slice to have new copy of array
+                    // remove node from array
+                    nodes.splice(nodes.indexOf(e.target), 1);
+                    imagemTransformer1.nodes(nodes);
+                } else if (metaPressed && !isSelected) {
+                    if(stage1.find('.texto').includes(e.target)) {
+                        const nodes = textoTransformer1.nodes().concat([e.target]);
+                        textoTransformer1.nodes(nodes);
+                    } else {
+                        const nodes = imagemTransformer1.nodes().concat([e.target]);
+                        imagemTransformer1.nodes(nodes);
+                    }
+                }
+                });
+
             function send() {
                 ['nome','cargo'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
@@ -411,6 +578,16 @@
                         document.querySelectorAll("input[name="+objeto+"-altura-"+assinatura.id)[0].value = box[0].attrs.height;
                     });
                 });
+                qrcode = stage1.find('#qrcode');
+                document.querySelectorAll("input[name=qrcode-x")[0].value = qrcode[0].attrs.x;
+                document.querySelectorAll("input[name=qrcode-y")[0].value = qrcode[0].attrs.y;
+                document.querySelectorAll("input[name=qrcode-largura")[0].value = qrcode[0].attrs.width;
+                document.querySelectorAll("input[name=qrcode-altura")[0].value = qrcode[0].attrs.height;
+
+                document.querySelectorAll("input[name=hash-x")[0].value = hash.attrs.x;
+                document.querySelectorAll("input[name=hash-y")[0].value = hash.attrs.y;
+                document.querySelectorAll("input[name=hash-largura")[0].value = hash.attrs.width;
+                document.querySelectorAll("input[name=hash-fontSize")[0].value = hash.attrs.fontSize;
                 document.getElementById("form").submit();
             }
         </script>

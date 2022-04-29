@@ -25,10 +25,7 @@ Route::get('/evento/buscar-livre', 'Submissao\EventoController@buscaLivreAjax')-
 
 
 
-Route::get('qr-code', function ()
-{
-  return base64_encode(QrCode::generate('Make me into a QrCode!'));
-})->name('qr-code');
+
 Auth::routes(['verify' => true]);
 
 Route::get('/', function () {
@@ -163,6 +160,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::post('certificados/{id}/editCertificado',  'CertificadoController@update')->name('certificado.update');
       Route::get('certificados/ajax-listar-destinatarios', 'CertificadoController@ajaxDestinatarios')->name('ajax.listar.destinatarios');
       Route::get('certificados/{certificadoId}/preview-destinatario/{destinatarioId}/trabalho/{trabalhoId}', 'CertificadoController@previewCertificado')->name('previewCertificado');
+      Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', 'CertificadoController@visualizar_certificado_emitido')->name('verCertificado');
 
       Route::get('modalidade/cadastrarModalidade', 'EventoController@cadastrarModalidade')->name('cadastrarModalidade');
       Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');

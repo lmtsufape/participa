@@ -103,7 +103,7 @@
                                                                     @switch($certificado->tipo)
                                                                         @case(1)
                                                                             <a class="text-reset d-flex justify-content-center"
-                                                                                href="{{ route('coord.previewCertificado', [$certificado->id, $usuario->id, $certificado->pivot->trabalho_id]) }}"
+                                                                                href="{{ route('coord.verCertificado', [$certificado->id, $usuario->id, $certificado->pivot->trabalho_id]) }}"
                                                                                 target="_blank"
                                                                                 rel="noopener noreferrer">
                                                                                 <i class="far fa-eye"></i>
@@ -112,7 +112,7 @@
 
                                                                         @case(6)
                                                                             <a class="text-reset d-flex justify-content-center"
-                                                                                href="{{ route('coord.previewCertificado', [$certificado->id, $usuario->id, $certificado->pivot->palestra_id]) }}"
+                                                                                href="{{ route('coord.verCertificado', [$certificado->id, $usuario->id, $certificado->pivot->palestra_id]) }}"
                                                                                 target="_blank"
                                                                                 rel="noopener noreferrer">
                                                                                 <i class="far fa-eye"></i>
@@ -121,7 +121,7 @@
 
                                                                         @case(8)
                                                                             <a class="text-reset d-flex justify-content-center"
-                                                                                href="{{ route('coord.previewCertificado', [$certificado->id, $usuario->id, $certificado->pivot->comissao_id]) }}"
+                                                                                href="{{ route('coord.verCertificado', [$certificado->id, $usuario->id, $certificado->pivot->comissao_id]) }}"
                                                                                 target="_blank"
                                                                                 rel="noopener noreferrer">
                                                                                 <i class="far fa-eye"></i>
@@ -130,7 +130,7 @@
 
                                                                         @default
                                                                             <a class="text-reset d-flex justify-content-center"
-                                                                                href="{{ route('coord.previewCertificado', [$certificado->id, $usuario->id, 0]) }}"
+                                                                                href="{{ route('coord.verCertificado', [$certificado->id, $usuario->id, 0]) }}"
                                                                                 target="_blank"
                                                                                 rel="noopener noreferrer">
                                                                                 <i class="far fa-eye"></i>

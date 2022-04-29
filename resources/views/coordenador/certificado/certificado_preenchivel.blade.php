@@ -51,7 +51,9 @@
                     style="
                     left: {{$medida->x}}px;
                     top: {{$medida->y}}px;
-                    width: {{$medida->largura}}px;">
+                    width: {{$medida->largura}}px;
+                    padding-bottom: 5px;
+                    border-bottom: 2px solid black">
                 @php
                     $medida = $certificado->medidas->where('tipo', $tipos["nome_assinatura"])->where('assinatura_id', $assinatura->id)->first();
                 @endphp
@@ -77,10 +79,26 @@
 
         <div class="page_break"></div>
         <div class="container" style="background-image: url({{ storage_path('/app/public/'.$certificado->caminho) }});">
-            <div style="position: absolute; left: 500px; top: 100px;">
+            @php
+                $medida = $certificado->medidas->where('tipo', $tipos["qrcode"])->first();
+            @endphp
+            <img style="
+                position: absolute;
+                left: {{$medida->x}}px;
+                top: {{$medida->y}}px;
+                width: {{$medida->largura}}px;"
+                src="data:image/png;base64,{{$qrcode}}">
+            @php
+                $medida = $certificado->medidas->where('tipo', $tipos["hash"])->first();
+            @endphp
+            <p style="
+                position: absolute;
+                left: {{$medida->x}}px;
+                font-size: {{$medida->fontSize}}px;
+                top: {{$medida->y}}px;
+                width: {{$medida->largura}}px;">
                 {{$validacao}}
-            </div>
-            <img style="position: absolute; left: 500px; top: 100px;" src="data:image/png;base64,{{$qrcode}}">
+            </p>
         </div>
     </body>
 </html>

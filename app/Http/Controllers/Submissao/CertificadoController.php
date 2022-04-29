@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Gate;
 
 class CertificadoController extends Controller
 {
@@ -199,6 +200,20 @@ class CertificadoController extends Controller
         $medida->fontSize = intval($request['data-fontSize']);
         $medida->save();
 
+        $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['hash']]);
+        $medida->x = $request['hash-x'];
+        $medida->y = $request['hash-y'];
+        $medida->largura = $request['hash-largura'];
+        $medida->fontSize = intval($request['hash-fontSize']);
+        $medida->save();
+
+        $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['qrcode']]);
+        $medida->x = $request['qrcode-x'];
+        $medida->y = $request['qrcode-y'];
+        $medida->largura = $request['qrcode-largura'];
+        $medida->altura = intval($request['qrcode-altura']);
+        $medida->save();
+
         foreach ($assinaturas_id as $id) {
             $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['cargo_assinatura'], 'assinatura_id' => $id]);
             $medida->x = $request['cargo-x-'.$id];
@@ -259,6 +274,14 @@ class CertificadoController extends Controller
         $certificado = Certificado::find($certificadoId);
         $evento = $certificado->evento;
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        return $this->gerar_pdf_certificado($certificado, $destinatarioId, $trabalhoId, $evento);
+    }
+
+    public function visualizar_certificado_emitido($certificadoId, $destinatarioId, $trabalhoId)
+    {
+        $certificado = Certificado::find($certificadoId);
+        $this->authorize('visualizarCertificado', $certificado);
+        $evento = $certificado->evento;
         return $this->gerar_pdf_certificado($certificado, $destinatarioId, $trabalhoId, $evento);
     }
 
@@ -510,68 +533,76 @@ class CertificadoController extends Controller
         switch($request->destinatario){
             case(Certificado::TIPO_ENUM['apresentador']):
                 foreach($request->destinatarios as $i => $destinarioId){
+                    $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i], 'trabalho_id' => $request->trabalhos[$i]]);
                     $user = User::find($destinarioId);
                     $trabalho = Trabalho::find($request->trabalhos[$i]);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['qrcode' => $qrcode, 'validacao' => $validacoes[$i], 'certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, 'apresentador de trabalho', $evento->nome, $pdf));
                 }
                 break;
             case(Certificado::TIPO_ENUM['comissao_cientifica']):
                 foreach($request->destinatarios as $i => $destinarioId){
+                    $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Científica', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['qrcode' => $qrcode, 'validacao' => $validacoes[$i], 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Científica', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, 'membro da Comissão Científica', $evento->nome, $pdf));
                 }
                 break;
             case(Certificado::TIPO_ENUM['comissao_organizadora']):
                 foreach($request->destinatarios as $i => $destinarioId){
+                    $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Organizadora', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['qrcode' => $qrcode, 'validacao' => $validacoes[$i], 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Organizadora', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, 'membro da Comissão Organizadora', $evento->nome, $pdf));
                 }
                 break;
             case(Certificado::TIPO_ENUM['revisor']):
                 foreach($request->destinatarios as $i => $destinarioId){
+                    $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Revisor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['qrcode' => $qrcode, 'validacao' => $validacoes[$i], 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Revisor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, 'avaliador/a', $evento->nome, $pdf));
                 }
                 break;
             case(Certificado::TIPO_ENUM['participante']):
                 foreach($request->destinatarios as $i => $destinarioId){
+                    $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Participante', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['qrcode' => $qrcode, 'validacao' => $validacoes[$i], 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Participante', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, 'participante', $evento->nome, $pdf));
                 }
                 break;
             case(Certificado::TIPO_ENUM['expositor']):
                 foreach($request->destinatarios as $i => $destinarioId){
+                    $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i], 'palestra_id' => $request->palestras[$i]]);
                     $user = Palestrante::find($destinarioId);
                     $palestra = Palestra::find($request->palestras[$i]);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'palestra' => $palestra, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['qrcode' => $qrcode, 'validacao' => $validacoes[$i], 'certificado' => $certificado, 'user' => $user, 'palestra' => $palestra, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, 'palestrante', $evento->nome, $pdf));
                 }
                 break;
             case(Certificado::TIPO_ENUM['coordenador_comissao_cientifica']):
                 foreach($request->destinatarios as $i => $destinarioId){
+                    $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => 'Coordenador comissão científica', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['qrcode' => $qrcode, 'validacao' => $validacoes[$i], 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Coordenador comissão científica', 'evento' => $evento, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, 'coordenador/a da comissão Científica', $evento->nome, $pdf));
                 }
                 break;
             case(Certificado::TIPO_ENUM['outras_comissoes']):
                 foreach($request->destinatarios as $i => $destinarioId){
+                    $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i], 'comissao_id' => $request->tipo_comissao_id]);
                     $user = User::find($destinarioId);
                     $comissao = TipoComissao::find($request->tipo_comissao_id);
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['certificado' => $certificado, 'user' => $user, 'cargo' => "membro da comissão {$comissao->nome}", 'evento' => $evento, 'comissao' => $comissao, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['qrcode' => $qrcode, 'validacao' => $validacoes[$i], 'certificado' => $certificado, 'user' => $user, 'cargo' => "membro da comissão {$comissao->nome}", 'evento' => $evento, 'comissao' => $comissao, 'dataHoje' => strftime('%d de %B de %Y', strtotime($certificado->data))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, "membro da comissão {$comissao->nome}", $evento->nome, $pdf));
                 }
                 break;
@@ -625,7 +656,7 @@ class CertificadoController extends Controller
                     return $this->gerar_pdf_certificado($certificado, $certificado_user->user_id, 0, $evento);
             }
         } else {
-            return redirect()->back()->with('message', 'Esse código de verificação é inválido');
+            return redirect()->back()->withErrors(['hash' => 'Não existe certificado válido para esse código de verificação.']);
         }
     }
 }
