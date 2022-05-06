@@ -20,6 +20,7 @@ use App\Models\Submissao\Evento;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 Route::get('/index', 'HomeController@index')->name('index');
+Route::view('/termos-de-uso', 'termosdeuso')->name('termos.de.uso');
 Route::get('/evento/busca', 'Submissao\EventoController@buscaLivre')->name('busca.eventos');
 Route::get('/evento/buscar-livre', 'Submissao\EventoController@buscaLivreAjax')->name('busca.livre.ajax');
 
