@@ -513,7 +513,7 @@
                                                             <div class="col-sm-12">
                                                                 <h5 class="card-title">
                                                                     <div class="row">
-                                                                        <div class="col-sm-10">
+                                                                        <div class="col-sm-12">
                                                                             @auth()
                                                                                 <a href="{{ route('evento.visualizar', ['id' => $subevento->id]) }}" style="text-decoration: inherit;">
                                                                                     {{ $subevento->nome }}
