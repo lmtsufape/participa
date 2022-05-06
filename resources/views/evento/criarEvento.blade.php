@@ -324,6 +324,20 @@
 
                     </div>
 
+                    <div class="row justify-content-start" style="margin: 30px 0 20px 0">
+                        <div class="form-check">
+                            <input name="termos" class="form-check-input @error('termos') is-invalid @enderror" type="checkbox" value="true" id="termos">
+                            <label class="form-check-label" for="termos">
+                                Concordo e respeitarei os <a href=" {{route('termos.de.uso')}} ">termos de uso</a> da plataforma Participa
+                            </label>
+                            @error('termos')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                          </div>
+                    </div>
+
                     <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 
                         <div class="col-md-7" style="padding-left:0">
@@ -351,6 +365,7 @@
 @section('javascript')
   <script type="text/javascript" >
     $(document).ready(function($){
+        CKEDITOR.replace( 'descricao' );
         $('#cep').mask('00000-000');
         $(".apenasLetras").mask("#", {
             maxlength: false,

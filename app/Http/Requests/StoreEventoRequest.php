@@ -40,7 +40,8 @@ class StoreEventoRequest extends FormRequest
             'uf'          => ['required', 'string'],
             'cep'         => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
-            'eventoPai'   => ['nullable', new NaoESubEvento]
+            'eventoPai'   => ['nullable', new NaoESubEvento],
+            'termos'      => ['required'],
         ];
     }
 
@@ -52,8 +53,7 @@ class StoreEventoRequest extends FormRequest
     public function messages()
     {
         return [
-            // 'title.required' => 'A title is required',
-            // 'body.required' => 'A message is required',
+            'termos.required' => 'É necessário concordar com os termos de uso'
         ];
     }
 

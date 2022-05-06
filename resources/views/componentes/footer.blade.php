@@ -2,7 +2,8 @@
   <div class="row justify-content-center links-rodape">
       <a href="{{ route('index') }}">Inicio</a>  |
       {{-- <a href="#">Eventos Acadêmicos</a>  | --}}
-      <a hfer="#" data-toggle="modal" data-target="#modalInfo" >Sobre</a>
+      <a hfer="#" data-toggle="modal" data-target="#modalInfo" >Sobre</a> |
+      <a href=" {{route('termos.de.uso')}} ">Termos de Uso</a>
   </div>
   <div class="row" style="margin-bottom: -3.5rem;">
     <div class="col-sm-12 separador">

@@ -118,10 +118,11 @@
                     <div class="card">
                         <div class="card-body">
                         <h5 class="card-title">{{$trabalhosDoRevisor[0]->evento->formSubTrab->etiquetaareatrabalho}}: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor[0]->area->nome}}</span></h5>
-                        <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor[0]->modalidade->nome}}</span>
-                            <a href="#" data-toggle="modal" data-target="#modalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Visualizar regras da modalidade" width="15px" title="Visualizar regras da modalidade"></a>
-                        </h5>
+                        <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor[0]->modalidade->nome}}</span></h5>
                         <h5 class="card-title">Período de avaliação: <span class="card-subtitle mb-2 text-muted" >De {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->fimRevisao))}}</span></h5>
+                        @if ($trabalhosDoRevisor[0]->modalidade->regra != null)
+                            <h5 class="card-title">Regras de submissão: <span class="card-subtitle mb-2 text-muted"><a href="{{route('modalidade.regras.download', ['id' => $trabalhosDoRevisor[0]->modalidade->id])}}" target="_blank">Arquivo</a></span></h5>
+                        @endif
                         <p class="card-text">
                             <div class="col-sm-12">
                             <table class="table table-hover table-responsive-lg table-sm">
@@ -295,7 +296,7 @@
           </div>
         </div>
       </div>
-      
+
 </div>
 
 <input type="hidden" name="resumoModalAjax" value="1" id="resumoModalAjax">
