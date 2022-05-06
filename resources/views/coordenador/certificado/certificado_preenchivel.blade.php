@@ -75,10 +75,12 @@
                     {{ $assinatura->cargo }}
                 </div>
             @endforeach
-        </div>
+        @if ($certificado->verso)
+            </div>
 
-        <div class="page_break"></div>
-        <div class="container" style="background-image: url({{ storage_path('/app/public/'.$certificado->caminho) }});">
+            <div class="page_break"></div>
+            <div class="container" style="background-image: url({{ storage_path('/app/public/'.$certificado->caminho) }});">
+        @endif
             @php
                 $medida = $certificado->medidas->where('tipo', $tipos["qrcode"])->first();
             @endphp
@@ -97,6 +99,7 @@
                 font-size: {{$medida->fontSize}}px;
                 top: {{$medida->y}}px;
                 width: {{$medida->largura}}px;">
+                Código para validação do certificado: <br>
                 {{$validacao}}
             </p>
         </div>

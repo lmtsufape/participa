@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Submissao;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CertificadoRequest;
+use App\Http\Requests\UpdateCertificadoRequest;
 use App\Mail\EmailCertificado;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Assinatura;
@@ -131,19 +132,11 @@ class CertificadoController extends Controller
      * @param  \App\Models\Submissao\Certificado  $certificado
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCertificadoRequest $request, $id)
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        $validatedData = $request->validate([
-            'local'              => 'required|string|min:3|max:40',
-            'nome'              => 'required|string|min:5|max:290',
-            'texto'              => 'required|string|min:5|max:500',
-            'assinaturas' => 'required',
-            'data' => 'required|date',
-            'tipo' => 'required',
-            'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8'
-        ]);
+        $validatedData = $request->validated();
         $certificado = Certificado::find($id);
         $certificado->setAtributes($validatedData);
 
@@ -207,11 +200,25 @@ class CertificadoController extends Controller
         $medida->fontSize = intval($request['hash-fontSize']);
         $medida->save();
 
+        $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['emissao']]);
+        $medida->x = $request['emissao-x'];
+        $medida->y = $request['emissao-y'];
+        $medida->largura = $request['emissao-largura'];
+        $medida->fontSize = intval($request['emissao-fontSize']);
+        $medida->save();
+
         $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['qrcode']]);
         $medida->x = $request['qrcode-x'];
         $medida->y = $request['qrcode-y'];
         $medida->largura = $request['qrcode-largura'];
         $medida->altura = intval($request['qrcode-altura']);
+        $medida->save();
+
+        $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['logo']]);
+        $medida->x = $request['logo-x'];
+        $medida->y = $request['logo-y'];
+        $medida->largura = $request['logo-largura'];
+        $medida->altura = intval($request['logo-altura']);
         $medida->save();
 
         foreach ($assinaturas_id as $id) {
@@ -250,9 +257,6 @@ class CertificadoController extends Controller
         $certificado = Certificado::find($id);
         $evento = $certificado->evento;
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        foreach($certificado->assinaturas()->get() as $modelo){
-            $modelo->pivot->delete();
-        }
         $certificado->delete();
         return redirect(route('coord.listarCertificados', ['eventoId' => $evento->id]))->with(['success' => 'Certificado deletado com sucesso.']);
     }
@@ -279,8 +283,12 @@ class CertificadoController extends Controller
 
     public function visualizar_certificado_emitido($certificadoId, $destinatarioId, $trabalhoId)
     {
-        $certificado = Certificado::find($certificadoId);
+        $certificado = Certificado::withTrashed()
+            ->where('id', $certificadoId)
+            ->first();
         $this->authorize('visualizarCertificado', $certificado);
+        if(auth()->user()->id != $destinatarioId)
+            return redirect()->back()->with('certificado', 'Você não possui autorização para ver este certificado');
         $evento = $certificado->evento;
         return $this->gerar_pdf_certificado($certificado, $destinatarioId, $trabalhoId, $evento);
     }
@@ -289,10 +297,13 @@ class CertificadoController extends Controller
     {
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
         date_default_timezone_set('America/Recife');
-        $validacao = DB::table('certificado_user')->where([
+        $certificado_user = DB::table('certificado_user')->where([
             ['certificado_id', '=', $certificado->id],
             ['user_id', '=', $destinatarioId],
-        ])->first()->validacao;
+        ])->first();
+        if(is_null($certificado_user))
+            return redirect()->back()->with('certificado', 'Falha ao recuperar o certificado');
+        $validacao = $certificado_user->validacao;
         switch ($certificado->tipo) {
             case Certificado::TIPO_ENUM['apresentador']:
                 $validacao = DB::table('certificado_user')->where([
@@ -527,6 +538,9 @@ class CertificadoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $certificado = Certificado::find($request->certificado);
+        if($certificado->medidas->count() == 0) {
+            return redirect()->back()->with('error', 'Atualize o modelo do certificado antes de realizar emissões');
+        }
         $validacoes = collect($request->destinatarios)->map(function($item){return Hash::make($item);});
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
         date_default_timezone_set('America/Recife');
@@ -658,5 +672,16 @@ class CertificadoController extends Controller
         } else {
             return redirect()->back()->withErrors(['hash' => 'Não existe certificado válido para esse código de verificação.']);
         }
+    }
+
+    public function deletarEmissao(Request $request)
+    {
+        $request->validate(['certificado_user' => 'required']);
+        $evento = Evento::find($request->evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        DB::table('certificado_user')->where([
+            ['id', '=', $request->certificado_user],
+        ])->delete();
+        return redirect()->back()->with('message', 'Emissão do certificado deletada com sucesso!');
     }
 }

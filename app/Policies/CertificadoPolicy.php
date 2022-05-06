@@ -22,6 +22,6 @@ class CertificadoPolicy
 
     public function visualizarCertificado(User $user, Certificado $certificado)
     {
-        return $certificado->usuarios->contains($user);
+        return true;
     }
 }

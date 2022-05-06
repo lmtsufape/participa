@@ -328,7 +328,7 @@
                         <div class="form-check">
                             <input name="termos" class="form-check-input @error('termos') is-invalid @enderror" type="checkbox" value="true" id="termos">
                             <label class="form-check-label" for="termos">
-                                Concondo com os <a href=" {{route('termos.de.uso')}} ">Termos de Uso</a>
+                                Concordo e respeitarei os <a href=" {{route('termos.de.uso')}} ">termos de uso</a> da plataforma Participa.
                             </label>
                             @error('termos')
                                 <span class="invalid-feedback" role="alert">

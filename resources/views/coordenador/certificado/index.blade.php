@@ -53,7 +53,7 @@
                         <div>
                             <div>
                                 <a href="{{route('coord.modeloCertificado', $certificado->id)}}" target="_blank">
-                                    <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar modelo
+                                    <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Atualizar modelo
                                 </a>
                             </div>
                             <div>

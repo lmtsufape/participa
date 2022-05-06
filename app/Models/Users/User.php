@@ -127,6 +127,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function certificados()
     {
-        return $this->belongsToMany(Certificado::class, 'certificado_user')->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id')->withTimestamps();
+        return $this->belongsToMany(Certificado::class, 'certificado_user')->withTrashed()->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id')->withTimestamps();
     }
 }

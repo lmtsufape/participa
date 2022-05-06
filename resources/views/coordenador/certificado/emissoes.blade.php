@@ -26,9 +26,6 @@
     </div>
     <div class="row table-trabalhos">
         <div class="col-sm-12">
-            <form action="{{ route('atribuicao.check') }}"
-                method="post">
-                @csrf
                 <div class="row">
                     <div class="col-sm-12">
                         @if ($errors->any())
@@ -42,51 +39,6 @@
                         @endif
                     </div>
                 </div>
-                {{-- <div class="btn-group mb-2"
-                        role="group"
-                        aria-label="Button group with nested dropdown">
-                        <div class="btn-group"
-                            role="group">
-                            <button id="btnGroupDrop1"
-                                type="button"
-                                class="btn btn-secondary dropdown-toggle"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-                                Opções
-                            </button>
-                            <div class="dropdown-menu"
-                                aria-labelledby="btnGroupDrop1">
-                                <a class="dropdown-item"
-                                    href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id,'modalidadeId' => $modalidade->id,'titulo','asc','rascunho']) }}">
-                                    Todos
-                                </a>
-                                <a class="dropdown-item"
-                                    href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id,'modalidadeId' => $modalidade->id,'titulo','asc','arquivado']) }}">
-                                    Arquivados
-                                </a>
-                                <a class="dropdown-item disabled"
-                                    href="#">
-                                    Submetidos
-                                </a>
-                                <a class="dropdown-item disabled"
-                                    href="#">
-                                    Aprovados
-                                </a>
-                                <a class="dropdown-item disabled"
-                                    href="#">
-                                    Corrigidos
-                                </a>
-                                <a class="dropdown-item disabled"
-                                    href="#">
-                                    Rascunhos
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <input type="hidden"
-                        name="eventoId"
-                        value="{{ $evento->id }}"> --}}
                 <br>
                 @if ($usuarios->count() == 0)
                     <h5>Nenhum certificado emitido</h5>
@@ -94,13 +46,6 @@
                     <table class="table table-hover table-responsive-lg table-sm table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">
-                                    <input type="checkbox"
-                                        id="selectAllCheckboxes"
-                                        onclick="marcarCheckboxes()">
-                                    <label for="selectAllCheckboxes"
-                                        style="margin-bottom: 0px;">Selecionar</label>
-                                </th>
                                 <th scope="col">
                                     Nome
                                 </th>
@@ -141,13 +86,6 @@
                         <tbody>
                             @foreach ($usuarios as $i => $usuario)
                                 <tr>
-                                    <td style="text-align:center">
-                                        <input type="checkbox"
-                                            aria-label="Checkbox for following text input"
-                                            name="id[]"
-                                            value="{{ $usuario->id }}"
-                                            class="trabalhos">
-                                    </td>
                                     <td>
                                         {{ $usuario->name }}
                                     </td>
@@ -176,7 +114,32 @@
                                         {{ date('d/m/Y H:i:s', strtotime($usuario->pivot->created_at)) }}
                                     </td>
                                     <td>
-                                        <a href="#"
+                                        <form class="d-none" id="formDeletarEmissao{{$usuario->pivot->id}}" action="{{route('coord.deletar.emissao')}}" method="POST">
+                                            @method('DELETE')
+                                            @csrf
+                                            <input type="hidden" name="evento" value="{{$certificado->evento->id}}">
+                                            <input type="hidden" name="certificado_user" value="{{$usuario->pivot->id}}">
+                                        </form>
+                                        <div class="modal fade" id="modalDeletarEmissao{{$usuario->pivot->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header" style="background-color: #114048ff; color: white;">
+                                                  <h5 class="modal-title" id="#label">Confirmação</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                  Tem certeza que deseja deletar a emissão deste certificado para o usuário {{$usuario->name}}?
+                                                </div>
+                                                <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                                                  <button type="submit" class="btn btn-primary" form="formDeletarEmissao{{$usuario->pivot->id}}">Sim</button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        <a href="#" data-toggle="modal" data-target="#modalDeletarEmissao{{$usuario->pivot->id}}"
                                             class="text-reset d-flex justify-content-center">
                                             <i class="fas fa-archive"></i>
                                         </a>
@@ -220,7 +183,6 @@
                         </tbody>
                     </table>
                 @endif
-        </form>
     </div>
 </div>
 </div>

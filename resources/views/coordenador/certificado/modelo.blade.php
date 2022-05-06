@@ -23,7 +23,9 @@
 </head>
     <body style="text-align: center;">
         <div id="container"></div>
-        <div id="back" style="margin-top: 10px"></div>
+        @if($certificado->verso)
+            <div id="back" style="margin-top: 10px"></div>
+        @endif
         <button onclick="send()">Salvar</button>
         <form id="form" action="{{route('coord.cadastrarmedida')}}" class="d-none" method="POST">
             @csrf
@@ -35,8 +37,13 @@
                     @endforeach
                 @endforeach
             @endforeach
-            @foreach (['texto', 'data', 'hash'] as $objeto)
+            @foreach (['texto', 'data', 'hash', 'emissao'] as $objeto)
                 @foreach (['largura', 'x', 'y', 'fontSize'] as $medida)
+                    <input type="text" name="{{$objeto}}-{{$medida}}" value="0">
+                @endforeach
+            @endforeach
+            @foreach (['qrcode', 'logo'] as $objeto)
+                @foreach (['x', 'y', 'largura', 'altura'] as $medida)
                     <input type="text" name="{{$objeto}}-{{$medida}}" value="0">
                 @endforeach
             @endforeach
@@ -57,10 +64,16 @@
             var medidas = {!! json_encode($medidas) !!}
             medida = medidas.find(m => m.tipo == 1);
             if(medida === undefined)
-                medida = {x: 50, y: 350, largura: 1000, fontSize: 14}
+                medida = {x: 50, y: 300, largura: 1000, fontSize: 14}
             var imagemTransformer = new Konva.Transformer({
                 keepRatio: true,
                 enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+                boundBoxFunc: (oldBox, newBox) => {
+                    if (newBox.width < 50) {
+                        return oldBox;
+                    }
+                    return newBox;
+                    },
             });
             layer.add(imagemTransformer);
 
@@ -387,72 +400,110 @@
                 }
             });
 
-            var stage1 = new Konva.Stage({
-                container: 'back',
-                width: 1118,
-                height: 790,
-            });
+            var stage1;
+            var textoTransformer1;
+            var imagemTransformer1;
 
-            var layer1 = new Konva.Layer();
-            stage1.add(layer1);
+            if(@json($certificado->verso)) {
+                stage1 = new Konva.Stage({
+                    container: 'back',
+                    width: 1118,
+                    height: 790,
+                });
+                var layer1 = new Konva.Layer();
+                stage1.add(layer1);
+
+                textoTransformer1 = new Konva.Transformer({
+                    padding: 5,
+                    rotateEnabled: false,
+                    keepRatio: true,
+                    enabledAnchors: ['top-left', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-right'],
+                    // enable only side anchors
+                    // limit transformer size
+                    boundBoxFunc: (oldBox, newBox) => {
+                    if (newBox.width < MIN_WIDTH) {
+                        return oldBox;
+                    }
+                    return newBox;
+                    },
+                });
+                layer1.add(textoTransformer1);
+
+                imagemTransformer1 = new Konva.Transformer({
+                    keepRatio: true,
+                    enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+                    boundBoxFunc: (oldBox, newBox) => {
+                    if (newBox.width < MIN_WIDTH) {
+                        return oldBox;
+                    }
+                    return newBox;
+                    },
+                });
+                layer1.add(imagemTransformer1);
+            } else {
+                stage1 = stage;
+                layer1 = layer;
+                textoTransformer1 = textoTransformer;
+                imagemTransformer1 = imagemTransformer;
+            }
 
             medida = medidas.find(m => m.tipo == 8);
-            if(medida === undefined)
-                medida = {x: 312, y: 667, largura: 500, fontSize: 14}
-
+            if(medida === undefined) {
+                if(@json($certificado->verso))
+                    medida = {x: 74, y: 512, largura: 500, fontSize: 14}
+                else
+                    medida = {x: 26, y: 742, largura: 500, fontSize: 14}
+            }
             var hash = new Konva.Text({
                 x: parseInt(medida.x),
                 y: parseInt(medida.y),
                 width: parseInt(medida.largura),
                 fontSize: medida.fontSize,
-                text: '$2y$10$VN/cOnYHgsW/U5W16uH.Q.MKXDNa.3Z8QqeHl89qjp/TXNLP3yNO6', //exemplo de hash
+                text: 'Código para validação do certificado: $2y$10$VN/cOnYHgsW/U5W16uH.Q.MKXDNa.3Z8QqeHl89qjp/TXNLP3yNO6', //exemplo de hash
                 draggable: true,
                 id: 'hash',
                 name: 'texto',
             });
+            layer1.add(hash);
 
-            var textoTransformer1 = new Konva.Transformer({
-                padding: 5,
-                rotateEnabled: false,
-                keepRatio: true,
-                enabledAnchors: ['top-left', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-right'],
-                // enable only side anchors
-                // limit transformer size
-                boundBoxFunc: (oldBox, newBox) => {
-                if (newBox.width < MIN_WIDTH) {
-                    return oldBox;
-                }
-                return newBox;
-                },
+            medida = medidas.find(m => m.tipo == 10);
+            if(medida === undefined) {
+                if(@json($certificado->verso))
+                    medida = {x: 630, y: 522, largura: 500, fontSize: 14}
+                else
+                    medida = {x: 700, y: 750, largura: 500, fontSize: 14}
+            }
+            var options = { year: 'numeric', month: 'long', day: 'numeric' };
+            var today  = new Date();
+            var emissao = new Konva.Text({
+                x: parseInt(medida.x),
+                y: parseInt(medida.y),
+                width: parseInt(medida.largura),
+                fontSize: medida.fontSize,
+                text: 'Certificado emitido pela plataforma Participa em '+ today.toLocaleDateString("pt-BR", options),
+                draggable: true,
+                id: 'emissao',
+                name: 'texto',
             });
-            layer1.add(textoTransformer1);
-
-            var imagemTransformer1 = new Konva.Transformer({
-                keepRatio: true,
-                enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
-            });
-            layer1.add(imagemTransformer1);
-
+            layer1.add(emissao);
 
             var imageObj = new Image();
             imageObj.onload = function () {
                 medida = medidas.find(m => m.tipo == 7);
                 // add the shape to the layer
                 if(medida === undefined) {
+                    if(@json($certificado->verso))
+                        medida = {x: 175, y: 280, altura: 200, largura: 200}
+                    else
+                        medida = {x: 170, y: 600, altura: 100, largura: 100}
                     yoda = new Konva.Image({
-                        x: 443,
-                        y: 272,
+                        x: medida.x,
+                        y: medida.y,
                         image: imageObj,
                         draggable: true,
                         id: 'qrcode',
-                        scaleX: 0.2,
-                        scaleY: 0.2,
-                    });
-                    yoda.setAttrs({
-                        height: yoda.height() * yoda.scaleY(),
-                        width: yoda.width() * yoda.scaleX(),
-                        scaleX: 1,
-                        scaleY: 1,
+                        height: medida.altura,
+                        width: medida.largura,
                     });
                 } else {
                     medida = medidas.find(m => m.tipo == 7);
@@ -489,6 +540,59 @@
             };
             imageObj.src = "/img/qrcode.png";
 
+            var logoImageObj = new Image();
+            logoImageObj.onload = function () {
+                medida = medidas.find(m => m.tipo == 9);
+                // add the shape to the layer
+                if(medida === undefined) {
+                    if(@json($certificado->verso))
+                        medida = {x: 750, y: 280, altura: 200, largura: 200}
+                    else
+                        medida = {x: 900, y: 600, altura: 100, largura: 100}
+                    yoda = new Konva.Image({
+                        x: medida.x,
+                        y: medida.y,
+                        image: logoImageObj,
+                        draggable: true,
+                        id: 'qrcode',
+                        height: medida.altura,
+                        width: medida.largura,
+                    });
+                } else {
+                    medida = medidas.find(m => m.tipo == 7);
+                    yoda = new Konva.Image({
+                        x: parseInt(medida.x),
+                        y: parseInt(medida.y),
+                        image: logoImageObj,
+                        draggable: true,
+                        id: 'qrcode',
+                        height: parseInt(medida.altura),
+                        width: parseInt(medida.largura),
+                    });
+                }
+                layer1.add(yoda);
+                yoda.on('transform', (event) => {
+                    // with enabled anchors we can only change scaleX
+                    // so we don't need to reset height
+                    // just width
+                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                        event.target.setAttrs({
+                            height: event.target.height() * event.target.scaleY(),
+                            width: event.target.width() * event.target.scaleX(),
+                            scaleX: 1,
+                            scaleY: 1,
+                        });
+                    } else if ( ['middle-right', 'middle-left'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                        event.target.setAttrs({
+                            width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
+                            scaleX: 1,
+                            scaleY: 1,
+                        });
+                    }
+                });
+            };
+            logoImageObj.src = "/img/logo-icone.png";
+
 
             hash.on('transform', (event) => {
                 // with enabled anchors we can only change scaleX
@@ -509,7 +613,26 @@
                 });
                 }
             });
-            layer1.add(hash);
+
+            emissao.on('transform', (event) => {
+                // with enabled anchors we can only change scaleX
+                // so we don't need to reset height
+                // just width
+                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer1.getActiveAnchor()) ) {
+                emissao.setAttrs({
+                    fontSize: Math.max(emissao.fontSize() * emissao.scaleX(), 2),
+                    width: Math.max(emissao.width() * emissao.scaleX(), MIN_WIDTH),
+                    scaleX: 1,
+                    scaleY: 1,
+                });
+                } else if ( ['middle-right', 'middle-left'].includes(textoTransformer1.getActiveAnchor()) ) {
+                emissao.setAttrs({
+                    width: Math.max(emissao.width() * emissao.scaleX(), MIN_WIDTH),
+                    scaleX: 1,
+                    scaleY: 1,
+                });
+                }
+            });
             stage1.on('click tap', function (e) {
 
                 console.log(e.target.attrs);

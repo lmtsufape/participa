@@ -5,10 +5,12 @@ namespace App\Models\Submissao;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Models\Users\User;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Certificado extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ['caminho', 'data', 'local', 'nome', 'texto', 'tipo', 'tipo_comissao_id'];
 
     public const TIPO_ENUM = [
@@ -50,6 +52,7 @@ class Certificado extends Model
     public function setAtributes($request)
     {
         $this->local = $request['local'];
+        $this->verso = $request['verso'];
         $this->nome = $request['nome'];
         $texto = substr($request['texto'], 3);
         $texto = substr_replace($texto ,"", -4);

@@ -31,7 +31,8 @@ class CertificadoRequest extends FormRequest
             'fotoCertificado'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
             'assinaturas' => 'required',
             'data' => 'required|date',
-            'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8'
+            'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8',
+            'verso' => 'required|boolean',
         ];
     }
 
@@ -50,5 +51,12 @@ class CertificadoRequest extends FormRequest
             'fotoCertificado.max'      => "A imagem do certificado deve ter no máximo 2MB",
             'fotoCertificado.mimes'    => "A imagem do certificado deve ser em um dos formatos permitidos",
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'verso' => $this->has('verso'),
+        ]);
     }
 }

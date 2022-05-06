@@ -16,6 +16,8 @@ class Medida extends Model
         'linha_assinatura' => 6,
         'qrcode' => 7,
         'hash' => 8,
+        'logo' => 9,
+        'emissao' => 10,
     ];
 
     protected $fillable = [

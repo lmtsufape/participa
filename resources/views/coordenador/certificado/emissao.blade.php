@@ -177,9 +177,6 @@
                                                     <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+i+`}}" onChange="selecionarTrabalho(`+i+`)">
                                                     <input style="display: none;" type="checkbox" name="trabalhos[]" value="`+data.responseJSON.trabalhos[i].id+`" id="trabalho_{{`+i+`}}">
                                                     <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.trabalhos[i].titulo+' - '+data.responseJSON.destinatarios[i].name+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
-                                                        <a style="cursor: pointer" onclick="atualizarInputs(`+data.responseJSON.certificado.id+`, `+data.responseJSON.destinatarios[i].id+`, `+data.responseJSON.trabalhos[i].id+`)" target="_blank">
-                                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;
-                                                        </a>
                                                 </div>
                                         </div><hr>`;
                             }else{
@@ -199,9 +196,6 @@
                                                     <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+i+`}}" onChange="selecionarTrabalho(`+i+`)">
                                                     <input style="display: none;" type="checkbox" name="palestras[]" value="`+data.responseJSON.palestras[i].id+`" id="trabalho_{{`+i+`}}">
                                                     <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.palestras[i].titulo+' - '+data.responseJSON.destinatarios[i].nome+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
-                                                        <a style="cursor: pointer" onclick="atualizarInputs(`+data.responseJSON.certificado.id+`, `+data.responseJSON.destinatarios[i].id+`, `+data.responseJSON.palestras[i].id+`)" target="_blank">
-                                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;
-                                                        </a>
                                                 </div>
                                         </div><hr>`;
                             }else{
@@ -221,9 +215,6 @@
                                                     <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+i+`}}" onChange="selecionarTrabalho(`+i+`)">
                                                     <input style="display: none;" type="checkbox" name="comissao" value="`+data.responseJSON.comissao.id+`" id="trabalho_{{`+i+`}}">
                                                     <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.destinatarios[i].name+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
-                                                        <a style="cursor: pointer" onclick="atualizarInputs(`+data.responseJSON.certificado.id+`, `+data.responseJSON.destinatarios[i].id+`, `+data.responseJSON.comissao.id+`)" target="_blank">
-                                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;
-                                                        </a>
                                                 </div>
                                         </div><hr>`;
                             }else{
@@ -242,9 +233,6 @@
                                             <div class="form-check">
                                                 <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" value="`+data.responseJSON.destinatarios[i].id+`" id="destinatario_{{`+data.responseJSON.destinatarios[i].id+`}}">
                                                 <label id="`+data.responseJSON.destinatarios[i].id+`"><strong>`+data.responseJSON.destinatarios[i].name+`</strong> (`+data.responseJSON.destinatarios[i].email+`)</label>
-                                                <a style="cursor: pointer" onclick="atualizarInputs(`+data.responseJSON.certificado.id+`, `+data.responseJSON.destinatarios[i].id+`, -1)" target="_blank">
-                                                    <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;
-                                                </a>
                                             </div>
                                     </div><hr>`;
                             }else{

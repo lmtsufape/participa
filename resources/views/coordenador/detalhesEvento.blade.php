@@ -2457,7 +2457,3 @@
     </script>
   @endif
 @endsection
-
-@hasSection ('javascript')
-    @yield('javascript')
-@endif

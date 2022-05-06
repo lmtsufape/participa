@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+
+    @include('componentes.mensagens')
     <div class="container"
         style="position: relative; top: 80px;">
         <div class="row justify-content-center titulo-detalhes">
@@ -136,6 +138,9 @@
                                                                                 <i class="far fa-eye"></i>
                                                                             </a>
                                                                     @endswitch
+                                                                    @error('certificado')
+                                                                        {{$message}}
+                                                                    @enderror
                                                                 </td>
                                                             </tr>
                                                         @endforeach
