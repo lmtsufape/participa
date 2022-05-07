@@ -136,7 +136,6 @@ return [
 
     'providers' => [
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        PrettyRoutes\ServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
