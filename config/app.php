@@ -168,7 +168,6 @@ return [
         /*
          * Package Service Providers...
          */
-        LaravelQRCode\Providers\QRCodeServiceProvider::class,
 
         /*
          * Application Service Providers...
