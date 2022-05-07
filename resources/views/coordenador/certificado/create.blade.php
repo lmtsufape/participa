@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="col-sm-6 form-group">
+                <div class="col-sm-4 form-group">
                     <label for="tipo"><b>{{__('Tipo')}}</b></label>
                     <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required onchange="mostrarTags()">
                         <option value="">-- Selecione o tipo do certificado --</option>
@@ -49,11 +49,22 @@
                     @enderror
                 </div>
 
-                <div class="col-sm-6 form-group">
+                <div class="col-sm-4 form-group">
                     <label for="data" ><b>{{ __('Data') }}</b></label>
                     <input id="data" type="date" class="form-control @error('data') is-invalid @enderror" name="data" value="{{ old('data') }}" autocomplete="data" autofocus autocomplete="data">
 
                     @error('data')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+
+                <div class="col-sm-4 form-check form-check pl-4 ml-0">
+                    <input id="verso" type="checkbox" class="form-check-input @error('verso') is-invalid @enderror" name="verso" value="1" {{ old('verso', 'true') ? 'checked="checked"' : '' }} autocomplete="verso" autofocus autocomplete="verso">
+                    <label class="form-check-label" for="verso" ><b>{{ __('Folha de verso') }}</b></label>
+
+                    @error('verso')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -125,7 +136,7 @@
                                                 <div class="row">
                                                     <div class="form-check">
                                                         <input class="checkbox_assinatura" type="checkbox" name="assinaturas[]" value="{{$assinatura->id}}" id="assinatura_{{$assinatura->id}}">
-                                                        {{$assinatura->nome}}
+                                                        <label for="assinatura_{{$assinatura->id}}">{{$assinatura->nome}}</label>
                                                     </div>
                                                 </div>
                                             </h5>

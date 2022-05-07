@@ -186,6 +186,19 @@
                                     </a>
                                 @endguest
                             </li>
+                            <li class="nav-item">
+                                @guest
+                                @else
+                                    <a class="nav-link" href="{{ route('meusCertificados') }}" style="margin-right: 5px; margin-left: 5px">
+                                        Meus Certificados
+                                    </a>
+                                @endguest
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('validarCertificado') }}" style="margin-right: 5px; margin-left: 5px">
+                                    Validar Certificado
+                                </a>
+                            </li>
                             @auth
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

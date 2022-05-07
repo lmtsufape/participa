@@ -17,6 +17,7 @@ use App\Models\Submissao\Assinatura;
 use App\Models\Submissao\Certificado;
 use Illuminate\Support\Facades\Log;
 use App\Models\Submissao\Evento;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 Route::get('/index', 'HomeController@index')->name('index');
 Route::view('/termos-de-uso', 'termosdeuso')->name('termos.de.uso');
@@ -39,7 +40,9 @@ Route::get('/', function () {
 
 Route::namespace('Submissao')->group(function () {
   Route::get('/evento/visualizar/naologado/{id}','EventoController@showNaoLogado')->name('evento.visualizarNaoLogado');
-  Route::get('/home', 'EventoController@index')->name('home')->middleware('verified', 'isTemp');
+  Route::view('validarCertificado', 'validar')->name('validarCertificado');
+  Route::post('validarCertificado', 'CertificadoController@validar')->name('validarCertificadoPost');
+  Route::get('/home', 'Submissao\CertificadoController@validar')->name('home')->middleware('verified', 'isTemp');
 
 });
 
@@ -51,9 +54,13 @@ Route::post('/perfil/editar','Users\UserController@editarPerfil')->name('perfil.
 
 
 Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
+    Route::get('meusCertificados', 'CertificadoController@listarCertificados')->name('meusCertificados');
   Route::get('/home-user', 'HomeController@index')->name('home.user');
 
   Route::namespace('Users')->group(function () {
+
+    Route::get('meusCertificados', 'UserController@meusCertificados')->name('meusCertificados');
+
     // rotas do administrador
     Route::prefix('/admin')->name('admin.')->group(function(){
         Route::get('/home', 'AdministradorController@index')->name('home');
@@ -141,7 +148,9 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::post('certificados/{id}/deleteAssinatura',  'AssinaturaController@destroy')->name('assinatura.destroy');
       Route::post('certificados/{id}/editAssinatura',  'AssinaturaController@update')->name('assinatura.update');
       //Certificados
+      Route::post('certificados/cadastrarmedida', 'CertificadoController@salvarMedida')->name('cadastrarmedida');
       Route::get('certificados/cadastrarCertificado', 'CertificadoController@create')->name('cadastrarCertificado');
+      Route::get('certificados/listarEmissoes/{certificado}', 'CertificadoController@listarEmissoes')->name('listarEmissoes');
       Route::get('certificados/{id}/modelo', 'CertificadoController@modelo')->name('modeloCertificado');
       Route::get('certificados/{id}/editarCertificado', 'CertificadoController@edit')->name('editarCertificado');
       Route::get('certificados/emitir', 'CertificadoController@emitir')->name('emitirCertificado');
@@ -152,6 +161,8 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::post('certificados/{id}/editCertificado',  'CertificadoController@update')->name('certificado.update');
       Route::get('certificados/ajax-listar-destinatarios', 'CertificadoController@ajaxDestinatarios')->name('ajax.listar.destinatarios');
       Route::get('certificados/{certificadoId}/preview-destinatario/{destinatarioId}/trabalho/{trabalhoId}', 'CertificadoController@previewCertificado')->name('previewCertificado');
+      Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', 'CertificadoController@visualizar_certificado_emitido')->name('verCertificado');
+      Route::delete('certificados/emissoes/deletar', 'CertificadoController@deletarEmissao')->name('deletar.emissao');
 
       Route::get('modalidade/cadastrarModalidade', 'EventoController@cadastrarModalidade')->name('cadastrarModalidade');
       Route::get('modalidade/listarModalidade', 'EventoController@listarModalidade')->name('listarModalidade');

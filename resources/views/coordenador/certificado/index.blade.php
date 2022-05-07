@@ -53,12 +53,17 @@
                         <div>
                             <div>
                                 <a href="{{route('coord.modeloCertificado', $certificado->id)}}" target="_blank">
-                                    <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar modelo
+                                    <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Atualizar modelo
                                 </a>
                             </div>
                             <div>
                                 <a href="{{route('coord.editarCertificado', ['eventoId' => $certificado->evento->id, 'id' => $certificado->id])}}">
                                     <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Editar
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{route('coord.listarEmissoes', $certificado)}}">
+                                    <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Listar certificados emitidos
                                 </a>
                             </div>
                             <div>
