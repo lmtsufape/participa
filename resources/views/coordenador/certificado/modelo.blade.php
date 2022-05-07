@@ -47,10 +47,6 @@
                     <input type="text" name="{{$objeto}}-{{$medida}}" value="0">
                 @endforeach
             @endforeach
-            <input type="text" name="qrcode-x" value="0">
-            <input type="text" name="qrcode-y" value="0">
-            <input type="text" name="qrcode-largura" value="0">
-            <input type="text" name="qrcode-altura" value="0">
         </form>
         <script>
             var stage = new Konva.Stage({
@@ -554,7 +550,7 @@
                         y: medida.y,
                         image: logoImageObj,
                         draggable: true,
-                        id: 'qrcode',
+                        id: 'logo',
                         height: medida.altura,
                         width: medida.largura,
                     });
@@ -565,7 +561,7 @@
                         y: parseInt(medida.y),
                         image: logoImageObj,
                         draggable: true,
-                        id: 'qrcode',
+                        id: 'logo',
                         height: parseInt(medida.altura),
                         width: parseInt(medida.largura),
                     });
@@ -711,6 +707,19 @@
                 document.querySelectorAll("input[name=hash-y")[0].value = hash.attrs.y;
                 document.querySelectorAll("input[name=hash-largura")[0].value = hash.attrs.width;
                 document.querySelectorAll("input[name=hash-fontSize")[0].value = hash.attrs.fontSize;
+
+                logo = stage1.find('#logo');
+                document.querySelectorAll("input[name=logo-x")[0].value = logo[0].attrs.x;
+                document.querySelectorAll("input[name=logo-y")[0].value = logo[0].attrs.y;
+                document.querySelectorAll("input[name=logo-largura")[0].value = logo[0].attrs.width;
+                document.querySelectorAll("input[name=logo-altura")[0].value = logo[0].attrs.height;
+
+                document.querySelectorAll("input[name=emissao-x")[0].value = emissao.attrs.x;
+                document.querySelectorAll("input[name=emissao-y")[0].value = emissao.attrs.y;
+                document.querySelectorAll("input[name=emissao-largura")[0].value = emissao.attrs.width;
+                document.querySelectorAll("input[name=emissao-fontSize")[0].value = emissao.attrs.fontSize;
+
+
                 document.getElementById("form").submit();
             }
         </script>

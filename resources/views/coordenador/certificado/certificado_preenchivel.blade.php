@@ -89,7 +89,7 @@
                 left: {{$medida->x}}px;
                 top: {{$medida->y}}px;
                 width: {{$medida->largura}}px;"
-                src="data:image/png;base64,{{$qrcode}}">
+                src="data:image/png;base64, {{ $qrcode }}">
             @php
                 $medida = $certificado->medidas->where('tipo', $tipos["hash"])->first();
             @endphp
@@ -102,6 +102,26 @@
                 Código para validação do certificado: <br>
                 {{$validacao}}
             </p>
+            @php
+                $medida = $certificado->medidas->where('tipo', $tipos["emissao"])->first();
+            @endphp
+            <p style="
+                position: absolute;
+                left: {{$medida->x}}px;
+                font-size: {{$medida->fontSize}}px;
+                top: {{$medida->y}}px;
+                width: {{$medida->largura}}px;">
+                Certificado emitido pela plataforma Participa em {{ $now }}
+            </p>
+            @php
+                $medida = $certificado->medidas->where('tipo', $tipos["logo"])->first();
+            @endphp
+            <img style="
+                position: absolute;
+                left: {{$medida->x}}px;
+                top: {{$medida->y}}px;
+                width: {{$medida->largura}}px;"
+                src="img/logo-icone.png">
         </div>
     </body>
 </html>
