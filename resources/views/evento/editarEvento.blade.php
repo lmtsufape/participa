@@ -364,7 +364,12 @@
                 '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
             }
         });
-        $('#numero').mask('0000000000000');
+        $('#numero').mask('#', {
+            maxlength: false,
+            translation: {
+                '#': {pattern: /[0-9\\s/n]/, recursive: true}
+            }
+        });
 
         $('#imagem-loader').click(function() {
             $('#logo-input').click();
