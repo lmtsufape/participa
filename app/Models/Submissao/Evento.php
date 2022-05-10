@@ -122,6 +122,11 @@ class Evento extends Model
       return $this->hasMany('App\Models\Submissao\Palestra');
   }
 
+  public function memorias()
+  {
+      return $this->hasMany('App\Models\Submissao\Memoria');
+  }
+
   public function inscritos() {
     $users_inscricoes = DB::table('inscricaos AS i')
                 ->join('users AS u', 'u.id', 'i.user_id')

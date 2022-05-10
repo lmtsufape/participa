@@ -120,6 +120,13 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('revisores/listarUsuarios', 'EventoController@listarUsuarios')->name('listarUsuarios');
 
 
+      // Regristros de memória
+      Route::get(   '/{evento}/memoria/create',     'MemoriaController@create')->name( 'memoria.create');
+      Route::get(   '/{evento}/memoria',           'MemoriaController@index')->name(  'memoria.index');
+      Route::post(  '/{evento}/memoria',           'MemoriaController@store')->name(  'memoria.store');
+      Route::put(   '/{evento}/memoria/{memoria}', 'MemoriaController@update')->name( 'memoria.update');
+      Route::delete('/memoria',                    'MemoriaController@destroy')->name('memoria.destroy');
+
 
       // Route::get('revisores/{id}/disponiveis', 'RevisorController@listarRevisores')->name('adicionarRevisores');
 

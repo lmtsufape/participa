@@ -338,6 +338,23 @@
                       </a>
                 </div>
             </a>
+            <a id="memorias">
+                <li>
+                    <img src="{{asset('img/icons/slideshow.svg')}}" alt=""><h5>Memórias</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                </li>
+                <div id="dropdownMemoria" @if(request()->is('coord/*/memoria*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                    <a id="cadastrarMemoria" href="{{ route('coord.memoria.create', $evento) }}">
+                        <li>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Adicionar registro</h5>
+                        </li>
+                    </a>
+                    <a id="listarMemorias" href="{{ route('coord.memoria.index', $evento) }}">
+                        <li>
+                            <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Listar registros</h5>
+                        </li>
+                    </a>
+                </div>
+            </a>
 
             <a id="eventos">
               <li>
@@ -895,6 +912,9 @@
     });
     $('#programacao').click(function(){
             $('#dropdownProgramacao').slideToggle(200);
+    });
+    $('#memorias').click(function(){
+            $('#dropdownMemoria').slideToggle(200);
     });
     $('#trabalhos').click(function(){
             $('#dropdownTrabalhosModalidades').hide();
