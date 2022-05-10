@@ -3,9 +3,12 @@
 namespace App\Models\Submissao;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TipoComissao extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'nome', 'evento_id'
     ];
