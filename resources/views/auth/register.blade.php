@@ -5,13 +5,7 @@
 
 
     <div class="row titulo">
-        <h1>Cadastro</h1>
-    </div>
-
-    <div class="row subtitulo">
-        <div class="col-sm-12">
-            <p>Informações Pessoais</p>
-        </div>
+        <h1>{{__('Cadastro')}}</h1>
     </div>
 
     @if ($errors->any())
@@ -23,18 +17,52 @@
             </ul>
         </div>
     @endif
-    <form method="POST" action="{{ route('register') }}">
+
+    <form method="POST" action="{{ route('register', app()->getLocale()) }}">
+
+        <div class="row subtitulo">
+            <div class="col-sm-12">
+                <p>{{__('País')}}</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="pais" class="col-form-label">{{ __('País') }}*</label>
+                <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" class="form-control @error('pais') is-invalid @enderror" id="pais">
+                    <option value="" disabled selected hidden>-- {{__('País')}} --</option>
+                    <option @if($pais == 'brasil') selected @endif value="/pt-BR/register/brasil">{{__('Brasil')}}</option>
+                    <option @if($pais == 'usa') selected @endif value="/en/register/usa">{{__('Estados Unidos da América')}}</option>
+                    <option @if($pais == 'outro') selected @endif value="/en/register/outro">{{__('Outro')}}</option>
+                </select>
+                <input type="hidden" name="pais" value="{{$pais}}">
+                <small>{{__('O formulário seguirá os padrões desse país')}}.</small>
+
+                @error('pais')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ __($message) }}</strong>
+                    </span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="row subtitulo">
+            <div class="col-sm-12">
+                <p>{{__('Informações Pessoais')}}</p>
+            </div>
+        </div>
+
         @csrf
         {{-- Nome | CPF --}}
         <div class="form-group row">
 
             <div class="col-md-6">
-                <label for="name" class="col-form-label">{{ __('Nome Completo*') }}</label>
+                <label for="name" class="col-form-label">{{ __('Nome Completo') }}*</label>
                 <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}"  autocomplete="name" autofocus>
 
                 @error('name')
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        <strong>{{ __($message) }}</strong>
                     </span>
                 @enderror
             </div>
@@ -45,7 +73,7 @@
                   </div>
                   <div class="custom-control custom-radio custom-control-inline">
                     <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
-                    <label class="custom-control-label " for="customRadioInline2">Passaporte</label>
+                    <label class="custom-control-label " for="customRadioInline2">{{__('Passaporte')}}</label>
                   </div>
 
                   <div id="fieldCPF" @error('passaporte') style="display: none" @enderror>
@@ -53,16 +81,16 @@
 
                     @error('cpf')
                         <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
+                            <strong>{{ __($message) }}</strong>
                         </span>
                     @enderror
                   </div>
                   <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: none" >
-                    <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="Passaporte" value="{{ old('passaporte') }}"  autocomplete="passaporte" autofocus>
+                    <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="{{__('Passaporte')}}" value="{{ old('passaporte') }}"  autocomplete="passaporte" autofocus>
 
                     @error('passaporte')
                         <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
+                            <strong>{{ __($message) }}</strong>
                         </span>
                     @enderror
                   </div>
@@ -73,22 +101,22 @@
         {{-- Instituição de Ensino e Celular --}}
         <div class="form-group row">
             <div class="col-md-8">
-                <label for="instituicao" class="col-form-label">{{ __('Instituição*') }}</label>
+                <label for="instituicao" class="col-form-label">{{ __('Instituição') }}*</label>
                 <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" value="{{ old('instituicao') }}"  autocomplete="instituicao" autofocus>
 
                 @error('instituicao')
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        <strong>{{ __($message) }}</strong>
                     </span>
                 @enderror
             </div>
             <div class="col-md-4">
-                <label for="celular" class="col-form-label">{{ __('Celular*') }}</label>
+                <label for="celular" class="col-form-label">{{ __('Celular') }}*</label>
                 <input id="celular" type="text" class="form-control @error('celular') is-invalid @enderror" name="celular" value="{{ old('celular') }}"  autocomplete="celular" autofocus>
 
                 @error('celular')
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        <strong>{{ __($message) }}</strong>
                     </span>
                 @enderror
             </div>
@@ -98,29 +126,29 @@
         <div class="form-group row">
 
             <div class="col-md-4">
-                <label for="email" class="col-form-label">{{ __('E-Mail*') }}</label>
+                <label for="email" class="col-form-label">{{ __('E-Mail') }}*</label>
                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"  autocomplete="email">
 
                 @error('email')
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        <strong>{{ __($message) }}</strong>
                     </span>
                 @enderror
             </div>
 
             <div class="col-md-4">
-                <label for="password" class="col-form-label">{{ __('Senha*') }}</label>
+                <label for="password" class="col-form-label">{{ __('Senha') }}*</label>
                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password"  autocomplete="new-password">
-                <small>Deve ter no mínimo 8 caracteres (letras ou números).</small>
+                <small>{{__('Deve ter no mínimo 8 caracteres (letras ou números)')}}.</small>
                 @error('password')
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        <strong>{{ __($message) }}</strong>
                     </span>
                 @enderror
             </div>
 
             <div class="col-md-4">
-                <label for="password-confirm" class="col-form-label">{{ __('Confirme a Senha*') }}</label>
+                <label for="password-confirm" class="col-form-label">{{ __('Confirme a Senha') }}*</label>
                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation"  autocomplete="new-password">
             </div>
         </div>
@@ -128,7 +156,7 @@
 
         <div class="row subtitulo">
             <div class="col-sm-12">
-                <p>Endereço</p>
+                <p>{{__('Endereço')}}</p>
             </div>
         </div>
 
@@ -136,10 +164,10 @@
         <div class="form-group row">
           <div class="col-md-2">
               <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
-              <input value="{{old('cep')}}" onblur="pesquisacep(this.value);" id="cep" type="text"  autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="CEP" size="10" maxlength="9" >
+              <input value="{{old('cep')}}" id="cep" type="text"  autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="9" >
               @error('cep')
                   <span class="invalid-feedback" role="alert">
-                      <strong>{{ $message }}</strong>
+                      <strong>{{ __($message) }}</strong>
                   </span>
               @enderror
           </div>
@@ -153,7 +181,7 @@
 
                 @error('rua')
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        <strong>{{ __($message) }}</strong>
                     </span>
                 @enderror
             </div>
@@ -164,7 +192,7 @@
 
                 @error('numero')
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        <strong>{{ __($message) }}</strong>
                     </span>
                 @enderror
             </div>
@@ -175,7 +203,7 @@
 
                 @error('bairro')
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        <strong>{{ __($message) }}</strong>
                     </span>
                 @enderror
             </div>
@@ -190,7 +218,7 @@
 
                 @error('cidade')
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        <strong>{{ __($message) }}</strong>
                     </span>
                 @enderror
             </div>
@@ -201,16 +229,27 @@
 
                 @error('complemento')
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        <strong>{{ __($message) }}</strong>
                     </span>
                 @enderror
             </div>
 
-            <div class="col-sm-4">
+            <div class="col-sm-4" id="groupformufinput">
+                <label for="ufInput" class="col-form-label">{{ __('UF') }}</label>
+                <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
+
+                @error('uf')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ __($message) }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="col-sm-4" id="groupformuf">
                 <label for="uf" class="col-form-label">{{ __('UF') }}</label>
                 {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}"  autocomplete="uf" autofocus> --}}
                 <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
-                    <option value="" disabled selected hidden>-- UF --</option>
+                    <option value="" disabled selected hidden>-- {{__('UF')}} --</option>
                     <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
                     <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
                     <option @if(old('uf') == 'AP') selected @endif value="AP">Amapá</option>
@@ -242,20 +281,19 @@
 
                 @error('uf')
                 <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
+                    <strong>{{ __($message) }}</strong>
                 </span>
                 @enderror
             </div>
           </div>
 
-          <div class="row justify-content-center">
-
-            <div class="col-md-6" style="padding-bottom:10px">
-                <a class="btn btn-secondary botao-form" href="{{route('cancelarCadastro')}}" style="width:100%">Cancelar Cadastro</a>
+          <div class="row justify-content-between mt-4">
+            <div class="col-md-5">
+                <a class="btn btn-secondary w-100" href="{{route('cancelarCadastro')}}">{{__('Cancelar cadastro')}}</a>
             </div>
-            <div class="col-md-6">
-                <button type="submit" class="btn btn-primary botao-form" style="width:100%">
-                    {{ __('Finalizar Cadastro') }}
+            <div class="col-md-5 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    {{ __('Finalizar cadastro') }}
                 </button>
             </div>
         </div>
@@ -270,8 +308,29 @@
 @section('javascript')
   <script type="text/javascript" >
     $(document).ready(function($){
-      $('#cep').mask('00000-000');
+
       $('#cpf').mask('000.000.000-00');
+      if($('html').attr('lang') == 'en') {
+        $('#celular').mask('(000) 000-0000');
+        $('#groupformuf').addClass('d-none');
+        $("#uf").prop('disabled', true);
+      } else if ($('html').attr('lang') == 'pt-BR') {
+        $('#cep').blur(function () {
+            pesquisacep(this.value);
+        });
+        $('#groupformufinput').addClass('d-none');
+        $("#ufInput").prop('disabled', true);
+        var SPMaskBehavior = function (val) {
+          return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+        },
+        spOptions = {
+          onKeyPress: function(val, e, field, options) {
+            field.mask(SPMaskBehavior.apply({}, arguments), options);
+          }
+        };
+        $('#celular').mask(SPMaskBehavior, spOptions);
+        $('#cep').mask('00000-000');
+      }
       $(".apenasLetras").mask("#", {
         maxlength: false,
         translation: {
@@ -279,15 +338,6 @@
         }
       });
       $('#numero').mask('0000000000000');
-      var SPMaskBehavior = function (val) {
-        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
-      },
-      spOptions = {
-        onKeyPress: function(val, e, field, options) {
-          field.mask(SPMaskBehavior.apply({}, arguments), options);
-        }
-      };
-      $('#celular').mask(SPMaskBehavior, spOptions);
 
     });
     function limpa_formulário_cep() {

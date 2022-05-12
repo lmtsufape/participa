@@ -303,7 +303,7 @@
                                     <a class="nav-link" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Cadastre-se') }}</a>
+                                    <a class="nav-link" href="{{ route('register', app()->getLocale()) }}">{{ __('Cadastre-se') }}</a>
                                 </li>
                             @endauth
                         </div>

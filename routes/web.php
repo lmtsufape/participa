@@ -27,7 +27,14 @@ Route::get('/evento/buscar-livre', 'Submissao\EventoController@buscaLivreAjax')-
 
 
 
-Auth::routes(['verify' => true]);
+Auth::routes(['verify' => true, 'register' => false]);
+
+Route::group(['prefix' => '{locale}', 'middleware' => 'setLocale'], function() {
+    Route::get('/register/{pais?}', function($locale, $pais = null){
+        return view('auth.register', compact('pais'));
+    });
+    Route::post('/register', 'Auth\RegisterController@register')->name('register');
+});
 
 Route::get('/', function () {
     if(Auth::check()){
@@ -49,7 +56,7 @@ Route::namespace('Submissao')->group(function () {
 
 Route::get('/{id}/atividades', 'Submissao\AtividadeController@atividadesJson')->name('atividades.json');
 
-Route::get('/perfil','Users\UserController@perfil')->name('perfil')->middleware('auth');
+Route::get('/perfil/{pais?}','Users\UserController@perfil')->name('perfil')->middleware('auth');
 Route::post('/perfil/editar','Users\UserController@editarPerfil')->name('perfil.update')->middleware('auth');
 
 
