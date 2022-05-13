@@ -283,9 +283,14 @@
                     <img src="{{asset('img/icons/publish.svg')}}" alt=""><h5>Certificados</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                 </li>
                 <div id="dropdownCertificados" @if(request()->is('coord/evento/certificado*')) style='background-color: gray;display: block;' @else  style='background-color: gray; display: none' @endif>
-                    <a id="emitirCertificado" href="{{ route('coord.emitirCertificado', ['eventoId' => $evento->id]) }}">
+                    <a id="cadastrarAssinatura" href="{{ route('coord.cadastrarAssinatura', ['eventoId' => $evento->id]) }}">
                         <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5 style="font-size: 80%"> Emitir Certificado</h5>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5 style="font-size: 80%"> Cadastrar Assinatura</h5>
+                        </li>
+                    </a>
+                    <a id="listarAssinaturas" href="{{ route('coord.listarAssinaturas', ['eventoId' => $evento->id]) }}">
+                        <li>
+                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 80%"> Listar Assinaturas</h5>
                         </li>
                     </a>
                     <a id="cadastrarCertificado" href="{{ route('coord.cadastrarCertificado', ['eventoId' => $evento->id]) }}">
@@ -298,14 +303,9 @@
                             <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 80%"> Listar Certificados</h5>
                         </li>
                     </a>
-                    <a id="cadastrarAssinatura" href="{{ route('coord.cadastrarAssinatura', ['eventoId' => $evento->id]) }}">
+                    <a id="emitirCertificado" href="{{ route('coord.emitirCertificado', ['eventoId' => $evento->id]) }}">
                         <li>
-                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5 style="font-size: 80%"> Cadastrar Assinatura</h5>
-                        </li>
-                    </a>
-                    <a id="listarAssinaturas" href="{{ route('coord.listarAssinaturas', ['eventoId' => $evento->id]) }}">
-                        <li>
-                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 80%"> Listar Assinaturas</h5>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5 style="font-size: 80%"> Emitir Certificado</h5>
                         </li>
                     </a>
                 </div>
@@ -336,6 +336,23 @@
                             <img src="http://eventos.site/img/icons/file-alt-regular.svg" alt=""><h5>Arquivo adicional</h5>
                         </li>
                       </a>
+                </div>
+            </a>
+            <a id="memorias">
+                <li>
+                    <img src="{{asset('img/icons/slideshow.svg')}}" alt=""><h5>Memórias</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                </li>
+                <div id="dropdownMemoria" @if(request()->is('coord/*/memoria*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                    <a id="cadastrarMemoria" href="{{ route('coord.memoria.create', $evento) }}">
+                        <li>
+                            <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5>Adicionar registro</h5>
+                        </li>
+                    </a>
+                    <a id="listarMemorias" href="{{ route('coord.memoria.index', $evento) }}">
+                        <li>
+                            <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Listar registros</h5>
+                        </li>
+                    </a>
                 </div>
             </a>
 
@@ -895,6 +912,9 @@
     });
     $('#programacao').click(function(){
             $('#dropdownProgramacao').slideToggle(200);
+    });
+    $('#memorias').click(function(){
+            $('#dropdownMemoria').slideToggle(200);
     });
     $('#trabalhos').click(function(){
             $('#dropdownTrabalhosModalidades').hide();

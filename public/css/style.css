@@ -224,6 +224,12 @@ body{
 #dropdownModalidades h5{
     font-size: 11px;
 }
+#dropdownMemoria{
+    display: none;
+}
+#dropdownMemoria h5{
+    font-size: 11px;
+}
 #dropdownProgramacao {
     display: none;
 }

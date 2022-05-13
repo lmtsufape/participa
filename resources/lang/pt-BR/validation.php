@@ -269,5 +269,13 @@ return [
     | of "email". This simply helps us make messages a little cleaner.
     |
     */
-    'attributes' => [],
+    'attributes' => [
+        "name" => "nome",
+        "email" => "e-mail",
+        "password" => "senha",
+        "cpf" => "CPF",
+        "instituicao" => "instituição",
+        "numero" => "número",
+        "cep" => "CEP",
+    ],
 ];

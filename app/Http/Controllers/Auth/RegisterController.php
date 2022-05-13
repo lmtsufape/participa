@@ -58,8 +58,9 @@ class RegisterController extends Controller
             'password'      => ['required', 'string', 'min:8', 'confirmed'],
             'cpf'           => ($data['passaporte']==null ? ['required','cpf'] : 'nullable'),
             'passaporte'    => ($data['cpf']==null ? 'required|max:10' : 'nullable'),
-            'celular'       => ['nullable','string', 'telefone'],
+            'celular'       => ['nullable','string', app()->isLocale('pt-BR') ? 'telefone': ''],
             'instituicao'   => ['nullable','string','max:255'],
+            'pais'          => ['nullable','string','max:255'],
             'rua'           => ['nullable','string','max:255'],
             'numero'        => ['nullable','string'],
             'bairro'        => ['nullable','string','max:255'],
@@ -92,15 +93,7 @@ class RegisterController extends Controller
         $user->instituicao = $data['instituicao'];
 
         if( $data['rua'] != null && $data['cep'] != null ){
-            $end = new Endereco();
-            $end->rua = $data['rua'];
-            $end->numero = $data['numero'];
-            $end->bairro = $data['bairro'];
-            $end->cidade = $data['cidade'];
-            $end->uf = $data['uf'];
-            $end->cep = $data['cep'];
-            $end->complemento = $data['complemento'];
-
+            $end = new Endereco($data);
             $end->save();
             $user->enderecoId = $end->id;
             $user->save();
@@ -112,6 +105,7 @@ class RegisterController extends Controller
         $user->enderecoId = null;
         $user->save();
 
+        app()->setLocale('pt-BR');
         return $user;
     }
 }

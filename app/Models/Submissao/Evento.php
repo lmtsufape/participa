@@ -122,13 +122,18 @@ class Evento extends Model
       return $this->hasMany('App\Models\Submissao\Palestra');
   }
 
+  public function memorias()
+  {
+      return $this->hasMany('App\Models\Submissao\Memoria');
+  }
+
   public function inscritos() {
     $users_inscricoes = DB::table('inscricaos AS i')
                 ->join('users AS u', 'u.id', 'i.user_id')
                 ->join('eventos AS e', 'e.id', 'i.evento_id')
                 ->where('i.evento_id', $this->id)
                 ->distinct('u.email')
-                ->select('u.name AS nome', 'e.nome AS evento', 'u.email')
+                ->select('u.name AS nome', 'e.nome AS evento', 'u.email', 'u.instituicao', 'u.celular', 'u.cpf', 'u.passaporte', 'u.especProfissional')
                 ->get();
 
 
@@ -139,7 +144,7 @@ class Evento extends Model
                             ->join('eventos AS e', 'e.id', 'i.evento_id')
                             ->where('i.evento_id', $subevento->id)
                             ->distinct('u.email')
-                            ->select('u.name AS nome', 'e.nome AS evento', 'u.email')
+                            ->select('u.name AS nome', 'e.nome AS evento', 'u.email', 'u.instituicao', 'u.celular', 'u.cpf', 'u.passaporte', 'u.especProfissional')
                             ->get();
         $users_inscricoes = $users_inscricoes->merge($users_inscricoes_sub);
       }

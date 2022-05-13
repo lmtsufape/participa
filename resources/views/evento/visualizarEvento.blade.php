@@ -487,6 +487,45 @@
                                 </div>
                             </div>
                         </div>
+
+                        @if ($evento->memorias)
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="col-sm-12">
+                                    <div class="card sombra-card" style="width: 100%;">
+                                        <div class="card-body">
+                                            <div class="form-row">
+                                                <div class="col-sm-12 form-group">
+                                                    <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">Memória</h4>
+                                                </div>
+                                            </div>
+                                            @foreach ($evento->memorias as $memoria)
+                                                <div class="form-row justify-content-center">
+                                                    <div class="col-sm-3 form-group ">
+                                                        <div class="div-icon-programacao d-flex justify-content-center">
+                                                            @if($memoria->arquivo)
+                                                                <img class="icon-programacao" src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}" alt="">
+                                                            @elseif($memoria->link)
+                                                                <img class="icon-programacao" src="{{ asset('img/icons/link-solid.svg') }}" alt="">
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-8 form-inline">
+                                                        <span class="titulo">
+                                                            @if($memoria->arquivo)
+                                                                <a href="/storage/{{ $memoria->arquivo }}" target="_blank">{{ $memoria->titulo }}</a>
+                                                            @elseif($memoria->link)
+                                                                <a href="{{ $memoria->link }}" target="_blank">{{ $memoria->titulo }}</a>
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
                 @if ($subeventos->count() > 0)

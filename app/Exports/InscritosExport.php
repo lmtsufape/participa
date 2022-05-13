@@ -19,6 +19,11 @@ class InscritosExport implements FromCollection, WithHeadings
             'nome',
             'evento/subevento',
             'email',
+            'instituicao',
+            'celular',
+            'cpf',
+            'passaporte',
+            'especialicazao profissional',
         ];
     }
 

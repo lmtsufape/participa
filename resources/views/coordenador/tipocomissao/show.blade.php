@@ -14,7 +14,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-9">
+                            <div class="col-sm-3">
                                 <h5 class="card-title">Membros</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">Membros cadastrados na comissão</h6>
                             </div>
@@ -22,7 +22,19 @@
                                 style="text-align: right;">
                                 <button class="btn btn-primary"
                                     data-toggle="modal"
-                                    data-target="#modalCadastrarMembro">+ Cadastrar membro</button>
+                                    data-target="#modalCadastrarMembro">Cadastrar membro</button>
+                            </div>
+                            <div class="col-sm-3"
+                                style="text-align: right;">
+                                <button class="btn btn-secondary"
+                                    data-toggle="modal"
+                                    data-target="#modalEditarComissao">Editar comissão</button>
+                            </div>
+                            <div class="col-sm-3"
+                                style="text-align: right;">
+                                <button class="btn btn-danger"
+                                    data-toggle="modal"
+                                    data-target="#modalExcluirComissao">Deletar comissão</button>
                             </div>
                         </div>
                         <p class="card-text">
@@ -169,4 +181,63 @@
             </div>
         </div>
     </div>
+    <!-- Modal de editar comissao -->
+    <div class="modal fade" id="modalEditarComissao" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+              <h5 class="modal-title" id="#label">Editar comissão {{$comissao->nome}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form id="formEditarComissao" action="{{route('coord.tipocomissao.update', ['evento' => $evento, 'comissao' => $comissao])}}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="container">
+                  <div class="row form-group">
+                    <div class="col-sm-12" style="margin-top: 20px; margin-bottom: 20px;">
+                      <label for="nome">Nome*</label>
+                      <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{old('nome', $comissao->nome)}}">
+
+                      @error('nome')
+                      <span class="invalid-feedback" role="alert">
+                          <strong>{{ $message }}</strong>
+                      </span>
+                      @enderror
+                    </div>
+                  </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" form="formEditarComissao">Atualizar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <form id="formExcluirComissao" method="POST" action="{{route('coord.tipocomissao.destroy',['evento' => $evento, 'comissao' => $comissao])}}">
+        @csrf
+        @method('DELETE')
+      </form>
+      <!-- Modal de exclusão da comissao -->
+      <div class="modal fade" id="modalExcluirComissao" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+              <h5 class="modal-title" id="#label">Confirmação</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Tem certeza que deseja excluir essa comissão?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+              <button type="submit" class="btn btn-primary" form="formExcluirComissao">Sim</button>
+            </div>
+          </div>
+        </div>
+      </div>
 @endsection

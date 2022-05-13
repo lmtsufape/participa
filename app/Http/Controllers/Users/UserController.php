@@ -26,11 +26,22 @@ use Illuminate\Support\Facades\Redirect;
 class UserController extends Controller
 {
     //
-    function perfil(){
+    function perfil($pais = null){
         $user = User::find(Auth::user()->id);
         $end = $user->endereco;
+        if($pais) {
+            if ($pais != 'brasil') {
+                app()->setLocale('en');
+            } else {
+                app()->setLocale('pt-BR');
+            }
+        } elseif ($end && $end->pais != 'brasil') {
+            app()->setLocale('en');
+        } else {
+            app()->setLocale('pt-BR');
+        }
         $areas = Area::orderBy('nome')->get();
-        return view('user.perfilUser',['user'=>$user,'end'=>$end,'areas'=>$areas]);
+        return view('user.perfilUser', compact('user', 'end', 'areas', 'pais'));
     }
     function editarPerfil(Request $request){
         if ($request->passaporte != null &&  $request->cpf != null) {
@@ -58,19 +69,12 @@ class UserController extends Controller
                 'uf' => 'required|string',
                 'cep' => 'required|string',
                 'password' => 'required|string|min:8|confirmed',
+                'pais' => 'required',
                 // 'primeiraArea' => 'required|string',
             ]);
 
             // criar endereço
-            $end = new Endereco();
-            $end->rua = $request->input('rua');
-            $end->numero = $request->input('numero');
-            $end->bairro = $request->input('bairro');
-            $end->cidade = $request->input('cidade');
-            $end->complemento = $request->input('complemento');
-            $end->uf = $request->input('uf');
-            $end->cep = $request->input('cep');
-
+            $end = new Endereco($validator);
             $end->save();
 
             // Atualizar dados não preenchidos de User
@@ -121,7 +125,7 @@ class UserController extends Controller
                 'cidade' => 'required|string|max:255',
                 'uf' => 'required|string',
                 'cep' => 'required|string',
-
+                'pais' => 'required',
                 'email'             => 'required|string|email|max:255',
                 'senha_atual'       => 'nullable|string|min:8',
                 'password'          => 'nullable|string|min:8',
@@ -173,16 +177,11 @@ class UserController extends Controller
 
             // endereço
             $end = Endereco::find($user->enderecoId);
-            $end->rua = $request->input('rua');
-            $end->numero = $request->input('numero');
-            $end->bairro = $request->input('bairro');
-            $end->cidade = $request->input('cidade');
-            $end->complemento = $request->input('complemento');
-            $end->uf = $request->input('uf');
-            $end->cep = $request->input('cep');
+            $end->fill($validator);
 
             $end->update();
             // dd([$user,$end]);
+            app()->setLocale('pt-BR');
             return back()->with(['message' => "Atualizado com sucesso!"]);
 
         }
