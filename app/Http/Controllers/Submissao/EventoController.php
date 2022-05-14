@@ -698,9 +698,10 @@ class EventoController extends Controller
 
         $temRespostas = false;
         foreach($form->perguntas as $pergunta){
-            if($pergunta->respostas->first()->opcoes->count()){
+            $primeira = $pergunta->respostas->first();
+            if($primeira && $primeira->opcoes && $primeira->opcoes->count()){
                 //Resposta com Multipla escolha:
-            }elseif($pergunta->respostas->first()->paragrafo->count()){
+            }elseif($primeira && $primeira->paragrafo && $primeira->paragrafo->count()){
                 foreach($pergunta->respostas as $resposta){
                     if($resposta->revisor != null || $resposta->trabalho != null){
                         $temRespostas = true;
