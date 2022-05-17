@@ -37,10 +37,10 @@
               <tr>
                 <th scope="col">
                   Trabalho
-                  <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc'])}}">
+                  <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId' => $trabalhos->first()->modalidade->id ?? '', 'titulo', 'asc', 'rascunho'])}}">
                     <i class="fas fa-arrow-alt-circle-up"></i>
                   </a>
-                  <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'desc'])}}">
+                  <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId' => $trabalhos->first()->modalidade->id ?? '', 'titulo', 'desc', 'rascunho'])}}">
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>
@@ -55,10 +55,10 @@
                 </th>--}}
                  <th scope="col">
                   Autor
-                  <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'asc'])}}">
+                  <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId' => $trabalhos->first()->modalidade->id ?? '', 'autor', 'asc', 'rascunho'])}}">
                     <i class="fas fa-arrow-alt-circle-up"></i>
                   </a>
-                  <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'desc'])}}">
+                  <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId' => $trabalhos->first()->modalidade->id ?? '', 'autor', 'desc', 'rascunho'])}}">
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>

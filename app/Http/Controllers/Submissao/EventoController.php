@@ -847,7 +847,7 @@ class EventoController extends Controller
       return $pdf->download("resumos - {$evento->nome}.pdf");
     }
 
-    public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
+    public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
@@ -862,8 +862,8 @@ class EventoController extends Controller
         if($column == "autor") {
             // Não tem como ordenar os trabalhos por nome do autor automaticamente
             // Já que na tabale a de trabalhos não existe o nome do autor
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
-            ->orWhere([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->get()->sortBy(
+            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
+            ->orWhere([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->get()->sortBy(
                 function($trabalho) {
                     return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
                 },
@@ -872,8 +872,8 @@ class EventoController extends Controller
         } else {
             // Como aqui é um else, então $trabalhos nunca vai ser null
             // Busca os trabalhos da forma como era feita antes
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
-            ->orWhere([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->orderBy($column, $direction)->get();
+            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
+            ->orWhere([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->orderBy($column, $direction)->get();
         }
 
         return view('coordenador.trabalhos.listarRespostasTrabalhos', [
