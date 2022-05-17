@@ -488,7 +488,7 @@
                             </div>
                         </div>
 
-                        @if ($evento->memorias)
+                        @if ($evento->memorias->count())
                             <div class="row" style="margin-bottom: 10px;">
                                 <div class="col-sm-12">
                                     <div class="card sombra-card" style="width: 100%;">
