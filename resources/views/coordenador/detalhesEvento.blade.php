@@ -43,7 +43,7 @@
                         </a>
                         <a id="pdfadicional" href="{{route('coord.arquivos-adicionais', $evento)}}">
                             <li>
-                                <img src="http://eventos.site/img/icons/file-alt-regular.svg" alt=""><h5>Arquivos adicionais</h5>
+                                <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt=""><h5>Arquivos adicionais</h5>
                             </li>
                           </a>
 
