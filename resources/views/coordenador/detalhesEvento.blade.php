@@ -18,14 +18,14 @@
             @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                 <a id="informacoes" href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}" style="text-decoration:none;">
                     <li>
-                        <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""> <h5> Informações</h5>
+                        <img src="{{asset('img/icons/info-circle-solid.svg')}}" alt=""><h5>Informações</h5>
                     </li>
                 </a>
                 <a id="programacao">
                     <li>
                         <img src="{{asset('img/icons/slideshow.svg')}}" alt=""><h5>Programação</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                     </li>
-                    <div id="dropdownProgramacao" @if(request()->is('coord/evento/atividade*') || request()->is('inscricoes*') || request()->routeIs('coord.arquivos-adicionais') || request()->is('coord/evento/palestrantes*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                    <div id="dropdownProgramacao" @if(request()->is('coord/evento/atividade*') || request()->routeIs('coord.arquivos-adicionais') || request()->is('coord/evento/palestrantes*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                         <a id="cadastrarModalidade" href="{{ route('coord.atividades', ['id' => $evento->id]) }}">
                             <li>
                                 <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Atividades</h5>
@@ -68,7 +68,7 @@
                 </a>
                 <a id="areas">
                     <li>
-                        <img src="{{asset('img/icons/area.svg')}}" alt=""><h5> Áreas</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                        <img src="{{asset('img/icons/area.svg')}}" alt=""><h5>Áreas</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                     </li>
                     <div id="dropdownAreas"  @if(request()->is('coord/evento/areas*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                         <a id="listarAreas" href="{{ route('coord.listarAreas', ['eventoId' => $evento->id]) }}">
@@ -211,7 +211,7 @@
                 </a>
                 <a id="inscricoes" href="{{ route('inscricao.inscritos', $evento) }}" style="text-decoration:none;">
                     <li>
-                        <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""> <h5>Inscrições</h5>
+                        <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5>
                     </li>
                 </a>
             @endcan
