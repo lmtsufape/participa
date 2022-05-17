@@ -5,8 +5,26 @@
     <div id="divListarTrabalhos" style="display: block">
 
       <div class="row ">
-        <div class="col-sm-12">
+        <div class="col-sm-9">
             <h2 class="">Avaliações da modalidade {{$trabalhos->first()->modalidade->nome ?? ''}} </h2>
+        </div>
+        <div class="col-sm-3 mt-1">
+          <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
+
+            <div class="btn-group" role="group">
+              <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Exportar avaliações .csv
+              </button>
+              <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                @if($trabalhos->first() != null)
+                  @foreach ($trabalhos->first()->modalidade->forms as $form)
+                    <a class="dropdown-item" href="{{route('evento.downloadAvaliacoes', ['evento' => $evento, 'modalidade' => $trabalhos->first()->modalidade, 'form' => $form])}}">{{$form->titulo}}
+                    </a>
+                  @endforeach
+                @endif
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
