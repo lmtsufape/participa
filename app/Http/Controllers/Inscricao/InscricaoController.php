@@ -45,6 +45,14 @@ class InscricaoController extends Controller
                                                            'campos'     => $camposDoFormulario,]);
     }
 
+    public function inscritos(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $users = $evento->inscritos();
+        return view('coordenador.inscritos', compact('users', 'evento'));
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

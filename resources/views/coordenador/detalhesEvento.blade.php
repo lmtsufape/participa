@@ -31,11 +31,11 @@
                                 <img src="{{asset('img/icons/plus-square-solid.svg')}}" alt=""><h5> Atividades</h5>
                             </li>
                         </a>
-                        <a id="cadastrarModalidade" href="{{ route('inscricoes', ['id' => $evento->id]) }}">
+                        {{-- <a id="cadastrarModalidade" href="{{ route('inscricoes', ['id' => $evento->id]) }}">
                             <li>
                                 <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5>
                             </li>
-                        </a>
+                        </a> --}}
                         <a id="cadastrarModalidade" href="{{ route('checkout.pagamentos', ['id' => $evento->id]) }}">
                             <li>
                                 <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Pagamentos</h5>
@@ -208,6 +208,11 @@
                             </li>
                         </a> --}}
                     </div>
+                </a>
+                <a id="inscricoes" href="{{ route('inscricao.inscritos', $evento) }}" style="text-decoration:none;">
+                    <li>
+                        <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""> <h5>Inscrições</h5>
+                    </li>
                 </a>
             @endcan
 
