@@ -48,8 +48,8 @@ class InscricaoController extends Controller
     public function inscritos(Evento $evento)
     {
         $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
-        $users = $evento->inscritos();
-        return view('coordenador.inscritos', compact('users', 'evento'));
+        $inscricoes = $evento->inscritos();
+        return view('coordenador.inscritos', compact('inscricoes', 'evento'));
 
     }
 

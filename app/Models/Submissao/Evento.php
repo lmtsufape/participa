@@ -128,24 +128,11 @@ class Evento extends Model
   }
 
   public function inscritos() {
-    $users_inscricoes = DB::table('inscricaos AS i')
-                ->join('users AS u', 'u.id', 'i.user_id')
-                ->join('eventos AS e', 'e.id', 'i.evento_id')
-                ->where('i.evento_id', $this->id)
-                ->distinct('u.email')
-                ->select('u.name AS nome', 'e.nome AS evento', 'u.email', 'u.instituicao', 'u.celular', 'u.cpf', 'u.passaporte', 'u.especProfissional')
-                ->get();
-
+    $users_inscricoes = $this->inscricaos;
 
     if ($this->subeventos->count() > 0) {
       foreach ($this->subeventos as $subevento) {
-        $users_inscricoes_sub = DB::table('inscricaos AS i')
-                            ->join('users AS u', 'u.id', 'i.user_id')
-                            ->join('eventos AS e', 'e.id', 'i.evento_id')
-                            ->where('i.evento_id', $subevento->id)
-                            ->distinct('u.email')
-                            ->select('u.name AS nome', 'e.nome AS evento', 'u.email', 'u.instituicao', 'u.celular', 'u.cpf', 'u.passaporte', 'u.especProfissional')
-                            ->get();
+        $users_inscricoes_sub = $subevento->inscricaos;
         $users_inscricoes = $users_inscricoes->merge($users_inscricoes_sub);
       }
     }
