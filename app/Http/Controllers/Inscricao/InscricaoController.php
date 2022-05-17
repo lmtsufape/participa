@@ -27,7 +27,7 @@ class InscricaoController extends Controller
     public function index($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $promocoes = Promocao::where('evento_id', $id)->get();
         $atividades = Atividade::where('eventoId', $id)->get();
@@ -47,7 +47,7 @@ class InscricaoController extends Controller
 
     public function inscritos(Evento $evento)
     {
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $inscricoes = $evento->inscritos();
         return view('coordenador.inscritos', compact('inscricoes', 'evento'));
 

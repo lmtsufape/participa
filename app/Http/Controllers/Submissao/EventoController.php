@@ -471,7 +471,7 @@ class EventoController extends Controller
               'Content-Type' => 'text/csv',
         ]);
     }
-      
+
 
     private function makeHeadingsExportAvaliacoes($form)
     {
@@ -508,7 +508,7 @@ class EventoController extends Controller
       }
 
       $vazio = False;
-      
+
       foreach ($form->perguntas as $index => $pergunta){
         $achou = False;
         if($pergunta->respostas->first()->opcoes->count()){
@@ -1180,6 +1180,8 @@ class EventoController extends Controller
 
     public function showNaoLogado($id)
     {
+        if(auth()->user())
+            return redirect()->route('evento.visualizar', $id);
         $evento = Evento::find($id);
         $subeventos = Evento::where('deletado',false)->where('publicado', true)->where('evento_pai_id', $id)->get();
         $hasTrabalho = false;
