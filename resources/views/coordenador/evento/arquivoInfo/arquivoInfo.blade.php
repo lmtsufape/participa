@@ -4,26 +4,26 @@
     <div id="divListarAreas"
         style="display: block">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-md-12">
                 <h1 class="titulo-detalhes">Arquivos adicionais</h1>
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-sm-12">
+            <div class="col-md-12">
                 @include('componentes.mensagens')
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-10">
+                        <div class="row justify-content-between">
+                            <div class="col-md-6">
                                 <h5 class="card-title">Arquivos</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Arquivo adicionados</h6>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-6 d-flex justify-content-sm-start justify-content-md-end align-items-center">
                                 @component('coordenador.evento.arquivoInfo.modal-arquivoInfo', ['evento' => $evento])@endcomponent
                             </div>
                         </div>
-                        <h6 class="card-subtitle mb-2 text-muted">Arquivo adicionados</h6>
                         <p class="card-text">
-                        <table class="table table-hover table-responsive-lg table-sm">
+                        <table class="table table-hover table-responsive-md table-md">
                             <thead>
                                 <tr>
                                     <th scope="col">Nome</th>

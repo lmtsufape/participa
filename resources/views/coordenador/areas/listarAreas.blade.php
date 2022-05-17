@@ -2,37 +2,37 @@
 
 @section('menu')
     <div>
-      @error('excluirAtividade')  
+      @error('excluirAtividade')
         @include('componentes.mensagens')
       @enderror
     </div>
     <div id="divListarAreas" style="display: block">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-md-12">
                 <h1 class="titulo-detalhes">Listar Áreas</h1>
             </div>
         </div>
 
         <div class="row justify-content-center">
-            <div class="col-sm-12">
-              
+            <div class="col-md-12">
+
                 <div class="card">
                     <div class="card-body">
-                      <div class="row">
-                        <div class="col-md-10">
+                      <div class="row justify-content-between">
+                        <div class="col-md-6">
                           <h5 class="card-title">Áreas</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">Áreas cadastradas no seu evento</h6>
                         </div>
-                        <div class="col-md-2">
-                          
+                        <div class="col-md-6 d-flex justify-content-sm-start justify-content-md-end align-items-center">
+
                           @component('componentes.modal-area', ['evento' => $evento])
-                            
+
                           @endcomponent
                         </div>
 
                       </div>
-                      <h6 class="card-subtitle mb-2 text-muted">Áreas cadastradas no seu evento</h6>
                       <p class="card-text">
-                        <table class="table table-hover table-responsive-lg table-sm">
+                        <table class="table table-hover table-responsive-md table-md">
                             <thead>
                               <tr>
                                 <th scope="col">Nome</th>
@@ -57,8 +57,8 @@
                                     </form>
                                   </td>
                                 </tr>
-                                
-                
+
+
                               @endforeach
                             </tbody>
                           </table>
@@ -76,7 +76,7 @@
           <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
               <h5 class="modal-title" id="#label">Editar área {{$area->nome}}</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+              <button type="button" class="close" data-dimdiss="modal" aria-label="Close" style="color: white;">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -85,10 +85,10 @@
                 <input type="hidden" name="editarAreaId" value="{{$area->id}}">
                 <div class="container">
                   <div class="row form-group">
-                    <div class="col-sm-12" style="margin-top: 20px; margin-bottom: 20px;">
+                    <div class="col-md-12" style="margin-top: 20px; margin-bottom: 20px;">
                       <label for="nome_da_área">Nome*</label>
                       <input id="nome_da_área" type="text" class="form-control @error('nome_da_área') is-invalid @enderror" name="nome_da_área" value="@if(old('nome_da_área') != null){{old('nome_da_área')}}@else{{$area->nome}}@endif">
-    
+
                       @error('nome_da_área')
                       <span class="invalid-feedback" role="alert">
                           <strong>{{ $message }}</strong>
@@ -99,7 +99,7 @@
                 </div>
             </form>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-secondary" data-dimdiss="modal">Cancelar</button>
               <button type="submit" class="btn btn-primary" form="formEditarArea{{$area->id}}">Atualizar</button>
             </div>
           </div>
@@ -111,7 +111,7 @@
           <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
               <h5 class="modal-title" id="#label">Confirmação</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+              <button type="button" class="close" data-dimdiss="modal" aria-label="Close" style="color: white;">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -119,7 +119,7 @@
               Tem certeza que deseja excluir essa área?
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+              <button type="button" class="btn btn-secondary" data-dimdiss="modal">Não</button>
               <button type="submit" class="btn btn-primary" form="formExcluirArea{{$area->id}}">Sim</button>
             </div>
           </div>
