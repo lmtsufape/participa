@@ -76,17 +76,13 @@
                                     <label for="nomeTrabalho" class="col-form-label"><strong>Trabalho corrigido e/ou com comentários (opcional):</strong> </label>
 
                                     <div class="custom-file">
-                                      <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                                      <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" accept=".pdf, .odt, .docx, .rtf">
                                     </div>
                                     <small><strong>Extensão de arquivos aceitas:</strong>
-                                      @if($data['modalidade']->pdf == true)<span> / ".pdf"</span>@endif
-                                      @if($data['modalidade']->jpg == true)<span> / ".jpg"</span>@endif
-                                      @if($data['modalidade']->jpeg == true)<span> / ".jpeg"</span>@endif
-                                      @if($data['modalidade']->png == true)<span> / ".png"</span>@endif
-                                      @if($data['modalidade']->docx == true)<span> / ".docx"</span>@endif
-                                      @if($data['modalidade']->odt == true)<span> / ".odt"</span>@endif
-                                      @if($data['modalidade']->zip == true)<span> / ".zip"</span>@endif
-                                      @if($data['modalidade']->svg == true)<span> / ".svg"</span>@endif.
+                                      <span> / ".pdf"</span>
+                                      <span> / ".docx"</span>
+                                      <span> / ".odt"</span>
+                                      <span> / ".rtf"</span>
                                     </small>
                                     @error('arquivo')
                                     <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Submissao;
 
 use App\Exports\InscritosExport;
+use App\Exports\TrabalhosExport;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Evento;
@@ -72,7 +73,7 @@ class EventoController extends Controller
 
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $numeroRevisores = Revisor::where('evento_id', $evento->id)->count();
+        $numeroRevisores = Revisor::where('evento_id', $evento->id)->select('user_id')->distinct()->get()->count();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
 
@@ -419,6 +420,36 @@ class EventoController extends Controller
         return (new InscritosExport($evento))->download($evento->nome.'.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
       ]);
+    }
+
+    public function exportTrabalhos(Evento $evento)
+    {
+      $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+      $trabalhos = Trabalho::where('eventoId', $evento->id)
+      ->get()->map(function ($trabalho) {
+          return [
+              $trabalho->area->nome,
+              $trabalho->modalidade->nome,
+              $trabalho->titulo,
+              $trabalho->autor->name . " (" . $trabalho->autor->celular . ")",
+              $this->coautoresToString($trabalho),
+          ];
+      })->collect();
+      return (new TrabalhosExport($trabalhos))->download($evento->nome.'- Trabalhos.csv', \Maatwebsite\Excel\Excel::CSV, [
+            'Content-Type' => 'text/csv',
+      ]);
+    }
+
+    private function coautoresToString(Trabalho $trabalho)
+    {
+      $stringRetorno = "";
+
+      foreach($trabalho->coautors as $coautor){
+        if($coautor->user->id != $trabalho->autorId){
+          $stringRetorno .= $coautor->user->name . " (" . $coautor->user->celular . "), ";
+        }
+      }
+      return $stringRetorno;
     }
 
     public function cadastrarModalidade(Request $request)

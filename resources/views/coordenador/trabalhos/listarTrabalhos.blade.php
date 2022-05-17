@@ -13,11 +13,20 @@
         <div class="col-sm-3">
           <form method="GET" action="{{route('distribuicao')}}">
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
-            <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
-              {{ __('Distribuir trabalhos') }}
-            </button>
+
+            <div class="row">
+                <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
+                    {{ __('Distribuir trabalhos') }}
+                  </button>
+            </div>
+
           </form>
-          <a class="btn btn-primary col-sm" href="{{route('evento.downloadResumos', $evento)}}">Baixar resumos</a>
+          <div class="row mt-1">
+            <a class="btn btn-primary col-sm" href="{{route('evento.downloadResumos', $evento)}}">Baixar resumos</a>
+          </div>
+          <div class="row mt-1">
+            <a class="btn btn-primary col-sm" href="{{route('evento.downloadTrabalhos', $evento)}}">Exportar trabalhos .csv</a>
+          </div>
         </div>
       </div>
 

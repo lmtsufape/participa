@@ -43,7 +43,11 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos->first()->modalidade->nome}}</span>
-                            <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >{{date("d/m/Y H:i", strtotime($trabalhos->first()->modalidade->inicioCorrecao))}} - {{date("d/m/Y H:i",strtotime($trabalhos->first()->modalidade->fimCorrecao))}}</span></h5>
+                            @if ($trabalhos->first()->modalidade->inicioCorrecao && $trabalhos->first()->modalidade->fimCorrecao)
+                                <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >{{date("d/m/Y H:i", strtotime($trabalhos->first()->modalidade->inicioCorrecao))}} - {{date("d/m/Y H:i",strtotime($trabalhos->first()->modalidade->fimCorrecao))}}</span></h5>
+                            @else
+                                <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >não haverá</span></h5>
+                            @endif
                             <h5 class="card-title">{{$trabalhos->first()->evento->formSubTrab->etiquetaareatrabalho}}: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos->first()->area->nome}}</span></h5>
                             <div class="row table-trabalhos">
                             <div class="col-sm-12">

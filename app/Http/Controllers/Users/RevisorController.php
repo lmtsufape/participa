@@ -574,31 +574,7 @@ class RevisorController extends Controller
     public function validarTipoDoArquivo($arquivo, $tiposExtensao) {
         if($tiposExtensao->arquivo == true){
 
-          $tiposcadastrados = [];
-          if($tiposExtensao->pdf == true){
-            array_push($tiposcadastrados, "pdf");
-          }
-          if($tiposExtensao->jpg == true){
-            array_push($tiposcadastrados, "jpg");
-          }
-          if($tiposExtensao->jpeg == true){
-            array_push($tiposcadastrados, "jpeg");
-          }
-          if($tiposExtensao->png == true){
-            array_push($tiposcadastrados, "png");
-          }
-          if($tiposExtensao->docx == true){
-            array_push($tiposcadastrados, "docx");
-          }
-          if($tiposExtensao->odt == true){
-            array_push($tiposcadastrados, "odt");
-          }
-          if($tiposExtensao->zip == true) {
-            array_push($tiposcadastrados, "zip");
-          }
-          if($tiposExtensao->svg == true) {
-            array_push($tiposcadastrados, "svg");
-          }
+          $tiposcadastrados = ["pdf", "odt", "docx", "rtf"];
 
           $extensao = $arquivo->getClientOriginalExtension();
           if(!in_array($extensao, $tiposcadastrados)){
