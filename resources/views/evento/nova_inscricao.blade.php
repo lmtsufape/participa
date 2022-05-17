@@ -190,7 +190,7 @@
                                                         </div>
                                                         <div class="col-sm-3">
                                                             <label for="endereco-numero-{{$campo->id}}">Número</label>
-                                                            <input type="number" class="form-control numero @error('endereco-numero-'.$campo->id) is-invalid @enderror" id="endereco-numero-{{$campo->id}}" name="endereco-numero-{{$campo->id}}" placeholder="10" @if($campo->obrigatorio) required @endif value="@if(old('endereco-numero-'.$campo->id) != null){{old('endereco-numero-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$enderecoPreenchido->numero}}@endif">
+                                                            <input type="number" class="form-control numero @error('endereco-numero-'.$campo->id) is-invalid @enderror" id="endereco-numero-{{$campo->id}}" name="endereco-numero-{{$campo->id}}" placeholder="10" @if($campo->obrigatorio) required @endif value="@if(old('endereco-numero-'.$campo->id) != null){{old('endereco-numero-'.$campo->id)}}@elseif($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id){{$enderecoPreenchido->numero}}@endif" maxlength="10">
 
                                                             @error('endereco-numero-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
@@ -595,7 +595,7 @@
                                                         </div>
                                                         <div class="col-sm-3">
                                                             <label for="endereco-numero-{{$campo->id}}">Número</label>
-                                                            <input type="number" class="form-control numero @error('endereco-numero-'.$campo->id) is-invalid @enderror" id="endereco-numero-{{$campo->id}}" name="endereco-numero-{{$campo->id}}" placeholder="10" @if($campo->obrigatorio) required @endif value="@if(old('endereco-numero-'.$campo->id) != null){{old('endereco-numero-'.$campo->id)}}@endif">
+                                                            <input type="number" class="form-control numero @error('endereco-numero-'.$campo->id) is-invalid @enderror" id="endereco-numero-{{$campo->id}}" name="endereco-numero-{{$campo->id}}" placeholder="10" @if($campo->obrigatorio) required @endif value="@if(old('endereco-numero-'.$campo->id) != null){{old('endereco-numero-'.$campo->id)}}@endif" maxlength="10">
 
                                                             @error('endereco-numero-'.$campo->id)
                                                             <span class="invalid-feedback" role="alert">
@@ -1040,7 +1040,7 @@
         $('.cep').mask('00000-000');
         $('.cpf').mask('000.000.000-00');
 
-        $('.numero').mask('0000000000000');
+        //$('.numero').mask('0000000000000');
         var SPMaskBehavior = function (val) {
             return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
         },

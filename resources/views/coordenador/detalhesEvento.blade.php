@@ -542,7 +542,7 @@
                 '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
             }
         });
-        $('.numero').mask('0000000');
+        //$('.numero').mask('0000000');
     });
 
     // Remover Criterio

@@ -283,6 +283,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
 
     Route::get('/evento/{evento}/downloadInscritos', 'EventoController@exportInscritos')->name('evento.downloadInscritos');
     Route::get('/evento/{evento}/downloadTrabalhos', 'EventoController@exportTrabalhos')->name('evento.downloadTrabalhos');
+    Route::get('/evento/{evento}/downloadAvaliacoes/{modalidade}/form/{form}', 'EventoController@exportAvaliacoes')->name('evento.downloadAvaliacoes');
 
     // Encontrar resumo especifico para trabalhos
     Route::get(   '/encontrarResumo',    'TrabalhoController@findResumo'                  )->name('trabalhoResumo');

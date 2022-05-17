@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Submissao;
 
+use App\Exports\AvaliacoesExport;
 use App\Exports\InscritosExport;
 use App\Exports\TrabalhosExport;
 use App\Models\Submissao\Area;
@@ -452,6 +453,96 @@ class EventoController extends Controller
       return $stringRetorno;
     }
 
+    public function exportAvaliacoes(Evento $evento, Modalidade $modalidade, Form $form)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $trabalhos = Trabalho::where([['eventoId', $evento->id], ['modalidadeId', $modalidade->id]])
+        ->get()->map(function ($trabalho) use ($form) {
+          if ($trabalho->atribuicoes->first() != null) {
+              foreach ($trabalho->atribuicoes as $avaliacao) {
+                  return $this->makeRepostasExportAvaliacoes($trabalho, $form, $avaliacao);
+              }
+          } else {
+              return $this->makeRepostasExportAvaliacoes($trabalho, $form, null);
+          }
+        })->collect();
+        $trabalhos = $trabalhos->filter();
+          return (new AvaliacoesExport($trabalhos, $this->makeHeadingsExportAvaliacoes($form)))->download($evento->nome.' - Avaliacões - ' . $modalidade->nome. ' - '. $form->titulo . '.csv', \Maatwebsite\Excel\Excel::CSV, [
+              'Content-Type' => 'text/csv',
+        ]);
+    }
+      
+
+    private function makeHeadingsExportAvaliacoes($form)
+    {
+      $retorno = [];
+      array_push($retorno, 'Área/Eixo');
+      array_push($retorno, 'Modalidade');
+      array_push($retorno, 'Avaliador(a)');
+      array_push($retorno, 'Título do trabalho');
+
+      foreach ($form->perguntas as $pergunta){
+        array_push($retorno, $pergunta->pergunta);
+      }
+
+      return $retorno;
+    }
+
+    private function makeRepostasExportAvaliacoes($trabalho, $form, $revisor)
+    {
+      $retorno = [];
+      array_push($retorno, $trabalho->area->nome);
+      array_push($retorno, $trabalho->modalidade->nome);
+      if($revisor != null){
+        array_push($retorno, $revisor->user->name);
+      }else{
+        array_push($retorno, "Sem avaliador");
+      }
+      array_push($retorno, $trabalho->titulo);
+
+      $respostas = collect();
+      if ($revisor != null) {
+          foreach ($form->perguntas as $pergunta) {
+              $respostas->push($pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first());
+          }
+      }
+
+      $vazio = False;
+      
+      foreach ($form->perguntas as $index => $pergunta){
+        $achou = False;
+        if($pergunta->respostas->first()->opcoes->count()){
+          foreach ($pergunta->respostas->first()->opcoes as $opcao){
+            if($respostas[$index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo)){
+              array_push($retorno, $respostas[$index]->opcoes[0]->titulo);
+                $achou = True;
+            }
+          }
+        }elseif($pergunta->respostas->first()->paragrafo != null){
+          foreach ($pergunta->respostas as $resposta) {
+            if ($resposta->revisor != null && $resposta->trabalho != null  && $resposta->paragrafo != null) {
+              if($revisor != null){
+                if ($resposta->revisor->user_id == $revisor->user->id && $resposta->trabalho->id == $trabalho->id) {
+                  array_push($retorno, $resposta->paragrafo->resposta);
+                  $achou = True;
+                }
+              }else{
+                array_push($retorno, "Sem resposta");
+              }
+            }
+          }
+          if($pergunta->respostas->first() == null){
+            array_push($retorno, "Sem resposta");
+          }
+        }
+        $vazio = $vazio || $achou;
+      }
+      if($vazio == False){
+        return [];
+      }
+      return $retorno;
+    }
+
     public function cadastrarModalidade(Request $request)
     {
         $evento = Evento::find($request->eventoId);
@@ -847,7 +938,7 @@ class EventoController extends Controller
       return $pdf->download("resumos - {$evento->nome}.pdf");
     }
 
-    public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
+    public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
@@ -862,8 +953,8 @@ class EventoController extends Controller
         if($column == "autor") {
             // Não tem como ordenar os trabalhos por nome do autor automaticamente
             // Já que na tabale a de trabalhos não existe o nome do autor
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
-            ->orWhere([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->get()->sortBy(
+            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
+            ->orWhere([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->get()->sortBy(
                 function($trabalho) {
                     return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
                 },
@@ -872,8 +963,8 @@ class EventoController extends Controller
         } else {
             // Como aqui é um else, então $trabalhos nunca vai ser null
             // Busca os trabalhos da forma como era feita antes
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
-            ->orWhere([['status', '!=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->orderBy($column, $direction)->get();
+            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
+            ->orWhere([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->orderBy($column, $direction)->get();
         }
 
         return view('coordenador.trabalhos.listarRespostasTrabalhos', [

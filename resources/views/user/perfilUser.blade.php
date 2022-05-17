@@ -226,7 +226,7 @@
 
                                 <div class="col-md-2">
                                     <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                                    <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$end->numero}}" @endif required autocomplete="numero">
+                                    <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$end->numero}}" @endif required autocomplete="numero" maxlength="10">
 
                                     @error('numero')
                                         <span class="invalid-feedback" role="alert">
@@ -571,7 +571,7 @@
                             </div>
                             <div class="col-md-2">
                                 <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                                <input value="{{old('numero')}}" id="numero" min="0" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero">
+                                <input value="{{old('numero')}}" id="numero" min="0" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero" maxlength="10">
 
                                 @error('numero')
                                     <span class="invalid-feedback" role="alert">
@@ -717,7 +717,7 @@
                     '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
                 }
             });
-            $('#numero').mask('0000000000000');
+            //$('#numero').mask('0000000000000');
         });
 
     function limpa_formulário_cep() {

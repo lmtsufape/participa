@@ -80,28 +80,28 @@
                 </th>
                 <th scope="col">
                   Título
-                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc'])}}">
+                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho'])}}">
                     <i class="fas fa-arrow-alt-circle-up"></i>
                   </a>
-                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'desc'])}}">
+                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'desc', 'rascunho'])}}">
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>
                 <th scope="col">
                   Área
-                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'areaId', 'asc'])}}">
+                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'areaId', 'asc', 'rascunho'])}}">
                     <i class="fas fa-arrow-alt-circle-up"></i>
                   </a>
-                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'areaId', 'desc'])}}">
+                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'areaId', 'desc', 'rascunho'])}}">
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>
                 <th scope="col">
                   Autor
-                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'autor', 'asc'])}}">
+                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'autor', 'asc', 'rascunho'])}}">
                     <i class="fas fa-arrow-alt-circle-up"></i>
                   </a>
-                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'autor', 'desc'])}}">
+                  <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'autor', 'desc', 'rascunho'])}}">
                     <i class="fas fa-arrow-alt-circle-down"></i>
                   </a>
                 </th>
