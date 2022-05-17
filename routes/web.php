@@ -46,7 +46,7 @@ Route::get('/', function () {
 })->name('cancelarCadastro');
 
 Route::namespace('Submissao')->group(function () {
-  Route::get('/evento/visualizar/naologado/{id}','EventoController@showNaoLogado')->name('evento.visualizarNaoLogado');
+  Route::get('/evento/{id}','EventoController@showNaoLogado')->name('evento.visualizarNaoLogado');
   Route::view('validarCertificado', 'validar')->name('validarCertificado');
   Route::post('validarCertificado', 'CertificadoController@validar')->name('validarCertificadoPost');
   Route::get('/home', 'Submissao\CertificadoController@validar')->name('home')->middleware('verified', 'isTemp');
