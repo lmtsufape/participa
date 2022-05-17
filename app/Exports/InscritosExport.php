@@ -8,22 +8,32 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class InscritosExport implements FromCollection, WithHeadings
+class InscritosExport implements FromCollection, WithHeadings, WithMapping
 {
     use Exportable;
 
     public function headings(): array
     {
         return [
-            'nome',
             'evento/subevento',
+            'nome',
             'email',
             'instituicao',
             'celular',
             'cpf',
             'passaporte',
             'especialicazao profissional',
+            'rua',
+            'numero',
+            'bairro',
+            'cidade',
+            'estado',
+            'cep',
+            'complemento',
+            'pais'
+
         ];
     }
 
@@ -34,6 +44,28 @@ class InscritosExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        return new Collection($this->evento->inscritos());
+        return $this->evento->inscritos();
+    }
+
+    public function map($inscricao): array
+    {
+        return [
+            $inscricao->evento->nome,
+            $inscricao->user->name,
+            $inscricao->user->email,
+            $inscricao->user->instituicao,
+            $inscricao->user->celular,
+            $inscricao->user->cpf,
+            $inscricao->user->passaporte,
+            $inscricao->user->especProfissional,
+            $inscricao->user->endereco->rua,
+            $inscricao->user->endereco->numero,
+            $inscricao->user->endereco->bairro,
+            $inscricao->user->endereco->cidade,
+            $inscricao->user->endereco->uf,
+            $inscricao->user->endereco->cep,
+            $inscricao->user->endereco->complemento,
+            $inscricao->user->endereco->pais,
+        ];
     }
 }
