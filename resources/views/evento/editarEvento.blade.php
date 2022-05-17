@@ -216,7 +216,7 @@
                         </div>
                         <div class="col-sm-2">
                             <label for="numero" class="col-form-label">{{ __('Número*') }}</label>
-                            <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$endereco->numero}}" @endif required autocomplete="numero" autofocus>
+                            <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$endereco->numero}}" @endif required autocomplete="numero" autofocus maxlength="10">
 
                             @error('numero')
                             <span class="invalid-feedback" role="alert">
@@ -364,12 +364,12 @@
                 '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
             }
         });
-        $('#numero').mask('#', {
+        /*$('#numero').mask('#', {
             maxlength: false,
             translation: {
                 '#': {pattern: /[0-9\\s/n]/, recursive: true}
             }
-        });
+        });*/
 
         $('#imagem-loader').click(function() {
             $('#logo-input').click();
