@@ -18,7 +18,11 @@ class TrabalhosExport implements FromCollection, WithHeadings
             'Modalidade',
             'Título do trabalho',
             'Autor',
+            'E-mail',
+            'Telefone',
             'Co-autor(es)',
+            'E-mail',
+            'Telefone'
         ];
     }
 

@@ -432,8 +432,12 @@ class EventoController extends Controller
               $trabalho->area->nome,
               $trabalho->modalidade->nome,
               $trabalho->titulo,
-              $trabalho->autor->name . " (" . $trabalho->autor->celular . ")",
-              $this->coautoresToString($trabalho),
+              $trabalho->autor->name,
+              $trabalho->autor->email,
+              $trabalho->autor->celular,
+              $this->coautoresToString($trabalho, 'nome'),
+              $this->coautoresToString($trabalho, 'email'),
+              $this->coautoresToString($trabalho, 'celular'),
           ];
       })->collect();
       return (new TrabalhosExport($trabalhos))->download($evento->nome.'- Trabalhos.csv', \Maatwebsite\Excel\Excel::CSV, [
@@ -441,16 +445,31 @@ class EventoController extends Controller
       ]);
     }
 
-    private function coautoresToString(Trabalho $trabalho)
+    private function coautoresToString(Trabalho $trabalho, $campo)
     {
       $stringRetorno = "";
 
-      foreach($trabalho->coautors as $coautor){
-        if($coautor->user->id != $trabalho->autorId){
-          $stringRetorno .= $coautor->user->name . " (" . $coautor->user->celular . "), ";
+      if($campo == 'nome'){
+        foreach($trabalho->coautors as $coautor){
+          if($coautor->user->id != $trabalho->autorId){
+            $stringRetorno .= $coautor->user->name  . ", ";
+          }
+        }
+      }elseif($campo == 'email'){
+        foreach($trabalho->coautors as $coautor){
+          if($coautor->user->id != $trabalho->autorId){
+            $stringRetorno .= $coautor->user->email  . ", ";
+          }
+        }
+      }elseif($campo == 'celular'){
+        foreach($trabalho->coautors as $coautor){
+          if($coautor->user->id != $trabalho->autorId){
+            $stringRetorno .= $coautor->user->celular  . ", ";
+          }
         }
       }
-      return $stringRetorno;
+      
+      return substr($stringRetorno, 0, strlen($stringRetorno)-2);
     }
 
     public function exportAvaliacoes(Evento $evento, Modalidade $modalidade, Form $form)
