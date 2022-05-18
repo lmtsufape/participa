@@ -111,8 +111,10 @@
                 @enderror
             </div>
             <div class="col-md-4">
-                <label for="celular" class="col-form-label">{{ __('Celular') }}*</label>
-                <input id="celular" type="text" class="form-control @error('celular') is-invalid @enderror" name="celular" value="{{ old('celular') }}"  autocomplete="celular" autofocus>
+                <label for="celular" class="col-form-label">{{ __('Celular') }}*</label><br>
+                <input id="phone" class="form-control celular @error('celular') is-invalid @enderror" type="tel" name="celular" value="{{old('celular')}}" required autocomplete="celular" onkeyup="process(event)">
+                <div class="alert alert-info mt-1" style="display: none"></div>
+                <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
 
                 @error('celular')
                     <span class="invalid-feedback" role="alert">
@@ -425,4 +427,50 @@
     });
 
   </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+    
+    <script type="text/javascript">
+        const phoneInputField = document.querySelector("#phone");
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            formatOnDisplay: true,
+            hiddenInput: "full_number",
+            preferredCountries: ["br", "us"],
+                utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+        const info = document.querySelector(".alert-info");
+        const error = document.querySelector("#celular-invalido");
+
+        function process(event) {
+            event.preventDefault();
+
+            const phoneNumber = phoneInput.getNumber();
+
+            info.style.display = "none";
+            error.style.display = "none";
+
+            if (phoneInput.isValidNumber()) {
+                info.style.display = "";
+                info.innerHTML = `Número válido: <strong>${phoneNumber}</strong>`;
+            } else {
+                error.style.display = "";
+                error.innerHTML = `Número inválido.`;
+            }
+        }
+
+        $(phoneInputField).on("countrychange", function(event) {
+            var selectedCountryData = phoneInput.getSelectedCountryData();
+            newPlaceholder = intlTelInputUtils.getExampleNumber(selectedCountryData.iso2, true, intlTelInputUtils.numberFormat.INTERNATIONAL),
+            phoneInput.setNumber("");
+            mask = newPlaceholder.replace(/[1-9]/g, "0");
+
+            $(this).mask(mask);
+        });
+
+        phoneInput.promise.then(function() {
+            $(phoneInputField).trigger("countrychange");
+        });
+    </script>
 @endsection
