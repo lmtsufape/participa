@@ -71,6 +71,10 @@ class EventoPolicy
       return false;
     }
 
+    public function isCoordenadorOrComissaoCientifica(User $user, Evento $evento) {
+        return ($evento->coordenadorId == $user->id || $evento->coord_comissao_cientifica_id == $user->id || $evento->usuariosDaComissao()->where('user_id', $user->id)->first() != null);
+    }
+
     public function isCoordenadorOrCoordenadorDaComissaoOrganizadora(User $user, Evento $evento)
     {
         return $this->isCoordenador($user, $evento) || $this->isCoordenadorDaComissaoOrganizadora($user, $evento);
