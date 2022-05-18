@@ -58,14 +58,14 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             $inscricao->user->cpf,
             $inscricao->user->passaporte,
             $inscricao->user->especProfissional,
-            $inscricao->user->endereco->rua,
-            $inscricao->user->endereco->numero,
-            $inscricao->user->endereco->bairro,
-            $inscricao->user->endereco->cidade,
-            $inscricao->user->endereco->uf,
-            $inscricao->user->endereco->cep,
-            $inscricao->user->endereco->complemento,
-            $inscricao->user->endereco->pais,
+            $inscricao->user->endereco ? $inscricao->user->endereco->rua : '' ,
+            $inscricao->user->endereco ? $inscricao->user->endereco->numero : '' ,
+            $inscricao->user->endereco ? $inscricao->user->endereco->bairro : '' ,
+            $inscricao->user->endereco ? $inscricao->user->endereco->cidade : '' ,
+            $inscricao->user->endereco ? $inscricao->user->endereco->uf : '' ,
+            $inscricao->user->endereco ? $inscricao->user->endereco->cep : '' ,
+            $inscricao->user->endereco ? $inscricao->user->endereco->complemento : '' ,
+            $inscricao->user->endereco ? $inscricao->user->endereco->pais : '' ,
         ];
     }
 }
