@@ -111,8 +111,10 @@
                 @enderror
             </div>
             <div class="col-md-4">
-                <label for="celular" class="col-form-label">{{ __('Celular') }}*</label>
-                <input id="celular" type="text" class="form-control @error('celular') is-invalid @enderror" name="celular" value="{{ old('celular') }}"  autocomplete="celular" autofocus>
+                <label for="celular" class="col-form-label">{{ __('Celular') }}*</label><br>
+                <input id="phone" class="form-control celular @error('celular') is-invalid @enderror" type="tel" name="celular" value="{{old('celular')}}" required autocomplete="celular" onkeyup="process(event)">
+                <div class="alert alert-info mt-1" style="display: none"></div>
+                <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
 
                 @error('celular')
                     <span class="invalid-feedback" role="alert">
@@ -311,7 +313,7 @@
 
       $('#cpf').mask('000.000.000-00');
       if($('html').attr('lang') == 'en') {
-        $('#celular').mask('(000) 000-0000');
+        //$('#celular').mask('(000) 000-0000');
         $('#groupformuf').addClass('d-none');
         $("#uf").prop('disabled', true);
       } else if ($('html').attr('lang') == 'pt-BR') {
@@ -328,7 +330,7 @@
             field.mask(SPMaskBehavior.apply({}, arguments), options);
           }
         };
-        $('#celular').mask(SPMaskBehavior, spOptions);
+        //$('#celular').mask(SPMaskBehavior, spOptions);
         $('#cep').mask('00000-000');
       }
       $(".apenasLetras").mask("#", {
@@ -407,6 +409,10 @@
         }
     };
   </script>
+  <script src="{{ asset('js/celular.js') }}" defer></script>
+  <script src="{{ asset('js/jquery-mask-plugin.js')}}" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script type="text/javascript">
 
@@ -425,4 +431,5 @@
     });
 
   </script>
+    
 @endsection

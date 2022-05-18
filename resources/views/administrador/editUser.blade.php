@@ -90,8 +90,10 @@
             </div>
 
             <div class="col-md-4">
-                <label for="celular" class="col-form-label">{{ __('Celular') }}</label>
-                <input id="celular" type="text" class="form-control @error('celular') is-invalid @enderror" name="celular" @if(old('celular') != null) value="{{ old('celular') }}" @else value="{{$user->celular}}" @endif required autocomplete="celular" autofocus>
+                <label for="celular" class="col-form-label">{{ __('Celular') }}</label><br>
+                <input id="celular" id="phone" type="tel" class="form-control @error('celular') is-invalid @enderror" name="celular" @if(old('celular') != null) value="{{ old('celular') }}" @else value="{{$user->celular}}" @endif required autocomplete="celular" autofocus>
+                <div class="alert alert-info mt-1" style="display: none"></div>
+                <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
 
                 @error('celular')
                     <span class="invalid-feedback" role="alert">
@@ -453,7 +455,7 @@
           field.mask(SPMaskBehavior.apply({}, arguments), options);
         }
       };
-      $('#celular').mask(SPMaskBehavior, spOptions);
+      //$('#celular').mask(SPMaskBehavior, spOptions);
 
     });
 
@@ -511,6 +513,10 @@
         }
     };
   </script>
+    <script src="{{ asset('js/celular.js') }}" defer></script>
+    <script src="{{ asset('js/jquery-mask-plugin.js')}}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
 

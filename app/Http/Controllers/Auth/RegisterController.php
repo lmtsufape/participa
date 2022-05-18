@@ -58,7 +58,7 @@ class RegisterController extends Controller
             'password'      => ['required', 'string', 'min:8', 'confirmed'],
             'cpf'           => ($data['passaporte']==null ? ['required','cpf'] : 'nullable'),
             'passaporte'    => ($data['cpf']==null ? 'required|max:10' : 'nullable'),
-            'celular'       => ['nullable','string', app()->isLocale('pt-BR') ? 'telefone': ''],
+            'celular'       => ['nullable','string','max:20'],
             'instituicao'   => ['nullable','string','max:255'],
             'pais'          => ['nullable','string','max:255'],
             'rua'           => ['nullable','string','max:255'],
@@ -89,7 +89,7 @@ class RegisterController extends Controller
         $user->password = bcrypt($data['password']);
         $user->cpf = $data['cpf'];
         $user->passaporte = $data['passaporte'];
-        $user->celular = $data['celular'];
+        $user->celular = $data['full_number'];
         $user->instituicao = $data['instituicao'];
 
         if( $data['rua'] != null && $data['cep'] != null ){
