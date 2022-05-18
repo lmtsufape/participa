@@ -313,7 +313,7 @@
 
       $('#cpf').mask('000.000.000-00');
       if($('html').attr('lang') == 'en') {
-        $('#celular').mask('(000) 000-0000');
+        //$('#celular').mask('(000) 000-0000');
         $('#groupformuf').addClass('d-none');
         $("#uf").prop('disabled', true);
       } else if ($('html').attr('lang') == 'pt-BR') {
@@ -330,7 +330,7 @@
             field.mask(SPMaskBehavior.apply({}, arguments), options);
           }
         };
-        $('#celular').mask(SPMaskBehavior, spOptions);
+        //$('#celular').mask(SPMaskBehavior, spOptions);
         $('#cep').mask('00000-000');
       }
       $(".apenasLetras").mask("#", {
@@ -409,6 +409,10 @@
         }
     };
   </script>
+  <script src="{{ asset('js/celular.js') }}" defer></script>
+  <script src="{{ asset('js/jquery-mask-plugin.js')}}" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script type="text/javascript">
 
@@ -427,50 +431,5 @@
     });
 
   </script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
     
-    <script type="text/javascript">
-        const phoneInputField = document.querySelector("#phone");
-        const phoneInput = window.intlTelInput(phoneInputField, {
-            formatOnDisplay: true,
-            hiddenInput: "full_number",
-            preferredCountries: ["br", "us"],
-                utilsScript:
-                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-        });
-        const info = document.querySelector(".alert-info");
-        const error = document.querySelector("#celular-invalido");
-
-        function process(event) {
-            event.preventDefault();
-
-            const phoneNumber = phoneInput.getNumber();
-
-            info.style.display = "none";
-            error.style.display = "none";
-
-            if (phoneInput.isValidNumber()) {
-                info.style.display = "";
-                info.innerHTML = `Número válido: <strong>${phoneNumber}</strong>`;
-            } else {
-                error.style.display = "";
-                error.innerHTML = `Número inválido.`;
-            }
-        }
-
-        $(phoneInputField).on("countrychange", function(event) {
-            var selectedCountryData = phoneInput.getSelectedCountryData();
-            newPlaceholder = intlTelInputUtils.getExampleNumber(selectedCountryData.iso2, true, intlTelInputUtils.numberFormat.INTERNATIONAL),
-            phoneInput.setNumber("");
-            mask = newPlaceholder.replace(/[1-9]/g, "0");
-
-            $(this).mask(mask);
-        });
-
-        phoneInput.promise.then(function() {
-            $(phoneInputField).trigger("countrychange");
-        });
-    </script>
 @endsection

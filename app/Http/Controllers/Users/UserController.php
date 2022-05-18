@@ -58,7 +58,7 @@ class UserController extends Controller
                 'name' => 'bail|required|string|max:255',
                 'cpf'           => ($request->passaporte ==null ? ['bail','required','cpf'] : 'nullable'),
                 'passaporte'    => ($request->cpf ==null ? 'bail|required|max:10' : 'nullable'),
-                'celular' => 'required|string|max:16',
+                'celular' => 'required|string|max:20',
                 'instituicao' => 'required|string| max:255',
                 'especialidade' => 'nullable|string',
                 'rua' => 'required|string|max:255',
@@ -82,7 +82,7 @@ class UserController extends Controller
             $user->name = $request->input('name');
             $user->cpf = $request->input('cpf');
             $user->passaporte = $request->input('passaporte');
-            $user->celular = $request->input('celular');
+            $user->celular = $request->input('full_number');
             $user->instituicao = $request->input('instituicao');
             $user->password = bcrypt($request->password);
             if ($request->input('especialidade') != null) {
@@ -115,7 +115,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'cpf'           => ($request->passaporte  ==null ? ['bail','required','cpf'] : 'nullable'),
                 'passaporte'    => ($request->cpf == null && $request->cpf ==null? ['bail','required','max:10'] : ['nullable']),
-                'celular' => 'required|string|max:16',
+                'celular' => 'required|string|max:20',
                 'instituicao' => 'required|string| max:255',
                 // 'especProfissional' => 'nullable|string',
                 'rua' => 'required|string|max:255',
@@ -169,7 +169,7 @@ class UserController extends Controller
             $user->name = $request->input('name');
             $user->cpf = $request->input('cpf');
             $user->passaporte = $request->input('passaporte');
-            $user->celular = $request->input('celular');
+            $user->celular = $request->input('full_number');
             $user->instituicao = $request->input('instituicao');
             // $user->especProfissional = $request->input('especProfissional');
             $user->usuarioTemp = null;
