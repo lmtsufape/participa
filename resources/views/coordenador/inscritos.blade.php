@@ -46,8 +46,8 @@
                                     @endif
                                     <td>{{$inscricao->user->name}}</td>
                                     <td>{{$inscricao->user->email}}</td>
-                                    <td>{{$inscricao->user->endereco->cidade}}</td>
-                                    <td>{{$inscricao->user->endereco->uf}}</td>
+                                    <td>{{$inscricao->user->endereco ? $inscricao->user->endereco->cidade : 'Endereço não cadastrado'}}</td>
+                                    <td>{{$inscricao->user->endereco? $inscricao->user->endereco->uf : 'Endereço não cadastrado'}}</td>
                                 </th>
                             </tbody>
                         @endforeach
