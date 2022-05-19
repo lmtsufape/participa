@@ -176,10 +176,16 @@ class UserController extends Controller
             $user->update();
 
             // endereço
-            $end = Endereco::find($user->enderecoId);
-            $end->fill($validator);
-
-            $end->update();
+            if($user->enderecoId == null){
+                $end = new Endereco($request->all());
+                $end->save();
+                $user->enderecoId = $end->id;
+                $user->update();
+            }else{
+                $end = Endereco::find($user->enderecoId);
+                $end->fill($validator);
+                $end->update();
+            }
             // dd([$user,$end]);
             app()->setLocale('pt-BR');
             return back()->with(['message' => "Atualizado com sucesso!"]);

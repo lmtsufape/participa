@@ -106,7 +106,7 @@
                             </div>
 
                             <div class="col-md-5">
-                                <label for="celular" class="col-form-label">{{ __('Celular  ') }}<small style="color: rgb(245, 65, 10);">@if($user->celular[0] != '+'){{ __('       Atualize seu celular') }}@endif</small></label><br>
+                                <label for="celular" class="col-form-label">{{ __('Celular') }}<small style="color: rgb(245, 65, 10);">@if($user->celular[0] != '+'){{ __('       Atualize seu celular') }}@endif</small></label><br>
                                 <input id="phone" type="tel" class="form-control @error('celular') is-invalid @enderror" name="celular" @if(old('celular') != null) value="{{ old('celular') }}" @else value="{{$user->celular}}" @endif required autocomplete="celular" autofocus onkeyup="process(event)">
                                 <div class="alert alert-info mt-1" style="display: none"></div>
                                 <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
@@ -324,6 +324,153 @@
                                 </div>
 
                             </div>
+                        @else
+                            <div class="row subtitulo" style="margin-top:20px">
+                                <div class="col-sm-12">
+                                    <p>{{__('Cadastre o seu endereço')}}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <label for="pais" class="col-form-label">{{ __('País') }}*</label>
+                                    <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" class="form-control @error('pais') is-invalid @enderror" id="pais">
+                                        <option value="" disabled selected hidden>-- {{__('País')}} --</option>
+                                        <option @if($pais == 'brasil') selected @endif value="/perfil/brasil">{{__('Brasil')}}</option>
+                                        <option @if($pais == 'usa') selected @endif value="/perfil/usa">{{__('Estados Unidos da América')}}</option>
+                                        <option @if($pais == 'outro') selected @endif value="/perfil/outro">{{__('Outro')}}</option>
+                                    </select>
+                                    <input type="hidden" name="pais" value="{{$pais}}">
+                                    <small>{{__('O formulário seguirá os padrões desse país')}}.</small>
+                    
+                                    @error('pais')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ __($message) }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            {{-- Endereço --}}
+                            <div class="form-group row justify-content-center">
+                                <div class="col-md-12">
+                                    <label for="cep" class="col-form-label">{{ __('CEP') }}*</label>
+                                    <input value="{{old('cep')}}" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" required autocomplete="cep">
+
+                                    @error('cep')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row justify-content-center">
+                                <div class="col-md-6">
+                                    <label for="rua" class="col-form-label">{{ __('Rua') }}*</label>
+                                    <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" required autocomplete="new-password">
+
+                                    @error('rua')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="numero" class="col-form-label">{{ __('Número') }}*</label>
+                                    <input value="{{old('numero')}}" id="numero" min="0" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero" maxlength="10">
+
+                                    @error('numero')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="bairro" class="col-form-label">{{ __('Bairro') }}*</label>
+                                    <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" required autocomplete="bairro">
+
+                                    @error('bairro')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="form-group row justify-content-center">
+                                <div class="col-md-4">
+                                    <label for="cidade" class="col-form-label">{{ __('Cidade') }}*</label>
+                                    <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" required autocomplete="cidade">
+
+                                    @error('cidade')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
+                                    <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="{{ old('complemento') }}" autocomplete="complemento" autofocus>
+
+                                    @error('complemento')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-sm-4" id="groupformufinput">
+                                    <label for="ufInput" class="col-form-label">{{ __('UF') }}*</label>
+                                    <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
+
+                                    @error('uf')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ __($message) }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-sm-4" id="groupformuf">
+                                    <label for="uf" class="col-form-label">{{ __('UF') }}*</label>
+                                    {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
+                                    <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
+                                        <option value="" disabled selected hidden>-- {{__('UF')}} --</option>
+                                        <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
+                                        <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
+                                        <option @if(old('uf') == 'AP') selected @endif value="AP">Amapá</option>
+                                        <option @if(old('uf') == 'AM') selected @endif value="AM">Amazonas</option>
+                                        <option @if(old('uf') == 'BA') selected @endif value="BA">Bahia</option>
+                                        <option @if(old('uf') == 'CE') selected @endif value="CE">Ceará</option>
+                                        <option @if(old('uf') == 'DF') selected @endif value="DF">Distrito Federal</option>
+                                        <option @if(old('uf') == 'ES') selected @endif value="ES">Espírito Santo</option>
+                                        <option @if(old('uf') == 'GO') selected @endif value="GO">Goiás</option>
+                                        <option @if(old('uf') == 'MA') selected @endif value="MA">Maranhão</option>
+                                        <option @if(old('uf') == 'MT') selected @endif value="MT">Mato Grosso</option>
+                                        <option @if(old('uf') == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
+                                        <option @if(old('uf') == 'MG') selected @endif value="MG">Minas Gerais</option>
+                                        <option @if(old('uf') == 'PA') selected @endif value="PA">Pará</option>
+                                        <option @if(old('uf') == 'PB') selected @endif value="PB">Paraíba</option>
+                                        <option @if(old('uf') == 'PR') selected @endif value="PR">Paraná</option>
+                                        <option @if(old('uf') == 'PE') selected @endif value="PE">Pernambuco</option>
+                                        <option @if(old('uf') == 'PI') selected @endif value="PI">Piauí</option>
+                                        <option @if(old('uf') == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
+                                        <option @if(old('uf') == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
+                                        <option @if(old('uf') == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
+                                        <option @if(old('uf') == 'RO') selected @endif value="RO">Rondônia</option>
+                                        <option @if(old('uf') == 'RR') selected @endif value="RR">Roraima</option>
+                                        <option @if(old('uf') == 'SC') selected @endif value="SC">Santa Catarina</option>
+                                        <option @if(old('uf') == 'SP') selected @endif value="SP">São Paulo</option>
+                                        <option @if(old('uf') == 'SE') selected @endif value="SE">Sergipe</option>
+                                        <option @if(old('uf') == 'TO') selected @endif value="TO">Tocantins</option>
+                                    </select>
+
+                                    @error('uf')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
                         @endif
                         <div class="row justify-content-center" style="margin: 20px 0 20px 0">
 
@@ -394,7 +541,7 @@
                         <div class="row justify-content-center">
                             <input hidden name="id" value="{{$user->id}}">
                             <div class="col-md-6">
-                                <label for="name" class="col-form-label">{{ __('Name') }}</label>
+                                <label for="name" class="col-form-label">{{ __('Name') }}*</label>
                                 <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" @if(old('name') != null) value="{{ old('name') }}" @else value="{{$user->name}}" @endif required autocomplete="name" autofocus>
 
                                 @error('name')
@@ -439,7 +586,7 @@
                         <div class="row justify-content-center">
 
                             <div class="col-md-8">
-                            <label for="instituicao" class="col-form-label">{{ __('Instituição de Ensino') }}</label>
+                            <label for="instituicao" class="col-form-label">{{ __('Instituição de Ensino') }}*</label>
                             <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" @if(old('instituicao') != null) value="{{ old('instituicao') }}" @else value="{{$user->instituicao}}" @endif required autocomplete="instituicao" autofocus>
 
                             @error('instituicao')
@@ -450,8 +597,10 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label for="celular" class="col-form-label">{{ __('Celular') }}</label>
-                                <input id="celular" type="text" class="form-control @error('celular') is-invalid @enderror" name="celular" @if(old('celular') != null) value="{{ old('celular') }}" @else value="{{$user->celular}}" @endif required autocomplete="celular" autofocus>
+                                <label for="celular" class="col-form-label">{{ __('Celular') }}*</label><br>
+                                <input id="phone" type="tel" class="form-control @error('celular') is-invalid @enderror" name="celular" @if(old('celular') != null) value="{{ old('celular') }}" @else value="{{$user->celular}}" @endif required autocomplete="celular" autofocus onkeyup="process(event)">
+                                <div class="alert alert-info mt-1" style="display: none"></div>
+                                <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
 
                                 @error('celular')
                                     <span class="invalid-feedback" role="alert">
@@ -479,7 +628,7 @@
                             @endif
 
                             <div class="col-md-4">
-                                <label for="password" class="col-form-label">{{ __('Senha') }}</label>
+                                <label for="password" class="col-form-label">{{ __('Senha') }}*</label>
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
 
                                 @error('password')
@@ -490,7 +639,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label for="password-confirm" class="col-form-label">{{ __('Confirme a Senha') }}</label>
+                                <label for="password-confirm" class="col-form-label">{{ __('Confirme a Senha') }}*</label>
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
 
@@ -549,7 +698,7 @@
                         {{-- Endereço --}}
                         <div class="form-group row justify-content-center">
                             <div class="col-md-12">
-                                <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
+                                <label for="cep" class="col-form-label">{{ __('CEP') }}*</label>
                                 <input value="{{old('cep')}}" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" required autocomplete="cep">
 
                                 @error('cep')
@@ -562,7 +711,7 @@
 
                         <div class="form-group row justify-content-center">
                             <div class="col-md-6">
-                                <label for="rua" class="col-form-label">{{ __('Rua') }}</label>
+                                <label for="rua" class="col-form-label">{{ __('Rua') }}*</label>
                                 <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" required autocomplete="new-password">
 
                                 @error('rua')
@@ -572,7 +721,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <label for="numero" class="col-form-label">{{ __('Número') }}</label>
+                                <label for="numero" class="col-form-label">{{ __('Número') }}*</label>
                                 <input value="{{old('numero')}}" id="numero" min="0" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero" maxlength="10">
 
                                 @error('numero')
@@ -582,7 +731,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
+                                <label for="bairro" class="col-form-label">{{ __('Bairro') }}*</label>
                                 <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" required autocomplete="bairro">
 
                                 @error('bairro')
@@ -594,7 +743,7 @@
                         </div>
                         <div class="form-group row justify-content-center">
                             <div class="col-md-4">
-                                <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
+                                <label for="cidade" class="col-form-label">{{ __('Cidade') }}*</label>
                                 <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" required autocomplete="cidade">
 
                                 @error('cidade')
@@ -615,7 +764,7 @@
                             </div>
 
                             <div class="col-sm-4" id="groupformufinput">
-                                <label for="ufInput" class="col-form-label">{{ __('UF') }}</label>
+                                <label for="ufInput" class="col-form-label">{{ __('UF') }}*</label>
                                 <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
 
                                 @error('uf')
@@ -626,7 +775,7 @@
                             </div>
 
                             <div class="col-sm-4" id="groupformuf">
-                                <label for="uf" class="col-form-label">{{ __('UF') }}</label>
+                                <label for="uf" class="col-form-label">{{ __('UF') }}*</label>
                                 {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
                                 <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                                     <option value="" disabled selected hidden>-- {{__('UF')}} --</option>

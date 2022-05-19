@@ -16,7 +16,7 @@ class IsTemp
     public function handle($request, Closure $next)
     {
 
-        if(Auth()->user()->usuarioTemp === true){
+        if(Auth()->user()->usuarioTemp === true || Auth()->user()->endereco == null){
           return redirect('perfil');
 
         }
