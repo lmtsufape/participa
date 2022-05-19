@@ -165,8 +165,8 @@
         {{-- Rua | Número | Bairro --}}
         <div class="form-group row">
           <div class="col-md-2">
-              <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
-              <input value="{{old('cep')}}" id="cep" type="text"  autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="9" >
+              <label for="cep" class="col-form-label">{{ __('CEP') }}*</label>
+              <input value="{{old('cep')}}" id="cep" type="text"  autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="9" required >
               @error('cep')
                   <span class="invalid-feedback" role="alert">
                       <strong>{{ __($message) }}</strong>
@@ -178,8 +178,8 @@
 
 
             <div class="col-md-6">
-                <label for="rua" class="col-form-label">{{ __('Rua') }}</label>
-                <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua"  autocomplete="new-password">
+                <label for="rua" class="col-form-label">{{ __('Rua') }}*</label>
+                <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua"  autocomplete="new-password" required>
 
                 @error('rua')
                     <span class="invalid-feedback" role="alert">
@@ -189,8 +189,8 @@
             </div>
 
             <div class="col-md-2">
-                <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero" maxlength="10">
+                <label for="numero" class="col-form-label">{{ __('Número') }}*</label>
+                <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero" maxlength="10" required>
 
                 @error('numero')
                     <span class="invalid-feedback" role="alert">
@@ -200,8 +200,8 @@
             </div>
 
             <div class="col-md-4">
-                <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
-                <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro"  autocomplete="bairro">
+                <label for="bairro" class="col-form-label">{{ __('Bairro') }}*</label>
+                <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro"  autocomplete="bairro" required>
 
                 @error('bairro')
                     <span class="invalid-feedback" role="alert">
@@ -215,8 +215,8 @@
           <div class="form-group row">
 
             <div class="col-md-4">
-                <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
-                <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade"  autocomplete="cidade">
+                <label for="cidade" class="col-form-label">{{ __('Cidade') }}*</label>
+                <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade"  autocomplete="cidade" required>
 
                 @error('cidade')
                     <span class="invalid-feedback" role="alert">
@@ -237,8 +237,8 @@
             </div>
 
             <div class="col-sm-4" id="groupformufinput">
-                <label for="ufInput" class="col-form-label">{{ __('UF') }}</label>
-                <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
+                <label for="ufInput" class="col-form-label">{{ __('UF') }}*</label>
+                <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" required>
 
                 @error('uf')
                     <span class="invalid-feedback" role="alert">
@@ -248,9 +248,9 @@
             </div>
 
             <div class="col-sm-4" id="groupformuf">
-                <label for="uf" class="col-form-label">{{ __('UF') }}</label>
+                <label for="uf" class="col-form-label">{{ __('UF') }}*</label>
                 {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}"  autocomplete="uf" autofocus> --}}
-                <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
+                <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf" required>
                     <option value="" disabled selected hidden>-- {{__('UF')}} --</option>
                     <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
                     <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
