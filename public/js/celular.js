@@ -19,21 +19,27 @@ function process(event) {
     error.style.display = "none";
 
     if (phoneInput.isValidNumber()) {
-        info.style.display = "";
-        info.innerHTML = `Número válido: <strong>${phoneNumber}</strong>`;
+        //info.style.display = "";
+        //info.innerHTML = `Número válido: <strong>${phoneNumber}</strong>`;
     } else {
-        error.style.display = "";
-        error.innerHTML = `Número inválido.`;
+        //error.style.display = "";
+        //error.innerHTML = `Número inválido.`;
     }
 }
 
 $(phoneInputField).on("countrychange", function(event) {
     var selectedCountryData = phoneInput.getSelectedCountryData();
     newPlaceholder = intlTelInputUtils.getExampleNumber(selectedCountryData.iso2, true, intlTelInputUtils.numberFormat.INTERNATIONAL),
-    phoneInput.setNumber("");
     mask = newPlaceholder.replace(/[1-9]/g, "0");
 
     $(this).mask(mask);
+        
+    if(phoneInputField.value == ""){
+        phoneInput.setNumber("");
+    }else{
+        $(phoneInputField).val(phoneInputField.value);
+        phoneInput.setNumber(phoneInputField.value);
+    }
 });
 
 phoneInput.promise.then(function() {
