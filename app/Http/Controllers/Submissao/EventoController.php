@@ -113,21 +113,18 @@ class EventoController extends Controller
     }
     public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
-        //dd($status);
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrComissaoOrRevisorComAtribuicao', $evento);
         // $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-        //dd($modalidadesId);
 
         $trabalhos = NULL;
 
         if($column == "autor") {
             //Pela logica da implementacao de status, rascunho eh o parametro para encontrar todos os trabalhos diferentes de arquivado
             if($status == "rascunho"){
-                //dd($modalidadesId);
                 $trabalhos = collect();
                 foreach($modalidades as $modalidade){
                     $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
@@ -143,10 +140,7 @@ class EventoController extends Controller
                 // Não tem como ordenar os trabalhos por nome do autor automaticamente
                 // Já que na tabale a de trabalhos não existe o nome do autor
                 $trabalhos = collect();
-                //dd($modalidadesId);
                 foreach($modalidades as $modalidade){
-                    //dd($modalidadeId->id);
-                    //dd(Trabalho::where([['modalidadeId', $modalidadeId->id], ['status', $status]])->get());
                     $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
                         function($trabalho) {
                             return $trabalho->autor->name;
@@ -154,13 +148,11 @@ class EventoController extends Controller
                         SORT_REGULAR,
                         $direction == "desc"));
                 }
-                dd($trabalhos);
             }
         }else{
             if($status == "rascunho"){
                 $trabalhos = collect();
                 foreach($modalidades as $modalidade){
-                    //dd($modalidadeId->id);
                     $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get());
                 }
 
@@ -176,8 +168,6 @@ class EventoController extends Controller
         }
 
 
-        // dd($status);
-        //dd($trabalhos);
         return view('coordenador.trabalhos.listarTrabalhos', [
                                                     'evento'            => $evento,
                                                     'areas'             => $areas,

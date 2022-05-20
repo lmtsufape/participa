@@ -110,7 +110,10 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::get('trabalhos/definirSubmissoes', 'EventoController@definirSubmissoes')->name('definirSubmissoes');
       Route::get('trabalhos/listarTrabalhos/{column?}/{direction?}/{status?}', 'EventoController@listarTrabalhos')->name('listarTrabalhos');
       Route::get('trabalhos/listarTrabalhosModalidades/{column?}/{direction?}/{status?}', 'EventoController@listarTrabalhosModalidades')->name('listarTrabalhosModalidades');
-      Route::get('trabalhos/{id}/resultados', 'TrabalhoController@resultados')->name('resultados');
+      Route::get('trabalhos/{id}/resultados/{column?}/{direction?}/{status?}', 'TrabalhoController@resultados')->name('resultados');
+      Route::post('trabalhos/parecer_final', 'TrabalhoController@parecerFinalTrabalho')->name('parecer.final');
+      Route::get('/trabalhos/parecer_final/info','TrabalhoController@infoParecerTrabalho')->name('parecer.final.info.ajax');
+
       Route::get('trabalhos/edit/{id}', 'TrabalhoController@edit')->name('trabalho.edit');
 
       Route::get('trabalhos/listarAvaliacoes/{column?}/{direction?}/{status?}', 'EventoController@listarAvaliacoes')->name('listarAvaliacoes');
