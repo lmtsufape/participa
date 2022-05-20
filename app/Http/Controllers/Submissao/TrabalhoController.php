@@ -925,16 +925,100 @@ class TrabalhoController extends Controller
         }
     }
 
-    public function resultados($id) {
+    public function resultados($id, $column = 'titulo', $direction = 'asc', $status = 'rascunho') {
       $evento = Evento::find($id);
       $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
-      $trabalhos = Trabalho::where('eventoId', $id)->orderBy('titulo')->get();
+      $todosTrabalhos = Trabalho::where('eventoId', $id)->orderBy('titulo')->get();
       $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
+      $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
 
-      return view('coordenador.trabalhos.resultados')->with(['trabalhos' => $trabalhos,
-                                                             'evento' => $evento,
-                                                             'areas' => $areas]);
+      $trabalhos = NULL;
+
+      if($column == "autor") {
+          if($status == "rascunho"){
+              $trabalhos = collect();
+              foreach($modalidades as $modalidade){
+                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
+                      function($trabalho) {
+                          return $trabalho->autor->name;
+                      },
+                      SORT_REGULAR,
+                      $direction == "desc"));
+              }
+
+
+          }else{
+              $trabalhos = collect();
+              foreach($modalidades as $modalidade){
+                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
+                      function($trabalho) {
+                          return $trabalho->autor->name;
+                      },
+                      SORT_REGULAR,
+                      $direction == "desc"));
+              }
+          }
+      }else{
+          if($status == "rascunho"){
+              $trabalhos = collect();
+              foreach($modalidades as $modalidade){
+                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get());
+              }
+
+          }else{
+              $trabalhos = collect();
+              foreach($modalidades as $modalidade){
+                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->orderBy($column, $direction)->get());
+              }
+          }
+      }
+
+
+      return view('coordenador.trabalhos.resultados', [
+                                                  'evento'            => $evento,
+                                                  'areas'             => $areas,
+                                                  'trabalhos'         => $todosTrabalhos,
+                                                  'trabalhosPorModalidade' => $trabalhos,
+                                                  'agora'         => now(),
+
+                                                ]);
+    }
+
+    public function parecerFinalTrabalho(Request $request)
+    {
+        $msg = '';
+        $trabalho = Trabalho::find($request->trabalho_id);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $trabalho->evento);
+        
+        if ($request->aprovar == "true") {
+            $trabalho->parecer_final = true;
+            $msg = 'Parecer final do trabalho aprovado!';
+            
+
+        } else if ($request->aprovar == "false") {
+            $trabalho->parecer_final = false;
+            $msg = 'Parecer final do trabalho reprovado!';
+
+        }
+
+        $trabalho->update();
+
+        return redirect()->back()->with(['success' => $msg]);
+    }
+
+    public function infoParecerTrabalho(Request $request)
+    {
+        $trabalho = Trabalho::find($request->trabalho_id);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $trabalho->evento);
+
+        $trabalhoInfo = [
+            'id' => $trabalho->id,
+            'titulo' => $trabalho->titulo,
+            'parecer' => $trabalho->parecer_final,
+        ];
+
+        return response()->json($trabalhoInfo);
     }
 
     public function pesquisaAjax(Request $request) {

@@ -7,7 +7,7 @@
         <div class="col-sm-4">
             <h1 class="">Resultados</h1>
         </div>
-        <div class="col-sm-8">
+        {{--<div class="col-sm-8">
             <form class="form-inline">
                 <div class="form-group mx-sm-1 mb-2">
                     <select class="form-control" name="area" id="area_trabalho_pesquisa">
@@ -26,10 +26,9 @@
                 </div>
                 <button type="button" class="btn btn-primary mb-2" onclick="pesquisaResultadoTrabalho()" @if (count($areas) == 0) disabled @endif>Pesquisar</button>
             </form>
-        </div>
+        </div>--}}
     </div>
 
-    <div class="row resultado_card">
         @foreach($trabalhos as $trabalho)
             <!-- Modal que exibe os resultados -->
             <div class="modal fade bd-example-modal-lg" id="modalResultados{{$trabalho->id}}" tabindex="-1" role="dialog" aria-labelledby="labelmodalResultados{{$trabalho->id}}" aria-hidden="true">
@@ -170,7 +169,7 @@
                 </div>
             </div>
         @endforeach
-        <div id="cards_com_trabalhos" class="row">
+        {{--<div id="cards_com_trabalhos" class="row">
             @foreach ($trabalhos as $trabalho)
                 <div class="card bg-light mb-3" style="width: 20rem;">
                     <div class="card-body">
@@ -187,7 +186,193 @@
                     </div>
                 </div>
             @endforeach
-        </div> 
+            --}}
+        @foreach ($trabalhosPorModalidade as $trabalhos)
+            <div class="row justify-content-center" style="width: 100%;">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            @if(!is_null($trabalhos->first()))
+                                <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos[0]->modalidade->nome}}</span>
+                            @endif
+                            <div class="row table-trabalhos">
+                            <div class="col-sm-12">
+                                <form action="{{route('atribuicao.check')}}" method="post">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                                    <br>
+                                    <table class="table table-hover table-responsive-lg table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">
+                                                    Título
+                                                    <a href="{{route('coord.resultados',[ 'id' => $evento->id, 'titulo', 'asc'])}}">
+                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                    </a>
+                                                    <a href="{{route('coord.resultados',[ 'id' => $evento->id, 'titulo', 'desc'])}}">
+                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                    </a>
+                                                </th>
+                                                <th scope="col">
+                                                    Área
+                                                    <a href="{{route('coord.resultados',[ 'id' => $evento->id, 'areaId', 'asc'])}}">
+                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                    </a>
+                                                    <a href="{{route('coord.resultados',[ 'id' => $evento->id, 'areaId', 'desc'])}}">
+                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                    </a>
+                                                </th>
+                                                <th scope="col">
+                                                    Autor
+                                                    <a href="{{route('coord.resultados',[ 'id' => $evento->id, 'autor', 'asc'])}}">
+                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                    </a>
+                                                    <a href="{{route('coord.resultados',[ 'id' => $evento->id, 'autor', 'desc'])}}">
+                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                    </a>
+                                                </th>
+                                                <th scope="col" style="text-align:center">
+                                                    Resultado
+                                                </th>
+                                                <th scope="col" style="text-align:center">
+                                                    Parecer final
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php $i = 0; @endphp
+                                            @foreach($trabalhos as $trabalho)
+                                                <tr>
+                                                    <td>
+                                                        @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
+                                                            <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
+                                                                <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                                    {{$trabalho->titulo}}
+                                                                </span>
+                                                            </a>
+                                                        @else
+                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                                {{$trabalho->titulo}}
+                                                            </span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
+                                                        {{$trabalho->area->nome}}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{$trabalho->autor->name}}</td>
+                                                    <td style="text-align:center">
+                                                        <a style="cursor: pointer" data-toggle="modal" data-target="#modalResultados{{$trabalho->id}}">
+                                                            <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
+                                                        </a>
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                        <a onclick="mostrarParecerFinal({{$trabalho->id}})" style="cursor: pointer" data-toggle="modal" data-target="#modalParecerFinal">
+                                                            <img @if($trabalho->parecer_final == true) src="{{asset('img/icons/resultado-aprovado.svg')}}" @elseif(is_null($trabalho->parecer_final)) src="{{asset('img/icons/resultado-nulo.svg')}}" @else src="{{asset('img/icons/resultado-reprovado.svg')}}"  @endif  style="width:35px">
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+        <div class="modal fade bd-example-modal-lg" id="modalParecerFinal" tabindex="-1" role="dialog" aria-labelledby="labelmodalResultados" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #114048ff; color: white;">
+                        <h5 class="modal-title" id="trabalho-nome-parecer"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"> 
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-avaliar-trabalho" method="POST" action="{{route('coord.parecer.final')}}">
+                            @csrf
+                            <input type="hidden" name="trabalho_id" id="trabalho-id" value="">
+                            <input type="hidden" name="aprovar" id="parecer-final-input" value="">
+                            <div class="form-row">
+                                <div class="col-md-12 form-group">
+                                    <div class="alert alert-success" role="alert" id="resultadoAprovado" style="display: none">
+                                        <p>O trabalho foi aprovado.</p>
+                                    </div>
+                                    <div class="alert alert-danger" role="alert" id="resultadoReprovado" style="display: none">
+                                        <p>O trabalho foi reprovado.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row mt-4">
+                                <div class="col-md-6 form-group">
+                                    <button type="button" class="btn btn-danger" style="width:100%;" onclick="atualizarInputAprovar(false)">Reprovar</button>
+                                </div>
+                                <div class="col-md-6 form-group" style="padding-right: 20px">
+                                    <button type="button" class="btn btn-success" style="width:100%" onclick="atualizarInputAprovar(true)">Aprovar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+@section('javascript')
+    <script>
+        function mostrarParecerFinal(id) {
+            const aprovado = $("#resultadoAprovado");
+            const reprovado = $("#resultadoReprovado");
+            document.querySelector("#trabalho-nome-parecer").innerHTML = "";
+            aprovado.hide();
+            reprovado.hide();
+            $.ajax({
+                url:"{{route('coord.parecer.final.info.ajax')}}",
+                type:"get",
+                data: {"trabalho_id": id},
+                dataType:'json',
+                success: function(trabalho) {
+                    console.log(trabalho);
+                    document.getElementById("trabalho-id").value = trabalho.id;
+                    document.getElementById("trabalho-nome-parecer").innerHTML = "Parecer do trabalho '"+trabalho.titulo+"'";
+                    if(trabalho.parecer == true){
+                        aprovado.show();
+                        console.log('trabalho aprovado');
+                    }else if(trabalho.parecer == false){
+                        reprovado.show();
+                        console.log('trabalho reprovado');
+
+                    }
+                }
+            });
+        }
+
+        function atualizarInputAprovar(resultado){
+            document.getElementById('parecer-final-input').value = resultado;
+            var form = document.getElementById('form-avaliar-trabalho');
+            form.submit();
+        }
+    </script>
+@endsection
 @endsection

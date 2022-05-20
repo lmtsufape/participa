@@ -4,17 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAprovadoToTrabalhosTable extends Migration
+class AddParecerFinalToTrabalhosTable extends Migration
 {
     /**
      * Run the migrations.
-     * Adicionar coluna para controle de aprovação do trabalho pelos revisores
+     * Adicionar coluna para definir o parecer final da comissão.
      * @return void
      */
     public function up()
     {
         Schema::table('trabalhos', function (Blueprint $table) {
-            $table->boolean('aprovado')->nullable();;
+            $table->boolean('parecer_final')->nullable();;
         });
     }
 
@@ -26,7 +26,7 @@ class AddAprovadoToTrabalhosTable extends Migration
     public function down()
     {
         Schema::table('trabalhos', function (Blueprint $table) {
-            $table->dropColumn('aprovado');
+            $table->dropColumn('parecer_final');
         });
     }
 }
