@@ -943,47 +943,41 @@ class TrabalhoController extends Controller
       $todosTrabalhos = Trabalho::where('eventoId', $id)->orderBy('titulo')->get();
       $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
       $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
+      $direcao = 'desc';
 
       $trabalhos = NULL;
 
       if($column == "autor") {
-          if($status == "rascunho"){
-              $trabalhos = collect();
-              foreach($modalidades as $modalidade){
-                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
-                      function($trabalho) {
-                          return $trabalho->autor->name;
-                      },
-                      SORT_REGULAR,
-                      $direction == "desc"));
-              }
-
-
-          }else{
-              $trabalhos = collect();
-              foreach($modalidades as $modalidade){
-                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
-                      function($trabalho) {
-                          return $trabalho->autor->name;
-                      },
-                      SORT_REGULAR,
-                      $direction == "desc"));
-              }
+          $trabalhos = collect();
+          foreach($modalidades as $modalidade){
+              $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
+                  function($trabalho) {
+                      return $trabalho->autor->name;
+                  },
+                  SORT_REGULAR,
+                  $direcao == $direction));
           }
-      }else{
-          if($status == "rascunho"){
-              $trabalhos = collect();
-              foreach($modalidades as $modalidade){
-                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get());
-              }
-
-          }else{
-              $trabalhos = collect();
-              foreach($modalidades as $modalidade){
-                  $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->orderBy($column, $direction)->get());
-              }
-          }
+      }elseif($column == "titulo"){
+          $trabalhos = collect();
+          foreach($modalidades as $modalidade){
+            $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
+                function($trabalho) {
+                    return $trabalho->titulo;
+                },
+                SORT_REGULAR,
+                $direcao == $direction));
+        }
+      }elseif($column == "areaId"){ 
+        $trabalhos = collect();
+        foreach($modalidades as $modalidade){
+          $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
+              function($trabalho) {
+                  return $trabalho->area->nome;
+              },
+              SORT_REGULAR,
+              $direcao == $direction));
       }
+    }
 
 
       return view('coordenador.trabalhos.resultados', [
