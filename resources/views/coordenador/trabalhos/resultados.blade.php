@@ -353,15 +353,12 @@
                 data: {"trabalho_id": id},
                 dataType:'json',
                 success: function(trabalho) {
-                    console.log(trabalho);
                     document.getElementById("trabalho-id").value = trabalho.id;
                     document.getElementById("trabalho-nome-parecer").innerHTML = "Parecer do trabalho '"+trabalho.titulo+"'";
                     if(trabalho.parecer == true){
                         aprovado.show();
-                        console.log('trabalho aprovado');
                     }else if(trabalho.parecer == false){
                         reprovado.show();
-                        console.log('trabalho reprovado');
 
                     }
                 }

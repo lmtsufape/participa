@@ -458,7 +458,7 @@ class EventoController extends Controller
           }
         }
       }
-      
+
       return substr($stringRetorno, 0, strlen($stringRetorno)-2);
     }
 
@@ -1134,98 +1134,64 @@ class EventoController extends Controller
     public function show($id)
     {
         $evento = Evento::find($id);
-        $subeventos = Evento::where('deletado',false)->where('publicado', true)->where('evento_pai_id', $id)->get();
-        $hasTrabalho = false;
-        $hasTrabalhoCoautor = false;
-        $hasFile = false;
-        // $trabalhos = Trabalho::where('autorId', Auth::user()->id)->get();
-        // $trabalhosCount = Trabalho::where('autorId', Auth::user()->id)->count();
-        // $trabalhosId = Trabalho::where('eventoId', $evento->id)->select('id')->get();
-        // $trabalhosIdCoautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->select('trabalhoId')->get();
-        // $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
-        // $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
-        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
-        $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
-        $atividades = Atividade::where('eventoId', $id)->get();
-        $primeiraAtividade = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
+        if(auth()->user()) {
+            $subeventos = Evento::where('deletado',false)->where('publicado', true)->where('evento_pai_id', $id)->get();
+            $hasTrabalho = false;
+            $hasTrabalhoCoautor = false;
+            $hasFile = false;
+            // $trabalhos = Trabalho::where('autorId', Auth::user()->id)->get();
+            // $trabalhosCount = Trabalho::where('autorId', Auth::user()->id)->count();
+            // $trabalhosId = Trabalho::where('eventoId', $evento->id)->select('id')->get();
+            // $trabalhosIdCoautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->select('trabalhoId')->get();
+            // $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
+            // $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
+            $modalidades = Modalidade::where('evento_id', $evento->id)->get();
+            $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
+            $atividades = Atividade::where('eventoId', $id)->get();
+            $dataInicial = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
 
-        $isInscrito = Inscricao::where('user_id', Auth()->user()->id)->where('evento_id', $evento->id)->count();
+            $isInscrito = Inscricao::where('user_id', Auth()->user()->id)->where('evento_id', $evento->id)->count();
 
 
-        // if($trabalhosCount != 0){
-        //   $hasTrabalho = true;
-        //   $hasFile = true;
-        // }
-        // if($coautorCount != 0){
-        //   $hasTrabalhoCoautor = true;
-        //   $hasFile = true;
-        // }
+            // if($trabalhosCount != 0){
+            //   $hasTrabalho = true;
+            //   $hasFile = true;
+            // }
+            // if($coautorCount != 0){
+            //   $hasTrabalhoCoautor = true;
+            //   $hasFile = true;
+            // }
 
-        $mytime = Carbon::now('America/Recife');
-        $etiquetas = FormEvento::where('eventoId',$evento->id)->first();
+            $mytime = Carbon::now('America/Recife');
+            $etiquetas = FormEvento::where('eventoId',$evento->id)->first();
 
-        $formSubTraba = FormSubmTraba::all();
+            $formSubTraba = FormSubmTraba::all();
 
-        if ($primeiraAtividade == null) {
-          $primeiraAtividade = "";
+            if ($dataInicial == null) {
+                $dataInicial = "";
+            }
+            return view('evento.visualizarEvento', compact('evento', 'hasFile','mytime','etiquetas','modalidades','formSubTraba','atividades','dataInicial','isInscrito','subeventos'));
+        } else {
+            $subeventos = Evento::where('deletado',false)->where('publicado', true)->where('evento_pai_id', $id)->get();
+            $hasTrabalho = false;
+            $hasTrabalhoCoautor = false;
+            $hasFile = false;
+            $trabalhos = null;
+            $trabalhosCoautor = null;
+            $etiquetas = FormEvento::where('eventoId',$evento->id)->first();
+            $formSubTraba = FormSubmTraba::all();
+            $atividades = Atividade::where([['eventoId', $id], ['visibilidade_participante', true]])->get();
+            $dataInicial = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where([['eventoId', '=', $id], ['visibilidade_participante', '=', true]])->first();
+            $modalidades = Modalidade::where('evento_id', $id)->get();
+            $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
+            $mytime = Carbon::now('America/Recife');
+            // dd(false);
+            $isInscrito = false;
+            if ($dataInicial == null) {
+                $dataInicial = "";
+            }
+            return view('evento.visualizarEvento', compact('evento','trabalhos','trabalhosCoautor','hasTrabalho','hasTrabalhoCoautor','hasFile','mytime','etiquetas','formSubTraba','atividades','dataInicial','modalidades','isInscrito','subeventos'));
         }
-        return view('evento.visualizarEvento', [
-                                                'evento'              => $evento,
-                                                // 'trabalhos'           => $trabalhos,
-                                                // 'trabalhosCoautor'    => $trabalhosCoautor,
-                                                // 'hasTrabalho'         => $hasTrabalho,
-                                                // 'hasTrabalhoCoautor'  => $hasTrabalhoCoautor,
-                                                'hasFile'             => $hasFile,
-                                                'mytime'              => $mytime,
-                                                'etiquetas'           => $etiquetas,
-                                                'modalidades'         => $modalidades,
-                                                'formSubTraba'        => $formSubTraba,
-                                                'atividades'          => $atividades,
-                                                'dataInicial'         => $primeiraAtividade,
-                                                'isInscrito'          => $isInscrito,
-                                                'subeventos'          => $subeventos,
-                                               ]);
-    }
-
-    public function showNaoLogado($id)
-    {
-        if(auth()->user())
-            return redirect()->route('evento.visualizar', $id);
-        $evento = Evento::find($id);
-        $subeventos = Evento::where('deletado',false)->where('publicado', true)->where('evento_pai_id', $id)->get();
-        $hasTrabalho = false;
-        $hasTrabalhoCoautor = false;
-        $hasFile = false;
-        $trabalhos = null;
-        $trabalhosCoautor = null;
-        $etiquetas = FormEvento::where('eventoId',$evento->id)->first();
-        $formSubTraba = FormSubmTraba::all();
-        $atividades = Atividade::where([['eventoId', $id], ['visibilidade_participante', true]])->get();
-        $primeiraAtividade = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where([['eventoId', '=', $id], ['visibilidade_participante', '=', true]])->first();
-        $modalidades = Modalidade::where('evento_id', $id)->get();
-        $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
-        $mytime = Carbon::now('America/Recife');
-        // dd(false);
-        $isInscrito = false;
-        if ($primeiraAtividade == null) {
-          $primeiraAtividade = "";
-        }
-        return view('evento.visualizarEvento', [
-                                                'evento'              => $evento,
-                                                'trabalhos'           => $trabalhos,
-                                                'trabalhosCoautor'    => $trabalhosCoautor,
-                                                'hasTrabalho'         => $hasTrabalho,
-                                                'hasTrabalhoCoautor'  => $hasTrabalhoCoautor,
-                                                'hasFile'             => $hasFile,
-                                                'mytime'              => $mytime,
-                                                'etiquetas'           => $etiquetas,
-                                                'formSubTraba'        => $formSubTraba,
-                                                'atividades'          => $atividades,
-                                                'dataInicial'         => $primeiraAtividade,
-                                                'modalidades'         => $modalidades,
-                                                'isInscrito'          => $isInscrito,
-                                                'subeventos'          => $subeventos,
-                                               ]);
     }
 
     /**

@@ -301,6 +301,20 @@
             </div>
             <div class="modal-body">
             <div class="row justify-content-center">
+                @if(session('success'))
+                    <div class="col-sm-12">
+                        <div class="alert alert-success">
+                            <p>{{session('success')}}</p>
+                        </div>
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="col-sm-12">
+                        <div class="alert alert-danger">
+                            <p>{{session('error')}}</p>
+                        </div>
+                    </div>
+                @endif
                 <div class="col-sm-6">
                 <h5>Título</h5>
                 <p id="tituloTrabalho">{{$trabalho->titulo}}</p>
@@ -366,8 +380,10 @@
                         <form action="{{ route('atribuicao.delete', ['id' => $revisor->id]) }}" method="post">
                         @csrf
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                        <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
-                        <button type="submit" class="btn btn-primary" id="removerRevisorTrabalho">Remover Revisor</button>
+                        <input type="hidden" name="trabalhoId" value="{{$trabalho->id}}">
+                        <button type="submit" class="btn btn-primary button-prevent-multiple-submits" id="removerRevisorTrabalho">
+                            Remover Revisor
+                        </button>
                         </form>
                     </div>
                     </div>
@@ -390,7 +406,7 @@
                     <select name="revisorId" class="form-control" id="selectRevisorTrabalho">
                         <option value="" disabled selected>-- E-mail do revisor --</option>
                         @foreach ($evento->revisors()->where([['modalidadeId', $trabalho->modalidade->id], ['areaId', $trabalho->area->id]])->get() as $revisor)
-                        @if (!$trabalho->atribuicoes->contains($revisor))
+                        @if (!$trabalho->atribuicoes->contains($revisor) && is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first()) && $trabalho->autorId != $revisor->user_id)
                             <option value="{{$revisor->id}}">{{$revisor->user->name}} ({{$revisor->user->email}})</option>
                         @endif
                         @endforeach
@@ -398,7 +414,9 @@
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <button type="submit" class="btn btn-primary" id="addRevisorTrabalho">Adicionar Revisor</button>
+                    <button type="submit" class="btn btn-primary button-prevent-multiple-submits" id="addRevisorTrabalho">
+                        <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i>Adicionar Revisor
+                    </button>
                 </div>
             </form>
             </div>
@@ -420,5 +438,11 @@
         function marcarCheckboxes(id) {
             $(".modalidade" + id).prop('checked', $('#selectAllCheckboxes'+id).is(":checked"));
         }
+        const id = {!! json_encode(old('trabalhoId')) !!};
+        $(document).ready(function(){
+            if(id != null){
+                $('#modalTrabalho'+id).modal('show');
+            }
+        });
     </script>
 @endsection

@@ -553,15 +553,9 @@
                                                                 <h5 class="card-title">
                                                                     <div class="row">
                                                                         <div class="col-sm-12">
-                                                                            @auth()
                                                                                 <a href="{{ route('evento.visualizar', ['id' => $subevento->id]) }}" style="text-decoration: inherit;">
                                                                                     {{ $subevento->nome }}
                                                                                 </a>
-                                                                            @else
-                                                                                <a href="{{ route('evento.visualizarNaoLogado', ['id' => $subevento->id]) }}" style="text-decoration: inherit;">
-                                                                                    {{ $subevento->nome }}
-                                                                                </a>
-                                                                            @endauth
                                                                         </div>
                                                                     </div>
                                                                 </h5>
@@ -581,15 +575,9 @@
                                                             </p>
                                                             <div>
                                                                 <div>
-                                                                    @auth
-                                                                        <a href="{{ route('evento.visualizar', ['id' => $subevento->id]) }}">
-                                                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
-                                                                        </a>
-                                                                    @else
-                                                                        <a href="{{ route('evento.visualizarNaoLogado', ['id' => $subevento->id]) }}">
-                                                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
-                                                                        </a>
-                                                                    @endauth
+                                                                    <a href="{{ route('evento.visualizar', ['id' => $subevento->id]) }}">
+                                                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                                                    </a>
                                                                 </div>
                                                                 @can('isCoordenadorOrCoordenadorDasComissoes', $subevento)
                                                                     <div>
