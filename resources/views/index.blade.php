@@ -46,11 +46,7 @@
                   <div class="col-lg-5">
                     <div class="row container" style="margin-left: 0px; margin-top:15px;">
                       <div class="col-md-12" style="text-align:center; margin-top:20px;margin-bottom:10px;">
-                        @auth
                           <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
-                        @else
-                          <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
-                        @endauth
                       </div>
                       <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">
                         <div>
@@ -88,11 +84,7 @@
                 <div class="col-md-5" style=" height: 350px;">
                   <div class="row container" style="margin-left: 0px; margin-top:15px;">
                     <div class="col-md-12" style="text-align:center; margin-top:20px;margin-bottom:10px;">
-                      @auth
                         <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
-                      @else
-                        <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
-                      @endauth
                     </div>
                     <div class="col-md-12" style="text-align: justify;line-height: 1.3;color:#12583C; margin-bottom:15px;">
                         @if (strlen($evento->descricao) > 621)
@@ -142,15 +134,9 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-md-12" style="height:80px">
-                  @auth
                     <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
                       <h5 class="card-title">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</h5>
                     </a>
-                  @else
-                    <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="color: black;">
-                      <h5 class="card-title">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</h5>
-                    </a>
-                  @endauth
                 </div>
 
 
@@ -178,15 +164,9 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-md-12" style="height:80px">
-                  @auth
                     <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
                       <h5 class="card-title">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</h5>
                     </a>
-                  @else
-                    <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="color: black;">
-                      <h5 class="card-title">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</h5>
-                    </a>
-                  @endauth
                 </div>
 
 
@@ -289,15 +269,9 @@
                     <img class="card-img-top" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap">
                   @endif
                   <div class="card-body">
-                    @auth
                       <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="color: black;">
                         <h6 class="card-title acessibilidade">{{$evento->nome}}</h6>
                       </a>
-                    @else
-                      <a href="{{route('evento.visualizarNaoLogado',['id'=>$evento->id])}}" style="color: black;">
-                        <h6 class="card-title acessibilidade">{{$evento->nome}}</h6>
-                      </a>
-                    @endauth
                     <br>
                     <div class="container" style="position: relative; top: -25px;">
                       <div class="tags-a row" style="position: relative; left: -15px;">
@@ -537,7 +511,6 @@
                               </div>
                           </p>
                           <p>
-                              <a href="{{  route('evento.visualizarNaoLogado',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
                           </p>
                       </div>
 
