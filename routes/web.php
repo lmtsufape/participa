@@ -46,7 +46,7 @@ Route::get('/', function () {
 })->name('cancelarCadastro');
 
 Route::namespace('Submissao')->group(function () {
-  Route::get('/evento/{id}','EventoController@showNaoLogado')->name('evento.visualizarNaoLogado');
+  Route::get('/evento/visualizar/{id}','EventoController@show')->name('evento.visualizar');
   Route::view('validarCertificado', 'validar')->name('validarCertificado');
   Route::post('validarCertificado', 'CertificadoController@validar')->name('validarCertificadoPost');
   Route::get('/home', 'Submissao\CertificadoController@validar')->name('home')->middleware('verified', 'isTemp');
@@ -217,7 +217,6 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     //Evento
     Route::get(   '/evento/criar',          'EventoController@create'                    )->name('evento.criar');
     Route::post(  '/evento/criar',          'EventoController@store'                     )->name('evento.criar');
-    Route::get(   '/evento/visualizar/{id}','EventoController@show'                      )->name('evento.visualizar');
     Route::delete('/evento/excluir/{id}',   'EventoController@destroy'                   )->name('evento.deletar');
     Route::get(   '/evento/editar/{id}',    'EventoController@edit'                      )->name('evento.editar');
     Route::post(   '/evento/editar/{id}',    'EventoController@update'                   )->name('evento.update');
