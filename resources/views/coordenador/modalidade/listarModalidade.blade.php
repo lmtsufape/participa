@@ -422,8 +422,20 @@
                                         <div class="row justify-content-center">
                                             {{-- Arquivo de Modelos  --}}
                                             <div class="col-sm-12" style="margin-top: 20px;">
-                                                <label for="arquivoModelos" class="col-form-label">{{ __('Enviar modelo de apresentação:') }}</label> @if ($modalidade->modelo_apresentacao != null) <a href="{{route('modalidade.modelos.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
-
+                                                <label for="arquivoModelos" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarapresentacao}}:</label> @if ($modalidade->modelo_apresentacao != null) <a href="{{route('modalidade.modelos.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
+                                                @if ($modalidade->modelo_apresentacao)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="deleteapresentacao" id="deleteapresentacao{{$modalidade->id}}" @if(old('deleteapresentacao') == "on") checked @endif>
+                                                        <label class="form-check-label" for="deleteapresentacao{{$modalidade->id}}">
+                                                            Excluir arquivo enviado
+                                                        </label>
+                                                        @error('deleteapresentacao')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                @endif
                                             <div class="custom-file">
                                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoModelos{{$modalidade->id}}">
                                             </div>
@@ -437,8 +449,20 @@
                                             </div>
                                             {{-- Arquivo de Regras  --}}
                                             <div class="col-sm-12" style="margin-top: 20px;">
-                                                <label for="arquivoRegras" class="col-form-label">{{ __('Enviar regras:') }}</label> @if ($modalidade->regra != null) <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
-
+                                                <label for="arquivoRegras" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarregra}}:</label> @if ($modalidade->regra != null) <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
+                                                @if ($modalidade->regra)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="deleteregra" id="deleteregra{{$modalidade->id}}" @if(old('deleteregra') == "on") checked @endif>
+                                                        <label class="form-check-label" for="deleteregra{{$modalidade->id}}">
+                                                            Excluir arquivo enviado
+                                                        </label>
+                                                        @error('deleteregra')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                @endif
                                             <div class="custom-file">
                                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegras{{$modalidade->id}}">
                                             </div>
@@ -452,8 +476,20 @@
                                             </div>
                                             {{-- Arquivo de Templates --}}
                                             <div class="col-sm-12 tiposDeArquivos{{$modalidade->id}}" id="area-templateEdit" style="@if(old('arquivoEdit'.$modalidade->id)=="on") display: block @elseif(old('arquivoEdit'.$modalidade->id) == null && $modalidade->arquivo == true) display: block; @else display: none; @endif">
-                                                <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar template:') }}</label> @if ($modalidade->template != null) <a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
-
+                                                <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixartemplate}}:</label> @if ($modalidade->template != null) <a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
+                                                @if ($modalidade->template)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="deletetemplate" id="deletetemplate{{$modalidade->id}}" @if(old('deletetemplate') == "on") checked @endif>
+                                                        <label class="form-check-label" for="deletetemplate{{$modalidade->id}}">
+                                                            Excluir arquivo enviado
+                                                        </label>
+                                                        @error('deletetemplate')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                @endif
                                                 <div class="custom-file">
                                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates{{$modalidade->id}}">
                                                 </div>

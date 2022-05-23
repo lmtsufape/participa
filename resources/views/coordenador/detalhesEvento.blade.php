@@ -792,6 +792,12 @@
     });
 
     $(document).ready(function() {
+        $('#botao-editar-etiqueta-apresentacao').on("click", function() {
+            $("#etiqueta-baixar-apresentacao-evento").toggle(500);
+        });
+    });
+
+    $(document).ready(function() {
         $('#botao-editar-etiqueta-template').on("click", function() {
             $("#etiqueta-baixar-template-evento").toggle(500);
         });

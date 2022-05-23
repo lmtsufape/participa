@@ -308,7 +308,7 @@
                         <div class="row justify-content-center">
                             {{-- Arquivo de Modelos --}}
                             <div class="col-sm-12" style="margin-top: 20px;" >
-                                <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar modelo de apresentação:') }}</label>
+                                <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarapresentacao}}:</label>
 
                                 <div class="custom-file">
                                   <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoModelos">
@@ -322,7 +322,7 @@
                             </div>
                             {{-- Arquivo de Regras  --}}
                             <div class="col-sm-12" style="margin-top: 20px;">
-                              <label for="arquivoRegras" class="col-form-label">{{ __('Enviar regras:') }}</label>
+                              <label for="arquivoRegras" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarregra}}:</label>
 
                               <div class="custom-file">
                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegras">
@@ -336,7 +336,7 @@
                             </div>
                             {{-- Arquivo de Templates --}}
                             <div class="col-sm-12" id="area-template" style="margin-top: 20px; @if(old('arquivo')) display:block; @else display:none; @endif" >
-                                <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar template:') }}</label>
+                                <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixartemplate}}:</label>
 
                                 <div class="custom-file">
                                   <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates">

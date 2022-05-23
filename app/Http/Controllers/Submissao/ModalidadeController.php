@@ -266,6 +266,10 @@ class ModalidadeController extends Controller
             'zip'.$request->modalidadeEditId                    => ['nullable'],
             'svg'.$request->modalidadeEditId                    => ['nullable'],
 
+            'deleteapresentacao'                                => ['nullable'],
+            'deleteregra'                                       => ['nullable'],
+            'deletetemplate'                                    => ['nullable'],
+
             'mincaracteres'.$request->modalidadeEditId          => ['nullable', 'integer'],
             'maxcaracteres'.$request->modalidadeEditId          => ['nullable', 'integer'],
             'minpalavras'.$request->modalidadeEditId            => ['nullable', 'integer'],
@@ -275,7 +279,6 @@ class ModalidadeController extends Controller
             'arquivoTemplates'.$request->modalidadeEditId       => ['nullable', 'file', 'max:5120'],
 
         ]);
-
         $caracteres = $modalidadeEdit->caracteres;
         $palavras = $modalidadeEdit->palavras;
 
@@ -390,6 +393,13 @@ class ModalidadeController extends Controller
 
         }
 
+        if($request->input('deleteregra') != null) {
+            $path = $modalidadeEdit->regra;
+            if (Storage::disk()->exists($modalidadeEdit->regra))
+                Storage::delete($path);
+            $modalidadeEdit->regra = null;
+        }
+
         if ($request->file('arquivoTemplates'.$request->modalidadeEditId)) {
 
             $path = $modalidadeEdit->template;
@@ -406,9 +416,16 @@ class ModalidadeController extends Controller
             $modalidadeEdit->save();
         }
 
+        if ($request->input('deletetemplate') != null) {
+            $path = $modalidadeEdit->template;
+            if (Storage::disk()->exists($modalidadeEdit->template))
+                Storage::delete($path);
+            $modalidadeEdit->template = null;
+        }
+
         if ($request->file('arquivoModelos'.$request->modalidadeEditId)) {
 
-            $path = $modalidadeEdit->modelo;
+            $path = $modalidadeEdit->modelo_apresentacao;
             Storage::delete($path);
 
             $fileModelos = $request->file('arquivoModelos'.$request->modalidadeEditId);
@@ -420,6 +437,13 @@ class ModalidadeController extends Controller
             $modalidadeEdit->modelo_apresentacao = $pathModelos . $nomeModelos;
 
             $modalidadeEdit->save();
+        }
+
+        if ($request->input('deleteapresentacao') != null) {
+            $path = $modalidadeEdit->modelo_apresentacao;
+            if (Storage::disk()->exists($modalidadeEdit->modelo_apresentacao))
+                Storage::delete($path);
+            $modalidadeEdit->modelo_apresentacao = null;
         }
         $modalidadeEdit->save();
         // dd($modalidadeEdit);
