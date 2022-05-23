@@ -165,6 +165,20 @@
                                                     <input type="text" class="form-control apenasLetras" id="etiquetabaixartemplate" name="etiquetabaixartemplate" placeholder="Editar Etiqueta">
                                                 </div>
                                             </div>
+
+                                            <div class="row justify-content-left">
+                                                <div class="col-sm-auto">
+                                                    <a>
+                                                        <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                                    </a>
+                                                    <label for="botao-editar-etiqueta-apresentacao" class="col-form-label" id="classeh9">{{$etiquetas->etiquetabaixarapresentacao}}:</label>
+                                                    <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-etiqueta-apresentacao" style="width:20px"></a>
+                                                    {{-- <button type="button" id="botao-editar-etiqueta-apresentacao" class="btn btn-outline-dark">Editar</button> --}}
+                                                </div>
+                                                <div class="col-sm-auto" id="etiqueta-baixar-apresentacao-evento" style="display: none">
+                                                    <input type="text" class="form-control apenasLetras" id="etiquetabaixarapresentacao" name="etiquetabaixarapresentacao" placeholder="Editar Etiqueta">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -295,6 +309,7 @@
                                     <input type="hidden" name="etiquetamoduloorganizacao"   value="Organização">
                                     <input type="hidden" name="etiquetabaixarregra"         value="Regras">
                                     <input type="hidden" name="etiquetabaixartemplate"      value="Template">
+                                    <input type="hidden" name="etiquetabaixarapresentacao"  value="Modelo de apresentação">
 
                                     <button type="submit" class="btn btn-primary" form="formCardEventosPadrao" onclick="return default_edicaoCardEvento()" style="width:100%">
                                         {{ __('Retornar ao Padrão') }}

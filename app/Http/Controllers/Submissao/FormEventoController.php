@@ -26,6 +26,7 @@ class FormEventoController extends Controller
             'etiquetamoduloorganizacao' => ['nullable', 'string'],
             'etiquetabaixarregra'       => ['nullable', 'string'],
             'etiquetabaixartemplate'    => ['nullable', 'string'],
+            'etiquetabaixarapresentacao'=> ['nullable', 'string'],
             'etiquetaarquivo'           => ['nullable', 'string'],
         ]);
 
@@ -57,6 +58,9 @@ class FormEventoController extends Controller
         }
         if(isset($request->etiquetamoduloorganizacao)){
             $formevento->etiquetamoduloorganizacao = $request->etiquetamoduloorganizacao;
+        }
+        if(isset($request->etiquetabaixarregra)){
+            $formevento->etiquetabaixarregra = $request->etiquetabaixarregra;
         }
         if(isset($request->etiquetabaixarregra)){
             $formevento->etiquetabaixarregra = $request->etiquetabaixarregra;
