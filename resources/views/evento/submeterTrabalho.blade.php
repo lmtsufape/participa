@@ -7,6 +7,19 @@
         <div class="col-sm-10">
             <div class="card" style="margin-top:50px">
                 <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                          @if ($errors->any())
+                              <div class="alert alert-danger">
+                                  <ul>
+                                      @foreach ($errors->all() as $error)
+                                          <li>{{ $error }}</li>
+                                      @endforeach
+                                  </ul>
+                              </div>
+                          @endif
+                        </div>
+                      </div>
                   <h2 class="card-title">{{$evento->nome}}</h2>
                   <h4 class="card-title">Modalidade: {{$modalidade->nome}}</h4>
                   <div class="titulo-detalhes"></div>
@@ -74,76 +87,57 @@
                                 </div>
                                 <div id="coautores" class="row " >
                                     @if (old('nomeCoautor') != null)
-                                        <div class="item card" id="1" style="width:100%;">
-                                            <div class="row card-body">
-                                                <div class="col-sm-4">
-                                                    <label>E-mail</label>
-                                                    <input type="email" style="margin-bottom:10px" id="email${order}" value="{{Auth::user()->email}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" disabled>
-                                                </div>
-                                                <div class="col-sm-5">
-                                                    <label>Nome Completo</label>
-                                                    <input type="text" style="margin-bottom:10px" value="{{Auth::user()->name}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" disabled>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <a href="#" @if(!Auth::check()) class=" delete pr-2" @else onclick="return false;" class=" pr-2" @endif style="color: #d30909;">
-                                                        <i class="fas fa-user-times fa-2x"></i>
-                                                    </a>
-                                                    <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, event)">
-                                                        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                                                    </a>
-                                                    <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, event)">
-                                                        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h4 class="col-sm-12" id="title-coautores" style="margin-top:20px">Coautor(es)</h4>
                                         @foreach (old('nomeCoautor') as $i => $nomeCoautor)
-                                        <div class="item card " id="{{$i+1}}" style="width:100%;">
-                                          <div class="row card-body">
-                                              <div class="col-sm-4">
-                                                  <label>E-mail</label>
-                                                  <input type="email" style="margin-bottom:10px" id="email{{$i+1}}" value="{{old('emailCoautor')[$i]}}" onclick="digitarEmail(email{{$i+1}})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail">
-                                              </div>
-                                              <div class="col-sm-5">
-                                                  <label>Nome Completo</label>
-                                                  <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome">
-                                              </div>
-                                              <div class="col-sm-3">
-                                                  <a href="#" style="color: #d30909;" class="delete pr-2">
-                                                    <i class="fas fa-user-times fa-2x"></i>
-                                                  </a>
-                                                  <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, event)">
-                                                    <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                                                  </a>
-                                                  <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, event)">
-                                                    <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                                                  </a>
-                                              </div>
-                                          </div>
-                                        </div>
+                                            @if ($loop->first)
+                                                <div class="item card" id="1" style="width:100%;">
+                                                    <div class="row card-body">
+                                                        <div class="col-sm-6">
+                                                            <label>E-mail</label>
+                                                            <input type="email" style="margin-bottom:10px" id="email${order}" value="{{old('emailCoautor')[$i]}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" @can('isCoordenadorOrComissaoCientifica', $evento) @else readonly @endcan>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label>Nome Completo</label>
+                                                            <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" @can('isCoordenadorOrComissaoCientifica', $evento) @else readonly @endcan>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <h4 class="col-sm-12" id="title-coautores" style="margin-top:20px">Coautor(es)</h4>
+                                                <div class="item card " id="{{$i+1}}" style="width:100%;">
+                                                <div class="row card-body">
+                                                    <div class="col-sm-4">
+                                                        <label>E-mail</label>
+                                                        <input type="email" style="margin-bottom:10px" id="email{{$i+1}}" value="{{old('emailCoautor')[$i]}}" onclick="digitarEmail(email{{$i+1}})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail">
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <label>Nome Completo</label>
+                                                        <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome">
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <a href="#" style="color: #d30909;" class="delete pr-2">
+                                                            <i class="fas fa-user-times fa-2x"></i>
+                                                        </a>
+                                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, event)">
+                                                            <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                                        </a>
+                                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, event)">
+                                                            <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            @endif
                                         @endforeach
                                     @else
                                         <div class="item card" id="1" style="width:100%;">
                                             <div class="row card-body">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-6">
                                                     <label>E-mail</label>
-                                                    <input type="email" style="margin-bottom:10px" id="email${order}" value="{{Auth::user()->email}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" disabled>
+                                                    <input type="email" style="margin-bottom:10px" id="email${order}" value="{{Auth::user()->email}}" onclick="digitarEmail(email${order})" class="form-control emailCoautor" name="emailCoautor[]" placeholder="E-mail" @can('isCoordenadorOrComissaoCientifica', $evento) @else readonly @endcan>
                                                 </div>
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-6">
                                                     <label>Nome Completo</label>
-                                                    <input type="text" style="margin-bottom:10px" value="{{Auth::user()->name}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" disabled>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <a href="#" @if(!Auth::check()) class=" delete pr-2" @else onclick="return false;" class=" pr-2" @endif style="color: #d30909;">
-                                                        <i class="fas fa-user-times fa-2x"></i>
-                                                    </a>
-                                                    <a href="#" onclick="return false;">
-                                                        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                                                    </a>
-                                                    <a href="#" onclick="return false;">
-                                                        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                                                    </a>
+                                                    <input type="text" style="margin-bottom:10px" value="{{Auth::user()->name}}" class="form-control emailCoautor" name="nomeCoautor[]" placeholder="Nome" @can('isCoordenadorOrComissaoCientifica', $evento) @else readonly @endcan>
                                                 </div>
                                             </div>
                                         </div>

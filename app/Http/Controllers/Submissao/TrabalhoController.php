@@ -117,8 +117,19 @@ class TrabalhoController extends Controller
           Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
         }
 
-      //   $autor = User::where('email', $request->emailCoautor[0])->first();
-        $autor = Auth::user();
+        $autor = User::where('email', $request->emailCoautor[0])->first();
+        if($autor == null) {
+            $passwordTemporario = Str::random(8);
+            $coord = User::find($evento->coordenadorId);
+            Mail::to($request->emailCoautor[0])->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Autor', $evento->nome, $passwordTemporario, $request->emailCoautor[0], $coord));
+            $autor = User::create([
+                'email' => $request->emailCoautor[0],
+                'password' => bcrypt($passwordTemporario),
+                'usuarioTemp' => true,
+                'name' => $request->nomeCoautor[0],
+            ]);
+        }
+        // $autor = Auth::user();
 
         $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->where('status', '!=','arquivado' )->count();
         // $areaModalidade = AreaModalidade::where('areaId', $request->araeaId)->where('modalidadeId', $request->modalidadeId)->first();

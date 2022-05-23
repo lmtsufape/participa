@@ -72,4 +72,17 @@ class TrabalhoPostRequest extends FormRequest
             'arquivo.max' => 'O tamanho máximo permitido é de 2mb'
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'nomeTrabalho' => 'título do trabalho',
+            'areaId' => 'área',
+            'modalidadeId' => 'modalidade',
+            'eventoId' => 'evento',
+            'resumo' => 'resumo',
+            'nomeCoautor.*' => 'nome',
+            'emailCoautor.*' => 'email',
+        ];
+    }
 }
