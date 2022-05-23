@@ -201,6 +201,15 @@ class AtribuicaoController extends Controller
       $trabalho->save();
 
       $revisor = Revisor::find($request->revisorId);
+
+      if($trabalho->atribuicoes->contains($revisor)){
+        return redirect()->back()->with(['error' => 'Revisor já atribuído ao trabalho.'])->withInput($validatedData);
+      }
+
+      if(!is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first())){
+        return redirect()->back()->with(['error' => $revisor->user->name.' não pode ser revisor deste trabalho.'])->withInput($validatedData);
+      }
+
       $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando']);
       $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
       $revisor->save();

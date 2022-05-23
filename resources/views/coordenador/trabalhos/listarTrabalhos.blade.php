@@ -308,6 +308,13 @@
                         </div>
                     </div>
                 @endif
+                @if(session('error'))
+                    <div class="col-sm-12">
+                        <div class="alert alert-danger">
+                            <p>{{session('error')}}</p>
+                        </div>
+                    </div>
+                @endif
                 <div class="col-sm-6">
                 <h5>Título</h5>
                 <p id="tituloTrabalho">{{$trabalho->titulo}}</p>
