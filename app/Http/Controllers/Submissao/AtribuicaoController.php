@@ -213,14 +213,14 @@ class AtribuicaoController extends Controller
         ->send(new EmailConviteRevisor($revisor->user, $evento, $subject, Auth::user()));
 
       $mensagem = $trabalho->titulo . ' atribuído ao revisor ' . $revisor->user->name . ' com sucesso!';
-      return redirect()->back()->with(['mensagem' => $mensagem]);
+      return redirect()->back()->with(['success' => $mensagem])->withInput($validatedData);
     }
 
     public function deletePorRevisores(Request $request, $id){
       // dd($id);
       $validatedData = $request->validate([
         'eventoId'      => ['required', 'integer'],
-        'trabalho_id'   => ['required', 'integer'],
+        'trabalhoId'   => ['required', 'integer'],
       ]);
 
       $evento = Evento::find($request->eventoId);
@@ -230,12 +230,12 @@ class AtribuicaoController extends Controller
       $revisor->correcoesEmAndamento -= 1;
       $revisor->update();
 
-      $trabalho = Trabalho::find($request->trabalho_id);
+      $trabalho = Trabalho::find($request->trabalhoId);
       $trabalho->atribuicoes()->detach($id);
 
       $mensagem = $trabalho->titulo . ' foi retirado de ' . $revisor->user->name . ' com sucesso!';
 
-      return redirect()->back()->with(['mensagem' => $mensagem]);
+      return redirect()->back()->with(['success' => $mensagem])->withInput($validatedData);
     }
 
     public function atribuirCheck(AtribuicaoRevisorRequest $request)
