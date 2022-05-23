@@ -206,7 +206,7 @@ class AtribuicaoController extends Controller
         return redirect()->back()->with(['error' => 'Revisor já atribuído ao trabalho.'])->withInput($validatedData);
       }
 
-      if(!is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first())){
+      if(!is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first()) || $trabalho->autorId == $revisor->user_id){
         return redirect()->back()->with(['error' => $revisor->user->name.' não pode ser revisor deste trabalho.'])->withInput($validatedData);
       }
 

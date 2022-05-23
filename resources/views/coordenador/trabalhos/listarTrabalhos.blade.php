@@ -406,7 +406,7 @@
                     <select name="revisorId" class="form-control" id="selectRevisorTrabalho">
                         <option value="" disabled selected>-- E-mail do revisor --</option>
                         @foreach ($evento->revisors()->where([['modalidadeId', $trabalho->modalidade->id], ['areaId', $trabalho->area->id]])->get() as $revisor)
-                        @if (!$trabalho->atribuicoes->contains($revisor) && is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first()))
+                        @if (!$trabalho->atribuicoes->contains($revisor) && is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first()) && $trabalho->autorId != $revisor->user_id)
                             <option value="{{$revisor->id}}">{{$revisor->user->name}} ({{$revisor->user->email}})</option>
                         @endif
                         @endforeach
