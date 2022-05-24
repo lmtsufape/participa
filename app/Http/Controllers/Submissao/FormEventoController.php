@@ -62,8 +62,8 @@ class FormEventoController extends Controller
         if(isset($request->etiquetabaixarregra)){
             $formevento->etiquetabaixarregra = $request->etiquetabaixarregra;
         }
-        if(isset($request->etiquetabaixarregra)){
-            $formevento->etiquetabaixarregra = $request->etiquetabaixarregra;
+        if(isset($request->etiquetabaixarapresentacao)){
+            $formevento->etiquetabaixarapresentacao = $request->etiquetabaixarapresentacao;
         }
         if(isset($request->etiquetabaixartemplate)){
             $formevento->etiquetabaixartemplate = $request->etiquetabaixartemplate;
