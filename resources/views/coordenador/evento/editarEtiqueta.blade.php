@@ -269,26 +269,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="row justify-content-left">
-                                                <div class="col-sm-auto info-evento">
-                                                    <h4 id="classeh13">{{$etiquetas->etiquetaarquivo}}:</h4>
-                                                </div>
-                                                <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-arquivo" style="width:20px"></a>
-                                                <div class="col-sm-auto" id="etiqueta-arquivo-evento" style="display: none">
-                                                    <input type="text" class="form-control apenasLetras" id="etiquetaarquivo" name="etiquetaarquivo" placeholder="Editar Etiqueta">
-                                                </div>
-                                            </div>
-                                            <div class="row justify-content-center">
-                                                <div class="col-sm-12">
-                                                    <p>
-                                                        Informações sobre arquivo adicional
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
