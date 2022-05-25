@@ -299,7 +299,7 @@ body{
 .banner-evento{
     min-width: 100%;
     min-height: 425px;
-    background-color:#071b1eff;
+    background-color:rgb(255, 255, 255);
 }
 .banner-evento img{
     width: 100%;
@@ -399,6 +399,18 @@ body{
     }
     .botao-form-right{
       padding:0;
+    }
+    .banner-evento{
+        display: flex;
+        min-width: 100%;
+        min-height: 425px;
+        background-color:rgb(255, 255, 255);
+    }
+    .banner-evento img{
+        width: 100%;
+        min-height: 425px;
+        max-height: 425px;
+        object-fit: contain;
     }
 }
 
