@@ -44,6 +44,12 @@
             <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'arquivado'])}}">
                 Arquivados
             </a>
+            <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'no_revisor'])}}">
+                Sem revisor
+            </a>
+            <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'with_revisor'])}}">
+                Com revisor
+            </a>
             <a class="dropdown-item disabled" href="#" >
                 Submetidos
             </a>
@@ -109,28 +115,28 @@
                                     </th>
                                     <th scope="col">
                                     Título
-                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc'])}}">
+                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', $status])}}">
                                         <i class="fas fa-arrow-alt-circle-up"></i>
                                     </a>
-                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'desc'])}}">
+                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'desc', $status])}}">
                                         <i class="fas fa-arrow-alt-circle-down"></i>
                                     </a>
                                     </th>
                                     <th scope="col">
                                     Área
-                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'asc'])}}">
+                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'asc', $status])}}">
                                         <i class="fas fa-arrow-alt-circle-up"></i>
                                     </a>
-                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
+                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc', $status])}}">
                                         <i class="fas fa-arrow-alt-circle-down"></i>
                                     </a>
                                     </th>
                                     <th scope="col">
                                     Autor
-                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'asc'])}}">
+                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'asc', $status])}}">
                                         <i class="fas fa-arrow-alt-circle-up"></i>
                                     </a>
-                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'desc'])}}">
+                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'desc', $status])}}">
                                         <i class="fas fa-arrow-alt-circle-down"></i>
                                     </a>
                                     </th>
