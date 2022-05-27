@@ -57,9 +57,9 @@
                                           <td>{{$user->celular}}</td>
                                           <td>{{$user->email}}</td>
                                           <td>
-                                          @if ($evento->coord_comissao_cientifica_id == $user->id)
-                                            Coordenador
-                                          @endif
+                                            @if($evento->userIsCoordComissaoCientifica($user))
+                                                Coordenador
+                                            @endif
                                           </td>
                                           <td style="text-align:center">
                                             <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao', ['id' => $user->id])}}" method="POST">
@@ -76,9 +76,9 @@
                                           <td>Usuário temporário - Sem Celular</td>
                                           <td>{{$user->email}}</td>
                                           <td>
-                                          @if ($evento->coord_comissao_cientifica_id == $user->id)
-                                            Coordenador
-                                          @endif
+                                            @if($evento->userIsCoordComissaoCientifica($user))
+                                                Coordenador
+                                            @endif
                                           </td>
                                           <td style="text-align:center">
                                             <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao', ['id' => $user->id])}}" method="POST">
@@ -92,7 +92,7 @@
                                         @endif
                                       </th>
                                   </tbody>
-                                  @endforeach    
+                                  @endforeach
                                 @endif
                         </table>
                       </p>

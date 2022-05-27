@@ -2,6 +2,7 @@
 
 namespace App\Models\Submissao;
 
+use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -42,9 +43,14 @@ class Evento extends Model
       return $this->belongsTo('App\Models\Users\User', 'coordenadorId');
   }
 
+  public function userIsCoordComissaoCientifica(User $user)
+  {
+      return $this->coordComissaoCientifica->contains($user);
+  }
+
 
   public function coordComissaoCientifica(){
-      return $this->belongsTo('App\Models\Users\CoordComissaoCientifica');
+      return $this->belongsToMany('App\Models\Users\User', 'coord_comissao_cientificas', 'eventos_id', 'user_id')->using('App\Models\Users\CoordComissaoCientifica');
   }
 
   // public function revisors(){

@@ -16,6 +16,7 @@ use App\Mail\EmailParaUsuarioNaoCadastrado;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
+use App\Models\Users\CoordComissaoCientifica;
 
 class ComissaoController extends Controller
 {
@@ -123,9 +124,9 @@ class ComissaoController extends Controller
     public function coordenadorComissao(Request $request){
         $evento = Evento::find($request->input('eventoId'));
         $this->authorize('isCoordenador', $evento);
-
-        $evento->coord_comissao_cientifica_id = $request->input('coordComissaoId');
-        $evento->save();
+        foreach ($request->input('coordComissaoId') as $id) {
+            CoordComissaoCientifica::firstOrCreate(['user_id' => $id, 'eventos_id' => $evento->id]);
+        }
 
         $areas = Area::where('eventoId', $evento->id)->get();
         $revisores = $evento->revisores;
