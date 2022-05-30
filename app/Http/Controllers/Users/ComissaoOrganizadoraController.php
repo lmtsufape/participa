@@ -133,20 +133,23 @@ class ComissaoOrganizadoraController extends Controller
         $evento = Evento::find($id);
         $this->authorize('isCoordenador', $evento);
 
-        $usuariosDaComissao = $evento->usuariosDaComissaoOrganizadora;
-        return view('coordenador.comissaoOrganizadora.definirCoordComissao', ['evento' => $evento,
-                                                                              'users' => $usuariosDaComissao]);
+        $users = $evento->usuariosDaComissaoOrganizadora;
+        $coordenadores = $evento->coordComissaoOrganizadora->pluck('id')->all();
+        return view('coordenador.comissaoOrganizadora.definirCoordComissao', compact('evento', 'users', 'coordenadores'));
     }
 
     public function salvarCoordenador(Request $request) {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $validationData = $request->validate([
-            'coordComissaoId' => 'required|array',
+            'coordComissaoId' => 'nullable|array',
         ]);
-        foreach ($validationData['coordComissaoId'] as $id) {
-            CoordComissaoOrganizadora::firstOrCreate(['user_id' => $id, 'eventos_id' => $evento->id]);
-        }
+        if($request->has('coordComissaoId'))
+            foreach ($validationData['coordComissaoId'] as $id) {
+                CoordComissaoOrganizadora::firstOrCreate(['user_id' => $id, 'eventos_id' => $evento->id]);
+            }
+        else
+            $validationData['coordComissaoId'] = [];
         $idsCoordenadores = $evento->coordComissaoOrganizadora->map(function($coord){
             return $coord->id;
         })->all();
