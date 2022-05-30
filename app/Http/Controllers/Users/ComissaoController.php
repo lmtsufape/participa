@@ -124,20 +124,17 @@ class ComissaoController extends Controller
     public function coordenadorComissao(Request $request){
         $evento = Evento::find($request->input('eventoId'));
         $this->authorize('isCoordenador', $evento);
-        foreach ($request->input('coordComissaoId') as $id) {
+        $validationData = $request->validate([
+            'coordComissaoId' => 'required|array',
+        ]);
+        foreach ($validationData['coordComissaoId'] as $id) {
             CoordComissaoCientifica::firstOrCreate(['user_id' => $id, 'eventos_id' => $evento->id]);
         }
-
-        $areas = Area::where('eventoId', $evento->id)->get();
-        $revisores = $evento->revisores;
-        // dd($ComissaoEventos);
-        $users = $evento->usuariosDaComissao;
-        // return view('coordenador.detalhesEvento', [
-        //                                                 'evento'    => $evento,
-        //                                                 'areas'     => $areas,
-        //                                                 'revisores' => $revisores,
-        //                                                 'users'     => $users,
-        //                                             ]);
+        $idsCoordenadores = $evento->coordComissaoCientifica->map(function($coord){
+            return $coord->id;
+        })->all();
+        $removidos = array_diff($idsCoordenadores, $validationData['coordComissaoId']);
+        CoordComissaoCientifica::whereIn('user_id', $removidos)->where('eventos_id', $evento->id)->delete();
         return redirect()->back()->with(['mensagem' => 'Coordenador da comissão científica salvo com sucesso!']);
     }
 
@@ -179,7 +176,7 @@ class ComissaoController extends Controller
     {
         $evento = Evento::find($request->evento_id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-
+        CoordComissaoCientifica::where([['user_id', '=', $id], ['eventos_id', '=', $evento->id]])->delete();
         $evento->usuariosDaComissao()->detach($id);
 
         return redirect()->back()->with(['mensagem' => 'Membro da comissão removido com sucesso!']);

@@ -15,7 +15,7 @@ class Evento extends Model
    */
   protected $fillable = [
       'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim', 'fotoEvento',
-      'enderecoId', 'coordenadorId', 'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo', 'coord_comissao_organizadora_id',
+      'enderecoId', 'coordenadorId', 'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo',
       'evento_pai_id',
   ];
 
@@ -43,19 +43,23 @@ class Evento extends Model
       return $this->belongsTo('App\Models\Users\User', 'coordenadorId');
   }
 
-  public function userIsCoordComissaoCientifica(User $user)
-  {
-      return $this->coordComissaoCientifica->contains($user);
-  }
+    public function coordComissaoCientifica(){
+        return $this->belongsToMany('App\Models\Users\User', 'coord_comissao_cientificas', 'eventos_id', 'user_id')->using('App\Models\Users\CoordComissaoCientifica');
+    }
 
+    public function userIsCoordComissaoCientifica(User $user)
+    {
+        return $this->coordComissaoCientifica->contains($user);
+    }
 
-  public function coordComissaoCientifica(){
-      return $this->belongsToMany('App\Models\Users\User', 'coord_comissao_cientificas', 'eventos_id', 'user_id')->using('App\Models\Users\CoordComissaoCientifica');
-  }
+    public function coordComissaoOrganizadora(){
+        return $this->belongsToMany('App\Models\Users\User', 'coord_comissao_organizadoras', 'eventos_id', 'user_id')->using('App\Models\Users\CoordComissaoOrganizadora');
+    }
 
-  // public function revisors(){
-  //     return $this->belongsToMany('App\Revisor', 'evento_revisor', 'evento_id', 'revisor_id');
-  // }
+    public function userIsCoordComissaoOrganizadora(User $user)
+    {
+        return $this->coordComissaoOrganizadora->contains($user);
+    }
 
   public function revisors() {
     return $this->hasMany('App\Models\Users\Revisor', 'evento_id');
