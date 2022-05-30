@@ -5,15 +5,15 @@
     <div id="divDefinirCoordComissaoOrganizadora" class="comissao" style="display: block">
         <div class="row">
             <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Definir Coordenador da Comissão Organizadora</h1>
+                <h1 class="titulo-detalhes">Definir Coordenadores da Comissão Organizadora</h1>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-lg-7 col-md-10 col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Coordenador da Comissão</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Selecione um coordenador para comissão do seu evento</h6>
+                        <h5 class="card-title">Coordenadores da Comissão Organizadora</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Selecione os coordenadores para comissão organizadora do seu evento</h6>
                         <form id="formCoordComissao" action="{{route('comissaoOrganizadora.salvaCoordenador')}}" method="POST">
                             @csrf
                             <p class="card-text">

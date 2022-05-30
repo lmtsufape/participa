@@ -5,7 +5,7 @@
     <div id="divDefinirCoordComissao" class="comissao" style="display: block">
         <div class="row">
             <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Definir Coordenador da Comissão Científica</h1>
+                <h1 class="titulo-detalhes">Definir Coordenadores da Comissão Científica</h1>
             </div>
         </div>
         <div class="row justify-content-center">
