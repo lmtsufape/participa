@@ -150,6 +150,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::put(   '/{evento}/tipocomissao/{comissao}', 'TipoComissaoController@update')->name( 'tipocomissao.update');
       Route::delete('/{evento}/tipocomissao/{comissao}', 'TipoComissaoController@destroy')->name('tipocomissao.destroy');
       Route::post(  '/{evento}/tipocomissao/{comissao}/addmembro', 'TipoComissaoController@adicionarMembro')->name('tipocomissao.addmembro');
+      Route::put(  '/{evento}/tipocomissao/{comissao}/editmembro/{membro}', 'TipoComissaoController@editarMembro')->name('tipocomissao.editmembro');
       Route::delete(  '/{evento}/tipocomissao/{comissao}/removermembro', 'TipoComissaoController@removerMembro')->name('tipocomissao.removermembro');
       //Palestrantes
       Route::get('palestrantes/listarPalestrantes', 'PalestranteController@index')->name('palestrantes.index');

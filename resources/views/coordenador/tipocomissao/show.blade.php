@@ -43,6 +43,7 @@
                                 <tr>
                                     <th scope="col">Nome</th>
                                     <th scope="col">E-mail</th>
+                                    <th scope="col">Direção</th>
                                     <th scope="col"
                                         style="text-align:center">Remover</th>
                                 </tr>
@@ -54,6 +55,8 @@
                                             data-target="#modalEditarMembro{{ $membro->id }}">{{ $membro->name }}</td>
                                         <td data-toggle="modal"
                                             data-target="#modalEditarMembro{{ $membro->id }}">{{ $membro->email }}</td>
+                                            <td data-toggle="modal"
+                                            data-target="#modalEditarMembro{{ $membro->id }}">@if($membro->pivot->isCoordenador) Coordenador @endif</td>
                                         <td style="text-align:center">
                                             <form id="removerMembro{{ $membro->id }}"
                                                 action="{{ route('coord.tipocomissao.removermembro', ['evento' => $evento, 'comissao' => $comissao]) }}"
@@ -117,6 +120,83 @@
                 </div>
             </div>
         </div>
+
+        {{-- Modal de edição do membro --}}
+        <div class="modal fade"
+            id="modalEditarMembro{{$membro->id}}"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="modalEditarMembroLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-md"
+                role="document">
+                <div class="modal-content">
+                    <div class="modal-header"
+                        style="background-color: #114048ff; color: white;">
+                        <h5 class="modal-title"
+                            id="modalEditarMembroLabel">Editar um membro da comissao</h5>
+                        <button type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                            style="color: white;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editarMembroForm"
+                            method="POST"
+                            action="{{ route('coord.tipocomissao.editmembro', ['evento' => $evento->id, 'comissao' => $comissao->id, 'membro' => $membro->id]) }}">
+                            @csrf
+                            @method('PUT')
+                            <div class="form-group">
+                                <label for="email"
+                                    class="col-form-label">{{ __('Email') }}</label>
+                                <input id="email"
+                                    type="email"
+                                    class="form-control @error('email') is-invalid @enderror"
+                                    name="email"
+                                    value="{{ old('email', $membro->email) }}"
+                                    required
+                                    autocomplete="email"
+                                    autofocus
+                                    placeholder="Email do novo membro">
+                                @error('email')
+                                    <span class="invalid-feedback"
+                                        role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-check">
+                                <input id="isCoordenador{{$membro->id}}"
+                                    type="checkbox"
+                                    class="form-check-input @error('isCoordenador') is-invalid @enderror"
+                                    name="isCoordenador"
+                                    value="true"
+                                    @if($membro->pivot->isCoordenador) checked @endif>
+                                <label for="isCoordenador{{$membro->id}}"
+                                    class="form-check-label">{{ __('Coordenador') }}</label>
+                                @error('isCoordenador')
+                                    <span class="invalid-feedback"
+                                        role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal">Cancelar</button>
+                        <button type="submit"
+                            class="btn btn-primary"
+                            form="editarMembroForm">{{ __('Finalizar') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     @endforeach
 
     <!-- cadastrar membro -->
@@ -146,27 +226,39 @@
                         method="POST"
                         action="{{ route('coord.tipocomissao.addmembro', ['evento' => $evento, 'comissao' => $comissao]) }}">
                         @csrf
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <label for="email"
-                                    class="col-form-label">{{ __('Email') }}</label>
-                                <input id="email"
-                                    type="email"
-                                    class="form-control @error('email') is-invalid @enderror"
-                                    name="email"
-                                    value="{{ old('email') }}"
-                                    required
-                                    autocomplete="email"
-                                    autofocus
-                                    placeholder="Email do novo membro">
-
-                                @error('email')
-                                    <span class="invalid-feedback"
-                                        role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        <div class="form-group">
+                            <label for="email"
+                                class="col-form-label">{{ __('Email') }}</label>
+                            <input id="email"
+                                type="email"
+                                class="form-control @error('email') is-invalid @enderror"
+                                name="email"
+                                value="{{ old('email') }}"
+                                required
+                                autocomplete="email"
+                                autofocus
+                                placeholder="Email do novo membro">
+                            @error('email')
+                                <span class="invalid-feedback"
+                                    role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-check">
+                            <input id="isCoordenador"
+                                type="checkbox"
+                                class="form-check-input @error('isCoordenador') is-invalid @enderror"
+                                name="isCoordenador"
+                                value="true">
+                            <label for="isCoordenador"
+                                class="form-check-label">{{ __('Coordenador') }}</label>
+                            @error('isCoordenador')
+                                <span class="invalid-feedback"
+                                    role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                     </form>
                 </div>
