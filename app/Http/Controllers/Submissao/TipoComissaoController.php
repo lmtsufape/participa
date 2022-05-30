@@ -14,8 +14,15 @@ use Illuminate\Support\Str;
 
 class TipoComissaoController extends Controller
 {
+    private function podeComissao(Evento $evento, TipoComissao $comissao)
+    {
+        $loggedUser = auth()->user();
+        if(!(policy($evento)->isCoordenadorOrCoordenadorDasComissoes($loggedUser, $evento) || policy($comissao)->isCoordenadorDeOutraComissao($loggedUser, $comissao)))
+            abort(403);
+    }
+
     public function show(Evento $evento, TipoComissao $comissao) {
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->podeComissao($evento, $comissao);
         $evento = $comissao->evento;
         return view('coordenador.tipocomissao.show', compact('comissao', 'evento'));
     }
@@ -36,7 +43,6 @@ class TipoComissaoController extends Controller
 
     public function update(TipoComissaoRequest $request, Evento $evento, TipoComissao $comissao)
     {
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $validated = $request->validated();
         $comissao->nome = $validated['nome'];
         $comissao->save();
@@ -110,5 +116,13 @@ class TipoComissaoController extends Controller
         }
         $comissao->membros()->save($user, ['isCoordenador' => $isCoordenador]);
         return redirect()->back()->with(['success' => 'Membro da comissão atualizado com sucesso!']);
+    }
+
+    public function membroIndex()
+    {
+        $eventos = auth()->user()->outrasComissoes->map(function($comissao){
+            return $comissao->evento;
+        });
+        return view('comissao.homeOutrasComissoes', compact('eventos'));
     }
 }

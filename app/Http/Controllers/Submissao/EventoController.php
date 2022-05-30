@@ -70,7 +70,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
 
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoesOrIsCoordenadorDeOutrasComissoes', $evento);
 
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();

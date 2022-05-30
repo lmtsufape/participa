@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Users\User;
 use App\Models\Submissao\Trabalho;
 use App\Models\Submissao\Evento;
+use App\Models\Submissao\TipoComissao;
 use App\Models\Users\ComissaoEvento;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -25,6 +26,13 @@ class EventoPolicy
 
     public function isCoordenador(User $user, Evento $evento){
       return $user->id === $evento->coordenadorId;
+    }
+
+    public function isCoordenadorDeOutrasComissoes(User $user, Evento $evento){
+        $idsCoordenadores = $evento->outrasComissoes->flatMap(function($comissao) {
+            return $comissao->membros()->wherePivot('isCoordenador', true)->get()->pluck('id');
+        })->all();
+        return in_array($user->id, $idsCoordenadores);
     }
 
     public function isPublishOrIsCoordenador(User $user, Evento $evento) {
@@ -95,11 +103,18 @@ class EventoPolicy
         return $evento->userIsCoordComissaoCientifica($user);
     }
 
+
     public function isCoordenadorOrCoordenadorDasComissoes(User $user, Evento $evento)
     {
         return $this->isCoordenador($user, $evento)
             || $this->isCoordenadorDaComissaoCientifica($user, $evento)
             || $this->isCoordenadorDaComissaoOrganizadora($user, $evento);
+    }
+
+    public function isCoordenadorOrCoordenadorDasComissoesOrIsCoordenadorDeOutrasComissoes(User $user, Evento $evento)
+    {
+        return $this->isCoordenadorDeOutrasComissoes($user, $evento)
+            || $this->isCoordenadorOrCoordenadorDasComissoes($user, $evento);
     }
 
     public function isCoordenadorOrComissaoOrRevisorComAtribuicao(User $user, Evento $evento)

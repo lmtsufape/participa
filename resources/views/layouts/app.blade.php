@@ -248,7 +248,15 @@
                                         {{-- Rota - Area da Comissao --}}
                                         <a class="dropdown-item" href="{{ route('home.membro') }}">
                                             <img src="{{asset('img/icons/comissao.png')}}" alt="">
-                                            {{ __('Área do Membro da Comissão') }}
+                                            {{ __('Área do Membro da Comissão Científica') }}
+                                        </a>
+                                    @endif
+
+                                    @if (Auth::user()->outrasComissoes->count())
+                                        {{-- Rota - Area da Comissao --}}
+                                        <a class="dropdown-item" href="{{ route('coord.membroOutrasComissoes') }}">
+                                            <img src="{{asset('img/icons/comissao.png')}}" alt="">
+                                            {{ __('Área do coordenador de outras comissões') }}
                                         </a>
                                     @endif
 
