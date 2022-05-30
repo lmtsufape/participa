@@ -21,7 +21,7 @@
 
                                     <div class="form-group">
                                         <label for="coodComissaoId">Coordenador Comissão</label>
-                                        <select class="form-control" name="coordComissaoId" id="coodComissaoId" required>
+                                        <select class="form-control" name="coordComissaoId[]" id="coodComissaoId" required multiple>
                                             <option value="">-- E-mail do coordenador --</option>
                                             @foreach ($users as $user)
                                                 @if($evento->coordComissaoId == $user->id)
