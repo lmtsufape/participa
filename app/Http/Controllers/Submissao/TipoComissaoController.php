@@ -35,7 +35,6 @@ class TipoComissaoController extends Controller
 
     public function store(TipoComissaoRequest $request, Evento $evento)
     {
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $validated = $request->validated();
         TipoComissao::create(['nome' => $validated['nome'], 'evento_id' => $evento->id]);
         return redirect()->route('coord.tipocomissao.create', compact('evento'))->with('success', 'Comissão criada com sucesso!');
@@ -58,7 +57,7 @@ class TipoComissaoController extends Controller
 
     public function adicionarMembro(Request $request, Evento $evento, TipoComissao $comissao)
     {
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->podeComissao($evento, $comissao);
         $data = $request->validate(['email' => 'required|email']);
         $isCoordenador = $request->has('isCoordenador');
         $user = User::where('email', $data['email'])->first();
@@ -83,7 +82,7 @@ class TipoComissaoController extends Controller
 
     public function removerMembro(Request $request, Evento $evento, TipoComissao $comissao)
     {
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->podeComissao($evento, $comissao);
         $data = $request->validate(['email' => 'required|email']);
         $user = User::where('email', $data['email'])->first();
         $comissao->membros()->detach($user);
@@ -92,7 +91,7 @@ class TipoComissaoController extends Controller
 
     public function editarMembro(Request $request, Evento $evento, TipoComissao $comissao, User $membro)
     {
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->podeComissao($evento, $comissao);
         $data = $request->validate(['email' => 'required|email']);
         $isCoordenador = $request->has('isCoordenador');
         $user = User::where('email', $data['email'])->first();
