@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Http\Controllers\Controller;
+use App\Models\Users\CoordComissaoOrganizadora;
 
 class ComissaoOrganizadoraController extends Controller
 {
@@ -122,7 +123,7 @@ class ComissaoOrganizadoraController extends Controller
     {
         $evento = Evento::find($request->evento_id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-
+        CoordComissaoOrganizadora::where([['user_id', '=', $id], ['eventos_id', '=', $evento->id]])->delete();
         $evento->usuariosDaComissaoOrganizadora()->detach($id);
 
         return redirect()->back()->with(['mensagem' => 'Membro da comissão organizadora removido com sucesso!']);
@@ -132,22 +133,28 @@ class ComissaoOrganizadoraController extends Controller
         $evento = Evento::find($id);
         $this->authorize('isCoordenador', $evento);
 
-        $usuariosDaComissao = $evento->usuariosDaComissaoOrganizadora;
-        return view('coordenador.comissaoOrganizadora.definirCoordComissao', ['evento' => $evento,
-                                                                              'users' => $usuariosDaComissao]);
+        $users = $evento->usuariosDaComissaoOrganizadora;
+        $coordenadores = $evento->coordComissaoOrganizadora->pluck('id')->all();
+        return view('coordenador.comissaoOrganizadora.definirCoordComissao', compact('evento', 'users', 'coordenadores'));
     }
 
     public function salvarCoordenador(Request $request) {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-
         $validationData = $request->validate([
-            'coordComissaoId' => 'required',
+            'coordComissaoId' => 'nullable|array',
         ]);
-
-        $evento->coord_comissao_organizadora_id = $request->coordComissaoId;
-        $evento->update();
-
+        if($request->has('coordComissaoId'))
+            foreach ($validationData['coordComissaoId'] as $id) {
+                CoordComissaoOrganizadora::firstOrCreate(['user_id' => $id, 'eventos_id' => $evento->id]);
+            }
+        else
+            $validationData['coordComissaoId'] = [];
+        $idsCoordenadores = $evento->coordComissaoOrganizadora->map(function($coord){
+            return $coord->id;
+        })->all();
+        $removidos = array_diff($idsCoordenadores, $validationData['coordComissaoId']);
+        CoordComissaoOrganizadora::whereIn('user_id', $removidos)->where('eventos_id', $evento->id)->delete();
         return redirect()->back()->with(['mensagem' => 'Coordenador da comissão organizadora salvo com sucesso!']);
     }
 }

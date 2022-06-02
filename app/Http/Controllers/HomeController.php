@@ -30,49 +30,29 @@ class HomeController extends Controller
         $user = Auth::user();
         if($user->administradors != null){
             $eventos = Evento::all();
-            // dd('adm');
             return view('administrador.index', ['eventos' => $eventos]);
-
-          }else if($user->coordComissaoCientifica != null){
-            $eventos = $user->coordComissaoCientifica->eventos;
-            // dd('CCC');
+        }else if(($eventos = $user->coordComissaoCientifica) && $eventos->isNotEmpty()){
             return view('coordenador.index', ['eventos' => $eventos]);
-
-          }else if($user->coordComissaoOrganizadora != null){
-            $eventos = $user->coordComissaoOrganizadora->eventos;
-            // dd('CCO');
+        }else if(($eventos = $user->coordComissaoOrganizadora) && $eventos->isNotEmpty()){
             return view('coordenador.index', ['eventos' => $eventos]);
-
-          }else if($user->membroComissao != null){
+        }else if($user->membroComissao != null){
             $eventos = $user->membroComissao->eventos;
-            // dd('MC');
             return view('coordenador.index', ['eventos' => $eventos]);
-
-          }else if($user->revisor != null){
+        }else if($user->revisor != null){
             $eventos = Evento::all();
-            // dd('R');
             return view('coordenador.index', ['eventos' => $eventos]);
-
-          }else if($user->coautor != null){
+        }else if($user->coautor != null){
             $eventos = $user->coautor->eventos;
-            // dd('CA');
             return view('coordenador.index', compact('eventos'));
-
-          }else if($user->coordEvento != null){
-            // $eventos = $user->coordEvento->evento;
+        }else if($user->coordEvento != null){
             $eventos = Evento::all();
-            // dd('CE');
             return view('coordenador.index', compact('eventos'));
-
-          }else if($user->participante != null){
-
+        }else if($user->participante != null){
             $eventos = Evento::all();
-            // dd('P');
             return view('coordenador.index', compact('eventos'));
-
-          }else {
+        }else {
             return view('home');
-          }
+        }
     }
 
     public function index() {
