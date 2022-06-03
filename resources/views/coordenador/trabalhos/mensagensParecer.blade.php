@@ -49,11 +49,11 @@
                                 <div id="evento" x-show="tipo == 'evento'">
                                     <div class="form-group">
                                         <label for="msgpositivo">Mensagem de parecer positivo</label>
-                                        <textarea name="msgpositivo" class="form-control" id="msgpositivo" rows="3">{{old('msgpositivo')}}</textarea>
+                                        <textarea name="msgpositivo" class="form-control" id="msgpositivo" rows="3">@if(old('msgpositivo')) {{old('msgpositivo')}} @else {{$msgpositivo}} @endif</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="msgnegativo">Mensagem de parecer negativo</label>
-                                        <textarea name="msgnegativo" class="form-control" id="msgnegativo" rows="3">{{old('msgnegativo')}}</textarea>
+                                        <textarea name="msgnegativo" class="form-control" id="msgnegativo" rows="3">@if(old('msgnegativo')) {{old('msgnegativo')}} @else {{$msgnegativo}} @endif</textarea>
                                     </div>
                                 </div>
                                 <div class="" id="modalidade" x-show="tipo == 'modalidade'">
@@ -73,11 +73,11 @@
                                     @foreach ($evento->areas as $area)
                                         <div class="form-group">
                                             <label for="msgareapositivo[{{$area->id}}]">Mensagem de parecer positivo da área {{$area->nome}}</label>
-                                            <textarea name="msgareapositivo[{{$area->id}}]" class="form-control" id="msgareapositivo[{{$area->id}}]" rows="3">{{old('msgareapositivo'[$area->id])}}</textarea>
+                                            <textarea name="msgareapositivo[{{$area->id}}]" class="form-control" id="msgareapositivo[{{$area->id}}]" rows="3">@if(old('msgareapositivo')[$area->id]) {{old('msgareapositivo')[$area->id]}} @else {{$msgareapositivo[$area->id]}} @endif</textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="msgareanegativo[{{$area->id}}]">Mensagem de parecer negativo da área {{$area->nome}}</label>
-                                            <textarea name="msgareanegativo[{{$area->id}}]" class="form-control" id="msgareanegativo[{{$area->id}}]" rows="3">{{old('msgareanegativo'[$area->id])}}</textarea>
+                                            <textarea name="msgareanegativo[{{$area->id}}]" class="form-control" id="msgareanegativo[{{$area->id}}]" rows="3">@if(old('msgareanegativo')[$area->id]) {{old('msgareanegativo')[$area->id]}} @else {{$msgareanegativo[$area->id]}} @endif</textarea>
                                         </div>
                                     @endforeach
                                 </div>

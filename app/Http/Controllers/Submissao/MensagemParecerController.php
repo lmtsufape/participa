@@ -51,7 +51,7 @@ class MensagemParecerController extends Controller
                 MensagemParecer::updateOrCreate(['parecer' => 'positivo', 'evento_id' => $evento->id], ['texto' => $validated['msgpositivo']]);
                 MensagemParecer::updateOrCreate(['parecer' => 'negativo', 'evento_id' => $evento->id], ['texto' => $validated['msgnegativo']]);
                 MensagemParecer::whereIn('area_id', $evento->areas->pluck('id')->all())->orWhereIn('modalidade_id', $evento->modalidades->pluck('id')->all())->delete();
-                return redirect()->route('coord.resultados', ['id' => $evento->id]);
+                return redirect()->route('coord.resultados', ['id' => $evento->id])->with('success', 'Mensagens definidas com sucesso!');
                 break;
             case 'modalidade':
                 $modalidades = $evento->modalidades;
@@ -69,7 +69,7 @@ class MensagemParecerController extends Controller
                     MensagemParecer::updateOrCreate(['parecer' => 'negativo', 'modalidade_id' => $modalidade->id], ['texto' => $validated['msgmodnegativo'][$modalidade->id]]);
                 }
                 MensagemParecer::whereIn('area_id', $evento->areas->pluck('id')->all())->orWhere('evento_id', $evento->id)->delete();
-                return redirect()->route('coord.resultados', ['id' => $evento->id]);
+                return redirect()->route('coord.resultados', ['id' => $evento->id])->with('success', 'Mensagens definidas com sucesso!');
                 break;
             case 'area':
                     $areas = $evento->areas;
@@ -87,10 +87,10 @@ class MensagemParecerController extends Controller
                         MensagemParecer::updateOrCreate(['parecer' => 'negativo', 'area_id' => $area->id], ['texto' => $validated['msgareanegativo'][$area->id]]);
                     }
                     MensagemParecer::WhereIn('modalidade_id', $evento->modalidades->pluck('id')->all())->orWhere('evento_id', $evento->id)->delete();
-                    return redirect()->route('coord.resultados', ['id' => $evento->id]);
+                    return redirect()->route('coord.resultados', ['id' => $evento->id])->with('success', 'Mensagens definidas com sucesso!');
                     break;
             default:
-                return redirect()->route('coord.resultados', ['id' => $evento->id]);
+                return redirect()->route('coord.resultados', ['id' => $evento->id])->with('error', 'Falha ao definir as mensagens');
                 break;
         }
     }

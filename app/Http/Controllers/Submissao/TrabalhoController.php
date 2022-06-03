@@ -1017,7 +1017,7 @@ class TrabalhoController extends Controller
         } else if (($msgs = $trabalho->area->mensagensParecer) && $msgs->count() > 1) {
         } else if (($msgs = $trabalho->modalidade->mensagensParecer) && $msgs->count() > 1) {
         } else {
-            return redirect()->back();
+            return redirect()->back()->with('error', 'Cadastre as mensagens do parecer antes de realizar esta ação.');
         }
         $msgParecer = $msgs->where('parecer', $parecer)->first();
         $justificativa = str_replace(

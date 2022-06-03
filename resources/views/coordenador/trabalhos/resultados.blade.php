@@ -2,6 +2,7 @@
 
 @section('menu')
 <div id="divListarResultados" style="display: block">
+    @include('componentes.mensagens')
 
     <div class="row titulo-detalhes justify-content-between">
         <div class="col-sm-4">
