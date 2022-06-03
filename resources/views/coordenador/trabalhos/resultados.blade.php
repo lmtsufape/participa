@@ -2,33 +2,17 @@
 
 @section('menu')
 <div id="divListarResultados" style="display: block">
-    
-    <div class="row titulo-detalhes">
+
+    <div class="row titulo-detalhes justify-content-between">
         <div class="col-sm-4">
             <h1 class="">Resultados</h1>
         </div>
-        {{--<div class="col-sm-8">
-            <form class="form-inline">
-                <div class="form-group mx-sm-1 mb-2">
-                    <select class="form-control" name="area" id="area_trabalho_pesquisa">
-                        @if (count($areas) > 0)
-                            @foreach ($areas as $area)
-                                <option value="{{$area->id}}">{{$area->nome}}</option>
-                            @endforeach
-                        @else
-                            <option value="" selected disabled>-- Nenhuma área cadastrada --</option>
-                        @endif
-                    </select>
-                </div>
-                <div class="form-group mx-sm-2 mb-2">
-                    <label for="pesquisaTexto" class="sr-only">Nome do trabalho</label>
-                    <input type="text" class="form-control" id="pesquisaTexto" name="pesquisaTexto" placeholder="Nome do trabalho" @if (count($areas) == 0) disabled @endif>
-                </div>
-                <button type="button" class="btn btn-primary mb-2" onclick="pesquisaResultadoTrabalho()" @if (count($areas) == 0) disabled @endif>Pesquisar</button>
-            </form>
-        </div>--}}
+        <div class="col-sm-4">
+            <a href="{{route('coord.mensagem.parecer.create', $evento)}}" class="btn btn-primary" style="width:100%">
+                {{ __('Mensanges de parecer') }}
+            </a>
+        </div>
     </div>
-
         @foreach($trabalhos as $trabalho)
             <!-- Modal que exibe os resultados -->
             <div class="modal fade bd-example-modal-lg" id="modalResultados{{$trabalho->id}}" tabindex="-1" role="dialog" aria-labelledby="labelmodalResultados{{$trabalho->id}}" aria-hidden="true">
@@ -36,7 +20,7 @@
                     <div class="modal-content">
                         <div class="modal-header" style="background-color: #114048ff; color: white;">
                             <h5 class="modal-title" id="labelmodalResultados{{$trabalho->id}}">Resultado de {{$trabalho->titulo}}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"> 
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -49,54 +33,60 @@
                                                 <button class="btn" data-toggle="collapse" data-target="#collapse{{$trabalho->pareceres[$i]->id}}" aria-expanded="true" aria-controls="collapse{{$trabalho->pareceres[$i]->id}}">
                                                     <div class="card-header" id="heading{{$trabalho->pareceres[$i]->id}}">
                                                         <h5 class="mb-0">
-                                                            Parecer de {{$trabalho->pareceres[$i]->revisor->user->name}}
+                                                            @if ($trabalho->pareceres[$i]->revisor)
+                                                                Parecer de {{$trabalho->pareceres[$i]->revisor->user->name}}
+                                                            @endif
                                                         </h5>
                                                     </div>
                                                 </button>
                                                 <div id="collapse{{$trabalho->pareceres[$i]->id}}" class="collapse show" aria-labelledby="heading{{$trabalho->pareceres[$i]->id}}" data-parent="#accordion">
                                                     <div class="card-body">
                                                         <div class="container">
-                                                            <div class="row">
-                                                                <div class="col-sm-12">
-                                                                    <h4>Dados do revisor</h4>
+                                                            @if ($trabalho->pareceres[$i]->revisor)
+                                                                <div class="row">
+                                                                    <div class="col-sm-12">
+                                                                        <h4>Dados do revisor</h4>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-sm-4">
-                                                                    <label for="especialidade">Area:</label>
-                                                                    <p id="especialidade">
-                                                                        {{$trabalho->pareceres[$i]->revisor->area->nome}} 
-                                                                    </p>
+                                                                <div class="row">
+                                                                    <div class="col-sm-4">
+                                                                        <label for="especialidade">Area:</label>
+                                                                        <p id="especialidade">
+                                                                            {{$trabalho->pareceres[$i]->revisor->area->nome}}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <label for="especialidade">Modalidade:</label>
+                                                                        <p id="especialidade">
+                                                                            {{$trabalho->pareceres[$i]->revisor->modalidade->nome}}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <label for="email">E-mail:</label>
+                                                                        <p id="email">
+                                                                            {{$trabalho->pareceres[$i]->revisor->user->email}}
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-sm-4">
-                                                                    <label for="especialidade">Modalidade:</label>
-                                                                    <p id="especialidade">
-                                                                        {{$trabalho->pareceres[$i]->revisor->modalidade->nome}} 
-                                                                    </p>
-                                                                </div>
-                                                                <div class="col-sm-4">
-                                                                    <label for="email">E-mail:</label>
-                                                                    <p id="email">
-                                                                        {{$trabalho->pareceres[$i]->revisor->user->email}}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
+                                                            @endif
                                                             <hr>
                                                             <div class="row">
                                                                 <div class="col-sm-12">
                                                                     <h4>Avaliação</h4>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                @foreach ($trabalho->avaliacoes()->where('revisor_id', $trabalho->pareceres[$i]->revisor->id)->get() as $avaliacao)
-                                                                    <div class="col-sm-6">
-                                                                        <label for="criterio_{{$avaliacao->opcaoCriterio->criterio->id}}">{{$avaliacao->opcaoCriterio->criterio->nome}}:</label>
-                                                                        <p id="criterio_{{$avaliacao->opcaoCriterio->criterio->id}}">
-                                                                            {{$avaliacao->opcaoCriterio->nome_opcao}}
-                                                                        </p>
-                                                                    </div>
-                                                                @endforeach
-                                                            </div>
+                                                            @if ($trabalho->pareceres[$i]->revisor)
+                                                                <div class="row">
+                                                                    @foreach ($trabalho->avaliacoes()->where('revisor_id', $trabalho->pareceres[$i]->revisor->id)->get() as $avaliacao)
+                                                                        <div class="col-sm-6">
+                                                                            <label for="criterio_{{$avaliacao->opcaoCriterio->criterio->id}}">{{$avaliacao->opcaoCriterio->criterio->nome}}:</label>
+                                                                            <p id="criterio_{{$avaliacao->opcaoCriterio->criterio->id}}">
+                                                                                {{$avaliacao->opcaoCriterio->nome_opcao}}
+                                                                            </p>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            @endif
                                                             <div class="row">
                                                                 <div class="col-sm-12">
                                                                     <label for="parecer_final">Parecer final:</label>
@@ -122,27 +112,31 @@
                                                 <button class="btn" data-toggle="collapse" data-target="#collapse{{$trabalho->pareceres[$i]->id}}" aria-expanded="true" aria-controls="collapse{{$trabalho->pareceres[$i]->id}}">
                                                     <div class="card-header" id="heading{{$trabalho->pareceres[$i]->id}}">
                                                         <h5 class="mb-0">
-                                                            Parecer de {{$trabalho->pareceres[$i]->revisor->user->name}}
+                                                            @if ($trabalho->pareceres[$i]->revisor)
+                                                                Parecer de {{$trabalho->pareceres[$i]->revisor->user->name}}
+                                                            @endif
                                                         </h5>
                                                     </div>
                                                 </button>
                                                 <div id="collapse{{$trabalho->pareceres[$i]->id}}" class="collapse" aria-labelledby="heading{{$trabalho->pareceres[$i]->id}}" data-parent="#accordion">
                                                     <div class="card-body">
                                                         <div class="container">
-                                                            <div class="row">
-                                                                <div class="col-sm-6">
-                                                                    <label for="especialidade">Especialidade:</label>
-                                                                    <p id="especialidade">
-                                                                        {{$trabalho->pareceres[$i]->revisor->user->especProfissional}} 
-                                                                    </p>
+                                                            @if ($trabalho->pareceres[$i]->revisor)
+                                                                <div class="row">
+                                                                    <div class="col-sm-6">
+                                                                        <label for="especialidade">Especialidade:</label>
+                                                                        <p id="especialidade">
+                                                                            {{$trabalho->pareceres[$i]->revisor->user->especProfissional}}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label for="email">E-mail:</label>
+                                                                        <p id="email">
+                                                                            {{$trabalho->pareceres[$i]->revisor->user->email}}
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-sm-6">
-                                                                    <label for="email">E-mail:</label>
-                                                                    <p id="email">
-                                                                        {{$trabalho->pareceres[$i]->revisor->user->email}}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
+                                                            @endif
                                                             <div class="row">
                                                                 <div class="col-sm-12">
                                                                     <label for="Parecer">Parecer:</label>
@@ -157,7 +151,7 @@
                                             </div>
                                         @endif
                                     </div>
-                                @endfor 
+                                @endfor
                             @else
                                 <h4>Nenhum resultado</h4>
                             @endif
@@ -302,7 +296,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: #114048ff; color: white;">
                         <h5 class="modal-title" id="trabalho-nome-parecer"></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"> 
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -340,6 +334,7 @@
     </div>
 </div>
 @section('javascript')
+@parent
     <script>
         function mostrarParecerFinal(id) {
             const aprovado = $("#resultadoAprovado");

@@ -151,6 +151,10 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::delete('/{evento}/tipocomissao/{comissao}', 'TipoComissaoController@destroy')->name('tipocomissao.destroy');
       Route::post(  '/{evento}/tipocomissao/{comissao}/addmembro', 'TipoComissaoController@adicionarMembro')->name('tipocomissao.addmembro');
       Route::delete(  '/{evento}/tipocomissao/{comissao}/removermembro', 'TipoComissaoController@removerMembro')->name('tipocomissao.removermembro');
+      //Mensangens de parecer
+      Route::get( '/{evento}/mensagem/parecer', 'MensagemParecerController@create') ->name('mensagem.parecer.create');
+      Route::post('/{evento}/mensagem/parecer', 'MensagemParecerController@store')  ->name('mensagem.parecer.store');
+      Route::put( '/{evento}/mensagem/parecer', 'MensagemParecerController@update') ->name('mensagem.parecer.update');
       //Palestrantes
       Route::get('palestrantes/listarPalestrantes', 'PalestranteController@index')->name('palestrantes.index');
       Route::get('palestrantes/cadastrarPalestrante', 'PalestranteController@create')->name('palestrantes.create');

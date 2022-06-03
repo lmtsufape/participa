@@ -71,6 +71,10 @@ class Evento extends Model
     return $this->hasMany('App\Models\Submissao\Trabalho', 'eventoId');
   }
 
+  function mensagensParecer() {
+    return $this->hasMany('App\Models\Submissao\MensagemParecer');
+  }
+
   public function usuariosDaComissaoOrganizadora() {
     return $this->belongsToMany('App\Models\Users\User', 'comissao_organizadora_eventos', 'evento_id', 'user_id');
   }
