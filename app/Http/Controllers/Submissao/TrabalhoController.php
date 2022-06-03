@@ -809,9 +809,17 @@ class TrabalhoController extends Controller
         }
       }
 
-      if ($trabalho->evento->coordenadorId == auth()->user()->id
-        || $trabalho->evento->coordComissaoId == auth()->user()->id
-        || $trabalho->autorId == auth()->user()->id
+      $evento = $trabalho->evento;
+      $usuariosDaComissaoCientifica = $evento->usuariosDaComissao;
+      $usuariosDaComissaoOrganizadora = $evento->usuariosDaComissaoOrganizadora;
+      $usuarioLogado = auth()->user();
+
+      if ($evento->coordenadorId == $usuarioLogado->id
+        || $usuariosDaComissaoCientifica->contains($usuarioLogado)
+        || $usuariosDaComissaoOrganizadora->contains($usuarioLogado)
+        || $evento->userIsCoordComissaoCientifica($usuarioLogado)
+        || $evento->userIsCoordComissaoOrganizadora($usuarioLogado)
+        || $trabalho->autorId == $usuarioLogado->id
         || $trabalhosCoautor->contains($trabalho->id)) {
         // dd($arquivo);
         if ($arquivo != null && Storage::disk()->exists($arquivo->nome)) {
