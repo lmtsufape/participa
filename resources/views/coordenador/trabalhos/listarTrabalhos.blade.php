@@ -102,7 +102,7 @@
 
                             <input type="hidden" name="eventoId" value="{{$evento->id}}">
                             <br>
-                            <table class="table table-hover table-responsive-lg table-sm table-striped">
+                            <table class="table table-hover table-responsive table-striped">
                                 <thead>
                                 <tr>
                                     {{-- <th scope="col" style="text-align:center">
@@ -445,6 +445,25 @@
 @section('javascript')
     @parent
     <script>
+
+        $(function(){
+            //your current click function
+            $('.scroll').on('click',function(e){
+                e.preventDefault();
+                $('html,body').animate({
+                    scrollTop:$($(this).attr('href')).offset().top + 'px'
+                },1000,'swing');
+            });
+
+            // if we have anchor on the url (calling from other page)
+            if(window.location.hash){
+                // smooth scroll to the anchor id
+                $('html,body').animate({
+                    scrollTop:$(window.location.hash).offset().top - $('.navbar').first().height() - 20 + 'px'
+                    },1000,'swing');
+            }
+        });
+
         function marcarCheckboxes(id) {
             $(".modalidade" + id).prop('checked', $('#selectAllCheckboxes'+id).is(":checked"));
         }
