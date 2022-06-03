@@ -150,7 +150,9 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
       Route::put(   '/{evento}/tipocomissao/{comissao}', 'TipoComissaoController@update')->name( 'tipocomissao.update');
       Route::delete('/{evento}/tipocomissao/{comissao}', 'TipoComissaoController@destroy')->name('tipocomissao.destroy');
       Route::post(  '/{evento}/tipocomissao/{comissao}/addmembro', 'TipoComissaoController@adicionarMembro')->name('tipocomissao.addmembro');
+      Route::put(  '/{evento}/tipocomissao/{comissao}/editmembro/{membro}', 'TipoComissaoController@editarMembro')->name('tipocomissao.editmembro');
       Route::delete(  '/{evento}/tipocomissao/{comissao}/removermembro', 'TipoComissaoController@removerMembro')->name('tipocomissao.removermembro');
+      Route::get('comissao', 'TipoComissaoController@membroIndex')->name('membroOutrasComissoes');
       //Mensangens de parecer
       Route::get( '/{evento}/mensagem/parecer', 'MensagemParecerController@create') ->name('mensagem.parecer.create');
       Route::post('/{evento}/mensagem/parecer', 'MensagemParecerController@store')  ->name('mensagem.parecer.store');

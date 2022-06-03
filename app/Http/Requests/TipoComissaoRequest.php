@@ -15,7 +15,9 @@ class TipoComissaoRequest extends FormRequest
     public function authorize()
     {
         $evento = $this->route('evento');
-        return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $comissao = $this->route('comissao');
+        $loggedUser = auth()->user();
+        return policy($evento)->isCoordenadorOrCoordenadorDasComissoes($loggedUser, $evento) || policy($comissao)->isCoordenadorDeOutraComissao($loggedUser, $comissao);
     }
 
     /**
