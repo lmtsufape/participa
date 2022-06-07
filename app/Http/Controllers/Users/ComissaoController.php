@@ -125,11 +125,14 @@ class ComissaoController extends Controller
         $evento = Evento::find($request->input('eventoId'));
         $this->authorize('isCoordenador', $evento);
         $validationData = $request->validate([
-            'coordComissaoId' => 'required|array',
+            'coordComissaoId' => 'nullable|array',
         ]);
-        foreach ($validationData['coordComissaoId'] as $id) {
-            CoordComissaoCientifica::firstOrCreate(['user_id' => $id, 'eventos_id' => $evento->id]);
-        }
+        if($request->has('coordComissaoId'))
+            foreach ($validationData['coordComissaoId'] as $id) {
+                CoordComissaoCientifica::firstOrCreate(['user_id' => $id, 'eventos_id' => $evento->id]);
+            }
+        else
+            $validationData['coordComissaoId'] = [];
         $idsCoordenadores = $evento->coordComissaoCientifica->map(function($coord){
             return $coord->id;
         })->all();

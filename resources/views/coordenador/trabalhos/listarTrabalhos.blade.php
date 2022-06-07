@@ -66,7 +66,7 @@
         </div>
     </div>
     @foreach ($trabalhosPorModalidade as $trabalhos)
-        <div class="row justify-content-center" style="width: 100%;">
+        <div class="row justify-content-center">
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
@@ -102,17 +102,17 @@
 
                             <input type="hidden" name="eventoId" value="{{$evento->id}}">
                             <br>
-                            <table class="table table-hover table-responsive-lg table-sm table-striped">
+                            <table class="table table-hover table-responsive table-striped">
                                 <thead>
                                 <tr>
-                                    <th scope="col" style="text-align:center">
+                                    {{-- <th scope="col" style="text-align:center">
                                         @if(!is_null($trabalhos->first()))
                                         <input type="checkbox" id="selectAllCheckboxes{{$trabalhos[0]->modalidade->id}}" onclick="marcarCheckboxes({{$trabalhos[0]->modalidade->id}})">
                                         <label for="selectAllCheckboxes{{$trabalhos[0]->modalidade->id}}" style="margin-bottom: 0px;">Selecionar</label>
                                         @else
                                         Selecionar
                                         @endif
-                                    </th>
+                                    </th> --}}
                                     <th scope="col">
                                     Título
                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', $status])}}">
@@ -149,6 +149,7 @@
                                         <i class="fas fa-arrow-alt-circle-down"></i>
                                     </a> --}}
                                     </th>
+                                    <th>Avaliado</th>
                                     <th scope="col">Data</th>
                                     <th scope="col">Atribuir</th>
                                     <th scope="col">Arquivar</th>
@@ -160,10 +161,10 @@
                                 @php $i = 0; @endphp
                                 @foreach($trabalhos as $trabalho)
 
-                                <tr>
-                                    <td style="text-align:center">
+                                <tr id="trab{{$trabalho->id}}">
+                                    {{-- <td style="text-align:center">
                                         <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" class="modalidade{{$trabalho->modalidade->id}}" value="{{$trabalho->id}}">
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                                             <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
@@ -191,6 +192,9 @@
                                         @elseif (count($trabalho->atribuicoes) == 1)
                                         {{count($trabalho->atribuicoes)}}
                                         @endif --}}
+                                    </td>
+                                    <td>
+                                        {{$trabalho->avaliado == 'Avaliado' ? 'Sim' : 'Não'}}
                                     </td>
                                     <td>
                                         {{ date("d/m/Y H:i", strtotime($trabalho->created_at) ) }}
@@ -441,6 +445,25 @@
 @section('javascript')
     @parent
     <script>
+
+        $(function(){
+            //your current click function
+            $('.scroll').on('click',function(e){
+                e.preventDefault();
+                $('html,body').animate({
+                    scrollTop:$($(this).attr('href')).offset().top + 'px'
+                },1000,'swing');
+            });
+
+            // if we have anchor on the url (calling from other page)
+            if(window.location.hash){
+                // smooth scroll to the anchor id
+                $('html,body').animate({
+                    scrollTop:$(window.location.hash).offset().top - $('.navbar').first().height() - 20 + 'px'
+                    },1000,'swing');
+            }
+        });
+
         function marcarCheckboxes(id) {
             $(".modalidade" + id).prop('checked', $('#selectAllCheckboxes'+id).is(":checked"));
         }

@@ -809,9 +809,17 @@ class TrabalhoController extends Controller
         }
       }
 
-      if ($trabalho->evento->coordenadorId == auth()->user()->id
-        || $trabalho->evento->coordComissaoId == auth()->user()->id
-        || $trabalho->autorId == auth()->user()->id
+      $evento = $trabalho->evento;
+      $usuariosDaComissaoCientifica = $evento->usuariosDaComissao;
+      $usuariosDaComissaoOrganizadora = $evento->usuariosDaComissaoOrganizadora;
+      $usuarioLogado = auth()->user();
+
+      if ($evento->coordenadorId == $usuarioLogado->id
+        || $usuariosDaComissaoCientifica->contains($usuarioLogado)
+        || $usuariosDaComissaoOrganizadora->contains($usuarioLogado)
+        || $evento->userIsCoordComissaoCientifica($usuarioLogado)
+        || $evento->userIsCoordComissaoOrganizadora($usuarioLogado)
+        || $trabalho->autorId == $usuarioLogado->id
         || $trabalhosCoautor->contains($trabalho->id)) {
         // dd($arquivo);
         if ($arquivo != null && Storage::disk()->exists($arquivo->nome)) {
@@ -967,7 +975,7 @@ class TrabalhoController extends Controller
                 SORT_REGULAR,
                 $direcao == $direction));
         }
-      }elseif($column == "areaId"){ 
+      }elseif($column == "areaId"){
         $trabalhos = collect();
         foreach($modalidades as $modalidade){
           $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
@@ -995,17 +1003,28 @@ class TrabalhoController extends Controller
         $msg = '';
         $trabalho = Trabalho::find($request->trabalho_id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $trabalho->evento);
-        
+        $parecer = '';
         if ($request->aprovar == "true") {
             $trabalho->parecer_final = true;
+            $parecer = 'positivo';
             $msg = 'Parecer final do trabalho aprovado!';
-            
-
         } else if ($request->aprovar == "false") {
             $trabalho->parecer_final = false;
+            $parecer = 'negativo';
             $msg = 'Parecer final do trabalho reprovado!';
-
         }
+        if (($msgs = $trabalho->evento->mensagensParecer) && $msgs->count() > 1) {
+        } else if (($msgs = $trabalho->area->mensagensParecer) && $msgs->count() > 1) {
+        } else if (($msgs = $trabalho->modalidade->mensagensParecer) && $msgs->count() > 1) {
+        } else {
+            return redirect()->back()->with('error', 'Cadastre as mensagens do parecer antes de realizar esta ação.');
+        }
+        $msgParecer = $msgs->where('parecer', $parecer)->first();
+        $justificativa = str_replace(
+            ['%NOME_AUTOR%', '%TITULO_TRABALHO%', '%NOME_EVENTO%', '%NOME_MODALIDADE%', '%NOME_AREA%'],
+            [$trabalho->autor->name, $trabalho->titulo, $trabalho->evento->nome, $trabalho->modalidade->nome, $trabalho->area->nome],
+            $msgParecer->texto);
+        Parecer::updateOrCreate(['parecer_final' => true, 'trabalhoId' => $trabalho->id], ['resultado' => $parecer, 'justificativa' => $justificativa]);
 
         $trabalho->update();
 

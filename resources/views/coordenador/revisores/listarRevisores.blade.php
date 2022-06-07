@@ -224,7 +224,8 @@
                             <tbody>
                               @foreach ($revisorDosTrabalhos->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
                                 <tr>
-                                  <td>{{$trabalho->titulo}}</td>
+                                  <td>
+                                      <a href="{{route('coord.listarTrabalhos', [ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}#trab{{$trabalho->id}}">{{$trabalho->titulo}}</a></td>
                                   <td>{{$trabalho->avaliado}}</td>
                                 </tr>
                               @endforeach
