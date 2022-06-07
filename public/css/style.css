@@ -412,6 +412,22 @@ body{
         max-height: 425px;
         object-fit: contain;
     }
+
+    #div-add-coautor{
+        padding-right: 0px;
+        right: 0%;
+    }
+
+    #div-add-coautor #addCoautor{
+        width: 125px;
+        padding: 0px;
+        padding-bottom: 4px;
+        font-size: 14px;
+    }
+
+    #div-add-coautor #addCoautor #icone-add-coautor{
+        width: 24px;
+    }
 }
 
 .modal-show-atividade h4 {

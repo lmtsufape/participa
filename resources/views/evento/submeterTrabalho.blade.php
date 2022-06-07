@@ -4,8 +4,8 @@
 <div class="container content">
 
     <div class="row justify-content-center">
-        <div class="col-sm-10">
-            <div class="card" style="margin-top:50px">
+        <div class="col-sm-10" style="padding-right: 0px;">
+            <div class="card" style="margin-top:50px;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-12">
@@ -71,19 +71,19 @@
                             </div> --}}
                           @endif
                           @if ($indice == "etiquetacoautortrabalho")
-                            <div class="row " style="margin-top:20px">
-                              <div class="col-sm-12">
-                                <div class="row">
-                                    <div class="col">
+                            <div style="margin-top:20px">
+                                <div class="row align-items-center justify-content-between" style="flex-wrap: unset">
+                                    <div class="col-md-12">
                                         <h4>Autor(a)</h4>
                                     </div>
-                                    <div class="col mr-5">
+                                    {{--<div class="col-md-6">
                                         <div class="float-right">
-                                            <a href="#" onclick="addLinha(event)" id="addCoautor" style="color: #196572ff;text-decoration: none;" title="Clique aqui para adicionar coautor(es), se houver">
-                                                <i class="fas fa-user-plus fa-2x"></i>
+                                            <a href="#" onclick="addLinha(event)" id="addCoautor" class="btn btn-primary btn-padding border" style="text-decoration: none;" title="Clique aqui para adicionar coautor(es), se houver">
+                                                <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt="ìcone de adicionar coautor(es)" width="24px">
+                                                Adicionar coautor(es)
                                             </a>
                                         </div>
-                                    </div>
+                                    </div>--}}
                                 </div>
                                 <div id="coautores" class="row " >
                                     @if (old('nomeCoautor') != null)
@@ -143,7 +143,6 @@
                                         </div>
                                     @endif
                                   </div>
-                              </div>
                             </div>
                           @endif
                           @if ($modalidade->texto && $indice == "etiquetaresumotrabalho")
@@ -483,6 +482,17 @@
                 </div>
               </div>
         </div>
+        @if(in_array('etiquetacoautortrabalho', $ordemCampos))
+          <div id="div-add-coautor" class="col-sm-2" style="margin-top:50px; position: fixed; right: 2%; padding-left: 0px;">
+              <div class="float-right">
+                  <a onclick="addLinha(event)" id="addCoautor" class="btn btn-primary btn-padding border mb-2" style="text-decoration: none; border-radius: 14px; background-color: #E5B300" title="Clique aqui para adicionar coautor(es), se houver">
+                      <img id="icone-add-coautor" class="mt-2" src="{{asset('img/icons/user-plus-solid.svg')}}" alt="ícone de adicionar coautor(es)" width="30px">
+                      <br>
+                      Adicionar coautor(es)
+                  </a>
+              </div>
+          </div>
+        @endif
     </div>
 
 </div>
@@ -576,6 +586,16 @@
     }
       linha = montarLinhaInput(order);
       $('#coautores').append(linha);
+      centralizarTela(order);
+  }
+
+  function centralizarTela(order){
+    document.getElementById("email"+order).focus();
+    var center = $(window).height()/2;
+    var top = $("#email"+order).offset().top;
+    if (top > center){
+        $(window).scrollTop(top-center);
+    }
   }
 
   $(function(){
