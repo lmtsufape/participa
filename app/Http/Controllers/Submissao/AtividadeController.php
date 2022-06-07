@@ -335,8 +335,8 @@ class AtividadeController extends Controller
 
         $validatedConvidados = $request->validate([
             'nomeDoConvidado.*'     => 'nullable',
-            'emailDoConvidado.*'    => ($request->nomeDoConvidado[0] != null) ? 'required|email' : 'nullable',
-            'funçãoDoConvidado.*'   => ($request->nomeDoConvidado[0] != null) ? 'required' : 'nullable',
+            'emailDoConvidado.*'    => $request->has('nomeDoConvidado') ? 'required|email' : 'nullable',
+            'funçãoDoConvidado.*'   => $request->has('nomeDoConvidado') ? 'required' : 'nullable',
         ]);
 
 
