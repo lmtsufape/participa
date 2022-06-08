@@ -600,18 +600,19 @@ class EventoController extends Controller
     {
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $trabalhos = Trabalho::where([['eventoId', $evento->id], ['modalidadeId', $modalidade->id]])
-        ->get()->map(function ($trabalho) use ($form) {
-          if ($trabalho->atribuicoes->first() != null) {
-              foreach ($trabalho->atribuicoes as $avaliacao) {
-                  return $this->makeRepostasExportAvaliacoes($trabalho, $form, $avaliacao);
-              }
-          } else {
-              return $this->makeRepostasExportAvaliacoes($trabalho, $form, null);
-          }
-        })->collect();
+            ->get()
+            ->map(function ($trabalho) use ($form) {
+                if ($trabalho->atribuicoes->first() != null) {
+                    foreach ($trabalho->atribuicoes as $avaliacao) {
+                        return $this->makeRepostasExportAvaliacoes($trabalho, $form, $avaliacao);
+                    }
+                } else {
+                    return $this->makeRepostasExportAvaliacoes($trabalho, $form, null);
+                }
+            })->collect();
         $trabalhos = $trabalhos->filter();
-          return (new AvaliacoesExport($trabalhos, $this->makeHeadingsExportAvaliacoes($form)))->download($evento->nome.' - Avaliacões - ' . $modalidade->nome. ' - '. $form->titulo . '.csv', \Maatwebsite\Excel\Excel::CSV, [
-              'Content-Type' => 'text/csv',
+        return (new AvaliacoesExport($trabalhos, $this->makeHeadingsExportAvaliacoes($form)))->download($evento->nome.' - Avaliacões - ' . $modalidade->nome. ' - '. $form->titulo . '.csv', \Maatwebsite\Excel\Excel::CSV, [
+            'Content-Type' => 'text/csv',
         ]);
     }
 
@@ -656,7 +657,7 @@ class EventoController extends Controller
         $achou = False;
         if($pergunta->respostas->first()->opcoes->count()){
           foreach ($pergunta->respostas->first()->opcoes as $opcao){
-            if($respostas[$index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo)){
+            if(count($respostas) > $index && $respostas[$index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo)){
               array_push($retorno, $respostas[$index]->opcoes[0]->titulo);
                 $achou = True;
             }
