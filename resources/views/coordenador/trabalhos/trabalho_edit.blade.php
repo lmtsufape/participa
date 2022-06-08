@@ -73,11 +73,11 @@
                   <div class="flexContainer" style="margin-top:20px">
                     <div class="row">
                         <div class="col">
-                            <h4>Autor(a)</h4>
+                            <h4>{{$evento->formSubTrab->etiquetaautortrabalho}}</h4>
                         </div>
                         <div class="col mr-5">
                             <div class="float-right">
-                                <a href="#" style="color: #196572ff;text-decoration: none;" title="Clique aqui para adicionar coautor(es), se houver" onclick="montarLinhaInput(this, {{$trabalho->id}}, event)" id="addCoautor_{{$trabalho->id}}">
+                                <a href="#" style="color: #196572ff;text-decoration: none;" title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}, se houver" onclick="montarLinhaInput(this, {{$trabalho->id}}, event)" id="addCoautor_{{$trabalho->id}}">
                                     <i class="fas fa-user-plus fa-2x"></i>
                                 </a>
                             </div>
@@ -87,7 +87,7 @@
                           @if (old('nomeCoautor_'.$trabalho->id) != null)
                             @foreach (old('nomeCoautor_'.$trabalho->id) as $i => $nomeCoautor)
                                 @if($i == 1)
-                                    <h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">Coautor(es)</h4>
+                                    <h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">{{$evento->formSubTrab->etiquetacoautortrabalho}}</h4>
                                 @endif
                                 <div class="item card">
                                     <div class="row card-body">
@@ -138,7 +138,7 @@
                                 </div>
                             </div>
                             @if(! $trabalho->coautors->isEmpty())
-                                <h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">Coautor(es)</h4>
+                                <h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">{{$evento->formSubTrab->etiquetacoautortrabalho}}</h4>
                             @endif
                             @foreach ($trabalho->coautors as $i => $coautor)
                                 <div class="item card">
@@ -552,7 +552,7 @@
     var coautores = document.getElementById("coautores"+id);
     var html = "";
     if (coautores.children.length==1){
-        html = '<h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">Coautor(es)</h4>'
+        html = `<h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">${@json($evento->formSubTrab->etiquetacoautortrabalho)}</h4>`;
     }
     event.preventDefault();
     html += `

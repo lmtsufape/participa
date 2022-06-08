@@ -93,7 +93,6 @@
                                             <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
                                             <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
                                             <textarea id="resumo" class="char-count form-control @error('resumo') is-invalid @enderror" data-ls-module="charCounter" style="margin-top: 10px" disabled></textarea>
-                                            <p class="text-muted"><small><span name="resumo">0</span></small></p>
                                         </div>
                                     </div>
                                 </div>
@@ -369,9 +368,9 @@
                             <div class="col-md-6">
                                 <form id="formSubmTrabaEtiquetasPadrao" method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
                                     @csrf
-                                    <input type="hidden" name="etiquetatitulotrabalho"  value="Titulo">
-                                    <input type="hidden" name="etiquetaautortrabalho"   value="Autor">
-                                    <input type="hidden" name="etiquetacoautortrabalho" value="Co-Autor">
+                                    <input type="hidden" name="etiquetatitulotrabalho"  value="Título">
+                                    <input type="hidden" name="etiquetaautortrabalho"   value="Autor(a)">
+                                    <input type="hidden" name="etiquetacoautortrabalho" value="Coautor(es)">
                                     <input type="hidden" name="etiquetaresumotrabalho"  value="Resumo">
                                     <input type="hidden" name="etiquetaareatrabalho"    value="Área">
                                     <input type="hidden" name="etiquetauploadtrabalho"  value="Upload de Trabalho">
