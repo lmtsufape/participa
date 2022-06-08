@@ -14,7 +14,7 @@ class TipoComissao extends Model
     ];
 
     public function membros(){
-        return $this->belongsToMany('App\Models\Users\User');
+        return $this->belongsToMany('App\Models\Users\User')->withPivot('isCoordenador');
     }
 
     public function evento() {

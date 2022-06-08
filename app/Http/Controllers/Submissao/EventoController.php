@@ -70,7 +70,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
 
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoesOrIsCoordenadorDeOutrasComissoes', $evento);
 
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
@@ -136,6 +136,62 @@ class EventoController extends Controller
                 }
 
 
+            }else if($status == "with_revisor"){
+              $trabalhos_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
+                ->where('trabalhos.eventoId', $evento->id)
+                ->get('trabalhos.id');
+
+              $trabalhos = Trabalho::whereIn('id', $trabalhos_id->pluck('id'))
+              ->where('status', '!=', 'arquivado')
+              ->get();
+
+              $trabalhos = $trabalhos->groupBy('modalidadeId');
+              foreach($trabalhos as $i => $modalidade){
+                $modalidade = $modalidade->sortBy(function($trabalho){
+                  return $trabalho->autor->name;
+                },
+                SORT_REGULAR,
+                $direction == "desc");
+
+                $trabalhos[$i] = $modalidade;
+              }
+              $trabalhos = $trabalhos->sortBy(function($modalidade){
+                return $modalidade->first()->modalidade->nome;
+              });
+            }else if($status == "no_revisor"){
+              $trabalhos_com_revisor_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
+                ->where('trabalhos.eventoId', $evento->id)
+                ->get('trabalhos.id');
+
+              $trabalhos_id = DB::table('trabalhos')
+              ->where('trabalhos.eventoId', $evento->id)
+              ->get('trabalhos.id');
+
+              $trabalhos_sem_revisores_collection = collect();
+
+              foreach($trabalhos_id as $trabalho){
+                  if(!$trabalhos_com_revisor_id->contains($trabalho)){
+                      $trabalhos_sem_revisores_collection->push($trabalho);
+                  }
+              }
+
+              $trabalhos = Trabalho::whereIn('id', $trabalhos_sem_revisores_collection->pluck('id'))
+              ->where('status', '!=', 'arquivado')
+              ->get();
+
+              $trabalhos = $trabalhos->groupBy('modalidadeId');
+              foreach($trabalhos as $i => $modalidade){
+                $modalidade = $modalidade->sortBy(function($trabalho){
+                  return $trabalho->autor->name;
+                },
+                SORT_REGULAR,
+                $direction == "desc");
+
+                $trabalhos[$i] = $modalidade;
+              }
+              $trabalhos = $trabalhos->sortBy(function($modalidade){
+                return $modalidade->first()->modalidade->nome;
+              });
             }else{
                 // Não tem como ordenar os trabalhos por nome do autor automaticamente
                 // Já que na tabale a de trabalhos não existe o nome do autor
@@ -156,6 +212,88 @@ class EventoController extends Controller
                     $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get());
                 }
 
+            }else if($status == "with_revisor"){
+              $trabalhos_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
+              ->where('trabalhos.eventoId', $evento->id)
+              ->get('trabalhos.id');
+
+              $trabalhos = Trabalho::whereIn('id', $trabalhos_id->pluck('id'))
+              ->where('status', '!=', 'arquivado')
+              ->get();
+
+              $trabalhos = $trabalhos->groupBy('modalidadeId');
+
+              if($column == "titulo"){
+                foreach($trabalhos as $i => $modalidade){
+                  $modalidade = $modalidade->sortBy(function($trabalho){
+                    return $trabalho->titulo;
+                  },
+                  SORT_REGULAR,
+                  $direction == "desc");
+                  $trabalhos[$i] = $modalidade;
+                }
+              }else if($column == "areaId"){
+                foreach($trabalhos as $i => $modalidade){
+                  $modalidade = $modalidade->sortBy(function($trabalho){
+                    return $trabalho->area->nome;
+                  },
+                  SORT_REGULAR,
+                  $direction == "desc");
+                  $trabalhos[$i] = $modalidade;
+                }
+              }
+
+              $trabalhos = $trabalhos->sortBy(function($modalidade){
+                  return $modalidade->first()->modalidade->nome;
+              });
+
+            }else if($status == "no_revisor"){
+              $trabalhos_com_revisor_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
+              ->where('trabalhos.eventoId', $evento->id)
+              ->get('trabalhos.id');
+
+              $trabalhos_id = DB::table('trabalhos')
+              ->where('trabalhos.eventoId', $evento->id)
+              ->get('trabalhos.id');
+
+              $trabalhos_sem_revisores_collection = collect();
+
+              foreach($trabalhos_id as $trabalho){
+                  if(!$trabalhos_com_revisor_id->contains($trabalho)){
+                      $trabalhos_sem_revisores_collection->push($trabalho);
+                  }
+              }
+
+              $trabalhos = Trabalho::whereIn('id', $trabalhos_sem_revisores_collection->pluck('id'))
+              ->where('status', '!=', 'arquivado')
+              ->get();
+
+              $trabalhos = $trabalhos->groupBy('modalidadeId');
+
+              if($column == "titulo"){
+                foreach($trabalhos as $i => $modalidade){
+                  $modalidade = $modalidade->sortBy(function($trabalho){
+                    return $trabalho->titulo;
+                  },
+                  SORT_REGULAR,
+                  $direction == "desc");
+                  $trabalhos[$i] = $modalidade;
+                }
+              }else if($column == "areaId"){
+                foreach($trabalhos as $i => $modalidade){
+                  $modalidade = $modalidade->sortBy(function($trabalho){
+                    return $trabalho->area->nome;
+                  },
+                  SORT_REGULAR,
+                  $direction == "desc");
+                  $trabalhos[$i] = $modalidade;
+                }
+              }
+
+              $trabalhos = $trabalhos->sortBy(function($modalidade){
+                  return $modalidade->first()->modalidade->nome;
+              });
+
             }else{
                 // Como aqui é um else, então $trabalhos nunca vai ser null
                 // Busca os trabalhos da forma como era feita antes
@@ -173,6 +311,7 @@ class EventoController extends Controller
                                                     'areas'             => $areas,
                                                     'trabalhosPorModalidade'         => $trabalhos,
                                                     'agora'         => now(),
+                                                    'status' => $status,
 
                                                   ]);
 
@@ -379,13 +518,8 @@ class EventoController extends Controller
 
         $this->authorize('isCoordenador', $evento);
         $users = $evento->usuariosDaComissao;
-
-
-        return view('coordenador.comissao.definirCoordComissao', [
-                                                    'evento'                  => $evento,
-                                                    'users'                   => $users,
-
-                                                  ]);
+        $coordenadores = $evento->coordComissaoCientifica->pluck('id')->all();
+        return view('coordenador.comissao.definirCoordComissao', compact('evento', 'users', 'coordenadores'));
 
     }
 

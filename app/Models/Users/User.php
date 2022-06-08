@@ -94,11 +94,11 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function coordComissaoCientifica(){
-        return $this->hasOne('App\Models\Users\CoordComissaoCientifica');
+        return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_cientificas', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoCientifica');
     }
 
     public function coordComissaoOrganizadora(){
-        return $this->hasOne('App\Models\Users\CoordComissaoOrganizadora');
+        return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_organizadoras', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoOrganizadora');
     }
 
     function membroComissaoEvento(){

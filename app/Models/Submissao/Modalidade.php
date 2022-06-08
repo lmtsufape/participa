@@ -38,4 +38,8 @@ class Modalidade extends Model
   {
     return $this->belongsTo('App\Models\Submissao\Evento', 'evento_id');
   }
+
+  function mensagensParecer() {
+    return $this->hasMany('App\Models\Submissao\MensagemParecer');
+  }
 }

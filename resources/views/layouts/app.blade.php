@@ -14,6 +14,7 @@
         <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
         <script src="{{ asset('js/app.js') }}" defer></script>
+        <script defer src="https://unpkg.com/alpinejs@3.10.2/dist/cdn.min.js"></script>
 
         <!-- CKEditor -->
         <script src="{{asset('ckeditor/ckeditor.js')}}"></script>
@@ -34,6 +35,7 @@
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
         {{-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> --}}
+
 
         <style>
             .flexContainer {
@@ -248,7 +250,15 @@
                                         {{-- Rota - Area da Comissao --}}
                                         <a class="dropdown-item" href="{{ route('home.membro') }}">
                                             <img src="{{asset('img/icons/comissao.png')}}" alt="">
-                                            {{ __('Área do Membro da Comissão') }}
+                                            {{ __('Área do Membro da Comissão Científica') }}
+                                        </a>
+                                    @endif
+
+                                    @if (Auth::user()->outrasComissoes->count())
+                                        {{-- Rota - Area da Comissao --}}
+                                        <a class="dropdown-item" href="{{ route('coord.membroOutrasComissoes') }}">
+                                            <img src="{{asset('img/icons/comissao.png')}}" alt="">
+                                            {{ __('Área do coordenador de outras comissões') }}
                                         </a>
                                     @endif
 

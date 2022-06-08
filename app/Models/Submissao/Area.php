@@ -34,4 +34,8 @@ class Area extends Model
   public function revisor(){
       return $this->hasMany('App\Models\Users\Revisor', 'areaId');
   }
+
+  function mensagensParecer() {
+    return $this->hasMany('App\Models\Submissao\MensagemParecer');
+  }
 }

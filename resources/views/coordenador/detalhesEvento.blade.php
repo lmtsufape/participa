@@ -78,7 +78,6 @@
                         </a>
                     </div>
                 </a>
-            @endcan
 
             <a id="modalidades">
                 <li>
@@ -112,8 +111,10 @@
                     </a>
                 </div>
             </a>
+            @endcan
 
-            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
+            @can('isCoordenadorOrCoordenadorDasComissoesOrIsCoordenadorDeOutrasComissoes', $evento)
+                @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                 <a id="comissao" >
                     <li>
                         <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão Cientifica</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -162,26 +163,39 @@
                         </a>
                     </div>
                 </a>
+                @endcan
                 <a id="outrasComissoes">
                     <li>
                         <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Outras comissões</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                     </li>
                     <div id="dropdownOutrasComissoes"  @if(request()->is('coord/evento/*/tipocomissao*')) style='background-color: gray;display: block;' @else  style='background-color: gray; display: none;' @endif>
-                        <a id="cadastrarOutraComissao" href=" {{route('coord.tipocomissao.create', $evento)}} ">
-                            <li>
-                                <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5 style="font-size: 11px;">Cadastrar comissão</h5>
-                            </li>
-                        </a>
-                        @foreach ($evento->outrasComissoes as $comissao)
-                            <a href=" {{route('coord.tipocomissao.show', ['evento' => $evento, 'comissao' => $comissao])}} ">
+                        @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
+                            <a id="cadastrarOutraComissao" href=" {{route('coord.tipocomissao.create', $evento)}} ">
                                 <li>
-                                    <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 11px;"> {{$comissao->nome}} </h5>
+                                    <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5 style="font-size: 11px;">Cadastrar comissão</h5>
                                 </li>
                             </a>
+                        @endcan
+                        @foreach ($evento->outrasComissoes as $comissao)
+                            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
+                                <a href=" {{route('coord.tipocomissao.show', ['evento' => $evento, 'comissao' => $comissao])}} ">
+                                    <li>
+                                        <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 11px;"> {{$comissao->nome}} </h5>
+                                    </li>
+                                </a>
+                            @else
+                                @can('isCoordenadorDeOutraComissao', $comissao)
+                                    <a href=" {{route('coord.tipocomissao.show', ['evento' => $evento, 'comissao' => $comissao])}} ">
+                                        <li>
+                                            <img src="{{asset('img/icons/list.svg')}}" alt=""><h5 style="font-size: 11px;"> {{$comissao->nome}} </h5>
+                                        </li>
+                                    </a>
+                                @endcan
+                            @endcan
                         @endforeach
                     </div>
                 </a>
-
+                @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                 <a id="revisores">
                     <li>
                         <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Revisores</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
@@ -214,6 +228,7 @@
                         <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5>
                     </li>
                 </a>
+                @endcan
             @endcan
 
             @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
@@ -301,7 +316,6 @@
                         @endcan
                     </div>
                 </a>
-            @endcan
 
             <a id="certificados">
                 <li>
@@ -335,6 +349,7 @@
                     </a>
                 </div>
             </a>
+            @endcan
 
             @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
 

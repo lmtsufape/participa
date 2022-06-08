@@ -166,6 +166,38 @@
                             <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                         </a>
                     @endforelse
+                    @if ($trabalho->pareceres->where('parecer_final', true)->count() > 0)
+                        <a href="#" onclick="return false;" data-toggle="modal" data-target="#modalparecerfinal{{$trabalho->id}}">
+                            <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px" title="Parecer final">
+                        </a>
+                        <div class="modal fade" id="modalparecerfinal{{$trabalho->id}}" tabindex="-1"
+                            aria-labelledby="modalparecerfinal{{$trabalho->id}}Label" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #114048ff; color: white;">
+                                        <h5>Parecer final</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    @php
+                                        $parecer = $trabalho->pareceres->where('parecer_final', true)->first();
+                                    @endphp
+                                    <div class="modal-body">
+                                        <p class="text-left">
+                                            Resultado: {{$parecer->resultado == 'positivo' ? 'Aprovado' : 'Reprovado'}}
+                                        </p>
+                                        <p class="text-left">
+                                            {{$parecer->justificativa}}
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </td>
 
                 <td style="text-align:center">
