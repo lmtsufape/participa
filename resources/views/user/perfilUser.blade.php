@@ -106,7 +106,7 @@
                             </div>
 
                             <div class="col-md-5">
-                                <label for="celular" class="col-form-label">{{ __('Celular') }}<small style="color: rgb(245, 65, 10);">@if($user->celular[0] != '+'){{ __('       Atualize seu celular') }}@endif</small></label><br>
+                                <label for="celular" class="col-form-label">{{ __('Celular') }}<small style="color: rgb(245, 65, 10);">@if($user->celular && $user->celular[0] != '+'){{ __('       Atualize seu celular') }}@endif</small></label><br>
                                 <input id="phone" type="tel" class="form-control @error('celular') is-invalid @enderror" name="celular" @if(old('celular') != null) value="{{ old('celular') }}" @else value="{{$user->celular}}" @endif required autocomplete="celular" autofocus onkeyup="process(event)">
                                 <div class="alert alert-info mt-1" style="display: none"></div>
                                 <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
