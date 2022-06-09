@@ -2,6 +2,8 @@
 
 namespace App\Models\Submissao;
 
+use App\Models\Users\Revisor;
+use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -71,5 +73,20 @@ class Trabalho extends Model
 
   public function respostas() {
     return $this->hasMany('App\Models\Submissao\Resposta');
+  }
+
+  public function avaliado(User $user){
+      $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id], 
+      ['modalidadeId', $this->modalidade->id]])->first();
+
+      return Resposta::where([['trabalho_id', $this->id], ['revisor_id', $revisor->id]])
+      ->get()->count() > 0;
+  }
+
+  public function getParecerAtribuicao(User $user){
+    $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id], 
+    ['modalidadeId', $this->modalidade->id]])->first();
+
+    return $this->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->parecer;
   }
 }

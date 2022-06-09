@@ -235,10 +235,12 @@ class UserController extends Controller
     {
 
         $trabalho = Trabalho::find($request->trabalhoId);
-        $this->authorize('permissaoVisualizarParecer', $trabalho);
+        $revisor = Revisor::find($request->revisorId);
+        if(!$trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado'){
+            $this->authorize('permissaoVisualizarParecer', $trabalho);
+        }
         $evento = Evento::find($request->eventoId);
         $modalidade = Modalidade::find($request->modalidadeId);
-        $revisor = Revisor::find($request->revisorId);
         $revisorUser = User::find($revisor->user_id);
         $respostas = collect();
         foreach ($modalidade->forms as $form) {
@@ -246,7 +248,7 @@ class UserController extends Controller
             $respostas->push($pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first());
           }
         }
-        return view('user.visualizarParecer', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'respostas'));
+        return view('user.visualizarParecer', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'respostas', 'revisor'));
 
     }
 

@@ -142,10 +142,10 @@
                                 <tr>
                                     <td style="text-align:center">{{$trabalho->id}}</td>
                                     <td style="text-align:center">{{$trabalho->titulo}}</td>
-                                    @if ($trabalho->avaliado == "Avaliado")
-                                    <td style="text-align:center">Avaliado</td>
+                                    @if ($trabalho->avaliado(auth()->user())){{--avaliacao do revisor aqui--}}
+                                        <td style="text-align:center">Avaliado</td>
                                     @else
-                                    <td style="text-align:center">Pendente</td>
+                                        <td style="text-align:center">Pendente</td>
                                     @endif
                                     <td style="text-align:center">
                                     @if ($trabalho->resumo != null)
@@ -159,32 +159,32 @@
                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                                     @endif
                                     </td>
-                                    @if ($trabalho->avaliado != "Avaliado")
-                                    @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao)
-                                        {{-- <td>
-                                        <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
-                                        </td> --}}
-                                        <td>
-                                        <form action="{{route('revisor.responde')}}" method="get">
-                                            @csrf
-                                            <input type="hidden" name="revisor_id" value="{{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}}">
-                                            <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
-                                            <input type="hidden" name="evento_id" value="{{$eventos[$key]->id}}">
-                                            <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
-                                            <div class="d-flex justify-content-center">
-                                                <button type="submit" class="btn btn-success">
-                                                Avaliar
-                                                </button>
-                                            </div>
-                                        </form>
-                                        </td>
-                                    @else
-                                        <div class="d-flex justify-content-center">
-                                            <td style="text-align:center">
-                                                <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
+                                    @if (!$trabalho->avaliado(auth()->user())){{--avaliacao do revisor aqui--}}
+                                        @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao)
+                                            {{-- <td>
+                                            <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
+                                            </td> --}}
+                                            <td>
+                                            <form action="{{route('revisor.responde')}}" method="get">
+                                                @csrf
+                                                <input type="hidden" name="revisor_id" value="{{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}}">
+                                                <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
+                                                <input type="hidden" name="evento_id" value="{{$eventos[$key]->id}}">
+                                                <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
+                                                <div class="d-flex justify-content-center">
+                                                    <button type="submit" class="btn btn-success">
+                                                    Avaliar
+                                                    </button>
+                                                </div>
+                                            </form>
                                             </td>
-                                        </div>
-                                    @endif
+                                        @else
+                                            <div class="d-flex justify-content-center">
+                                                <td style="text-align:center">
+                                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
+                                                </td>
+                                            </div>
+                                        @endif
                                     {{-- {{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}} --}}
                                     @else
                                         <div class="d-flex justify-content-center">

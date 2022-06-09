@@ -131,13 +131,16 @@
                   </td>
 
                   <td>
-                    @if($trabalho->avaliado == 'processando')
-                        Processando
-                    @elseif($trabalho->avaliado == 'nao')
-                        Sem avaliador
-                    @else
-                        {{$trabalho->avaliado}}
-                    @endif
+                    @forelse ($trabalho->atribuicoes as $revisor)
+                        @if($trabalho->avaliado($revisor->user))
+                          Avaliado
+                        @else
+                          Processando
+                        @endif
+                        <br>
+                    @empty
+                      Sem avaliador
+                    @endforelse
                   </td>
 
                   <td style="text-align:center">
