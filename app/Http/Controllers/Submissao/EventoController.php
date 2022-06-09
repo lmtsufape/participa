@@ -1095,22 +1095,28 @@ class EventoController extends Controller
         $trabalhos = NULL;
 
         if($column == "autor") {
-            // Não tem como ordenar os trabalhos por nome do autor automaticamente
-            // Já que na tabale a de trabalhos não existe o nome do autor
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
-            ->orWhere([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->get()->sortBy(
+            if($status == "rascunho"){
+              $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '!=', 'arquivado']])->get()->sortBy(
                 function($trabalho) {
-                    return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
+                    return $trabalho->autor->name;
                 },
-                SORT_REGULAR, // Usa o método padrão de ordenação
-                $direction == "desc"); // Se true, então ordena decrescente
-        } else {
-            // Como aqui é um else, então $trabalhos nunca vai ser null
-            // Busca os trabalhos da forma como era feita antes
-            $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'Avaliado']])
-            ->orWhere([['status', '=', $status], ['modalidadeId', $request->modalidadeId], ['avaliado', 'processando']])->orderBy($column, $direction)->get();
+                SORT_REGULAR,
+                $direction == "desc");
+            }else{
+              $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '=', 'arquivado']])->get()->sortBy(
+                function($trabalho) {
+                    return $trabalho->autor->name;
+                },
+                SORT_REGULAR,
+                $direction == "desc");
+            }
+        }else{
+            if($status == "rascunho"){
+                $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get();
+            }else{
+                $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '=', $status]])->orderBy($column, $direction)->get();
+            }
         }
-
         return view('coordenador.trabalhos.listarRespostasTrabalhos', [
                                                     'evento'            => $evento,
                                                     'areas'             => $areas,
