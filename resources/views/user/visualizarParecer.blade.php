@@ -43,7 +43,7 @@
                         </div>
                         @elseif($pergunta->respostas->first()->paragrafo->count())
                             @forelse ($pergunta->respostas as $resposta)
-                                @if($resposta->revisor != null || $resposta->trabalho != null)
+                                @if(($resposta->revisor != null || $resposta->trabalho != null) && $resposta->revisor_id == $revisor->id)
                                     @if(($resposta->trabalho->id == $trabalho->id) && $resposta->paragrafo->visibilidade == true)
                                         <div class="card">
                                             <div class="card-body">
