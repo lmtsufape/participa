@@ -126,7 +126,7 @@
             </div>
         </div>
     </form>
-    @if ($trabalho->arquivoAvaliacao()->first() !== null)
+    @if ($trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first() != null)
         <div class="d-flex justify-content-left">
             <a class="btn btn-primary" href="{{route('downloadAvaliacao', ['trabalhoId' => $trabalho->id, 'revisorUserId' => $revisorUser->id])}}">
                 <div class="btn-group">
@@ -136,14 +136,16 @@
             </a>
             @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                 <div class="col-md-4" style="padding-ridht:0">
-                    @if ($trabalho->status == 'rascunho')
-                        <a href="{{ route('trabalho.status', [$trabalho->id, 'avaliado']) }}" class="btn btn-secondary">
-                            Encaminhar parecer ao autor
-                        </a>
-                    @elseif ($trabalho->status == 'avaliado')
-                        <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" class="btn btn-secondary">
-                            Desfazer encaminhamento do parecer
-                        </a>
+                    @if ($trabalho->avaliado($revisor->user))
+                        @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
+                            <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-secondary">
+                                Encaminhar parecer ao autor
+                            </a>
+                        @else
+                            <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-secondary">
+                                Desfazer encaminhamento do parecer
+                            </a>
+                        @endif
                     @endif
                 </div>
             @endcan
@@ -160,14 +162,16 @@
             </div>
             @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                 <div class="col-md-4" style="padding-ridht:0">
-                    @if ($trabalho->status == 'rascunho')
-                        <a href="{{ route('trabalho.status', [$trabalho->id, 'avaliado']) }}" class="btn btn-secondary">
-                            Encaminhar parecer ao autor
-                        </a>
-                    @elseif ($trabalho->status == 'avaliado')
-                        <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" class="btn btn-secondary">
-                            Desfazer encaminhamento do parecer
-                        </a>
+                    @if ($trabalho->avaliado($revisor->user))
+                        @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
+                            <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-secondary">
+                                Encaminhar parecer ao autor
+                            </a>
+                        @else
+                            <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-secondary">
+                                Desfazer encaminhamento do parecer
+                            </a>
+                        @endif
                     @endif
                 </div>
             @endcan

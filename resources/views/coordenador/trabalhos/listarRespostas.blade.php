@@ -107,13 +107,16 @@
                                                     @endforeach
                                                 </td>
                                                 <td>
-                                                    @if ($trabalho->avaliado == 'processando')
-                                                        Processando
-                                                    @elseif($trabalho->avaliado == 'nao')
+                                                    @forelse ($trabalho->atribuicoes as $revisor)
+                                                        @if($trabalho->avaliado($revisor->user))
+                                                            Avaliado
+                                                        @else
+                                                            Processando
+                                                        @endif
+                                                        <br>
+                                                    @empty
                                                         Sem avaliador
-                                                    @else
-                                                        {{ $trabalho->avaliado }}
-                                                    @endif
+                                                    @endforelse
                                                 </td>
                                                 <td style="text-align:center">
                                                     @foreach ($trabalho->atribuicoes as $revisor)

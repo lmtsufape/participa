@@ -69,7 +69,7 @@
         </div>
 
     @endforeach
-    @if ($trabalho->arquivoAvaliacao()->first() !== null)
+    @if ($trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first() != null)
         <a class="btn btn-primary" href="{{route('downloadAvaliacao', ['trabalhoId' => $trabalho->id, 'revisorUserId' => $revisorUser->id])}}">
             <div class="btn-group">
                 <img src="{{asset('img/icons/file-download-solid.svg')}}" style="width:15px">
