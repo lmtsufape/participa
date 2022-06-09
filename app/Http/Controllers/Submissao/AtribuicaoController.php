@@ -236,10 +236,14 @@ class AtribuicaoController extends Controller
       $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
       $revisor = Revisor::find($id);
+      $trabalho = Trabalho::find($request->trabalhoId);
+
+      if($trabalho->avaliado($revisor->user)){
+        return redirect()->back()->with(['error' => 'O revisor já deu início à avaliação do trabalho, ele não pode ser removido.'])->withInput($validatedData);
+      }
       $revisor->correcoesEmAndamento -= 1;
       $revisor->update();
 
-      $trabalho = Trabalho::find($request->trabalhoId);
       $trabalho->atribuicoes()->detach($id);
 
       $mensagem = $trabalho->titulo . ' foi retirado de ' . $revisor->user->name . ' com sucesso!';
