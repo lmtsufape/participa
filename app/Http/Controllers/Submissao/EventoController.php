@@ -604,9 +604,9 @@ class EventoController extends Controller
             ->get()
             ->map(function ($trabalho) use ($form, $trabalhosCollect) {
                 if ($trabalho->atribuicoes->first() != null) {
-                    return $trabalho->atribuicoes->map(function ($avaliacao) use ($trabalho, $form, $trabalhosCollect) {
+                    $trabalho->atribuicoes->map(function ($avaliacao) use ($trabalho, $form, $trabalhosCollect) {
                       $trabalhosCollect->push($this->makeRepostasExportAvaliacoes($trabalho, $form, $avaliacao));
-                    })->collect();
+                    });
                 } else {
                   $trabalhosCollect->push($this->makeRepostasExportAvaliacoes($trabalho, $form, null));
                 }
