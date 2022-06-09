@@ -76,7 +76,7 @@ class Trabalho extends Model
   }
 
   public function avaliado(User $user){
-      $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id], 
+      $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
       ['modalidadeId', $this->modalidade->id]])->first();
 
       return Resposta::where([['trabalho_id', $this->id], ['revisor_id', $revisor->id]])
@@ -84,9 +84,16 @@ class Trabalho extends Model
   }
 
   public function getParecerAtribuicao(User $user){
-    $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id], 
+    $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
     ['modalidadeId', $this->modalidade->id]])->first();
 
     return $this->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->parecer;
+  }
+
+  public function getQuantidadeAvaliacoes()
+  {
+    return $this->atribuicoes->map(function($revisor) {
+      return $this->avaliado($revisor->user);
+    })->filter()->count();
   }
 }

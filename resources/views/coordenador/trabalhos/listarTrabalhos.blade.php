@@ -141,16 +141,8 @@
                                             <i class="fas fa-arrow-alt-circle-down"></i>
                                         </a>
                                         </th>
-                                        <th scope="col">
-                                        Revisores
-                                        {{-- <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
-                                            <i class="fas fa-arrow-alt-circle-up"></i>
-                                        </a>
-                                        <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc'])}}">
-                                            <i class="fas fa-arrow-alt-circle-down"></i>
-                                        </a> --}}
-                                        </th>
-                                        <th>Avaliado</th>
+                                        <th scope="col">Revisores</th>
+                                        <th scope="col">Avaliações</th>
                                         <th scope="col">Data</th>
                                         <th scope="col">Atribuir</th>
                                         <th scope="col">Arquivar</th>
@@ -194,9 +186,7 @@
                                             {{count($trabalho->atribuicoes)}}
                                             @endif --}}
                                         </td>
-                                        <td>
-                                            {{$trabalho->avaliado == 'Avaliado' ? 'Sim' : 'Não'}}
-                                        </td>
+                                        <td>{{$trabalho->getQuantidadeAvaliacoes()}}</td>
                                         <td>
                                             {{ date("d/m/Y H:i", strtotime($trabalho->created_at) ) }}
 

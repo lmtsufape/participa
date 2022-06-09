@@ -106,10 +106,8 @@
                         <i class="fas fa-arrow-alt-circle-down"></i>
                       </a>
                     </th>
-                    <th scope="col">
-                      Revisores
-
-                    </th>
+                    <th scope="col">Revisores</th>
+                    <th scope="col">Avaliações</th>
                     <th scope="col">Data</th>
                     <th scope="col" style="text-align:center">Atribuir</th>
                     <th scope="col" style="text-align:center">Arquivar</th>
@@ -147,8 +145,8 @@
                       <td>{{$trabalho->autor->name}}</td>
                       <td>
                         {{count($trabalho->atribuicoes)}}
-
                       </td>
+                      <td>{{$trabalho->getQuantidadeAvaliacoes()}}</td>
                       <td>
                         {{ date("d/m/Y H:i", strtotime($trabalho->created_at) ) }}
 
