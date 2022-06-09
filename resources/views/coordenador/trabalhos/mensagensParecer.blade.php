@@ -61,11 +61,11 @@
                                         <div class="form-group">
                                             <label for="msgmodpositivo[{{$modalidade->id}}]">
                                                 Mensagem de parecer positivo da modalidade {{$modalidade->nome}}</label>
-                                            <textarea name="msgmodpositivo[{{$modalidade->id}}]" class="form-control" id="msgmodpositivo[{{$modalidade->id}}]" rows="3">@if(old('msgmodpositivo')[$modalidade->id]) {{old('msgmodpositivo')[$modalidade->id]}} @else {{$msgmodpositivo[$modalidade->id]}} @endif</textarea>
+                                            <textarea name="msgmodpositivo[{{$modalidade->id}}]" class="form-control" id="msgmodpositivo[{{$modalidade->id}}]" rows="3">@if(old('msgmodpositivo') && array_key_exists($modalidade->id, old('msgmodpositivo')) && old('msgmodpositivo')[$modalidade->id]) {{old('msgmodpositivo')[$modalidade->id]}} @else {{$msgmodpositivo[$modalidade->id]}} @endif</textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="msgmodnegativo[{{$modalidade->id}}]">Mensagem de parecer negativo da modalidade {{$modalidade->nome}}</label>
-                                            <textarea name="msgmodnegativo[{{$modalidade->id}}]" class="form-control" id="msgmodnegativo[{{$modalidade->id}}]" rows="3">@if(old('msgmodnegativo')[$modalidade->id]) {{old('msgmodnegativo')[$modalidade->id]}} @else {{$msgmodnegativo[$modalidade->id]}} @endif</textarea>
+                                            <textarea name="msgmodnegativo[{{$modalidade->id}}]" class="form-control" id="msgmodnegativo[{{$modalidade->id}}]" rows="3">@if(old('msgmodnegativo') && array_key_exists($modalidade->id, old('msgmodnegativo')) && old('msgmodnegativo')[$modalidade->id]) {{old('msgmodnegativo')[$modalidade->id]}} @else {{$msgmodnegativo[$modalidade->id]}} @endif</textarea>
                                         </div>
                                     @endforeach
                                 </div>
@@ -73,11 +73,11 @@
                                     @foreach ($evento->areas as $area)
                                         <div class="form-group">
                                             <label for="msgareapositivo[{{$area->id}}]">Mensagem de parecer positivo da área {{$area->nome}}</label>
-                                            <textarea name="msgareapositivo[{{$area->id}}]" class="form-control" id="msgareapositivo[{{$area->id}}]" rows="3">@if(old('msgareapositivo')[$area->id]) {{old('msgareapositivo')[$area->id]}} @else {{$msgareapositivo[$area->id]}} @endif</textarea>
+                                            <textarea name="msgareapositivo[{{$area->id}}]" class="form-control" id="msgareapositivo[{{$area->id}}]" rows="3">@if(old('msgareapositivo') && array_key_exists($area->id, old('msgareapositivo')) && old('msgareapositivo')[$area->id]) {{old('msgareapositivo')[$area->id]}} @else {{$msgareapositivo[$area->id]}} @endif</textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="msgareanegativo[{{$area->id}}]">Mensagem de parecer negativo da área {{$area->nome}}</label>
-                                            <textarea name="msgareanegativo[{{$area->id}}]" class="form-control" id="msgareanegativo[{{$area->id}}]" rows="3">@if(old('msgareanegativo')[$area->id]) {{old('msgareanegativo')[$area->id]}} @else {{$msgareanegativo[$area->id]}} @endif</textarea>
+                                            <textarea name="msgareanegativo[{{$area->id}}]" class="form-control" id="msgareanegativo[{{$area->id}}]" rows="3">@if(old('msgareanegativo') && array_key_exists($area->id, old('msgareanegativo')) && old('msgareanegativo')[$area->id]) {{old('msgareanegativo')[$area->id]}} @else {{$msgareanegativo[$area->id]}} @endif</textarea>
                                         </div>
                                     @endforeach
                                 </div>
