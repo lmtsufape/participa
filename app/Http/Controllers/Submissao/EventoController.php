@@ -599,19 +599,20 @@ class EventoController extends Controller
     public function exportAvaliacoes(Evento $evento, Modalidade $modalidade, Form $form)
     {
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        $trabalhos = Trabalho::where([['eventoId', $evento->id], ['modalidadeId', $modalidade->id]])
+        $trabalhosCollect = collect();
+        Trabalho::where([['eventoId', $evento->id], ['modalidadeId', $modalidade->id]])
             ->get()
-            ->map(function ($trabalho) use ($form) {
+            ->map(function ($trabalho) use ($form, $trabalhosCollect) {
                 if ($trabalho->atribuicoes->first() != null) {
-                    foreach ($trabalho->atribuicoes as $avaliacao) {
-                        return $this->makeRepostasExportAvaliacoes($trabalho, $form, $avaliacao);
-                    }
+                    return $trabalho->atribuicoes->map(function ($avaliacao) use ($trabalho, $form, $trabalhosCollect) {
+                      $trabalhosCollect->push($this->makeRepostasExportAvaliacoes($trabalho, $form, $avaliacao));
+                    })->collect();
                 } else {
-                    return $this->makeRepostasExportAvaliacoes($trabalho, $form, null);
+                  $trabalhosCollect->push($this->makeRepostasExportAvaliacoes($trabalho, $form, null));
                 }
             })->collect();
-        $trabalhos = $trabalhos->filter();
-        return (new AvaliacoesExport($trabalhos, $this->makeHeadingsExportAvaliacoes($form)))->download($evento->nome.' - Avaliacões - ' . $modalidade->nome. ' - '. $form->titulo . '.csv', \Maatwebsite\Excel\Excel::CSV, [
+        $trabalhosCollect = $trabalhosCollect->filter();
+        return (new AvaliacoesExport($trabalhosCollect, $this->makeHeadingsExportAvaliacoes($form)))->download($evento->nome.' - Avaliacões - ' . $modalidade->nome. ' - '. $form->titulo . '.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
     }
