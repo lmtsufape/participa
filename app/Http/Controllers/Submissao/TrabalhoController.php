@@ -139,7 +139,6 @@ class TrabalhoController extends Controller
         }
 
         if($request->emailCoautor != null){
-          $i = 0;
           foreach ($request->emailCoautor as $key => $value) {
             if($value == $autor->email){
 
@@ -153,10 +152,9 @@ class TrabalhoController extends Controller
                     'email' => $value,
                     'password' => bcrypt($passwordTemporario),
                     'usuarioTemp' => true,
-                    'name' => $request->nomeCoautor[$i],
+                    'name' => $request->nomeCoautor[$key],
                   ]);
                 }
-                $i++;
             }
           }
         }
