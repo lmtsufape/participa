@@ -428,6 +428,53 @@ body{
     #div-add-coautor #addCoautor #icone-add-coautor{
         width: 24px;
     }
+
+    .linha-divisora {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-evento .carousel-item > div {
+        display: none;
+    }
+    .carousel-evento .carousel-inner .carousel-item > div:first-child {
+        display: block;
+    }
+}
+
+/* display 3 */
+@media (min-width: 768px) {
+    
+    .carousel-evento .carousel-inner .carousel-item-right.active,
+    .carousel-evento .carousel-inner .carousel-item-next {
+      transform: translateX(33.333%);
+    }
+    
+    .carousel-evento .carousel-inner .carousel-item-left.active, 
+    .carousel-evento .carousel-inner .carousel-item-prev {
+      transform: translateX(-33.333%);
+    }
+}
+
+.carousel-evento .carousel-inner .carousel-item.active,
+.carousel-evento .carousel-inner .carousel-item-next,
+.carousel-evento .carousel-inner .carousel-item-prev {
+    display: flex;
+}
+
+.carousel-evento .carousel-inner .carousel-item-right,
+.carousel-evento .carousel-inner .carousel-item-left{ 
+  transform: translateX(0);
+}
+
+.linha-divisora {
+    border-right: 2px solid #D9D9D9;
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 40%;
+    padding: 0;
 }
 
 .modal-show-atividade h4 {
