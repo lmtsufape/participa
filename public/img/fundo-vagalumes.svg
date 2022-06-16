@@ -1,0 +1,76 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1362 624" width="1362" height="624">
+	<title>fundo-vagalumes-svg</title>
+	<style>
+		.s0 { fill: #154d59 } 
+		.s1 { fill: #298f7d } 
+		.s2 { opacity: .7;fill: #eef16b } 
+		.s3 { opacity: .7;fill: #fafc9f } 
+	</style>
+	<path id="Layer" class="s0" d="m270.1 440.6c-98.3 26.2-229.1 124.5-229.1 124.5v-539.1h1280v501.6c0 0-66.3 64.3-195.2 79-129 14.7-221.2-41.5-315.3-105.5-84.9-57.7-213.2-93.5-288.4-93.5-75.2 0-144.5 4.3-252 33z"/>
+	<g id="Layer">
+		<path id="Layer" class="s1" d="m128.2 180.3c-46.6 48.1-87.2 111.7-87.2 111.7v-286h1280v81.1c0 0-36.3 24.2-61.1 37.1-63.7 33.2-103.5 49.3-174.8 56.1-72.2 6.8-113-9.5-184.2-23-111.2-21.2-191.1-57.6-293-81.2-64.7-14.9-133.8-30-199.5-30-31.5 0-93.1 8.5-165.5 41-41.7 18.8-80.7 58.1-114.7 93.2z"/>
+	</g>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="131.5" cy="97.5" r="21.5"/>
+	</g>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="1234.5" cy="57.5" r="21.5"/>
+	</g>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="881.5" cy="511.5" r="21.5"/>
+	</g>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="1256.5" cy="554.5" r="21.5"/>
+	</g>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="263.5" cy="21.5" r="15.5"/>
+	</g>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="1077.5" cy="122.5" r="43.5"/>
+	</g>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="1320.5" cy="400.5" r="31.5"/>
+	</g>
+	<circle id="Layer" class="s3" cx="134.5" cy="94.5" r="12.5"/>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="589.5" cy="40.5" r="30.5"/>
+	</g>
+	<circle id="Layer" class="s3" cx="593.5" cy="36.5" r="17.5"/>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="116.5" cy="571.5" r="34.5"/>
+	</g>
+	<circle id="Layer" class="s3" cx="121" cy="576" r="20"/>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="410.5" cy="533.5" r="21.5"/>
+	</g>
+	<circle id="Layer" class="s3" cx="413.5" cy="536.5" r="12.5"/>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="1036.5" cy="588.5" r="21.5"/>
+	</g>
+	<circle id="Layer" class="s3" cx="1039.5" cy="591.5" r="12.5"/>
+	<circle id="Layer" class="s3" cx="1252.5" cy="554.5" r="12.5"/>
+	<circle id="Layer" class="s3" cx="1238.5" cy="61.5" r="12.5"/>
+	<ellipse id="Layer" class="s3" cx="265.5" cy="20" rx="8.5" ry="9"/>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="97.5" cy="353.5" r="15.5"/>
+	</g>
+	<ellipse id="Layer" class="s3" cx="99.5" cy="352" rx="8.5" ry="9"/>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="866.5" cy="89.5" r="15.5"/>
+	</g>
+	<ellipse id="Layer" class="s3" cx="868.5" cy="88" rx="8.5" ry="9"/>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="1233.5" cy="408.5" r="15.5"/>
+	</g>
+	<ellipse id="Layer" class="s3" cx="1235.5" cy="407" rx="8.5" ry="9"/>
+	<ellipse id="Layer" class="s3" cx="1316.5" cy="405" rx="18.5" ry="18"/>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="1271.5" cy="172.5" r="31.5"/>
+	</g>
+	<ellipse id="Layer" class="s3" cx="1267.5" cy="177" rx="18.5" ry="18"/>
+	<circle id="Layer" class="s3" cx="1071" cy="116" r="25"/>
+	<g id="Layer">
+		<circle id="Layer" class="s2" cx="49" cy="234" r="39"/>
+	</g>
+	<ellipse id="Layer" class="s3" cx="44" cy="239.5" rx="22" ry="22.5"/>
+</svg>
