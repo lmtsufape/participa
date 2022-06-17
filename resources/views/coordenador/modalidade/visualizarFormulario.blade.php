@@ -249,10 +249,10 @@
                                                     </div>
                                                 </div>
                                                 @endforeach
-                                            </div>{{-- end row--}}
 
+                                            </div>{{-- end row--}}
                                                 <div class="col-md-12">
-                                                    <div id="coautores" class="flexContainer " >
+                                                    <div id="coautores2" class="flexContainer" style="width: 97.5%" >
                                                     </div>
                                                     <a href="#" onclick="addLinha(event)" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">Adicionar pergunta</a>
                                                 </div>
@@ -305,6 +305,7 @@
 
 
 @section('javascript')
+    @parent
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script type="text/javascript">
 
@@ -373,9 +374,9 @@
 
         function addLinha(event){
             event.preventDefault();
-            order += 2;
+            order += 1;
             linha = montarLinhaInput(order);
-            $('#coautores').append(linha);
+            $('#coautores2').append(linha);
         }
         $(document).ready(function(){
 

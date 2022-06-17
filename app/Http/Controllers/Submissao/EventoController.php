@@ -958,6 +958,7 @@ class EventoController extends Controller
                     $resposta->paragrafo()->save($paragrafo);
 
                 }else if($data['tipo'][$i] == 'radio'){
+                    dd('oi');
                     foreach ($data['tituloRadio']['row'.$i] as $titulo) {
                         $resposta->opcoes()->create([
                             'titulo' => $titulo,
@@ -969,7 +970,7 @@ class EventoController extends Controller
             }
         }
 
-        $form->titulo = $request->titulo1;
+        $form->titulo = $data['titulo'.$form->id];
         $form->update();
 
         return redirect()->back()->with(['mensagem' => 'Formulário editado com sucesso!']);
