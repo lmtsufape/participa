@@ -181,6 +181,7 @@
                                                                 <div class="col-sm-12">
                                                                     <label>Pergunta</label>
                                                                     <input type="text" syle="margin-bottom:10px" value="{{old('pergunta['.$index.']', $pergunta->pergunta)}}"  class="form-control " name="pergunta[]" required>
+                                                                    <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
                                                                 </div>
                                                                 <div class="col-sm-12" >
                                                                     <label>Resposta</label>
@@ -246,7 +247,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <a href="#" onclick="addLinha(event)" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">Adicionar pergunta</a>
                                                 </div>
                                                 @endforeach
                                             </div>{{-- end row--}}
@@ -305,7 +305,6 @@
 
 
 @section('javascript')
-    @parent
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script type="text/javascript">
 
@@ -402,7 +401,11 @@
 
         // Remover Coautor
         $(document).on('click','.delete',function(){
-            $(this).closest('.item').remove();
+            $(this).closest('.item').slideUp("normal", function (){
+                $(this).remove();
+            });
+
+            //$(this).closest('.item').remove();
                 return false;
         });
 
