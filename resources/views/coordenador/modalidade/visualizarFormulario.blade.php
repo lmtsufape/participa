@@ -218,7 +218,7 @@
                                                                 </div>
                                                                 <div class="col-md-5">
                                                                     <div class="col-form-label text-md-left">
-                                                                        <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="checkboxVisibilidade[]" value="0">
+                                                                        <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="checkboxVisibilidade_{{$pergunta->id}}" @if($pergunta->visibilidade) checked @endif>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-4">
@@ -373,7 +373,7 @@
 
         function addLinha(event){
             event.preventDefault();
-            order += 1;
+            order += 2;
             linha = montarLinhaInput(order);
             $('#coautores').append(linha);
         }

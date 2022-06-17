@@ -913,23 +913,65 @@ class EventoController extends Controller
         $pergunta_checkBox = $request->pergunta_checkBox;
         $perguntasMantidas = [];
 
-        dd($data);
         foreach ($request->pergunta_id as $key => $pergunta_id) {
             $pergunta = Pergunta::find($pergunta_id);
             $pergunta->pergunta = $request->pergunta[$key];
+            if(isset($data['checkboxVisibilidade_'.$pergunta->id]))
+            {
+                $pergunta->visibilidade = true;
+            } else {
+                $pergunta->visibilidade = false;
+            }
             $pergunta->update();
 
             array_push($perguntasMantidas, $pergunta->id);
 
         }
+
         $perguntas = Pergunta::where('form_id', $data['formEditId'])->get();
 
         foreach ($perguntas as $pergunta) {
             if (!in_array($pergunta->id, $perguntasMantidas)) {
-                dd('Entre não');
                 $pergunta->delete();
             }
         }
+
+        $perguntasView = $request->pergunta;
+        $perguntasIdView = $request->pergunta_id;
+
+        if(count($perguntasView) > count($perguntasIdView))
+        {
+            for($i = count($perguntasIdView); $i < count($perguntasView); $i++)
+            {
+                $pergunta = new Pergunta();
+                $pergunta->form_id = $data['formEditId'];
+                $pergunta->pergunta = $request->pergunta[$i];
+                $pergunta->visibilidade = false;
+                $pergunta->save();
+
+                $resposta = new Resposta();
+                $resposta->pergunta_id = $pergunta->id;
+                $resposta->save();
+
+                if($data['tipo'][$i] == 'paragrafo'){
+                    $paragrafo = new Paragrafo();
+                    $resposta->paragrafo()->save($paragrafo);
+
+                }else if($data['tipo'][$i] == 'radio'){
+                    foreach ($data['tituloRadio']['row'.$i] as $titulo) {
+                        $resposta->opcoes()->create([
+                            'titulo' => $titulo,
+                            'tipo' => 'radio',
+                        ]);
+                    }
+                }
+
+            }
+        }
+
+        $form->titulo = $request->titulo1;
+        $form->update();
+
         return redirect()->back()->with(['mensagem' => 'Formulário editado com sucesso!']);
     }
 
