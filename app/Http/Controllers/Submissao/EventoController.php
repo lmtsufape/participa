@@ -910,7 +910,6 @@ class EventoController extends Controller
 
         $data = $request->all();
         //dd($data);
-        $pergunta_checkBox = $request->pergunta_checkBox;
         $perguntasMantidas = [];
 
         foreach ($request->pergunta_id as $key => $pergunta_id) {
@@ -957,9 +956,8 @@ class EventoController extends Controller
                     $paragrafo = new Paragrafo();
                     $resposta->paragrafo()->save($paragrafo);
 
-                }else if($data['tipo'][$i] == 'radio'){
-                    dd('oi');
-                    foreach ($data['tituloRadio']['row'.$i] as $titulo) {
+                }else if($data['tipo'][$i] == 'checkbox'){
+                    foreach ($data['tituloCheckox']['row'.$i] as $titulo) {
                         $resposta->opcoes()->create([
                             'titulo' => $titulo,
                             'tipo' => 'radio',
