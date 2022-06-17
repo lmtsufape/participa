@@ -225,7 +225,7 @@
                                                                     <div class="form-group">
                                                                         <label for="exampleFormControlSelect1">Tipo</label>
                                                                         <select onchange="escolha(this.value, event)" name="tipo[]" class="form-control" id="FormControlSelect">
-                                                                            <option @if($pergunta->respostas->first()->opcoes->count()) selected @endif value="radio">Multipla escolha</option>
+                                                                            <option @if($pergunta->respostas->first()->opcoes->count()) selected @endif value="checkbox">Multipla escolha</option>
                                                                             <option @if($pergunta->respostas->first()->paragrafo) selected @endif value="paragrafo">Parágrafo</option>
                                                                             {{-- <option value="radio">Seleção</option> --}}
                                                                         </select>
@@ -305,7 +305,6 @@
 
 
 @section('javascript')
-    @parent
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script type="text/javascript">
 
