@@ -233,7 +233,7 @@
                                                                     <div class="form-group">
                                                                         <label for="exampleFormControlSelect1">Tipo</label>
                                                                         <select onchange="escolha(this.value, event)" name="tipo[]" class="form-control" id="FormControlSelect" readonly="readonly">
-                                                                            <option @if($pergunta->respostas->first()->opcoes->count()) selected @endif value="checkbox">Multipla escolha</option>
+                                                                            <option @if($pergunta->respostas->first()->opcoes->count()) selected @endif value="radio">Multipla escolha</option>
                                                                             <option @if($pergunta->respostas->first()->paragrafo) selected @endif value="paragrafo">Parágrafo</option>
                                                                             {{-- <option value="radio">Seleção</option> --}}
                                                                         </select>
@@ -427,7 +427,7 @@
                         </div>
                         <div class="col-sm-8" >
                             <label>Resposta</label>
-                            <div class="row" id="row${order}">
+                            <div class="row" id="rowNew${order}">
                                 <div class="col-md-12">
                                     <input type="text" style="margin-bottom:10px" disabled='true' class="form-control " name="resposta[]">
                                 </div>

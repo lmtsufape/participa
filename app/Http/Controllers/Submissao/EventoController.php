@@ -937,7 +937,7 @@ class EventoController extends Controller
 
         $perguntasView = $request->pergunta;
         $perguntasIdView = $request->pergunta_id;
-
+        $count = 2;
         if(count($perguntasView) > count($perguntasIdView))
         {
             for($i = count($perguntasIdView); $i < count($perguntasView); $i++)
@@ -958,13 +958,13 @@ class EventoController extends Controller
                     $resposta->paragrafo()->save($paragrafo);
                 }else if($data['tipo'][$i] == 'checkbox'){
                     $count = 2;
-                    foreach ($data['tituloCheckox']['row'.$count] as $titulo) {
+                    foreach ($data['tituloCheckox']['rowNew'.$count] as $titulo) {
                         $resposta->opcoes()->create([
                             'titulo' => $titulo,
                             'tipo' => 'radio',
                         ]);
-                        $count += 1;
                     }
+                    $count += 1;
                 }
 
             }
