@@ -5,6 +5,14 @@
         @include('componentes.mensagens')
     @enderror
 
+    <style>
+        select[readonly] {
+            background: #eee; /*Simular campo inativo - Sugestão @GabrielRodrigues*/
+            pointer-events: none;
+            touch-action: none;
+        }
+    </style>
+
     <div id="divListarCriterio" class="comissao">
         <div class="row">
             <div class="col-sm-12">
@@ -224,7 +232,7 @@
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="exampleFormControlSelect1">Tipo</label>
-                                                                        <select onchange="escolha(this.value, event)" name="tipo[]" class="form-control" id="FormControlSelect">
+                                                                        <select onchange="escolha(this.value, event)" name="tipo[]" class="form-control" id="FormControlSelect" readonly="readonly">
                                                                             <option @if($pergunta->respostas->first()->opcoes->count()) selected @endif value="checkbox">Multipla escolha</option>
                                                                             <option @if($pergunta->respostas->first()->paragrafo) selected @endif value="paragrafo">Parágrafo</option>
                                                                             {{-- <option value="radio">Seleção</option> --}}

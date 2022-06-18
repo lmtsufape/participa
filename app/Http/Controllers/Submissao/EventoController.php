@@ -952,16 +952,18 @@ class EventoController extends Controller
                 $resposta->pergunta_id = $pergunta->id;
                 $resposta->save();
 
+
                 if($data['tipo'][$i] == 'paragrafo'){
                     $paragrafo = new Paragrafo();
                     $resposta->paragrafo()->save($paragrafo);
-
                 }else if($data['tipo'][$i] == 'checkbox'){
-                    foreach ($data['tituloCheckox']['row'.$i] as $titulo) {
+                    $count = 2;
+                    foreach ($data['tituloCheckox']['row'.$count] as $titulo) {
                         $resposta->opcoes()->create([
                             'titulo' => $titulo,
                             'tipo' => 'radio',
                         ]);
+                        $count += 1;
                     }
                 }
 
