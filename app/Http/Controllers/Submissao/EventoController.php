@@ -912,19 +912,26 @@ class EventoController extends Controller
         //dd($data);
         $perguntasMantidas = [];
 
-        foreach ($request->pergunta_id as $key => $pergunta_id) {
-            $pergunta = Pergunta::find($pergunta_id);
-            $pergunta->pergunta = $request->pergunta[$key];
-            if(isset($data['checkboxVisibilidade_'.$pergunta->id]))
-            {
-                $pergunta->visibilidade = true;
-            } else {
-                $pergunta->visibilidade = false;
+
+        if(!isset($request->pergunta_id))
+        {
+            return redirect()->back()->withErrors(['excluirFormulario' => 'Não é possivel apagar todas as perguntas!!']);
+        }
+
+        if (isset($request->pergunta_id)) {
+            foreach ($request->pergunta_id as $key => $pergunta_id) {
+                $pergunta = Pergunta::find($pergunta_id);
+                $pergunta->pergunta = $request->pergunta[$key];
+                if (isset($data['checkboxVisibilidade_' . $pergunta->id])) {
+                    $pergunta->visibilidade = true;
+                } else {
+                    $pergunta->visibilidade = false;
+                }
+                $pergunta->update();
+
+                array_push($perguntasMantidas, $pergunta->id);
+
             }
-            $pergunta->update();
-
-            array_push($perguntasMantidas, $pergunta->id);
-
         }
 
         $perguntas = Pergunta::where('form_id', $data['formEditId'])->get();
@@ -937,40 +944,37 @@ class EventoController extends Controller
 
         $perguntasView = $request->pergunta;
         $perguntasIdView = $request->pergunta_id;
-        $count = 2;
-        if(count($perguntasView) > count($perguntasIdView))
-        {
-            for($i = count($perguntasIdView); $i < count($perguntasView); $i++)
-            {
-                $pergunta = new Pergunta();
-                $pergunta->form_id = $data['formEditId'];
-                $pergunta->pergunta = $request->pergunta[$i];
-                $pergunta->visibilidade = false;
-                $pergunta->save();
+        if (isset($perguntasView) && isset($perguntasIdView)) {
+            if (count($perguntasView) > count($perguntasIdView)) {
+                for ($i = count($perguntasIdView); $i < count($perguntasView); $i++) {
+                    $pergunta = new Pergunta();
+                    $pergunta->form_id = $data['formEditId'];
+                    $pergunta->pergunta = $request->pergunta[$i];
+                    $pergunta->visibilidade = false;
+                    $pergunta->save();
 
-                $resposta = new Resposta();
-                $resposta->pergunta_id = $pergunta->id;
-                $resposta->save();
+                    $resposta = new Resposta();
+                    $resposta->pergunta_id = $pergunta->id;
+                    $resposta->save();
 
 
-                if($data['tipo'][$i] == 'paragrafo'){
-                    $paragrafo = new Paragrafo();
-                    $resposta->paragrafo()->save($paragrafo);
-                }else if($data['tipo'][$i] == 'checkbox'){
-                    $count = 2;
-                    foreach ($data['tituloCheckox']['rowNew'.$count] as $titulo) {
-                        $resposta->opcoes()->create([
-                            'titulo' => $titulo,
-                            'tipo' => 'radio',
-                        ]);
+                    if ($data['tipo'][$i] == 'paragrafo') {
+                        $paragrafo = new Paragrafo();
+                        $resposta->paragrafo()->save($paragrafo);
+                    } else if ($data['tipo'][$i] == 'checkbox') {
+                        foreach (array_shift($data['tituloCheckox']) as $titulo) {
+                            $resposta->opcoes()->create([
+                                'titulo' => $titulo,
+                                'tipo' => 'radio',
+                            ]);
+                        }
                     }
-                    $count += 1;
-                }
 
+                }
             }
         }
 
-        $form->titulo = $data['titulo'.$form->id];
+        $form->titulo = $data['titulo' . $form->id];
         $form->update();
 
         return redirect()->back()->with(['mensagem' => 'Formulário editado com sucesso!']);

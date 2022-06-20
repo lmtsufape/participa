@@ -202,17 +202,19 @@
                                                                                     <div class="input-group pl-0 col-sm-10 mb-3">
                                                                                         <div class="input-group-prepend">
                                                                                             <div class="input-group-text">
-                                                                                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input">
+                                                                                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input" disabled>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control">
+                                                                                        <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control" readonly>
                                                                                     </div>
+                                                                                    <!--
+                                                                                    Botões de Adicionar e Remover Opção
                                                                                     <div class="col-sm-1 mt-2">
                                                                                         <a href="#" onclick="addRadioToResposta(event)"><i class="fas fa-plus"></i></a>
                                                                                     </div>
                                                                                     <div class="col-sm-1 mt-2">
                                                                                         <a href="#" class="radioDelete" onclick="removerOpcao(event)"><i class="fas fa-trash-alt"></i></a>
-                                                                                    </div>
+                                                                                    </div>-->
                                                                                 </div>
                                                                             </div>
                                                                             @endforeach
@@ -244,12 +246,15 @@
                                                                     <a href="#" class="delete pr-2 mr-2">
                                                                         <i class="fas fa-trash-alt fa-2x"></i>
                                                                     </a>
+                                                                    <!--
+                                                                    Botões de Subir e Descer
                                                                     <a href="#" onclick="moverElementoAF(event)">
                                                                         <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
                                                                     </a>
                                                                     <a href="#" onclick="moverElementoAF(event)">
                                                                         <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
                                                                     </a>
+                                                                    -->
 
                                                                 </div>
                                                             </div>
@@ -448,12 +453,6 @@
                             <a href="#" class="delete pr-2 mr-2">
                                 <i class="fas fa-trash-alt fa-2x"></i>
                             </a>
-                            <a href="#" onclick="myFunction(event)">
-                            <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                            </a>
-                            <a href="#" onclick="myFunction(event)">
-                            <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                            </a>
 
                         </div>
                     </div>
@@ -469,7 +468,7 @@
                                 <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input">
                                 </div>
                             </div>
-                            <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox">
+                            <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox" required>
                         </div>
                     </div>
                     <div class="col-md-1 mt-2">
@@ -484,7 +483,7 @@
             return `<div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                            <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input">
+                            <input name="checkbox" type="checkbox[]" aria-label="Checkbox for following text input">
                             </div>
                         </div>
                         <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox">
