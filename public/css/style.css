@@ -445,13 +445,13 @@ body{
 
 /* display 3 */
 @media (min-width: 768px) {
-    
+
     .carousel-evento .carousel-inner .carousel-item-right.active,
     .carousel-evento .carousel-inner .carousel-item-next {
       transform: translateX(33.333%);
     }
-    
-    .carousel-evento .carousel-inner .carousel-item-left.active, 
+
+    .carousel-evento .carousel-inner .carousel-item-left.active,
     .carousel-evento .carousel-inner .carousel-item-prev {
       transform: translateX(-33.333%);
     }
@@ -464,7 +464,7 @@ body{
 }
 
 .carousel-evento .carousel-inner .carousel-item-right,
-.carousel-evento .carousel-inner .carousel-item-left{ 
+.carousel-evento .carousel-inner .carousel-item-left{
   transform: translateX(0);
 }
 
@@ -652,7 +652,7 @@ body{
 }
 
 .nav-link:hover, .nav-link:focus {
-    background-image: linear-gradient( to right, red, rgb(230, 46, 0), rgb(255, 153, 0) );
+    <!-- background-image: linear-gradient( to right, darkgreen, darkslategrey, forestgreen ); -->
     border-radius: 10px;
     filter: alpha(opacity=100);
     -moz-opacity:1;
