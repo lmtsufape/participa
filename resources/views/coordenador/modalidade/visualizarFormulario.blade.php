@@ -49,7 +49,7 @@
 
             <p class="card-text">
 
-                @foreach ($form->perguntas as $pergunta)
+                @foreach ($form->perguntas->sortBy("created_at") as $pergunta)
                     <div class="card">
                         <div class="card-body">
                             <p>Pergunta: {{$pergunta->pergunta}}</p>
@@ -60,7 +60,7 @@
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                    <input type="checkbox" disabled>
+                                                    <input type="checkbox" disabled @if($opcao->check) checked @endif>
                                                 </div>
                                             </div>
                                             <input type="text" class="form-control" value=" {{$opcao->titulo}}" disabled>
@@ -181,7 +181,7 @@
                                                     @enderror
                                                 </div>
 
-                                                @foreach ($form->perguntas as $index => $pergunta)
+                                                @foreach ($form->perguntas->sortBy("created_at") as $index => $pergunta)
                                                 <div class="col-md-12">
                                                     <div id="coautores" class="flexContainer">
                                                         <div class="item card" style="order:{{$index}}">
@@ -202,7 +202,7 @@
                                                                                     <div class="input-group pl-0 col-sm-10 mb-3">
                                                                                         <div class="input-group-prepend">
                                                                                             <div class="input-group-text">
-                                                                                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input" disabled>
+                                                                                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input" disabled @if($opcao->check) checked @endif>
                                                                                             </div>
                                                                                         </div>
                                                                                         <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control" readonly>
@@ -319,10 +319,12 @@
 
 @section('javascript')
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-    <script type="text/javascript">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-            let order = 1;
-            let pergunta = 1;
+    <script type="text/javascript">
+        let rep = 0;
+        let order = 1;
+        let pergunta = 1;
 
         function escolha(select){
             if('paragrafo' == select){
@@ -400,7 +402,10 @@
 
             let div = document.createElement('div');
             console.log(div)
-            div.classList.add("col-md-10");
+            div.classList.add("col-md-12");
+            div.classList.add("row");
+            div.classList.add("p-0");
+            div.classList.add("ml-0");
 
             div.innerHTML = addCheckboxInput(id);
             let find = document.querySelector("#"+id);
@@ -460,12 +465,13 @@
         }
 
         function montarOpcao(check){
-
+            rep += 1;
             return `<div  class="col-md-10 itemRadio">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input">
+                                <input id="${rep}" name="checkbox" type="checkbox" aria-label="Checkbox for following text input" onclick="changeResposta(${rep});">
+                                 <input hidden id="checked[${rep}]" name="tituloCheckoxMarc[${check}][]"  type="text" value="false" >
                                 </div>
                             </div>
                             <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox" required>
@@ -474,26 +480,48 @@
                     <div class="col-md-1 mt-2">
                         <a href="#"  onclick="addCheckbox(event)"><i class="fas fa-plus"></i></a>
                     </div>
-                    <div class="col-md-1 mt-2">
-                        <a href="#" class="radioDelete" onclick="myFunction(event)"><i class="fas fa-trash-alt"></i></a>
-                    </div>`;
+                    `;
         }
 
-        function addCheckboxInput(check){
-            return `<div class="input-group mb-3">
+            function addCheckboxInput(check){
+                rep += 1;
+                return `
+                <div class="optionResposta col-md-12 p-0 m-0 row">
+                    <div class="input-group mb-3 col-md-10">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                            <input name="checkbox" type="checkbox[]" aria-label="Checkbox for following text input">
+                            <input id="${rep}" name="checkbox" type="checkbox" aria-label="Checkbox for following text input" onclick="changeResposta(${rep});">
+                            <input hidden id="checked[${rep}]" name="tituloCheckoxMarc[${check}][]"  type="text" value="false" >
                             </div>
                         </div>
                         <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox">
-                    </div>`;
-        }
+                    </div>
+                    <div class="col-md-1 mt-2">
+                         <a type="button" class="removeRow" ><i class="fas fa-trash-alt"></i></a>
+                    </div>
+               </div>
+                   `;
+            }
 
         function addParagrafo(){
             return `<div class="col-md-12">
                         <input type="text" style="margin-bottom:10px" disabled='true' class="form-control" name="resposta[]" required>
                     </div>`;
         }
+
+        function changeResposta(marc)
+        {
+            if (document.getElementById(marc).checked)
+            {
+                document.getElementById('checked['+marc+']').value = 'true';
+            } else {
+                document.getElementById('checked['+marc+']').value = 'false';
+            }
+        }
+
+        $(document).on("click", ".removeRow", function(){
+            $(this).parents(".optionResposta").remove();
+        });
+
     </script>
 @endsection
