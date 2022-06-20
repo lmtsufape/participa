@@ -202,7 +202,7 @@
                                                                                     <div class="input-group pl-0 col-sm-10 mb-3">
                                                                                         <div class="input-group-prepend">
                                                                                             <div class="input-group-text">
-                                                                                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input" disabled>
+                                                                                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input" disabled @if($opcao->check) checked @endif>
                                                                                             </div>
                                                                                         </div>
                                                                                         <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control" readonly>
@@ -402,7 +402,10 @@
 
             let div = document.createElement('div');
             console.log(div)
-            div.classList.add("col-md-10");
+            div.classList.add("col-md-12");
+            div.classList.add("row");
+            div.classList.add("p-0");
+            div.classList.add("ml-0");
 
             div.innerHTML = addCheckboxInput(id);
             let find = document.querySelector("#"+id);
@@ -477,14 +480,14 @@
                     <div class="col-md-1 mt-2">
                         <a href="#"  onclick="addCheckbox(event)"><i class="fas fa-plus"></i></a>
                     </div>
-                    <div class="col-md-1 mt-2">
-                        <a href="#" class="radioDelete" onclick="myFunction(event)"><i class="fas fa-trash-alt"></i></a>
-                    </div>`;
+                    `;
         }
 
             function addCheckboxInput(check){
                 rep += 1;
-                return `<div class="input-group mb-3">
+                return `
+                <div class="optionResposta col-md-12 p-0 m-0 row">
+                    <div class="input-group mb-3 col-md-10">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                             <input id="${rep}" name="checkbox" type="checkbox" aria-label="Checkbox for following text input" onclick="changeResposta(${rep});">
@@ -492,8 +495,12 @@
                             </div>
                         </div>
                         <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox">
-
-                    </div>`;
+                    </div>
+                    <div class="col-md-1 mt-2">
+                         <a type="button" class="removeRow" ><i class="fas fa-trash-alt"></i></a>
+                    </div>
+               </div>
+                   `;
             }
 
         function addParagrafo(){
@@ -511,6 +518,10 @@
                 document.getElementById('checked['+marc+']').value = 'false';
             }
         }
+
+        $(document).on("click", ".removeRow", function(){
+            $(this).parents(".optionResposta").remove();
+        });
 
     </script>
 @endsection
