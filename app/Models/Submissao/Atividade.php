@@ -2,6 +2,7 @@
 
 namespace App\Models\Submissao;
 
+use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Atividade extends Model
@@ -12,9 +13,9 @@ class Atividade extends Model
    * @var array
    */
   protected $fillable = [
-    'titulo', 'vagas', 'valor', 'descricao', 'local', 
+    'titulo', 'vagas', 'valor', 'descricao', 'local',
     'carga_horaria', 'palavras_chave', 'visibilidade_participante',
-    'eventoId', 'tipo_id', 
+    'eventoId', 'tipo_id',
   ];
 
   public function evento(){
@@ -36,4 +37,9 @@ class Atividade extends Model
   public function promocoes() {
     return $this->belongsToMany('App\Models\Inscricao\Promocao', 'atividades_promocaos', 'atividade_id', 'promocao_id');
   }
+
+  public function users() {
+    return $this->belongsToMany(User::class, 'atividades_user', 'atividade_id', 'user_id');
+  }
+
 }

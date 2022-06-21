@@ -2,6 +2,7 @@
 
 namespace App\Models\Users;
 
+use App\Models\Submissao\Atividade;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -128,5 +129,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function certificados()
     {
         return $this->belongsToMany(Certificado::class, 'certificado_user')->withTrashed()->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id')->withTimestamps();
+    }
+
+    public function atividades()
+    {
+        return $this->belongsToMany(Atividade::class, 'atividades_user', 'user_id', 'atividade_id');
     }
 }
