@@ -104,6 +104,13 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
   Route::namespace('Submissao')->group(function () {
     // Controllers Within The "App\Http\Controllers\Admin" Namespace
     Route::get('/coordenador/home','EventoController@index')->name('coord.home');
+
+    //Inscrição em atividade
+    Route::get('atividades/{id}/inscrever', 'AtividadeController@inscrever')->name('atividades.inscricao');
+    Route::get('atividades/{id}/cancelarInscricao', 'AtividadeController@cancelarInscricao')->name('atividades.cancelarInscricao');
+    Route::get('atividades/{id}/exportar', 'AtividadeController@exportInscritos')->name('atividades.exportar');
+    Route::get('atividades/{id}/inscritos', 'AtividadeController@listarInscritos')->name('atividades.inscritos');
+
     Route::prefix('/coord/evento/')->name('coord.')->group(function(){
       Route::get('detalhes', 'EventoController@informacoes')->name('detalhesEvento');
       Route::get('informacoes', 'EventoController@informacoes')->name('informacoes');

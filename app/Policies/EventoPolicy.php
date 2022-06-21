@@ -119,6 +119,6 @@ class EventoPolicy
 
     public function isCoordenadorOrComissaoOrRevisorComAtribuicao(User $user, Evento $evento)
     {
-      return $this->isCoordenadorOrComissao($user, $evento) || $this->isRevisorComAtribuicao($user);
+      return $this->isCoordenadorOrComissao($user, $evento ) ||$this->isRevisorComAtribuicao($user);
     }
 }

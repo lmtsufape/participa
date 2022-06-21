@@ -5,6 +5,14 @@
         @include('componentes.mensagens')
     @enderror
 
+    <style>
+        select[readonly] {
+            background: #eee; /*Simular campo inativo - Sugestão @GabrielRodrigues*/
+            pointer-events: none;
+            touch-action: none;
+        }
+    </style>
+
     <div id="divListarCriterio" class="comissao">
         <div class="row">
             <div class="col-sm-12">
@@ -41,7 +49,7 @@
 
             <p class="card-text">
 
-                @foreach ($form->perguntas as $pergunta)
+                @foreach ($form->perguntas->sortBy("created_at") as $pergunta)
                     <div class="card">
                         <div class="card-body">
                             <p>Pergunta: {{$pergunta->pergunta}}</p>
@@ -52,7 +60,7 @@
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                    <input type="checkbox" disabled>
+                                                    <input type="checkbox" disabled @if($opcao->check) checked @endif>
                                                 </div>
                                             </div>
                                             <input type="text" class="form-control" value=" {{$opcao->titulo}}" disabled>
@@ -173,7 +181,7 @@
                                                     @enderror
                                                 </div>
 
-                                                @foreach ($form->perguntas as $index => $pergunta)
+                                                @foreach ($form->perguntas->sortBy("created_at") as $index => $pergunta)
                                                 <div class="col-md-12">
                                                     <div id="coautores" class="flexContainer">
                                                         <div class="item card" style="order:{{$index}}">
@@ -181,6 +189,7 @@
                                                                 <div class="col-sm-12">
                                                                     <label>Pergunta</label>
                                                                     <input type="text" syle="margin-bottom:10px" value="{{old('pergunta['.$index.']', $pergunta->pergunta)}}"  class="form-control " name="pergunta[]" required>
+                                                                    <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
                                                                 </div>
                                                                 <div class="col-sm-12" >
                                                                     <label>Resposta</label>
@@ -193,17 +202,19 @@
                                                                                     <div class="input-group pl-0 col-sm-10 mb-3">
                                                                                         <div class="input-group-prepend">
                                                                                             <div class="input-group-text">
-                                                                                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input">
+                                                                                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input" disabled @if($opcao->check) checked @endif>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control">
+                                                                                        <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control" readonly>
                                                                                     </div>
+                                                                                    <!--
+                                                                                    Botões de Adicionar e Remover Opção
                                                                                     <div class="col-sm-1 mt-2">
                                                                                         <a href="#" onclick="addRadioToResposta(event)"><i class="fas fa-plus"></i></a>
                                                                                     </div>
                                                                                     <div class="col-sm-1 mt-2">
                                                                                         <a href="#" class="radioDelete" onclick="removerOpcao(event)"><i class="fas fa-trash-alt"></i></a>
-                                                                                    </div>
+                                                                                    </div>-->
                                                                                 </div>
                                                                             </div>
                                                                             @endforeach
@@ -217,13 +228,13 @@
                                                                 </div>
                                                                 <div class="col-md-5">
                                                                     <div class="col-form-label text-md-left">
-                                                                        <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="checkboxVisibilidade[]" value="0">
+                                                                        <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="checkboxVisibilidade_{{$pergunta->id}}" @if($pergunta->visibilidade) checked @endif>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="exampleFormControlSelect1">Tipo</label>
-                                                                        <select onchange="escolha(this.value, event)" name="tipo[]" class="form-control" id="FormControlSelect">
+                                                                        <select onchange="escolha(this.value, event)" name="tipo[]" class="form-control" id="FormControlSelect" readonly="readonly">
                                                                             <option @if($pergunta->respostas->first()->opcoes->count()) selected @endif value="radio">Multipla escolha</option>
                                                                             <option @if($pergunta->respostas->first()->paragrafo) selected @endif value="paragrafo">Parágrafo</option>
                                                                             {{-- <option value="radio">Seleção</option> --}}
@@ -235,24 +246,26 @@
                                                                     <a href="#" class="delete pr-2 mr-2">
                                                                         <i class="fas fa-trash-alt fa-2x"></i>
                                                                     </a>
+                                                                    <!--
+                                                                    Botões de Subir e Descer
                                                                     <a href="#" onclick="moverElementoAF(event)">
                                                                         <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
                                                                     </a>
                                                                     <a href="#" onclick="moverElementoAF(event)">
                                                                         <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
                                                                     </a>
+                                                                    -->
 
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <a href="#" onclick="addLinha(event)" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">Adicionar pergunta</a>
                                                 </div>
                                                 @endforeach
-                                            </div>{{-- end row--}}
 
+                                            </div>{{-- end row--}}
                                                 <div class="col-md-12">
-                                                    <div id="coautores" class="flexContainer " >
+                                                    <div id="coautores2" class="flexContainer" style="width: 97.5%" >
                                                     </div>
                                                     <a href="#" onclick="addLinha(event)" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">Adicionar pergunta</a>
                                                 </div>
@@ -305,12 +318,13 @@
 
 
 @section('javascript')
-    @parent
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-    <script type="text/javascript">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-            let order = 1;
-            let pergunta = 1;
+    <script type="text/javascript">
+        let rep = 0;
+        let order = 1;
+        let pergunta = 1;
 
         function escolha(select){
             if('paragrafo' == select){
@@ -376,7 +390,7 @@
             event.preventDefault();
             order += 1;
             linha = montarLinhaInput(order);
-            $('#coautores').append(linha);
+            $('#coautores2').append(linha);
         }
         $(document).ready(function(){
 
@@ -388,7 +402,10 @@
 
             let div = document.createElement('div');
             console.log(div)
-            div.classList.add("col-md-10");
+            div.classList.add("col-md-12");
+            div.classList.add("row");
+            div.classList.add("p-0");
+            div.classList.add("ml-0");
 
             div.innerHTML = addCheckboxInput(id);
             let find = document.querySelector("#"+id);
@@ -402,7 +419,11 @@
 
         // Remover Coautor
         $(document).on('click','.delete',function(){
-            $(this).closest('.item').remove();
+            $(this).closest('.item').slideUp("normal", function (){
+                $(this).remove();
+            });
+
+            //$(this).closest('.item').remove();
                 return false;
         });
 
@@ -416,7 +437,7 @@
                         </div>
                         <div class="col-sm-8" >
                             <label>Resposta</label>
-                            <div class="row" id="row${order}">
+                            <div class="row" id="rowNew${order}">
                                 <div class="col-md-12">
                                     <input type="text" style="margin-bottom:10px" disabled='true' class="form-control " name="resposta[]">
                                 </div>
@@ -437,12 +458,6 @@
                             <a href="#" class="delete pr-2 mr-2">
                                 <i class="fas fa-trash-alt fa-2x"></i>
                             </a>
-                            <a href="#" onclick="myFunction(event)">
-                            <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                            </a>
-                            <a href="#" onclick="myFunction(event)">
-                            <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                            </a>
 
                         </div>
                     </div>
@@ -450,40 +465,63 @@
         }
 
         function montarOpcao(check){
-
+            rep += 1;
             return `<div  class="col-md-10 itemRadio">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input">
+                                <input id="${rep}" name="checkbox" type="checkbox" aria-label="Checkbox for following text input" onclick="changeResposta(${rep});">
+                                 <input hidden id="checked[${rep}]" name="tituloCheckoxMarc[${check}][]"  type="text" value="false" >
                                 </div>
                             </div>
-                            <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox">
+                            <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox" required>
                         </div>
                     </div>
                     <div class="col-md-1 mt-2">
                         <a href="#"  onclick="addCheckbox(event)"><i class="fas fa-plus"></i></a>
                     </div>
-                    <div class="col-md-1 mt-2">
-                        <a href="#" class="radioDelete" onclick="myFunction(event)"><i class="fas fa-trash-alt"></i></a>
-                    </div>`;
+                    `;
         }
 
-        function addCheckboxInput(check){
-            return `<div class="input-group mb-3">
+            function addCheckboxInput(check){
+                rep += 1;
+                return `
+                <div class="optionResposta col-md-12 p-0 m-0 row">
+                    <div class="input-group mb-3 col-md-10">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                            <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input">
+                            <input id="${rep}" name="checkbox" type="checkbox" aria-label="Checkbox for following text input" onclick="changeResposta(${rep});">
+                            <input hidden id="checked[${rep}]" name="tituloCheckoxMarc[${check}][]"  type="text" value="false" >
                             </div>
                         </div>
                         <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox">
-                    </div>`;
-        }
+                    </div>
+                    <div class="col-md-1 mt-2">
+                         <a type="button" class="removeRow" ><i class="fas fa-trash-alt"></i></a>
+                    </div>
+               </div>
+                   `;
+            }
 
         function addParagrafo(){
             return `<div class="col-md-12">
                         <input type="text" style="margin-bottom:10px" disabled='true' class="form-control" name="resposta[]" required>
                     </div>`;
         }
+
+        function changeResposta(marc)
+        {
+            if (document.getElementById(marc).checked)
+            {
+                document.getElementById('checked['+marc+']').value = 'true';
+            } else {
+                document.getElementById('checked['+marc+']').value = 'false';
+            }
+        }
+
+        $(document).on("click", ".removeRow", function(){
+            $(this).parents(".optionResposta").remove();
+        });
+
     </script>
 @endsection

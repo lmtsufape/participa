@@ -82,6 +82,15 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+                        @if ($isInscrito)
+                            @if($atv->vagas > 0 && Auth::user()->atividades()->find($atv->id) == null)
+                                <a type="button" class="btn btn-primary" href="{{route('atividades.inscricao', ['id'=>$atv->id])}}">Inscrever-se</a>
+                            @elseif(Auth::user()->atividades()->find($atv->id) != null)
+                                <a type="button" class="btn btn-primary"  href="{{route('atividades.cancelarInscricao', ['id'=>$atv->id])}}">Cancelar Inscrição</a>
+                            @else
+                                <button type="button" class="btn btn-danger"  style="pointer-events: none">Sem Vagas</button>
+                            @endif
+                        @endif
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                     </div>
                 </div>
@@ -185,6 +194,11 @@
                                             @if (session('message'))
                                                 <div class="alert alert-success">
                                                     {{ session('message') }}
+                                                </div>
+                                            @endif
+                                            @if (session('error'))
+                                                <div class="alert alert-danger">
+                                                    {{ session('error') }}
                                                 </div>
                                             @endif
                                             <div class="row">
