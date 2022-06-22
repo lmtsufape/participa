@@ -498,7 +498,7 @@
                             <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                             <div class="col-sm-6">
                                 <label for="titulo">Titulo*:</label>
-                                <input class="form-control apenasLetras @error('título') is-invalid @enderror" type="text" name="título" id="titulo" value="{{ old('título')}}" placeholder="Nova atividade" required>
+                                <input class="form-control @error('título') is-invalid @enderror" type="text" name="título" id="titulo" value="{{ old('título')}}" placeholder="Nova atividade" required>
 
                                 @error('título')
                                 <span class="invalid-feedback" role="alert">
