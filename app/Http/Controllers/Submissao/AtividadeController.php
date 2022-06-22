@@ -70,7 +70,7 @@ class AtividadeController extends Controller
 
         $validated = $request->validate([
             'idNovaAtividade'       => ['required', 'integer'],
-            'título'                => ['required', 'max:50'],
+            'título'                => ['required', 'max:150'],
             'tipo'                  => ['required', 'string'],
             'descrição'             => ['required', 'max:500'],
             'carga_horaria'         => ['nullable', 'string'],
@@ -270,7 +270,7 @@ class AtividadeController extends Controller
 
         $validated = $request->validate([
             'idAtividade'           => ['required', 'integer'],
-            'titulo'                => ['required', 'max:50'],
+            'titulo'                => ['required', 'max:150'],
             'tipo'                  => ['required', 'string'],
             'descricao'             => ['required', 'max:500'],
             'carga_horaria'         => ['nullable', 'string'],
