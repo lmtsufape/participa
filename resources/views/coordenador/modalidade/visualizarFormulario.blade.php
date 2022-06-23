@@ -21,7 +21,7 @@
         </div>
     </div>
     {{-- {{dd($modalidade->forms)}} --}}
-    @foreach ($modalidade->forms as $form)
+    @foreach ($modalidade->forms->sortBy("created_at") as $form)
         <div class="card" style="width: 48rem;">
             <div class="card-body">
             <h5 class="card-title">{{$form->titulo}}</h5>
@@ -457,7 +457,7 @@
                         <div class="col-md-5"></div>
                         <div class="col-sm-7">
                             <a href="#" class=" 2 pr-2 mr-2">
-                                <i class="fas fa-trash-alt fa-2x"></i>
+                                <i class="fas fa-trash-alt fa-2x delete2"></i>
                             </a>
 
                         </div>
