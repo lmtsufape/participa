@@ -119,6 +119,7 @@
                   <th>Evento</th>
                   <th>ID</th>
                   <th>Título</th>
+                  <th style="text-align:center">Coautores</th>
                   <th style="text-align:center">Baixar</th>
                   <th style="text-align:center">Editar</th>
                   <th style="text-align:center">Excluir</th>
@@ -133,6 +134,11 @@
                   <td>{{$trabalho->evento->nome}}</td>
                   <td>{{$trabalho->id}}</td>
                   <td>{{$trabalho->titulo}}</td>
+                  <td style="text-align:center">
+                    <a data-toggle="modal" data-target="#modalCoautoresTrabalho_{{$trabalho->id}}" style="cursor: pointer;">
+                      <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
+                    </a>
+                  </td>
                   <td style="text-align:center">
                     @if($trabalho->arquivo()->where('versaoFinal', true)->first() != null && Storage::disk()->exists($trabalho->arquivo()->where('versaoFinal', true)->first()->nome))
                       <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" style="font-size: 20px; color: #114048ff;" >
@@ -819,6 +825,30 @@
   @endif
 @endforeach
 
+@foreach ($trabalhos as $trabalho)
+    <!-- Modal de coautores trabalho -->
+    <div class="modal fade" id="modalCoautoresTrabalho_{{$trabalho->id}}" tabindex="-1" aria-labelledby="modalCoautoresTrabalho_{{$trabalho->id}}Label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <h5 class="modal-title">Coautores do trabalho {{$trabalho->titulo}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <label for="autor" style="font-weight: bold">{{__('Autor')}}:</label>
+            <p>{{$trabalho->autor->name}}</p>
+            <label for="autor" style="font-weight: bold">{{__('Coautores')}}:</label>
+            @foreach ($trabalho->coautors as $coautor)
+                <p>{{$coautor->user->name}}</p>
+            @endforeach
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Fim Modal coautores do trabalho -->
+@endforeach
 
 @foreach ($trabalhos as $trabalho)
   @if($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao)
