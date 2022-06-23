@@ -14,7 +14,7 @@ class Evento extends Model
    * @var array
    */
   protected $fillable = [
-      'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim', 'fotoEvento',
+      'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim', 'fotoEvento', 'icone',
       'enderecoId', 'coordenadorId', 'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo',
       'evento_pai_id', 'email',
   ];

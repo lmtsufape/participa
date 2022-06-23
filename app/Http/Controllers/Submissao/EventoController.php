@@ -44,6 +44,7 @@ use Illuminate\Http\Response;
 use PDF;
 use PhpParser\Node\Expr\AssignOp\Mod;
 use Svg\Gradient\Stop;
+use Intervention\Image\ImageManagerStatic as Image;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -1266,6 +1267,11 @@ class EventoController extends Controller
             $evento->save();
         }
 
+        if ($request->icone != null) {
+            $evento->icone = $this->uploadIconeFile($request, $evento);
+            $evento->save();
+        }
+
         $user = Auth::user();
         $subject = "Evento Criado";
         Mail::to($user->email)->send(new EventoCriado($user, $subject, $evento));
@@ -1287,6 +1293,25 @@ class EventoController extends Controller
             $path = 'public/eventos/' . $evento->id;
             $nome = $request->file('fotoEvento')->getClientOriginalName();
             Storage::putFileAs($path, $file, $nome);
+            return 'eventos/' . $evento->id . '/' . $nome;
+        }
+        return null;
+    }
+
+    public function uploadIconeFile($request, $evento)
+    {
+        if ($request->hasFile('icone')) {
+            $file = $request->icone;
+            $path = 'public/eventos/' . $evento->id;
+            $nome = 'icone.'.$request->file('icone')->getClientOriginalExtension();
+            Storage::putFileAs($path, $file, $nome);
+            $evento->save();
+
+            $file = Image::make(Storage::get('public/eventos/' . $evento->id . '/' . $nome));
+            $file->resize(600, 600);
+            Storage::delete('storage/eventos/' . $evento->id . '/' . $nome);
+            $file->save((storage_path('app/'.$path.'/'. $nome)));
+
             return 'eventos/' . $evento->id . '/' . $nome;
         }
         return null;
@@ -1407,6 +1432,25 @@ class EventoController extends Controller
             $nome = $request->file('fotoEvento')->getClientOriginalName();
             Storage::putFileAs($path, $file, $nome);
             $evento->fotoEvento = 'eventos/' . $evento->id . '/' . $nome;
+        }
+
+        if ($request->icone != null) {
+            if (Storage::disk()->exists('public/' . $evento->icone)) {
+                Storage::delete('storage/' . $evento->icone);
+            }
+            $file = $request->icone;
+            $path = 'public/eventos/' . $evento->id;
+            $nome = 'icone.'.$request->file('icone')->getClientOriginalExtension();
+            Storage::putFileAs($path, $file, $nome);
+            $evento->icone = 'eventos/' . $evento->id . '/' . $nome;
+
+            $evento->update();
+
+            $file = Image::make(Storage::get('public/' . $evento->icone));
+            $file->resize(600, 600);
+            Storage::delete('storage/' . $evento->icone);
+            $file->save((storage_path('app/'.$path.'/'. $nome)));
+
         }
 
         $evento->update();

@@ -2,16 +2,15 @@
 
 @section('content')
 
-    <div class="banner-perfil" style="position: relative; top: 65px;">
+    <div class="banner-perfil"  style="position: relative; top: 65px;">
         <div class="row justify-content-center curved" style="margin-bottom:-5px">
 
         </div>
 
         <div class="row justify-content-center">
             <div class="col-sm-12">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                    <path fill="#114048ff"
-                          fill-opacity="1" d="M0,288L80,261.3C160,235,320,181,480,176C640,171,800,213,960,
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#114048ff"
+                                                                                     fill-opacity="1" d="M0,288L80,261.3C160,235,320,181,480,176C640,171,800,213,960,
             218.7C1120,224,1280,192,1360,176L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,
             0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
                 </svg>
@@ -66,20 +65,17 @@
                                 @enderror
                             </div>
 
-                            @if ($eventoPai ?? '')
+                            <div class="col-sm-4">
+                                <label for="email" class="col-form-label">{{ __('Email*') }}</label>
+                                <input class="form-control @error('nome') is-invalid @enderror" type="email" value="{{old('email')}}" name="email" id="email" required autofocus
+                                       autocomplete="email">
 
-                                <div class="col-sm-4">
-                                    <label for="email" class="col-form-label">{{ __('Email*') }}</label>
-                                    <input class="form-control @error('nome') is-invalid @enderror" type="email" value="{{old('email')}}" name="email" id="email" required autofocus
-                                           autocomplete="email">
-
-                                    @error('email')
-                                    <span class="invalid-feedback" role="alert">
+                                @error('email')
+                                <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
-                                    @enderror
-                                </div>
-                            @endif
+                                @enderror
+                            </div>
 
                             {{-- <div class="col-sm-3">
                                 <label for="numeroParticipantes" class="col-form-label">{{ __('N° de Participantes') }}</label>
@@ -145,11 +141,10 @@
                         <br>
                         {{-- Descricao Evento --}}
                         <div class="row justify-content-center">
-                            <div class="col-sm-7">
+                            <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="exampleFormControlTextarea1">Descrição*</label>
-                                    <textarea class="form-control @error('descricao') is-invalid @enderror" required autocomplete="descricao" autofocus id="descricao" name="descricao"
-                                              rows="8">{{ old('descricao') }}</textarea>
+                                    <textarea class="form-control @error('descricao') is-invalid @enderror" required autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">{{ old('descricao') }}</textarea>
                                     @error('descricao')
                                     <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -157,26 +152,37 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-sm-5">
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-7">
                                 <div class="form-group">
-                                    <label for="fotoEvento">Logo</label>
+                                    <label for="fotoEvento">Banner</label>
                                     <div id="imagem-loader" class="imagem-loader">
                                         <img id="logo-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                     </div>
                                     <div style="display: none;">
-                                        <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror" name="fotoEvento" value="{{ old('fotoEvento') }}"
-                                               id="fotoEvento">
+                                        <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror" name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
                                     </div>
                                     <small style="position: relative; top: 5px;">Tamanho minimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-7">
-
+                                @error('fotoEvento')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
                             </div>
                             <div class="col-sm-5">
-                                @error('fotoEvento')
+                                <div class="form-group">
+                                    <label for="icone">Ícone</label>
+                                    <div id="imagem-loader-icone" class="imagem-loader">
+                                        <img id="icone-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                    </div>
+                                    <div style="display: none;">
+                                        <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror" name="icone" value="{{ old('icone') }}" id="icone">
+                                    </div>
+                                    <small style="position: relative; top: 5px;">O arquivo será redimensionado para 600 x 600;<br>Formato: JPEG, JPG, PNG</small>
+                                </div>
+                                @error('icone')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
@@ -187,8 +193,7 @@
                         <div class="row">
                             <div class="col-sm-3">
                                 <label for="dataInicio" class="col-form-label">{{ __('Início*') }}</label>
-                                <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror" name="dataInicio" value="{{ old('dataInicio') }}" required
-                                       autocomplete="dataInicio" autofocus>
+                                <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror" name="dataInicio" value="{{ old('dataInicio') }}" required autocomplete="dataInicio" autofocus>
 
                                 @error('dataInicio')
                                 <span class="invalid-feedback" role="alert">
@@ -198,8 +203,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <label for="dataFim" class="col-form-label">{{ __('Fim*') }}</label>
-                                <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror" name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim"
-                                       autofocus>
+                                <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror" name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim" autofocus>
 
                                 @error('dataFim')
                                 <span class="invalid-feedback" role="alert">
@@ -238,8 +242,7 @@
                         <div class="row justify-content-center">
                             <div class="col-sm-4">
                                 <label for="cep" class="col-form-label">{{ __('CEP*') }}</label>
-                                <input value="{{ old('cep') }}" onblur="pesquisacep(this.value);" id="cep" name="cep" type="text" class="form-control @error('cep') is-invalid @enderror" required
-                                       autocomplete="cep">
+                                <input value="{{ old('cep') }}" onblur="pesquisacep(this.value);" id="cep" name="cep" type="text" class="form-control @error('cep') is-invalid @enderror" required autocomplete="cep">
 
                                 @error('cep')
                                 <span class="invalid-feedback" role="alert">
@@ -259,8 +262,7 @@
                             </div>
                             <div class="col-sm-2">
                                 <label for="numero" class="col-form-label">{{ __('Número*') }}</label>
-                                <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" value="{{ old('numero') }}" required autocomplete="numero"
-                                       autofocus maxlength="10">
+                                <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" value="{{ old('numero') }}" required autocomplete="numero" autofocus maxlength="10">
 
                                 @error('numero')
                                 <span class="invalid-feedback" role="alert">
@@ -275,8 +277,7 @@
                         <div class="row justify-content-center">
                             <div class="col-sm-3">
                                 <label for="bairro" class="col-form-label">{{ __('Bairro*') }}</label>
-                                <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" value="{{ old('bairro') }}" required autocomplete="bairro"
-                                       autofocus>
+                                <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" value="{{ old('bairro') }}" required autocomplete="bairro" autofocus>
 
                                 @error('bairro')
                                 <span class="invalid-feedback" role="alert">
@@ -286,8 +287,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <label for="cidade" class="col-form-label">{{ __('Cidade*') }}</label>
-                                <input id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" value="{{ old('cidade') }}" required
-                                       autocomplete="cidade" autofocus>
+                                <input id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" value="{{ old('cidade') }}" required autocomplete="cidade" autofocus>
 
                                 @error('cidade')
                                 <span class="invalid-feedback" role="alert">
@@ -297,8 +297,7 @@
                             </div>
                             <div class="col-sm-4">
                                 <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
-                                <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="{{ old('complemento') }}"
-                                       autocomplete="complemento" autofocus>
+                                <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="{{ old('complemento') }}" autocomplete="complemento" autofocus>
 
                                 @error('complemento')
                                 <span class="invalid-feedback" role="alert">
@@ -388,9 +387,9 @@
 
 @endsection
 @section('javascript')
-    <script type="text/javascript">
-        $(document).ready(function ($) {
-            CKEDITOR.replace('descricao');
+    <script type="text/javascript" >
+        $(document).ready(function($){
+            CKEDITOR.replace( 'descricao' );
             $('#cep').mask('00000-000');
             $(".apenasLetras").mask("#", {
                 maxlength: false,
@@ -405,13 +404,26 @@
                 }
             });*/
 
-            $('#imagem-loader').click(function () {
+            $('#imagem-loader').click(function() {
                 $('#logo-input').click();
-                $('#logo-input').change(function () {
+                $('#logo-input').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
-                        file.onload = function (e) {
+                        file.onload = function(e) {
                             document.getElementById("logo-preview").src = e.target.result;
+                        };
+                        file.readAsDataURL(this.files[0]);
+                    }
+                })
+            });
+
+            $('#imagem-loader-icone').click(function() {
+                $('#icone-input').click();
+                $('#icone-input').change(function() {
+                    if (this.files && this.files[0]) {
+                        var file = new FileReader();
+                        file.onload = function(e) {
+                            document.getElementById("icone-preview").src = e.target.result;
                         };
                         file.readAsDataURL(this.files[0]);
                     }
@@ -422,19 +434,18 @@
 
         function limpa_formulário_cep() {
             //Limpa valores do formulário de cep.
-            document.getElementById('rua').value = ("");
-            document.getElementById('bairro').value = ("");
-            document.getElementById('cidade').value = ("");
-            document.getElementById('uf').value = ("");
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
         }
-
         function meu_callback(conteudo) {
             if (!("erro" in conteudo)) {
                 //Atualiza os campos com os valores.
-                document.getElementById('rua').value = (conteudo.logradouro);
-                document.getElementById('bairro').value = (conteudo.bairro);
-                document.getElementById('cidade').value = (conteudo.localidade);
-                document.getElementById('uf').value = (conteudo.uf);
+                document.getElementById('rua').value=(conteudo.logradouro);
+                document.getElementById('bairro').value=(conteudo.bairro);
+                document.getElementById('cidade').value=(conteudo.localidade);
+                document.getElementById('uf').value=(conteudo.uf);
             } //end if.
             else {
                 //CEP não Encontrado.
@@ -442,7 +453,6 @@
                 alert("CEP não encontrado.");
             }
         }
-
         function pesquisacep(valor) {
             //Nova variável "cep" somente com dígitos.
             var cep = valor.replace(/\D/g, '');
@@ -451,16 +461,16 @@
                 //Expressão regular para validar o CEP.
                 var validacep = /^[0-9]{8}$/;
                 //Valida o formato do CEP.
-                if (validacep.test(cep)) {
+                if(validacep.test(cep)) {
                     //Preenche os campos com "..." enquanto consulta webservice.
-                    document.getElementById('rua').value = "...";
-                    document.getElementById('bairro').value = "...";
-                    document.getElementById('cidade').value = "...";
-                    document.getElementById('uf').value = "...";
+                    document.getElementById('rua').value="...";
+                    document.getElementById('bairro').value="...";
+                    document.getElementById('cidade').value="...";
+                    document.getElementById('uf').value="...";
                     //Cria um elemento javascript.
                     var script = document.createElement('script');
                     //Sincroniza com o callback.
-                    script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
+                    script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
                     //Insere script no documento e carrega o conteúdo.
                     document.body.appendChild(script);
                 } //end if.

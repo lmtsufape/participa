@@ -127,9 +127,12 @@
                                             <div class="col-md-4">
                                                 <div class="card h-100 shadow" style="width: 16rem; margin:8px; border: 0px solid #1492E6; border-radius: 20px;">
                                                     <div style="width: 100%; text-align: center; padding-top: 10;">
-                                                        @if ($evento->fotoEvento != null)
-                                                            <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap" style="height: 200px;
+                                                        @if ($evento->icone != null)
+                                                            <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->icone) }}" alt="Card image cap" style="height: 200px;
                               width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
+                                                        @elseif ($evento->fotoEvento != null)
+                                                            <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap" style="height: 200px;
+                            width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
                                                         @else
                                                             <img class="card-img-top img-flex" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap" style="height: 200px;
                               width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
@@ -172,9 +175,12 @@
                                             <div class="col-md-4">
                                                 <div class="card h-100 shadow" style="width: 16rem; margin:8px; border: 0px solid #1492E6; border-radius: 20px;">
                                                     <div style="width: 100%; text-align: center; padding-top: 10px;">
-                                                        @if ($evento->fotoEvento != null)
-                                                            <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap" style="height: 200px;
+                                                        @if ($evento->icone != null)
+                                                            <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->icone) }}" alt="Card image cap" style="height: 200px;
                               width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
+                                                        @elseif ($evento->fotoEvento != null)
+                                                            <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap" style="height: 200px;
+                            width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
                                                         @else
                                                             <img class="card-img-top img-flex" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap" style="height: 200px;
                               width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
