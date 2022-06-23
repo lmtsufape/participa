@@ -243,7 +243,7 @@
                                                                 </div>
                                                                 <div class="col-md-5"></div>
                                                                 <div class="col-sm-7">
-                                                                    <a href="#" class="delete pr-2 mr-2">
+                                                                    <a href="#" class="delete2 pr-2 mr-2">
                                                                         <i class="fas fa-trash-alt fa-2x"></i>
                                                                     </a>
                                                                     <!--
@@ -318,6 +318,7 @@
 
 
 @section('javascript')
+    @parent
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
@@ -418,7 +419,7 @@
         });
 
         // Remover Coautor
-        $(document).on('click','.delete',function(){
+        $(document).on('click','.delete2',function(){
             $(this).closest('.item').slideUp("normal", function (){
                 $(this).remove();
             });
@@ -455,7 +456,7 @@
                         </div>
                         <div class="col-md-5"></div>
                         <div class="col-sm-7">
-                            <a href="#" class="delete pr-2 mr-2">
+                            <a href="#" class=" 2 pr-2 mr-2">
                                 <i class="fas fa-trash-alt fa-2x"></i>
                             </a>
 
