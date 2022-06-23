@@ -168,7 +168,7 @@
                                 <div style="display: none;">
                                     <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror" name="icone" value="{{ old('icone') }}" id="icone">
                                 </div>
-                                <small style="position: relative; top: 5px;">Tamanho minimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
+                                <small style="position: relative; top: 5px;">O arquivo será redimensionado para 600 x 600;<br>Formato: JPEG, JPG, PNG</small>
                             </div>
                             @error('icone')
                                 <span class="invalid-feedback" role="alert">

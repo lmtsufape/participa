@@ -130,6 +130,9 @@
                                                         @if ($evento->icone != null)
                                                             <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->icone) }}" alt="Card image cap" style="height: 200px;
                               width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
+                                                        @elseif ($evento->fotoEvento != null)
+                                                            <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap" style="height: 200px;
+                            width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
                                                         @else
                                                             <img class="card-img-top img-flex" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap" style="height: 200px;
                               width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
@@ -175,6 +178,9 @@
                                                         @if ($evento->icone != null)
                                                             <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->icone) }}" alt="Card image cap" style="height: 200px;
                               width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
+                                                        @elseif ($evento->fotoEvento != null)
+                                                            <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="Card image cap" style="height: 200px;
+                            width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
                                                         @else
                                                             <img class="card-img-top img-flex" src="{{ asset('img/colorscheme.png') }}" alt="Card image cap" style="height: 200px;
                               width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">

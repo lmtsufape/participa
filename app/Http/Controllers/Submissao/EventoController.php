@@ -44,6 +44,7 @@ use Illuminate\Http\Response;
 use PDF;
 use PhpParser\Node\Expr\AssignOp\Mod;
 use Svg\Gradient\Stop;
+use Intervention\Image\ImageManagerStatic as Image;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -1302,8 +1303,15 @@ class EventoController extends Controller
         if ($request->hasFile('icone')) {
             $file = $request->icone;
             $path = 'public/eventos/' . $evento->id;
-            $nome = $request->file('icone')->getClientOriginalName();
+            $nome = 'icone.'.$request->file('icone')->getClientOriginalExtension();
             Storage::putFileAs($path, $file, $nome);
+            $evento->save();
+
+            $file = Image::make(Storage::get('public/eventos/' . $evento->id . '/' . $nome));
+            $file->resize(600, 600);
+            Storage::delete('storage/eventos/' . $evento->id . '/' . $nome);
+            $file->save((storage_path('app/'.$path.'/'. $nome)));
+
             return 'eventos/' . $evento->id . '/' . $nome;
         }
         return null;
@@ -1432,9 +1440,17 @@ class EventoController extends Controller
             }
             $file = $request->icone;
             $path = 'public/eventos/' . $evento->id;
-            $nome = $request->file('icone')->getClientOriginalName();
+            $nome = 'icone.'.$request->file('icone')->getClientOriginalExtension();
             Storage::putFileAs($path, $file, $nome);
             $evento->icone = 'eventos/' . $evento->id . '/' . $nome;
+
+            $evento->update();
+
+            $file = Image::make(Storage::get('public/' . $evento->icone));
+            $file->resize(600, 600);
+            Storage::delete('storage/' . $evento->icone);
+            $file->save((storage_path('app/'.$path.'/'. $nome)));
+
         }
 
         $evento->update();
