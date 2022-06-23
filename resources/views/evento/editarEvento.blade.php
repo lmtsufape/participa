@@ -121,7 +121,7 @@
                     <br>
                     {{-- Descricao Evento --}}
                     <div class="row justify-content-center">
-                        <div class="col-sm-7">
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="exampleFormControlTextarea1">Descrição*</label>
                                 <textarea class="form-control @error('descricao') is-invalid @enderror" id="descricao" name="descricao" rows="8">@if(old('descricao') != null) {{ old('descricao') }} @else {{$evento->descricao}} @endif</textarea>
@@ -132,9 +132,11 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-sm-5">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-7">
                             <div class="form-group">
-                                <label for="fotoEvento">Logo</label>
+                                <label for="fotoEvento">Banner</label>
                                 <div id="imagem-loader" class="imagem-loader">
                                     @if ($evento->fotoEvento != null)
                                         <img id="logo-preview" src="{{asset('storage/'.$evento->fotoEvento)}}" alt="">
@@ -147,14 +149,28 @@
                                 </div>
                                 <small style="position: relative; top: 5px;">Tamanho minimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-7">
-
+                            @error('fotoEvento')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div class="col-sm-5">
-                            @error('fotoEvento')
+                            <div class="form-group">
+                                <label for="icone">Ícone</label>
+                                <div id="imagem-loader-icone" class="imagem-loader">
+                                    @if ($evento->icone != null)
+                                        <img id="icone-preview" src="{{asset('storage/'.$evento->icone)}}" alt="">
+                                    @else
+                                        <img id="icone-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                    @endif
+                                </div>
+                                <div style="display: none;">
+                                    <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror" name="icone" value="{{ old('icone') }}" id="icone">
+                                </div>
+                                <small style="position: relative; top: 5px;">O arquivo será redimensionado para 600 x 600;<br>Formato: JPEG, JPG, PNG</small>
+                            </div>
+                            @error('icone')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
@@ -378,6 +394,19 @@
                     var file = new FileReader();
                     file.onload = function(e) {
                         document.getElementById("logo-preview").src = e.target.result;
+                    };
+                    file.readAsDataURL(this.files[0]);
+                }
+            })
+        });
+
+        $('#imagem-loader-icone').click(function() {
+            $('#icone-input').click();
+            $('#icone-input').change(function() {
+                if (this.files && this.files[0]) {
+                    var file = new FileReader();
+                    file.onload = function(e) {
+                        document.getElementById("icone-preview").src = e.target.result;
                     };
                     file.readAsDataURL(this.files[0]);
                 }
