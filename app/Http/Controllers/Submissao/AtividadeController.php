@@ -8,6 +8,7 @@ use App\Models\Submissao\Evento;
 use App\Models\Submissao\TipoAtividade;
 use App\Models\Submissao\DatasAtividade;
 use App\Models\Users\Convidado;
+use App\Models\Users\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Mail\ConvidadoAtividade\EmailConvidadoAtividade;
@@ -619,9 +620,9 @@ class AtividadeController extends Controller
         return redirect()->back()->with(['error' => ''.$atividade->titulo.' não possui mais vagas!']);
     }
 
-    public function cancelarInscricao($id){
+    public function cancelarInscricao($id,$user){
         $atividade = Atividade::find($id);
-        $user = Auth::user();
+        $user = User::find($user);
         $atividade->vagas += 1;
         $atividade->users()->detach($user->id);
         $atividade->update();
