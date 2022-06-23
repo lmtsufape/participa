@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Submissao;
 
+use App\Exports\AtividadeInscritosExport;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\TipoAtividade;
 use App\Models\Submissao\DatasAtividade;
 use App\Models\Users\Convidado;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Mail\ConvidadoAtividade\EmailConvidadoAtividade;
 use App\Mail\ConvidadoAtividade\EmailDesconvidandoAtividade;
@@ -68,9 +70,9 @@ class AtividadeController extends Controller
 
         $validated = $request->validate([
             'idNovaAtividade'       => ['required', 'integer'],
-            'título'                => ['required', 'max:50'],
+            'título'                => ['required', 'max:150'],
             'tipo'                  => ['required', 'string'],
-            'descrição'             => ['required', 'max:500'],
+            'descrição'             => ['required', 'max:1500'],
             'carga_horaria'         => ['nullable', 'string'],
             'vagas'                 => ['nullable', 'string'],
             'valor'                 => ['nullable', 'string'],
@@ -268,9 +270,9 @@ class AtividadeController extends Controller
 
         $validated = $request->validate([
             'idAtividade'           => ['required', 'integer'],
-            'titulo'                => ['required', 'max:50'],
+            'titulo'                => ['required', 'max:150'],
             'tipo'                  => ['required', 'string'],
-            'descricao'             => ['required', 'max:500'],
+            'descricao'             => ['required', 'max:1500'],
             'carga_horaria'         => ['nullable', 'string'],
             'vagas'                 => ['nullable', 'string'],
             'valor'                 => ['nullable', 'string'],
@@ -595,5 +597,43 @@ class AtividadeController extends Controller
 
     public function valida_email($email) {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
+    public function listarInscritos($id)
+    {
+        $atividade = Atividade::find($id);
+        $inscritos = $atividade->users()->get();
+        return view('coordenador.atividade.inscritos', ['inscritos' => $inscritos, 'atividade' => $atividade,'evento' => $atividade->evento]);
+
+    }
+
+    public function inscrever($id){
+        $atividade = Atividade::find($id);
+        if($atividade->vagas >0){
+            $user = Auth::user();
+            $atividade->vagas -= 1;
+            $atividade->users()->attach($user->id);
+            $atividade->update();
+            return redirect()->back()->with(['message' => 'Inscrito em '.$atividade->titulo.' com sucesso!']);
+        }
+        return redirect()->back()->with(['error' => ''.$atividade->titulo.' não possui mais vagas!']);
+    }
+
+    public function cancelarInscricao($id){
+        $atividade = Atividade::find($id);
+        $user = Auth::user();
+        $atividade->vagas += 1;
+        $atividade->users()->detach($user->id);
+        $atividade->update();
+
+        return redirect()->back()->with(['message' => 'Inscrição em '.$atividade->titulo.' cancelada sucesso!']);
+    }
+
+    public function exportInscritos($id)
+    {
+        $atividade = Atividade::find($id);
+        return (new AtividadeInscritosExport($atividade))->download($atividade->titulo . '.csv', \Maatwebsite\Excel\Excel::CSV, [
+            'Content-Type' => 'text/csv',
+        ]);
     }
 }

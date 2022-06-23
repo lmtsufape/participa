@@ -498,7 +498,7 @@
                             <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                             <div class="col-sm-6">
                                 <label for="titulo">Titulo*:</label>
-                                <input class="form-control apenasLetras @error('título') is-invalid @enderror" type="text" name="título" id="titulo" value="{{ old('título')}}" placeholder="Nova atividade" required>
+                                <input class="form-control @error('título') is-invalid @enderror" type="text" name="título" id="titulo" value="{{ old('título')}}" placeholder="Nova atividade" required>
 
                                 @error('título')
                                 <span class="invalid-feedback" role="alert">
@@ -1038,6 +1038,7 @@
                                 <th>Local</th>
                                 <th>Carga Horária</th>
                                 <th>Visibilidade</th>
+                                <th>Inscritos</th>
                                 <th>Excluir</th>
                             </th>
                         </thead>
@@ -1052,6 +1053,7 @@
                                     <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->local}}</td>
                                     <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">@if(empty($atv->carga_horaria)) Nenhuma @else {{$atv->carga_horaria}} @endif</td>
                                     <td><input id="checkbox_{{$atv->id}}" type="checkbox" @if($atv->visibilidade_participante) checked @endif onclick="setVisibilidadeAtv({{$atv->id}})"></td>
+                                    <td><a type="button" class="btn btn-primary" href="{{route('atividades.inscritos',['id'=> $atv->id])}}">Lista</a></td>
                                     <td data-toggle="modal" data-target="#modalExcluirAtividade{{$atv->id}}"><button style="border: none; background-color: rgba(255, 255, 255, 0);"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></button></td>
                                 </th>
                             </tbody>
