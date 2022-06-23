@@ -652,7 +652,6 @@ body{
 }
 
 .nav-link:hover, .nav-link:focus {
-    <!-- background-image: linear-gradient( to right, darkgreen, darkslategrey, forestgreen ); -->
     border-radius: 10px;
     filter: alpha(opacity=100);
     -moz-opacity:1;
@@ -660,6 +659,11 @@ body{
     transition: 0.3s;
     padding-right: 10px;
     box-shadow: 5px 5px 5px black;
+    background-color: #298F7D;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: rgb(255 255 255);
 }
 
 .card-visualizar-evento {
