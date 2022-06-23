@@ -1266,6 +1266,11 @@ class EventoController extends Controller
             $evento->save();
         }
 
+        if ($request->icone != null) {
+            $evento->icone = $this->uploadIconeFile($request, $evento);
+            $evento->save();
+        }
+
         $user = Auth::user();
         $subject = "Evento Criado";
         Mail::to($user->email)->send(new EventoCriado($user, $subject, $evento));
@@ -1286,6 +1291,18 @@ class EventoController extends Controller
             $file = $request->fotoEvento;
             $path = 'public/eventos/' . $evento->id;
             $nome = $request->file('fotoEvento')->getClientOriginalName();
+            Storage::putFileAs($path, $file, $nome);
+            return 'eventos/' . $evento->id . '/' . $nome;
+        }
+        return null;
+    }
+
+    public function uploadIconeFile($request, $evento)
+    {
+        if ($request->hasFile('icone')) {
+            $file = $request->icone;
+            $path = 'public/eventos/' . $evento->id;
+            $nome = $request->file('icone')->getClientOriginalName();
             Storage::putFileAs($path, $file, $nome);
             return 'eventos/' . $evento->id . '/' . $nome;
         }
@@ -1407,6 +1424,17 @@ class EventoController extends Controller
             $nome = $request->file('fotoEvento')->getClientOriginalName();
             Storage::putFileAs($path, $file, $nome);
             $evento->fotoEvento = 'eventos/' . $evento->id . '/' . $nome;
+        }
+
+        if ($request->icone != null) {
+            if (Storage::disk()->exists('public/' . $evento->icone)) {
+                Storage::delete('storage/' . $evento->icone);
+            }
+            $file = $request->icone;
+            $path = 'public/eventos/' . $evento->id;
+            $nome = $request->file('icone')->getClientOriginalName();
+            Storage::putFileAs($path, $file, $nome);
+            $evento->icone = 'eventos/' . $evento->id . '/' . $nome;
         }
 
         $evento->update();
