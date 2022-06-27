@@ -623,9 +623,9 @@ class AtividadeController extends Controller
         return redirect()->back()->with(['error' => ''.$atividade->titulo.' não possui mais vagas!']);
     }
 
-    public function cancelarInscricao($id,$user){
+    public function cancelarInscricao($id){
         $atividade = Atividade::find($id);
-        $user = User::find($user);
+        $user = auth()->user();
         $atividade->vagas += 1;
         $atividade->users()->detach($user->id);
         $atividade->update();
