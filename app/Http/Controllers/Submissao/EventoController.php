@@ -1253,6 +1253,7 @@ class EventoController extends Controller
         $endereco = Endereco::create($data);
         $data['enderecoId'] = $endereco->id;
         $data['coordenadorId'] = Auth::user()->id;
+        $data['data_limite_inscricao'] = $request->dataLimiteInscricao;
         $evento = Evento::create($data);
 
         $evento->coordenadorId = auth()->user()->id;
@@ -1270,13 +1271,6 @@ class EventoController extends Controller
         if ($request->icone != null) {
             $evento->icone = $this->uploadIconeFile($request, $evento);
             $evento->save();
-        }
-
-        if ($request->dataLimiteInscricao != null){
-            $request->validate([
-                'dataLimiteInscricao'   => ['required', 'date']
-            ]);
-            $evento->data_limite_inscricao = $request->dataLimiteInscricao;
         }
 
         $user = Auth::user();
