@@ -17,7 +17,7 @@ class Evento extends Model
   protected $fillable = [
       'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim', 'fotoEvento', 'icone',
       'enderecoId', 'coordenadorId', 'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo',
-      'evento_pai_id', 'data_limite_inscricao',
+      'evento_pai_id', 'email', 'data_limite_inscricao'
   ];
 
   public function endereco(){
