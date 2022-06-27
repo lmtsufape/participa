@@ -202,6 +202,25 @@
                     </div>{{-- end Fim do Evento --}}
                     </div>
 
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="dataLimiteInscricao" class="col-form-label">{{ __('Data de encerramento de inscrições') }}</label>
+                            <small>
+                                (<span style="color: red">Disponível ao habilitar o módulo de inscrição!</span>)<br>
+                                Informe uma data para encerramento das inscrições no evento. Caso não informada, a data limite para inscrição no evento será um dia prévio a data de início do evento.
+                            </small>
+                        </div>
+                        <div class="col-sm-3">
+                            <input id="dataLimiteInscricao" type="datetime-local" class="form-control @error('dataLimiteInscricao') is-invalid @enderror" name="dataLimiteInscricao" @if(old('dataLimiteInscricao') != null) value="{{ old('dataLimiteInscricao') }}" @else value="{{$evento->data_limite_inscricao}}" @endif autocomplete="dataLimiteInscricao" autofocus>
+
+                            @error('dataLimiteInscricao')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div class="row subtitulo" style="margin-top:20px">
                         <div class="col-sm-12">
                             <p>Endereço</p>

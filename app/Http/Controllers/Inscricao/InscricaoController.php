@@ -279,6 +279,10 @@ class InscricaoController extends Controller
     public function inscrever(InscricaoRequest $request)
     {
         $request->validated();
+        $evento =  Evento::find($request->evento_id);
+        if($evento->eventoInscricoesEncerradas()){
+            return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrições encerradas.');
+        }
         $inscricao = new Inscricao();
         $inscricao->user_id = auth()->user()->id;
         $inscricao->evento_id = $request->evento_id;

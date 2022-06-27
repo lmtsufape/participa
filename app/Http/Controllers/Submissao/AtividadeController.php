@@ -609,6 +609,9 @@ class AtividadeController extends Controller
 
     public function inscrever($id){
         $atividade = Atividade::find($id);
+        if($atividade->atividadeInscricoesEncerradas()){
+            return redirect()->back()->with(['error' => ''.$atividade->titulo.' já iniciada. Não aceitamos mais inscritos.']);
+        }
         if($atividade->vagas >0){
             $user = Auth::user();
             $atividade->vagas -= 1;

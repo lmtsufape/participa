@@ -83,12 +83,20 @@
                     </div>
                     <div class="modal-footer">
                         @if ($isInscrito)
-                            @if($atv->vagas > 0 && Auth::user()->atividades()->find($atv->id) == null)
-                                <a type="button" class="btn btn-primary" href="{{route('atividades.inscricao', ['id'=>$atv->id])}}">Inscrever-se</a>
-                            @elseif(Auth::user()->atividades()->find($atv->id) != null)
-                                <a type="button" class="btn btn-primary"  href="{{route('atividades.cancelarInscricao', ['id'=>$atv->id])}}">Cancelar Inscrição</a>
+                            @if(!$atv->atividadeInscricoesEncerradas())
+                                @if($atv->vagas > 0 && Auth::user()->atividades()->find($atv->id) == null)
+                                    <a type="button" class="btn btn-primary" href="{{route('atividades.inscricao', ['id'=>$atv->id])}}">Inscrever-se</a>
+                                @elseif(Auth::user()->atividades()->find($atv->id) != null)
+                                    <a type="button" class="btn btn-primary"  href="{{route('atividades.cancelarInscricao', ['id'=>$atv->id])}}">Cancelar Inscrição</a>
+                                @else
+                                    <button type="button" class="btn btn-danger"  style="pointer-events: none">Sem Vagas</button>
+                                @endif
                             @else
-                                <button type="button" class="btn btn-danger"  style="pointer-events: none">Sem Vagas</button>
+                                @if(Auth::user()->atividades()->find($atv->id) != null)
+                                    <button type="button" class="btn btn-primary" disabled>Inscrito</button>
+                                @else
+                                    <button type="button" class="btn btn-danger" disabled>Inscrições encerradas</button>
+                                @endif
                             @endif
                         @endif
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -255,7 +263,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <button id="btn-inscrevase" class="btn btn-primary" data-toggle="modal" data-target="#modalInscrever" @if ($isInscrito) disabled @endif>@if ($isInscrito) Já inscrito @else Inscreva-se @endif</button>
+                                                    <button id="btn-inscrevase" class="btn btn-primary" data-toggle="modal" data-target="#modalInscrever" @if ($isInscrito || $encerrada) disabled @endif>@if ($isInscrito) Já inscrito @elseif($encerrada) Encerradas @else Inscreva-se @endif</button>
                                                 </div>
                                             </div>
                                         </div>
