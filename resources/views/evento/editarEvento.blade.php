@@ -34,7 +34,7 @@
                         </div>
                         {{-- nome | Tipo--}}
                         <div class="row justify-content-center">
-                            <div class="@if($evento->email != null) col-sm-4 @else col-sm-6 @endif">{{--Nome do evento--}}
+                            <div class="@if($evento->evento_pai_id != null) col-sm-4 @else col-sm-6 @endif">{{--Nome do evento--}}
                                 <label for="nome" class="col-form-label">{{ __('Nome*') }}</label>
                                 <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" @if(old('nome') != null) value="{{ old('nome') }}"
                                        @else value="{{$evento->nome}}" @endif required autocomplete="nome" autofocus>
@@ -46,7 +46,7 @@
                                 @enderror
                             </div>
 
-                            @if($evento->email != null)
+                            @if($evento->evento_pai_id != null)
                                 <div class="col-sm-4">
                                     <label for="email" class="col-form-label">{{ __('Email*') }}</label>
                                     <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" @if(old('email') != null) value="{{ old('email') }}"
@@ -73,7 +73,7 @@
                                 @enderror
                             </div> --}}
                             {{-- Tipo do evento --}}
-                            <div class="@if($evento->email != null) col-sm-2 @else col-sm-3 @endif">
+                            <div class="@if($evento->evento_pai_id != null) col-sm-2 @else col-sm-3 @endif">
                                 <label for="tipo" class="col-form-label">{{ __('Tipo*') }}</label>
                             <!-- <input value="{{$evento->tipo}}" id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" value="{{ old('tipo') }}" required autocomplete="tipo" autofocus> -->
                                 <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" required>
@@ -115,7 +115,7 @@
                             </span>
                                 @enderror
                             </div>{{-- Tipo do evento --}}
-                            <div class="@if($evento->email != null) col-sm-2 @else col-sm-3 @endif">
+                            <div class="@if($evento->evento_pai_id != null) col-sm-2 @else col-sm-3 @endif">
                                 <label for="recolhimento" class="col-form-label">{{ __('Recolhimento*') }}</label>
                                 <select name="recolhimento" id="recolhimento" class="form-control @error('recolhimento') is-invalid @enderror">
                                     @if (old('recolhimento') != null)
