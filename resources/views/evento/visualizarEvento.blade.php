@@ -489,7 +489,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-8">
-                                                <a href="mailto:{{ $evento->coordenador->email }}">
+                                                <a href="mailto:@if($evento->email != null) {{$evento->email}} @else {{ $evento->coordenador->email }} @endif">
                                                     <div style="margin-top: 18px;">
                                                         <h6 style="margin-bottom: 0px; font-size: 16px; font-weight: bold;">Contato</h6>
                                                         {{-- {{$evento->coordenador->email}} --}}
