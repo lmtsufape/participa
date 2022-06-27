@@ -1253,6 +1253,7 @@ class EventoController extends Controller
         $endereco = Endereco::create($data);
         $data['enderecoId'] = $endereco->id;
         $data['coordenadorId'] = Auth::user()->id;
+        $data['data_limite_inscricao'] = $request->dataLimiteInscricao;
         $evento = Evento::create($data);
 
         $evento->coordenadorId = auth()->user()->id;
@@ -1326,6 +1327,7 @@ class EventoController extends Controller
     public function show($id)
     {
         $evento = Evento::find($id);
+        $encerrada = $evento->eventoInscricoesEncerradas();
         if (auth()->user()) {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -1362,7 +1364,7 @@ class EventoController extends Controller
             if ($dataInicial == null) {
                 $dataInicial = "";
             }
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'dataInicial', 'isInscrito', 'subeventos'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'dataInicial', 'isInscrito', 'subeventos', 'encerrada'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -1382,7 +1384,7 @@ class EventoController extends Controller
             if ($dataInicial == null) {
                 $dataInicial = "";
             }
-            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'mytime', 'etiquetas', 'formSubTraba', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos'));
+            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'mytime', 'etiquetas', 'formSubTraba', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada'));
         }
     }
 
@@ -1451,6 +1453,13 @@ class EventoController extends Controller
             Storage::delete('storage/' . $evento->icone);
             $file->save((storage_path('app/'.$path.'/'. $nome)));
 
+        }
+
+        if ($request->dataLimiteInscricao != null){
+            $request->validate([
+                'dataLimiteInscricao'   => ['required', 'date']
+            ]);
+            $evento->data_limite_inscricao = $request->dataLimiteInscricao;
         }
 
         $evento->update();

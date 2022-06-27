@@ -3,6 +3,7 @@
 namespace App\Models\Submissao;
 
 use App\Models\Users\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +17,7 @@ class Evento extends Model
   protected $fillable = [
       'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim', 'fotoEvento', 'icone',
       'enderecoId', 'coordenadorId', 'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo',
-      'evento_pai_id', 'email',
+      'evento_pai_id', 'email', 'data_limite_inscricao'
   ];
 
   public function endereco(){
@@ -152,5 +153,30 @@ class Evento extends Model
     }
 
     return $users_inscricoes;
+  }
+
+  /**
+   * Tells if the event subscriptions are done.
+   *
+   * @param \App\Evento $evento
+   * @return boolean
+   */
+
+  public function eventoInscricoesEncerradas(){
+    if($this->data_limite_inscricao != null){
+        if($this->data_limite_inscricao < now()){
+            $encerrada = true;
+        }else{
+            $encerrada = false;
+        }
+    }else{
+        if($this->dataInicio <= Carbon::today()){
+            $encerrada = true;
+        }else{
+            $encerrada = false;
+        }
+    }
+
+    return $encerrada;
   }
 }

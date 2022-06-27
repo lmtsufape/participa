@@ -3,6 +3,7 @@
 namespace App\Models\Submissao;
 
 use App\Models\Users\User;
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 
 class Atividade extends Model
@@ -40,6 +41,18 @@ class Atividade extends Model
 
   public function users() {
     return $this->belongsToMany(User::class, 'atividades_user', 'atividade_id', 'user_id');
+  }
+
+
+  public function atividadeInscricoesEncerradas(){
+    $primeiraAtividade = $this->datasAtividade()->orderBy('data', 'ASC')->orderBy('hora_inicio', 'ASC')->first();
+    $dataPrimeiraAtividade = new DateTime($primeiraAtividade->data.$primeiraAtividade->hora_inicio);
+    if($dataPrimeiraAtividade < now()){
+      $encerrada = true;
+    }else{
+      $encerrada = false;
+    }
+    return $encerrada;
   }
 
 }

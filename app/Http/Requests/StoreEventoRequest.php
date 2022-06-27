@@ -43,6 +43,7 @@ class StoreEventoRequest extends FormRequest
             'complemento' => ['nullable', 'string'],
             'eventoPai'   => ['nullable', new NaoESubEvento],
             'termos'      => ['required'],
+            'dataLimiteInscricao'   => ['nullable', 'date'],
         ];
     }
 
