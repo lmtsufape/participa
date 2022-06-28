@@ -170,7 +170,7 @@ class Evento extends Model
             $encerrada = false;
         }
     }else{
-        if($this->dataInicio <= Carbon::today()){
+        if($this->dataFim <= date_format(Carbon::today(),"Y-m-d")){
             $encerrada = true;
         }else{
             $encerrada = false;
