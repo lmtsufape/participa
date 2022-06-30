@@ -36,11 +36,30 @@
                     <td >{{$inscrito->celular}}</td>
                     <td >{{$inscrito->cpf}}</td>
                     <td>{{$inscrito->instituicao}}</td>
-                    <td><a type="button" class="btn btn-primary"
-                           href="{{route('atividades.cancelarInscricao', ['id'=>$atividade->id, 'user'=>$inscrito->id])}}"
-                           onclick="return confirm('Tem certeza que deseja cancelar a inscrição de {{$inscrito->name}}?')"
-                        >Cancelar Inscrição</a></td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCancelarInscricao{{$inscrito->id}}">
+                           Cancelar Inscrição
+                        </button>
+                    </td>
                     </tbody>
+                    <div class="modal fade" id="modalCancelarInscricao{{$inscrito->id}}" tabindex="-1" role="dialog" aria-labelledby="#label"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #114048ff; color: white;">
+                                    <h5 class="modal-title" id="#label">Confirmação</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body"> Tem certeza que deseja cancelar a inscrição de {{$inscrito->name}}? </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                                    <a href="{{route('atividades.cancelarInscricao', ['id'=>$atividade->id, 'user'=>$inscrito->id])}}" class="btn btn-primary">Sim</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
             </table>
         </div>
