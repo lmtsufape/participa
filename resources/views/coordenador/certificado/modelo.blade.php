@@ -555,7 +555,7 @@
                         width: medida.largura,
                     });
                 } else {
-                    medida = medidas.find(m => m.tipo == 7);
+                    medida = medidas.find(m => m.tipo == 9);
                     yoda = new Konva.Image({
                         x: parseInt(medida.x),
                         y: parseInt(medida.y),
