@@ -36,6 +36,7 @@ use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailParecerDisponivel;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\SubmissaoTrabalhoNotification;
+use App\Policies\EventoPolicy;
 
 class TrabalhoController extends Controller
 {
@@ -873,8 +874,8 @@ class TrabalhoController extends Controller
                 }
             }
             $arquivo = $trabalho->arquivoAvaliacao()->where([['versaoFinal', true], ['revisorId', $revisor->id]])->first();
-
-            if ($trabalho->evento->coordenadorId == auth()->user()->id || $trabalho->evento->coordComissaoId == auth()->user()->id) {
+            $eventoPolicy = new EventoPolicy();
+            if ($eventoPolicy->isCoordenadorOrCoordenadorDaComissaoCientifica(auth()->user(), $trabalho->evento)) {
                 if ($arquivo != null && Storage::disk()->exists($arquivo->nome)) {
                     return Storage::download($arquivo->nome);
                 }
