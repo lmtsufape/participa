@@ -78,7 +78,8 @@ class EventoController extends Controller
         $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
         $numeroRevisores = Revisor::where('evento_id', $evento->id)->select('user_id')->distinct()->get()->count();
         $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
-        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
+        $trabalhosArquivados = Trabalho::whereIn('areaId', $areasId)->where('status', 'arquivado')->count();
+        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->where('status', '!=', 'arquivado')->count();
 
         $trabalhosAvaliados = 0;
         foreach ($trabalhosId as $trabalho) {
@@ -91,6 +92,7 @@ class EventoController extends Controller
         return view('coordenador.informacoes', [
             'evento' => $evento,
             'trabalhosEnviados' => $trabalhosEnviados,
+            'trabalhosArquivados' => $trabalhosArquivados,
             'trabalhosAvaliados' => $trabalhosAvaliados,
             'trabalhosPendentes' => $trabalhosPendentes,
             'numeroRevisores' => $numeroRevisores,

@@ -36,6 +36,7 @@
                             <thead>
                               <tr>
                                 <th style="text-align:center">Enviados</th>
+                                <th style="text-align:center">Arquivados</th>
                                 <th style="text-align:center">Avaliados</th>
                                 <th style="text-align:center">Pendentes</th>
                               </tr>
@@ -43,6 +44,7 @@
                             <tbody>
                               <tr>
                                 <td style="text-align:center"> {{$trabalhosEnviados}} </td>
+                                <td style="text-align:center"> {{$trabalhosArquivados}} </td>
                                 <td style="text-align:center"> {{$trabalhosAvaliados}} </td>
                                 <td style="text-align:center"> {{$trabalhosPendentes}} </td>
                               </tr>
