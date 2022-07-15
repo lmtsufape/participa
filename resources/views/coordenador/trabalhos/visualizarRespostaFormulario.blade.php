@@ -126,7 +126,7 @@
             </div>
         </div>
     </form>
-    @if ($trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first() != null)
+    @if ($arquivoAvaliacao != null)
         <div class="d-flex justify-content-left">
             <a class="btn btn-primary" href="{{route('downloadAvaliacao', ['trabalhoId' => $trabalho->id, 'revisorUserId' => $revisorUser->id])}}">
                 <div class="btn-group">

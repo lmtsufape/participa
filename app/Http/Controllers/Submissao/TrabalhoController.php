@@ -881,7 +881,7 @@ class TrabalhoController extends Controller
                 }
                 return abort(404);
 
-            }else if(($revisor != null && $revisor->id == auth()->user()->id) || ($trabalho->status == 'avaliado' && $trabalho->autorId  == auth()->user()->id)) {
+            }else if(($revisor != null && $revisor->id == auth()->user()->id) || ($trabalho->status == 'avaliado' && $trabalho->autorId  == auth()->user()->id) || ($trabalho->avaliado($revisor->user) && $trabalho->autorId == auth()->user()->id)) {
                 if ($revisor->trabalhosAtribuidos->contains($trabalho) || ($trabalho->autorId  == auth()->user()->id)) {
                     if (Storage::disk()->exists($arquivo->nome)) {
                         return Storage::download($arquivo->nome);
