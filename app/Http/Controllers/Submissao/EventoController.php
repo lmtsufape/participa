@@ -1162,13 +1162,20 @@ class EventoController extends Controller
         $revisor = Revisor::find($request->revisorId);
         $revisorUser = User::find($revisor->user_id);
         $respostas = collect();
+        
+        $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first();
+        if($arquivoAvaliacao == null){
+            $permissoes_revisao = Revisor::where([['user_id', $revisor->user_id], ['evento_id', $evento->id]])->get()->map->only(['id']);;
+            $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->whereIn('revisorId', $permissoes_revisao)->first();
+        }
+        
         foreach ($modalidade->forms as $form) {
             foreach ($form->perguntas as $pergunta) {
                 $respostas->push($pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first());
             }
         }
         //   dd($respostas, $trabalho->id, $revisor->id, $modalidade->id);
-        return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'respostas'));
+        return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'respostas', 'arquivoAvaliacao'));
 
     }
 

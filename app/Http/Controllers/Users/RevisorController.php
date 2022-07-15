@@ -480,11 +480,7 @@ class RevisorController extends Controller
       $trabalho->atribuicoes()->where('revisor_id', $data['revisor_id'])->first()->pivot->update(['parecer' => 'avaliado']);
       $trabalho->save();
       $evento = Evento::find($evento_id);
-      $revisores = Revisor::where([['user_id', auth()->user()->id],['evento_id', $evento_id]])->get();
-      $trabalhos = collect();
-      foreach ($revisores as $revisor) {
-        $trabalhos->push($revisor->trabalhosAtribuidos()->orderBy('titulo')->get());
-      }
+      $revisor = Revisor::where([['user_id', auth()->user()->id],['evento_id', $evento_id]])->first();
 
       if(isset($request->arquivo)){
 
@@ -495,7 +491,7 @@ class RevisorController extends Controller
 
         $arquivo = ArquivoAvaliacao::create([
           'nome'  => $path . $nome,
-          'revisorId' => $revisor->id,
+          'revisorId' => $data['revisor_id'],
           'trabalhoId'  => $trabalho->id,
           'versaoFinal' => true,
         ]);
