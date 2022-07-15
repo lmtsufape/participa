@@ -486,7 +486,7 @@ class RevisorController extends Controller
 
         $file = $request->arquivo;
         $path = 'avaliacoes/' . $evento_id . '/' . $trabalho->id .'/';
-        $nome = $request->arquivo->getClientOriginalName();
+        $nome = 'avaliacao' . $revisor->id . '.' . $file->getClientOriginalExtension();
         Storage::putFileAs($path, $file, $nome);
 
         $arquivo = ArquivoAvaliacao::create([
@@ -528,7 +528,7 @@ class RevisorController extends Controller
         if($request->pergunta_id != null){
             foreach ($data['pergunta_id'] as $key => $value) {
                 $pergunta = Pergunta::find($value);
-                if($pergunta->respostas->first()->paragrafo != null){
+                if($pergunta->respostas->first()->paragrafo != null && $paraCont < count($data['resposta_paragrafo_id'])){
                     $resposta = Paragrafo::find($data['resposta_paragrafo_id'][$paraCont++]);
                     $resposta->resposta = $data['resposta'.$resposta->id];
                     if($paragrafo_checkBox != null && in_array($resposta->id, $paragrafo_checkBox)){
@@ -537,7 +537,7 @@ class RevisorController extends Controller
                         $resposta->visibilidade = false;
                     }
                     $resposta->save();
-                } elseif ($pergunta->respostas->first()->opcoes->count()) {
+                } elseif ($pergunta->respostas->first()->opcoes->count() && $opcaoCont < count($data['opcao_id'])){
                     $opcao = Opcao::find($data["opcao_id"][$opcaoCont++]);
                     $opcao->titulo = $data[$value];
                     $opcao->save();
@@ -545,7 +545,12 @@ class RevisorController extends Controller
             }
         }
         if($request->arquivoAvaliacao != null){
-            $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->first();
+            $revisor = Revisor::find($data["revisor_id"]);
+            $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first();
+            if($arquivoAvaliacao == null){
+                $permissoes_revisao = Revisor::where([['user_id', $revisor->user_id], ['evento_id', $trabalho->evento->id]])->get()->map->only(['id']);;
+                $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->whereIn('revisorId', $permissoes_revisao)->first();
+            }
             if($arquivoAvaliacao != null){
                 if (Storage::disk()->exists($arquivoAvaliacao->nome)) {
                     Storage::delete($arquivoAvaliacao->nome);
@@ -555,12 +560,12 @@ class RevisorController extends Controller
 
             $file = $request->arquivoAvaliacao;
             $path = 'avaliacoes/' . $trabalho->evento->id . '/' . $trabalho->id .'/';
-            $nome = $request->arquivoAvaliacao->getClientOriginalName();
+            $nome = 'avaliacao' . $revisor->id . '.' . $file->getClientOriginalExtension();
             Storage::putFileAs($path, $file, $nome);
 
-            $arquivo = ArquivoAvaliacao::create([
+            ArquivoAvaliacao::create([
                 'nome'  => $path . $nome,
-                'revisorId' => $request->revisor_id,
+                'revisorId' => $revisor->id,
                 'trabalhoId'  => $trabalho->id,
                 'versaoFinal' => true,
             ]);
