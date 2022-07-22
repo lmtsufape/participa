@@ -167,7 +167,7 @@
                     <div style="display: none;">
                         <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoCertificado') is-invalid @enderror" name="fotoCertificado" value="{{ old('fotoCertificado') }}">
                     </div>
-                    <small style="position: relative; top: 5px;">Tamanho minimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
+                    <small style="position: relative; top: 5px;">Tamanho mínimo: 1268 x 792;<br>Formato: JPEG, JPG, PNG</small>
                     <br>
                     @error('fotoCertificado')
                         <span class="invalid-feedback" role="alert">
