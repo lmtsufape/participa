@@ -78,7 +78,7 @@
                 y: parseInt(medida.y),
                 width: parseInt(medida.largura),
                 fontSize: medida.fontSize,
-                text: '{!! json_encode(strip_tags($certificado->texto)) !!}',
+                text: '{!! html_entity_decode(json_encode(strip_tags($certificado->texto))) !!}',
                 draggable: true,
                 id: 'texto',
                 name: 'texto',
