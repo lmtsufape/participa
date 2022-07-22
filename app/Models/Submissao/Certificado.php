@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Traits\FormatFileNames;
+
 class Certificado extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, FormatFileNames;
 
     protected $fillable = ['caminho', 'data', 'local', 'nome', 'texto', 'tipo', 'tipo_comissao_id'];
 
