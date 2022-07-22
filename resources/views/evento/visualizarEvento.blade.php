@@ -713,6 +713,7 @@
                         center: 'title',
                         right: 'prev,next today'
                     },
+                    initialView: 'listWeek',
                     locale: 'pt-br',
                     editable: false,
                     eventClick: function(info) {
