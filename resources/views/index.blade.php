@@ -2,13 +2,6 @@
 
 @section('content')
 
-    <style>
-        .rounded-circle
-        {
-            padding: 30px;
-        }
-    </style>
-
     <div id="showcase" style="margin-top:-1rem;">
         <div style="margin-top: 5rem; background-image: url('./img/fundo-vagalumes.png');
   background-repeat: no-repeat; background-position-x: center;  background-size: 100% 650px;">
@@ -32,21 +25,21 @@
                                     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active" style="background-color:#ccbcac"></li>
                                 @endif
                             </ol>
-                            <div class="carousel-inner" style="box-shadow: -1px 0px 11px 2px rgba(0,0,0,0.39);
-          -webkit-box-shadow: -1px 0px 11px 2px rgba(0,0,0,0.39);
-          -moz-box-shadow: -1px 0px 11px 2px rgba(0,0,0,0.39);">
+                            <div class="carousel-inner" style="box-shadow: -1px 0 11px 2px rgba(0,0,0,0.39);
+          -webkit-box-shadow: -1px 0 11px 2px rgba(0,0,0,0.39);
+          -moz-box-shadow: -1px 0 11px 2px rgba(0,0,0,0.39);">
 
                                 @forelse ($proximosEventos as $i => $evento)
                                     <div class="carousel-item @if ($i == 0)active @endif" style="background-color:white; height: 400px;">
                                         <div class="row">
                                             <div class="col-lg-6 evento-image sizeImg">
                                                 @if ($evento->fotoEvento != null)
-                                                    <img class="img-carousel" src="{{ asset('storage/'.$evento->fotoEvento) }}" class="" alt="..." style="
+                                                    <img class="img-carousel" src="{{ asset('storage/'.$evento->fotoEvento) }}" alt="..." style="
                         width: auto;
                         height: auto;background: no-repeat center;
                         background-size: cover;">
                                                 @else
-                                                    <img class="img-carousel" src="{{ asset('img/colorscheme.png') }}" class="" alt="..." style="max-width:300px;
+                                                    <img class="img-carousel" src="{{ asset('img/colorscheme.png') }}" alt="..." style="max-width:300px;
                         max-height:150px;
                         width: auto;
                         height: auto;background: no-repeat center;background-size: cover;">
@@ -55,7 +48,7 @@
                                             <div class="col-lg-1 linha-divisora">
                                             </div>
                                             <div class="col-lg-5">
-                                                <div class="row container" style="margin-left: 0px; margin-top:15px;">
+                                                <div class="row container" style="margin-left: 0; margin-top:15px;">
                                                     <div class="col-md-12" style="text-align:center; margin-top:20px;margin-bottom:10px;">
                                                         <a href="{{route('evento.visualizar',['id'=>$evento->id])}}"
                                                            style="font-size:25px;line-height: 1.2; color:#12583C; font-weight:600">{{mb_strimwidth($evento->nome, 0, 54, "...")}}</a>
@@ -79,7 +72,7 @@
                                     <div class="carousel-item active " style="background-color:white; height: 400px;">
                                         <div class="row">
                                             <div class="col-lg-6 evento-image sizeImg">
-                                                <img class="img-carousel" src="{{ asset('img/colorscheme.png') }}" class="" alt="..." style="max-width:300px;
+                                                <img class="img-carousel" src="{{ asset('img/colorscheme.png') }}" alt="..." style="max-width:300px;
                         max-height:150px;
                         width: auto;
                         height: auto;background: no-repeat center;background-size: cover;">
@@ -87,7 +80,7 @@
                                             <div class="col-lg-1 linha-divisora">
                                             </div>
                                             <div class="col-lg-5">
-                                                <div class="row container" style="margin-left: 0px; margin-top:15px;">
+                                                <div class="row container" style="margin-left: 0; margin-top:15px;">
                                                     <div class="col-md-12" style="text-align:center; margin-top:20px;margin-bottom:10px;">
                                                         <b>Nenhum Evento Cadastrado.</b>
                                                     </div>
@@ -103,12 +96,10 @@
                                 @endforelse
                             </div>
                             <a class="carousel-control-prev w-auto mr-2" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
-                                <span class="sr-only">Anterior</span>
+                                <img src="{{asset('/img/icons/previous.svg')}}" alt="anterior">
                             </a>
                             <a class="carousel-control-next w-auto" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
-                                <span class="sr-only">Próximo</span>
+                                <img src="{{asset('/img/icons/next.svg')}}" alt="próximo">
                             </a>
                         </div>
                     </div>
@@ -125,8 +116,8 @@
                                     @foreach($proximosEventos as $i => $evento)
                                         <div class="carousel-item @if($i==0) active @endif">
                                             <div class="col-md-4">
-                                                <div class="card h-100 shadow" style="width: 16rem; margin:8px; border: 0px solid #1492E6; border-radius: 20px;">
-                                                    <div style="width: 100%; text-align: center; padding-top: 10;">
+                                                <div class="card h-100 shadow" style="width: 16rem; margin:8px; border: 0 solid #1492E6; border-radius: 20px;">
+                                                    <div style="width: 100%; text-align: center; padding-top: 10px;">
                                                         @if ($evento->icone != null)
                                                             <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->icone) }}" alt="Card image cap" style="height: 200px;
                               width: 80%; border:2px solid rgb(175, 175, 175); border-radius: 50%;">
@@ -153,12 +144,10 @@
                                     @endforeach
                                 </div>
                                 <a class="carousel-control-prev w-auto" href="#recipeCarousel" role="button" data-slide="prev">
-                                    <span class="carousel-control-prev-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
-                                    <span class="sr-only">Anterior</span>
+                                    <img src="{{asset('/img/icons/previous.svg')}}" alt="anterior">
                                 </a>
                                 <a class="carousel-control-next w-auto" href="#recipeCarousel" role="button" data-slide="next">
-                                    <span class="carousel-control-next-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
-                                    <span class="sr-only">Próximo</span>
+                                    <img src="{{asset('/img/icons/next.svg')}}" alt="próximo">
                                 </a>
                             </div>
                         </div>
@@ -173,7 +162,7 @@
                                     @foreach($eventosPassados as $i => $evento)
                                         <div class="carousel-item @if($i==0) active @endif">
                                             <div class="col-md-4">
-                                                <div class="card h-100 shadow" style="width: 16rem; margin:8px; border: 0px solid #1492E6; border-radius: 20px;">
+                                                <div class="card h-100 shadow" style="width: 16rem; margin:8px; border: 0 solid #1492E6; border-radius: 20px;">
                                                     <div style="width: 100%; text-align: center; padding-top: 10px;">
                                                         @if ($evento->icone != null)
                                                             <img class="card-img-top img-flex" src="{{ asset('storage/'.$evento->icone) }}" alt="Card image cap" style="height: 200px;
@@ -216,12 +205,10 @@
                                     </div>
                                 </div>
                                 <a class="carousel-control-prev w-auto" href="#recipeCarouselPassados" role="button" data-slide="prev">
-                                    <span class="carousel-control-prev-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
-                                    <span class="sr-only">Anterior</span>
+                                    <img src="{{asset('/img/icons/previous.svg')}}" alt="anterior">
                                 </a>
                                 <a class="carousel-control-next w-auto" href="#recipeCarouselPassados" role="button" data-slide="next">
-                                    <span class="carousel-control-next-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
-                                    <span class="sr-only">Próximo</span>
+                                    <img src="{{asset('/img/icons/next.svg')}}" alt="próximo">
                                 </a>
                             </div>
                         </div>
