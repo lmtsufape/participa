@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="banner-perfil"  style="position: relative; top: 65px;">
+<div class="banner-perfil position-relative">
     <div class="row justify-content-center curved" style="margin-bottom:-5px">
 
     </div>
@@ -342,7 +342,7 @@
                                     </select>
                                     <input type="hidden" name="pais" value="{{$pais}}">
                                     <small>{{__('O formulário seguirá os padrões desse país')}}.</small>
-                    
+
                                     @error('pais')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ __($message) }}</strong>
@@ -835,7 +835,7 @@
     </div>
 </div>
 
-@include('componentes.footer')
+
 @endsection
 @section('javascript')
   <script type="text/javascript" >

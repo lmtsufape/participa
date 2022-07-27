@@ -2,17 +2,17 @@
 
 @section('content')
 
-    <div id="showcase" style="margin-top:-1rem;">
-        <div style="margin-top: 5rem; background-image: url('./img/fundo-vagalumes.png');
+    <div id="showcase" class="mt-n2">
+        <div style="background-image: url('./img/fundo-vagalumes.png');
   background-repeat: no-repeat; background-position-x: center;  background-size: 100% 650px;">
-            <div class="container-xl">
+            <div class="container">
                 <div class="row justify-content-center">
                     <!-- TITULO: DESTAQUE -->
                     <div class="col-md-12" style="font-size: 20px; margin-top:20px; margin-bottom:20px; text-align:center; color:white"></div>
                     <!-- SLIDESHOW -->
                     <div id="carouselExampleIndicators" class="col-md-11 carousel slide" data-ride="carousel" style="padding-top: 4rem;">
                         <div class="row justify-content-center">
-                            <div class="col-md-10">
+                            <div>
                                 <ol class="carousel-indicators" style="display: none;">
                                     @if (count($proximosEventos) > 0)
                                         @foreach ($proximosEventos as $i => $evento)

@@ -1025,7 +1025,7 @@
     </div>
 </div>
 
-@include('componentes.footer')
+
 @endsection
 @section('javascript')
 <script type="text/javascript">

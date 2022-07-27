@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container" style="position: relative; top: 100px; padding-bottom: 200px;">
+<div class="container">
     <div class="row">
         <div class="col-sm-12 titulo-detalhes">
             <h1>Buscar eventos</h1>
@@ -76,7 +76,7 @@
     <br>
 </div>
 
-@include('componentes.footer')
+
 
 @endsection
 
@@ -93,44 +93,44 @@
                 case "tipo":
                     setar_display("none", "block", "none", "none");
                     break;
-                case "data_inicio": 
+                case "data_inicio":
                     setar_display("none", "none", "block", "none");
                     break;
-                case "data_fim": 
+                case "data_fim":
                     setar_display("none", "none", "none", "block");
                     break;
-                case "nome_tipo": 
+                case "nome_tipo":
                     setar_display("block", "block", "none", "none");
                     break;
-                case "nome_data_inicio": 
+                case "nome_data_inicio":
                     setar_display("block", "none", "block", "none");
                     break;
-                case "nome_data_fim": 
+                case "nome_data_fim":
                     setar_display("block", "none", "none", "block");
                     break;
-                case "tipo_data_inicio": 
+                case "tipo_data_inicio":
                     setar_display("none", "block", "block", "none");
                     break;
-                case "tipo_data_fim": 
+                case "tipo_data_fim":
                     setar_display("none", "block", "none", "block");
                     break;
-                case "nome_datas": 
+                case "nome_datas":
                     setar_display("block", "none", "block", "block");
                     break;
                 case "tipo_datas":
                     setar_display("none", "block", "block", "block");
                     break;
-                case "datas": 
+                case "datas":
                     setar_display("none", "none", "block", "block");
                     break;
-                case "todos": 
+                case "todos":
                     setar_display("block", "block", "block", "block");
                     break;
                 default:
                     setar_display("block", "none", "none", "none");
                     break;
             }
-            
+
             limparInputs();
         }
 
@@ -177,7 +177,7 @@
                         $('#resultados').html("");
                         var divs = "";
                         $.each(result, function(i, obj) {
-                            var data = new Date(obj.dataInicio); 
+                            var data = new Date(obj.dataInicio);
                             if (result[i].fotoEvento != null && result[i].recolhimento == "pago") {
                                 divs += "<div class='card card-busca-livre-evento'>" +
                                             "<div class='row no-gutters'>" +
@@ -216,7 +216,7 @@
                                                 "</div>" +
                                             "</div>" +
                                         "</div>";
-                                    
+
                             } else if (result[i].fotoEvento == null && result[i].recolhimento == "pago") {
                                 divs += "<div class='card card-busca-livre-evento'>" +
                                             "<div class='row no-gutters'>" +
@@ -331,7 +331,7 @@
                                                 "</div>" +
                                             "</div>" +
                                         "</div>";
-                            }                 
+                            }
                         })
                         $('#resultados').html(divs);
                         colorir();

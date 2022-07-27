@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container"  style="position: relative; top: 65px;">
+<div class="container position-relative">
 
     {{-- titulo da página --}}
     <div class="row justify-content-center titulo">
@@ -35,7 +35,7 @@
             <tbody>
                 @php $i = 0; @endphp
                 @foreach($trabalhos as $trabalho)
-    
+
                 <tr>
                 <td>{{$trabalho->id}}</td>
                 <td>{{$trabalho->area->nome}}</td>
@@ -63,13 +63,13 @@
                 <td style="text-align:center">
                     <a class="botaoAjax" href="#" data-toggle="modal" onclick="trabalhoId({{$trabalho->id}})" data-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
                 </td>
-    
+
                 </tr>
                 @endforeach
             </tbody>
             </table>
         </div>
-    
+
     </div>
 
 </div>

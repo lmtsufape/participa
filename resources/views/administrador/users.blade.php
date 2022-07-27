@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container"  style="position: relative; top: 100px;">
+<div class="container position-relative">
         <div class="row justify-content-center">
             <div class="col-auto mr-auto">
                 <h2 >

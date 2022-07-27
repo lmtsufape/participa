@@ -1,4 +1,4 @@
-<div class="footer" style="padding-bottom: 0px;">
+<footer class="footer">
   <div class="row justify-content-center links-rodape">
       <a href="{{ route('index') }}">Inicio</a>  |
       {{-- <a href="#">Eventos Acadêmicos</a>  | --}}
@@ -49,4 +49,4 @@
   <!--x rodapé x-->
 
 
-</div>
+</footer>

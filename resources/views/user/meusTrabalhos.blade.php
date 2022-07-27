@@ -68,7 +68,7 @@
   </div>
 @endforeach
 
-<div class="container content" style="margin-top: 80px;">
+<div class="container content">
     {{-- titulo da página --}}
     <div class="row justify-content-center titulo-detalhes">
         <div class="col-sm-12">
@@ -183,12 +183,12 @@
                           <br>
                         @endif
                       @endforeach
-                    @else 
+                    @else
                       <a href="#" onclick="return false;" data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível assim que revisado.">
                           <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                       </a>
                     @endif
-                    
+
                     @if ($trabalho->pareceres->where('parecer_final', true)->count() > 0)
                         <a href="#" onclick="return false;" data-toggle="modal" data-target="#modalparecerfinal{{$trabalho->id}}">
                             <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px" title="Parecer final">

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="banner-perfil" style="position: relative; top: 65px;">
+    <div class="banner-perfil position-absolute mt-n2">
         <div class="row justify-content-center curved" style="margin-bottom:-5px">
 
         </div>
@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <div class="card-perfil justify-content-center">
+    <div class="card-perfil justify-content-center position-relative">
         <div class="card card-change-mode" style="width: 80%;">
             <div class="card-body">
                 <div class="container">
@@ -158,9 +158,9 @@
                                     <label for="fotoEvento">Banner</label>
                                     <div id="imagem-loader" class="imagem-loader">
                                         @if ($evento->fotoEvento != null)
-                                            <img id="logo-preview" src="{{asset('storage/'.$evento->fotoEvento)}}" alt="">
+                                            <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$evento->fotoEvento)}}" alt="">
                                         @else
-                                            <img id="logo-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                            <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                         @endif
                                     </div>
                                     <div style="display: none;">
@@ -180,9 +180,9 @@
                                     <label for="icone">Ícone</label>
                                     <div id="imagem-loader-icone" class="imagem-loader">
                                         @if ($evento->icone != null)
-                                            <img id="icone-preview" src="{{asset('storage/'.$evento->icone)}}" alt="">
+                                            <img id="icone-preview" class="img-fluid" src="{{asset('storage/'.$evento->icone)}}" alt="">
                                         @else
-                                            <img id="icone-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                            <img id="icone-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                         @endif
                                     </div>
                                     <div style="display: none;">
@@ -224,7 +224,7 @@
                                 @enderror
                             </div>{{-- end Fim do Evento --}}
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="dataLimiteInscricao" class="col-form-label">{{ __('Data de encerramento de inscrições') }}</label>
@@ -235,7 +235,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <input id="dataLimiteInscricao" type="datetime-local" class="form-control @error('dataLimiteInscricao') is-invalid @enderror" name="dataLimiteInscricao" @if(old('dataLimiteInscricao') != null) value="{{ old('dataLimiteInscricao') }}" @else value="{{$evento->data_limite_inscricao}}" @endif autocomplete="dataLimiteInscricao" autofocus>
-    
+
                                 @error('dataLimiteInscricao')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -413,7 +413,7 @@
         </div>
     </div>
 
-    @include('componentes.footer')
+
 @endsection
 @section('javascript')
     <script type="text/javascript">
