@@ -2,9 +2,9 @@
 
 @section('content')
 
-<div class="container" style="position: relative; top: 80px;">
+<div class="container position-relative">
 
-    <h2 style="margin-top: 100px; ">{{ Auth()->user()->name }} - Perfil: Coautor</h2>
+    <h2>{{ Auth()->user()->name }} - Perfil: Coautor</h2>
 
     <table class="table table-striped">
         <thead>
@@ -23,11 +23,11 @@
                 <td>Otto</td>
                 <td>@mdo</td>
                 </tr>
-                
+
             @empty
-                
+
             @endforelse
-          
+
         </tbody>
       </table>
 

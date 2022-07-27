@@ -3,7 +3,7 @@
 @section('content')
 
 
-<div class="container content" style="margin-top: 80px;">
+<div class="container content">
     {{-- titulo da página --}}
     <div class="row justify-content-center titulo-detalhes">
         <div class="col-sm-12">

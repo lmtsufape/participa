@@ -9,10 +9,9 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Scripts -->
-        <script src="{{ asset('js/jquery-3.5.1.slim.min.js')}}"></script>
+        <script src="{{ asset('js/app.js')}}"></script>
         <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
-        
-        {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
+        <script src="{{ asset('js/alpine.js')}}"></script>
 
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com">

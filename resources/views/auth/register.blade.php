@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container content" style="position: relative; top: 50px;">
+<div class="container content mb-5 position-relative">
 
 
     <div class="row titulo">
@@ -303,7 +303,7 @@
 
 </div>
 
-@include('componentes.footer')
+
 
 @endsection
 
@@ -410,10 +410,8 @@
     };
   </script>
   <script src="{{ asset('js/celular.js') }}" defer></script>
-  <script src="{{ asset('js/jquery-mask-plugin.js')}}" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script type="text/javascript">
 
     $(document).ready(function(){
@@ -431,5 +429,5 @@
     });
 
   </script>
-    
+
 @endsection
