@@ -128,7 +128,7 @@
                     <div class="row cards-eventos-index">
                         @foreach ($assinaturas as $assinatura)
                             <div class="card" style="width: 16rem;">
-                                <img class="img-card" src="{{asset('storage/'.$assinatura->caminho)}}" class="card-img-top" alt="...">
+                                <img src="{{asset('storage/'.$assinatura->caminho)}}" class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-12">
@@ -157,7 +157,7 @@
                 <div class="col-sm-12 form-group">
                     <label for="fotoCertificado"><b>Imagem do Certificado</b></label>
                     <div id="imagem-loader" class="imagem-loader">
-                        <img id="logo-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                        <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                     </div>
                     <div style="display: none;">
                         <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoCertificado') is-invalid @enderror" name="fotoCertificado" value="{{ old('fotoCertificado') }}">
