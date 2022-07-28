@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://unpkg.com/konva@8.3.5/konva.min.js"></script>
-    <style type="text/css">
+    <style>
         @page { margin: 0; }
         #container, #back{
             background-image: url({{ "/storage/" .$certificado->caminho }});
@@ -31,7 +31,7 @@
             @csrf
             <input type="text" name="certificado_id" value="{{$certificado->id}}">
             @foreach ($certificado->assinaturas as $assinatura)
-                @foreach (['nome', 'imagem', 'cargo'] as $objeto)
+                @foreach (['nome', 'imagem', 'cargo', 'linha'] as $objeto)
                     @foreach (['x', 'y', 'largura', 'altura', 'fontSize'] as $medida)
                         <input type="text" name="{{$objeto}}-{{$medida}}-{{$assinatura->id}}" value="0">
                     @endforeach
@@ -49,19 +49,19 @@
             @endforeach
         </form>
         <script>
-            var stage = new Konva.Stage({
+            stage = new Konva.Stage({
                 container: 'container',
                 width: 1118,
                 height: 790,
             });
 
-            var layer = new Konva.Layer();
+            layer = new Konva.Layer();
             stage.add(layer);
-            var medidas = {!! json_encode($medidas) !!}
+            medidas = {!! json_encode($medidas) !!}
             medida = medidas.find(m => m.tipo == 1);
             if(medida === undefined)
                 medida = {x: 50, y: 300, largura: 1000, fontSize: 14}
-            var imagemTransformer = new Konva.Transformer({
+            imagemTransformer = new Konva.Transformer({
                 keepRatio: true,
                 enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
                 boundBoxFunc: (oldBox, newBox) => {
@@ -73,7 +73,7 @@
             });
             layer.add(imagemTransformer);
 
-            var texto = new Konva.Text({
+            texto = new Konva.Text({
                 x: parseInt(medida.x),
                 y: parseInt(medida.y),
                 width: parseInt(medida.largura),
@@ -85,15 +85,14 @@
             });
 
             texto.on('transform click tap move', (event) => {
-                console.log(stage.find('#texto')[0].attrs);
             });
 
             medida = medidas.find(m => m.tipo == 2);
             if(medida === undefined)
                 medida = {x: 915, y: 350, largura: 450, fontSize: 14}
 
-            var localdata = {!! json_encode($certificado->local) !!} + ', ' + {!! json_encode($dataHoje) !!};
-            var local = new Konva.Text({
+            localdata = {!! json_encode($certificado->local) !!} + ', ' + {!! json_encode($dataHoje) !!};
+            local = new Konva.Text({
                 x: parseInt(medida.x),
                 y: parseInt(medida.y),
                 width: parseInt(medida.largura),
@@ -105,8 +104,8 @@
             });
             layer.add(local);
 
-            var MIN_WIDTH = 100;
-            var textoTransformer = new Konva.Transformer({
+            const MIN_WIDTH = 100;
+            textoTransformer = new Konva.Transformer({
                 padding: 5,
                 rotateEnabled: false,
                 keepRatio: true,
@@ -163,21 +162,22 @@
                 }
             });
 
-            var assinaturas = {!! json_encode($certificado->assinaturas) !!};
+            const assinaturas = {!! json_encode($certificado->assinaturas) !!};
+            let posicao_inicial_x;
             if (assinaturas.length > 1) {
                 posicao_inicial_x = ((1268 - 100) / assinaturas.length) / assinaturas.length;
             } else {
                 posicao_inicial_x = 1268 / 2 - 100;
             }
-            var i = 0;
+            let i = 0;
             assinaturas.forEach((assinatura, index) => {
-                var assinaturaArray = [];
-                var imageObj = new Image();
+                let assinaturaArray = [];
+                const imageObj = new Image();
                 imageObj.onload = function () {
-                    medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
+                    const medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     // add the shape to the layer
                     if(medida === undefined) {
-                        yoda = new Konva.Image({
+                        const yoda = new Konva.Image({
                             x: posicao_inicial_x + (index * 350),
                             y: 600,
                             image: imageObj,
@@ -193,7 +193,7 @@
                             scaleY: 1,
                         });
                     } else {
-                        medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
+                        const medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                         yoda = new Konva.Image({
                             x: parseInt(medida.x),
                             y: parseInt(medida.y),
@@ -204,7 +204,6 @@
                             width: parseInt(medida.largura),
                         });
                     }
-                    console.log(yoda.attrs)
                     layer.add(yoda);
                     yoda.on('transform', (event) => {
                         // with enabled anchors we can only change scaleX
@@ -228,15 +227,36 @@
                 };
                 imageObj.src = '/storage/' + assinatura.caminho;
 
-                var redLine = new Konva.Line({
-                    points: [posicao_inicial_x + (index * 350), 550 + 106, posicao_inicial_x + (index * 350) + 256, 550 + 106],
-                    stroke: 'grey',
-                    strokeWidth: 3,
-                    draggable: true,
-                    id: 'linha' + assinatura.id,
-                });
+                medida = medidas.find(m => m.tipo == 6 && m.assinatura.id == assinatura.id);
+                if(medida === undefined) {
+                    redLine = new Konva.Line({
+                        points: [posicao_inicial_x + (index * 350), 550 + 106, posicao_inicial_x + (index * 350) + 256, 550 + 106],
+                        stroke: 'black',
+                        strokeWidth: 3,
+                        draggable: true,
+                        id: 'linha' + assinatura.id,
+                    });
+                    layer.add(redLine);
+                } else {
+                    const x = parseInt(medida.x)
+                    const y = parseInt(medida.y)
+                    const width = parseInt(medida.largura)
+                    console.log(x, y, x + width, y)
+                    redLine = new Konva.Line({
+                        points: [x, y, x + width, y],
+                        stroke: 'black',
+                        strokeWidth: 2,
+                        draggable: true,
+                        id: 'linha' + assinatura.id,
+                    });
 
-                layer.add(redLine);
+                    console.log(redLine.position())
+                    console.log(redLine.points())
+                    console.log(redLine.absolutePosition())
+                    console.log(redLine.getAttrs())
+                    layer.add(redLine);
+                }
+
                 medida = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
                 var simpleText;
                 if(medida === undefined) {
@@ -631,7 +651,6 @@
             });
             stage1.on('click tap', function (e) {
 
-                console.log(e.target.attrs);
                 // if click on empty area - remove all selections
                 if (e.target === stage1) {
                     textoTransformer1.nodes([]);
@@ -672,53 +691,56 @@
             function send() {
                 ['nome','cargo'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
-                        box = stage.find('#'+objeto+''+assinatura.id);
-                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id)[0].value = box[0].attrs.x;
-                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id)[0].value = box[0].attrs.y;
-                        document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id)[0].value = box[0].attrs.width;
-                        document.querySelectorAll("input[name="+objeto+"-fontSize-"+assinatura.id)[0].value = box[0].attrs.fontSize;
+                        const box = stage.find('#'+objeto+''+assinatura.id);
+                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x;
+                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y;
+                        document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
+                        document.querySelectorAll("input[name="+objeto+"-fontSize-"+assinatura.id+"]")[0].value = box[0].attrs.fontSize;
                     });
                 });
+                assinaturas.forEach(assinatura => {
+                    const box = stage.find('#linha'+assinatura.id);
+                    document.querySelectorAll("input[name=linha-x-"+assinatura.id+"]")[0].value = box[0].position().x + box[0].points()[0];
+                    document.querySelectorAll("input[name=linha-y-"+assinatura.id+"]")[0].value = box[0].position().y + box[0].points()[1];
+                    document.querySelectorAll("input[name=linha-largura-"+assinatura.id+"]")[0].value = box[0].attrs.points[2] - box[0].attrs.points[0];
+                });
                 ['texto','data'].forEach(objeto => {
-                    box = stage.find('#'+objeto);
-                    ['x','y','largura','fontSize'].forEach(medida => {
-                        document.querySelectorAll("input[name="+objeto+"-x")[0].value = box[0].attrs.x;
-                        document.querySelectorAll("input[name="+objeto+"-y")[0].value = box[0].attrs.y;
-                        document.querySelectorAll("input[name="+objeto+"-largura")[0].value = box[0].attrs.width;
-                        document.querySelectorAll("input[name="+objeto+"-fontSize")[0].value = box[0].attrs.fontSize;
-                    });
+                    const box = stage.find('#'+objeto);
+                    document.querySelectorAll("input[name="+objeto+"-x]")[0].value = box[0].attrs.x;
+                    document.querySelectorAll("input[name="+objeto+"-y]")[0].value = box[0].attrs.y;
+                    document.querySelectorAll("input[name="+objeto+"-largura]")[0].value = box[0].attrs.width;
+                    document.querySelectorAll("input[name="+objeto+"-fontSize]")[0].value = box[0].attrs.fontSize;
                 });
                 ['imagem'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
-                        box = stage.find('#'+objeto+''+assinatura.id);
-                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id)[0].value = box[0].attrs.x;
-                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id)[0].value = box[0].attrs.y;
-                        document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id)[0].value = box[0].attrs.width;
-                        document.querySelectorAll("input[name="+objeto+"-altura-"+assinatura.id)[0].value = box[0].attrs.height;
+                        const box = stage.find('#' + objeto + '' + assinatura.id);
+                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x;
+                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y;
+                        document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
+                        document.querySelectorAll("input[name="+objeto+"-altura-"+assinatura.id+"]")[0].value = box[0].attrs.height;
                     });
                 });
-                qrcode = stage1.find('#qrcode');
-                document.querySelectorAll("input[name=qrcode-x")[0].value = qrcode[0].attrs.x;
-                document.querySelectorAll("input[name=qrcode-y")[0].value = qrcode[0].attrs.y;
-                document.querySelectorAll("input[name=qrcode-largura")[0].value = qrcode[0].attrs.width;
-                document.querySelectorAll("input[name=qrcode-altura")[0].value = qrcode[0].attrs.height;
+                const qrcode = stage1.find('#qrcode');
+                document.querySelectorAll("input[name=qrcode-x]")[0].value = qrcode[0].attrs.x;
+                document.querySelectorAll("input[name=qrcode-y]")[0].value = qrcode[0].attrs.y;
+                document.querySelectorAll("input[name=qrcode-largura]")[0].value = qrcode[0].attrs.width;
+                document.querySelectorAll("input[name=qrcode-altura]")[0].value = qrcode[0].attrs.height;
 
-                document.querySelectorAll("input[name=hash-x")[0].value = hash.attrs.x;
-                document.querySelectorAll("input[name=hash-y")[0].value = hash.attrs.y;
-                document.querySelectorAll("input[name=hash-largura")[0].value = hash.attrs.width;
-                document.querySelectorAll("input[name=hash-fontSize")[0].value = hash.attrs.fontSize;
+                document.querySelectorAll("input[name=hash-x]")[0].value = hash.attrs.x;
+                document.querySelectorAll("input[name=hash-y]")[0].value = hash.attrs.y;
+                document.querySelectorAll("input[name=hash-largura]")[0].value = hash.attrs.width;
+                document.querySelectorAll("input[name=hash-fontSize]")[0].value = hash.attrs.fontSize;
 
-                logo = stage1.find('#logo');
-                document.querySelectorAll("input[name=logo-x")[0].value = logo[0].attrs.x;
-                document.querySelectorAll("input[name=logo-y")[0].value = logo[0].attrs.y;
-                document.querySelectorAll("input[name=logo-largura")[0].value = logo[0].attrs.width;
-                document.querySelectorAll("input[name=logo-altura")[0].value = logo[0].attrs.height;
+                const logo = stage1.find('#logo');
+                document.querySelectorAll("input[name=logo-x]")[0].value = logo[0].attrs.x;
+                document.querySelectorAll("input[name=logo-y]")[0].value = logo[0].attrs.y;
+                document.querySelectorAll("input[name=logo-largura]")[0].value = logo[0].attrs.width;
+                document.querySelectorAll("input[name=logo-altura]")[0].value = logo[0].attrs.height;
 
-                document.querySelectorAll("input[name=emissao-x")[0].value = emissao.attrs.x;
-                document.querySelectorAll("input[name=emissao-y")[0].value = emissao.attrs.y;
-                document.querySelectorAll("input[name=emissao-largura")[0].value = emissao.attrs.width;
-                document.querySelectorAll("input[name=emissao-fontSize")[0].value = emissao.attrs.fontSize;
-
+                document.querySelectorAll("input[name=emissao-x]")[0].value = emissao.attrs.x;
+                document.querySelectorAll("input[name=emissao-y]")[0].value = emissao.attrs.y;
+                document.querySelectorAll("input[name=emissao-largura]")[0].value = emissao.attrs.width;
+                document.querySelectorAll("input[name=emissao-fontSize]")[0].value = emissao.attrs.fontSize;
 
                 document.getElementById("form").submit();
             }

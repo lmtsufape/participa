@@ -42,7 +42,7 @@
                         <div class="form-group">
                             <label for="fotoAssinatura">Assinatura</label>
                             <div id="imagem-loader" class="imagem-loader">
-                                <img id="logo-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                             </div>
                             <div style="display: none;">
                                 <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoAssinatura') is-invalid @enderror" name="fotoAssinatura" value="{{ old('fotoAssinatura') }}">
