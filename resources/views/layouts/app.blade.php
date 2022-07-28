@@ -43,7 +43,7 @@
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}"></script>
         <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
-        <script src="{{ asset('js/alpine.js') }}"></script>
+        <script defer src="{{ asset('js/alpine.js') }}"></script>
         <script src="{{ asset('js/dark-mode.js') }}"></script>
         <script src="{{ asset('js/submit.js') }}"></script>
         <!-- CKEditor -->
