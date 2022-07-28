@@ -104,7 +104,7 @@
             });
             layer.add(local);
 
-            const MIN_WIDTH = 100;
+            let MIN_WIDTH = 100;
             textoTransformer = new Konva.Transformer({
                 padding: 5,
                 rotateEnabled: false,
@@ -162,7 +162,7 @@
                 }
             });
 
-            const assinaturas = {!! json_encode($certificado->assinaturas) !!};
+            let assinaturas = {!! json_encode($certificado->assinaturas) !!};
             let posicao_inicial_x;
             if (assinaturas.length > 1) {
                 posicao_inicial_x = ((1268 - 100) / assinaturas.length) / assinaturas.length;
@@ -172,12 +172,12 @@
             let i = 0;
             assinaturas.forEach((assinatura, index) => {
                 let assinaturaArray = [];
-                const imageObj = new Image();
+                let imageObj = new Image();
                 imageObj.onload = function () {
-                    const medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
+                    let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     // add the shape to the layer
                     if(medida === undefined) {
-                        const yoda = new Konva.Image({
+                        let yoda = new Konva.Image({
                             x: posicao_inicial_x + (index * 350),
                             y: 600,
                             image: imageObj,
@@ -193,7 +193,7 @@
                             scaleY: 1,
                         });
                     } else {
-                        const medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
+                        let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                         yoda = new Konva.Image({
                             x: parseInt(medida.x),
                             y: parseInt(medida.y),
@@ -238,9 +238,9 @@
                     });
                     layer.add(redLine);
                 } else {
-                    const x = parseInt(medida.x)
-                    const y = parseInt(medida.y)
-                    const width = parseInt(medida.largura)
+                    let x = parseInt(medida.x)
+                    let y = parseInt(medida.y)
+                    let width = parseInt(medida.largura)
                     console.log(x, y, x + width, y)
                     redLine = new Konva.Line({
                         points: [x, y, x + width, y],
@@ -387,8 +387,8 @@
                 }
 
                 // do we pressed shift or ctrl?
-                const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-                const isSelected = imagemTransformer.nodes().indexOf(e.target) >= 0;
+                let metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
+                let isSelected = imagemTransformer.nodes().indexOf(e.target) >= 0;
 
                 if (!metaPressed && !isSelected) {
                     // if no key pressed and the node is not selected
@@ -401,16 +401,16 @@
                 } else if (metaPressed && isSelected) {
                     // if we pressed keys and node was selected
                     // we need to remove it from selection:
-                    const nodes = imagemTransformer.nodes().slice(); // use slice to have new copy of array
+                    let nodes = imagemTransformer.nodes().slice(); // use slice to have new copy of array
                     // remove node from array
                     nodes.splice(nodes.indexOf(e.target), 1);
                     imagemTransformer.nodes(nodes);
                 } else if (metaPressed && !isSelected) {
                     if(stage.find('.texto').includes(e.target)) {
-                        const nodes = textoTransformer.nodes().concat([e.target]);
+                        let nodes = textoTransformer.nodes().concat([e.target]);
                         textoTransformer.nodes(nodes);
                     } else {
-                        const nodes = imagemTransformer.nodes().concat([e.target]);
+                        let nodes = imagemTransformer.nodes().concat([e.target]);
                         imagemTransformer.nodes(nodes);
                     }
                 }
@@ -659,8 +659,8 @@
                 }
 
                 // do we pressed shift or ctrl?
-                const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-                const isSelected = imagemTransformer1.nodes().indexOf(e.target) >= 0;
+                let metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
+                let isSelected = imagemTransformer1.nodes().indexOf(e.target) >= 0;
 
                 if (!metaPressed && !isSelected) {
                     // if no key pressed and the node is not selected
@@ -673,16 +673,16 @@
                 } else if (metaPressed && isSelected) {
                     // if we pressed keys and node was selected
                     // we need to remove it from selection:
-                    const nodes = imagemTransformer1.nodes().slice(); // use slice to have new copy of array
+                    let nodes = imagemTransformer1.nodes().slice(); // use slice to have new copy of array
                     // remove node from array
                     nodes.splice(nodes.indexOf(e.target), 1);
                     imagemTransformer1.nodes(nodes);
                 } else if (metaPressed && !isSelected) {
                     if(stage1.find('.texto').includes(e.target)) {
-                        const nodes = textoTransformer1.nodes().concat([e.target]);
+                        let nodes = textoTransformer1.nodes().concat([e.target]);
                         textoTransformer1.nodes(nodes);
                     } else {
-                        const nodes = imagemTransformer1.nodes().concat([e.target]);
+                        let nodes = imagemTransformer1.nodes().concat([e.target]);
                         imagemTransformer1.nodes(nodes);
                     }
                 }
@@ -691,7 +691,7 @@
             function send() {
                 ['nome','cargo'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
-                        const box = stage.find('#'+objeto+''+assinatura.id);
+                        let box = stage.find('#'+objeto+''+assinatura.id);
                         document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x;
                         document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y;
                         document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
@@ -699,13 +699,13 @@
                     });
                 });
                 assinaturas.forEach(assinatura => {
-                    const box = stage.find('#linha'+assinatura.id);
+                    let box = stage.find('#linha'+assinatura.id);
                     document.querySelectorAll("input[name=linha-x-"+assinatura.id+"]")[0].value = box[0].position().x + box[0].points()[0];
                     document.querySelectorAll("input[name=linha-y-"+assinatura.id+"]")[0].value = box[0].position().y + box[0].points()[1];
                     document.querySelectorAll("input[name=linha-largura-"+assinatura.id+"]")[0].value = box[0].attrs.points[2] - box[0].attrs.points[0];
                 });
                 ['texto','data'].forEach(objeto => {
-                    const box = stage.find('#'+objeto);
+                    let box = stage.find('#'+objeto);
                     document.querySelectorAll("input[name="+objeto+"-x]")[0].value = box[0].attrs.x;
                     document.querySelectorAll("input[name="+objeto+"-y]")[0].value = box[0].attrs.y;
                     document.querySelectorAll("input[name="+objeto+"-largura]")[0].value = box[0].attrs.width;
@@ -713,14 +713,14 @@
                 });
                 ['imagem'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
-                        const box = stage.find('#' + objeto + '' + assinatura.id);
+                        let box = stage.find('#' + objeto + '' + assinatura.id);
                         document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x;
                         document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y;
                         document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
                         document.querySelectorAll("input[name="+objeto+"-altura-"+assinatura.id+"]")[0].value = box[0].attrs.height;
                     });
                 });
-                const qrcode = stage1.find('#qrcode');
+                let qrcode = stage1.find('#qrcode');
                 document.querySelectorAll("input[name=qrcode-x]")[0].value = qrcode[0].attrs.x;
                 document.querySelectorAll("input[name=qrcode-y]")[0].value = qrcode[0].attrs.y;
                 document.querySelectorAll("input[name=qrcode-largura]")[0].value = qrcode[0].attrs.width;
@@ -731,7 +731,7 @@
                 document.querySelectorAll("input[name=hash-largura]")[0].value = hash.attrs.width;
                 document.querySelectorAll("input[name=hash-fontSize]")[0].value = hash.attrs.fontSize;
 
-                const logo = stage1.find('#logo');
+                let logo = stage1.find('#logo');
                 document.querySelectorAll("input[name=logo-x]")[0].value = logo[0].attrs.x;
                 document.querySelectorAll("input[name=logo-y]")[0].value = logo[0].attrs.y;
                 document.querySelectorAll("input[name=logo-largura]")[0].value = logo[0].attrs.width;

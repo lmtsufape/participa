@@ -53,7 +53,11 @@
                     top: {{$medida->y}}px;
                     width: {{$medida->largura}}px;
                     padding-bottom: 5px;
-                    border-bottom: 2px solid black">
+                    @if($certificado->medidas->where('tipo', $tipos["linha_assinatura"])->where('assinatura_id', $assinatura->id)->first() == null)
+                    border-bottom: 2px solid black;
+                    @endif
+                    "
+                    >
                 @php
                     $medida = $certificado->medidas->where('tipo', $tipos["nome_assinatura"])->where('assinatura_id', $assinatura->id)->first();
                 @endphp
@@ -64,6 +68,18 @@
                     width: {{$medida->largura}}px;">
                     {{ $assinatura->nome }}
                 </div>
+                @php
+                    $medida = $certificado->medidas->where('tipo', $tipos["linha_assinatura"])->where('assinatura_id', $assinatura->id)->first();
+                @endphp
+                @if($medida != null)
+                    <div id="data" style="
+                        left: {{$medida->x}}px;
+                        top: {{$medida->y}}px;
+                        width: {{$medida->largura}}px;
+                        background-color: blue;
+                        border-bottom: 2px solid black;">
+                    </div>
+                @endif
                 @php
                     $medida = $certificado->medidas->where('tipo', $tipos["cargo_assinatura"])->where('assinatura_id', $assinatura->id)->first();
                 @endphp
