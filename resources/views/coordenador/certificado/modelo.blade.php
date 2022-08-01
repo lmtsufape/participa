@@ -177,7 +177,7 @@
                     let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     // add the shape to the layer
                     if(medida === undefined) {
-                        let yoda = new Konva.Image({
+                        yoda = new Konva.Image({
                             x: posicao_inicial_x + (index * 350),
                             y: 600,
                             image: imageObj,
@@ -249,11 +249,6 @@
                         draggable: true,
                         id: 'linha' + assinatura.id,
                     });
-
-                    console.log(redLine.position())
-                    console.log(redLine.points())
-                    console.log(redLine.absolutePosition())
-                    console.log(redLine.getAttrs())
                     layer.add(redLine);
                 }
 
