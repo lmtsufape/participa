@@ -88,16 +88,6 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="col-sm-6 form-group">
-                    <label for="texto"><b>{{ __('Texto') }}</b></label>
-                    <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" value="{{old('texto')}}" required autofocus autocomplete="texto">{{$certificado->texto}}</textarea>
-
-                    @error('texto')
-                        <div id="validationServer03Feedback" class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="local"><b>{{ __('Local') }}</b></label>
@@ -109,8 +99,10 @@
                             </div>
                         @enderror
                     </div>
-                    <div>
-                        <p>Tags que podem ser utilizadas para recuperar informações no certificado:</p>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="tags"><b>{{ __('Tags que podem ser utilizadas para recuperar informações no certificado:') }}</b></label>
                         <p style="display: none;" id="tagNOME_PESSOA">%NOME_PESSOA% para preencher o nome da pessoa que está sendo certificada</p>
                         <p style="display: none;" id="tagCPF">%CPF% para preencher o CPF da pessoa que está sendo certicidada</p>
                         <p style="display: none;" id="tagTITULO_TRABALHO">%TITULO_TRABALHO% para preencher o título do trabalho do autor ou coautor</p>
@@ -118,6 +110,18 @@
                         <p style="display: none;" id="tagTITULO_PALESTRA">%TITULO_PALESTRA% para preencher o título da palestra do palestrante</p>
                         <p style="display: none;" id="tagNOME_COMISSAO">%NOME_COMISSAO% para preencher o nome da comissão</p>
                     </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-sm-12 form-group">
+                    <label for="texto"><b>{{ __('Texto') }}</b></label>
+                    <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" value="{{old('texto')}}" required autofocus autocomplete="texto">{{$certificado->texto}}</textarea>
+
+                    @error('texto')
+                        <div id="validationServer03Feedback" class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
             </div>
 
