@@ -81,11 +81,9 @@ class CertificadoController extends Controller
         $certificado->evento_id = $evento->id;
 
         $imagem = $request->fotoCertificado;
-        $path = 'certificados/'.$evento->id.'/';
-        $nome = $imagem->getClientOriginalName();
-        $nomeSemEspaco = str_replace(' ', '', $nome);
-        Storage::putFileAs('public/'.$path, $imagem, $nomeSemEspaco);
-        $certificado->caminho = $path . $nomeSemEspaco;
+        $path = 'certificados/'.$evento->id;
+        $novo_caminho = $certificado->uploadArquivo($path, true, $imagem);
+        $certificado->caminho = $novo_caminho;
         $certificado->save();
 
         foreach($request->assinaturas as $assinatura_id){
@@ -145,15 +143,13 @@ class CertificadoController extends Controller
                 'fotoCertificado'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
             ]);
             if(Storage::disk()->exists('public/'.$certificado->caminho)) {
-                Storage::delete('storage/'.$certificado->caminho);
+                Storage::delete('public/'.$certificado->caminho);
             }
 
             $imagem = $request->fotoCertificado;
-            $path = 'certificados/'.$evento->id.'/';
-            $nome = $imagem->getClientOriginalName();
-            $nomeSemEspaco = str_replace(' ', '', $nome);
-            Storage::putFileAs('public/'.$path, $imagem, $nomeSemEspaco);
-            $certificado->caminho = $path . $nomeSemEspaco;
+            $path = 'certificados/'.$evento->id;
+            $novo_caminho = $certificado->uploadArquivo($path, true, $imagem);
+            $certificado->caminho = $novo_caminho;
 
         }
 
@@ -263,6 +259,9 @@ class CertificadoController extends Controller
         $certificado = Certificado::find($id);
         $evento = $certificado->evento;
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        if(Storage::disk()->exists('public/'.$certificado->caminho)) {
+            Storage::delete('public/'.$certificado->caminho);
+        }
         $certificado->delete();
         return redirect(route('coord.listarCertificados', ['eventoId' => $evento->id]))->with(['success' => 'Certificado deletado com sucesso.']);
     }
