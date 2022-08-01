@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="banner-perfil"  style="position: relative; top: 65px;">
+    <div class="banner-perfil position-absolute w-100 mt-n2">
         <div class="row justify-content-center curved" style="margin-bottom:-5px">
 
         </div>
@@ -158,7 +158,7 @@
                                 <div class="form-group">
                                     <label for="fotoEvento">Banner</label>
                                     <div id="imagem-loader" class="imagem-loader">
-                                        <img id="logo-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                        <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                     </div>
                                     <div style="display: none;">
                                         <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror" name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
@@ -175,7 +175,7 @@
                                 <div class="form-group">
                                     <label for="icone">Ícone</label>
                                     <div id="imagem-loader-icone" class="imagem-loader">
-                                        <img id="icone-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                        <img id="icone-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                     </div>
                                     <div style="display: none;">
                                         <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror" name="icone" value="{{ old('icone') }}" id="icone">
@@ -238,7 +238,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <input id="dataLimiteInscricao" type="datetime-local" class="form-control @error('dataLimiteInscricao') is-invalid @enderror" name="dataLimiteInscricao" value="{{ old('dataLimiteInscricao') }}" autocomplete="dataLimiteInscricao" autofocus>
-    
+
                                 @error('dataLimiteInscricao')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -246,7 +246,7 @@
                                 @enderror
                             </div>
                         </div>
-                        
+
                         {{-- Foto Evento --}}
                         <div class="row justify-content-center" style="margin-top:10px">
 
@@ -402,7 +402,7 @@
         </div>
     </div>
 
-    @include('componentes.footer')
+
 
 @endsection
 @section('javascript')

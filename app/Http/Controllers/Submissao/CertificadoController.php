@@ -242,6 +242,12 @@ class CertificadoController extends Controller
             $medida->largura = $request['imagem-largura-'.$id];
             $medida->altura = $request['imagem-altura-'.$id];
             $medida->save();
+
+            $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['linha_assinatura'], 'assinatura_id' => $id]);
+            $medida->x = $request['linha-x-'.$id];
+            $medida->y = $request['linha-y-'.$id];
+            $medida->largura = $request['linha-largura-'.$id];
+            $medida->save();
         }
         return redirect()->route('coord.listarCertificados', ['eventoId' => $certificado->evento->id]);
     }

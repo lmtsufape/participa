@@ -128,7 +128,7 @@
                     <div class="row cards-eventos-index">
                         @foreach ($assinaturas as $assinatura)
                             <div class="card" style="width: 16rem;">
-                                <img class="img-card" src="{{asset('storage/'.$assinatura->caminho)}}" class="card-img-top" alt="...">
+                                <img src="{{asset('storage/'.$assinatura->caminho)}}" class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-12">
@@ -159,15 +159,15 @@
                     <label for="fotoCertificado"><b>Certificado</b></label>
                     <div id="imagem-loader" class="imagem-loader">
                         @if ($certificado->caminho != null)
-                            <img id="logo-preview" src="{{asset('storage/'.$certificado->caminho)}}" alt="">
+                            <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$certificado->caminho)}}" alt="">
                         @else
-                            <img id="logo-preview" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                            <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                         @endif
                     </div>
                     <div style="display: none;">
                         <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoCertificado') is-invalid @enderror" name="fotoCertificado" value="{{ old('fotoCertificado') }}">
                     </div>
-                    <small style="position: relative; top: 5px;">Tamanho minimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
+                    <small style="position: relative; top: 5px;">Tamanho mínimo: 1268 x 792;<br>Formato: JPEG, JPG, PNG</small>
                     <br>
                     @error('fotoCertificado')
                         <span class="invalid-feedback" role="alert">

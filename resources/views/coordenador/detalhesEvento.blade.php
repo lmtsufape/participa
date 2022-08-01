@@ -423,7 +423,7 @@
 @endsection
 @section('content')
 
-<div class="main_content" style="position: relative; top: 15px;">
+<div class="main_content position-relative">
   {{-- mensagem de confimação --}}
   @if(session('mensagem'))
     <div class="col-md-12" style="margin-top: 5px;">

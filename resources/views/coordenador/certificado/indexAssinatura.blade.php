@@ -2,7 +2,7 @@
 
 @section('menu')
 
-<div class="container"  style="position: relative;">
+<div class="container position-relative">
     <div class="row justify-content-center titulo-detalhes">
         <div class="col-sm-12">
             <div class="row">

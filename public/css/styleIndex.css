@@ -5,12 +5,6 @@ color dark: #071b1eff
 
 */
 
-body{
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
 .curved{
     background-color: #114048ff;
     color: #fff;
@@ -83,17 +77,6 @@ body{
 .info-modulo-body{
   height: 260px;
   overflow-y: auto;
-}
-.footer{
-  position: relative;
-  background-color:#114048ff;
-  top: 105px;
-  padding: 50px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  width: 102%;
-  color: white;
-  bottom: 0px;
 }
 .footer .social{
   width: 40px;
@@ -283,12 +266,6 @@ body{
 .carousel-control-next-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
 }
-
-.content{
-  position: relative;
-  padding-bottom: 50px;
-}
-
 .wrapper-barra-horizontal {
   width: 95%;
   position: relative;

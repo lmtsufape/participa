@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container mb-4" style="position: relative; top: 80px;">
+<div class="container mb-4 position-relative">
     <div id="divListarCriterio" class="comissao">
         <div class="row">
             <div class="col-sm-12">

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container"  style="position: relative; top: 65px;">
+<div class="container "  style="position: relative; ">
 
     {{-- titulo da página --}}
     <div class="row justify-content-center titulo">

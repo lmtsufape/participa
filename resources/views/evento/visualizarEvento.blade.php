@@ -23,10 +23,10 @@
                             <hr>
                             <div class="row form-group">
                                 <div class="col-sm-12">
-                                    <h4 for="descricao">Descrição</label>
-                                        <p>
-                                            {{ $atv->descricao }}
-                                        </p>
+                                    <label for="descricao">Descrição</label>
+                                    <p>
+                                        {{ $atv->descricao }}
+                                    </p>
                                 </div>
                             </div>
                             @if (count($atv->convidados) > 0)
@@ -145,7 +145,7 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid content">
+    <div class="container-fluid content mt-n2">
         <div class="row">
             @if (isset($evento->fotoEvento))
                 <div class="banner-evento">
@@ -181,14 +181,14 @@
             </div>
         </div>
     </div>
-    <div class="div-informacoes-evento container" style="@if (isset($evento->fotoEvento))margin-top: -75px;@else margin-top: -200px; @endif">
+    <div class="div-informacoes-evento container mb-5" style="@if (isset($evento->fotoEvento))margin-top: -25px;@else margin-top: -200px; @endif">
         <div class="row justify-content-center">
             <div class="col-sm-10">
                 <div class="row">
                     <div class="col-xl-8">
                         <div class="row" style="margin-bottom: 10px;">
                             <div class="col-sm-12">
-                                <div class="card sombra-card" style="width: 100%;">
+                                <div class="card sombra-card w-100">
                                     <div class="card-body">
                                         <div class="container">
                                             {{-- @if (!Auth::check())
@@ -655,7 +655,7 @@
             </div>
         </div>
     </div>
-    @include('componentes.footer')
+
 @endsection
 @section('javascript')
     <script>

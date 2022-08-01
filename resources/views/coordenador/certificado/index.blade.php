@@ -2,7 +2,7 @@
 
 @section('menu')
 
-<div class="container"  style="position: relative;">
+<div class="container "  style="position: relative;">
     <div class="row justify-content-center titulo-detalhes">
         <div class="col-sm-12">
             <div class="row">
@@ -52,7 +52,7 @@
                         </div>
                         <div>
                             <div>
-                                <a href="{{route('coord.modeloCertificado', $certificado->id)}}" target="_blank">
+                                <a href="{{route('coord.modeloCertificado', $certificado->id)}}">
                                     <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Atualizar modelo
                                 </a>
                             </div>

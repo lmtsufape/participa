@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container content" style="position: relative; top: 50px;">
+<div class="container content" >
     <div class="row justify-content-center">
         <div class="col-md-5">
             <div class="card card-login-cadastro">
@@ -45,6 +45,6 @@
 </div>
 <br>
 <br>
-@include('componentes.footer')
+
 
 @endsection

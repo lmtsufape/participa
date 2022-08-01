@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container"  style="position: relative; top: 100px;">
+<div class="container position-relative">
 
 
     {{--dd($user)--}}
@@ -433,7 +433,7 @@
     </div>
 </div>
 
-@include('componentes.footer')
+
 @endsection
 @section('javascript')
   <script type="text/javascript" >

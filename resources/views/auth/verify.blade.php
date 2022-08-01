@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container content" style="position: relative; top: 80px;">
+<div class="container content position-relative">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
