@@ -91,33 +91,31 @@
                         <small>Selecionar todas as respostas </small><input id="selecionarTodas" type="checkbox" onclick="select_all()">
                     </div>
 
-                    <div class="col-sm-12" style="margin-top: 20px;">
-                        <small>Para trocar o arquivo de avaliação do revisor, envie um novo.</small><br>
-                        <div class="custom-file">
-                            <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoAvaliacao">
-                        </div>
-                        <small>Arquivos aceitos nos formatos
-                            @if($modalidade->pdf == true)<span> - pdf</span>@endif
-                            @if($modalidade->jpg == true)<span> - jpg</span>@endif
-                            @if($modalidade->jpeg == true)<span> - jpeg</span>@endif
-                            @if($modalidade->png == true)<span> - png</span>@endif
-                            @if($modalidade->docx == true)<span> - docx</span>@endif
-                            @if($modalidade->odt == true)<span> - odt</span>@endif
-                            @if($modalidade->zip == true)<span> - zip</span>@endif
-                            @if($modalidade->svg == true)<span> - svg</span>@endif.
-                        </small>
-                        @error('arquivo'.$trabalho->id)
-                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                                <strong>{{ $message }}</strong>
-                             </span>
-                        @enderror
-                    </div>
-
                 </p>
                 </div>
             </div>
-
         @endforeach
+        <div class="col-sm-12" style="margin-top: 20px;">
+            <small>Para trocar o arquivo de avaliação do revisor, envie um novo.</small><br>
+            <div class="custom-file">
+                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoAvaliacao">
+            </div>
+            <small>Arquivos aceitos nos formatos
+                @if($modalidade->pdf == true)<span> - pdf</span>@endif
+                @if($modalidade->jpg == true)<span> - jpg</span>@endif
+                @if($modalidade->jpeg == true)<span> - jpeg</span>@endif
+                @if($modalidade->png == true)<span> - png</span>@endif
+                @if($modalidade->docx == true)<span> - docx</span>@endif
+                @if($modalidade->odt == true)<span> - odt</span>@endif
+                @if($modalidade->zip == true)<span> - zip</span>@endif
+                @if($modalidade->svg == true)<span> - svg</span>@endif.
+            </small>
+            @error('arquivo'.$trabalho->id)
+                <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                    <strong>{{ $message }}</strong>
+                 </span>
+            @enderror
+        </div>
         <div class="row justify-content-left">
             <div class="col-md-6">
                 <button type="submit" class="btn btn-primary" id="submeterFormBotao">
