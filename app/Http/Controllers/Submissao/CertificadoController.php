@@ -149,11 +149,9 @@ class CertificadoController extends Controller
             }
 
             $imagem = $request->fotoCertificado;
-            $path = 'certificados/'.$evento->id.'/';
-            $nome = $imagem->getClientOriginalName();
-            $nome_formatado = $certificado->formatarNomeArquivo('public/'.$path, true, $nome, $imagem->getClientOriginalExtension());
-            Storage::putFileAs('public/'.$path, $imagem, $nome_formatado);
-            $certificado->caminho = $path . $nome_formatado;
+            $path = 'certificados/'.$evento->id;
+            $novo_caminho = $certificado->uploadArquivo($path, true, $imagem);
+            $certificado->caminho = $novo_caminho;
 
         }
 
