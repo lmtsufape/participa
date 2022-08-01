@@ -56,12 +56,7 @@ class AssinaturaController extends Controller
         $assinatura->setAtributes($request);
         $assinatura->evento_id = $evento->id;
 
-        $imagem = $request->fotoAssinatura;
-        $path = 'assinaturas/'.$evento->id.'/';
-        $nome = $imagem->getClientOriginalName();
-        $nomeSemEspaco = str_replace(' ', '', $nome);
-        Storage::putFileAs('public/'.$path, $imagem, $nomeSemEspaco);
-        $assinatura->caminho = $path . $nomeSemEspaco;
+        $assinatura->caminho = $request->fotoAssinatura->store("assinaturas/{$evento->id}", 'public');
         $assinatura->save();
         return redirect(route('coord.listarAssinaturas', ['eventoId' => $evento->id]))->with(['success' => 'Assinatura cadastrada com sucesso.']);
     }
