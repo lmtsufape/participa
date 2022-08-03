@@ -26,7 +26,7 @@ class UpdateCertificadoRequest extends FormRequest
         return [
             'local' => 'required|string|min:3|max:40',
             'nome' => 'required|string|min:5|max:290',
-            'texto' => 'required|string|min:5|max:500',
+            'texto' => 'required|string|min:5',
             'assinaturas' => 'required',
             'data' => 'required|date',
             'tipo' => 'required',
