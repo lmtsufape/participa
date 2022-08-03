@@ -28,31 +28,20 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="col-sm-4 form-group">
-                    <label for="tipo"><b>{{__('Tipo')}}</b></label>
-                    <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required onchange="mostrarTags()">
-                        <option value="">-- Selecione o tipo do certificado --</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador']}}">Apresentador</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica']}}">Membro da comissão Científica</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['coordenador_comissao_cientifica']}}">Coordenador da Comissão Científica</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora']}}">Membro da comissão Organizadora</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['expositor']}}">Palestrante</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['participante']}}">Participante</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['revisor']}}">Revisor</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['outras_comissoes']}}">Membro de outra comissão</option>
-                    </select>
-
-                    @error('tipo')
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="local"><b>{{ __('Local') }}</b></label>
+                        <input id="local" class="form-control @error('local') is-invalid @enderror" type="text" name="local" value="{{old('local')}}" required autofocus autocomplete="local">
+                        @error('local')
                         <div id="validationServer03Feedback" class="invalid-feedback">
                             {{ $message }}
                         </div>
-                    @enderror
+                        @enderror
+                    </div>
                 </div>
-
                 <div class="col-sm-4 form-group">
                     <label for="data" ><b>{{ __('Data') }}</b></label>
                     <input id="data" type="date" class="form-control @error('data') is-invalid @enderror" name="data" value="{{ old('data') }}" autocomplete="data" autofocus autocomplete="data">
-
                     @error('data')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -63,7 +52,6 @@
                 <div class="col-sm-4 form-check form-check pl-4 ml-0">
                     <input id="verso" type="checkbox" class="form-check-input @error('verso') is-invalid @enderror" name="verso" value="1" {{ old('verso', 'true') ? 'checked="checked"' : '' }} autocomplete="verso" autofocus autocomplete="verso">
                     <label class="form-check-label" for="verso" ><b>{{ __('Folha de verso') }}</b></label>
-
                     @error('verso')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -80,7 +68,6 @@
                             <option value=" {{$comissao->id}} "> {{$comissao->nome}} </option>
                         @endforeach
                     </select>
-
                     @error('tipo_comissao_id')
                         <div id="validationServer03Feedback" class="invalid-feedback">
                             {{ $message }}
@@ -89,17 +76,24 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="local"><b>{{ __('Local') }}</b></label>
-                        <input id="local" class="form-control @error('local') is-invalid @enderror" type="text" name="local" value="{{old('local')}}" required autofocus autocomplete="local">
-
-                        @error('local')
-                            <div id="validationServer03Feedback" class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                <div class="col-sm-6 form-group">
+                    <label for="tipo"><b>{{__('Tipo')}}</b></label>
+                    <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required onchange="mostrarTags()">
+                        <option value="">-- Selecione o tipo do certificado --</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador']}}">Apresentador</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica']}}">Membro da comissão Científica</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['coordenador_comissao_cientifica']}}">Coordenador da Comissão Científica</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora']}}">Membro da comissão Organizadora</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['expositor']}}">Palestrante</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['participante']}}">Participante</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['revisor']}}">Revisor</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['outras_comissoes']}}">Membro de outra comissão</option>
+                    </select>
+                    @error('tipo')
+                    <div id="validationServer03Feedback" class="invalid-feedback">
+                        {{ $message }}
                     </div>
+                    @enderror
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
@@ -110,6 +104,8 @@
                         <p style="display: none;" id="tagNOME_EVENTO">%NOME_EVENTO% para preencher o nome do evento</p>
                         <p style="display: none;" id="tagTITULO_PALESTRA">%TITULO_PALESTRA% para preencher o título da palestra do palestrante</p>
                         <p style="display: none;" id="tagNOME_COMISSAO">%NOME_COMISSAO% para preencher o nome da comissão</p>
+                        <p style="display: none;" id="tagCOAUTORES">%COAUTORES% para preencher o nome dos coautores</p>
+                        <p style="display: none;" id="tagMSG_COAUTORES">%MSG_COAUTORES=aqui vai a sua mensagem, se o trabalho tiver coautores% para preencher uma mensagem</p>
                     </div>
                 </div>
             </div>
@@ -117,7 +113,6 @@
                 <div class="col-sm-12 form-group">
                     <label for="texto"><b>{{ __('Texto') }}</b></label>
                     <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" value="{{old('texto')}}" required autofocus autocomplete="texto"></textarea>
-
                     @error('texto')
                         <div id="validationServer03Feedback" class="invalid-feedback">
                             {{ $message }}
@@ -161,7 +156,7 @@
                 <div class="col-sm-12 form-group">
                     <label for="fotoCertificado"><b>Imagem do Certificado</b></label>
                     <div id="imagem-loader" class="imagem-loader">
-                        <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                        <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="" style="max-width: 80%;">
                     </div>
                     <div style="display: none;">
                         <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoCertificado') is-invalid @enderror" name="fotoCertificado" value="{{ old('fotoCertificado') }}">
@@ -213,6 +208,8 @@
                     document.getElementById("tagNOME_PESSOA").style.display = 'block'
                     document.getElementById("tagCPF").style.display = 'block'
                     document.getElementById("tagTITULO_TRABALHO").style.display = 'block'
+                    document.getElementById("tagCOAUTORES").style.display = 'block'
+                    document.getElementById("tagMSG_COAUTORES").style.display = 'block'
                     document.getElementById("tagNOME_EVENTO").style.display = 'block'
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
                     document.getElementById("tagNOME_COMISSAO").style.display = 'none'
@@ -226,6 +223,8 @@
                     document.getElementById("tagNOME_PESSOA").style.display = 'block'
                     document.getElementById("tagCPF").style.display = 'block'
                     document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
+                    document.getElementById("tagCOAUTORES").style.display = 'none'
+                    document.getElementById("tagMSG_COAUTORES").style.display = 'none'
                     document.getElementById("tagNOME_EVENTO").style.display = 'block'
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
                     document.getElementById("tagNOME_COMISSAO").style.display = 'none'
@@ -235,6 +234,8 @@
                     document.getElementById("tagNOME_PESSOA").style.display = 'block'
                     document.getElementById("tagCPF").style.display = 'none'
                     document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
+                    document.getElementById("tagCOAUTORES").style.display = 'none'
+                    document.getElementById("tagMSG_COAUTORES").style.display = 'none'
                     document.getElementById("tagNOME_EVENTO").style.display = 'block'
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'block'
                     document.getElementById("tagNOME_COMISSAO").style.display = 'none'
@@ -244,6 +245,8 @@
                     document.getElementById("tagNOME_PESSOA").style.display = 'block'
                     document.getElementById("tagCPF").style.display = 'block'
                     document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
+                    document.getElementById("tagCOAUTORES").style.display = 'none'
+                    document.getElementById("tagMSG_COAUTORES").style.display = 'none'
                     document.getElementById("tagNOME_EVENTO").style.display = 'block'
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
                     document.getElementById("tagNOME_COMISSAO").style.display = 'block'

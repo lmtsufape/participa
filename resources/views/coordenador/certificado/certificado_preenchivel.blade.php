@@ -33,7 +33,13 @@
                 font-size: {{$certificado->medidas->where("tipo", $tipos["texto"])->first()->fontSize}}px;
                 top:{{$certificado->medidas->where("tipo", $tipos["texto"])->first()->y}}px;
                 width: {{$certificado->medidas->where("tipo", $tipos["texto"])->first()->largura}}px;">
-                {!! str_replace(['%NOME_PESSOA%', '%TITULO_TRABALHO%', '%NOME_EVENTO%', '%TITULO_PALESTRA%', '%CPF%', '%NOME_COMISSAO%'], [$user->name ?: $user->nome,$trabalho->titulo ?? "VARIAVEL INDEFINIDA", $evento->nome, $palestra->titulo ?? 'VARIAVEL INDEFINIDA', $user->cpf, $comissao->nome ?? 'VARIAVEL INDEFINIDA'], $certificado->texto) !!}
+                {!!
+                    str_replace(
+                        ['%NOME_PESSOA%', '%TITULO_TRABALHO%', '%NOME_EVENTO%', '%TITULO_PALESTRA%', '%CPF%', '%NOME_COMISSAO%', '%COAUTORES%'],
+                        [$user->name ?: $user->nome,$trabalho->titulo ?? "VARIAVEL INDEFINIDA", $evento->nome, $palestra->titulo ?? 'VARIAVEL INDEFINIDA', $user->cpf, $comissao->nome ?? 'VARIAVEL INDEFINIDA', $coautores],
+                        $texto
+                    )
+                !!}
             </div>
             <div id="data" style="
                 left: {{$certificado->medidas->where("tipo", $tipos["data"])->first()->x}}px;
