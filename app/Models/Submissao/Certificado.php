@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Traits\FormatFileNames;
+
 class Certificado extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, FormatFileNames;
 
     protected $fillable = ['caminho', 'data', 'local', 'nome', 'texto', 'tipo', 'tipo_comissao_id', 'atividade_id'];
 
@@ -60,9 +62,7 @@ class Certificado extends Model
         $this->local = $request['local'];
         $this->verso = $request['verso'];
         $this->nome = $request['nome'];
-        $texto = substr($request['texto'], 3);
-        $texto = substr_replace($texto ,"", -4);
-        $this->texto =  $texto;
+        $this->texto = $request['texto'];
         $this->tipo =  $request['tipo'];
         $this->data =  $request['data'];
         if (array_key_exists('tipo_comissao_id', $request)) {
