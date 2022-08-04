@@ -40,6 +40,7 @@
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['participante']}}">Participante</option>
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['revisor']}}">Revisor</option>
                         <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['outras_comissoes']}}">Membro de outra comissão</option>
+                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['inscrito_atividade']}}">Inscrito em uma atividade</option>
                     </select>
 
                     @error('tipo')
@@ -88,6 +89,24 @@
                     @enderror
                 </div>
             </div>
+            <div class="form-row" id="atividadeDivSelect" style="display: none;">
+                <div class="col-sm-6 form-group">
+                    <label for="atividade_id"><b>{{__('Atividade')}}</b></label>
+                    <select name="atividade_id" id="atividade_id" class="form-control @error('atividade_id') is-invalid @enderror">
+                        <option value="">-- Selecione uma atividade --</option>
+                        <option value="0">Todas as atividades</option>
+                        @foreach ($evento->atividade as $atividade)
+                            <option value=" {{$atividade->id}} "> {{$atividade->titulo}} </option>
+                        @endforeach
+                    </select>
+
+                    @error('atividade_id')
+                        <div id="validationServer03Feedback" class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div>
             <div class="form-row">
                 <div class="col-sm-6 form-group">
                     <label for="texto"><b>{{ __('Texto') }}</b></label>
@@ -118,6 +137,8 @@
                         <p style="display: none;" id="tagNOME_EVENTO">%NOME_EVENTO% para preencher o nome do evento</p>
                         <p style="display: none;" id="tagTITULO_PALESTRA">%TITULO_PALESTRA% para preencher o título da palestra do palestrante</p>
                         <p style="display: none;" id="tagNOME_COMISSAO">%NOME_COMISSAO% para preencher o nome da comissão</p>
+                        <p style="display: none;" id="tagNOME_ATIVIDADE">%NOME_ATIVIDADE% para preencher o nome da atividade</p>
+                        <p style="display: none;" id="tagCARGA_HORARIA">%CARGA_HORARIA% para preencher a carga horária da atividade</p>
                     </div>
                 </div>
             </div>
@@ -213,6 +234,9 @@
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
                     document.getElementById("tagNOME_COMISSAO").style.display = 'none'
                     document.getElementById("outrasComissoesDivSelect").style.display = 'none'
+                    document.getElementById("tagNOME_ATIVIDADE").style.display = 'none'
+                    document.getElementById("atividadeDivSelect").style.display = 'none'
+                    document.getElementById("tagCARGA_HORARIA").style.display = 'none'
                     break;
                 case '2':
                 case '3':
@@ -226,6 +250,9 @@
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
                     document.getElementById("tagNOME_COMISSAO").style.display = 'none'
                     document.getElementById("outrasComissoesDivSelect").style.display = 'none'
+                    document.getElementById("tagNOME_ATIVIDADE").style.display = 'none'
+                    document.getElementById("atividadeDivSelect").style.display = 'none'
+                    document.getElementById("tagCARGA_HORARIA").style.display = 'none'
                     break;
                 case '6':
                     document.getElementById("tagNOME_PESSOA").style.display = 'block'
@@ -235,6 +262,9 @@
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'block'
                     document.getElementById("tagNOME_COMISSAO").style.display = 'none'
                     document.getElementById("outrasComissoesDivSelect").style.display = 'none'
+                    document.getElementById("tagNOME_ATIVIDADE").style.display = 'none'
+                    document.getElementById("atividadeDivSelect").style.display = 'none'
+                    document.getElementById("tagCARGA_HORARIA").style.display = 'none'
                     break;
                 case '8':
                     document.getElementById("tagNOME_PESSOA").style.display = 'block'
@@ -244,6 +274,22 @@
                     document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
                     document.getElementById("tagNOME_COMISSAO").style.display = 'block'
                     document.getElementById("outrasComissoesDivSelect").style.display = 'block'
+                    document.getElementById("tagNOME_ATIVIDADE").style.display = 'none'
+                    document.getElementById("atividadeDivSelect").style.display = 'none'
+                    document.getElementById("tagCARGA_HORARIA").style.display = 'none'
+                    break;
+                case '9':
+                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
+                    document.getElementById("tagCPF").style.display = 'block'
+                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
+                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
+                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
+                    document.getElementById("tagNOME_COMISSAO").style.display = 'none'
+                    document.getElementById("outrasComissoesDivSelect").style.display = 'none'
+                    document.getElementById("tagNOME_ATIVIDADE").style.display = 'block'
+                    document.getElementById("atividadeDivSelect").style.display = 'block'
+                    document.getElementById("tagCARGA_HORARIA").style.display = 'block'
+                    break;
             }
         }
     </script>
