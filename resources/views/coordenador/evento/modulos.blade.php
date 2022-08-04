@@ -18,7 +18,7 @@
                     @csrf
 
                     <p class="card-text">
-                        <input type="hidden" name="modinscricao" value="false" id="modinscricao">
+                        <input type="hidden" name="modinscricao" value="false">
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="modinscricao" class="col-form-label">{{ __('Inscrições') }}</label>
@@ -43,7 +43,7 @@
                     </p>
 
                     <p class="card-text">
-                    <input type="hidden" name="modprogramacao" value="false" id="modprogramacao">
+                    <input type="hidden" name="modprogramacao" value="false">
                     <div class="row">
                         <div class="col-sm-12">
                             <label for="modprogramacao" class="col-form-label">{{ __('Programação') }}</label>
@@ -98,7 +98,7 @@
                     </p>
 
                     <p class="card-text">
-                    <input type="hidden" name="modorganizacao" value="false" id="modorganizacao">
+                    <input type="hidden" name="modorganizacao" value="false">
                     <div class="row">
                         <div class="col-sm-12">
                             <label for="modorganizacao" class="col-form-label">{{ __('Organização e Apoio') }}</label>
@@ -126,7 +126,7 @@
                     </p>
 
                     <p class="card-text">
-                    <input type="hidden" name="modsubmissao" value="false" id="modsubmissao">
+                    <input type="hidden" name="modsubmissao" value="false">
                     <div class="row">
                         <div class="col-sm-12">
                             <label for="modsubmissao" class="col-form-label">{{ __('Submissões de Trabalhos') }}</label>
