@@ -32,6 +32,7 @@ class CertificadoRequest extends FormRequest
             'assinaturas' => 'required',
             'data' => 'required|date',
             'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8',
+            'atividade_id' => 'required_if:tipo,9|exclude_unless:tipo,9',
             'verso' => 'required|boolean',
         ];
     }
@@ -39,7 +40,8 @@ class CertificadoRequest extends FormRequest
     public function attributes()
     {
         return [
-            'tipo_comissao_id' => 'tipo da comissão'
+            'tipo_comissao_id' => 'tipo da comissão',
+            'atividade_id' => 'atividade'
         ];
     }
 

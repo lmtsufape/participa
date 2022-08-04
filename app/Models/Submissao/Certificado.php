@@ -11,7 +11,7 @@ class Certificado extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['caminho', 'data', 'local', 'nome', 'texto', 'tipo', 'tipo_comissao_id'];
+    protected $fillable = ['caminho', 'data', 'local', 'nome', 'texto', 'tipo', 'tipo_comissao_id', 'atividade_id'];
 
     public const TIPO_ENUM = [
         'apresentador'          => 1,
@@ -22,6 +22,7 @@ class Certificado extends Model
         'expositor'             => 6,
         'coordenador_comissao_cientifica' => 7,
         'outras_comissoes' => 8,
+        'inscrito_atividade' => 9,
     ];
 
     public function assinaturas()
@@ -37,6 +38,11 @@ class Certificado extends Model
     public function medidas()
     {
         return $this->hasMany(Medida::class);
+    }
+
+    public function atividade()
+    {
+        return $this->hasOne(Atividade::class);
     }
 
     public function evento()
@@ -62,5 +68,9 @@ class Certificado extends Model
         if (array_key_exists('tipo_comissao_id', $request)) {
             $this->tipo_comissao_id =  $request['tipo_comissao_id'];
         }
+        if (array_key_exists('atividade_id', $request))
+            $this->atividade_id = null;
+        else
+            $this->atividade_id =  $request['atividade_id'];
     }
 }
