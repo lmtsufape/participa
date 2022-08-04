@@ -58,6 +58,8 @@
                                 <option value="5">{{$destinatario}}</option>
                             @elseif($destinatario == "Membro de outra comissão")
                                 <option value="8">{{$destinatario}}</option>
+                            @elseif($destinatario == "Inscrito em uma atividade")
+                                <option value="9">{{$destinatario}}</option>
                             @endif
 
                         @endforeach
@@ -81,6 +83,24 @@
                         </select>
 
                         @error('tipo_comissao_id')
+                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-row" id="atividadeDivSelect" style="display: none;">
+                    <div class="col-sm-6 form-group">
+                        <label for="atividade_id"><b>{{__('Atividade')}}</b></label>
+                        <select name="atividade_id" id="atividade_id" class="form-control @error('atividade_id') is-invalid @enderror" onChange="selecionarDestinatario({{$evento->id}})">
+                            <option value="" selected>-- Selecione uma atividade --</option>
+                            <option value="0">Todas as atividades</option>
+                            @foreach ($evento->atividade as $atividade)
+                                <option value="{{$atividade->id}}"> {{$atividade->titulo}} </option>
+                            @endforeach
+                        </select>
+
+                        @error('atividade_id')
                             <div id="validationServer03Feedback" class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -132,15 +152,24 @@
         var historySelectList = $('select#idSelecionarDestinatario');
         var $destinatario = $('option:selected', historySelectList).val();
         var tipo_comissao_id = $('#tipo_comissao_id').find(":selected").val();
+        var atividadeSelecionada = $('#atividadeDivSelect').find(":selected").val();
         limparLista();
         limparCertificados();
 
         if ($destinatario == 8) {
             document.getElementById("outrasComissoesDivSelect").style.display = 'block'
+            document.getElementById("atividadeDivSelect").style.display = 'none'
             if(tipo_comissao_id.length == 0)
                 return;
+        } else if ($destinatario == 9) {
+            document.getElementById("outrasComissoesDivSelect").style.display = 'none'
+            document.getElementById("atividadeDivSelect").style.display = 'block'
+            if(atividadeSelecionada == ''){
+                return;
+            }
         } else {
             document.getElementById("outrasComissoesDivSelect").style.display = 'none'
+            document.getElementById("atividadeDivSelect").style.display = 'none'
         }
 
         $.ajax({
