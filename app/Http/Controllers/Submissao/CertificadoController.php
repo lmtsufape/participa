@@ -449,6 +449,14 @@ class CertificadoController extends Controller
         }elseif($request->destinatario == Certificado::TIPO_ENUM['outras_comissoes']){
             $comissao = TipoComissao::find($request->tipo_comissao_id);
             $destinatarios = $comissao->membros;
+        }elseif($request->destinatario == Certificado::TIPO_ENUM['inscrito_atividade']){
+            $destinatarios = collect();
+            $ativ = Atividade::where('eventoId', '=', $request->eventoId)->orderBy('titulo')->get();
+            $atividades = collect();
+            foreach($ativ->users as $destinatario){
+                $destinatarios->push($destinatario);
+                $atividades->push($ativ);
+            }
         }
         $desti = collect();
 
@@ -494,6 +502,10 @@ class CertificadoController extends Controller
                 $modeloCertificado = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['outras_comissoes']], ['tipo_comissao_id', $request->tipo_comissao_id]])->first();
                 $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['outras_comissoes']], ['tipo_comissao_id', $request->tipo_comissao_id]])->get();
                 break;
+            case Certificado::TIPO_ENUM['inscrito_atividade']:
+                $modeloCertificado = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['inscrito_atividade']], ['atividade_id', $request->atividade_id]])->first();
+                $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['inscrito_atividade']], ['atividade_id', $request->atividade_id]])->get();
+                break;
 
             default:
                 break;
@@ -523,6 +535,15 @@ class CertificadoController extends Controller
                 'success'   => true,
                 'destinatarios' => $desti,
                 'comissao' => $comissao,
+                'certificado' => $modeloCertificado,
+                'certificados' => $certificados,
+            );
+            echo json_encode($data);
+        }elseif($request->destinatario == Certificado::TIPO_ENUM['inscrito_atividade']){
+            $data = array(
+                'success'   => true,
+                'destinatarios' => $desti,
+                'atividades' => $atividades,
                 'certificado' => $modeloCertificado,
                 'certificados' => $certificados,
             );
