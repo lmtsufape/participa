@@ -26,10 +26,12 @@ use geekcom\ValidatorDocs\Rules\Certidao;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
@@ -111,8 +113,9 @@ class CertificadoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Submissao\Certificado  $certificado
-     * @return Response
+     * @param  Request $request
+     * @param int $id
+     * @return View
      */
     public function edit(Request $request, $id)
     {
@@ -120,19 +123,17 @@ class CertificadoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $certificado = Certificado::find($id);
         $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
-        return view('coordenador.certificado.edit', [
-            'assinaturas' => $assinaturas,
-            'certificado' => $certificado,
-            'evento'=> $evento,
-        ]);
+        $tipos = array(1 => 'Apresentadores', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Revisores', 'Participantes', 'Palestrante', 'Coordenador da comissão científica', 'Membro de outra comissão', 'Inscrito em uma atividade');
+        return view('coordenador.certificado.edit', compact('assinaturas','certificado','evento', 'tipos'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Submissao\Certificado  $certificado
-     * @return Response
+     * @param UpdateCertificadoRequest $request
+     * @param int $id
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function update(UpdateCertificadoRequest $request, $id)
     {
