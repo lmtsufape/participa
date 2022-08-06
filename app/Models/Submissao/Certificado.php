@@ -34,7 +34,7 @@ class Certificado extends Model
 
     public function usuarios()
     {
-        return $this->belongsToMany(User::class, 'certificado_user')->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'certificado_user')->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id', 'atividade_id')->withTimestamps();
     }
 
     public function medidas()
@@ -69,8 +69,9 @@ class Certificado extends Model
             $this->tipo_comissao_id =  $request['tipo_comissao_id'];
         }
         if (array_key_exists('atividade_id', $request))
-            $this->atividade_id = null;
-        else
-            $this->atividade_id =  $request['atividade_id'];
+            if($request['atividade_id'] == 0)
+                $this->atividade_id = null;
+            else
+                $this->atividade_id =  $request['atividade_id'];
     }
 }
