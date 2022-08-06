@@ -14,7 +14,7 @@ class AddFieldToCertificadoUser extends Migration
     public function up()
     {
         Schema::table('certificado_user', function (Blueprint $table) {
-            $table->unsignedBigInteger('atividade_id');
+            $table->unsignedBigInteger('atividade_id')->nullable();
             $table->foreign('atividade_id')->references('id')->on('atividades');
         });
     }
