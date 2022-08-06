@@ -170,6 +170,14 @@
                                                 </a>
                                             @break
 
+                                            @case($tipos['inscrito_atividade'])
+                                                <a class="text-reset d-flex justify-content-center" href="{{ route('coord.previewCertificado', [$certificado->id, $usuario->id, $usuario->pivot->atividade_id]) }}"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer">
+                                                    <i class="far fa-eye"></i>
+                                                </a>
+                                            @break
+
                                             @default
                                                 <a class="text-reset d-flex justify-content-center" href="{{ route('coord.previewCertificado', [$certificado->id, $usuario->id, 0]) }}"
                                                     target="_blank"

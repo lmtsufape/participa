@@ -202,7 +202,7 @@ class UserController extends Controller
         $comissoes = TipoComissao::find($usuario->certificados->pluck('pivot.comissao_id'));
         $palestras = Palestra::find($usuario->certificados->pluck('pivot.palestra_id'));
         $trabalhos = Trabalho::find($usuario->certificados->pluck('pivot.trabalho_id'));
-        return view('user.meusCertificados', compact('tiposView', 'usuario', 'certificadosPorTipo', 'tipos', 'comissoes', 'palestras', 'trabalhos',));
+        return view('user.meusCertificados', compact('tiposView', 'usuario', 'certificadosPorTipo', 'tipos', 'comissoes', 'palestras', 'trabalhos'));
     }
 
     public function meusTrabalhos(){

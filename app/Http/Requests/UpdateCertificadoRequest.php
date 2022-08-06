@@ -31,14 +31,16 @@ class UpdateCertificadoRequest extends FormRequest
             'data' => 'required|date',
             'tipo' => 'required',
             'verso' => 'nullable|boolean',
-            'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8'
+            'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8',
+            'atividade_id' => 'required_if:tipo,9|exclude_unless:tipo,9',
         ];
     }
 
     public function attributes()
     {
         return [
-            'tipo_comissao_id' => 'tipo da comissão'
+            'tipo_comissao_id' => 'tipo da comissão',
+            'atividade_id' => 'atividade'
         ];
     }
 
