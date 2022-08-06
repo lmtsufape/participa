@@ -1,7 +1,6 @@
 @extends('coordenador.detalhesEvento')
-
 @section('menu')
-@include('componentes.mensagens')
+    @include('componentes.mensagens')
     <div id="divCadastrarAssinatura" class="comissao">
         <div class="row">
             <div class="col-sm-12">
@@ -10,7 +9,6 @@
             </div>
         </div>
     </div>
-
     <div class="row justify-content-center">
         <form id="formCadastrarCertificado" action="{{route('coord.certificado.store')}}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -41,16 +39,15 @@
                 </div>
                 <div class="col-sm-4 form-group">
                     <label for="data" ><b>{{ __('Data') }}</b></label>
-                    <input id="data" type="date" class="form-control @error('data') is-invalid @enderror" name="data" value="{{ old('data') }}" autocomplete="data" autofocus autocomplete="data">
+                    <input id="data" type="date" class="form-control @error('data') is-invalid @enderror" name="data" value="{{ old('data') }}" autocomplete="data" autofocus>
                     @error('data')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                     @enderror
                 </div>
-
                 <div class="col-sm-4 form-check form-check pl-4 ml-0">
-                    <input id="verso" type="checkbox" class="form-check-input @error('verso') is-invalid @enderror" name="verso" value="1" {{ old('verso', 'true') ? 'checked="checked"' : '' }} autocomplete="verso" autofocus autocomplete="verso">
+                    <input id="verso" type="checkbox" class="form-check-input @error('verso') is-invalid @enderror" name="verso" value="1" {{ old('verso', 'true') ? 'checked="checked"' : '' }} autocomplete="verso" autofocus>
                     <label class="form-check-label" for="verso" ><b>{{ __('Folha de verso') }}</b></label>
                     @error('verso')
                     <span class="invalid-feedback" role="alert">
@@ -59,61 +56,64 @@
                     @enderror
                 </div>
             </div>
-            <div class="form-row" id="outrasComissoesDivSelect" style="display: none;">
-                <div class="col-sm-6 form-group">
-                    <label for="tipo_comissao_id"><b>{{__('Comissão')}}</b></label>
-                    <select name="tipo_comissao_id" id="tipo_comissao_id" class="form-control @error('tipo_comissao_id') is-invalid @enderror">
-                        <option value="">-- Selecione a comissão --</option>
-                        @foreach ($evento->outrasComissoes as $comissao)
-                            <option value=" {{$comissao->id}} "> {{$comissao->nome}} </option>
-                        @endforeach
-                    </select>
-                    @error('tipo_comissao_id')
-                        <div id="validationServer03Feedback" class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-            </div>
-            <div class="form-row" id="atividadeDivSelect" style="display: none;">
-                <div class="col-sm-6 form-group">
-                    <label for="atividade_id"><b>{{__('Atividade')}}</b></label>
-                    <select name="atividade_id" id="atividade_id" class="form-control @error('atividade_id') is-invalid @enderror">
-                        <option value="">-- Selecione uma atividade --</option>
-                        <option value="0">Todas as atividades</option>
-                        @foreach ($evento->atividade as $atividade)
-                            <option value=" {{$atividade->id}} "> {{$atividade->titulo}} </option>
-                        @endforeach
-                    </select>
+            <div class="form-row" >
 
-                    @error('atividade_id')
-                        <div id="validationServer03Feedback" class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
             </div>
             <div class="form-row">
-                <div class="col-sm-6 form-group">
-                    <label for="tipo"><b>{{__('Tipo')}}</b></label>
-                    <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required onchange="mostrarTags()">
-                        <option value="">-- Selecione o tipo do certificado --</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador']}}">Apresentador</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica']}}">Membro da comissão Científica</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['coordenador_comissao_cientifica']}}">Coordenador da Comissão Científica</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora']}}">Membro da comissão Organizadora</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['expositor']}}">Palestrante</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['participante']}}">Participante</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['revisor']}}">Revisor</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['outras_comissoes']}}">Membro de outra comissão</option>
-                        <option value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['inscrito_atividade']}}">Inscrito em uma atividade</option>
-                    </select>
-                    @error('tipo')
-                    <div id="validationServer03Feedback" class="invalid-feedback">
-                        {{ $message }}
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-12 form-group">
+                            <label for="tipo"><b>{{__('Tipo')}}</b></label>
+                            <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required onchange="mostrarTags()">
+                                <option value="">-- Selecione o tipo do certificado --</option>
+                                <option value="{{$tipos['apresentador']}}">Apresentador</option>
+                                <option value="{{$tipos['comissao_cientifica']}}">Membro da comissão Científica</option>
+                                <option value="{{$tipos['coordenador_comissao_cientifica']}}">Coordenador da Comissão Científica</option>
+                                <option value="{{$tipos['comissao_organizadora']}}">Membro da comissão Organizadora</option>
+                                <option value="{{$tipos['expositor']}}">Palestrante</option>
+                                <option value="{{$tipos['participante']}}">Participante</option>
+                                <option value="{{$tipos['revisor']}}">Revisor</option>
+                                <option value="{{$tipos['outras_comissoes']}}">Membro de outra comissão</option>
+                                <option value="{{$tipos['inscrito_atividade']}}">Inscrito em uma atividade</option>
+                            </select>
+                            @error('tipo')
+                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="col-12 form-group" id="outrasComissoesDivSelect" style="display: none;">
+                            <label for="tipo_comissao_id"><b>{{__('Comissão')}}</b></label>
+                            <select name="tipo_comissao_id" id="tipo_comissao_id" class="form-control @error('tipo_comissao_id') is-invalid @enderror">
+                                <option value="">-- Selecione a comissão --</option>
+                                @foreach ($evento->outrasComissoes as $comissao)
+                                    <option value=" {{$comissao->id}} "> {{$comissao->nome}} </option>
+                                @endforeach
+                            </select>
+                            @error('tipo_comissao_id')
+                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="col-12 form-group" id="atividadeDivSelect" style="display: none;">
+                            <label for="atividade_id"><b>{{__('Atividade')}}</b></label>
+                            <select name="atividade_id" id="atividade_id" class="form-control @error('atividade_id') is-invalid @enderror">
+                                <option value="">-- Selecione uma atividade --</option>
+                                <option value="0">Todas as atividades</option>
+                                @foreach ($evento->atividade as $atividade)
+                                    <option value="{{$atividade->id}}"> {{$atividade->titulo}} </option>
+                                @endforeach
+                            </select>
+                            @error('atividade_id')
+                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
                     </div>
-                    @enderror
                 </div>
+
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="tags"><b>{{ __('Tags que podem ser utilizadas para recuperar informações no certificado:') }}</b></label>
@@ -133,7 +133,7 @@
             <div class="form-row">
                 <div class="col-sm-12 form-group">
                     <label for="texto"><b>{{ __('Texto') }}</b></label>
-                    <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" value="{{old('texto')}}" required autofocus autocomplete="texto"></textarea>
+                    <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" required autofocus autocomplete="texto">{{old('texto')}}</textarea>
                     @error('texto')
                         <div id="validationServer03Feedback" class="invalid-feedback">
                             {{ $message }}
@@ -152,14 +152,14 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <h5 class="card-title">
+                                            <div class="card-title">
                                                 <div class="row">
                                                     <div class="form-check">
                                                         <input class="checkbox_assinatura" type="checkbox" name="assinaturas[]" value="{{$assinatura->id}}" id="assinatura_{{$assinatura->id}}">
                                                         <label for="assinatura_{{$assinatura->id}}">{{$assinatura->nome}}</label>
                                                     </div>
                                                 </div>
-                                            </h5>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -180,7 +180,7 @@
                         <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="" style="max-width: 80%;">
                     </div>
                     <div style="display: none;">
-                        <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoCertificado') is-invalid @enderror" name="fotoCertificado" value="{{ old('fotoCertificado') }}">
+                        <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoCertificado') is-invalid @enderror" name="fotoCertificado" onchange="logoPreview(this)">
                     </div>
                     <small style="position: relative; top: 5px;">Tamanho recomendado: 1268 x 792;<br>Formato: JPEG, JPG, PNG</small>
                     <br>
@@ -191,7 +191,6 @@
                     @enderror
                 </div>
             </div>
-
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary" style="width:100%">
@@ -201,101 +200,63 @@
             </div>
         </form>
     </div>
-
 @endsection
-
 @section('javascript')
-    @parent
-    <script type="text/javascript" >
-        $(document).ready(function($){
-            CKEDITOR.replace('texto');
-            $('#imagem-loader').click(function() {
-                $('#logo-input').click();
-                $('#logo-input').change(function() {
-                    if (this.files && this.files[0]) {
-                        var file = new FileReader();
-                        file.onload = function(e) {
-                            document.getElementById("logo-preview").src = e.target.result;
-                        };
-                        file.readAsDataURL(this.files[0]);
-                    }
-                })
-            });
+    <script type="text/javascript">
+        CKEDITOR.replace('texto');
+        function logoPreview(input) {
+            $('#logo-preview').attr('src', window.URL.createObjectURL(input.files[0]))
+        }
+        $('#imagem-loader').click(function() {
+            $('#logo-input').click()
         });
-
+        function esconderTags() {
+            $("#tagCPF").hide();
+            $("#tagTITULO_TRABALHO").hide();
+            $("#tagCOAUTORES").hide();
+            $("#tagMSG_COAUTORES").hide();
+            $("#tagTITULO_PALESTRA").hide();
+            $("#tagNOME_COMISSAO").hide();
+            $("#outrasComissoesDivSelect").hide();
+            $("#tagNOME_ATIVIDADE").hide();
+            $("#atividadeDivSelect").hide();
+            $("#tagCARGA_HORARIA").hide();
+        }
         function mostrarTags() {
-            switch(document.getElementById("tipo").value){
+            $("#tagNOME_PESSOA").show();
+            $("#tagNOME_EVENTO").show();
+            switch($("#tipo").val()){
                 case '1':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'block'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'block'
-                    document.getElementById("tagCOAUTORES").style.display = 'block'
-                    document.getElementById("tagMSG_COAUTORES").style.display = 'block'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
-                    document.getElementById("tagNOME_COMISSAO").style.display = 'none'
-                    document.getElementById("outrasComissoesDivSelect").style.display = 'none'
-                    document.getElementById("tagNOME_ATIVIDADE").style.display = 'none'
-                    document.getElementById("atividadeDivSelect").style.display = 'none'
-                    document.getElementById("tagCARGA_HORARIA").style.display = 'none'
+                    esconderTags();
+                    $("#tagCPF").show();
+                    $("#tagTITULO_TRABALHO").show();
+                    $("#tagCOAUTORES").show();
+                    $("#tagMSG_COAUTORES").show();
                     break;
                 case '2':
                 case '3':
                 case '4':
                 case '5':
                 case '7':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'block'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
-                    document.getElementById("tagCOAUTORES").style.display = 'none'
-                    document.getElementById("tagMSG_COAUTORES").style.display = 'none'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
-                    document.getElementById("tagNOME_COMISSAO").style.display = 'none'
-                    document.getElementById("outrasComissoesDivSelect").style.display = 'none'
-                    document.getElementById("tagNOME_ATIVIDADE").style.display = 'none'
-                    document.getElementById("atividadeDivSelect").style.display = 'none'
-                    document.getElementById("tagCARGA_HORARIA").style.display = 'none'
+                    esconderTags();
+                    $("#tagCPF").show();
                     break;
                 case '6':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'none'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
-                    document.getElementById("tagCOAUTORES").style.display = 'none'
-                    document.getElementById("tagMSG_COAUTORES").style.display = 'none'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'block'
-                    document.getElementById("tagNOME_COMISSAO").style.display = 'none'
-                    document.getElementById("outrasComissoesDivSelect").style.display = 'none'
-                    document.getElementById("tagNOME_ATIVIDADE").style.display = 'none'
-                    document.getElementById("atividadeDivSelect").style.display = 'none'
-                    document.getElementById("tagCARGA_HORARIA").style.display = 'none'
+                    esconderTags();
+                    $("#tagTITULO_PALESTRA").show();
                     break;
                 case '8':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'block'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
-                    document.getElementById("tagCOAUTORES").style.display = 'none'
-                    document.getElementById("tagMSG_COAUTORES").style.display = 'none'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
-                    document.getElementById("tagNOME_COMISSAO").style.display = 'block'
-                    document.getElementById("outrasComissoesDivSelect").style.display = 'block'
-                    document.getElementById("tagNOME_ATIVIDADE").style.display = 'none'
-                    document.getElementById("atividadeDivSelect").style.display = 'none'
-                    document.getElementById("tagCARGA_HORARIA").style.display = 'none'
+                    esconderTags();
+                    $("#tagCPF").show();
+                    $("#tagNOME_COMISSAO").show();
+                    $("#outrasComissoesDivSelect").show();
                     break;
                 case '9':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'block'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
-                    document.getElementById("tagNOME_COMISSAO").style.display = 'none'
-                    document.getElementById("outrasComissoesDivSelect").style.display = 'none'
-                    document.getElementById("tagNOME_ATIVIDADE").style.display = 'block'
-                    document.getElementById("atividadeDivSelect").style.display = 'block'
-                    document.getElementById("tagCARGA_HORARIA").style.display = 'block'
+                    esconderTags();
+                    $("#tagCPF").show();
+                    $("#tagNOME_ATIVIDADE").show();
+                    $("#atividadeDivSelect").show();
+                    $("#tagCARGA_HORARIA").show();
                     break;
             }
         }

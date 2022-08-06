@@ -57,7 +57,7 @@
 
             layer = new Konva.Layer();
             stage.add(layer);
-            medidas = {!! json_encode($medidas) !!}
+            medidas = @json($medidas);
             medida = medidas.find(m => m.tipo == 1);
             if(medida === undefined)
                 medida = {x: 50, y: 300, largura: 1000, fontSize: 14}
@@ -89,9 +89,11 @@
 
             medida = medidas.find(m => m.tipo == 2);
             if(medida === undefined)
-                medida = {x: 915, y: 350, largura: 450, fontSize: 14}
+                medida = {x: 915, y: 350, largura: 450, fontSize: 14};
 
-            localdata = {!! json_encode($certificado->local) !!} + ', ' + {!! json_encode($dataHoje) !!};
+            templocal = @json($certificado->local);
+            tempdata = @json($dataHoje);
+            localdata =  templocal + ', ' + tempdata;
             local = new Konva.Text({
                 x: parseInt(medida.x),
                 y: parseInt(medida.y),
@@ -162,7 +164,7 @@
                 }
             });
 
-            let assinaturas = {!! json_encode($certificado->assinaturas) !!};
+            let assinaturas = @json($certificado->assinaturas);
             let posicao_inicial_x;
             if (assinaturas.length > 1) {
                 posicao_inicial_x = ((1268 - 100) / assinaturas.length) / assinaturas.length;

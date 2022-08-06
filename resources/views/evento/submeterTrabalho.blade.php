@@ -604,7 +604,7 @@
 @endsection
 
 @section('javascript')
-    <script type="text/javascript">
+    <script>
         function handler() {
             usuario = @json(auth()->user());
             oldEmail = @json(old('emailCoautor'));

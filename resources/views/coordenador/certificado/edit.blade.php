@@ -59,58 +59,69 @@
                     @enderror
                 </div>
             </div>
-            <div class="form-row" id="outrasComissoesDivSelect" style="display: none;">
-                <div class="col-sm-6 form-group">
-                    <label for="tipo_comissao_id"><b>{{__('Comissão')}}</b></label>
-                    <select name="tipo_comissao_id" id="tipo_comissao_id" class="form-control @error('tipo_comissao_id') is-invalid @enderror">
-                        @foreach ($evento->outrasComissoes as $comissao)
-                            <option @if ($certificado->tipo_comissao_id == $comissao->id) selected @endif  value="{{$comissao->id}}"> {{$comissao->nome}} </option>
-                        @endforeach
-                    </select>
-                    @error('tipo_comissao_id')
-                        <div id="validationServer03Feedback" class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-            </div>
             <div class="form-row">
-                <div class="col-sm-6 form-group">
-                    <label for="tipo"><b>{{__('Tipo')}}</b></label>
-                    <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required onchange="mostrarTags()">
-                        <option @if($certificado->tipo == \App\Models\Submissao\Certificado::TIPO_ENUM['apresentador']) selected @endif value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['apresentador']}}">Apresentador</option>
-                        <option @if($certificado->tipo == \App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica']) selected @endif value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_cientifica']}}">Membro da comissão Científica</option>
-                        <option @if($certificado->tipo == \App\Models\Submissao\Certificado::TIPO_ENUM['coordenador_comissao_cientifica']) selected @endif value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['coordenador_comissao_cientifica']}}">Coordenador da Comissão Científica</option>
-                        <option @if($certificado->tipo == \App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora']) selected @endif value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['comissao_organizadora']}}">Membro da Comissão Organizadora</option>
-                        <option @if($certificado->tipo == \App\Models\Submissao\Certificado::TIPO_ENUM['expositor']) selected @endif value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['expositor']}}">Expositor</option>
-                        <option @if($certificado->tipo == \App\Models\Submissao\Certificado::TIPO_ENUM['participante']) selected @endif value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['participante']}}">Participante</option>
-                        <option @if($certificado->tipo == \App\Models\Submissao\Certificado::TIPO_ENUM['revisor']) selected @endif value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['revisor']}}">Revisor</option>
-                        <option @if($certificado->tipo == \App\Models\Submissao\Certificado::TIPO_ENUM['outras_comissoes']) selected @endif value="{{\App\Models\Submissao\Certificado::TIPO_ENUM['outras_comissoes']}}">Membro de outra comissão</option>
-                    </select>
-                    @error('tipo')
-                    <div id="validationServer03Feedback" class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                    @enderror
-                </div>
                 <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="tags"><b>{{ __('Tags que podem ser utilizadas para recuperar informações no certificado:') }}</b></label>
-                        <p style="display: none;" id="tagNOME_PESSOA">%NOME_PESSOA% para preencher o nome da pessoa que está sendo certificada</p>
-                        <p style="display: none;" id="tagCPF">%CPF% para preencher o CPF da pessoa que está sendo certicidada</p>
-                        <p style="display: none;" id="tagTITULO_TRABALHO">%TITULO_TRABALHO% para preencher o título do trabalho do autor ou coautor</p>
-                        <p style="display: none;" id="tagNOME_EVENTO">%NOME_EVENTO% para preencher o nome do evento</p>
-                        <p style="display: none;" id="tagTITULO_PALESTRA">%TITULO_PALESTRA% para preencher o título da palestra do palestrante</p>
-                        <p style="display: none;" id="tagNOME_COMISSAO">%NOME_COMISSAO% para preencher o nome da comissão</p>
-                        <p style="display: none;" id="tagCOAUTORES">%COAUTORES% para preencher o nome dos coautores</p>
-                        <p style="display: none;" id="tagMSG_COAUTORES">%MSG_COAUTORES=aqui vai a sua mensagem, se o trabalho tiver coautores% para preencher uma mensagem</p>
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <label for="tipo"><b>{{__('Tipo')}}</b></label>
+                            <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required onchange="mostrarTags()">
+                                @foreach($tipos as $key => $tipo)
+                                    <option @if($certificado->tipo == $key) selected @endif value="{{$key}}">{{$tipo}}</option>
+                                @endforeach
+                            </select>
+                            @error('tipo')
+                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="col-sm-12 form-group" id="outrasComissoesDivSelect" style="display: none;">
+                            <label for="tipo_comissao_id"><b>{{__('Comissão')}}</b></label>
+                            <select name="tipo_comissao_id" id="tipo_comissao_id" class="form-control @error('tipo_comissao_id') is-invalid @enderror">
+                                @foreach ($evento->outrasComissoes as $comissao)
+                                    <option @if ($certificado->tipo_comissao_id == $comissao->id) selected @endif  value="{{$comissao->id}}"> {{$comissao->nome}} </option>
+                                @endforeach
+                            </select>
+                            @error('tipo_comissao_id')
+                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="col-12 form-group" id="atividadeDivSelect" style="display: none;">
+                            <label for="atividade_id"><b>{{__('Atividade')}}</b></label>
+                            <select name="atividade_id" id="atividade_id" class="form-control @error('atividade_id') is-invalid @enderror">
+                                <option @if ($certificado->atividade_id == null) selected @endif value="0">Todas as atividades</option>
+                                @foreach ($evento->atividade as $atividade)
+                                    <option @if ($certificado->atividade_id == $atividade->id) selected @endif value="{{$atividade->id}}"> {{$atividade->titulo}} </option>
+                                @endforeach
+                            </select>
+                            @error('atividade_id')
+                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
                     </div>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label for="tags"><b>{{ __('Tags que podem ser utilizadas para recuperar informações no certificado:') }}</b></label>
+                    <p style="display: none;" id="tagNOME_PESSOA">%NOME_PESSOA% para preencher o nome da pessoa que está sendo certificada</p>
+                    <p style="display: none;" id="tagCPF">%CPF% para preencher o CPF da pessoa que está sendo certicidada</p>
+                    <p style="display: none;" id="tagTITULO_TRABALHO">%TITULO_TRABALHO% para preencher o título do trabalho do autor ou coautor</p>
+                    <p style="display: none;" id="tagNOME_EVENTO">%NOME_EVENTO% para preencher o nome do evento</p>
+                    <p style="display: none;" id="tagTITULO_PALESTRA">%TITULO_PALESTRA% para preencher o título da palestra do palestrante</p>
+                    <p style="display: none;" id="tagNOME_COMISSAO">%NOME_COMISSAO% para preencher o nome da comissão</p>
+                    <p style="display: none;" id="tagNOME_ATIVIDADE">%NOME_ATIVIDADE% para preencher o nome da atividade</p>
+                    <p style="display: none;" id="tagCARGA_HORARIA">%CARGA_HORARIA% para preencher a carga horária da atividade</p>
+                    <p style="display: none;" id="tagCOAUTORES">%COAUTORES% para preencher o nome dos coautores</p>
+                    <p style="display: none;" id="tagMSG_COAUTORES">%MSG_COAUTORES=aqui vai a sua mensagem, se o trabalho tiver coautores% para preencher uma mensagem</p>
                 </div>
             </div>
             <div class="form-row">
                 <div class="col-sm-12 form-group">
                     <label for="texto"><b>{{ __('Texto') }}</b></label>
-                    <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" value="{{old('texto')}}" required autofocus autocomplete="texto">{{$certificado->texto}}</textarea>
+                    <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" required autofocus autocomplete="texto">{{$certificado->texto}}</textarea>
                     @error('texto')
                         <div id="validationServer03Feedback" class="invalid-feedback">
                             {{ $message }}
@@ -189,70 +200,61 @@
 @section('javascript')
     @parent
     <script type="text/javascript" >
-        $(document).ready(function($){
-            CKEDITOR.replace('texto');
-            $('#imagem-loader').click(function() {
-                $('#logo-input').click();
-                $('#logo-input').change(function() {
-                    if (this.files && this.files[0]) {
-                        var file = new FileReader();
-                        file.onload = function(e) {
-                            document.getElementById("logo-preview").src = e.target.result;
-                        };
-                        file.readAsDataURL(this.files[0]);
-                    }
-                })
-            });
+        CKEDITOR.replace('texto');
+        function logoPreview(input) {
+            $('#logo-preview').attr('src', window.URL.createObjectURL(input.files[0]))
+        }
+        $('#imagem-loader').click(function() {
+            $('#logo-input').click()
         });
+        function esconderTags() {
+            $("#tagCPF").hide();
+            $("#tagTITULO_TRABALHO").hide();
+            $("#tagCOAUTORES").hide();
+            $("#tagMSG_COAUTORES").hide();
+            $("#tagTITULO_PALESTRA").hide();
+            $("#tagNOME_COMISSAO").hide();
+            $("#outrasComissoesDivSelect").hide();
+            $("#tagNOME_ATIVIDADE").hide();
+            $("#atividadeDivSelect").hide();
+            $("#tagCARGA_HORARIA").hide();
+        }
         function mostrarTags() {
-            switch(document.getElementById("tipo").value){
+            $("#tagNOME_PESSOA").show();
+            $("#tagNOME_EVENTO").show();
+            switch($("#tipo").val()){
                 case '1':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'block'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'block'
-                    document.getElementById("tagCOAUTORES").style.display = 'block'
-                    document.getElementById("tagMSG_COAUTORES").style.display = 'block'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
-                    document.getElementById("tagNOME_COMISSAO").style.display = 'none'
-                    document.getElementById("outrasComissoesDivSelect").style.display = 'none'
+                    esconderTags();
+                    $("#tagCPF").show();
+                    $("#tagTITULO_TRABALHO").show();
+                    $("#tagCOAUTORES").show();
+                    $("#tagMSG_COAUTORES").show();
                     break;
                 case '2':
                 case '3':
                 case '4':
                 case '5':
                 case '7':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'block'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
-                    document.getElementById("tagCOAUTORES").style.display = 'none'
-                    document.getElementById("tagMSG_COAUTORES").style.display = 'none'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
-                    document.getElementById("tagNOME_COMISSAO").style.display = 'none'
-                    document.getElementById("outrasComissoesDivSelect").style.display = 'none'
+                    esconderTags();
+                    $("#tagCPF").show();
                     break;
                 case '6':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'none'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
-                    document.getElementById("tagCOAUTORES").style.display = 'none'
-                    document.getElementById("tagMSG_COAUTORES").style.display = 'none'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'block'
-                    document.getElementById("tagNOME_COMISSAO").style.display = 'none'
-                    document.getElementById("outrasComissoesDivSelect").style.display = 'none'
+                    esconderTags();
+                    $("#tagTITULO_PALESTRA").show();
                     break;
                 case '8':
-                    document.getElementById("tagNOME_PESSOA").style.display = 'block'
-                    document.getElementById("tagCPF").style.display = 'block'
-                    document.getElementById("tagTITULO_TRABALHO").style.display = 'none'
-                    document.getElementById("tagCOAUTORES").style.display = 'none'
-                    document.getElementById("tagMSG_COAUTORES").style.display = 'none'
-                    document.getElementById("tagNOME_EVENTO").style.display = 'block'
-                    document.getElementById("tagTITULO_PALESTRA").style.display = 'none'
-                    document.getElementById("tagNOME_COMISSAO").style.display = 'block'
-                    document.getElementById("outrasComissoesDivSelect").style.display = 'block'
+                    esconderTags();
+                    $("#tagCPF").show();
+                    $("#tagNOME_COMISSAO").show();
+                    $("#outrasComissoesDivSelect").show();
+                    break;
+                case '9':
+                    esconderTags();
+                    $("#tagCPF").show();
+                    $("#tagNOME_ATIVIDADE").show();
+                    $("#atividadeDivSelect").show();
+                    $("#tagCARGA_HORARIA").show();
+                    break;
             }
         }
         mostrarTags();
