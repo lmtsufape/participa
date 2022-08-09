@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Submissao;
 
-use Illuminate\Http\Request;
-use App\Models\Submissao\FormEvento;
-use App\Models\Submissao\Evento;
 use App\Http\Controllers\Controller;
+use App\Models\Submissao\Evento;
+use App\Models\Submissao\FormEvento;
+use Illuminate\Http\Request;
 
 class FormEventoController extends Controller
 {
@@ -13,26 +13,22 @@ class FormEventoController extends Controller
     {
         $evento = Evento::find($id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-
-        $validatedData = $request->validate([
-
-            'etiquetanomeevento'        => ['nullable', 'string'],
-            'etiquetatipoevento'        => ['nullable', 'string'],
-            'etiquetadescricaoevento'   => ['nullable', 'string'],
-            'etiquetadatas'             => ['nullable', 'string'],
-            'etiquetasubmissoes'        => ['nullable', 'string'],
-            'etiquetaenderecoevento'    => ['nullable', 'string'],
-            'etiquetamoduloinscricao'   => ['nullable', 'string'],
+        $request->validate([
+            'etiquetanomeevento' => ['nullable', 'string'],
+            'etiquetatipoevento' => ['nullable', 'string'],
+            'etiquetadescricaoevento' => ['nullable', 'string'],
+            'etiquetadatas' => ['nullable', 'string'],
+            'etiquetasubmissoes' => ['nullable', 'string'],
+            'etiquetaenderecoevento' => ['nullable', 'string'],
+            'etiquetamoduloinscricao' => ['nullable', 'string'],
             'etiquetamoduloprogramacao' => ['nullable', 'string'],
             'etiquetamoduloorganizacao' => ['nullable', 'string'],
-            'etiquetabaixarregra'       => ['nullable', 'string'],
-            'etiquetabaixartemplate'    => ['nullable', 'string'],
-            'etiquetabaixarapresentacao'=> ['nullable', 'string'],
-            'etiquetaarquivo'           => ['nullable', 'string'],
+            'etiquetabaixarregra' => ['nullable', 'string'],
+            'etiquetabaixartemplate' => ['nullable', 'string'],
+            'etiquetabaixarapresentacao' => ['nullable', 'string'],
+            'etiquetaarquivo' => ['nullable', 'string'],
         ]);
-
         $formevento = FormEvento::where('eventoId', $id)->first();
-
         if (isset($request->etiquetanomeevento)) {
             $formevento->etiquetanomeevento = $request->etiquetanomeevento;
         }
@@ -72,7 +68,6 @@ class FormEventoController extends Controller
         if (isset($request->etiquetaarquivo)) {
             $formevento->etiquetaarquivo = $request->etiquetaarquivo;
         }
-
         $formevento->save();
 
         return redirect()->back()->with(['mensagem' => 'Etiquetas salvas com sucesso!']);
@@ -83,8 +78,6 @@ class FormEventoController extends Controller
         $formevento = FormEvento::where('eventoId', $id)->first();
         $evento = Evento::find($id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-
-        // dd($evento);
         if (isset($request->modinscricao)) {
             $formevento->modinscricao = $request->modinscricao;
         }
@@ -94,15 +87,14 @@ class FormEventoController extends Controller
             $evento->exibir_pdf = isset($request->exibir_pdf);
         }
         if (isset($request->modorganizacao)) {
-            $formevento->modorganizacao       = $request->modorganizacao;
+            $formevento->modorganizacao = $request->modorganizacao;
         }
         if (isset($request->modsubmissao)) {
-            $formevento->modsubmissao       = $request->modsubmissao;
+            $formevento->modsubmissao = $request->modsubmissao;
         }
         if (isset($request->modarquivo)) {
             $evento->modarquivo = $request->modarquivo;
         }
-
         $evento->update();
         $formevento->save();
 
@@ -112,7 +104,6 @@ class FormEventoController extends Controller
     public function indexModulo($id)
     {
         $evento = Evento::find($id);
-
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $modulos = FormEvento::where('eventoId', $id)->first();
 
