@@ -1684,20 +1684,6 @@
     }
 
     // Funções da aba de etiquetas
-    $(document).ready(function(){
-        $('#exibir_calendario').click(function() {
-            if (this.checked) {
-                document.getElementById('exibir_pdf').checked = false;
-            }
-        });
-
-        $('#exibir_pdf').click(function() {
-            if (this.checked) {
-                document.getElementById('exibir_calendario').checked = false;
-            }
-        });
-    });
-
     function revisoresPorArea() {
         var idArea = document.getElementById('area_revisores').value;
         $.ajaxSetup({

@@ -9,7 +9,8 @@ use App\Http\Controllers\Controller;
 
 class FormEventoController extends Controller
 {
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $evento = Evento::find($id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
@@ -30,45 +31,45 @@ class FormEventoController extends Controller
             'etiquetaarquivo'           => ['nullable', 'string'],
         ]);
 
-        $formevento = FormEvento::where('eventoId',$id)->first();
+        $formevento = FormEvento::where('eventoId', $id)->first();
 
-        if(isset($request->etiquetanomeevento)){
+        if (isset($request->etiquetanomeevento)) {
             $formevento->etiquetanomeevento = $request->etiquetanomeevento;
         }
-        if(isset($request->etiquetatipoevento)){
+        if (isset($request->etiquetatipoevento)) {
             $formevento->etiquetatipoevento = $request->etiquetatipoevento;
         }
-        if(isset($request->etiquetadescricaoevento)){
+        if (isset($request->etiquetadescricaoevento)) {
             $formevento->etiquetadescricaoevento = $request->etiquetadescricaoevento;
         }
-        if(isset($request->etiquetadatas)){
+        if (isset($request->etiquetadatas)) {
             $formevento->etiquetadatas = $request->etiquetadatas;
         }
-        if(isset($request->etiquetasubmissoes)){
+        if (isset($request->etiquetasubmissoes)) {
             $formevento->etiquetasubmissoes = $request->etiquetasubmissoes;
         }
-        if(isset($request->etiquetaenderecoevento)){
+        if (isset($request->etiquetaenderecoevento)) {
             $formevento->etiquetaenderecoevento = $request->etiquetaenderecoevento;
         }
-        if(isset($request->etiquetamoduloinscricao)){
+        if (isset($request->etiquetamoduloinscricao)) {
             $formevento->etiquetamoduloinscricao = $request->etiquetamoduloinscricao;
         }
-        if(isset($request->etiquetamoduloprogramacao)){
+        if (isset($request->etiquetamoduloprogramacao)) {
             $formevento->etiquetamoduloprogramacao = $request->etiquetamoduloprogramacao;
         }
-        if(isset($request->etiquetamoduloorganizacao)){
+        if (isset($request->etiquetamoduloorganizacao)) {
             $formevento->etiquetamoduloorganizacao = $request->etiquetamoduloorganizacao;
         }
-        if(isset($request->etiquetabaixarregra)){
+        if (isset($request->etiquetabaixarregra)) {
             $formevento->etiquetabaixarregra = $request->etiquetabaixarregra;
         }
-        if(isset($request->etiquetabaixarapresentacao)){
+        if (isset($request->etiquetabaixarapresentacao)) {
             $formevento->etiquetabaixarapresentacao = $request->etiquetabaixarapresentacao;
         }
-        if(isset($request->etiquetabaixartemplate)){
+        if (isset($request->etiquetabaixartemplate)) {
             $formevento->etiquetabaixartemplate = $request->etiquetabaixartemplate;
         }
-        if(isset($request->etiquetaarquivo)){
+        if (isset($request->etiquetaarquivo)) {
             $formevento->etiquetaarquivo = $request->etiquetaarquivo;
         }
 
@@ -77,33 +78,28 @@ class FormEventoController extends Controller
         return redirect()->back()->with(['mensagem' => 'Etiquetas salvas com sucesso!']);
     }
 
-    public function exibirModulo(Request $request, $id) {
-
-        $formevento = FormEvento::where('eventoId',$id)->first();
+    public function exibirModulo(Request $request, $id)
+    {
+        $formevento = FormEvento::where('eventoId', $id)->first();
         $evento = Evento::find($id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         // dd($evento);
-        if(isset($request->modinscricao)){
-            $formevento->modinscricao       = $request->modinscricao;
+        if (isset($request->modinscricao)) {
+            $formevento->modinscricao = $request->modinscricao;
         }
-        if(isset($request->modprogramacao)){
-            $formevento->modprogramacao       = $request->modprogramacao;
-            if ($request->exibir_pdf != null && $request->exibir_pdf == "on") {
-                $evento->exibir_calendario_programacao = false;
-            }
-
-            if ($request->exibir_calendario != null && $request->exibir_calendario == "on") {
-                $evento->exibir_calendario_programacao = true;
-            }
+        if (isset($request->modprogramacao)) {
+            $formevento->modprogramacao = $request->modprogramacao;
+            $evento->exibir_calendario_programacao = isset($request->exibir_calendario);
+            $evento->exibir_pdf = isset($request->exibir_pdf);
         }
-        if(isset($request->modorganizacao)){
+        if (isset($request->modorganizacao)) {
             $formevento->modorganizacao       = $request->modorganizacao;
         }
-        if(isset($request->modsubmissao)){
+        if (isset($request->modsubmissao)) {
             $formevento->modsubmissao       = $request->modsubmissao;
         }
-        if(isset($request->modarquivo)){
+        if (isset($request->modarquivo)) {
             $evento->modarquivo = $request->modarquivo;
         }
 
@@ -113,7 +109,8 @@ class FormEventoController extends Controller
         return redirect()->back()->with(['mensagem' => 'Módulos em uso salvos com sucesso!']);
     }
 
-    public function indexModulo($id) {
+    public function indexModulo($id)
+    {
         $evento = Evento::find($id);
 
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
