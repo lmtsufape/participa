@@ -49,8 +49,8 @@
                             <label for="modprogramacao" class="col-form-label">{{ __('Programação') }}</label>
                         </div>
                     </div>
-                    <div class="row justify-content-center">
-                        <div class="col-sm-6">
+                    <div class="row justify-content-start">
+                        <div class="col-sm-12">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao) checked @endif name="modprogramacao" id="modprogramacao">
                                 <label class="form-check-label" for="modprogramacao">
@@ -64,15 +64,15 @@
                             </span>
                             @enderror
                         </div>
-                        <input type="hidden" name="modarquivo" value="false">
-                        <div class="col-sm-6">
+                        {{-- <input type="hidden" name="modarquivo" value="false"> --}}
+                        {{-- <div class="col-sm-6">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" @if($evento->modarquivo) checked @endif name="modarquivo" id="modarquivo">
                                 <label class="form-check-label" for="modarquivo">
                                 Exibir arquivo adicional
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
 
                         </div>
                         <div class="row justify-content-center">
@@ -87,7 +87,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao == true && !($evento->exibir_calendario_programacao)) checked @endif name="exibir_pdf" id="exibir_pdf">
+                                    <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao == true && $evento->exibir_pdf) checked @endif name="exibir_pdf" id="exibir_pdf">
                                     <label class="form-check-label" for="exibir_pdf">
                                     Exibir o pdf enviado
                                     </label>

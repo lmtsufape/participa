@@ -280,7 +280,7 @@
                                                 <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">Informações</h4>
                                             </div>
                                         </div>
-                                        @if (!$evento->exibir_calendario_programacao && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null)
+                                        @if ($evento->exibir_pdf && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null)
                                             <div class="form-row justify-content-center">
                                                 <div class="col-sm-3 form-group " style="position: relative; text-align: center;">
                                                     <div class="div-icon-programacao">
