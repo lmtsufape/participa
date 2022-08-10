@@ -77,7 +77,7 @@ class FormEventoController extends Controller
     {
         $formevento = FormEvento::where('eventoId', $id)->first();
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         if (isset($request->modinscricao)) {
             $formevento->modinscricao = $request->modinscricao;
         }
@@ -104,7 +104,7 @@ class FormEventoController extends Controller
     public function indexModulo($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $modulos = FormEvento::where('eventoId', $id)->first();
 
         return view('coordenador.evento.modulos')->with(['modulos' => $modulos, 'evento' => $evento]);

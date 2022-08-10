@@ -11,15 +11,20 @@ use Illuminate\Http\Request;
 
 class PalestranteController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $palestras = $evento->palestras;
+
         return view('coordenador.palestrante.index', compact('palestras', 'evento'));
     }
 
     public function create(Request $request)
     {
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
         return view('coordenador.palestrante.create', compact('evento'));
     }
 
@@ -33,13 +38,14 @@ class PalestranteController extends Controller
         foreach ($nomes as $index => $nome) {
             Palestrante::create(['nome' => $nome, 'email' => $emails[$index], 'palestra_id' => $palestra->id]);
         }
+
         return redirect()->route('coord.palestrantes.index', ['eventoId' => $validated['eventoId']]);
     }
 
     public function update(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $palestra = Palestra::find($request->idPalestra);
         $palestra->titulo = $request->titulo;
         $palestra->save();
@@ -52,16 +58,16 @@ class PalestranteController extends Controller
                 if (in_array($palestrantesCadastrados[$i], $request->idPalestrante)) {
                     $key = array_search($palestrantesCadastrados[$i], $request->idPalestrante);
                     $palestrante = Palestrante::find($palestrantesCadastrados[$i]);
-                    $palestrante->nome            = $request->nomeDoPalestrante[$key];
-                    $palestrante->email           = $request->emailDoPalestrante[$key];
+                    $palestrante->nome = $request->nomeDoPalestrante[$key];
+                    $palestrante->email = $request->emailDoPalestrante[$key];
                     $palestrante->save();
                 }
             }
             for ($i = 0; $i < count($request->idPalestrante); $i++) {
                 if ($request->idPalestrante[$i] == 0) {
                     $palestrante = new Palestrante();
-                    $palestrante->nome        = $request->nomeDoPalestrante[$i];
-                    $palestrante->email       = $request->emailDoPalestrante[$i];
+                    $palestrante->nome = $request->nomeDoPalestrante[$i];
+                    $palestrante->email = $request->emailDoPalestrante[$i];
                     $palestrante->palestra_id = $palestra->id;
                     $palestrante->save();
                 }
@@ -71,22 +77,24 @@ class PalestranteController extends Controller
             if ($request->nomeDoPalestrante != null) {
                 for ($i = 0; $i < count($request->nomeDoPalestrante); $i++) {
                     $palestrante = new Palestrante();
-                    $palestrante->nome        = $request->nomeDoPalestrante[$i];
-                    $palestrante->email       = $request->emailDoPalestrante[$i];
+                    $palestrante->nome = $request->nomeDoPalestrante[$i];
+                    $palestrante->email = $request->emailDoPalestrante[$i];
                     $palestrante->palestra_id = $palestra->id;
                     $palestrante->save();
                 }
             }
         }
+
         return redirect()->route('coord.palestrantes.index', ['eventoId' => $request->eventoId]);
     }
 
     public function destroy(Request $request, Palestra $palestra)
     {
         $evento = $palestra->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         Palestrante::destroy($palestra->palestrantes()->pluck('id'));
         $palestra->delete();
+
         return redirect()->route('coord.palestrantes.index', ['eventoId' => $evento->id]);
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Submissao;
 
-use App\Submissao\Endereco;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Submissao\Endereco;
+use Illuminate\Http\Request;
 
 class EnderecoController extends Controller
 {

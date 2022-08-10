@@ -69,13 +69,6 @@
                                         </a>
                                     </div>
                                 @endcan
-                                @can('isCoordenadorDeOutrasComissoes', $evento)
-                                    <div>
-                                        <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
-                                            <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
-                                        </a>
-                                    </div>
-                                @endcan
                             </div>
                         </div>
                     </div>

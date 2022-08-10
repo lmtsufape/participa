@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Submissao;
 
+use App\Http\Controllers\Controller;
 use App\Models\Submissao\Recurso;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class RecursoController extends Controller
 {

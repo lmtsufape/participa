@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\ValorCategoria;
 use App\Models\Submissao\Evento;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
 {
@@ -39,49 +39,40 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
-        $validateData = $request->validate([
-            'criarCategoria'        => 'required',
-            'nome'                  => 'required',
-            'valor_total'           => 'required',
-            'tipo_valor.*'          => 'nullable',
-            'valorDesconto.*'       => 'required_with:tipo_valor.*',
-            'inícioDesconto.*'      => 'required_with:tipo_valor.*|date',
-            'fimDesconto.*'         => 'required_with:tipo_valor.*|date|after:inícioDesconto.*',
-        ]);
-
-        if ($request->valor_total < 0) {
-            return redirect()->back()->withErrors(['valor_total' => 'Digite um valor positivo ou 0 para gratuito.'])->withInput($validateData);
-        }
-
-        if ($request->tipo_valor != null) {
-            foreach ($request->input('valorDesconto') as $i => $valor) {
-                if ($valor <= 0) {
-                    return redirect()->back()->withErrors(['valorDesconto.'.$i => 'Digite um valor positivo.'])->withInput($validateData);
-                }
-            }
-        }
+        $validateData = $request->validate(
+            [
+                'criarCategoria'        => 'required',
+                'nome'                  => 'required',
+                'valor_total'           => 'required|numeric|min:0',
+                'tipo_valor.*'          => 'nullable',
+                'valorDesconto.*'       => 'required_with:tipo_valor.*|numeric|min:0',
+                'inícioDesconto.*'      => 'required_with:tipo_valor.*|date',
+                'fimDesconto.*'         => 'required_with:tipo_valor.*|date|after:inícioDesconto.*',
+            ],
+            [
+                'valor_total.min' => 'Digite um valor positivo ou 0 para gratuito.',
+            ],
+            [
+                'valorDesconto.*' => 'O valor',
+            ]
+        );
 
         $categoria = new CategoriaParticipante();
-        $categoria->evento_id   = $evento->id;
-        $categoria->nome        = $request->nome;
-        $categoria->valor_total = $request->valor_total;
+        $categoria->evento_id = $evento->id;
+        $categoria->nome = $validateData['nome'];
+        $categoria->valor_total = $validateData['valor_total'];
         $categoria->save();
 
-        if ($request->tipo_valor != null) {
+        if ($request->has('tipo_valor')) {
             foreach ($request->tipo_valor as $key => $tipo_valor) {
                 $valor = new ValorCategoria();
-                if ($request->tipo_valor[$key] == "porcentagem") {
-                    $valor->porcentagem = true;
-                } else {
-                    $valor->porcentagem = false;
-                }
-                $valor->valor                     = $request->valorDesconto[$key];
-                $valor->inicio_prazo              = $request->input('inícioDesconto')[$key];
-                $valor->fim_prazo                 = $request->fimDesconto[$key];
+                $valor->porcentagem = $tipo_valor == 'porcentagem';
+                $valor->valor = $validateData['valorDesconto'][$key];
+                $valor->inicio_prazo = $validateData['inícioDesconto'][$key];
+                $valor->fim_prazo = $validateData['fimDesconto'][$key];
                 $valor->categoria_participante_id = $categoria->id;
                 $valor->save();
             }
@@ -123,49 +114,43 @@ class CategoriaController extends Controller
     {
         $categoria = CategoriaParticipante::find($id);
         $evento = $categoria->evento;
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
-        $validateData = $request->validate([
-            'editarCategoria'                       => 'required',
-            'nome_'.$categoria->id                  => 'required',
-            'valor_total_'.$categoria->id           => 'required',
-            'tipo_valor_'.$categoria->id.'.*'       => 'nullable',
-            'valorDesconto_'.$categoria->id.'.*'    => 'required_with:tipo_valor_'.$categoria->id.'.*',
-            'inícioDesconto_'.$categoria->id.'.*'   => 'required_with:tipo_valor_'.$categoria->id.'.*|date',
-            'fimDesconto_'.$categoria->id.'.*'      => 'required_with:tipo_valor_'.$categoria->id.'.*|date|after:inícioDesconto_'.$categoria->id.'.*',
-        ]);
+        $validateData = $request->validate(
+            [
+                'editarCategoria'  => 'required',
+                "nome_{$categoria->id}"             => 'required',
+                "valor_total_{$categoria->id}"      => 'required|numeric|min:0',
+                "tipo_valor_{$categoria->id}.*"     => 'nullable',
+                "valorDesconto_{$categoria->id}.*"  => "required_with:tipo_valor_{$categoria->id}.*|numeric|min:0",
+                "inícioDesconto_{$categoria->id}.*" => "required_with:tipo_valor_{$categoria->id}.*|date",
+                "fimDesconto_{$categoria->id}.*"    => "required_with:tipo_valor_{$categoria->id}.*|date|after:inícioDesconto_{$categoria->id}.*",
+            ],
+            [
+                "valorDesconto_[{$categoria->id}].*" => 'Digite um valor positivo ou 0 para gratuito.',
+            ],
+            [
+                "valorDesconto_{$categoria->id}.*" => 'O valor',
+            ]
+        );
 
-        if ($request->input('valor_total_'.$categoria->id) < 0) {
-            return redirect()->back()->withErrors(['valor_total_'.$categoria->id => 'Digite um valor positivo ou 0 para gratuito.'])->withInput($validateData);
-        }
-
-        foreach ($request->input('valorDesconto_'.$categoria->id) as $i => $valor) {
-            if ($request->input('valorDesconto_'.$categoria->id.'.'.$i) <= 0) {
-                return redirect()->back()->withErrors(['valorDesconto_'.$categoria->id.'.'.$i => 'Digite um valor positivo.'])->withInput($validateData);
-            }
-        }
-
-        foreach ($categoria->valores as $valor) {
-            $valor->delete();
-        }
-
-        $categoria->nome        = $request->input('nome_'.$categoria->id);
-        $categoria->valor_total = $request->input('valor_total_'.$categoria->id);
+        $categoria->nome = $request->input("nome_{$categoria->id}");
+        $categoria->valor_total = $request->input("valor_total_{$categoria->id}");
         $categoria->update();
+
+        $categoria->valores()->whereNotIn('id', array_keys($request->input('tipo_valor_'.$categoria->id)))->delete();
 
         if ($request->input('tipo_valor_'.$categoria->id) != null) {
             foreach ($request->input('tipo_valor_'.$categoria->id) as $key => $tipo_valor) {
-                $valor = new ValorCategoria();
-                if ($request->input('tipo_valor_'.$categoria->id)[$key] == "porcentagem") {
-                    $valor->porcentagem = true;
-                } else {
-                    $valor->porcentagem = false;
-                }
-                $valor->valor                     = $request->input('valorDesconto_'.$categoria->id)[$key];
-                $valor->inicio_prazo              = $request->input('inícioDesconto_'.$categoria->id)[$key];
-                $valor->fim_prazo                 = $request->input('fimDesconto_'.$categoria->id)[$key];
-                $valor->categoria_participante_id = $categoria->id;
-                $valor->save();
+                ValorCategoria::updateOrCreate(
+                    ['id' => $key, 'categoria_participante_id' => $categoria->id],
+                    [
+                        'porcentagem' => $tipo_valor == 'porcentagem',
+                        'valor' => $request->input('valorDesconto_'.$categoria->id)[$key],
+                        'inicio_prazo' => $request->input('inícioDesconto_'.$categoria->id)[$key],
+                        'fim_prazo' => $request->input('fimDesconto_'.$categoria->id)[$key],
+                    ]
+                );
             }
         }
 
@@ -184,29 +169,26 @@ class CategoriaController extends Controller
         //checar se está aplicado em alguma inscrição futuramente
         $categoria = CategoriaParticipante::find($id);
         $evento = $categoria->evento;
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
-
-        foreach ($categoria->valores as $valor) {
-            $valor->delete();
-        }
-
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        $categoria->valores()->delete();
         $categoria->delete();
 
         return redirect()->back()->with(['mensagem' => 'Categoria excluida com sucesso!']);
     }
 
-    public function valorAjax(Request $request) {
+    public function valorAjax(Request $request)
+    {
         $categoria = CategoriaParticipante::find($request->categoria_id);
-
         $hoje = Carbon::now('America/Recife')->subHours(3);
-
         foreach ($categoria->valores as $lote) {
             if ($hoje > Carbon::create($lote->inicio_prazo) && $hoje < Carbon::create($lote->fim_prazo)) {
                 if ($lote->porcentagem) {
                     $valor = $categoria->valor_total - ($categoria->valor_total * $lote->valor / 100);
+
                     return response()->json(collect(['valor' => $valor]));
                 } else {
                     $valor = $categoria->valor_total - $lote->valor;
+
                     return response()->json(collect(['valor' => $valor]));
                 }
             }

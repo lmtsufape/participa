@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Submissao;
 
-use App\Models\Submissao\Area;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Submissao\Area;
 use App\Models\Submissao\Evento;
+use Illuminate\Http\Request;
 
 class AreaController extends Controller
 {
@@ -41,12 +41,12 @@ class AreaController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $validatedData = $request->validate([
-          'nome'  =>  'required|string',
+            'nome'  =>  'required|string',
         ]);
 
         Area::create([
-          'nome'      => $request->nome,
-          'eventoId'  => $request->eventoId,
+            'nome'      => $request->nome,
+            'eventoId'  => $request->eventoId,
         ]);
 
         return redirect()->back()->with(['mensagem' => 'Área cadastrada com sucesso!']);
@@ -105,7 +105,6 @@ class AreaController extends Controller
      */
     public function destroy($id)
     {
-
         $area = Area::find($id);
         $evento = $area->evento;
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);

@@ -1365,6 +1365,7 @@
         </div>
     </div>
 {{-- Fim modal criar categoria --}}
+{{-- Inicio modal editar categoria --}}
 @foreach ($categorias as $categoria)
 <div class="modal fade" id="modalEditarCategoria{{$categoria->id}}" tabindex="-1" role="dialog" aria-labelledby="modalEditarCategoria{{$categoria->id}}Label" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -1376,7 +1377,7 @@
         </button>
         </div>
         <div class="modal-body">
-            <form id="formEditarCategoria" action="{{route('categoria.participante.update', ['id' => $categoria->id])}}" method="POST">
+            <form id="formEditarCategoria{{$categoria->id}}" action="{{route('categoria.participante.update', ['id' => $categoria->id])}}" method="POST">
                 @csrf
                 <input type="hidden" name="evento_id" value="{{$evento->id}}">
                 <input type="hidden" name="editarCategoria" value="{{$categoria->id}}">
@@ -1405,113 +1406,113 @@
                     </div>
                     <div id="periodosCategoria{{$categoria->id}}">
                         @if (old('editarCategoria') != null && old('tipo_valor_'.$categoria->id) != null)
-                        @foreach (old('tipo_valor_'.$categoria->id) as $i => $item)
-                            @if ($i == 0)
-                                <div id='tituloDePeriodo{{$categoria->id}}' class='row form-group'>
-                                    <div class='col-sm-12'>
-                                        <hr>
-                                        <h4>Periodos de desconto</h4>
+                            @foreach (old('tipo_valor_'.$categoria->id) as $i => $item)
+                                @if ($i == 0)
+                                    <div id='tituloDePeriodo{{$categoria->id}}' class='row form-group'>
+                                        <div class='col-sm-12'>
+                                            <hr>
+                                            <h4>Periodos de desconto</h4>
+                                        </div>
+                                    </div>
+                                @endif
+                                <div class='peridodoDesconto'>
+                                    <div class='row form-group'>
+                                        <div class='col-sm-4'>
+                                            <label for=''>Valor do desconto*</label>
+                                            <br>
+                                            <select class='form-control @error('tipo_valor.'.$i) is-invalid @enderror' name='tipo_valor_{{$categoria->id}}[]' required>
+                                                <option value='' disabled selected>-- Escolha o tipo de valor --</option>
+                                                <option value='porcentagem' @if(old('tipo_valor_'.$categoria->id.'.'.$i) == "porcentagem") selected @endif>Porcentagem</option>
+                                                <option value='real' @if(old('tipo_valor_'.$categoria->id.'.'.$i) == "real") selected @endif>Real</option>
+                                            </select>
+
+                                            @error('tipo_valor_'.$categoria->id.'.'.$i)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                        <div class='col-sm-6'>
+                                            <label for="valorDesconto_{{$i}}">Valor</label>
+                                            <input id='valorDesconto_{{$i}}' name='valorDesconto_{{$categoria->id}}[]' type='number' class='form-control real @error('valorDesconto_'.$categoria->id.'.'.$i) is-invalid @enderror' placeholder='' value='{{old('valorDesconto_'.$categoria->id.'.'.$i)}}' required>
+
+                                            @error('valorDesconto_'.$categoria->id.'.'.$i)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class='row form-group'>
+                                        <div class='col-sm-5'>
+                                            <label for='inicio_{{$i}}'>Data de início*</label>
+                                            <input id='inicio_{{$i}}' name='inícioDesconto_{{$categoria->id}}[]' class='form-control @error('inícioDesconto_'.$categoria->id.'.'.$i) is-invalid @enderror' type='date' value='{{old('inícioDesconto_'.$categoria->id.'.'.$i)}}' required>
+                                            @error('inícioDesconto_'.$categoria->id.'.'.$i)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+
+                                        <div class='col-sm-5'>
+                                            <label for='fim_{{$i}}'>Data de fim*</label>
+                                            <input id='fim_{{$i}}' name='fimDesconto_{{$categoria->id}}[]' class='form-control @error('fimDesconto_'.$categoria->id.'.'.$i) is-invalid @enderror' type='date' value='{{old('fimDesconto_'.$categoria->id.'.'.$i)}}' required>
+                                            @error('fimDesconto_'.$categoria->id.'.'.$i)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+
+                                        <div class='col-sm-2' style='position: relative; top: 35px;'>
+                                            <a type='button' onclick='removerPeriodoDesconto(this,{{$categoria->id}})'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
+                                        </div>
                                     </div>
                                 </div>
-                            @endif
-                            <div class='peridodoDesconto'>
-                                <div class='row form-group'>
-                                    <div class='col-sm-4'>
-                                        <label for=''>Valor do desconto*</label>
-                                        <br>
-                                        <select class='form-control @error('tipo_valor.'.$i) is-invalid @enderror' name='tipo_valor_{{$categoria->id}}[]' required>
-                                            <option value='' disabled selected>-- Escolha o tipo de valor --</option>
-                                            <option value='porcentagem' @if(old('tipo_valor_'.$categoria->id.'.'.$i) == "porcentagem") selected @endif>Porcentagem</option>
-                                            <option value='real' @if(old('tipo_valor_'.$categoria->id.'.'.$i) == "real") selected @endif>Real</option>
-                                        </select>
-
-                                        @error('tipo_valor_'.$categoria->id.'.'.$i)
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class='col-sm-6'>
-                                        <label for="valorDesconto_{{$i}}">Valor</label>
-                                        <input id='valorDesconto_{{$i}}' name='valorDesconto_{{$categoria->id}}[]' type='number' class='form-control real @error('valorDesconto_'.$categoria->id.'.'.$i) is-invalid @enderror' placeholder='' value='{{old('valorDesconto_'.$categoria->id.'.'.$i)}}' required>
-
-                                        @error('valorDesconto_'.$categoria->id.'.'.$i)
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class='row form-group'>
-                                    <div class='col-sm-5'>
-                                        <label for='inicio_{{$i}}'>Data de início*</label>
-                                        <input id='inicio_{{$i}}' name='inícioDesconto_{{$categoria->id}}[]' class='form-control @error('inícioDesconto_'.$categoria->id.'.'.$i) is-invalid @enderror' type='date' value='{{old('inícioDesconto_'.$categoria->id.'.'.$i)}}' required>
-                                        @error('inícioDesconto_'.$categoria->id.'.'.$i)
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class='col-sm-5'>
-                                        <label for='fim_{{$i}}'>Data de fim*</label>
-                                        <input id='fim_{{$i}}' name='fimDesconto_{{$categoria->id}}[]' class='form-control @error('fimDesconto_'.$categoria->id.'.'.$i) is-invalid @enderror' type='date' value='{{old('fimDesconto_'.$categoria->id.'.'.$i)}}' required>
-                                        @error('fimDesconto_'.$categoria->id.'.'.$i)
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class='col-sm-2' style='position: relative; top: 35px;'>
-                                        <a type='button' onclick='removerPeriodoDesconto(this,{{$categoria->id}})'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                            @endforeach
                         @else
-                        @foreach ($categoria->valores as $i => $valor)
-                            @if ($i == 0)
-                                <div id='tituloDePeriodo{{$categoria->id}}' class='row form-group'>
-                                    <div class='col-sm-12'>
-                                        <hr>
-                                        <h4>Periodos de desconto</h4>
+                            @foreach ($categoria->valores as $i => $valor)
+                                @if ($i == 0)
+                                    <div id='tituloDePeriodo{{$categoria->id}}' class='row form-group'>
+                                        <div class='col-sm-12'>
+                                            <hr>
+                                            <h4>Periodos de desconto</h4>
+                                        </div>
                                     </div>
-                                </div>
-                            @endif
-                            <div class='peridodoDesconto'>
-                                <div class='row form-group'>
-                                    <div class='col-sm-4'>
-                                        <label for=''>Valor do desconto*</label>
-                                        <br>
-                                        <select class='form-control @error('tipo_valor.'.$i) is-invalid @enderror' name='tipo_valor_{{$categoria->id}}[]' required>
-                                            <option value='' disabled selected>-- Escolha o tipo de valor --</option>
-                                            <option value='porcentagem' @if($valor->porcentagem == true) selected @endif>Porcentagem</option>
-                                            <option value='real' @if($valor->porcentagem == false) selected @endif>Real</option>
-                                        </select>
+                                @endif
+                                <div class='peridodoDesconto'>
+                                    <div class='row form-group'>
+                                        <div class='col-sm-4'>
+                                            <label for=''>Valor do desconto*</label>
+                                            <br>
+                                            <select class='form-control @error('tipo_valor.'.$i) is-invalid @enderror' name='tipo_valor_{{$categoria->id}}[{{$valor->id}}]' required>
+                                                <option value='' disabled selected>-- Escolha o tipo de valor --</option>
+                                                <option value='porcentagem' @if($valor->porcentagem == true) selected @endif>Porcentagem</option>
+                                                <option value='real' @if($valor->porcentagem == false) selected @endif>Real</option>
+                                            </select>
+                                        </div>
+                                        <div class='col-sm-6'>
+                                            <label for="valorDesconto{{$valor->id}}">Valor</label>
+                                            <input id='valorDesconto{{$valor->id}}' name='valorDesconto_{{$categoria->id}}[{{$valor->id}}]' type='number' class='form-control real' placeholder='' value='{{$valor->valor}}' required>
+                                        </div>
                                     </div>
-                                    <div class='col-sm-6'>
-                                        <label for="valorDesconto{{$valor->id}}">Valor</label>
-                                        <input id='valorDesconto{{$valor->id}}' name='valorDesconto_{{$categoria->id}}[]' type='number' class='form-control real' placeholder='' value='{{$valor->valor}}' required>
-                                    </div>
-                                </div>
-                                <div class='row form-group'>
-                                    <div class='col-sm-5'>
-                                        <label for='inicio{{$valor->id}}'>Data de início*</label>
-                                        <input id='inicio{{$valor->id}}' name='inícioDesconto_{{$categoria->id}}[]' class='form-control' type='date' value='{{$valor->inicio_prazo}}' required>
-                                    </div>
+                                    <div class='row form-group'>
+                                        <div class='col-sm-5'>
+                                            <label for='inicio{{$valor->id}}'>Data de início*</label>
+                                            <input id='inicio{{$valor->id}}' name='inícioDesconto_{{$categoria->id}}[{{$valor->id}}]' class='form-control' type='date' value='{{$valor->inicio_prazo}}' required>
+                                        </div>
 
-                                    <div class='col-sm-5'>
-                                        <label for='fim{{$valor->id}}'>Data de fim*</label>
-                                        <input id='fim{{$valor->id}}' name='fimDesconto_{{$categoria->id}}[]' class='form-control' type='date' value='{{$valor->fim_prazo}}' required>
-                                    </div>
+                                        <div class='col-sm-5'>
+                                            <label for='fim{{$valor->id}}'>Data de fim*</label>
+                                            <input id='fim{{$valor->id}}' name='fimDesconto_{{$categoria->id}}[{{$valor->id}}]' class='form-control' type='date' value='{{$valor->fim_prazo}}' required>
+                                        </div>
 
-                                    <div class='col-sm-2' style='position: relative; top: 35px;'>
-                                        <a type='button' onclick='removerPeriodoDesconto(this,{{$categoria->id}})'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
+                                        <div class='col-sm-2' style='position: relative; top: 35px;'>
+                                            <a type='button' onclick='removerPeriodoDesconto(this,{{$categoria->id}})'><img src='{{asset('img/icons/trash-alt-regular.svg')}}' class='icon-card' alt=''></a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
                         @endif
                     </div>
                     <div class="row form-group">
@@ -1524,12 +1525,13 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary" form="formEditarCategoria">Atualizar</button>
+            <button type="submit" class="btn btn-primary" form="formEditarCategoria{{$categoria->id}}">Atualizar</button>
         </div>
     </div>
     </div>
 </div>
 @endforeach
+{{-- Fim modal editar categoria --}}
 {{-- Modal criar campo --}}
     <div class="modal fade" id="modalCriarCampo" tabindex="-1" role="dialog" aria-labelledby="modalCriarCampoLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -1624,8 +1626,8 @@
                                 <div id="checkboxCategoria" @if (old('para_todas') == null && old('criarCampo') != null) style="display: block;" @else style="display: none;" @endif>
                                     @foreach ($categorias as $categoria)
                                         <div class="col-sm-12">
-                                            <input type="checkbox" id="categoria" name="categoria[]" value="{{$categoria->id}}">
-                                            <label for="categoria">{{$categoria->nome}}</label>
+                                            <input type="checkbox" id="categoriacreate{{$categoria->id}}" name="categoria[]" value="{{$categoria->id}}">
+                                            <label for="categoriacreate{{$categoria->id}}">{{$categoria->nome}}</label>
                                         </div>
                                     @endforeach
 
@@ -1797,8 +1799,8 @@
                             <div id="checkboxCategoria{{$campo->id}}" @if (old('para_todas') == null && old('campo_id') == $campo->id || $categorias->diff($campo->categorias)->isEmpty() == false) style="display: block;" @elseif($categorias->diff($campo->categorias)->isEmpty()) style="display: none;" @endif>
                                 @foreach ($categorias as $categoria)
                                     <div class="col-sm-12">
-                                        <input type="checkbox" id="categoria{{$campo->id}}" name="categoria[]" value="{{$categoria->id}}" @if (old('categoria') != null && in_array($categoria->id, old('categoria'))) checked @elseif($campo->categorias->contains($categoria) && old('campo_id') == null) checked @endif>
-                                        <label for="categoria{{$campo->id}}">{{$categoria->nome}}</label>
+                                        <input type="checkbox" id="categoria{{$campo->id}}{{$categoria->id}}" name="categoria[]" value="{{$categoria->id}}" @if (old('categoria') != null && in_array($categoria->id, old('categoria'))) checked @elseif($campo->categorias->contains($categoria) && old('campo_id') == null) checked @endif>
+                                        <label for="categoria{{$campo->id}}{{$categoria->id}}">{{$categoria->nome}}</label>
                                     </div>
                                 @endforeach
 

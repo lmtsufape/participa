@@ -19,8 +19,9 @@ class AssinaturaController extends Controller
     public function index(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
+
         return view('coordenador.certificado.indexAssinatura', [
             'evento'=> $evento,
             'assinaturas' => $assinaturas,
@@ -35,7 +36,7 @@ class AssinaturaController extends Controller
     public function create(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         return view('coordenador.certificado.createAssinatura', [
             'evento'=> $evento,
@@ -51,6 +52,7 @@ class AssinaturaController extends Controller
     public function store(AssinaturaRequest $request)
     {
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $request->validated();
         $assinatura = new Assinatura();
         $assinatura->setAtributes($request);
@@ -58,6 +60,7 @@ class AssinaturaController extends Controller
 
         $assinatura->caminho = $request->fotoAssinatura->store("assinaturas/{$evento->id}", 'public');
         $assinatura->save();
+
         return redirect(route('coord.listarAssinaturas', ['eventoId' => $evento->id]))->with(['success' => 'Assinatura cadastrada com sucesso.']);
     }
 
@@ -81,8 +84,9 @@ class AssinaturaController extends Controller
     public function edit(Request $request, $id)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $assinatura = Assinatura::find($id);
+
         return view('coordenador.certificado.editAssinatura', [
             'assinatura' => $assinatura,
             'evento'=> $evento,
@@ -99,7 +103,7 @@ class AssinaturaController extends Controller
     public function update(Request $request, $id)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $validatedData = $request->validate([
             'nome'              => 'required|string|min:10|max:290',
             'cargo'              => 'required|string|max:290',
@@ -107,11 +111,11 @@ class AssinaturaController extends Controller
         $assinatura = Assinatura::find($id);
         $assinatura->setAtributes($request);
 
-        if($request->fotoAssinatura != null){
+        if ($request->fotoAssinatura != null) {
             $validatedData = $request->validate([
                 'fotoAssinatura'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
             ]);
-            if(Storage::disk()->exists('public/'.$assinatura->caminho)) {
+            if (Storage::disk()->exists('public/'.$assinatura->caminho)) {
                 Storage::delete('storage/'.$assinatura->caminho);
             }
             $imagem = $request->fotoAssinatura;
@@ -119,9 +123,10 @@ class AssinaturaController extends Controller
             $nome = $imagem->getClientOriginalName();
             $nomeSemEspaco = str_replace(' ', '', $nome);
             Storage::putFileAs('public/'.$path, $imagem, $nomeSemEspaco);
-            $assinatura->caminho = $path . $nomeSemEspaco;
+            $assinatura->caminho = $path.$nomeSemEspaco;
         }
         $assinatura->update();
+
         return redirect(route('coord.listarAssinaturas', ['eventoId' => $evento->id]))->with(['success' => 'Assinatura editada com sucesso.']);
     }
 
@@ -135,10 +140,12 @@ class AssinaturaController extends Controller
     {
         $assinatura = Assinatura::find($id);
         $evento = $assinatura->evento;
-        if($assinatura->certificados()->first() != null){
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        if ($assinatura->certificados()->first() != null) {
             return redirect(route('coord.listarAssinaturas', ['eventoId' => $evento->id]))->with(['error' => 'Esta assinatura está presente em um modelo de certificado, e ela não pode ser deletada.']);
-        }else{
+        } else {
             $assinatura->delete();
+
             return redirect(route('coord.listarAssinaturas', ['eventoId' => $evento->id]))->with(['success' => 'Assinatura deletada com sucesso.']);
         }
     }

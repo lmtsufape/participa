@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Submissao\Endereco;
+use App\Models\Users\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
-use App\Models\Users\User;
-use App\Models\Submissao\Endereco;
 class RegisterController extends Controller
 {
     /*
@@ -56,18 +54,18 @@ class RegisterController extends Controller
             'name'          => ['required', 'string', 'max:255'],
             'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'      => ['required', 'string', 'min:8', 'confirmed'],
-            'cpf'           => ($data['passaporte']==null ? ['required','cpf'] : 'nullable'),
-            'passaporte'    => ($data['cpf']==null ? 'required|max:10' : 'nullable'),
-            'celular'       => ['required','string','max:20'],
-            'instituicao'   => ['required','string','max:255'],
-            'pais'          => ['required','string','max:255'],
-            'rua'           => ['required','string','max:255'],
-            'numero'        => ['required','string'],
-            'bairro'        => ['required','string','max:255'],
-            'cidade'        => ['required','string','max:255'],
-            'uf'            => ['required','string'],
-            'cep'           => ['required','string'],
-            'complemento'   => ['nullable','string'],
+            'cpf'           => ($data['passaporte'] == null ? ['required', 'cpf'] : 'nullable'),
+            'passaporte'    => ($data['cpf'] == null ? 'required|max:10' : 'nullable'),
+            'celular'       => ['required', 'string', 'max:20'],
+            'instituicao'   => ['required', 'string', 'max:255'],
+            'pais'          => ['required', 'string', 'max:255'],
+            'rua'           => ['required', 'string', 'max:255'],
+            'numero'        => ['required', 'string'],
+            'bairro'        => ['required', 'string', 'max:255'],
+            'cidade'        => ['required', 'string', 'max:255'],
+            'uf'            => ['required', 'string'],
+            'cep'           => ['required', 'string'],
+            'complemento'   => ['nullable', 'string'],
         ]);
     }
 
@@ -92,24 +90,23 @@ class RegisterController extends Controller
         $user->celular = $data['full_number'];
         $user->instituicao = $data['instituicao'];
 
-        if( $data['rua'] != null && $data['cep'] != null ){
+        if ($data['rua'] != null && $data['cep'] != null) {
             $end = new Endereco($data);
             $end->save();
             $user->enderecoId = $end->id;
             $user->save();
 
             return $user;
-
         }
 
         $user->enderecoId = null;
         $user->save();
 
         app()->setLocale('pt-BR');
+
         return $user;
     }
 }
-
 
 // 'cpf'           => ['required_if: passaporte, null' ,
 //                                     function ($attribute, $value, $fail) use ($data){
@@ -140,7 +137,6 @@ class RegisterController extends Controller
 //                                         $fail($attribute.' já está me uso.');
 //                                         return;
 //                                     }
-
 
 //                                 },
 //                                 ],
