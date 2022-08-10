@@ -17,19 +17,23 @@ class TipoComissaoController extends Controller
     private function podeComissao(Evento $evento, TipoComissao $comissao)
     {
         $loggedUser = auth()->user();
-        if(!(policy($evento)->isCoordenadorOrCoordenadorDasComissoes($loggedUser, $evento) || policy($comissao)->isCoordenadorDeOutraComissao($loggedUser, $comissao)))
+        if (! (policy($evento)->isCoordenadorOrCoordenadorDasComissoes($loggedUser, $evento) || policy($comissao)->isCoordenadorDeOutraComissao($loggedUser, $comissao))) {
             abort(403);
+        }
     }
 
-    public function show(Evento $evento, TipoComissao $comissao) {
+    public function show(Evento $evento, TipoComissao $comissao)
+    {
         $this->podeComissao($evento, $comissao);
         $evento = $comissao->evento;
+
         return view('coordenador.tipocomissao.show', compact('comissao', 'evento'));
     }
 
     public function create(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+
         return view('coordenador.tipocomissao.create', compact('evento'));
     }
 
@@ -37,6 +41,7 @@ class TipoComissaoController extends Controller
     {
         $validated = $request->validated();
         TipoComissao::create(['nome' => $validated['nome'], 'evento_id' => $evento->id]);
+
         return redirect()->route('coord.tipocomissao.create', compact('evento'))->with('success', 'Comissão criada com sucesso!');
     }
 
@@ -45,6 +50,7 @@ class TipoComissaoController extends Controller
         $validated = $request->validated();
         $comissao->nome = $validated['nome'];
         $comissao->save();
+
         return redirect()->route('coord.tipocomissao.show', compact('evento', 'comissao'))->with('success', 'Comissão atualizada com sucesso!');
     }
 
@@ -52,6 +58,7 @@ class TipoComissaoController extends Controller
     {
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $comissao->delete();
+
         return redirect()->route('coord.tipocomissao.create', compact('evento'))->with('success', 'Comissão deletada com sucesso!');
     }
 
@@ -61,15 +68,15 @@ class TipoComissaoController extends Controller
         $data = $request->validate(['email' => 'required|email']);
         $isCoordenador = $request->has('isCoordenador');
         $user = User::where('email', $data['email'])->first();
-        if($user == null){
-          $passwordTemporario = Str::random(8);
-          $coord = User::find($evento->coordenadorId);
-          Mail::to($data['email'])->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', "membro da comissão {$comissao->nome}", $evento->nome, $passwordTemporario, ' ', $coord));
-          $user = User::create([
-            'email' => $data['email'],
-            'password' => bcrypt($passwordTemporario),
-            'usuarioTemp' => true,
-          ]);
+        if ($user == null) {
+            $passwordTemporario = Str::random(8);
+            $coord = User::find($evento->coordenadorId);
+            Mail::to($data['email'])->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', "membro da comissão {$comissao->nome}", $evento->nome, $passwordTemporario, ' ', $coord));
+            $user = User::create([
+                'email' => $data['email'],
+                'password' => bcrypt($passwordTemporario),
+                'usuarioTemp' => true,
+            ]);
         } else {
             $usuarioDaComissa = $comissao->membros()->where('user_id', $user->id)->first();
             if ($usuarioDaComissa != null) {
@@ -77,6 +84,7 @@ class TipoComissaoController extends Controller
             }
         }
         $comissao->membros()->save($user, ['isCoordenador' => $isCoordenador]);
+
         return redirect()->back()->with(['success' => 'Membro da comissão cadastrado com sucesso!']);
     }
 
@@ -86,6 +94,7 @@ class TipoComissaoController extends Controller
         $data = $request->validate(['email' => 'required|email']);
         $user = User::where('email', $data['email'])->first();
         $comissao->membros()->detach($user);
+
         return redirect()->back()->with(['success' => 'Membro da comissão removido com sucesso!']);
     }
 
@@ -95,9 +104,10 @@ class TipoComissaoController extends Controller
         $data = $request->validate(['email' => 'required|email']);
         $isCoordenador = $request->has('isCoordenador');
         $user = User::where('email', $data['email'])->first();
-        if($membro->email != $data['email'])
+        if ($membro->email != $data['email']) {
             $comissao->membros()->detach($user);
-        if($user == null){
+        }
+        if ($user == null) {
             $passwordTemporario = Str::random(8);
             $coord = User::find($evento->coordenadorId);
             Mail::to($data['email'])->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', "membro da comissão {$comissao->nome}", $evento->nome, $passwordTemporario, ' ', $coord));
@@ -110,18 +120,21 @@ class TipoComissaoController extends Controller
             $usuarioDaComissa = $comissao->membros()->where('user_id', $user->id)->first();
             if ($usuarioDaComissa != null) {
                 $comissao->membros()->updateExistingPivot($user->id, ['isCoordenador' => $isCoordenador]);
+
                 return redirect()->back()->with(['success' => 'Membro da comissão atualizado com sucesso!']);
             }
         }
         $comissao->membros()->save($user, ['isCoordenador' => $isCoordenador]);
+
         return redirect()->back()->with(['success' => 'Membro da comissão atualizado com sucesso!']);
     }
 
     public function membroIndex()
     {
-        $eventos = auth()->user()->outrasComissoes->map(function($comissao){
+        $eventos = auth()->user()->outrasComissoes->map(function ($comissao) {
             return $comissao->evento;
         });
+
         return view('comissao.homeOutrasComissoes', compact('eventos'));
     }
 }

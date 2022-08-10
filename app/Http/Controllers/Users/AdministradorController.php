@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Models\Users\User;
+use App\Http\Controllers\Controller;
 use App\Models\Submissao\Endereco;
+use App\Models\Users\Administrador;
+use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Http\Controllers\Controller;
-use App\Models\Users\Administrador;
 
 class AdministradorController extends Controller
 {
@@ -19,6 +19,7 @@ class AdministradorController extends Controller
     public function index()
     {
         $this->authorize('isAdmin', Administrador::class);
+
         return view('administrador.index');
     }
 
@@ -86,18 +87,21 @@ class AdministradorController extends Controller
     public function destroy($id)
     {
         $this->authorize('isAdmin', Administrador::class);
+
         return view('administrador.index');
     }
 
     public function editais()
     {
         $this->authorize('isAdmin', Administrador::class);
+
         return view('administrador.index');
     }
 
     public function areas()
     {
         $this->authorize('isAdmin', Administrador::class);
+
         return view('administrador.index');
     }
 
@@ -115,7 +119,7 @@ class AdministradorController extends Controller
         $user = User::find($id);
         $end = $user->endereco;
 
-        return view('administrador.editUser', ['user'=>$user,'end'=>$end]);
+        return view('administrador.editUser', ['user'=>$user, 'end'=>$end]);
     }
 
     public function updateUser(Request $request, $id)
@@ -124,14 +128,14 @@ class AdministradorController extends Controller
         $this->authorize('isAdmin', Administrador::class);
         $user = User::find($id);
 
-        if ($request->passaporte != null &&  $request->cpf != null) {
+        if ($request->passaporte != null && $request->cpf != null) {
             $request->merge(['passaporte' => null]);
         }
-        if($user->usuarioTemp == true){
+        if ($user->usuarioTemp == true) {
             $validator = $request->validate([
                 'name' => 'bail|required|string|max:255',
-                'cpf'           => ($request->passaporte ==null ? ['bail','required','cpf'] : 'nullable'),
-                'passaporte'    => ($request->cpf ==null ? 'bail|required|max:10' : 'nullable'),
+                'cpf'           => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
+                'passaporte'    => ($request->cpf == null ? 'bail|required|max:10' : 'nullable'),
                 'celular' => 'required|string|max:16',
                 'instituicao' => 'required|string| max:255',
                 'especialidade' => 'nullable|string',
@@ -174,19 +178,16 @@ class AdministradorController extends Controller
             $user->email_verified_at = now();
             $user->save();
 
-            return redirect()->route('admin.users')->with(['message' => "Cadastro completado com sucesso!"]);
-
-        }
-
-        else {
-            if ($request->passaporte != null &&  $request->cpf != null) {
+            return redirect()->route('admin.users')->with(['message' => 'Cadastro completado com sucesso!']);
+        } else {
+            if ($request->passaporte != null && $request->cpf != null) {
                 $request->merge(['passaporte' => null]);
             }
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
                 'email'         => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-                'cpf'           => ($request->passaporte  ==null ? ['bail','required','cpf',Rule::unique('users')->ignore($user->id)] : 'nullable'),
-                'passaporte'    => ($request->cpf == null && $request->cpf ==null? ['bail','required','max:10',Rule::unique('users')->ignore($user->id)] : ['nullable']),
+                'cpf'           => ($request->passaporte == null ? ['bail', 'required', 'cpf', Rule::unique('users')->ignore($user->id)] : 'nullable'),
+                'passaporte'    => ($request->cpf == null && $request->cpf == null ? ['bail', 'required', 'max:10', Rule::unique('users')->ignore($user->id)] : ['nullable']),
                 'celular' => 'required|string|max:16',
                 'instituicao' => 'required|string| max:255',
                 // 'especProfissional' => 'nullable|string',
@@ -228,39 +229,34 @@ class AdministradorController extends Controller
 
             $end->update();
             // dd([$user,$end]);
-            return redirect()->route('admin.users')->with(['message' => "Usuário atualizado com sucesso!"]);
-
+            return redirect()->route('admin.users')->with(['message' => 'Usuário atualizado com sucesso!']);
         }
 
-
-        return redirect()->route('admin.users')->with(['message' => "Atualizado com sucesso!"]);
+        return redirect()->route('admin.users')->with(['message' => 'Atualizado com sucesso!']);
     }
 
-    public function deleteUser( $id)
+    public function deleteUser($id)
     {
         // dd($request->all());
         $this->authorize('isAdmin', Administrador::class);
         $user = User::doesntHave('administradors')->find($id);
         $user->delete();
 
-        return redirect()->route('admin.users')->with(['message' => "Deletado com sucesso!"]);
+        return redirect()->route('admin.users')->with(['message' => 'Deletado com sucesso!']);
     }
+
     public function search(Request $request)
     {
         // dd($request->all());
         $this->authorize('isAdmin', Administrador::class);
-        $users = User::where('email','ilike', '%'.$request->search.'%' )->paginate(100);
-        if($users->count() == 0){
-            $users = User::where('name','ilike', '%'.$request->search.'%')->paginate(100);
-
+        $users = User::where('email', 'ilike', '%'.$request->search.'%')->paginate(100);
+        if ($users->count() == 0) {
+            $users = User::where('name', 'ilike', '%'.$request->search.'%')->paginate(100);
         }
-        if($users->count() == 0){
-            return view('administrador.users', compact('users'))->with(['message' => "Nenhum Resultado encontrado!"]);
-
+        if ($users->count() == 0) {
+            return view('administrador.users', compact('users'))->with(['message' => 'Nenhum Resultado encontrado!']);
         }
+
         return view('administrador.users', compact('users'));
-
-
     }
-
 }

@@ -7,8 +7,6 @@ use App\Http\Requests\StoreArquivoInfoRequest;
 use App\Http\Requests\UpdateArquivoInfoRequest;
 use App\Models\Submissao\ArquivoInfo;
 use App\Models\Submissao\Evento;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
 class ArquivoInfoController extends Controller
@@ -18,7 +16,8 @@ class ArquivoInfoController extends Controller
         return view('coordenador.evento.arquivoInfo.arquivoInfo', ['evento' => $evento]);
     }
 
-    public function store(StoreArquivoInfoRequest $request, Evento $evento) {
+    public function store(StoreArquivoInfoRequest $request, Evento $evento)
+    {
         $data = $request->validated();
         $arquivo = new ArquivoInfo();
         $arquivo->evento_id = $evento->id;
@@ -28,6 +27,7 @@ class ArquivoInfoController extends Controller
         Storage::putFileAs('public/'.$path, $data['arquivo'], $name);
         $arquivo->path = $path.$name;
         $arquivo->save();
+
         return redirect()->back()->with(['success' => 'Arquivo adicionado com sucesso!']);
     }
 
@@ -35,6 +35,7 @@ class ArquivoInfoController extends Controller
     {
         Storage::delete('public/'.$arquivoInfo->path);
         $arquivoInfo->delete();
+
         return redirect()->back()->with(['success' => 'Arquivo deletado com sucesso!']);
     }
 
@@ -42,7 +43,7 @@ class ArquivoInfoController extends Controller
     {
         $data = $request->validated();
         $arquivoInfo->nome = $data['nome'];
-        if(isset($data['arquivo'])) {
+        if (isset($data['arquivo'])) {
             Storage::delete('public/'.$arquivoInfo->path);
             $name = $data['arquivo']->getClientOriginalName();
             $path = 'eventos/'.$arquivoInfo->evento->id.'/arquivos/';
@@ -50,6 +51,7 @@ class ArquivoInfoController extends Controller
             $arquivoInfo->path = $path.$name;
         }
         $arquivoInfo->save();
+
         return redirect()->back()->with(['success' => 'Arquivo atualizado com sucesso!']);
     }
 }

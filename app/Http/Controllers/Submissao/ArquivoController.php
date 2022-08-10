@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Submissao;
 
+use App\Http\Controllers\Controller;
 use App\Models\Submissao\Arquivo;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class ArquivoController extends Controller
 {

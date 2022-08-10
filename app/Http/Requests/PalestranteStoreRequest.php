@@ -15,7 +15,7 @@ class PalestranteStoreRequest extends FormRequest
     public function authorize()
     {
         $evento = Evento::find(request()->eventoId);
-        return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        return $this->user()->can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
     }
 
     /**

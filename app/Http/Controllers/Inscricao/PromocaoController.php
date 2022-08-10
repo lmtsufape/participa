@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Inscricao\Promocao;
-use App\Models\Inscricao\Lote;
 use App\Models\Inscricao\CategoriaParticipante;
+use App\Models\Inscricao\Lote;
+use App\Models\Inscricao\Promocao;
 use App\Models\Submissao\Evento;
+use Illuminate\Http\Request;
 
 class PromocaoController extends Controller
 {
@@ -38,9 +38,9 @@ class PromocaoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         $validadeData = $request->validate([
             'novaPromocao'          => 'required',
@@ -50,9 +50,9 @@ class PromocaoController extends Controller
             'dataDeInício.*'        => 'required|date',
             'dataDeFim.*'           => 'required|date|after:dataDeInício.*',
             'disponibilidade.*'     => 'required',
-            'atividades.*'          => 'nullable', 
-            'para_todas_categorias' => 'nullable', 
-            'categorias.*'          => 'nullable',  
+            'atividades.*'          => 'nullable',
+            'para_todas_categorias' => 'nullable',
+            'categorias.*'          => 'nullable',
         ]);
 
         if ($request->valor < 0) {
@@ -71,18 +71,18 @@ class PromocaoController extends Controller
 
         $promocao = new Promocao();
         $promocao->identificador = $request->identificador;
-        $promocao->evento_id     = $request->evento_id;
-        $promocao->descricao     = $request->input('descrição'); 
-        $promocao->valor         = $request->valor;
+        $promocao->evento_id = $request->evento_id;
+        $promocao->descricao = $request->input('descrição');
+        $promocao->valor = $request->valor;
         $promocao->save();
 
-        if ($request->para_todas_categorias == "on") {
+        if ($request->para_todas_categorias == 'on') {
             $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
 
             foreach ($categorias as $categoria) {
                 $promocao->categorias()->attach($categoria->id);
             }
-        } else if ($request->categorias != null && count($request->categorias) > 0) {
+        } elseif ($request->categorias != null && count($request->categorias) > 0) {
             foreach ($request->categorias as $categoria) {
                 $promocao->categorias()->attach($categoria);
             }
@@ -90,9 +90,9 @@ class PromocaoController extends Controller
 
         foreach ($request->input('dataDeInício') as $key => $lote) {
             $lote = new Lote();
-            $lote->promocao_id              = $promocao->id;
-            $lote->inicio_validade          = $request->input('dataDeInício.'.$key);
-            $lote->fim_validade             = $request->input('dataDeFim.'.$key);
+            $lote->promocao_id = $promocao->id;
+            $lote->inicio_validade = $request->input('dataDeInício.'.$key);
+            $lote->fim_validade = $request->input('dataDeFim.'.$key);
             if ($request->input('disponibilidade.'.$key) == 0) {
                 $lote->quantidade_de_aplicacoes = -1;
             } else {
@@ -143,7 +143,7 @@ class PromocaoController extends Controller
     {
         // dd($request);
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         $promocao = Promocao::find($id);
 
@@ -187,18 +187,18 @@ class PromocaoController extends Controller
         }
 
         // Atualizando dados
-        $promocao->identificador    = $request->input('identificador_'.$promocao->id);
-        $promocao->descricao        = $request->input('descrição_'.$promocao->id); 
-        $promocao->valor            = $request->input('valor_'.$promocao->id);
+        $promocao->identificador = $request->input('identificador_'.$promocao->id);
+        $promocao->descricao = $request->input('descrição_'.$promocao->id);
+        $promocao->valor = $request->input('valor_'.$promocao->id);
         $promocao->update();
 
-        if ($request->input('para_todas_categorias_'.$promocao->id) == "on") {
+        if ($request->input('para_todas_categorias_'.$promocao->id) == 'on') {
             $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
 
             foreach ($categorias as $categoria) {
                 $promocao->categorias()->attach($categoria->id);
             }
-        } else if ($request->input('categorias_'.$promocao->id) != null && count($request->input('categorias_'.$promocao->id)) > 0) {
+        } elseif ($request->input('categorias_'.$promocao->id) != null && count($request->input('categorias_'.$promocao->id)) > 0) {
             foreach ($request->input('categorias_'.$promocao->id) as $categoria) {
                 $promocao->categorias()->attach($categoria);
             }
@@ -206,9 +206,9 @@ class PromocaoController extends Controller
 
         foreach ($request->input('dataDeInício_'.$promocao->id) as $key => $loteRequest) {
             $lote = new Lote();
-            $lote->promocao_id              = $promocao->id;
-            $lote->inicio_validade          = $request->input('dataDeInício_'.$promocao->id.'.'.$key);
-            $lote->fim_validade             = $request->input('dataDeFim_'.$promocao->id.'.'.$key);
+            $lote->promocao_id = $promocao->id;
+            $lote->inicio_validade = $request->input('dataDeInício_'.$promocao->id.'.'.$key);
+            $lote->fim_validade = $request->input('dataDeFim_'.$promocao->id.'.'.$key);
             if ($request->input('disponibilidade_'.$promocao->id.'.'.$key) == 0) {
                 $lote->quantidade_de_aplicacoes = -1;
             } else {
@@ -235,37 +235,38 @@ class PromocaoController extends Controller
     public function destroy($id)
     {
         $promocao = Promocao::find($id);
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $promocao->evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $promocao->evento);
         // Lembrar de atualizar essa função para checar se a promoção
         // já foi aplicada em alguma inscrição
         $atividades = $promocao->atividades;
-        
+
         foreach ($promocao->categorias as $categoria) {
-            if(!$promocao->categorias()->detach($categoria->id)) {
+            if (! $promocao->categorias()->detach($categoria->id)) {
                 abort(500);
             }
         }
 
         foreach ($atividades as $atv) {
-            if(!$promocao->atividades()->detach($atv->id)) {
+            if (! $promocao->atividades()->detach($atv->id)) {
                 abort(500);
             }
         }
 
         foreach ($promocao->lotes as $lote) {
-            if (!$lote->delete()) {
+            if (! $lote->delete()) {
                 abort(500);
             }
         }
 
-        if(!$promocao->delete()) {
+        if (! $promocao->delete()) {
             abort(500);
         }
 
         return redirect()->back()->with(['mensagem' => 'Promoção deletada com sucesso!']);
     }
 
-    public function atividades(Request $request) {
+    public function atividades(Request $request)
+    {
         if ($request->id != null) {
             $promocao = Promocao::find($request->id);
             $promo = ['promocao_id' => $promocao->id, 'valorPromo' => $promocao->valor, 'descricao' => $promocao->descricao];

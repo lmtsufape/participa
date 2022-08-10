@@ -8,35 +8,28 @@ use App\Http\Requests\UpdateCertificadoRequest;
 use App\Mail\EmailCertificado;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Assinatura;
-use App\Models\Submissao\Medida;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Evento;
+use App\Models\Submissao\Medida;
 use App\Models\Submissao\Palestra;
 use App\Models\Submissao\Palestrante;
 use App\Models\Submissao\TipoComissao;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
-use App\Models\Users\ComissaoEvento;
-use App\Models\Users\Convidado;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Barryvdh\DomPDF\Facade as PDF;
-use geekcom\ValidatorDocs\Rules\Certidao;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Illuminate\Support\Facades\Gate;
 
 class CertificadoController extends Controller
 {
@@ -48,8 +41,9 @@ class CertificadoController extends Controller
     public function index(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $certificados = Certificado::where('evento_id', $evento->id)->get();
+
         return view('coordenador.certificado.index', [
             'evento'=> $evento,
             'certificados' => $certificados,
@@ -65,9 +59,10 @@ class CertificadoController extends Controller
     public function create(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
         $tipos = Certificado::TIPO_ENUM;
+
         return view('coordenador.certificado.create', compact('evento', 'assinaturas', 'tipos'));
     }
 
@@ -80,7 +75,7 @@ class CertificadoController extends Controller
     public function store(CertificadoRequest $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $validated = $request->validated();
         $certificado = new Certificado();
         $certificado->setAtributes($validated);
@@ -92,7 +87,7 @@ class CertificadoController extends Controller
         $certificado->caminho = $novo_caminho;
         $certificado->save();
 
-        foreach($request->assinaturas as $assinatura_id){
+        foreach ($request->assinaturas as $assinatura_id) {
             $certificado->assinaturas()->attach(Assinatura::find($assinatura_id));
         }
 
@@ -120,11 +115,12 @@ class CertificadoController extends Controller
     public function edit(Request $request, $id)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $certificado = Certificado::find($id);
         $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
-        $tipos = array(1 => 'Apresentadores', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Revisores', 'Participantes', 'Palestrante', 'Coordenador da comissão científica', 'Membro de outra comissão', 'Inscrito em uma atividade');
-        return view('coordenador.certificado.edit', compact('assinaturas','certificado','evento', 'tipos'));
+        $tipos = [1 => 'Apresentadores', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Revisores', 'Participantes', 'Palestrante', 'Coordenador da comissão científica', 'Membro de outra comissão', 'Inscrito em uma atividade'];
+
+        return view('coordenador.certificado.edit', compact('assinaturas', 'certificado', 'evento', 'tipos'));
     }
 
     /**
@@ -138,16 +134,16 @@ class CertificadoController extends Controller
     public function update(UpdateCertificadoRequest $request, $id)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $validatedData = $request->validated();
         $certificado = Certificado::find($id);
         $certificado->setAtributes($validatedData);
 
-        if($request->fotoCertificado != null){
+        if ($request->fotoCertificado != null) {
             $validatedData = $request->validate([
                 'fotoCertificado'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
             ]);
-            if(Storage::disk()->exists('public/'.$certificado->caminho)) {
+            if (Storage::disk()->exists('public/'.$certificado->caminho)) {
                 Storage::delete('public/'.$certificado->caminho);
             }
 
@@ -155,17 +151,16 @@ class CertificadoController extends Controller
             $path = 'certificados/'.$evento->id;
             $novo_caminho = $certificado->uploadArquivo($path, true, $imagem);
             $certificado->caminho = $novo_caminho;
-
         }
 
-        foreach($request->assinaturas as $assinatura_id){
+        foreach ($request->assinaturas as $assinatura_id) {
             if ($certificado->assinaturas()->where('assinatura_id', $assinatura_id)->first() == null) {
                 $certificado->assinaturas()->attach(Assinatura::find($assinatura_id));
             }
         }
 
         foreach ($certificado->assinaturas as $assinatura) {
-            if (!(in_array($assinatura->id, $request->assinaturas))) {
+            if (! (in_array($assinatura->id, $request->assinaturas))) {
                 $certificado->assinaturas()->detach($assinatura->id);
             }
         }
@@ -178,6 +173,8 @@ class CertificadoController extends Controller
     public function salvarMedida(Request $request)
     {
         $certificado = Certificado::find($request->certificado_id);
+        $evento = $certificado->evento;
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $assinaturas = $certificado->assinaturas;
         $assinaturas_id = $assinaturas->pluck('id');
         $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['texto']]);
@@ -250,6 +247,7 @@ class CertificadoController extends Controller
             $medida->largura = $request['linha-largura-'.$id];
             $medida->save();
         }
+
         return redirect()->route('coord.listarCertificados', ['eventoId' => $certificado->evento->id]);
     }
 
@@ -263,11 +261,12 @@ class CertificadoController extends Controller
     {
         $certificado = Certificado::find($id);
         $evento = $certificado->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        if(Storage::disk()->exists('public/'.$certificado->caminho)) {
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        if (Storage::disk()->exists('public/'.$certificado->caminho)) {
             Storage::delete('public/'.$certificado->caminho);
         }
         $certificado->delete();
+
         return redirect(route('coord.listarCertificados', ['eventoId' => $evento->id]))->with(['success' => 'Certificado deletado com sucesso.']);
     }
 
@@ -276,10 +275,11 @@ class CertificadoController extends Controller
         $certificado = Certificado::find($id);
         $medidas = $certificado->medidas()->with('assinatura')->get();
         $evento = $certificado->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
         date_default_timezone_set('America/Recife');
         $dataHoje = utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data)));
+
         return view('coordenador.certificado.modelo', compact('certificado', 'dataHoje', 'evento', 'medidas'));
     }
 
@@ -287,7 +287,8 @@ class CertificadoController extends Controller
     {
         $certificado = Certificado::find($certificadoId);
         $evento = $certificado->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
         return $this->gerar_pdf_certificado($certificado, $destinatarioId, $trabalhoId, $evento);
     }
 
@@ -296,10 +297,11 @@ class CertificadoController extends Controller
         $certificado = Certificado::withTrashed()
             ->where('id', $certificadoId)
             ->first();
-        $this->authorize('visualizarCertificado', $certificado);
-        if(auth()->user()->id != $destinatarioId)
+        if (auth()->user()->id != $destinatarioId) {
             return redirect()->back()->with('certificado', 'Você não possui autorização para ver este certificado');
+        }
         $evento = $certificado->evento;
+
         return $this->gerar_pdf_certificado($certificado, $destinatarioId, $trabalhoId, $evento);
     }
 
@@ -311,8 +313,9 @@ class CertificadoController extends Controller
             ['certificado_id', '=', $certificado->id],
             ['user_id', '=', $destinatarioId],
         ])->first();
-        if(is_null($certificado_user))
+        if (is_null($certificado_user)) {
             return redirect()->back()->with('certificado', 'Falha ao recuperar o certificado');
+        }
         $validacao = $certificado_user->validacao;
         switch ($certificado->tipo) {
             case Certificado::TIPO_ENUM['apresentador']:
@@ -347,81 +350,87 @@ class CertificadoController extends Controller
                 break;
         }
         $qrcode = base64_encode(QrCode::generate($validacao));
-        switch($certificado->tipo){
-            case(Certificado::TIPO_ENUM['apresentador']):
+        switch ($certificado->tipo) {
+            case Certificado::TIPO_ENUM['apresentador']:
                 $user = User::find($destinatarioId);
                 $trabalho = Trabalho::find($trabalhoId);
                 $coautores = $trabalho->coautors()->with('user')->get()->pluck('user.name')->join(', ', ' e ');
                 $texto = $certificado->texto;
-                if ($coautores!=''){
-                    $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/','$1', $texto);
+                if ($coautores != '') {
+                    $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/', '$1', $texto);
                 } else {
-                    $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/','', $texto);
+                    $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/', '', $texto);
                 }
-                $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'coautores' => $coautores,'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
+                $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'coautores' => $coautores, 'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
                 break;
-            case(Certificado::TIPO_ENUM['comissao_cientifica']):
+            case Certificado::TIPO_ENUM['comissao_cientifica']:
                 $user = User::find($destinatarioId);
                 $texto = $certificado->texto;
                 $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Científica', 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
                 break;
-            case(Certificado::TIPO_ENUM['comissao_organizadora']):
+            case Certificado::TIPO_ENUM['comissao_organizadora']:
                 $user = User::find($destinatarioId);
                 $texto = $certificado->texto;
                 $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Organizadora', 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
                 break;
-            case(Certificado::TIPO_ENUM['revisor']):
+            case Certificado::TIPO_ENUM['revisor']:
                 $user = User::find($destinatarioId);
                 $texto = $certificado->texto;
                 $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Revisor', 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
                 break;
-            case(Certificado::TIPO_ENUM['participante']):
+            case Certificado::TIPO_ENUM['participante']:
                 $user = User::find($destinatarioId);
                 $texto = $certificado->texto;
                 $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Participante', 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
                 break;
-            case(Certificado::TIPO_ENUM['expositor']):
+            case Certificado::TIPO_ENUM['expositor']:
                 $user = Palestrante::find($destinatarioId);
                 $palestra = Palestra::find($trabalhoId);
                 $texto = $certificado->texto;
                 $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'palestra' => $palestra, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
                 break;
-            case(Certificado::TIPO_ENUM['coordenador_comissao_cientifica']):
+            case Certificado::TIPO_ENUM['coordenador_comissao_cientifica']:
                 $user = User::find($destinatarioId);
                 $trabalho = Trabalho::find($trabalhoId);
                 $texto = $certificado->texto;
                 $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Coordenador comissão científica', 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
                 break;
-            case(Certificado::TIPO_ENUM['outras_comissoes']):
+            case Certificado::TIPO_ENUM['outras_comissoes']:
                 $user = User::find($destinatarioId);
                 $comissao = TipoComissao::find($trabalhoId);
                 $texto = $certificado->texto;
                 $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'comissao' => $comissao, 'cargo' => "membro da comissao {$comissao->nome}", 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
                 break;
-            case(Certificado::TIPO_ENUM['inscrito_atividade']):
+            case Certificado::TIPO_ENUM['inscrito_atividade']:
                 $user = User::find($destinatarioId);
                 $atividade = Atividade::find($trabalhoId);
                 $texto = $certificado->texto;
                 $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'atividade' => $atividade, 'cargo' => "inscrito na atividade {$atividade->titulo}", 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
                 break;
         }
+
         return $pdf->stream('preview.pdf');
     }
 
-    public function get_string_between($string, $start, $end){
+    public function get_string_between($string, $start, $end)
+    {
         $ini = strpos($string, $start);
-        if ($ini == 0) return '';
+        if ($ini == 0) {
+            return '';
+        }
         $ini += strlen($start);
         $len = strpos($string, $end, $ini) - $ini;
+
         return substr($string, $ini, $len);
     }
 
     public function emitir(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $certificados = Certificado::where('evento_id', $evento->id)->get();
-        $destinatarios = array(1 => 'Apresentadores', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Revisores', 'Participantes', 'Palestrante', 'Coordenador da comissão científica', 'Membro de outra comissão', 'Inscrito em uma atividade');
+        $destinatarios = [1 => 'Apresentadores', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Revisores', 'Participantes', 'Palestrante', 'Coordenador da comissão científica', 'Membro de outra comissão', 'Inscrito em uma atividade'];
+
         return view('coordenador.certificado.emissao', [
             'evento'=> $evento,
             'certificados' => $certificados,
@@ -431,37 +440,37 @@ class CertificadoController extends Controller
 
     public function ajaxDestinatarios(Request $request)
     {
-       if($request->destinatario == Certificado::TIPO_ENUM['apresentador']){
+        if ($request->destinatario == Certificado::TIPO_ENUM['apresentador']) {
             $destinatarios = collect();
             $trab = Trabalho::where('eventoId', '=', $request->eventoId)->orderBy('titulo')->get();
             $trabalhos = collect();
-            foreach($trab as $trabalho){
+            foreach ($trab as $trabalho) {
                 $destinatarios->push($trabalho->autor);
                 $trabalhos->push($trabalho);
-                foreach($trabalho->coautors as $coautor){
+                foreach ($trabalho->coautors as $coautor) {
                     $destinatarios->push($coautor->user);
                     $trabalhos->push($trabalho);
                 }
             }
-        }elseif($request->destinatario == Certificado::TIPO_ENUM['comissao_cientifica'] || $request->destinatario == Certificado::TIPO_ENUM['coordenador_comissao_cientifica']){
+        } elseif ($request->destinatario == Certificado::TIPO_ENUM['comissao_cientifica'] || $request->destinatario == Certificado::TIPO_ENUM['coordenador_comissao_cientifica']) {
             $destinatarios = User::join('comissao_cientifica_eventos', 'users.id', '=', 'comissao_cientifica_eventos.user_id')->where('comissao_cientifica_eventos.evento_id', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
-                function($membro) {
+                function ($membro) {
                     return $membro->name;
                 },
                 SORT_REGULAR);
-        }elseif($request->destinatario == Certificado::TIPO_ENUM['comissao_organizadora']){
+        } elseif ($request->destinatario == Certificado::TIPO_ENUM['comissao_organizadora']) {
             $destinatarios = User::join('comissao_organizadora_eventos', 'users.id', '=', 'comissao_organizadora_eventos.user_id')->where('comissao_organizadora_eventos.evento_id', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
-                function($membro) {
+                function ($membro) {
                     return $membro->name;
                 },
                 SORT_REGULAR);
-        }elseif($request->destinatario == Certificado::TIPO_ENUM['revisor']){
+        } elseif ($request->destinatario == Certificado::TIPO_ENUM['revisor']) {
             $destinatarios = User::join('revisors', 'users.id', '=', 'revisors.user_id')->where('revisors.evento_id', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
-                function($revisor) {
+                function ($revisor) {
                     return $revisor->name;
                 },
                 SORT_REGULAR);
-        }elseif($request->destinatario == Certificado::TIPO_ENUM['participante']){
+        } elseif ($request->destinatario == Certificado::TIPO_ENUM['participante']) {
             $autores = Trabalho::where('eventoId', $request->eventoId)->get()->pluck('autor');
             $cientifica = Evento::find($request->eventoId)->usuariosDaComissao;
             $organizadora = Evento::find($request->eventoId)->usuariosDaComissaoOrganizadora;
@@ -474,21 +483,24 @@ class CertificadoController extends Controller
                 ->merge($coautores)
                 ->merge($inscritos)
                 ->sortBy('name');
-        }elseif($request->destinatario == Certificado::TIPO_ENUM['expositor']){
+        } elseif ($request->destinatario == Certificado::TIPO_ENUM['expositor']) {
             $destinatarios = Evento::find($request->eventoId)->palestrantes;
-            $palestras = $destinatarios->map(function($destinatario){ return $destinatario->palestra;});
-        }elseif($request->destinatario == Certificado::TIPO_ENUM['outras_comissoes']){
+            $palestras = $destinatarios->map(function ($destinatario) {
+                return $destinatario->palestra;
+            });
+        } elseif ($request->destinatario == Certificado::TIPO_ENUM['outras_comissoes']) {
             $comissao = TipoComissao::find($request->tipo_comissao_id);
             $destinatarios = $comissao->membros;
-        }elseif($request->destinatario == Certificado::TIPO_ENUM['inscrito_atividade']){
+        } elseif ($request->destinatario == Certificado::TIPO_ENUM['inscrito_atividade']) {
             $destinatarios = collect();
-            if ($request->atividade == '0')
+            if ($request->atividade == '0') {
                 $ativ = Atividade::where('eventoId', $request->eventoId)->orderBy('titulo')->get();
-            else
+            } else {
                 $ativ = Atividade::where('id', $request->atividade)->get();
+            }
             $atividades = collect();
-            foreach($ativ as $atividade) {
-                foreach($atividade->users as $destinatario){
+            foreach ($ativ as $atividade) {
+                foreach ($atividade->users as $destinatario) {
                     $destinatarios->push($destinatario);
                     $atividades->push($atividade);
                 }
@@ -520,48 +532,49 @@ class CertificadoController extends Controller
                 $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['outras_comissoes']], ['tipo_comissao_id', $request->tipo_comissao_id]])->get();
                 break;
             case Certificado::TIPO_ENUM['inscrito_atividade']:
-                if ($request->atividade == '0')
+                if ($request->atividade == '0') {
                     $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['inscrito_atividade']]])->whereNull('atividade_id')->get();
-                else
+                } else {
                     $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['inscrito_atividade']], ['atividade_id', $request->atividade]])->whereNull('atividade_id')->get();
+                }
                 break;
             default:
                 break;
         }
-        if($request->destinatario == Certificado::TIPO_ENUM['apresentador']){
-            $data = array(
+        if ($request->destinatario == Certificado::TIPO_ENUM['apresentador']) {
+            $data = [
                 'success' => true,
                 'destinatarios' => $destinatarios,
                 'trabalhos' => $trabalhos,
                 'certificados' => $certificados,
-            );
-        }elseif($request->destinatario == Certificado::TIPO_ENUM['expositor']){
-            $data = array(
+            ];
+        } elseif ($request->destinatario == Certificado::TIPO_ENUM['expositor']) {
+            $data = [
                 'success' => true,
                 'destinatarios' => $destinatarios,
                 'palestras' => $palestras,
                 'certificados' => $certificados,
-            );
-        }elseif($request->destinatario == Certificado::TIPO_ENUM['outras_comissoes']){
-            $data = array(
+            ];
+        } elseif ($request->destinatario == Certificado::TIPO_ENUM['outras_comissoes']) {
+            $data = [
                 'success' => true,
                 'destinatarios' => $destinatarios,
                 'comissao' => $comissao,
                 'certificados' => $certificados,
-            );
-        }elseif($request->destinatario == Certificado::TIPO_ENUM['inscrito_atividade']){
-            $data = array(
+            ];
+        } elseif ($request->destinatario == Certificado::TIPO_ENUM['inscrito_atividade']) {
+            $data = [
                 'success' => true,
                 'destinatarios' => $destinatarios,
                 'atividades' => $atividades,
                 'certificados' => $certificados,
-            );
-        }else{
-            $data = array(
+            ];
+        } else {
+            $data = [
                 'success' => true,
                 'destinatarios' => $destinatarios,
                 'certificados' => $certificados,
-            );
+            ];
         }
         echo json_encode($data);
     }
@@ -570,34 +583,36 @@ class CertificadoController extends Controller
     {
         $request->validate(['certificado' => 'required']);
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $certificado = Certificado::find($request->certificado);
-        if($certificado->medidas->count() == 0) {
+        if ($certificado->medidas->count() == 0) {
             return redirect()->back()->with('error', 'Atualize o modelo do certificado antes de realizar emissões');
         }
-        $validacoes = collect($request->destinatarios)->map(function($item){return Hash::make($item);});
+        $validacoes = collect($request->destinatarios)->map(function ($item) {
+            return Hash::make($item);
+        });
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
         date_default_timezone_set('America/Recife');
-        switch($request->destinatario){
-            case(Certificado::TIPO_ENUM['apresentador']):
-                foreach($request->destinatarios as $i => $destinarioId){
+        switch ($request->destinatario) {
+            case Certificado::TIPO_ENUM['apresentador']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i], 'trabalho_id' => $request->trabalhos[$i]]);
                     $user = User::find($destinarioId);
                     $trabalho = Trabalho::find($request->trabalhos[$i]);
                     $coautores = $trabalho->coautors()->with('user')->get()->pluck('user.name')->join(', ', ' e ');
                     $texto = $certificado->texto;
-                    if ($coautores!=''){
-                        $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/','$1', $texto);
+                    if ($coautores != '') {
+                        $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/', '$1', $texto);
                     } else {
-                        $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/','', $texto);
+                        $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/', '', $texto);
                     }
-                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacoes[$i], 'certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'coautores' => $coautores,'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
+                    $pdf = PDF::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacoes[$i], 'certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'coautores' => $coautores, 'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data))), 'now' => utf8_encode(strftime('%d de %B de %Y', strtotime(now())))])->setPaper('a4', 'landscape');
                     Mail::to($user->email)->send(new EmailCertificado($user, 'apresentador de trabalho', $evento->nome, $pdf));
                 }
                 break;
-            case(Certificado::TIPO_ENUM['comissao_cientifica']):
-                foreach($request->destinatarios as $i => $destinarioId){
+            case Certificado::TIPO_ENUM['comissao_cientifica']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
@@ -606,8 +621,8 @@ class CertificadoController extends Controller
                     Mail::to($user->email)->send(new EmailCertificado($user, 'membro da Comissão Científica', $evento->nome, $pdf));
                 }
                 break;
-            case(Certificado::TIPO_ENUM['comissao_organizadora']):
-                foreach($request->destinatarios as $i => $destinarioId){
+            case Certificado::TIPO_ENUM['comissao_organizadora']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
@@ -616,8 +631,8 @@ class CertificadoController extends Controller
                     Mail::to($user->email)->send(new EmailCertificado($user, 'membro da Comissão Organizadora', $evento->nome, $pdf));
                 }
                 break;
-            case(Certificado::TIPO_ENUM['revisor']):
-                foreach($request->destinatarios as $i => $destinarioId){
+            case Certificado::TIPO_ENUM['revisor']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
@@ -626,8 +641,8 @@ class CertificadoController extends Controller
                     Mail::to($user->email)->send(new EmailCertificado($user, 'avaliador/a', $evento->nome, $pdf));
                 }
                 break;
-            case(Certificado::TIPO_ENUM['participante']):
-                foreach($request->destinatarios as $i => $destinarioId){
+            case Certificado::TIPO_ENUM['participante']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
@@ -636,8 +651,8 @@ class CertificadoController extends Controller
                     Mail::to($user->email)->send(new EmailCertificado($user, 'participante', $evento->nome, $pdf));
                 }
                 break;
-            case(Certificado::TIPO_ENUM['expositor']):
-                foreach($request->destinatarios as $i => $destinarioId){
+            case Certificado::TIPO_ENUM['expositor']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i], 'palestra_id' => $request->palestras[$i]]);
                     $user = Palestrante::find($destinarioId);
@@ -647,8 +662,8 @@ class CertificadoController extends Controller
                     Mail::to($user->email)->send(new EmailCertificado($user, 'palestrante', $evento->nome, $pdf));
                 }
                 break;
-            case(Certificado::TIPO_ENUM['coordenador_comissao_cientifica']):
-                foreach($request->destinatarios as $i => $destinarioId){
+            case Certificado::TIPO_ENUM['coordenador_comissao_cientifica']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
@@ -657,8 +672,8 @@ class CertificadoController extends Controller
                     Mail::to($user->email)->send(new EmailCertificado($user, 'coordenador/a da comissão Científica', $evento->nome, $pdf));
                 }
                 break;
-            case(Certificado::TIPO_ENUM['outras_comissoes']):
-                foreach($request->destinatarios as $i => $destinarioId){
+            case Certificado::TIPO_ENUM['outras_comissoes']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i], 'comissao_id' => $request->tipo_comissao_id]);
                     $user = User::find($destinarioId);
@@ -668,8 +683,8 @@ class CertificadoController extends Controller
                     Mail::to($user->email)->send(new EmailCertificado($user, "membro da comissão {$comissao->nome}", $evento->nome, $pdf));
                 }
                 break;
-            case(Certificado::TIPO_ENUM['inscrito_atividade']):
-                foreach($request->destinatarios as $i => $destinarioId){
+            case Certificado::TIPO_ENUM['inscrito_atividade']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i], 'atividade_id' => $request->atividades[$i]]);
                     $user = User::find($destinarioId);
@@ -680,6 +695,7 @@ class CertificadoController extends Controller
                 }
                 break;
         }
+
         return redirect(route('coord.emitirCertificado', ['eventoId' => $evento->id]))->with(['success' => 'Certificados enviados com sucesso.']);
     }
 
@@ -704,12 +720,14 @@ class CertificadoController extends Controller
                 break;
             case Certificado::TIPO_ENUM['outras_comissoes']:
                 $usuario = $certificado->usuarios->first();
-                if($usuario)
+                if ($usuario) {
                     $comissao = TipoComissao::find($usuario->pivot->comissao_id);
+                }
                 break;
             default:
                 break;
         }
+
         return view('coordenador.certificado.emissoes', compact('evento', 'usuarios', 'certificado', 'comissao', 'palestras', 'trabalhos', 'tipos', 'atividades'));
     }
 
@@ -719,7 +737,7 @@ class CertificadoController extends Controller
             ['validacao', '=', $request['hash']],
             ['valido', '=', true],
         ])->first();
-        if($certificado_user) {
+        if ($certificado_user) {
             $certificado = Certificado::find($certificado_user->certificado_id);
             $evento = $certificado->evento;
             switch ($certificado->tipo) {
@@ -741,10 +759,11 @@ class CertificadoController extends Controller
     {
         $request->validate(['certificado_user' => 'required']);
         $evento = Evento::find($request->evento);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         DB::table('certificado_user')->where([
             ['id', '=', $request->certificado_user],
         ])->delete();
+
         return redirect()->back()->with('message', 'Emissão do certificado deletada com sucesso!');
     }
 }

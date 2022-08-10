@@ -2,12 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Users\User;
-use App\Models\Submissao\Trabalho;
 use App\Models\Submissao\Evento;
-use App\Models\Submissao\TipoComissao;
-use App\Models\Users\ComissaoEvento;
-use Illuminate\Support\Facades\Log;
+use App\Models\Users\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EventoPolicy
@@ -24,63 +20,57 @@ class EventoPolicy
         //
     }
 
-    public function isCoordenador(User $user, Evento $evento){
-      return $user->id === $evento->coordenadorId;
+    public function isCoordenador(User $user, Evento $evento)
+    {
+        return $user->id === $evento->coordenadorId;
     }
 
-    public function isCoordenadorDeOutrasComissoes(User $user, Evento $evento){
-        $idsCoordenadores = $evento->outrasComissoes->flatMap(function($comissao) {
+    public function isCoordenadorDeOutrasComissoes(User $user, Evento $evento)
+    {
+        $idsCoordenadores = $evento->outrasComissoes->flatMap(function ($comissao) {
             return $comissao->membros()->wherePivot('isCoordenador', true)->get()->pluck('id');
         })->all();
+
         return in_array($user->id, $idsCoordenadores);
     }
 
-    public function isPublishOrIsCoordenador(User $user, Evento $evento) {
-
-      if ($user->id === $evento->coordenadorId || $evento->publicado) {
-        // print_r($evento);
-        return true;
-      }
-      print_r($evento->coordenadorId);
-      return false;
+    public function isPublishOrIsCoordenador(User $user, Evento $evento)
+    {
+        return $user->id === $evento->coordenadorId || $evento->publicado;
     }
 
-    public function isPublishOrIsCoordenadorOrCoordenadorDasComissoes(User $user, Evento $evento) {
+    public function isPublishOrIsCoordenadorOrCoordenadorDasComissoes(User $user, Evento $evento)
+    {
         return $this->isPublishOrIsCoordenador($user, $evento) || $this->isCoordenadorOrCoordenadorDasComissoes($user, $evento);
     }
 
-    public function isCoordenadorOrComissao(User $user, Evento $evento) {
-      $membro = $evento->usuariosDaComissao()->where([['user_id', $user->id], ['evento_id', $evento->id]])->first();
-      return $user->id === $evento->coordenadorId || !(is_null($membro));
+    public function isCoordenadorOrComissao(User $user, Evento $evento)
+    {
+        $membro = $evento->usuariosDaComissao()->where(['user_id', $user->id])->first();
+
+        return $user->id === $evento->coordenadorId || ! (is_null($membro));
     }
 
-    public function isRevisor(User $user, Evento $evento) {
-      $autorizado = false;
-      $revisoresDoEvento = $evento->revisors;
-      foreach ($user->revisor as $revisor) {
-        if ($revisoresDoEvento->contains($revisor)) {
-          $autorizado = true;
-        }
-      }
-      return $autorizado;
+    public function isRevisor(User $user, Evento $evento)
+    {
+        $usuariosRevisores = Evento::revisors()->distinct()->pluck('user_id');
+
+        return in_array($user->id, $usuariosRevisores);
     }
 
-    public function isRevisorComAtribuicao(User $user) {
-      if ($user->revisor->trabalhosAtribuidos != null && count($user->revisor->trabalhosAtribuidos) > 0) {
-        return true;
-      }
-      return false;
+    public function isRevisorComAtribuicao(User $user)
+    {
+        return $user->revisor->trabalhosAtribuidos != null && count($user->revisor->trabalhosAtribuidos) > 0;
     }
 
-    public function isCoordenadorOrComissaoOrganizadora(User $user, Evento $evento) {
-      if ($evento->coordenadorId == $user->id || $evento->usuariosDaComissaoOrganizadora()->where('user_id', $user->id)->first() != null) {
-        return true;
-      }
-      return false;
+    public function isCoordenadorOrComissaoOrganizadora(User $user, Evento $evento)
+    {
+        return $evento->coordenadorId == $user->id || $evento->usuariosDaComissaoOrganizadora()->where('user_id', $user->id)->first() != null;
     }
 
-    public function isCoordenadorOrComissaoCientifica(User $user, Evento $evento) {
-        return ($evento->coordenadorId == $user->id || $evento->usuariosDaComissao()->where('user_id', $user->id)->first() != null);
+    public function isCoordenadorOrComissaoCientifica(User $user, Evento $evento)
+    {
+        return $evento->coordenadorId == $user->id || $evento->usuariosDaComissao()->where('user_id', $user->id)->first() != null;
     }
 
     public function isCoordenadorOrCoordenadorDaComissaoOrganizadora(User $user, Evento $evento)
@@ -103,7 +93,6 @@ class EventoPolicy
         return $evento->userIsCoordComissaoCientifica($user);
     }
 
-
     public function isCoordenadorOrCoordenadorDasComissoes(User $user, Evento $evento)
     {
         return $this->isCoordenador($user, $evento)
@@ -119,6 +108,6 @@ class EventoPolicy
 
     public function isCoordenadorOrComissaoOrRevisorComAtribuicao(User $user, Evento $evento)
     {
-      return $this->isCoordenadorOrComissao($user, $evento ) ||$this->isRevisorComAtribuicao($user);
+        return $this->isCoordenadorOrComissao($user, $evento) || $this->isRevisorComAtribuicao($user);
     }
 }

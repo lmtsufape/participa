@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Submissao;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Submissao\Criterio;
+use App\Models\Submissao\Evento;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\OpcoesCriterio;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class CriteriosController extends Controller
 {
@@ -14,19 +15,17 @@ class CriteriosController extends Controller
     {
         $modalidade = Modalidade::find($request->modalidade);
         $evento = $modalidade->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $validatedData = $request->validate([
             'nomeCriterioUpdate' => ['string'],
             'pesoCriterioUpdate' => ['integer'],
         ]);
-        // dd($request);
-        $quantDeCriterios = (count($request->all())- 3) / 4;
-        // dd($quantDeCriterios);
+        $quantDeCriterios = (count($request->all()) - 3) / 4;
         $c = 0;
         while ($quantDeCriterios != 0) {
-            $criterioCadastrado         = false;
-            $opcoesCriterioCadastrado   = false;
+            $criterioCadastrado = false;
+            $opcoesCriterioCadastrado = false;
 
             if ($request->input('nomeCriterio'.$c) != null && $request->input('pesoCriterio'.$c) != null) {
                 // $validatedData = $request->validate([
@@ -37,9 +36,9 @@ class CriteriosController extends Controller
                 // ]);
 
                 $criterio = new Criterio();
-                $criterio->nome             = $request->input('nomeCriterio'.$c);
-                $criterio->peso             = $request->input('pesoCriterio'.$c);
-                $criterio->modalidadeId     = $request->modalidade;
+                $criterio->nome = $request->input('nomeCriterio'.$c);
+                $criterio->peso = $request->input('pesoCriterio'.$c);
+                $criterio->modalidadeId = $request->modalidade;
                 $criterio->save();
 
                 $criterioCadastrado = true;
@@ -48,9 +47,9 @@ class CriteriosController extends Controller
             if ($request->input('opcaoCriterio_'.$c) != null && $request->input('valor_real_opcao_'.$c) != null) {
                 for ($i = 0; $i < count($request->input('opcaoCriterio_'.$c)); $i++) {
                     $opCriterio = new OpcoesCriterio();
-                    $opCriterio->nome_opcao     = $request->input('opcaoCriterio_'.$c)[$i];
-                    $opCriterio->criterio_id    = $criterio->id;
-                    $opCriterio->valor_real     = $request->input('valor_real_opcao_'.$c)[$i];
+                    $opCriterio->nome_opcao = $request->input('opcaoCriterio_'.$c)[$i];
+                    $opCriterio->criterio_id = $criterio->id;
+                    $opCriterio->valor_real = $request->input('valor_real_opcao_'.$c)[$i];
                     $opCriterio->save();
                 }
                 $opcoesCriterioCadastrado = true;
@@ -64,7 +63,7 @@ class CriteriosController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Critério salvo para a modalidade ' . $modalidade->nome . '.']);
+        return redirect()->back()->with(['mensagem' => 'Critério salvo para a modalidade '.$modalidade->nome.'.']);
     }
 
     public function update(Request $request, $id)
@@ -72,7 +71,7 @@ class CriteriosController extends Controller
         $criterio = Criterio::find($id);
         $modalidade = $criterio->modalidade;
         $evento = $modalidade->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $validatedData = $request->validate([
             'nomeCriterioUpdate' => ['string'],
@@ -93,15 +92,18 @@ class CriteriosController extends Controller
 
         return redirect()->back()->with(['mensagem' => 'Critério salvo com sucesso!']);
     }
+
     public function findCriterio(Request $request)
     {
         $criterio = Criterio::find($request->criterioId);
+
         return $criterio;
     }
 
-    public function destroy($evento_id, $id) {
+    public function destroy($evento_id, $id)
+    {
         $criterio = Criterio::find($id);
-
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', Evento::find($evento_id));
         foreach ($criterio->opcoes as $opcao) {
             $opcao->delete();
         }

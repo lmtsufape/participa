@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Users;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class MembroComissaoController extends Controller
 {
@@ -15,6 +15,7 @@ class MembroComissaoController extends Controller
     public function index()
     {
         $eventos = auth()->user()->membroComissaoEvento;
+
         return view('comissao.home')->with(['eventos' => $eventos]);
     }
 

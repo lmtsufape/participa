@@ -13,21 +13,25 @@ class MemoriaController extends Controller
 {
     public function create(Evento $evento)
     {
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         return view('coordenador.memorias.create', compact('evento'));
     }
 
     public function index(Evento $evento)
     {
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $registros = $evento->memorias;
+
         return view('coordenador.memorias.index', compact('registros', 'evento'));
     }
 
     public function store(MemoriaRequest $request, Evento $evento)
     {
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $validatedData = $request->validated();
-        if($request->has('arquivo')) {
+        if ($request->has('arquivo')) {
             $path = $request->file('arquivo')->store("eventos/$evento->id/registros", 'public');
-            if(!$path) {
+            if (! $path) {
                 return redirect()->back('erro', 'Não foi possível salvar o arquivo enviado');
             }
             $validatedData['arquivo'] = $path;
@@ -41,10 +45,11 @@ class MemoriaController extends Controller
 
     public function update(MemoriaRequest $request, Evento $evento, Memoria $memoria)
     {
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $validatedData = $request->validated();
-        if($request->has('arquivo')) {
+        if ($request->has('arquivo')) {
             $path = $request->file('arquivo')->store("eventos/$evento->id/registros", 'public');
-            if(!$path) {
+            if (! $path) {
                 return redirect()->back('error', 'Não foi possível salvar o arquivo enviado');
             }
             Storage::disk('public')->delete($memoria->arquivo);
@@ -52,16 +57,19 @@ class MemoriaController extends Controller
         }
         $memoria->fill($validatedData);
         $memoria->update();
+
         return redirect()->back()->with(['mensagem' => 'Registro atualizada com sucesso!']);
     }
 
     public function destroy(Request $request)
     {
         $evento = Evento::find($request->evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $memoria = Memoria::find($request->memoria);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         Storage::disk('public')->delete($memoria->arquivo);
         $memoria->delete();
+
         return redirect()->back()->with(['mensagem' => 'Registro excluido com sucesso!']);
     }
 }

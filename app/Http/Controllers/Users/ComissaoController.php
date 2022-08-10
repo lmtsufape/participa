@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers\Users;
 
-use Illuminate\Http\Request;
-use App\Models\Users\User;
-use App\Models\Users\ComissaoEvento;
-use App\Models\Submissao\Evento;
+use App\Http\Controllers\Controller;
+use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Models\Submissao\Area;
-use App\Models\Users\Revisor;
-use App\Models\Submissao\Trabalho;
-use App\Models\Submissao\Atribuicao;
+use App\Models\Submissao\Evento;
 use App\Models\Submissao\FormEvento;
 use App\Models\Submissao\FormSubmTraba;
-use App\Mail\EmailParaUsuarioNaoCadastrado;
+use App\Models\Submissao\Trabalho;
+use App\Models\Users\CoordComissaoCientifica;
+use App\Models\Users\Revisor;
+use App\Models\Users\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use App\Http\Controllers\Controller;
-use App\Models\Users\CoordComissaoCientifica;
 
 class ComissaoController extends Controller
 {
@@ -40,7 +38,8 @@ class ComissaoController extends Controller
         //
     }
 
-    public function informacoes(Request $request) {
+    public function informacoes(Request $request)
+    {
         $evento = Evento::find($request->eventoId);
 
         $areas = Area::where('eventoId', $evento->id)->get();
@@ -53,25 +52,23 @@ class ComissaoController extends Controller
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->where('status', '!=', 'arquivado')->count();
         $trabalhosAvaliados = 0;
         foreach ($trabalhosId as $trabalho) {
-          $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
+            $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
         }
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
         $numeroComissao = count($evento->usuariosDaComissao);
 
-
-
         return view('coordenador.informacoes', [
-                                                    'evento'                  => $evento,
-                                                    'trabalhosEnviados'       => $trabalhosEnviados,
-                                                    'trabalhosArquivados'     => $trabalhosArquivados,
-                                                    'trabalhosAvaliados'      => $trabalhosAvaliados,
-                                                    'trabalhosPendentes'      => $trabalhosPendentes,
-                                                    'numeroRevisores'         => $numeroRevisores,
-                                                    'numeroComissao'          => $numeroComissao,
-
-                                                  ]);
+            'evento'                  => $evento,
+            'trabalhosEnviados'       => $trabalhosEnviados,
+            'trabalhosArquivados'     => $trabalhosArquivados,
+            'trabalhosAvaliados'      => $trabalhosAvaliados,
+            'trabalhosPendentes'      => $trabalhosPendentes,
+            'numeroRevisores'         => $numeroRevisores,
+            'numeroComissao'          => $numeroComissao,
+        ]);
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -85,19 +82,19 @@ class ComissaoController extends Controller
             // 'especProfissional'=>'required|string',
         ]);
 
-        $user = User::where('email',$request->input('emailMembroComissao'))->first();
+        $user = User::where('email', $request->input('emailMembroComissao'))->first();
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
-        if($user == null){
-          $passwordTemporario = Str::random(8);
-          $coord = User::find($evento->coordenadorId);
-          Mail::to($request->emailMembroComissao)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Comissao', $evento->nome, $passwordTemporario, ' ', $coord));
-          $user = User::create([
-            'email' => $request->emailMembroComissao,
-            'password' => bcrypt($passwordTemporario),
-            'usuarioTemp' => true,
-          ]);
+        if ($user == null) {
+            $passwordTemporario = Str::random(8);
+            $coord = User::find($evento->coordenadorId);
+            Mail::to($request->emailMembroComissao)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Comissao', $evento->nome, $passwordTemporario, ' ', $coord));
+            $user = User::create([
+                'email' => $request->emailMembroComissao,
+                'password' => bcrypt($passwordTemporario),
+                'usuarioTemp' => true,
+            ]);
         } else {
             $usuarioDaComissa = $evento->usuariosDaComissao()->where('user_id', $user->id)->first();
             if ($usuarioDaComissa != null) {
@@ -113,7 +110,6 @@ class ComissaoController extends Controller
         // // $comissaoEventos->especProfissional = $request->input('especProfissional');
         // $comissaoEventos->save();
 
-
         $evento = Evento::find($request->input('eventoId'));
         $areas = Area::where('eventoId', $evento->id)->get();
         $revisores = $evento->revisores;
@@ -122,24 +118,26 @@ class ComissaoController extends Controller
         return redirect()->back()->with(['mensagem' => 'Membro da comissão cadastrado com sucesso!']);
     }
 
-
-    public function coordenadorComissao(Request $request){
+    public function coordenadorComissao(Request $request)
+    {
         $evento = Evento::find($request->input('eventoId'));
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $validationData = $request->validate([
             'coordComissaoId' => 'nullable|array',
         ]);
-        if($request->has('coordComissaoId'))
+        if ($request->has('coordComissaoId')) {
             foreach ($validationData['coordComissaoId'] as $id) {
                 CoordComissaoCientifica::firstOrCreate(['user_id' => $id, 'eventos_id' => $evento->id]);
             }
-        else
+        } else {
             $validationData['coordComissaoId'] = [];
-        $idsCoordenadores = $evento->coordComissaoCientifica->map(function($coord){
+        }
+        $idsCoordenadores = $evento->coordComissaoCientifica->map(function ($coord) {
             return $coord->id;
         })->all();
         $removidos = array_diff($idsCoordenadores, $validationData['coordComissaoId']);
         CoordComissaoCientifica::whereIn('user_id', $removidos)->where('eventos_id', $evento->id)->delete();
+
         return redirect()->back()->with(['mensagem' => 'Coordenador da comissão científica salvo com sucesso!']);
     }
 

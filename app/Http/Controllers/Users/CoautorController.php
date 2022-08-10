@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Http\Controllers\Controller;
 use App\Users\Coautor;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 class CoautorController extends Controller
@@ -20,7 +20,7 @@ class CoautorController extends Controller
     }
 
     public function trabalhos()
-    {   
+    {
         // $trabalhos = DB::table('users')
         //                 ->join('coautors', 'users.id', '=', 'coautors.autorId')
         //                 ->join('trabalhos', 'coautors.id', '=', 'orders.user_id')

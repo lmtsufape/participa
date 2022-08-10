@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Inscricao\CampoFormulario;
-use App\Models\Submissao\Evento;
 use App\Models\Inscricao\CategoriaParticipante;
+use App\Models\Submissao\Evento;
+use Illuminate\Http\Request;
 
 class CampoFormularioController extends Controller
 {
@@ -39,7 +39,7 @@ class CampoFormularioController extends Controller
     public function store(Request $request)
     {
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         $validateData = $request->validate([
             'criarCampo'      => 'required',
@@ -53,29 +53,18 @@ class CampoFormularioController extends Controller
         }
 
         $campo = new CampoFormulario();
-
-        $campo->titulo      = $request->titulo_do_campo;
-        $campo->tipo        = $request->tipo_campo;
-        $campo->evento_id   = $evento->id;
-
-        if ($request->input("campo_obrigatório") == "on") {
-            $campo->obrigatorio = true;
-        } else {
-            $campo->obrigatorio = false;
-        }
-        
+        $campo->titulo = $request->titulo_do_campo;
+        $campo->tipo = $request->tipo_campo;
+        $campo->evento_id = $evento->id;
+        $campo->obrigatorio = $request->input('campo_obrigatório') == 'on';
         $campo->save();
-        
-        if ($request->para_todas == "on") {
-            $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
 
-            foreach ($categorias as $categoria) {
-                $campo->categorias()->attach($categoria->id);
-            }
-        } else if ($request->categoria != null) {
-            foreach ($request->categoria as $categoria) {
-                $campo->categorias()->attach($categoria);
-            }
+        if ($request->para_todas == 'on') {
+            $categorias = $evento->categoriasParticipantes->pluck('id');
+            $campo->categorias()->attach($categorias);
+        } elseif ($request->categoria != null) {
+            $categorias = CategoriaParticipante::whereIn('id', $request->categoria)->pluck('id');
+            $campo->categorias()->attach($categorias);
         }
 
         return redirect()->back()->with(['mensagem' => 'Campo salvo com sucesso!']);
@@ -113,7 +102,7 @@ class CampoFormularioController extends Controller
     public function update(Request $request, $id)
     {
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         $validateData = $request->validate([
             'campo_id'        => 'required',
@@ -127,30 +116,15 @@ class CampoFormularioController extends Controller
         }
 
         $campo = CampoFormulario::find($id);
-
-        foreach ($campo->categorias as $categoria) {
-            $campo->categorias()->detach($categoria->id);
-        }
-
-        $campo->titulo      = $request->titulo_do_campo;
-        if ($request->input("campo_obrigatório") == "on") {
-            $campo->obrigatorio = true;
-        } else {
-            $campo->obrigatorio = false;
-        }
-        
+        $campo->titulo = $request->titulo_do_campo;
+        $campo->obrigatorio = $request->input('campo_obrigatório') == 'on';
         $campo->update();
 
-        if ($request->para_todas == "on") {
-            $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
-
-            foreach ($categorias as $categoria) {
-                $campo->categorias()->attach($categoria->id);
-            }
-        } else if ($request->categoria != null) {
-            foreach ($request->categoria as $categoria) {
-                $campo->categorias()->attach($categoria);
-            }
+        if ($request->para_todas == 'on') {
+            $categorias = $evento->categoriasParticipantes->pluck('id');
+            $campo->categorias()->attach($categorias);
+        } elseif ($request->categoria != null) {
+            $campo->categorias()->sync($request->categoria);
         }
 
         return redirect()->back()->with(['mensagem' => 'Campo atualizado com sucesso!']);
@@ -167,16 +141,13 @@ class CampoFormularioController extends Controller
         // Checar erros futuros após a criação da inscrição
         $campo = CampoFormulario::find($id);
         $evento = $campo->evento;
-        $this->authorize('isCoordenadorOrComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
-        if(count($campo->inscricoesFeitas) > 0) {
+        if (count($campo->inscricoesFeitas) > 0) {
             return redirect()->back()->with(['excluirCampoExtra' => 'Não foi possivel excluir, há inscrições realizadas que utilizam o campo.']);
         }
 
-        foreach ($campo->categorias as $categoria) {
-            $campo->categorias()->detach($categoria->id);
-        }
-
+        $campo->categorias()->detach($campo->categorias);
         $campo->delete();
 
         return redirect()->back()->with(['mensagem' => 'Campo extra deletado com sucesso!']);

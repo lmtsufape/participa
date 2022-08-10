@@ -5,59 +5,49 @@ namespace App\Http\Controllers\Submissao;
 use App\Exports\AvaliacoesExport;
 use App\Exports\InscritosExport;
 use App\Exports\TrabalhosExport;
-use App\Models\Submissao\Area;
-use App\Models\Submissao\Atividade;
-use App\Models\Submissao\Evento;
-use App\Models\Users\Coautor;
-use App\Models\Submissao\Criterio;
-use App\Models\Users\Revisor;
-use App\Models\Submissao\Atribuicao;
-use App\Models\Submissao\Modalidade;
-use App\Models\Users\ComissaoEvento;
-use App\Models\Users\User;
-use App\Models\Submissao\Trabalho;
-use App\Models\Submissao\AreaModalidade;
-use App\Models\Submissao\FormEvento;
-use App\Models\Submissao\FormSubmTraba;
-use App\Models\Submissao\RegraSubmis;
-use App\Models\Submissao\TemplateSubmis;
-use App\Models\Inscricao\Inscricao;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use App\Models\Submissao\Endereco;
-use App\Mail\EventoCriado;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
 use App\Http\Requests\UpdateEventoRequest;
+use App\Mail\EventoCriado;
+use App\Models\Inscricao\Inscricao;
+use App\Models\Submissao\Area;
+use App\Models\Submissao\AreaModalidade;
+use App\Models\Submissao\Atividade;
+use App\Models\Submissao\Criterio;
+use App\Models\Submissao\Endereco;
+use App\Models\Submissao\Evento;
 use App\Models\Submissao\Form;
-use App\Models\Submissao\Opcao;
+use App\Models\Submissao\FormEvento;
+use App\Models\Submissao\FormSubmTraba;
+use App\Models\Submissao\Modalidade;
+use App\Models\Submissao\Paragrafo;
 use App\Models\Submissao\Pergunta;
 use App\Models\Submissao\Resposta;
-use App\Models\Submissao\Paragrafo;
-use Illuminate\Http\File;
-use Illuminate\Http\Response;
-use PDF;
-use PhpParser\Node\Expr\AssignOp\Mod;
-use Svg\Gradient\Stop;
+use App\Models\Submissao\Trabalho;
+use App\Models\Users\Coautor;
+use App\Models\Users\ComissaoEvento;
+use App\Models\Users\Revisor;
+use App\Models\Users\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
+use PDF;
 
 // dd($request->all());
 class EventoController extends Controller
 {
     public function index()
     {
-        //
         $eventos = Evento::all();
         // $comissaoEvento = ComissaoEvento::all();
         // $eventos = Evento::where('coordenadorId', Auth::user()->id)->get();
 
         return view('coordenador.home', ['eventos' => $eventos]);
-
     }
 
     public function areaComissao()
@@ -88,7 +78,6 @@ class EventoController extends Controller
 
         $numeroComissao = count($evento->usuariosDaComissao);
 
-
         return view('coordenador.informacoes', [
             'evento' => $evento,
             'trabalhosEnviados' => $trabalhosEnviados,
@@ -97,15 +86,13 @@ class EventoController extends Controller
             'trabalhosPendentes' => $trabalhosPendentes,
             'numeroRevisores' => $numeroRevisores,
             'numeroComissao' => $numeroComissao,
-
         ]);
-
     }
 
     public function definirSubmissoes(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
@@ -113,7 +100,6 @@ class EventoController extends Controller
         return view('coordenador.trabalhos.definirSubmissoes', [
             'evento' => $evento,
         ]);
-
     }
 
     public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
@@ -125,11 +111,11 @@ class EventoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
 
-        $trabalhos = NULL;
+        $trabalhos = null;
 
-        if ($column == "autor") {
+        if ($column == 'autor') {
             //Pela logica da implementacao de status, rascunho eh o parametro para encontrar todos os trabalhos diferentes de arquivado
-            if ($status == "rascunho") {
+            if ($status == 'rascunho') {
                 $trabalhos = collect();
                 foreach ($modalidades as $modalidade) {
                     $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
@@ -137,11 +123,9 @@ class EventoController extends Controller
                             return $trabalho->autor->name;
                         },
                         SORT_REGULAR,
-                        $direction == "desc"));
+                        $direction == 'desc'));
                 }
-
-
-            } else if ($status == "with_revisor") {
+            } elseif ($status == 'with_revisor') {
                 $trabalhos_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
                     ->where('trabalhos.eventoId', $evento->id)
                     ->get('trabalhos.id');
@@ -156,14 +140,14 @@ class EventoController extends Controller
                         return $trabalho->autor->name;
                     },
                         SORT_REGULAR,
-                        $direction == "desc");
+                        $direction == 'desc');
 
                     $trabalhos[$i] = $modalidade;
                 }
                 $trabalhos = $trabalhos->sortBy(function ($modalidade) {
                     return $modalidade->first()->modalidade->nome;
                 });
-            } else if ($status == "no_revisor") {
+            } elseif ($status == 'no_revisor') {
                 $trabalhos_com_revisor_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
                     ->where('trabalhos.eventoId', $evento->id)
                     ->get('trabalhos.id');
@@ -175,7 +159,7 @@ class EventoController extends Controller
                 $trabalhos_sem_revisores_collection = collect();
 
                 foreach ($trabalhos_id as $trabalho) {
-                    if (!$trabalhos_com_revisor_id->contains($trabalho)) {
+                    if (! $trabalhos_com_revisor_id->contains($trabalho)) {
                         $trabalhos_sem_revisores_collection->push($trabalho);
                     }
                 }
@@ -190,7 +174,7 @@ class EventoController extends Controller
                         return $trabalho->autor->name;
                     },
                         SORT_REGULAR,
-                        $direction == "desc");
+                        $direction == 'desc');
 
                     $trabalhos[$i] = $modalidade;
                 }
@@ -207,17 +191,16 @@ class EventoController extends Controller
                             return $trabalho->autor->name;
                         },
                         SORT_REGULAR,
-                        $direction == "desc"));
+                        $direction == 'desc'));
                 }
             }
         } else {
-            if ($status == "rascunho") {
+            if ($status == 'rascunho') {
                 $trabalhos = collect();
                 foreach ($modalidades as $modalidade) {
                     $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get());
                 }
-
-            } else if ($status == "with_revisor") {
+            } elseif ($status == 'with_revisor') {
                 $trabalhos_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
                     ->where('trabalhos.eventoId', $evento->id)
                     ->get('trabalhos.id');
@@ -228,22 +211,22 @@ class EventoController extends Controller
 
                 $trabalhos = $trabalhos->groupBy('modalidadeId');
 
-                if ($column == "titulo") {
+                if ($column == 'titulo') {
                     foreach ($trabalhos as $i => $modalidade) {
                         $modalidade = $modalidade->sortBy(function ($trabalho) {
                             return $trabalho->titulo;
                         },
                             SORT_REGULAR,
-                            $direction == "desc");
+                            $direction == 'desc');
                         $trabalhos[$i] = $modalidade;
                     }
-                } else if ($column == "areaId") {
+                } elseif ($column == 'areaId') {
                     foreach ($trabalhos as $i => $modalidade) {
                         $modalidade = $modalidade->sortBy(function ($trabalho) {
                             return $trabalho->area->nome;
                         },
                             SORT_REGULAR,
-                            $direction == "desc");
+                            $direction == 'desc');
                         $trabalhos[$i] = $modalidade;
                     }
                 }
@@ -251,8 +234,7 @@ class EventoController extends Controller
                 $trabalhos = $trabalhos->sortBy(function ($modalidade) {
                     return $modalidade->first()->modalidade->nome;
                 });
-
-            } else if ($status == "no_revisor") {
+            } elseif ($status == 'no_revisor') {
                 $trabalhos_com_revisor_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
                     ->where('trabalhos.eventoId', $evento->id)
                     ->get('trabalhos.id');
@@ -264,7 +246,7 @@ class EventoController extends Controller
                 $trabalhos_sem_revisores_collection = collect();
 
                 foreach ($trabalhos_id as $trabalho) {
-                    if (!$trabalhos_com_revisor_id->contains($trabalho)) {
+                    if (! $trabalhos_com_revisor_id->contains($trabalho)) {
                         $trabalhos_sem_revisores_collection->push($trabalho);
                     }
                 }
@@ -275,22 +257,22 @@ class EventoController extends Controller
 
                 $trabalhos = $trabalhos->groupBy('modalidadeId');
 
-                if ($column == "titulo") {
+                if ($column == 'titulo') {
                     foreach ($trabalhos as $i => $modalidade) {
                         $modalidade = $modalidade->sortBy(function ($trabalho) {
                             return $trabalho->titulo;
                         },
                             SORT_REGULAR,
-                            $direction == "desc");
+                            $direction == 'desc');
                         $trabalhos[$i] = $modalidade;
                     }
-                } else if ($column == "areaId") {
+                } elseif ($column == 'areaId') {
                     foreach ($trabalhos as $i => $modalidade) {
                         $modalidade = $modalidade->sortBy(function ($trabalho) {
                             return $trabalho->area->nome;
                         },
                             SORT_REGULAR,
-                            $direction == "desc");
+                            $direction == 'desc');
                         $trabalhos[$i] = $modalidade;
                     }
                 }
@@ -298,7 +280,6 @@ class EventoController extends Controller
                 $trabalhos = $trabalhos->sortBy(function ($modalidade) {
                     return $modalidade->first()->modalidade->nome;
                 });
-
             } else {
                 // Como aqui é um else, então $trabalhos nunca vai ser null
                 // Busca os trabalhos da forma como era feita antes
@@ -310,26 +291,23 @@ class EventoController extends Controller
             }
         }
 
-
         return view('coordenador.trabalhos.listarTrabalhos', [
             'evento' => $evento,
             'areas' => $areas,
             'trabalhosPorModalidade' => $trabalhos,
             'agora' => now(),
             'status' => $status,
-
         ]);
-
     }
 
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-        $trabalhos = NULL;
-        if ($column == "autor") {
-            if ($status == "rascunho") {
+        $trabalhos = null;
+        if ($column == 'autor') {
+            if ($status == 'rascunho') {
                 $trabalhos = collect();
                 foreach ($modalidades as $modalidade) {
                     $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
@@ -337,7 +315,7 @@ class EventoController extends Controller
                             return $trabalho->autor->name;
                         },
                         SORT_REGULAR,
-                        $direction == "desc"));
+                        $direction == 'desc'));
                 }
             } else {
                 $trabalhos = collect();
@@ -347,17 +325,16 @@ class EventoController extends Controller
                             return $trabalho->autor->name;
                         },
                         SORT_REGULAR,
-                        $direction == "desc"));
+                        $direction == 'desc'));
                 }
             }
         } else {
-            if ($status == "rascunho") {
+            if ($status == 'rascunho') {
                 $trabalhos = collect();
                 foreach ($modalidades as $modalidade) {
                     //dd($modalidadeId->id);
                     $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get());
                 }
-
             } else {
                 $trabalhos = collect();
                 foreach ($modalidades as $modalidade) {
@@ -365,6 +342,7 @@ class EventoController extends Controller
                 }
             }
         }
+
         return view(
             'coordenador.trabalhos.listarRespostas',
             [
@@ -377,23 +355,22 @@ class EventoController extends Controller
     public function listarTrabalhosModalidades(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $modalidade = Modalidade::find($request->modalidadeId);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
 
+        $trabalhos = null;
 
-        $trabalhos = NULL;
-
-        if ($column == "autor") {
+        if ($column == 'autor') {
             //Pela logica da implementacao de status, rascunho eh o parametro para encontrar todos os trabalhos diferentes de arquivado
-            if ($status == "rascunho") {
+            if ($status == 'rascunho') {
                 $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', 'arquivado'], ['modalidadeId', $request->modalidadeId]])->get()->sortBy(
                     function ($trabalho) {
                         return $trabalho->autor->name;
                     },
                     SORT_REGULAR,
-                    $direction == "desc");
+                    $direction == 'desc');
             } else {
                 // Não tem como ordenar os trabalhos por nome do autor automaticamente
                 // Já que na tabale a de trabalhos não existe o nome do autor
@@ -402,10 +379,10 @@ class EventoController extends Controller
                         return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
                     },
                     SORT_REGULAR, // Usa o método padrão de ordenação
-                    $direction == "desc"); // Se true, então ordena decrescente
+                    $direction == 'desc'); // Se true, então ordena decrescente
             }
         } else {
-            if ($status == "rascunho") {
+            if ($status == 'rascunho') {
                 $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', 'arquivado'], ['modalidadeId', $request->modalidadeId]])->orderBy($column, $direction)->get();
             } else {
                 // Como aqui é um else, então $trabalhos nunca vai ser null
@@ -413,15 +390,14 @@ class EventoController extends Controller
                 $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId]])->orderBy($column, $direction)->get();
             }
         }
+
         return view('coordenador.trabalhos.listarTrabalhosModalidades', [
             'evento' => $evento,
             'areas' => $areas,
             'trabalhos' => $trabalhos,
             'agora' => now(),
             'modalidade' => $modalidade,
-
         ]);
-
     }
 
     public function cadastrarComissao(Request $request)
@@ -431,12 +407,9 @@ class EventoController extends Controller
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
-
         return view('coordenador.comissao.cadastrarComissao', [
             'evento' => $evento,
-
         ]);
-
     }
 
     public function cadastrarAreas(Request $request)
@@ -446,12 +419,9 @@ class EventoController extends Controller
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
 
-
         return view('coordenador.areas.cadastrarAreas', [
             'evento' => $evento,
-
         ]);
-
     }
 
     public function listarAreas(Request $request)
@@ -460,10 +430,10 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $areas = $areas->sortBy('nome', SORT_NATURAL)->values()->all();
+
         return view('coordenador.areas.listarAreas', [
             'evento' => $evento,
             'areas' => $areas,
-
         ]);
     }
 
@@ -475,14 +445,13 @@ class EventoController extends Controller
         //             'modalidades'             => $modalidades,
 
         //           ]);
-
     }
 
     public function listarRevisores(Request $request)
     {
         $evento = Evento::find($request->eventoId);
 
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $revisores = User::join('revisors', 'users.id', '=', 'revisors.user_id')->where('revisors.evento_id', '=', $evento->id)->selectRaw('DISTINCT users.*')->get()->sortBy(
             function ($revisor) {
                 return $revisor->name;
@@ -490,7 +459,7 @@ class EventoController extends Controller
             SORT_REGULAR);
         // $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
         $contadores = DB::table('revisors AS r')
-            ->select(array('r.user_id', 't.avaliado', DB::raw('COUNT(r.user_id) AS count')))
+            ->select(['r.user_id', 't.avaliado', DB::raw('COUNT(r.user_id) AS count')])
             ->join('atribuicaos AS a', 'r.id', 'a.revisor_id')
             ->join('trabalhos AS t', 't.id', 'a.trabalho_id')
             ->where('r.evento_id', $evento->id)
@@ -507,7 +476,6 @@ class EventoController extends Controller
             'modalidades' => $modalidades,
             'contadores' => $contadores,
         ]);
-
     }
 
     public function listarUsuarios(Request $request)
@@ -517,18 +485,17 @@ class EventoController extends Controller
         $usuarios = User::doesntHave('administradors')->get();
 
         return view('coordenador.revisores.listarUsuarios', compact('usuarios', 'evento'));
-
     }
 
     public function definirCoordComissao(Request $request)
     {
         $evento = Evento::find($request->eventoId);
 
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $users = $evento->usuariosDaComissao;
         $coordenadores = $evento->coordComissaoCientifica->pluck('id')->all();
-        return view('coordenador.comissao.definirCoordComissao', compact('evento', 'users', 'coordenadores'));
 
+        return view('coordenador.comissao.definirCoordComissao', compact('evento', 'users', 'coordenadores'));
     }
 
     public function listarComissao(Request $request)
@@ -538,25 +505,22 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $users = $evento->usuariosDaComissao;
 
-
         return view('coordenador.comissao.listarComissao', [
             'evento' => $evento,
             'users' => $users,
-
         ]);
-
     }
 
     public function exportInscritos(Evento $evento, Request $request)
     {
-        return (new InscritosExport($evento))->download($evento->nome . '.csv', \Maatwebsite\Excel\Excel::CSV, [
+        return (new InscritosExport($evento))->download($evento->nome.'.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
     }
 
     public function exportTrabalhos(Evento $evento)
     {
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $trabalhos = Trabalho::where('eventoId', $evento->id)
             ->get()->map(function ($trabalho) {
                 return [
@@ -571,31 +535,32 @@ class EventoController extends Controller
                     $this->coautoresToString($trabalho, 'celular'),
                 ];
             })->collect();
-        return (new TrabalhosExport($trabalhos))->download($evento->nome . '- Trabalhos.csv', \Maatwebsite\Excel\Excel::CSV, [
+
+        return (new TrabalhosExport($trabalhos))->download($evento->nome.'- Trabalhos.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
     }
 
     private function coautoresToString(Trabalho $trabalho, $campo)
     {
-        $stringRetorno = "";
+        $stringRetorno = '';
 
         if ($campo == 'nome') {
             foreach ($trabalho->coautors as $coautor) {
                 if ($coautor->user->id != $trabalho->autorId) {
-                    $stringRetorno .= $coautor->user->name . ", ";
+                    $stringRetorno .= $coautor->user->name.', ';
                 }
             }
         } elseif ($campo == 'email') {
             foreach ($trabalho->coautors as $coautor) {
                 if ($coautor->user->id != $trabalho->autorId) {
-                    $stringRetorno .= $coautor->user->email . ", ";
+                    $stringRetorno .= $coautor->user->email.', ';
                 }
             }
         } elseif ($campo == 'celular') {
             foreach ($trabalho->coautors as $coautor) {
                 if ($coautor->user->id != $trabalho->autorId) {
-                    $stringRetorno .= $coautor->user->celular . ", ";
+                    $stringRetorno .= $coautor->user->celular.', ';
                 }
             }
         }
@@ -605,7 +570,7 @@ class EventoController extends Controller
 
     public function exportAvaliacoes(Evento $evento, Modalidade $modalidade, Form $form)
     {
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $trabalhosCollect = collect();
         Trabalho::where([['eventoId', $evento->id], ['modalidadeId', $modalidade->id]])
             ->get()
@@ -619,11 +584,11 @@ class EventoController extends Controller
                 }
             })->collect();
         $trabalhosCollect = $trabalhosCollect->filter();
-        return (new AvaliacoesExport($trabalhosCollect, $this->makeHeadingsExportAvaliacoes($form)))->download($evento->nome . ' - Avaliacões - ' . $modalidade->nome . ' - ' . $form->titulo . '.csv', \Maatwebsite\Excel\Excel::CSV, [
+
+        return (new AvaliacoesExport($trabalhosCollect, $this->makeHeadingsExportAvaliacoes($form)))->download($evento->nome.' - Avaliacões - '.$modalidade->nome.' - '.$form->titulo.'.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
     }
-
 
     private function makeHeadingsExportAvaliacoes($form)
     {
@@ -648,7 +613,7 @@ class EventoController extends Controller
         if ($revisor != null) {
             array_push($retorno, $revisor->user->name);
         } else {
-            array_push($retorno, "Sem avaliador");
+            array_push($retorno, 'Sem avaliador');
         }
         array_push($retorno, $trabalho->titulo);
 
@@ -659,15 +624,15 @@ class EventoController extends Controller
             }
         }
 
-        $vazio = False;
+        $vazio = false;
 
         foreach ($form->perguntas as $index => $pergunta) {
-            $achou = False;
+            $achou = false;
             if ($pergunta->respostas->first()->opcoes->count()) {
                 foreach ($pergunta->respostas->first()->opcoes as $opcao) {
                     if (count($respostas) > $index && $respostas[$index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo)) {
                         array_push($retorno, $respostas[$index]->opcoes[0]->titulo);
-                        $achou = True;
+                        $achou = true;
                     }
                 }
             } elseif ($pergunta->respostas->first()->paragrafo != null) {
@@ -676,22 +641,23 @@ class EventoController extends Controller
                         if ($revisor != null) {
                             if ($resposta->revisor->user_id == $revisor->user->id && $resposta->trabalho->id == $trabalho->id) {
                                 array_push($retorno, $resposta->paragrafo->resposta);
-                                $achou = True;
+                                $achou = true;
                             }
                         } else {
-                            array_push($retorno, "Sem resposta");
+                            array_push($retorno, 'Sem resposta');
                         }
                     }
                 }
                 if ($pergunta->respostas->first() == null) {
-                    array_push($retorno, "Sem resposta");
+                    array_push($retorno, 'Sem resposta');
                 }
             }
             $vazio = $vazio || $achou;
         }
-        if ($vazio == False) {
+        if ($vazio == false) {
             return [];
         }
+
         return $retorno;
     }
 
@@ -706,9 +672,7 @@ class EventoController extends Controller
             'evento' => $evento,
             'areas' => $areas,
             'modalidades' => $modalidades,
-
         ]);
-
     }
 
     public function listarModalidade(Request $request)
@@ -719,20 +683,17 @@ class EventoController extends Controller
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
 
-
         return view('coordenador.modalidade.listarModalidade', [
             'evento' => $evento,
             'modalidades' => $modalidades,
             // 'areaModalidades'         => $areaModalidades,
-
         ]);
-
     }
 
     public function listarCorrecoes(Request $request, $column = 'titulo', $direction = 'asc')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
@@ -763,7 +724,7 @@ class EventoController extends Controller
                             }
                         },
                         SORT_REGULAR,
-                        $direction == "asc"));
+                        $direction == 'asc'));
                 }
                 $trabalhos->push($trabalhosArea);
             }
@@ -771,33 +732,29 @@ class EventoController extends Controller
 
         //dd($trabalhos);
 
-
         return view('coordenador.trabalhos.listarTrabalhosCorrecoes', [
             'evento' => $evento,
             'trabalhosPorModalidade' => $trabalhos,
             'agora' => now(),
         ]);
-
     }
 
     public function cadastrarCriterio(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $modalidades = Modalidade::where('evento_id', $evento->id)->get();
 
         return view('coordenador.modalidade.cadastrarCriterio', [
             'evento' => $evento,
             'modalidades' => $modalidades,
-
         ]);
-
     }
 
     public function listarCriterios(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
         $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
@@ -805,9 +762,9 @@ class EventoController extends Controller
         // Criterios por modalidades
         $criteriosModalidade = [];
         foreach ($modalidades as $indice) {
-            $criterios = Criterio::where("modalidadeId", $indice->id)->orderBy('nome')->get();
+            $criterios = Criterio::where('modalidadeId', $indice->id)->orderBy('nome')->get();
             for ($i = 0; $i < count($criterios); $i++) {
-                if (!in_array($criterios[$i], $criteriosModalidade)) {
+                if (! in_array($criterios[$i], $criteriosModalidade)) {
                     array_push($criteriosModalidade, $criterios[$i]);
                 }
             }
@@ -818,13 +775,12 @@ class EventoController extends Controller
             'modalidades' => $modalidades,
             'criterios' => $criteriosModalidade,
         ]);
-
     }
 
     public function forms(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
 
@@ -832,34 +788,32 @@ class EventoController extends Controller
             'evento',
             'modalidades'
         ));
-
     }
 
     public function atribuirForm(Request $request)
     {
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $modalidade = Modalidade::find($request->modalidade_id);
 
         return view('coordenador.modalidade.atribuirFormulario', compact('evento', 'modalidade'));
-
     }
 
     public function salvarForm(Request $request)
     {
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $modalidade = Modalidade::find($request->modalidade_id);
         $data = $request->all();
         $form = $modalidade->forms()->create([
-            'titulo' => $data['titulo']
+            'titulo' => $data['titulo'],
         ]);
         foreach ($data['perguntas'] as $index => $value) {
             $pergunta = $form->perguntas()->create([
                 'pergunta' => $value,
-                'visibilidade' => $request->has("visibilidades") && array_key_exists($index, $request['visibilidades']),
+                'visibilidade' => $request->has('visibilidades') && array_key_exists($index, $request['visibilidades']),
             ]);
 
             $resposta = new Resposta();
@@ -878,22 +832,21 @@ class EventoController extends Controller
                 }
             }
         }
-        return view('coordenador.modalidade.atribuirFormulario', compact('evento','modalidade'))->with('message', 'Formulário cadastrado com sucesso');
+
+        return view('coordenador.modalidade.atribuirFormulario', compact('evento', 'modalidade'))->with('message', 'Formulário cadastrado com sucesso');
     }
 
     public function updateForm(Request $request)
     {
         $form = Form::find($request->formEditId);
         $evento = $form->modalidade->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $data = $request->all();
         //dd($data);
         $perguntasMantidas = [];
 
-
-        if(!isset($request->pergunta_id))
-        {
+        if (! isset($request->pergunta_id)) {
             return redirect()->back()->withErrors(['excluirFormulario' => 'Não é possivel apagar todas as perguntas!!']);
         }
 
@@ -901,7 +854,7 @@ class EventoController extends Controller
             foreach ($request->pergunta_id as $key => $pergunta_id) {
                 $pergunta = Pergunta::find($pergunta_id);
                 $pergunta->pergunta = $request->pergunta[$key];
-                if (isset($data['checkboxVisibilidade_' . $pergunta->id])) {
+                if (isset($data['checkboxVisibilidade_'.$pergunta->id])) {
                     $pergunta->visibilidade = true;
                 } else {
                     $pergunta->visibilidade = false;
@@ -909,14 +862,13 @@ class EventoController extends Controller
                 $pergunta->update();
 
                 array_push($perguntasMantidas, $pergunta->id);
-
             }
         }
 
         $perguntas = Pergunta::where('form_id', $data['formEditId'])->get();
 
         foreach ($perguntas as $pergunta) {
-            if (!in_array($pergunta->id, $perguntasMantidas)) {
+            if (! in_array($pergunta->id, $perguntasMantidas)) {
                 $pergunta->delete();
             }
         }
@@ -939,22 +891,21 @@ class EventoController extends Controller
                     if ($data['tipo'][$i] == 'paragrafo') {
                         $paragrafo = new Paragrafo();
                         $resposta->paragrafo()->save($paragrafo);
-                    } else if ($data['tipo'][$i] == 'checkbox') {
+                    } elseif ($data['tipo'][$i] == 'checkbox') {
                         $listResposta = array_shift($data['tituloCheckoxMarc']);
                         foreach (array_shift($data['tituloCheckox']) as $key => $titulo) {
                             $resposta->opcoes()->create([
                                 'titulo' => $titulo,
                                 'tipo' => 'radio',
-                                'check' => $listResposta[$key]
+                                'check' => $listResposta[$key],
                             ]);
                         }
                     }
-
                 }
             }
         }
 
-        $form->titulo = $data['titulo' . $form->id];
+        $form->titulo = $data['titulo'.$form->id];
         $form->update();
 
         return redirect()->back()->with(['mensagem' => 'Formulário editado com sucesso!']);
@@ -964,7 +915,7 @@ class EventoController extends Controller
     {
         $form = Form::find($id);
         $evento = $form->modalidade->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $temRespostas = false;
         foreach ($form->perguntas as $pergunta) {
@@ -984,8 +935,9 @@ class EventoController extends Controller
         }
         //dd($temRespostas);
 
-        if (!$temRespostas) {
+        if (! $temRespostas) {
             $form->delete();
+
             return redirect()->back()->with(['mensagem' => 'Formulário excluído com sucesso!']);
         } else {
             return redirect()->back()->withErrors(['excluirFormulario' => 'Não é possível excluir. Existem respostas submetidas ligadas a este formulário.']);
@@ -995,14 +947,13 @@ class EventoController extends Controller
     public function visualizarForm(Request $request)
     {
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $modalidade = Modalidade::find($request->modalidade_id);
         // $form = $modalidade->forms;
         $data = $request->all();
 
         return view('coordenador.modalidade.visualizarFormulario', compact('evento', 'modalidade'));
-
     }
 
     public function respostas(Request $request)
@@ -1013,27 +964,27 @@ class EventoController extends Controller
         $data = $request->all();
 
         return view('coordenador.modalidade.visualizarRespostas', compact('evento', 'modalidade'));
-
     }
 
     public function respostasToPdf(Modalidade $modalidade)
     {
         $evento = $modalidade->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $pdf = PDF::loadView('coordenador.modalidade.respostasPdf', ['modalidade' => $modalidade])->setOptions(['defaultFont' => 'sans-serif']);
+
         return $pdf->stream("respostas-{$modalidade->nome}.pdf");
     }
 
     public function resumosToPdf(Evento $evento, Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-        $trabalhos = NULL;
+        $trabalhos = null;
 
-        if ($column == "autor") {
+        if ($column == 'autor') {
             //Pela logica da implementacao de status, rascunho eh o parametro para encontrar todos os trabalhos diferentes de arquivado
-            if ($status == "rascunho") {
+            if ($status == 'rascunho') {
                 //dd($modalidadesId);
                 $trabalhos = collect();
                 foreach ($modalidades as $modalidade) {
@@ -1042,10 +993,8 @@ class EventoController extends Controller
                             return $trabalho->autor->name;
                         },
                         SORT_REGULAR,
-                        $direction == "desc"));
+                        $direction == 'desc'));
                 }
-
-
             } else {
                 // Não tem como ordenar os trabalhos por nome do autor automaticamente
                 // Já que na tabale a de trabalhos não existe o nome do autor
@@ -1059,18 +1008,17 @@ class EventoController extends Controller
                             return $trabalho->autor->name;
                         },
                         SORT_REGULAR,
-                        $direction == "desc"));
+                        $direction == 'desc'));
                 }
                 dd($trabalhos);
             }
         } else {
-            if ($status == "rascunho") {
+            if ($status == 'rascunho') {
                 $trabalhos = collect();
                 foreach ($modalidades as $modalidade) {
                     //dd($modalidadeId->id);
                     $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get());
                 }
-
             } else {
                 // Como aqui é um else, então $trabalhos nunca vai ser null
                 // Busca os trabalhos da forma como era feita antes
@@ -1083,56 +1031,57 @@ class EventoController extends Controller
         }
 
         $pdf = PDF::loadView('coordenador.trabalhos.resumosPdf', ['trabalhosPorModalidade' => $trabalhos, 'evento' => $evento])->setOptions(['defaultFont' => 'sans-serif']);
+
         return $pdf->download("resumos - {$evento->nome}.pdf");
     }
 
     public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         // $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
 
+        $trabalhos = null;
 
-        $trabalhos = NULL;
-
-        if ($column == "autor") {
-            if ($status == "rascunho") {
+        if ($column == 'autor') {
+            if ($status == 'rascunho') {
                 $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '!=', 'arquivado']])->get()->sortBy(
                     function ($trabalho) {
                         return $trabalho->autor->name;
                     },
                     SORT_REGULAR,
-                    $direction == "desc");
+                    $direction == 'desc');
             } else {
                 $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '=', 'arquivado']])->get()->sortBy(
                     function ($trabalho) {
                         return $trabalho->autor->name;
                     },
                     SORT_REGULAR,
-                    $direction == "desc");
+                    $direction == 'desc');
             }
         } else {
-            if ($status == "rascunho") {
+            if ($status == 'rascunho') {
                 $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get();
             } else {
                 $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '=', $status]])->orderBy($column, $direction)->get();
             }
         }
+
         return view('coordenador.trabalhos.listarRespostasTrabalhos', [
             'evento' => $evento,
             'areas' => $areas,
             'trabalhos' => $trabalhos,
             'agora' => now(),
-
         ]);
     }
 
     public function visualizarRespostaFormulario(Request $request)
     {
         $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $modalidade = Modalidade::find($request->modalidadeId);
         $trabalho = Trabalho::find($request->trabalhoId);
         $revisor = Revisor::find($request->revisorId);
@@ -1140,8 +1089,8 @@ class EventoController extends Controller
         $respostas = collect();
 
         $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first();
-        if($arquivoAvaliacao == null){
-            $permissoes_revisao = Revisor::where([['user_id', $revisor->user_id], ['evento_id', $evento->id]])->get()->map->only(['id']);;
+        if ($arquivoAvaliacao == null) {
+            $permissoes_revisao = Revisor::where([['user_id', $revisor->user_id], ['evento_id', $evento->id]])->get()->map->only(['id']);
             $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->whereIn('revisorId', $permissoes_revisao)->first();
         }
 
@@ -1152,7 +1101,6 @@ class EventoController extends Controller
         }
         //   dd($respostas, $trabalho->id, $revisor->id, $modalidade->id);
         return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'respostas', 'arquivoAvaliacao'));
-
     }
 
     public function editarEtiqueta(Request $request)
@@ -1165,9 +1113,9 @@ class EventoController extends Controller
         // Criterios por modalidades
         $criteriosModalidade = [];
         foreach ($modalidades as $indice) {
-            $criterios = Criterio::where("modalidadeId", $indice->id)->get();
+            $criterios = Criterio::where('modalidadeId', $indice->id)->get();
             for ($i = 0; $i < count($criterios); $i++) {
-                if (!in_array($criterios[$i], $criteriosModalidade)) {
+                if (! in_array($criterios[$i], $criteriosModalidade)) {
                     array_push($criteriosModalidade, $criterios[$i]);
                 }
             }
@@ -1179,7 +1127,6 @@ class EventoController extends Controller
             'etiquetasSubTrab' => $etiquetasSubTrab,
             'criterios' => $criteriosModalidade,
         ]);
-
     }
 
     public function etiquetasTrabalhos(Request $request)
@@ -1192,9 +1139,9 @@ class EventoController extends Controller
         // Criterios por modalidades
         $criteriosModalidade = [];
         foreach ($modalidades as $indice) {
-            $criterios = Criterio::where("modalidadeId", $indice->id)->get();
+            $criterios = Criterio::where('modalidadeId', $indice->id)->get();
             for ($i = 0; $i < count($criterios); $i++) {
-                if (!in_array($criterios[$i], $criteriosModalidade)) {
+                if (! in_array($criterios[$i], $criteriosModalidade)) {
                     array_push($criteriosModalidade, $criterios[$i]);
                 }
             }
@@ -1206,7 +1153,6 @@ class EventoController extends Controller
             'etiquetasSubTrab' => $etiquetasSubTrab,
             'criterios' => $criteriosModalidade,
         ]);
-
     }
 
     /**
@@ -1223,6 +1169,7 @@ class EventoController extends Controller
     {
         $eventoPai = Evento::find($id);
         $this->authorize('isCoordenador', $eventoPai);
+
         return view('evento.criarEvento', compact('eventoPai'));
     }
 
@@ -1259,7 +1206,7 @@ class EventoController extends Controller
         }
 
         $user = Auth::user();
-        $subject = "Evento Criado";
+        $subject = 'Evento Criado';
         Mail::to($user->email)->send(new EventoCriado($user, $subject, $evento));
 
         $FormEvento = FormEvento::create([
@@ -1269,18 +1216,20 @@ class EventoController extends Controller
             'eventoId' => $evento->id,
         ]);
 
-        return redirect()->route('home')->with(['message' => "Evento criado com sucesso!"]);
+        return redirect()->route('home')->with(['message' => 'Evento criado com sucesso!']);
     }
 
     public function uploadFile($request, $evento)
     {
         if ($request->hasFile('fotoEvento')) {
             $file = $request->fotoEvento;
-            $path = 'public/eventos/' . $evento->id;
+            $path = 'public/eventos/'.$evento->id;
             $nome = $request->file('fotoEvento')->getClientOriginalName();
             Storage::putFileAs($path, $file, $nome);
-            return 'eventos/' . $evento->id . '/' . $nome;
+
+            return 'eventos/'.$evento->id.'/'.$nome;
         }
+
         return null;
     }
 
@@ -1288,18 +1237,19 @@ class EventoController extends Controller
     {
         if ($request->hasFile('icone')) {
             $file = $request->icone;
-            $path = 'public/eventos/' . $evento->id;
+            $path = 'public/eventos/'.$evento->id;
             $nome = 'icone.'.$request->file('icone')->getClientOriginalExtension();
             Storage::putFileAs($path, $file, $nome);
             $evento->save();
 
-            $file = Image::make(Storage::get('public/eventos/' . $evento->id . '/' . $nome));
+            $file = Image::make(Storage::get('public/eventos/'.$evento->id.'/'.$nome));
             $file->resize(600, 600);
-            Storage::delete('storage/eventos/' . $evento->id . '/' . $nome);
-            $file->save((storage_path('app/'.$path.'/'. $nome)));
+            Storage::delete('storage/eventos/'.$evento->id.'/'.$nome);
+            $file->save((storage_path('app/'.$path.'/'.$nome)));
 
-            return 'eventos/' . $evento->id . '/' . $nome;
+            return 'eventos/'.$evento->id.'/'.$nome;
         }
+
         return null;
     }
 
@@ -1331,7 +1281,6 @@ class EventoController extends Controller
 
             $isInscrito = Inscricao::where('user_id', Auth()->user()->id)->where('evento_id', $evento->id)->count();
 
-
             // if($trabalhosCount != 0){
             //   $hasTrabalho = true;
             //   $hasFile = true;
@@ -1347,8 +1296,9 @@ class EventoController extends Controller
             $formSubTraba = FormSubmTraba::all();
 
             if ($dataInicial == null) {
-                $dataInicial = "";
+                $dataInicial = '';
             }
+
             return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'dataInicial', 'isInscrito', 'subeventos', 'encerrada'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
@@ -1367,8 +1317,9 @@ class EventoController extends Controller
             // dd(false);
             $isInscrito = false;
             if ($dataInicial == null) {
-                $dataInicial = "";
+                $dataInicial = '';
             }
+
             return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'mytime', 'etiquetas', 'formSubTraba', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada'));
         }
     }
@@ -1384,6 +1335,7 @@ class EventoController extends Controller
         $evento = Evento::find($id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $endereco = Endereco::find($evento->enderecoId);
+
         return view('evento.editarEvento', ['evento' => $evento, 'endereco' => $endereco]);
     }
 
@@ -1398,7 +1350,7 @@ class EventoController extends Controller
     {
         // $mytime = Carbon::now('America/Recife');
         // $this->authorize('isCoordenador', $evento);
-        Log::info("Final");
+        Log::info('Final');
         $data = $request->all();
         $evento = Evento::find($id);
         $evento->update($data);
@@ -1411,48 +1363,44 @@ class EventoController extends Controller
         $endereco->update($data);
 
         if ($request->fotoEvento != null) {
-            if (Storage::disk()->exists('public/' . $evento->fotoEvento)) {
-                Storage::delete('storage/' . $evento->fotoEvento);
+            if (Storage::disk()->exists('public/'.$evento->fotoEvento)) {
+                Storage::delete('storage/'.$evento->fotoEvento);
             }
             $file = $request->fotoEvento;
-            $path = 'public/eventos/' . $evento->id;
+            $path = 'public/eventos/'.$evento->id;
             $nome = $request->file('fotoEvento')->getClientOriginalName();
             Storage::putFileAs($path, $file, $nome);
-            $evento->fotoEvento = 'eventos/' . $evento->id . '/' . $nome;
+            $evento->fotoEvento = 'eventos/'.$evento->id.'/'.$nome;
         }
 
         if ($request->icone != null) {
-            if (Storage::disk()->exists('public/' . $evento->icone)) {
-                Storage::delete('storage/' . $evento->icone);
+            if (Storage::disk()->exists('public/'.$evento->icone)) {
+                Storage::delete('storage/'.$evento->icone);
             }
             $file = $request->icone;
-            $path = 'public/eventos/' . $evento->id;
+            $path = 'public/eventos/'.$evento->id;
             $nome = 'icone.'.$request->file('icone')->getClientOriginalExtension();
             Storage::putFileAs($path, $file, $nome);
-            $evento->icone = 'eventos/' . $evento->id . '/' . $nome;
+            $evento->icone = 'eventos/'.$evento->id.'/'.$nome;
 
             $evento->update();
 
-            $file = Image::make(Storage::get('public/' . $evento->icone));
+            $file = Image::make(Storage::get('public/'.$evento->icone));
             $file->resize(600, 600);
-            Storage::delete('storage/' . $evento->icone);
-            $file->save((storage_path('app/'.$path.'/'. $nome)));
-
+            Storage::delete('storage/'.$evento->icone);
+            $file->save((storage_path('app/'.$path.'/'.$nome)));
         }
 
-        if ($request->dataLimiteInscricao != null){
+        if ($request->dataLimiteInscricao != null) {
             $request->validate([
-                'dataLimiteInscricao'   => ['required', 'date']
+                'dataLimiteInscricao'   => ['required', 'date'],
             ]);
             $evento->data_limite_inscricao = $request->dataLimiteInscricao;
         }
 
         $evento->update();
 
-
-        return redirect()->route('home')->with(['message' => "Evento editado com sucesso!"]);
-
-
+        return redirect()->route('home')->with(['message' => 'Evento editado com sucesso!']);
     }
 
     /**
@@ -1502,9 +1450,9 @@ class EventoController extends Controller
 
         $criteriosModalidade = [];
         foreach ($modalidades as $indice) {
-            $criterios = Criterio::where("modalidadeId", $indice->id)->get();
+            $criterios = Criterio::where('modalidadeId', $indice->id)->get();
             for ($i = 0; $i < count($criterios); $i++) {
-                if (!in_array($criterios[$i], $criteriosModalidade)) {
+                if (! in_array($criterios[$i], $criteriosModalidade)) {
                     array_push($criteriosModalidade, $criterios[$i]);
                 }
             }
@@ -1537,7 +1485,7 @@ class EventoController extends Controller
         $validatedData = $request->validate([
             'eventoId' => ['required', 'integer'],
             'trabalhosPorAutor' => ['required', 'integer'],
-            'numCoautor' => ['required', 'integer']
+            'numCoautor' => ['required', 'integer'],
         ]);
 
         $evento->numMaxTrabalhos = $request->trabalhosPorAutor;
@@ -1553,7 +1501,7 @@ class EventoController extends Controller
 
         $validatedData = $request->validate([
             'eventoId' => ['required', 'integer'],
-            'hasResumo' => ['required', 'string']
+            'hasResumo' => ['required', 'string'],
         ]);
         if ($request->hasResumo == 'true') {
             $evento->hasResumo = true;
@@ -1562,6 +1510,7 @@ class EventoController extends Controller
         }
 
         $evento->save();
+
         return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
@@ -1573,37 +1522,41 @@ class EventoController extends Controller
         // dd($request);
         $validatedData = $request->validate([
             'eventoId' => ['required', 'integer'],
-            'fotoEvento' => ['required', 'file', 'mimes:png']
+            'fotoEvento' => ['required', 'file', 'mimes:png'],
         ]);
         $evento->fotoEvento = $this->uploadFile($request, $evento);
         $evento->save();
+
         return redirect()->route('coord.detalhesEvento', ['eventoId' => $request->eventoId]);
     }
 
     public function habilitar($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $evento->publicado = true;
         $evento->update();
+
         return redirect()->back()->with('mensagem', 'O evento foi exposto ao público.');
     }
 
     public function desabilitar($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $evento->publicado = false;
         $evento->update();
+
         return redirect()->back()->with('mensagem', 'O evento foi ocultado ao público.');
     }
 
     public function downloadFotoEvento($id)
     {
         $evento = Evento::find($id);
-        if (Storage::disk()->exists('public/' . $evento->fotoEvento)) {
-            return Storage::download('public/' . $evento->fotoEvento);
+        if (Storage::disk()->exists('public/'.$evento->fotoEvento)) {
+            return Storage::download('public/'.$evento->fotoEvento);
         }
+
         return abort(404);
     }
 
@@ -1613,21 +1566,21 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $request->validate([
-            'pdf_programacao' => ['file', 'mimetypes:application/pdf']
+            'pdf_programacao' => ['file', 'mimetypes:application/pdf'],
         ]);
 
         $formEvento = FormEvento::where('eventoId', $id)->first();
 
         if ($evento->pdf_programacao != null) {
-            Storage::delete('public/' . $evento->pdf_programacao);
+            Storage::delete('public/'.$evento->pdf_programacao);
         }
 
         if ($request->pdf_programacao != null) {
             $file = $request->pdf_programacao;
-            $path = 'public/eventos/' . $evento->id;
+            $path = 'public/eventos/'.$evento->id;
             $nome = '/pdf-programacao.pdf';
             Storage::putFileAs($path, $file, $nome);
-            $evento->pdf_programacao = 'eventos/' . $evento->id . $nome;
+            $evento->pdf_programacao = 'eventos/'.$evento->id.$nome;
             $evento->exibir_calendario_programacao = false;
             $evento->save();
 
@@ -1644,19 +1597,19 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $request->validate([
-            'pdf_arquivo' => ['file', 'mimetypes:application/pdf']
+            'pdf_arquivo' => ['file', 'mimetypes:application/pdf'],
         ]);
 
         if ($evento->pdf_arquivo != null) {
-            Storage::delete('public/' . $evento->pdf_arquivo);
+            Storage::delete('public/'.$evento->pdf_arquivo);
         }
 
         if ($request->pdf_arquivo != null) {
             $file = $request->pdf_arquivo;
-            $path = 'public/eventos/' . $evento->id;
+            $path = 'public/eventos/'.$evento->id;
             $nome = '/pdf-arquivo.pdf';
             Storage::putFileAs($path, $file, $nome);
-            $evento->pdf_arquivo = 'eventos/' . $evento->id . $nome;
+            $evento->pdf_arquivo = 'eventos/'.$evento->id.$nome;
             $evento->save();
         }
 
@@ -1672,49 +1625,50 @@ class EventoController extends Controller
     {
         $eventos = null;
         switch ($request->tipo_busca) {
-            case "nome":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.nome", "ilike", "%" . $request->nome . "%"], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'nome':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%'.$request->nome.'%'], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "tipo":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.tipo", "=", $request->tipo], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'tipo':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.tipo', '=', $request->tipo], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "data_inicio":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.dataInicio", "=", $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'data_inicio':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.dataInicio', '=', $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "data_fim":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'data_fim':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "nome_tipo":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.nome", "ilike", "%" . $request->nome . "%"], ["eventos.tipo", "=", $request->tipo], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'nome_tipo':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%'.$request->nome.'%'], ['eventos.tipo', '=', $request->tipo], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "nome_data_inicio":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.nome", "ilike", "%" . $request->nome . "%"], ["eventos.dataInicio", "=", $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'nome_data_inicio':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%'.$request->nome.'%'], ['eventos.dataInicio', '=', $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "nome_data_fim":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.nome", "ilike", "%" . $request->nome . "%"], ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'nome_data_fim':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%'.$request->nome.'%'], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "tipo_data_inicio":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.tipo", "=", $request->tipo], ["eventos.dataInicio", "=", $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'tipo_data_inicio':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.tipo', '=', $request->tipo], ['eventos.dataInicio', '=', $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "tipo_data_fim":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.tipo", "=", $request->tipo], ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'tipo_data_fim':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.tipo', '=', $request->tipo], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "nome_datas":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.nome", "ilike", "%" . $request->nome . "%"], ["eventos.dataInicio", "=", $request->data_inicio], ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'nome_datas':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%'.$request->nome.'%'], ['eventos.dataInicio', '=', $request->data_inicio], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "tipo_datas":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.tipo", "=", $request->tipo], ["eventos.dataInicio", "=", $request->data_inicio], ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'tipo_datas':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.tipo', '=', $request->tipo], ['eventos.dataInicio', '=', $request->data_inicio], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "datas":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.dataInicio", "=", $request->data_inicio], ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'datas':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.dataInicio', '=', $request->data_inicio], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
-            case "todos":
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([["eventos.nome", "ilike", "%" . $request->nome . "%"], ["eventos.tipo", "=", $request->tipo], ["eventos.dataInicio", "=", $request->data_inicio], ["eventos.dataFim", "=", $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+            case 'todos':
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%'.$request->nome.'%'], ['eventos.tipo', '=', $request->tipo], ['eventos.dataInicio', '=', $request->data_inicio], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
             default:
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where("eventos.nome", "ilike", "%" . $request->nome . "%")->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
+                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where('eventos.nome', 'ilike', '%'.$request->nome.'%')->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
                 break;
         }
+
         return response()->json($eventos);
     }
 }
