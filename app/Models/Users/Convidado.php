@@ -10,7 +10,8 @@ class Convidado extends Model
         'nome', 'email', 'funcao',
     ];
 
-    public function atividade(){
+    public function atividade()
+    {
         return $this->belongsTo('App\Models\Submissao\Atividade', 'atividade_id');
     }
 }

@@ -7,7 +7,6 @@ use App\Rules\MaxTrabalhosAutorUpdate;
 use App\Rules\MaxTrabalhosCoautorUpdate;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class TrabalhoUpdateRequest extends FormRequest
 {
@@ -21,7 +20,7 @@ class TrabalhoUpdateRequest extends FormRequest
         $trabalho = Trabalho::find($this->route('id'));
         $evento = $trabalho->evento;
         $mytime = Carbon::now('America/Recife');
-        if($mytime > $trabalho->modalidade->fimSubmissao){
+        if ($mytime > $trabalho->modalidade->fimSubmissao) {
             return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
         } else {
             return $this->user()->can('isCoordenadorOrComissaoOrAutor', $trabalho);
@@ -37,17 +36,18 @@ class TrabalhoUpdateRequest extends FormRequest
     {
         $id = request()->id;
         $evento = Trabalho::find($id)->evento;
+
         return [
             'trabalhoEditId'                       => ['required'],
-            'nomeTrabalho' . $id                   => ['required', 'string',],
-            'area' . $id                           => ['required', 'integer'],
-            'modalidade' . $id                     => ['required', 'integer'],
-            'resumo' . $id                         => ['nullable', 'string'],
-            'emailCoautor_' . $id                  => ['required', 'array', 'min:1'],
-            'nomeCoautor_' . $id . '.*'            => ['string'],
-            'emailCoautor_' . $id . '.0'           => ['string', new MaxTrabalhosAutorUpdate($evento->numMaxTrabalhos)],
-            'emailCoautor_' . $id . '.*'           => ['string', new MaxTrabalhosCoautorUpdate($evento->numMaxCoautores)],
-            'arquivo' . $id                        => ['nullable', 'file', 'max:2048'],
+            'nomeTrabalho'.$id                   => ['required', 'string'],
+            'area'.$id                           => ['required', 'integer'],
+            'modalidade'.$id                     => ['required', 'integer'],
+            'resumo'.$id                         => ['nullable', 'string'],
+            'emailCoautor_'.$id                  => ['required', 'array', 'min:1'],
+            'nomeCoautor_'.$id.'.*'            => ['string'],
+            'emailCoautor_'.$id.'.0'           => ['string', new MaxTrabalhosAutorUpdate($evento->numMaxTrabalhos)],
+            'emailCoautor_'.$id.'.*'           => ['string', new MaxTrabalhosCoautorUpdate($evento->numMaxCoautores)],
+            'arquivo'.$id                        => ['nullable', 'file', 'max:2048'],
             'campoextra1arquivo'                   => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo'                   => ['nullable', 'file', 'max:2048'],
             'campoextra3arquivo'                   => ['nullable', 'file', 'max:2048'],
@@ -69,9 +69,10 @@ class TrabalhoUpdateRequest extends FormRequest
     public function messages()
     {
         $id = request()->id;
+
         return [
             'arquivo*.max' => 'O tamanho máximo permitido é de 2mb',
-            'emailCoautor_' . $id . '*.required' => 'O trabalho deve conter pelo seu autor.'
+            'emailCoautor_'.$id.'*.required' => 'O trabalho deve conter pelo seu autor.',
         ];
     }
 }

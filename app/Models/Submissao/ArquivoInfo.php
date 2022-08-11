@@ -8,7 +8,8 @@ class ArquivoInfo extends Model
 {
     protected $fillable = ['nome', 'path'];
 
-    public function evento(){
+    public function evento()
+    {
         return $this->belongsTo('App\Models\Submissao\Evento');
     }
 }

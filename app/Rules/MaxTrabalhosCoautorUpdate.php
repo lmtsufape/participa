@@ -6,12 +6,13 @@ use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
 use App\Models\Users\User;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Log;
 
 class MaxTrabalhosCoautorUpdate implements Rule
 {
     private $numCoautores;
+
     private $value;
+
     /**
      * Create a new rule instance.
      *
@@ -35,18 +36,20 @@ class MaxTrabalhosCoautorUpdate implements Rule
      */
     public function passes($attribute, $value)
     {
-        if(str_ends_with($attribute, '0')) {
+        if (str_ends_with($attribute, '0')) {
             return true;
         }
         $user = User::where('email', $value)->first();
-        if($user != null && $this->numCoautores != null && Coautor::where('autorId', $user->id)->first() != null) {
+        if ($user != null && $this->numCoautores != null && Coautor::where('autorId', $user->id)->first() != null) {
             $this->value = $value;
-            $qtd = Coautor::where('autorId', $user->id)->first()->trabalhos()->where('status', '!=','arquivado' )->where('eventoId', 18)->count();
-            if(Coautor::where('autorId', $user->id)->first()->trabalhos->contains(Trabalho::find(request()->id))){
+            $qtd = Coautor::where('autorId', $user->id)->first()->trabalhos()->where('status', '!=', 'arquivado')->where('eventoId', 18)->count();
+            if (Coautor::where('autorId', $user->id)->first()->trabalhos->contains(Trabalho::find(request()->id))) {
                 return $qtd <= $this->numCoautores;
             }
+
             return $qtd < $this->numCoautores;
         }
+
         return true;
     }
 
@@ -57,6 +60,6 @@ class MaxTrabalhosCoautorUpdate implements Rule
      */
     public function message()
     {
-        return 'O coautor '. $this->value .', já atingiu o número máximo de trabalhos em que pode ser coautor.';
+        return 'O coautor '.$this->value.', já atingiu o número máximo de trabalhos em que pode ser coautor.';
     }
 }

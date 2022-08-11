@@ -10,23 +10,28 @@ class CategoriaParticipante extends Model
         'nome', 'valor_total', 'evento_id',
     ];
 
-    public function evento() {
+    public function evento()
+    {
         return $this->belongsTo('App\Models\Submissao\Evento', 'evento_id');
     }
 
-    public function valores() {
+    public function valores()
+    {
         return $this->hasMany('App\Models\Inscricao\ValorCategoria', 'categoria_participante_id');
     }
 
-    public function camposNecessarios() {
+    public function camposNecessarios()
+    {
         return $this->belongsToMany('App\Models\Inscricao\CampoFormulario', 'campo_necessarios', 'categoria_participante_id', 'campo_formulario_id');
     }
 
-    public function promocoes() {
+    public function promocoes()
+    {
         return $this->belongsToMany('App\Models\Inscricao\Promocao', 'exibir_promocaos', 'categoria_participante_id', 'promocao_id');
     }
 
-    public function inscricoes() {
+    public function inscricoes()
+    {
         return $this->hasMany('App\Models\Inscricao\Inscricao', 'categoria_participante_id');
     }
 }

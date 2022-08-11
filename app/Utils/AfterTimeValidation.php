@@ -1,10 +1,11 @@
-<?php namespace App\Utils;
+<?php
 
-use Illuminate\Support\ServiceProvider;
+namespace App\Utils;
+
 use Illuminate\Support\Arr;
 
 class AfterTimeValidation
-{   
+{
     /**
      * Valid after time.
      *
@@ -14,14 +15,13 @@ class AfterTimeValidation
      *
      * @return bool
      */
-
     public function validate($attribute, $value, $parameters)
     {
         $this->requireParameterCount(1, $parameters, 'min_time');
         dd($attribute);
         $valid = $this->validateTime($attribute, $value, $parameters);
 
-        if (!$valid) {
+        if (! $valid) {
             return false;
         }
 
@@ -29,7 +29,7 @@ class AfterTimeValidation
 
         $time = $this->validateTime($parameters[0], $other, []);
 
-        if (!$time) {
+        if (! $time) {
             return false;
         }
 
@@ -51,7 +51,6 @@ class AfterTimeValidation
      *
      * @return string
      */
-
     protected function replaceAfterTime($message, $attribute, $rule, $parameters)
     {
         $other = $this->getDisplayableAttribute($parameters[0]);

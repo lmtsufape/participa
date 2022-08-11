@@ -14,6 +14,7 @@ class MemoriaController extends Controller
     public function create(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+
         return view('coordenador.memorias.create', compact('evento'));
     }
 

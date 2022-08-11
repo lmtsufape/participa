@@ -28,6 +28,7 @@ class TrabalhoPostRequest extends FormRequest
                 return redirect()->route('home');
             }
         }
+
         return 1;
     }
 
@@ -39,8 +40,9 @@ class TrabalhoPostRequest extends FormRequest
     public function rules()
     {
         $evento = Evento::find(request()->eventoId);
+
         return [
-            'nomeTrabalho'       => ['required', 'string',],
+            'nomeTrabalho'       => ['required', 'string'],
             'areaId'             => ['required', 'integer'],
             'modalidadeId'       => ['required', 'integer'],
             'eventoId'           => ['required', 'integer'],
@@ -69,7 +71,7 @@ class TrabalhoPostRequest extends FormRequest
     public function messages()
     {
         return [
-            'arquivo.max' => 'O tamanho máximo permitido é de 2mb'
+            'arquivo.max' => 'O tamanho máximo permitido é de 2mb',
         ];
     }
 

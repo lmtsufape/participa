@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Submissao\Evento;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TipoComissaoRequest extends FormRequest
@@ -17,6 +16,7 @@ class TipoComissaoRequest extends FormRequest
         $evento = $this->route('evento');
         $comissao = $this->route('comissao');
         $loggedUser = auth()->user();
+
         return policy($evento)->isCoordenadorOrCoordenadorDasComissoes($loggedUser, $evento) || policy($comissao)->isCoordenadorDeOutraComissao($loggedUser, $comissao);
     }
 
@@ -28,7 +28,7 @@ class TipoComissaoRequest extends FormRequest
     public function rules()
     {
         return [
-            'nome' => ['required', 'string', 'min:5']
+            'nome' => ['required', 'string', 'min:5'],
         ];
     }
 }

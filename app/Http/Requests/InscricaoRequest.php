@@ -25,7 +25,7 @@ class InscricaoRequest extends FormRequest
     public function rules()
     {
         return [
-            'evento_id' => ['required']
+            'evento_id' => ['required'],
         ];
     }
 }

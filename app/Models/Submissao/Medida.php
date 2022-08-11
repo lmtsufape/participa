@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Medida extends Model
 {
-
     public const TIPO_ENUM = [
         'texto' => 1,
         'data' => 2,
@@ -21,7 +20,7 @@ class Medida extends Model
     ];
 
     protected $fillable = [
-        'x', 'y', 'largura', 'altura', 'fontSize', 'certificado_id', 'assinatura_id', 'tipo'
+        'x', 'y', 'largura', 'altura', 'fontSize', 'certificado_id', 'assinatura_id', 'tipo',
     ];
 
     /**

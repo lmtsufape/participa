@@ -1,6 +1,6 @@
-<?php namespace App\Utils;
+<?php
 
-use Illuminate\Support\ServiceProvider;
+namespace App\Utils;
 
 class TelefoneValidation
 {
@@ -11,6 +11,6 @@ class TelefoneValidation
 
     protected function isValidate($attribute, $value)
     {
-        return preg_match('/^\(\d{2}\)\s?\d{5}-\d{4}$/', $value) > 0; 
+        return preg_match('/^\(\d{2}\)\s?\d{5}-\d{4}$/', $value) > 0;
     }
 }

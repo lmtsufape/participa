@@ -39,7 +39,7 @@ class AtualizarExibirProgramacao extends Command
      */
     public function handle()
     {
-        Evento::whereHas('formEvento', function(Builder $q){
+        Evento::whereHas('formEvento', function (Builder $q) {
             $q->where('exibir_calendario_programacao', false);
         })->update(['exibir_pdf' =>  true]);
     }

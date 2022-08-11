@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -12,8 +11,8 @@ class SubmissaoTrabalho extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
-    public $subject;
 
+    public $subject;
 
     /**
      * Create a new message instance.
@@ -39,6 +38,6 @@ class SubmissaoTrabalho extends Mailable
                     ->markdown('emails.submissaoTrabalho')->with([
                         'user'     => $this->user,
                         'trabalho' => $this->trabalho,
-                    ]);;
+                    ]);
     }
 }

@@ -9,7 +9,9 @@ use Illuminate\Queue\SerializesModels;
 class EmailParecerDisponivel extends Mailable
 {
     use Queueable, SerializesModels;
+
     public $evento;
+
     public $trabalho;
 
     /**
@@ -19,8 +21,8 @@ class EmailParecerDisponivel extends Mailable
      */
     public function __construct($evento, $trabalho)
     {
-      $this->evento      = $evento;
-      $this->trabalho    = $trabalho;
+        $this->evento = $evento;
+        $this->trabalho = $trabalho;
     }
 
     /**
@@ -30,11 +32,11 @@ class EmailParecerDisponivel extends Mailable
      */
     public function build()
     {
-      return  $this->from('lmtsteste@gmail.com', 'Participa ')
-                    ->subject("Sistema Participa - Parecer disponível")
+        return  $this->from('lmtsteste@gmail.com', 'Participa ')
+                    ->subject('Sistema Participa - Parecer disponível')
                     ->markdown('emails.emailParecerDisponivel')->with([
-                      'evento' => $this->evento,
-                      'senha'  => $this->trabalho,
-                  ]);
+                        'evento' => $this->evento,
+                        'senha'  => $this->trabalho,
+                    ]);
     }
 }

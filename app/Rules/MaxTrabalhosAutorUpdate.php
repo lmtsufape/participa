@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use App\Models\Submissao\Trabalho;
-use App\Models\Users\Coautor;
 use App\Models\Users\User;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +10,9 @@ use Illuminate\Support\Facades\Log;
 class MaxTrabalhosAutorUpdate implements Rule
 {
     private $numTrabalhos;
+
     private $value;
+
     /**
      * Create a new rule instance.
      *
@@ -33,15 +34,17 @@ class MaxTrabalhosAutorUpdate implements Rule
     {
         Log::info('attribute autor '.$attribute);
         $user = User::where('email', $value)->first();
-        if($user != null && $this->numTrabalhos != null) {
+        if ($user != null && $this->numTrabalhos != null) {
             $this->value = $value;
             $trabalho = Trabalho::find(request()->id);
-            $qtd = Trabalho::where('eventoId', $trabalho->evento->id)->where('autorId', $user->id)->where('status', '!=','arquivado' )->count();
-            if(Trabalho::where('eventoId', $trabalho->evento->id)->where('autorId', $user->id)->where('status', '!=','arquivado' )->get()->contains($trabalho)){
+            $qtd = Trabalho::where('eventoId', $trabalho->evento->id)->where('autorId', $user->id)->where('status', '!=', 'arquivado')->count();
+            if (Trabalho::where('eventoId', $trabalho->evento->id)->where('autorId', $user->id)->where('status', '!=', 'arquivado')->get()->contains($trabalho)) {
                 return $qtd <= $this->numTrabalhos;
             }
+
             return $qtd < $this->numTrabalhos;
         }
+
         return true;
     }
 
@@ -52,6 +55,6 @@ class MaxTrabalhosAutorUpdate implements Rule
      */
     public function message()
     {
-        return 'O autor '. $this->value .', já atingiu o número máximo de trabalhos em que pode ser autor.';
+        return 'O autor '.$this->value.', já atingiu o número máximo de trabalhos em que pode ser autor.';
     }
 }

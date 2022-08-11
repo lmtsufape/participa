@@ -10,7 +10,8 @@ class ArquivoCorrecao extends Model
         'caminho', 'trabalhoId',
     ];
 
-    public function trabalho(){
+    public function trabalho()
+    {
         return $this->belongsTo('App\Models\Submissao\Trabalho', 'trabalhoId');
     }
 }

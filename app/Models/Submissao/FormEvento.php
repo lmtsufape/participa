@@ -6,14 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class FormEvento extends Model
 {
-
     /**
-    * The attributes that are mass assignable.
-    *
-    * @var array
-    */
-
-
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'etiquetanomeevento', 'etiquetatipoevento', 'etiquetadescricaoevento', 'etiquetadatas',
         'etiquetasubmissoes', 'etiquetabaixarregra', 'etiquetabaixartemplate', 'etiquetaenderecoevento', 'etiquetamoduloinscricao', 'etiquetamoduloprogramacao', 'etiquetamoduloorganizacao',
@@ -21,7 +18,8 @@ class FormEvento extends Model
         'etiquetaarquivo',
     ];
 
-    public function evento(){
+    public function evento()
+    {
         return $this->belongsTo('App\Models\Submissao\Evento', 'eventoId');
     }
 }

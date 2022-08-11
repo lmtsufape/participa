@@ -2,12 +2,10 @@
 
 namespace App\Models\Submissao;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use App\Models\Users\User;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
 use App\Traits\FormatFileNames;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Certificado extends Model
 {
@@ -63,15 +61,17 @@ class Certificado extends Model
         $this->verso = $request['verso'];
         $this->nome = $request['nome'];
         $this->texto = $request['texto'];
-        $this->tipo =  $request['tipo'];
-        $this->data =  $request['data'];
+        $this->tipo = $request['tipo'];
+        $this->data = $request['data'];
         if (array_key_exists('tipo_comissao_id', $request)) {
-            $this->tipo_comissao_id =  $request['tipo_comissao_id'];
+            $this->tipo_comissao_id = $request['tipo_comissao_id'];
         }
-        if (array_key_exists('atividade_id', $request))
-            if($request['atividade_id'] == 0)
+        if (array_key_exists('atividade_id', $request)) {
+            if ($request['atividade_id'] == 0) {
                 $this->atividade_id = null;
-            else
-                $this->atividade_id =  $request['atividade_id'];
+            } else {
+                $this->atividade_id = $request['atividade_id'];
+            }
+        }
     }
 }

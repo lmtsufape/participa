@@ -8,9 +8,10 @@ use Illuminate\Contracts\Validation\Rule;
 
 class MaxTrabalhosCoautor implements Rule
 {
-
     private $numCoautores;
+
     private $value;
+
     /**
      * Create a new rule instance.
      *
@@ -31,11 +32,13 @@ class MaxTrabalhosCoautor implements Rule
     public function passes($attribute, $value)
     {
         $user = User::where('email', $value)->first();
-        if($user != null && $this->numCoautores != null && Coautor::where('autorId', $user->id)->first() != null) {
+        if ($user != null && $this->numCoautores != null && Coautor::where('autorId', $user->id)->first() != null) {
             $this->value = $value;
-            $qtd = Coautor::where('autorId', $user->id)->first()->trabalhos()->where('status', '!=','arquivado' )->where('eventoId', 18)->count();
+            $qtd = Coautor::where('autorId', $user->id)->first()->trabalhos()->where('status', '!=', 'arquivado')->where('eventoId', 18)->count();
+
             return $qtd < $this->numCoautores;
         }
+
         return true;
     }
 
@@ -46,6 +49,6 @@ class MaxTrabalhosCoautor implements Rule
      */
     public function message()
     {
-        return 'O coautor '. $this->value .', já atingiu o número máximo de trabalhos em que pode ser coautor.';
+        return 'O coautor '.$this->value.', já atingiu o número máximo de trabalhos em que pode ser coautor.';
     }
 }

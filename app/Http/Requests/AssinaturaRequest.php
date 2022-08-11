@@ -33,9 +33,9 @@ class AssinaturaRequest extends FormRequest
     public function messages()
     {
         return [
-            'fotoAssinatura.required'     => "A imagem da assinatura é obrigatória",
-            'fotoAssinatura.max'          => "A imagem da assinatura deve ter no máximo 2MB",
-            'fotoAssinatura.mimes'        => "A imagem da assinatura deve ser em um dos formatos permitidos",
+            'fotoAssinatura.required'     => 'A imagem da assinatura é obrigatória',
+            'fotoAssinatura.max'          => 'A imagem da assinatura deve ter no máximo 2MB',
+            'fotoAssinatura.mimes'        => 'A imagem da assinatura deve ser em um dos formatos permitidos',
         ];
     }
 }

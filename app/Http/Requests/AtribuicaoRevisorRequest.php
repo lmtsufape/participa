@@ -33,7 +33,7 @@ class AtribuicaoRevisorRequest extends FormRequest
     {
         return [
             'id.required' => 'Selecione um trabalho.',
-            'eventoId.required' => 'Evento é obrigatório'
+            'eventoId.required' => 'Evento é obrigatório',
         ];
     }
 }

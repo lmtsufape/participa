@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Models\Submissao\Evento;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class UpdateEventoRequest extends FormRequest
 {
@@ -16,6 +15,7 @@ class UpdateEventoRequest extends FormRequest
     public function authorize()
     {
         $evento = Evento::find(request()->id);
+
         return auth()->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
     }
 

@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -12,20 +11,25 @@ class EmailLembrete extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
-    public $subject;
-    public $informacoes;
-    public $trabalhos;
-    public $dataLimite;
-    public $evento;
-    public $coord;
 
+    public $subject;
+
+    public $informacoes;
+
+    public $trabalhos;
+
+    public $dataLimite;
+
+    public $evento;
+
+    public $coord;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $subject, $informacoes = "", $trabalhos = "", $dataLimite = "", $evento, $coord)
+    public function __construct($user, $subject, $informacoes, $trabalhos, $dataLimite, $evento, $coord)
     {
         $this->user = $user;
         $this->subject = $subject;
@@ -34,7 +38,6 @@ class EmailLembrete extends Mailable
         $this->dataLimite = $dataLimite;
         $this->evento = $evento;
         $this->coord = $coord;
-
     }
 
     /**
@@ -62,6 +65,6 @@ class EmailLembrete extends Mailable
                         'dataLimite' => $this->dataLimite,
                         'evento' => $this->evento,
                         'coord' => $this->coord,
-                  ]);
+                    ]);
     }
 }

@@ -34,18 +34,19 @@ class TrabalhoPolicy
     {
         $membro = $trabalho->evento->usuariosDaComissao()->where([['user_id', $user->id], ['evento_id', $trabalho->evento->id]])->first();
         $resultado = false;
-        if($user->id == $trabalho->evento->coordenadorId || !(is_null($membro)))
-        {
+        if ($user->id == $trabalho->evento->coordenadorId || ! (is_null($membro))) {
             $resultado = true;
-        }else if($trabalho->autorId == $user->id && ($trabalho->modalidade->inicioCorrecao <= now() && now() <= $trabalho->modalidade->fimCorrecao)){
+        } elseif ($trabalho->autorId == $user->id && ($trabalho->modalidade->inicioCorrecao <= now() && now() <= $trabalho->modalidade->fimCorrecao)) {
             $resultado = true;
         }
+
         return $resultado;
     }
 
-    public function isCoordenadorOrComissaoOrAutor(User $user, Trabalho $trabalho) 
+    public function isCoordenadorOrComissaoOrAutor(User $user, Trabalho $trabalho)
     {
         $eventoPolicy = new EventoPolicy();
+
         return $this->isAutorTrabalho($user, $trabalho) || $eventoPolicy->isCoordenadorOrComissao($user, $trabalho->evento);
     }
 }

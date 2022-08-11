@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -12,7 +11,9 @@ class SubmissaoTrabalhoNotification extends Notification
     use Queueable;
 
     public $user;
+
     public $subject;
+
     public $trabalho;
 
     /**
@@ -54,7 +55,6 @@ class SubmissaoTrabalhoNotification extends Notification
                     ->line('Acompanhe o calendário do seu evento para estar ciente das próximas etapas.')
                     // ->action('Redefinir Senha', route('password.reset', $this->token))
                     ->markdown('vendor.notifications.email');
-
     }
 
     /**

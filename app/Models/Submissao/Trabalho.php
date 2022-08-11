@@ -10,90 +10,106 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Trabalho extends Model
 {
     use SoftDeletes;
-  /**
-   * The attributes that are mass assignable.
-   *
-   * @var array
-   */
-  // status = ['rascunho','submetido', 'avaliado', 'corrigido','aprovado','reprovado', 'arquivado']
-  protected $fillable = [
-      'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
-      'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
-      'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
-      'campoextra4grande', 'campoextra5grande', 'status'
-  ];
 
-  public function recurso(){
-      return $this->hasMany('App\Models\Submissao\Recurso', 'trabalhoId');
-  }
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    // status = ['rascunho','submetido', 'avaliado', 'corrigido','aprovado','reprovado', 'arquivado']
+    protected $fillable = [
+        'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
+        'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
+        'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
+        'campoextra4grande', 'campoextra5grande', 'status',
+    ];
 
-  public function arquivo(){
-      return $this->hasMany('App\Models\Submissao\Arquivo', 'trabalhoId');
-  }
+    public function recurso()
+    {
+        return $this->hasMany('App\Models\Submissao\Recurso', 'trabalhoId');
+    }
 
-  public function arquivoAvaliacao(){
-    return $this->hasMany('App\Models\Submissao\ArquivoAvaliacao', 'trabalhoId');
-  }
+    public function arquivo()
+    {
+        return $this->hasMany('App\Models\Submissao\Arquivo', 'trabalhoId');
+    }
 
-  public function arquivoCorrecao(){
-    return $this->hasOne('App\Models\Submissao\ArquivoCorrecao', 'trabalhoId');
-  }
+    public function arquivoAvaliacao()
+    {
+        return $this->hasMany('App\Models\Submissao\ArquivoAvaliacao', 'trabalhoId');
+    }
 
-  public function modalidade(){
-      return $this->belongsTo('App\Models\Submissao\Modalidade', 'modalidadeId');
-  }
+    public function arquivoCorrecao()
+    {
+        return $this->hasOne('App\Models\Submissao\ArquivoCorrecao', 'trabalhoId');
+    }
 
-  public function area(){
-      return $this->belongsTo('App\Models\Submissao\Area', 'areaId');
-  }
+    public function modalidade()
+    {
+        return $this->belongsTo('App\Models\Submissao\Modalidade', 'modalidadeId');
+    }
 
-  public function autor(){
-      return $this->belongsTo('App\Models\Users\User', 'autorId');
-  }
+    public function area()
+    {
+        return $this->belongsTo('App\Models\Submissao\Area', 'areaId');
+    }
 
-  public function coautors(){
-      return $this->belongsToMany('App\Models\Users\Coautor', 'coautor_trabalho', 'trabalho_id', 'coautor_id')->orderBy('ordem');
-  }
+    public function autor()
+    {
+        return $this->belongsTo('App\Models\Users\User', 'autorId');
+    }
 
-  public function pareceres(){
-      return $this->hasMany('App\Models\Submissao\Parecer', 'trabalhoId');
-  }
+    public function coautors()
+    {
+        return $this->belongsToMany('App\Models\Users\Coautor', 'coautor_trabalho', 'trabalho_id', 'coautor_id')->orderBy('ordem');
+    }
 
-  public function atribuicoes(){
-      return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
-  }
+    public function pareceres()
+    {
+        return $this->hasMany('App\Models\Submissao\Parecer', 'trabalhoId');
+    }
 
-  public function evento(){
-      return $this->belongsTo('App\Models\Submissao\Evento', 'eventoId');
-  }
+    public function atribuicoes()
+    {
+        return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
+    }
 
-  public function avaliacoes() {
-    return $this->hasMany('App\Models\Submissao\Avaliacao', 'trabalho_id');
-  }
+    public function evento()
+    {
+        return $this->belongsTo('App\Models\Submissao\Evento', 'eventoId');
+    }
 
-  public function respostas() {
-    return $this->hasMany('App\Models\Submissao\Resposta');
-  }
+    public function avaliacoes()
+    {
+        return $this->hasMany('App\Models\Submissao\Avaliacao', 'trabalho_id');
+    }
 
-  public function avaliado(User $user){
-      $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
-      ['modalidadeId', $this->modalidade->id]])->first();
+    public function respostas()
+    {
+        return $this->hasMany('App\Models\Submissao\Resposta');
+    }
 
-      return Resposta::where([['trabalho_id', $this->id], ['revisor_id', $revisor->id]])
+    public function avaliado(User $user)
+    {
+        $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
+            ['modalidadeId', $this->modalidade->id], ])->first();
+
+        return Resposta::where([['trabalho_id', $this->id], ['revisor_id', $revisor->id]])
       ->get()->count() > 0;
-  }
+    }
 
-  public function getParecerAtribuicao(User $user){
-    $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
-    ['modalidadeId', $this->modalidade->id]])->first();
+    public function getParecerAtribuicao(User $user)
+    {
+        $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
+            ['modalidadeId', $this->modalidade->id], ])->first();
 
-    return $this->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->parecer;
-  }
+        return $this->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->parecer;
+    }
 
-  public function getQuantidadeAvaliacoes()
-  {
-    return $this->atribuicoes->map(function($revisor) {
-      return $this->avaliado($revisor->user);
-    })->filter()->count();
-  }
+    public function getQuantidadeAvaliacoes()
+    {
+        return $this->atribuicoes->map(function ($revisor) {
+            return $this->avaliado($revisor->user);
+        })->filter()->count();
+    }
 }

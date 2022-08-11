@@ -10,7 +10,8 @@ class ValorCategoria extends Model
         'porcentagem', 'valor', 'inicio_prazo', 'fim_prazo', 'categoria_participante_id',
     ];
 
-    public function categoria() {
+    public function categoria()
+    {
         return $this->belongsTo('App\Models\Inscricao\CategoriaParticipante', 'categoria_participante_id');
     }
 }

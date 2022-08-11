@@ -40,7 +40,7 @@ class UpdateCertificadoRequest extends FormRequest
     {
         return [
             'tipo_comissao_id' => 'tipo da comissão',
-            'atividade_id' => 'atividade'
+            'atividade_id' => 'atividade',
         ];
     }
 

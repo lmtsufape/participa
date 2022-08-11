@@ -64,7 +64,7 @@ class CupomDeDescontoController extends Controller
 
         if ($request->quantidade == 0) {
             $cupomDeDesconto->quantidade_aplicacao = -1;
-        }  else {
+        } else {
             $cupomDeDesconto->quantidade_aplicacao = $request->quantidade;
         }
         $cupomDeDesconto->inicio = $request->input('início');

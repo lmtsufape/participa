@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('time', '\App\Utils\TimeValidation@validate', 'Hora inválida');
         // Validator::extend('after_time:attribute', '\App\Utils\AfterTimeValidation@validate', ':attribute deve ser em um horário depois do inicio.');
         \PagSeguro\Library::initialize();
-        \PagSeguro\Library::cmsVersion()->setName("Easy")->setRelease("1.0.0");
-        \PagSeguro\Library::moduleVersion()->setName("Easy")->setRelease("1.0.0");
+        \PagSeguro\Library::cmsVersion()->setName('Easy')->setRelease('1.0.0');
+        \PagSeguro\Library::moduleVersion()->setName('Easy')->setRelease('1.0.0');
     }
 }

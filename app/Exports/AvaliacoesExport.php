@@ -9,14 +9,15 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class AvaliacoesExport implements FromCollection, WithHeadings
 {
     use Exportable;
+
     protected $trabalhos;
+
     protected $headings_form;
 
     public function headings(): array
     {
         return $this->headings_form;
     }
-
 
     public function __construct($trabalhos, array $headings_form)
     {
@@ -32,9 +33,9 @@ class AvaliacoesExport implements FromCollection, WithHeadings
     public function getCsvSettings(): array
     {
         return [
-            'delimiter' => ";",
+            'delimiter' => ';',
             'line_ending' => ";\n",
-            'enclosure' => ''
+            'enclosure' => '',
         ];
     }
 }

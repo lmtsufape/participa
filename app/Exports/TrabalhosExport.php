@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class TrabalhosExport implements FromCollection, WithHeadings
 {
     use Exportable;
+
     protected $trabalhos;
 
     public function headings(): array
@@ -22,7 +23,7 @@ class TrabalhosExport implements FromCollection, WithHeadings
             'Telefone',
             'Co-autor(es)',
             'E-mail',
-            'Telefone'
+            'Telefone',
         ];
     }
 
@@ -39,9 +40,9 @@ class TrabalhosExport implements FromCollection, WithHeadings
     public function getCsvSettings(): array
     {
         return [
-            'delimiter' => ";",
+            'delimiter' => ';',
             'line_ending' => ";\n",
-            'enclosure' => ''
+            'enclosure' => '',
         ];
     }
 }

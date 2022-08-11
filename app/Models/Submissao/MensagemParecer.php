@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class MensagemParecer extends Model
 {
-
     protected $fillable = [
         'texto',
         'parecer',
         'evento_id',
         'modalidade_id',
-        'area_id'
+        'area_id',
     ];
+
     public function evento()
     {
         return $this->belongsTo('App\Models\Submissao\Evento');
@@ -24,7 +24,8 @@ class MensagemParecer extends Model
         return $this->belongsTo('App\Models\Submissao\Modalidade');
     }
 
-    public function area(){
+    public function area()
+    {
         return $this->belongsTo('App\Models\Submissao\Area');
     }
 }

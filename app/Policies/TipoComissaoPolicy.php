@@ -13,6 +13,7 @@ class TipoComissaoPolicy
     public function isCoordenadorDeOutraComissao(User $user, TipoComissao $comissao)
     {
         $idsCoordenadores = $comissao->membros()->wherePivot('isCoordenador', true)->get()->pluck('id')->all();
+
         return in_array($user->id, $idsCoordenadores);
     }
 }

@@ -41,17 +41,17 @@ class CertificadoRequest extends FormRequest
     {
         return [
             'tipo_comissao_id' => 'tipo da comissão',
-            'atividade_id' => 'atividade'
+            'atividade_id' => 'atividade',
         ];
     }
 
     public function messages()
     {
         return [
-            'assinaturas.required'     => "Selecione ao menos uma assinatura para o certificado",
-            'fotoCertificado.required' => "A imagem do certificado é obrigatória",
-            'fotoCertificado.max'      => "A imagem do certificado deve ter no máximo 2MB",
-            'fotoCertificado.mimes'    => "A imagem do certificado deve ser em um dos formatos permitidos",
+            'assinaturas.required'     => 'Selecione ao menos uma assinatura para o certificado',
+            'fotoCertificado.required' => 'A imagem do certificado é obrigatória',
+            'fotoCertificado.max'      => 'A imagem do certificado deve ter no máximo 2MB',
+            'fotoCertificado.mimes'    => 'A imagem do certificado deve ser em um dos formatos permitidos',
         ];
     }
 

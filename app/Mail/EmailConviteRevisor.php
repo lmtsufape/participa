@@ -3,24 +3,29 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class EmailConviteRevisor extends Mailable
 {
     use Queueable, SerializesModels;
+
     public $user;
+
     public $subject;
+
     public $informacoes;
+
     public $evento;
+
     public $coord;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $evento, $subject, $coord = "",$informacoes = "")
+    public function __construct($user, $evento, $subject, $coord = '', $informacoes = '')
     {
         $this->user = $user;
         $this->subject = $subject;
@@ -57,6 +62,5 @@ class EmailConviteRevisor extends Mailable
                         'evento'    => $this->evento,
                         'coord'    => $this->coord,
                     ]);
-
     }
 }

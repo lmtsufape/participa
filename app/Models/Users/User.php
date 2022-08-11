@@ -3,12 +3,11 @@
 namespace App\Models\Users;
 
 use App\Models\Submissao\Atividade;
+use App\Models\Submissao\Certificado;
+use App\Notifications\recuperacaoSenha;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\CanResetPassword;
-use App\Notifications\recuperacaoSenha;
-use App\Models\Submissao\Certificado;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -22,7 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name', 'email', 'password', 'cpf', 'instituicao', 'celular',
         'especProfissional', 'enderecoId',
-        'usuarioTemp', 'user_id'
+        'usuarioTemp', 'user_id',
     ];
 
     /**
@@ -43,12 +42,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function trabalho(){
+    public function trabalho()
+    {
         return $this->hasMany('App\Models\Submissao\Trabalho', 'autorId');
     }
 
-
-    public function parecer(){
+    public function parecer()
+    {
         return $this->hasMany('App\Models\Submissao\Parecer', 'revisorId');
     }
 
@@ -56,73 +56,88 @@ class User extends Authenticatable implements MustVerifyEmail
     //     return $this->hasMany('App\Atribuicao', 'revisorId');
     // }
 
-    public function pertence(){
+    public function pertence()
+    {
         return $this->hasMany('App\Models\Submissao\Pertence', 'revisorId');
     }
 
-    public function recurso(){
+    public function recurso()
+    {
         return $this->hasMany('App\Models\Submissao\Recurso', 'comissaoId');
     }
 
-    public function mensagem(){
+    public function mensagem()
+    {
         return $this->hasMany('App\Models\Submissao\Mensagem', 'comissaoId');
     }
 
-    public function endereco(){
+    public function endereco()
+    {
         return $this->belongsTo('App\Models\Submissao\Endereco', 'enderecoId');
     }
 
-
-
-    public function comissaoEvento(){
+    public function comissaoEvento()
+    {
         return $this->hasMany('App\Models\Users\ComissaoEvento');
     }
 
-    public function coautor(){
+    public function coautor()
+    {
         return $this->hasOne('App\Models\Users\Coautor', 'autorId');
     }
 
-    public function revisor(){
+    public function revisor()
+    {
         return $this->hasMany('App\Models\Users\Revisor');
     }
 
-    public function participante(){
+    public function participante()
+    {
         return $this->hasOne('App\Models\Users\Participante');
     }
 
-    public function administradors(){
+    public function administradors()
+    {
         return $this->hasOne('App\Models\Users\Administrador');
     }
 
-    public function coordComissaoCientifica(){
+    public function coordComissaoCientifica()
+    {
         return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_cientificas', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoCientifica');
     }
 
-    public function coordComissaoOrganizadora(){
+    public function coordComissaoOrganizadora()
+    {
         return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_organizadoras', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoOrganizadora');
     }
 
-    function membroComissaoEvento(){
-        return $this->belongsToMany('App\Models\Submissao\Evento','comissao_cientifica_eventos','user_id','evento_id');
+    public function membroComissaoEvento()
+    {
+        return $this->belongsToMany('App\Models\Submissao\Evento', 'comissao_cientifica_eventos', 'user_id', 'evento_id');
     }
 
-    public function coordEvento(){
+    public function coordEvento()
+    {
         return $this->hasOne('App\Models\Users\CoordenadorEvento');
     }
 
-    public function sendPasswordResetNotification($token){
+    public function sendPasswordResetNotification($token)
+    {
         $this->notify(new recuperacaoSenha($token));
     }
 
-    public function membroComissaoOrgaEvento() {
+    public function membroComissaoOrgaEvento()
+    {
         return $this->belongsToMany('App\Models\Submissao\Evento', 'comissao_organizadora_eventos', 'user_id', 'evento_id');
     }
 
-    public function inscricaos() {
+    public function inscricaos()
+    {
         return $this->hasMany('App\Models\Inscricao\Inscricao');
     }
 
-    public function outrasComissoes() {
+    public function outrasComissoes()
+    {
         return $this->belongsToMany('App\Models\Submissao\TipoComissao');
     }
 

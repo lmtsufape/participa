@@ -1,6 +1,6 @@
-<?php namespace App\Utils;
+<?php
 
-use Illuminate\Support\ServiceProvider;
+namespace App\Utils;
 
 class TimeValidation
 {

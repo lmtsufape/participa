@@ -3,9 +3,6 @@
 namespace App\Exports;
 
 use App\Models\Submissao\Atividade;
-use App\Models\Submissao\Evento;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -34,14 +31,12 @@ class AtividadeInscritosExport implements FromCollection, WithHeadings, WithMapp
             'estado',
             'cep',
             'complemento',
-            'pais'
-
+            'pais',
         ];
     }
 
     public function __construct(Atividade $atividade)
     {
-
         $this->atividade = $atividade;
         $this->evento = $atividade->evento()->first();
     }
@@ -63,14 +58,14 @@ class AtividadeInscritosExport implements FromCollection, WithHeadings, WithMapp
             $inscricao->cpf,
             $inscricao->passaporte,
             $inscricao->especProfissional,
-            $inscricao->endereco ? $inscricao->endereco->rua : '' ,
-            $inscricao->endereco ? $inscricao->endereco->numero : '' ,
-            $inscricao->endereco ? $inscricao->endereco->bairro : '' ,
-            $inscricao->endereco ? $inscricao->endereco->cidade : '' ,
-            $inscricao->endereco ? $inscricao->endereco->uf : '' ,
-            $inscricao->endereco ? $inscricao->endereco->cep : '' ,
-            $inscricao->endereco ? $inscricao->endereco->complemento : '' ,
-            $inscricao->endereco ? $inscricao->endereco->pais : '' ,
+            $inscricao->endereco ? $inscricao->endereco->rua : '',
+            $inscricao->endereco ? $inscricao->endereco->numero : '',
+            $inscricao->endereco ? $inscricao->endereco->bairro : '',
+            $inscricao->endereco ? $inscricao->endereco->cidade : '',
+            $inscricao->endereco ? $inscricao->endereco->uf : '',
+            $inscricao->endereco ? $inscricao->endereco->cep : '',
+            $inscricao->endereco ? $inscricao->endereco->complemento : '',
+            $inscricao->endereco ? $inscricao->endereco->pais : '',
         ];
     }
 }

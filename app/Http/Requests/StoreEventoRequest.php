@@ -4,8 +4,8 @@ namespace App\Http\Requests;
 
 use App\Rules\NaoESubEvento;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+
 class StoreEventoRequest extends FormRequest
 {
     /**
@@ -55,7 +55,7 @@ class StoreEventoRequest extends FormRequest
     public function messages()
     {
         return [
-            'termos.required' => 'É necessário concordar com os termos de uso'
+            'termos.required' => 'É necessário concordar com os termos de uso',
         ];
     }
 
@@ -70,5 +70,4 @@ class StoreEventoRequest extends FormRequest
             // 'email' => 'email address',
         ];
     }
-
-    }
+}
