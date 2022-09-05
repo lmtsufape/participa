@@ -87,11 +87,14 @@
                             @foreach ($usuarios as $i => $usuario)
                                 <tr>
                                     <td>
-                                        {{ $usuario->name }}
+                                        @if ($certificado->tipo == $tipos['expositor'])
+                                            {{ $usuario->nome }}
+                                        @else
+                                            {{ $usuario->name }}
+                                        @endif
                                     </td>
                                     <td>
                                         {{ $usuario->email }}
-
                                     </td>
                                     <td>
                                         @switch($certificado->tipo)
@@ -100,7 +103,7 @@
                                             @break
 
                                             @case($tipos['expositor'])
-                                                {{ $palestras->find($usuario->pivot->palestra_id)->nome }}
+                                                {{ $palestras->find($usuario->pivot->palestra_id)->titulo }}
                                             @break
 
                                             @case($tipos['outras_comissoes'])

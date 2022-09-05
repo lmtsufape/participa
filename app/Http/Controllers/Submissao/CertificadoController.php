@@ -717,6 +717,7 @@ class CertificadoController extends Controller
                 break;
             case Certificado::TIPO_ENUM['expositor']:
                 $palestras = Palestra::find($certificado->usuarios->pluck('pivot.palestra_id'));
+                $usuarios = $certificado->usuariosPalestrantes;
                 break;
             case Certificado::TIPO_ENUM['outras_comissoes']:
                 $usuario = $certificado->usuarios->first();
