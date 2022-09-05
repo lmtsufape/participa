@@ -535,7 +535,7 @@ class CertificadoController extends Controller
                 if ($request->atividade == '0') {
                     $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['inscrito_atividade']]])->whereNull('atividade_id')->get();
                 } else {
-                    $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['inscrito_atividade']], ['atividade_id', $request->atividade]])->whereNull('atividade_id')->get();
+                    $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['inscrito_atividade']], ['atividade_id', $request->atividade]])->get();
                 }
                 break;
             default:
