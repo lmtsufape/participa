@@ -210,11 +210,13 @@
                         </div>
                     </a>
                 @endcan
-                <a id="inscricoes" href="{{ route('inscricao.inscritos', $evento) }}" style="text-decoration:none;">
-                    <li>
-                        <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5>
-                    </li>
-                </a>
+                @can ('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
+                    <a id="inscricoes" href="{{ route('inscricao.inscritos', $evento) }}" style="text-decoration:none;">
+                        <li>
+                            <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5>
+                        </li>
+                    </a>
+                @endcan
                 @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
                     <a id="trabalhos">
                         <li>
