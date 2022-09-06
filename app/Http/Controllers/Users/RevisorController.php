@@ -507,8 +507,8 @@ class RevisorController extends Controller
     public function editarRespostasFormulario(Request $request)
     {
         $data = $request->all();
-        // dd($data);
         $paragrafo_checkBox = $request->paragrafo_checkBox;
+        $visivilidade_opcoes = $request->visivilidade_opcoes;
         $trabalho = Trabalho::find($data['trabalho_id']);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $trabalho->evento);
         if ($request->arquivoAvaliacao != null) {
@@ -516,7 +516,7 @@ class RevisorController extends Controller
                 return redirect()->back()->withErrors(['message' => 'Extensão de arquivo enviado é diferente do permitido.']);
             }
 
-            $validatedData = $request->validate([
+            $request->validate([
                 'arquivoAvaliacao' => ['required', 'file', 'max:2048'],
             ]);
         }
@@ -537,6 +537,11 @@ class RevisorController extends Controller
                 } elseif ($pergunta->respostas->first()->opcoes->count() && $opcaoCont < count($data['opcao_id'])) {
                     $opcao = Opcao::find($data['opcao_id'][$opcaoCont++]);
                     $opcao->titulo = $data[$value];
+                    if ($visivilidade_opcoes != null && in_array($opcao->id, $visivilidade_opcoes)) {
+                        $opcao->visibilidade = true;
+                    } else {
+                        $opcao->visibilidade = false;
+                    }
                     $opcao->save();
                 }
             }

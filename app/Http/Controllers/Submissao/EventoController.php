@@ -1099,7 +1099,6 @@ class EventoController extends Controller
                 $respostas->push($pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first());
             }
         }
-        //   dd($respostas, $trabalho->id, $revisor->id, $modalidade->id);
         return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'respostas', 'arquivoAvaliacao'));
     }
 

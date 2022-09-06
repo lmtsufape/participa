@@ -65,6 +65,11 @@
                                         </label>
                                     </div>
                                     @endforeach
+                                   @if ($respostas[$index] != null)
+                                        <div class="col-form-label text-md-left">
+                                            <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="visivilidade_opcoes[]" value="{{$respostas[$index]->opcoes->first()->id}}" {{  ($respostas[$index]->opcoes->first()->visibilidade == true ? ' checked' : '') }} {{$pergunta->visibilidade == true ? '' : 'disabled' }}>
+                                        </div>
+                                   @endif
                                 @elseif($pergunta->respostas->first()->paragrafo != null)
                                     @forelse ($pergunta->respostas as $resposta)
                                         @if($resposta->revisor != null && $resposta->trabalho != null  && $resposta->paragrafo != null)
