@@ -323,6 +323,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::post(  '/revisor/email',         'RevisorController@enviarEmailRevisor'       )->name('revisor.email');
     Route::get(  '{id}/revisor/convite',    'RevisorController@conviteParaEvento'        )->name('revisor.convite.evento');
     Route::post(  '/revisor/emailTodos',    'RevisorController@enviarEmailTodosRevisores')->name('revisor.emailTodos');
+    Route::post('{evento}/revisor/emailCadastroTodos', 'RevisorController@enviarEmailCadastroTodosRevisores')->name('revisor.emailCadastroTodos');
     Route::get(  '/revisores-por-area/{id}','RevisorController@revisoresPorAreaAjax'     )->name('revisores.area');
     Route::post(  '/remover/revisor/{id}/{evento_id}',  'RevisorController@destroy'                  )->name('remover.revisor');
     Route::get('/area/revisores/trabalhos/area/{area_id}/modalidade/{modalidade_id}', 'RevisorController@indexListarTrabalhos')->name('avaliar.listar.trabalhos.filtro');
