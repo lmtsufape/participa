@@ -44,7 +44,6 @@ class CategoriaController extends Controller
 
         $validateData = $request->validate(
             [
-                'criarCategoria'        => 'required',
                 'nome'                  => 'required',
                 'valor_total'           => 'required|numeric|min:0',
                 'tipo_valor.*'          => 'nullable',

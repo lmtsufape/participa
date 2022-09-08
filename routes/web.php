@@ -354,6 +354,8 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
 
   // ROTAS DO MODULO DE INSCRIÇÃO
   Route::get('{evento}/inscricoes',  'Inscricao\InscricaoController@inscritos')->name('inscricao.inscritos');
+  Route::get('{evento}/inscricoes/formulario',  'Inscricao\InscricaoController@formulario')->name('inscricao.formulario');
+  Route::get('{evento}/inscricoes/categorias',  'Inscricao\InscricaoController@categorias')->name('inscricao.categorias');
   Route::get('{id}/inscricoes/nova-inscricao',  'Inscricao\InscricaoController@create')->name('inscricao.create');
   Route::post('/inscricoes/inscrever',  'Inscricao\InscricaoController@inscrever')->name('inscricao.inscrever');
   Route::get('inscricoes/atividades-da-promocao','Inscricao\PromocaoController@atividades')->name('promocao.atividades');

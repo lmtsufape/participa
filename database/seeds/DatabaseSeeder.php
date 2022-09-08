@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -64,11 +65,11 @@ class DatabaseSeeder extends Seeder
           'instituicao'     => 'd',
           'celular'    => 2,
           'especProfissional' => 'e',
-          'email_verified_at' => '2020-02-15',
+          'email_verified_at' => now(),
           'enderecoId' => 1,
         ]);
-        
-        
+
+
         // DB::table('users')->insert([  //
         //   'name' => 'Gabriel Revisor',
         //   'email' => 'gabriel.app.dev@gmail.com',
@@ -79,7 +80,7 @@ class DatabaseSeeder extends Seeder
         //   'especProfissional' => 'e',
         //   'email_verified_at' => '2020-02-15',
         //   'enderecoId' => 1,
-        // ]); 
+        // ]);
 
         $evento = DB::table('eventos')->insert([
           'nome'=>'II CONGRESSO REGIONAL DE ZOOTECNIA',
@@ -88,8 +89,8 @@ class DatabaseSeeder extends Seeder
 O número máximo de autores por trabalho será seis autores;
 Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo uma (01) página, no formato PDF;',
           'tipo'=>'teste',
-          'dataInicio'=>'2021-02-19',
-          'dataFim'=>'2021-04-20',
+          'dataInicio'=>now()->subDays(30),
+          'dataFim'=>now()->addDays(30),
           'numMaxTrabalhos' => 10,
           'numMaxCoautores' => 10,
           // 'possuiTaxa'=>true,
@@ -100,7 +101,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'deletado'=>false,
         ]);
 
-        
+
 
 //         $evento = DB::table('eventos')->insert([
 //           'nome'=>'Evento Teste',
@@ -121,7 +122,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
 //           'deletado'=>false,
 //         ]);
         // $user_id = DB::table('eventos')->where('nome','II CONGRESSO REGIONAL DE ZOOTECNIA')->pluck('id');
-        
+
 
         DB::table('form_eventos')->insert([
           'eventoId'                       => 1,
@@ -136,7 +137,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'etiquetamoduloinscricao'        => 'Inscrições',
           'etiquetamoduloprogramacao'      => 'Programação',
           'etiquetamoduloorganizacao'      => 'Organização',
-          
+
         ]);
 
         DB::table('form_subm_trabas')->insert([
@@ -210,39 +211,33 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           //   'eventoId'  => 2,
           // ]);
         }
-        
+
 
         DB::table('modalidades')->insert([
           'nome'        => 'Resumo',
           'evento_id'   => 1,
+          'inicioSubmissao' =>  now()->subDays(2),
+          'fimSubmissao'    =>  now()->subDays(1),
+          'inicioRevisao'   =>  now(),
+          'fimRevisao'      =>  now()->addDay(),
+          'inicioCorrecao'  =>  now()->addDays(1),
+          'fimCorrecao'     =>  now()->addDays(2),
+          'inicioValidacao' =>  now()->addDays(3),
+          'fimValidacao'    =>  now()->addDays(4),
+          'inicioResultado' =>  now()->addDays(5),
+          'texto'           =>  null,
+          'arquivo'         =>  null,
+          'caracteres'      =>  true,
+          'mincaracteres'   =>  1,
+          'maxcaracteres'   =>  20,
+          'palavras'        =>  false,
+          'minpalavras'     =>  null,
+          'maxpalavras'     =>  null,
+          'pdf'             =>  null,
+          'jpg'             =>  null,
+          'regra'           =>  null,
+          'template'        =>  null
         ]);
-
-        // DB::table('modalidades')->insert([
-        //   'nome'            =>  'Modalidade teste',
-        //   'evento_id'       =>  2,
-        //   'inicioSubmissao' =>  '2021-03-02 16:43:00',
-        //   'fimSubmissao'    =>  '2021-04-30 16:43:00',
-        //   'inicioRevisao'   =>  '2021-05-01 16:43:00',
-        //   'fimRevisao'      =>  '2021-05-05 16:44:00',
-        //   'inicioCorrecao'  =>  '2021-05-06 16:44:00',
-        //   'fimCorrecao'     =>  '2021-05-07 16:44:00',
-        //   'inicioValidacao' =>  '2021-05-08 16:44:00',
-        //   'fimValidacao'    =>  '2021-05-09 16:44:00',
-        //   'inicioResultado' =>  '2021-05-10 16:44:00',
-        //   'texto'           =>  null,
-        //   'arquivo'         =>  null,
-        //   'caracteres'      =>  true,
-        //   'mincaracteres'   =>  1,
-        //   'maxcaracteres'   =>  20,
-        //   'palavras'        =>  false,
-        //   'minpalavras'     =>  null,
-        //   'maxpalavras'     =>  null,
-        //   'pdf'             =>  null,
-        //   'jpg'             =>  null,
-        //   'regra'           =>  null,
-        //   'template'        =>  null       
-
-        // ]);
 
         // for($i = 0; $i < sizeof($areasEventoZoo); $i++){
         //   DB::table('area_modalidades')->insert([
@@ -262,6 +257,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
             'celular'    => 2,
             'especProfissional' => 'e',
             'enderecoId' => 1,
+            'email_verified_at' => '2020-02-15'
           ]);
 
           if($i < 20){
@@ -344,7 +340,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
           'tipo_id' => 1,
         ]);
 
-        
+
         DB::table('convidados')->insert([  //
           'nome' => 'Carlos',
           'email' => 'carlos.andre12@live.com',
@@ -353,7 +349,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
         ]);
 
         DB::table('datas_atividades')->insert([
-          'data' => '2020-09-21',
+          'data' => now()->addDay(),
           'hora_inicio' => '14:00',
           'hora_fim' => '18:00',
           'atividade_id' => 1,

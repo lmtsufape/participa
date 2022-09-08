@@ -56,7 +56,7 @@ class CampoFormularioController extends Controller
         $campo->titulo = $request->titulo_do_campo;
         $campo->tipo = $request->tipo_campo;
         $campo->evento_id = $evento->id;
-        $campo->obrigatorio = $request->input('campo_obrigatório') == 'on';
+        $campo->obrigatorio = $request->input('campo_obrigatorio') == 'on';
         $campo->save();
 
         if ($request->para_todas == 'on') {

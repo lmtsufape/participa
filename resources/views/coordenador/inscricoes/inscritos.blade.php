@@ -1,17 +1,13 @@
 @extends('coordenador.detalhesEvento')
-
 @section('menu')
-
 <div id="" style="display: block">
     <div class="row">
         <div class="col-md-12">
             <h1 class="titulo-detalhes">Listar Inscritos</h1>
         </div>
     </div>
-
     <div class="row justify-content-center">
         <div class="col-md-12">
-
             <div class="card">
                 <div class="card-body">
                   <div class="row justify-content-between">
