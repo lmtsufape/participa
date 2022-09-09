@@ -128,6 +128,11 @@ class Evento extends Model
         return $this->hasMany('App\Models\Inscricao\CampoFormulario', 'evento_id');
     }
 
+    public function possuiFormularioDeInscricao()
+    {
+        return $this->camposFormulario()->count() > 0 && $this->categoriasParticipantes()->count() > 0;
+    }
+
     public function inscricaos()
     {
         return $this->hasMany('App\Models\Inscricao\Inscricao');

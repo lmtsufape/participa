@@ -191,7 +191,7 @@ class InscricaoController extends Controller
         ]);
 
         $categoria = CategoriaParticipante::find($request->categoria);
-        $validator = $this->validarCamposExtras($request, $categoria, $validatorData);
+        $validator = $this->validarCamposExtras($request, $categoria);
 
         if ($validator->fails()) {
             return redirect()
@@ -306,24 +306,34 @@ class InscricaoController extends Controller
         if ($evento->eventoInscricoesEncerradas()) {
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrições encerradas.');
         }
-        $validatorData = $request->validate([
-            'categoria' => 'required',
-        ]);
         $categoria = CategoriaParticipante::find($request->categoria);
-        $validator = $this->validarCamposExtras($request, $categoria, $validatorData);
-        if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('abrirmodalinscricao', true);
+        $possuiFormulario = $evento->possuiFormularioDeInscricao();
+        if ($possuiFormulario) {
+            $validator = Validator::make($request->all(), ['categoria' => 'required',]);
+            if ($validator->fails()) {
+                return redirect()
+                    ->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('abrirmodalinscricao', true);
+            }
+            $validator = $this->validarCamposExtras($request, $categoria);
+            if ($validator->fails()) {
+                return redirect()
+                    ->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('abrirmodalinscricao', true);
+            }
         }
         $inscricao = new Inscricao();
         $inscricao->user_id = auth()->user()->id;
         $inscricao->evento_id = $request->evento_id;
         $inscricao->finalizada = true;
         $inscricao->save();
-        $this->salvarCamposExtras($inscricao, $request, $categoria);
+        if ($possuiFormulario) {
+            $this->salvarCamposExtras($inscricao, $request, $categoria);
+        }
 
         return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição realizada com sucesso');
     }
@@ -356,7 +366,7 @@ class InscricaoController extends Controller
         return view('coordenador.programacao.pagamento', compact('evento'));
     }
 
-    public function validarCamposExtras(Request $request, $categoria, $validate)
+    public function validarCamposExtras(Request $request, $categoria)
     {
         $regras = [];
         foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo) {
