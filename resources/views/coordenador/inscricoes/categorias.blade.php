@@ -122,10 +122,10 @@
                                             </td>
                                             <td style="text-align:center">
                                                 <form id="formExcluirCategoria{{ $categoria->id }}"
+                                                    action="{{ route('categoria.participante.destroy', $categoria->id) }}"
                                                     method="POST">
-                                                    {{-- action="{{ route('categoria.destroy', $categoria->id) }}"> --}}
-                                                    {{ csrf_field() }}
-                                                    {{ method_field('DELETE') }}
+                                                    @csrf
+                                                    @method('DELETE')
                                                     <a href="#"
                                                         data-toggle="modal"
                                                         data-target="#modalExcluirCategoria{{ $categoria->id }}">
@@ -169,11 +169,15 @@
                         </button>
                     </div>
                     <form id="formEditarCategoria{{ $categoria->id }}"
-                        {{-- action="{{ route('categoria.update', ['id' => $categoria->id]) }}" --}}
+                        action="{{ route('categoria.participante.update', ['id' => $categoria->id]) }}"
                         method="POST">
                         @csrf
+                        @method('PUT')
                         <input type="hidden"
-                            name="editarCategoriaId"
+                            name="valor_total_{{ $categoria->id }}"
+                            value="0">
+                        <input type="hidden"
+                            name="editarCategoria"
                             value="{{ $categoria->id }}">
                         <div class="container">
                             <div class="row form-group">
@@ -183,10 +187,10 @@
                                     <input id="nome_da_categoria"
                                         type="text"
                                         class="form-control @error('nome_da_categoria') is-invalid @enderror"
-                                        name="nome_da_categoria"
-                                        value="{{ old('nome_da_categoria', $categoria->nome) }}">
+                                        name="nome_{{ $categoria->id }}"
+                                        value="{{ old('nome_da_categoria_'.$categoria->id, $categoria->nome) }}">
 
-                                    @error('nome_da_categoria')
+                                    @error('nome_da_categoria_'.$categoria->id)
                                         <span class="invalid-feedback"
                                             role="alert">
                                             <strong>{{ $message }}</strong>

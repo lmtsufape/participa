@@ -388,8 +388,8 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
   Route::get('inscricoes/destroy/{id}-cupom',  'Inscricao\CupomDeDescontoController@destroy')->name('cupom.destroy');
 
   Route::post('inscricoes/criar-categoria-participante', 'Inscricao\CategoriaController@store')->name('categoria.participante.store');
-  Route::get('{id}/inscricoes/excluir-categoria',    'Inscricao\CategoriaController@destroy')->name('categoria.destroy');
-  Route::post('{id}/inscricoes/atualizar-categoria', 'Inscricao\CategoriaController@update')->name('categoria.participante.update');
+  Route::delete('{id}/inscricoes/excluir-categoria',    'Inscricao\CategoriaController@destroy')->name('categoria.participante.destroy');
+  Route::put('{id}/inscricoes/atualizar-categoria', 'Inscricao\CategoriaController@update')->name('categoria.participante.update');
   Route::get('valor/categoria',                      'Inscricao\CategoriaController@valorAjax')->name('ajax.valor.categoria');
   Route::get('confirmar-inscricao',            'Inscricao\InscricaoController@store')->name('inscricao.confirmar');
 
