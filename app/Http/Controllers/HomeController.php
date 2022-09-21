@@ -48,7 +48,7 @@ class HomeController extends Controller
             $eventos = Evento::all();
         }
         if ($user->coautor()->exists()) {
-            $eventos = $eventos->concat($user->coautor->eventos);
+            $eventos = $eventos->concat([$user->coautor->eventos]);
         }
         if ($user->coordEvento()->exists()) {
             $eventos = Evento::all();
