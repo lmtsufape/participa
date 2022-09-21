@@ -57,6 +57,7 @@ class HomeController extends Controller
             $eventos = Evento::all();
         }
 
+        $eventos = $eventos->unique('id');
         return view('coordenador.index', ['eventos' => $eventos]);
     }
 
