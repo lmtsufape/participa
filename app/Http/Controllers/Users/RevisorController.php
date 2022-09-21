@@ -20,6 +20,8 @@ use App\Models\Submissao\Pergunta;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
+use App\Notifications\LembreteRevisorCompletarCadastro;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -342,6 +344,20 @@ class RevisorController extends Controller
             }
         }
 
+        return redirect()->back()->with(['mensagem' => 'E-mails de lembrete enviados!']);
+    }
+
+    public function enviarEmailCadastroTodosRevisores(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $revisores_ainda_nao_cadastrados = $evento->revisors()->whereHas('user', function(Builder $query){
+            $query->where('usuarioTemp', true);
+        })->get()->map(function($revisor){
+            return $revisor->user;
+        })->unique('id');
+        foreach ($revisores_ainda_nao_cadastrados as $user) {
+            $user->notify(new LembreteRevisorCompletarCadastro($evento, auth()->user()));
+        }
         return redirect()->back()->with(['mensagem' => 'E-mails de lembrete enviados!']);
     }
 

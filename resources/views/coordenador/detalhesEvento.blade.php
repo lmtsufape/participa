@@ -209,10 +209,27 @@
                     </a>
                 @endcan
                 @can ('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
-                    <a id="inscricoes" href="{{ route('inscricao.inscritos', $evento) }}" style="text-decoration:none;">
+                    <a id="inscricoes">
                         <li>
-                            <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5>
+                            <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                         </li>
+                        <div id="dropdownInscricoes" class="" @if(request()->is($evento->id.'/inscricoes*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
+                            <a href="{{ route('inscricao.categorias', $evento) }}">
+                                <li>
+                                    <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Categorias</h5>
+                                </li>
+                            </a>
+                            <a href="{{ route('inscricao.formulario', $evento) }}">
+                                <li>
+                                    <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Formulário</h5>
+                                </li>
+                            </a>
+                            <a href="{{ route('inscricao.inscritos', $evento) }}">
+                                <li>
+                                    <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listas inscritos</h5>
+                                </li>
+                            </a>
+                        </div>
                     </a>
                 @endcan
                 @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
@@ -919,6 +936,9 @@
     });
     $('#memorias').click(function(){
             $('#dropdownMemoria').slideToggle(200);
+    });
+    $('#inscricoes').click(function(){
+            $('#dropdownInscricoes').slideToggle(200);
     });
     $('#trabalhos').click(function(){
             $('#dropdownTrabalhosModalidades').hide();

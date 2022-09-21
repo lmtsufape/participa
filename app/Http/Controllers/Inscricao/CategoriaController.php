@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inscricao\CategoriaParticipante;
+use App\Models\Inscricao\Inscricao;
 use App\Models\Inscricao\ValorCategoria;
 use App\Models\Submissao\Evento;
 use Carbon\Carbon;
@@ -44,7 +45,6 @@ class CategoriaController extends Controller
 
         $validateData = $request->validate(
             [
-                'criarCategoria'        => 'required',
                 'nome'                  => 'required',
                 'valor_total'           => 'required|numeric|min:0',
                 'tipo_valor.*'          => 'nullable',
@@ -116,7 +116,7 @@ class CategoriaController extends Controller
         $evento = $categoria->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
-        $validateData = $request->validate(
+        $request->validate(
             [
                 'editarCategoria'  => 'required',
                 "nome_{$categoria->id}"             => 'required',
@@ -138,9 +138,8 @@ class CategoriaController extends Controller
         $categoria->valor_total = $request->input("valor_total_{$categoria->id}");
         $categoria->update();
 
-        $categoria->valores()->whereNotIn('id', array_keys($request->input('tipo_valor_'.$categoria->id)))->delete();
-
         if ($request->input('tipo_valor_'.$categoria->id) != null) {
+            $categoria->valores()->whereNotIn('id', array_keys($request->input('tipo_valor_'.$categoria->id)))->delete();
             foreach ($request->input('tipo_valor_'.$categoria->id) as $key => $tipo_valor) {
                 ValorCategoria::updateOrCreate(
                     ['id' => $key, 'categoria_participante_id' => $categoria->id],
@@ -165,11 +164,17 @@ class CategoriaController extends Controller
      */
     public function destroy($id)
     {
-        // LEMBRETE
-        //checar se está aplicado em alguma inscrição futuramente
         $categoria = CategoriaParticipante::find($id);
         $evento = $categoria->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        $qt_inscricoes = Inscricao::where('categoria_participante_id', $id)->count();
+        if ($qt_inscricoes > 0) {
+            return redirect()->back()->with(['error' => 'Categoria não pode ser excluida, existem inscrições realizadas.']);
+        }
+        $qt_inscricoes = $categoria->camposNecessarios()->count();
+        if ($qt_inscricoes > 0) {
+            return redirect()->back()->with(['error' => 'Categoria não pode ser excluida, existem campos criados para essa categoria.']);
+        }
         $categoria->valores()->delete();
         $categoria->delete();
 

@@ -15,6 +15,7 @@ use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class InscricaoController extends Controller
 {
@@ -49,7 +50,23 @@ class InscricaoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $inscricoes = $evento->inscritos();
 
-        return view('coordenador.inscritos', compact('inscricoes', 'evento'));
+        return view('coordenador.inscricoes.inscritos', compact('inscricoes', 'evento'));
+    }
+
+    public function formulario(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        $campos = $evento->camposFormulario;
+
+        return view('coordenador.inscricoes.formulario', compact('evento', 'campos'));
+    }
+
+    public function categorias(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        $categorias = $evento->categoriasParticipantes;
+
+        return view('coordenador.inscricoes.categorias', compact('evento', 'categorias'));
     }
 
     /**
@@ -174,8 +191,15 @@ class InscricaoController extends Controller
         ]);
 
         $categoria = CategoriaParticipante::find($request->categoria);
-        $validatorData = $this->validarCamposExtras($request, $categoria, $validatorData);
+        $validator = $this->validarCamposExtras($request, $categoria);
 
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('abrirmodalinscricao', true);
+        }
         $evento = Evento::find($id);
 
         if ($evento->recolhimento == 'gratuito' && $request->valorTotal * 1 == 0) {
@@ -275,18 +299,41 @@ class InscricaoController extends Controller
         return redirect()->action([EventoController::class, 'show'], ['id' => $evento->id])->with('message', 'Inscrição realizada com sucesso');
     }
 
-    public function inscrever(InscricaoRequest $request)
+    public function inscrever(Request $request)
     {
-        $request->validated();
+        auth()->user() != null;
         $evento = Evento::find($request->evento_id);
         if ($evento->eventoInscricoesEncerradas()) {
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrições encerradas.');
+        }
+        $categoria = CategoriaParticipante::find($request->categoria);
+        $possuiFormulario = $evento->possuiFormularioDeInscricao();
+        if ($possuiFormulario) {
+            $validator = Validator::make($request->all(), ['categoria' => 'required',]);
+            if ($validator->fails()) {
+                return redirect()
+                    ->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('abrirmodalinscricao', true);
+            }
+            $validator = $this->validarCamposExtras($request, $categoria);
+            if ($validator->fails()) {
+                return redirect()
+                    ->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('abrirmodalinscricao', true);
+            }
         }
         $inscricao = new Inscricao();
         $inscricao->user_id = auth()->user()->id;
         $inscricao->evento_id = $request->evento_id;
         $inscricao->finalizada = true;
         $inscricao->save();
+        if ($possuiFormulario) {
+            $this->salvarCamposExtras($inscricao, $request, $categoria);
+        }
 
         return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição realizada com sucesso');
     }
@@ -319,62 +366,44 @@ class InscricaoController extends Controller
         return view('coordenador.programacao.pagamento', compact('evento'));
     }
 
-    public function validarCamposExtras(Request $request, $categoria, $validate)
+    public function validarCamposExtras(Request $request, $categoria)
     {
+        $regras = [];
         foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo) {
             switch ($campo->tipo) {
                 case 'email':
-                    $validatorData = $request->validate([
-                        'email-'.$campo->id => $campo->obrigatorio ? 'required|string|email' : 'nullable|string|email',
-                    ]);
-                    $validate = array_merge($validate, $validatorData);
+                    $regras['email-'.$campo->id] = $campo->obrigatorio ? 'required|string|email' : 'nullable|string|email';
                     break;
                 case 'text':
-                    $validatorData = $request->validate([
-                        'text-'.$campo->id => $campo->obrigatorio ? 'required|string' : 'nullable|string',
-                    ]);
-                    $validate = array_merge($validate, $validatorData);
+                    $regras['text-'.$campo->id] = $campo->obrigatorio ? 'required|string' : 'nullable|string';
                     break;
                 case 'file':
-                    $validatorData = $request->validate([
-                        'file-'.$campo->id => $campo->obrigatorio ? 'required|file|mimes:pdf|max:2000' : 'nullable|file|mimes:pdf|max:2000',
-                    ]);
-                    $validate = array_merge($validate, $validatorData);
+                    $regras['file-'.$campo->id] = $campo->obrigatorio ? 'required|file|mimes:pdf|max:2000' : 'nullable|file|mimes:pdf|max:2000';
                     break;
                 case 'date':
-                    $validatorData = $request->validate([
-                        'date-'.$campo->id => $campo->obrigatorio ? 'required|date' : 'nullable|date',
-                    ]);
-                    $validate = array_merge($validate, $validatorData);
+                    $regras['date-'.$campo->id] = $campo->obrigatorio ? 'required|date' : 'nullable|date';
                     break;
                 case 'endereco':
-                    $validatorData = $request->validate([
-                        'endereco-cep-'.$campo->id          => $campo->obrigatorio ? 'required' : 'nullable',
-                        'endereco-bairro-'.$campo->id       => $campo->obrigatorio ? 'required' : 'nullable',
-                        'endereco-rua-'.$campo->id          => $campo->obrigatorio ? 'required' : 'nullable',
-                        'endereco-complemento-'.$campo->id  => $campo->obrigatorio ? 'required' : 'nullable',
-                        'endereco-cidade-'.$campo->id       => $campo->obrigatorio ? 'required' : 'nullable',
-                        'endereco-uf-'.$campo->id           => $campo->obrigatorio ? 'required' : 'nullable',
-                        'endereco-numero-'.$campo->id       => $campo->obrigatorio ? 'required' : 'nullable',
-                    ]);
-                    $validate = array_merge($validate, $validatorData);
+                    $regras['endereco-cep-'.$campo->id] = $campo->obrigatorio ? 'required' : 'nullable';
+                    $regras['endereco-bairro-'.$campo->id] = $campo->obrigatorio ? 'required' : 'nullable';
+                    $regras['endereco-rua-'.$campo->id] = $campo->obrigatorio ? 'required' : 'nullable';
+                    $regras['endereco-complemento-'.$campo->id] = $campo->obrigatorio ? 'required' : 'nullable';
+                    $regras['endereco-cidade-'.$campo->id] = $campo->obrigatorio ? 'required' : 'nullable';
+                    $regras['endereco-uf-'.$campo->id] = $campo->obrigatorio ? 'required' : 'nullable';
+                    $regras['endereco-numero-'.$campo->id] = $campo->obrigatorio ? 'required' : 'nullable';
                     break;
                 case 'cpf':
-                    $validatorData = $request->validate([
-                        'cpf-'.$campo->id => $campo->obrigatorio ? 'required|cpf' : 'nullable|cpf',
-                    ]);
-                    $validate = array_merge($validate, $validatorData);
+                    $regras['cpf-'.$campo->id] = $campo->obrigatorio ? 'required|cpf' : 'nullable|cpf';
                     break;
                 case 'contato':
-                    $validatorData = $request->validate([
-                        'contato-'.$campo->id => $campo->obrigatorio ? 'required|telefone' : 'nullable|telefone',
-                    ]);
-                    $validate = array_merge($validate, $validatorData);
+                    $regras['contato-'.$campo->id] = $campo->obrigatorio ? 'required|telefone' : 'nullable|telefone';
                     break;
             }
         }
 
-        return $validate;
+        $validator = Validator::make($request->all(), $regras);
+
+        return $validator;
     }
 
     public function salvarCamposExtras($inscricao, Request $request, $categoria)

@@ -101,7 +101,13 @@
                                 @csrf
                                   <input type="hidden" name="revisores" value='@json($revisores)'>
                                   <button class="btn btn-primary btn-sm" type="submit">
-                                      Lembrar todos
+                                      Lembrar todos os revisores com revisão pendente
+                                  </button>
+                              </form>
+                              <form action="{{route('revisor.emailCadastroTodos', $evento->id)}}" method="POST" >
+                                @csrf
+                                  <button class="btn btn-primary btn-sm" type="submit">
+                                      Lembrar todos os revisores com cadastro incompleto
                                   </button>
                               </form>
                           @endif

@@ -265,7 +265,9 @@
                                                     </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form id="formDeletarCategoria{{$categoria->id}}" action="{{route('categoria.destroy', ['id' => $categoria->id])}}" method="GET">
+                                                        <form id="formDeletarCategoria{{$categoria->id}}" action="{{route('categoria.participante.destroy', ['id' => $categoria->id])}}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
                                                             Tem certeza que deseja excluir essa categoria?
                                                         </form>
                                                     </div>
@@ -1379,6 +1381,7 @@
         <div class="modal-body">
             <form id="formEditarCategoria{{$categoria->id}}" action="{{route('categoria.participante.update', ['id' => $categoria->id])}}" method="POST">
                 @csrf
+                @method('PUT')
                 <input type="hidden" name="evento_id" value="{{$evento->id}}">
                 <input type="hidden" name="editarCategoria" value="{{$categoria->id}}">
                 <div class="container">

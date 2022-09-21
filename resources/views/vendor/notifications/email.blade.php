@@ -43,8 +43,10 @@
 @if (! empty($salutation))
 {{ $salutation }}
 @else
-@lang('Obrigado'),<br>
-Participa - Sistema de Gestão de Eventos Técnico-Científicos
+Atenciosamente,<br><br>
+Participa - Sistema de Gestão de Eventos Técnico-Científicos<br>
+Laboratório Multidisciplinar de Tecnologias Sociais<br>
+Universidade Federal do Agreste de Pernambuco
 @endif
 
 {{-- Subcopy --}}
