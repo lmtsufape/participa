@@ -41,22 +41,8 @@ class HomeController extends Controller
             $subeventos = Evento::whereIn('evento_pai_id', ($user->coordComissaoOrganizadora()->pluck('eventos_id')))->get();
             $eventos = $eventos->concat($subeventos);
         }
-        if ($user->membroComissaoEvento()->exists()) {
-            $eventos = $eventos->concat($user->membroComissaoEvento);
-        }
-        if ($user->coautor()->exists()) {
-            $eventos = $eventos->concat([$user->coautor->eventos]);
-        }
         if ($user->coordEvento()->exists()) {
-            $subeventos = Evento::whereIn('id', ($user->coordEvento()->pluck('eventos_id')))->get();
-            $eventos = $eventos->concat($subeventos);
-        }
-        if ($user->participante()->exists()) {
-            $subeventos = Evento::whereIn('id', ($user->participante()->pluck('eventos_id')))->get();
-            $eventos = $eventos->concat($subeventos);
-        }
-        if ($user->revisor()->exists()) {
-            $subeventos = Evento::whereIn('id', ($user->revisor()->pluck('evento_id')))->get();
+            $subeventos = Evento::where('coordenadorId', $user->id)->get();
             $eventos = $eventos->concat($subeventos);
         }
 
