@@ -27,37 +27,37 @@ class HomeController extends Controller
     public function home()
     {
         $user = Auth::user();
-        if ($user->administradors != null) {
-            $eventos = Evento::all();
+        $eventos = collect();
+        if ($user->administradors()->exists()) {
+            $eventos = $eventos->concat(Evento::all());
 
             return view('administrador.index', ['eventos' => $eventos]);
-        } elseif (($eventos = $user->coordComissaoCientifica) && $eventos->isNotEmpty()) {
-            return view('coordenador.index', ['eventos' => $eventos]);
-        } elseif (($eventos = $user->coordComissaoOrganizadora) && $eventos->isNotEmpty()) {
-            return view('coordenador.index', ['eventos' => $eventos]);
-        } elseif ($user->membroComissao != null) {
-            $eventos = $user->membroComissao->eventos;
-
-            return view('coordenador.index', ['eventos' => $eventos]);
-        } elseif ($user->revisor != null) {
-            $eventos = Evento::all();
-
-            return view('coordenador.index', ['eventos' => $eventos]);
-        } elseif ($user->coautor != null) {
-            $eventos = $user->coautor->eventos;
-
-            return view('coordenador.index', compact('eventos'));
-        } elseif ($user->coordEvento != null) {
-            $eventos = Evento::all();
-
-            return view('coordenador.index', compact('eventos'));
-        } elseif ($user->participante != null) {
-            $eventos = Evento::all();
-
-            return view('coordenador.index', compact('eventos'));
-        } else {
-            return view('home');
         }
+        if ($user->coordComissaoCientifica()->exists()) {
+            $eventos = $eventos->concat($user->coordComissaoCientifica);
+        }
+        if ($user->coordComissaoOrganizadora()->exists()) {
+            $eventos = $eventos->concat($user->coordComissaoOrganizadora);
+            $subeventos = Evento::whereIn('evento_pai_id', ($user->coordComissaoOrganizadora()->pluck('eventos_id')))->get();
+            $eventos = $eventos->concat($subeventos);
+        }
+        if ($user->membroComissaoEvento()->exists()) {
+            $eventos = $eventos->concat($user->membroComissao->eventos);
+        }
+        if ($user->revisor()->exists()) {
+            $eventos = Evento::all();
+        }
+        if ($user->coautor()->exists()) {
+            $eventos = $eventos->concat($user->coautor->eventos);
+        }
+        if ($user->coordEvento()->exists()) {
+            $eventos = Evento::all();
+        }
+        if ($user->participante()->exists()) {
+            $eventos = Evento::all();
+        }
+
+        return view('coordenador.index', ['eventos' => $eventos]);
     }
 
     public function index()

@@ -6,11 +6,9 @@
         <h2>{{{$evento->nome}}}
             @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
                 <a href="{{route('evento.editar',$evento->id)}}" class="edit-evento" onmouseover="this.children[0].src='{{asset('img/icons/edit-regular.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/edit-regular-white.svg')}}'"><img src="{{asset('img/icons/edit-regular-white.svg')}}"  alt="" width="20px;"></a>
-                @can('isCoordenador', $evento)
                 @if($evento->eventoPai == null)
                     <a href="{{route('subevento.criar',$evento->id)}}" onmouseover="this.children[0].src='{{asset('img/icons/plus-square-solid_black.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/plus-square-solid.svg')}}'"><img src="{{asset('img/icons/plus-square-solid.svg')}}"  alt="" width="20px;"></a>
                 @endif
-                @endcan
             @endcan
         </h2>
 

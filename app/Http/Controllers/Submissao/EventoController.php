@@ -1167,7 +1167,7 @@ class EventoController extends Controller
     public function createSubEvento($id)
     {
         $eventoPai = Evento::find($id);
-        $this->authorize('isCoordenador', $eventoPai);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $eventoPai);
 
         return view('evento.criarEvento', compact('eventoPai'));
     }
@@ -1190,6 +1190,7 @@ class EventoController extends Controller
         $evento->coordenadorId = auth()->user()->id;
         $evento->deletado = false;
         if ($request->eventoPai != null) {
+            $evento->coordenadorId = Evento::find($request->eventoPai)->coordenadorId;
             $evento->evento_pai_id = $request->eventoPai;
         }
         $evento->save();
