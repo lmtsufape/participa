@@ -42,7 +42,7 @@ class HomeController extends Controller
             $eventos = $eventos->concat($subeventos);
         }
         if ($user->membroComissaoEvento()->exists()) {
-            $eventos = $eventos->concat($user->membroComissao->eventos);
+            $eventos = $eventos->concat($user->membroComissaoEvento->eventos);
         }
         if ($user->revisor()->exists()) {
             $eventos = Evento::all();
