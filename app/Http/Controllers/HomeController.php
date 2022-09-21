@@ -44,17 +44,20 @@ class HomeController extends Controller
         if ($user->membroComissaoEvento()->exists()) {
             $eventos = $eventos->concat($user->membroComissaoEvento);
         }
-        if ($user->revisor()->exists()) {
-            $eventos = Evento::all();
-        }
         if ($user->coautor()->exists()) {
             $eventos = $eventos->concat([$user->coautor->eventos]);
         }
         if ($user->coordEvento()->exists()) {
-            $eventos = Evento::all();
+            $subeventos = Evento::whereIn('id', ($user->coordEvento()->pluck('eventos_id')))->get();
+            $eventos = $eventos->concat($subeventos);
         }
         if ($user->participante()->exists()) {
-            $eventos = Evento::all();
+            $subeventos = Evento::whereIn('id', ($user->participante()->pluck('eventos_id')))->get();
+            $eventos = $eventos->concat($subeventos);
+        }
+        if ($user->revisor()->exists()) {
+            $subeventos = Evento::whereIn('id', ($user->revisor()->pluck('evento_id')))->get();
+            $eventos = $eventos->concat($subeventos);
         }
 
         $eventos = $eventos->unique('id');
