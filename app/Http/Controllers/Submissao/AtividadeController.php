@@ -13,6 +13,7 @@ use App\Models\Submissao\Evento;
 use App\Models\Submissao\TipoAtividade;
 use App\Models\Users\Convidado;
 use App\Models\Users\User;
+use App\Notifications\InscricaoAtividade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -618,6 +619,8 @@ class AtividadeController extends Controller
             $atividade->vagas -= 1;
             $atividade->users()->attach($user->id);
             $atividade->update();
+
+            $user->notify(new InscricaoAtividade($atividade));
 
             return redirect()->back()->with(['message' => 'Inscrito em '.$atividade->titulo.' com sucesso!']);
         }
