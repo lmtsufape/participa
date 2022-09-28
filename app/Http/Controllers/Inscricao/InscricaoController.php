@@ -13,6 +13,7 @@ use App\Models\Inscricao\Promocao;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
+use App\Notifications\InscricaoEvento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -331,6 +332,9 @@ class InscricaoController extends Controller
         $inscricao->evento_id = $request->evento_id;
         $inscricao->finalizada = true;
         $inscricao->save();
+
+        auth()->user()->notify(new InscricaoEvento($evento));
+
         if ($possuiFormulario) {
             $this->salvarCamposExtras($inscricao, $request, $categoria);
         }
