@@ -105,7 +105,7 @@ class EventoController extends Controller
     public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
-        //$this->authorize('isCoordenadorOrComissaoOrRevisorComAtribuicao', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         // $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
