@@ -46,14 +46,14 @@ class EventoPolicy
 
     public function isCoordenadorOrComissao(User $user, Evento $evento)
     {
-        $membro = $evento->usuariosDaComissao()->where(['user_id', $user->id])->first();
+        $membro = $evento->usuariosDaComissao()->where('user_id', $user->id)->first();
 
         return $user->id === $evento->coordenadorId || ! (is_null($membro));
     }
 
     public function isRevisor(User $user, Evento $evento)
     {
-        $usuariosRevisores = Evento::revisors()->distinct()->pluck('user_id');
+        $usuariosRevisores = $evento->revisors()->distinct()->pluck('user_id');
 
         return in_array($user->id, $usuariosRevisores);
     }
