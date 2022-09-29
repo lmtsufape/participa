@@ -94,8 +94,11 @@ class Trabalho extends Model
         $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
             ['modalidadeId', $this->modalidade->id], ])->first();
 
-        return Resposta::where([['trabalho_id', $this->id], ['revisor_id', $revisor->id]])
-      ->get()->count() > 0;
+        if ($revisor == null) {
+            return false;
+        }
+
+        return Resposta::where([['trabalho_id', $this->id], ['revisor_id', $revisor->id]])->exists();
     }
 
     public function getParecerAtribuicao(User $user)
