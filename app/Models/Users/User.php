@@ -6,6 +6,8 @@ use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
 use App\Notifications\recuperacaoSenha;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -116,9 +118,22 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany('App\Models\Submissao\Evento', 'comissao_cientifica_eventos', 'user_id', 'evento_id');
     }
 
-    public function coordEvento()
+    /**
+     * Retorna os eventos que o usuário criou
+     * @return HasMany
+     */
+    public function eventos()
     {
-        return $this->hasOne('App\Models\Users\CoordenadorEvento');
+        return $this->hasMany('App\Models\Submissao\Evento', 'coordenadorId');
+    }
+
+    /**
+     * Retorna os eventos em que o usuário foi atribuído como coordenador pelo usuário criador do evento
+     * @return BelongsToMany
+     */
+    public function eventosCoordenador()
+    {
+        return $this->belongsToMany('App\Models\Submissao\Evento', 'coordenador_eventos', 'user_id', 'eventos_id')->using('App\Models\Users\CoordenadorEvento');
     }
 
     public function sendPasswordResetNotification($token)
