@@ -41,10 +41,11 @@ class HomeController extends Controller
             $subeventos = Evento::whereIn('evento_pai_id', ($user->coordComissaoOrganizadora()->pluck('eventos_id')))->get();
             $eventos = $eventos->concat($subeventos);
         }
-        $subeventos = Evento::where('coordenadorId', $user->id)->get();
-        $eventos = $eventos->concat($subeventos);
+        $eventos = $eventos->concat($user->eventos);
+        $eventos = $eventos->concat($user->eventosCoordenador);
 
         $eventos = $eventos->unique('id');
+
         return view('coordenador.index', ['eventos' => $eventos]);
     }
 
