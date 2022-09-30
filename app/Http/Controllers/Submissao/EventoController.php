@@ -8,6 +8,7 @@ use App\Exports\TrabalhosExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
 use App\Http\Requests\UpdateEventoRequest;
+use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EventoCriado;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Area;
@@ -26,15 +27,20 @@ use App\Models\Submissao\Resposta;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
 use App\Models\Users\ComissaoEvento;
+use App\Models\Users\CoordenadorEvento;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Carbon\Carbon;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 use PDF;
 
@@ -1187,6 +1193,14 @@ class EventoController extends Controller
         $data['data_limite_inscricao'] = $request->dataLimiteInscricao;
         $evento = Evento::create($data);
 
+        $user = Auth::user();
+        $validated = $request->validated();
+        if (array_key_exists('email_coordenador', $validated)) {
+            $coordenador = User::where('email', $validated['email_coordenador'])->first();
+            $coordenador = $this->criarUsuarioDoCoordenador($coordenador, $evento, $validated['email_coordenador'], $user);
+            CoordenadorEvento::create(['user_id' => $coordenador->id, 'eventos_id' => $evento->id]);
+        }
+
         $evento->coordenadorId = auth()->user()->id;
         $evento->deletado = false;
         if ($request->eventoPai != null) {
@@ -1205,14 +1219,13 @@ class EventoController extends Controller
             $evento->save();
         }
 
-        $user = Auth::user();
         $subject = 'Evento Criado';
         Mail::to($user->email)->send(new EventoCriado($user, $subject, $evento));
 
-        $FormEvento = FormEvento::create([
+        FormEvento::create([
             'eventoId' => $evento->id,
         ]);
-        $FormSubmTraba = FormSubmTraba::create([
+        FormSubmTraba::create([
             'eventoId' => $evento->id,
         ]);
 
@@ -1342,18 +1355,29 @@ class EventoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Evento $evento
-     * @return \Illuminate\Http\Response
+     * @param UpdateEventoRequest $request
+     * @param $id
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function update(UpdateEventoRequest $request, $id)
     {
-        // $mytime = Carbon::now('America/Recife');
-        // $this->authorize('isCoordenador', $evento);
-        Log::info('Final');
-        $data = $request->all();
         $evento = Evento::find($id);
+        $this->authorize('isCoordenador', $evento);
+        $data = $request->all();
         $evento->update($data);
+
+        $validated = $request->validated();
+        $user = auth()->user();
+        if ($evento->eventoPai()->exists()) {
+            $coordenador = User::where('email', $data['email_coordenador'])->first();
+            $coordenador = $this->criarUsuarioDoCoordenador($coordenador, $evento, $validated['email_coordenador'], $user);
+            if ($evento->coordenadoresEvento()->exists()) {
+                CoordenadorEvento::where('eventos_id', $evento->id)->update(['user_id' => $coordenador->id]);
+            } else {
+                $evento->coordenadoresEvento()->save($coordenador);
+            }
+        }
 
         $evento->recolhimento = $request->recolhimento;
         $evento->update();
@@ -1670,5 +1694,28 @@ class EventoController extends Controller
         }
 
         return response()->json($eventos);
+    }
+
+    /**
+     * Cria um usuário para o coordenador, caso o coordenador não tenha um usuário
+     * @param $coordenador
+     * @param $evento
+     * @param $email_coordenador
+     * @param $user
+     * @return mixed
+     */
+    private function criarUsuarioDoCoordenador($coordenador, $evento, $email_coordenador, $user)
+    {
+        if ($coordenador == null) {
+            $passwordTemporario = Str::random(8);
+            $coord = User::find($evento->coordenadorId);
+            Mail::to($email_coordenador)->send(new EmailParaUsuarioNaoCadastrado($user->name, '  ', 'Coordenador do evento', $evento->nome, $passwordTemporario, $email_coordenador, $coord));
+            $coordenador = User::create([
+                'email' => $email_coordenador,
+                'password' => bcrypt($passwordTemporario),
+                'usuarioTemp' => true,
+            ]);
+        }
+        return $coordenador;
     }
 }
