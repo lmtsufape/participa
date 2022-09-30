@@ -497,7 +497,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
 
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $users = $evento->usuariosDaComissao;
         $coordenadores = $evento->coordComissaoCientifica->pluck('id')->all();
 

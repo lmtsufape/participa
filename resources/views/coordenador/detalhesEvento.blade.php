@@ -122,11 +122,13 @@
                                 <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt=""><h5> Cadastrar membro</h5>
                             </li>
                         </a>
-                        <a id="definirCoordComissao" href="{{ route('coord.definirCoordComissao', ['eventoId' => $evento->id]) }}">
-                            <li>
-                                <img src="{{asset('img/icons/crown-solid.svg')}}" alt=""><h5> Definir Coordenador</h5>
-                            </li>
-                        </a>
+                        @can ('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
+                            <a id="definirCoordComissao" href="{{ route('coord.definirCoordComissao', ['eventoId' => $evento->id]) }}">
+                                <li>
+                                    <img src="{{asset('img/icons/crown-solid.svg')}}" alt=""><h5> Definir Coordenador</h5>
+                                </li>
+                            </a>
+                        @endcan
                         <a id="listarComissao" href="{{ route('coord.listarComissao', ['eventoId' => $evento->id]) }}">
                             <li>
                                 <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Comissão</h5>
