@@ -21,7 +21,7 @@ class ComissaoOrganizadoraController extends Controller
     public function index($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $usuariosDaComissao = $evento->usuariosDaComissaoOrganizadora;
 

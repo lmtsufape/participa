@@ -16,18 +16,21 @@
                       <p class="card-text">
                         <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
-                                <th>
+                                <tr>
                                     <th>Nome</th>
                                     <th>Especialidade</th>
                                     <th>Celular</th>
                                     <th>E-mail</th>
-                                    <th>Direção</th>
-                                    <th style="text-align:center">Remover</th>
-                                </th>
+                                    @can('isCoordenadorDaComissaoOrganizadora', $evento)
+                                        <th>Direção</th>
+                                        <th style="text-align:center">Remover</th>
+                                    @endcan
+                                </tr>
                             </thead>
                                 @if ($users != null)
                                   @foreach ($users as $user)
                                   <!-- Modal de exclusão do evento -->
+                                    @can('isCoordenadorDaComissaoOrganizadora', $evento)
                                     <div class="modal fade" id="modalRemoverComissao{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
                                       <div class="modal-dialog" role="document">
                                       <div class="modal-content">
@@ -47,50 +50,51 @@
                                       </div>
                                       </div>
                                     </div>
-                                  <!-- fim do modal -->
+                                    @endcan
+                                    <!-- fim do modal -->
                                   <tbody>
 
-                                      <th>
+                                      <tr>
                                         @if (isset($user->name))
                                           <td>{{$user->name}}</td>
                                           <td>{{$user->especProfissional}}</td>
                                           <td>{{$user->celular}}</td>
                                           <td>{{$user->email}}</td>
-                                          <td>
-                                          @if ($evento->userIsCoordComissaoOrganizadora($user))
-                                            Coordenador
-                                          @endif
-                                          </td>
-                                          <td style="text-align:center">
-                                            <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao.organizadora', ['id' => $user->id])}}" method="POST">
-                                              @csrf
-                                              <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                                              <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
-                                                <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
-                                              </a>
-                                            </form>
-                                          </td>
+                                          @can('isCoordenadorDaComissaoOrganizadora', $evento)
+                                              <td>
+                                                Coordenador
+                                              </td>
+                                              <td style="text-align:center">
+                                                <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao.organizadora', ['id' => $user->id])}}" method="POST">
+                                                  @csrf
+                                                  <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                                                  <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
+                                                    <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
+                                                  </a>
+                                                </form>
+                                              </td>
+                                          @endcan
                                         @else
                                           <td>Usuário temporário - Sem nome</td>
                                           <td>Usuário temporário - Sem Especialidade</td>
                                           <td>Usuário temporário - Sem Celular</td>
                                           <td>{{$user->email}}</td>
-                                          <td>
-                                          @if ($evento->userIsCoordComissaoOrganizadora($user))
-                                            Coordenador
+                                          @can('isCoordenadorDaComissaoOrganizadora', $evento)
+                                              <td>
+                                                Coordenador
+                                              </td>
+                                              <td style="text-align:center">
+                                                <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao.organizadora', ['id' => $user->id])}}" method="POST">
+                                                  @csrf
+                                                  <input type="hidden" name="evento_id" value="{{$evento->id}}">
+                                                  <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
+                                                    <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
+                                                  </a>
+                                                </form>
+                                              </td>
+                                          @endcan
                                           @endif
-                                          </td>
-                                          <td style="text-align:center">
-                                            <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao.organizadora', ['id' => $user->id])}}" method="POST">
-                                              @csrf
-                                              <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                                              <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
-                                                <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
-                                              </a>
-                                            </form>
-                                          </td>
-                                        @endif
-                                      </th>
+                                      </tr>
                                   </tbody>
                                   @endforeach
                                 @endif
