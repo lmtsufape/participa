@@ -114,7 +114,7 @@
                 </a>
                 <a id="comissao">
                     <li>
-                        <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão Cientifica</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                        <img src="{{asset('img/icons/user-tie-solid.svg')}}" alt=""><h5>Comissão Científica</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                     </li>
                     <div id="dropdownComissao" @if(request()->is('coord/evento/comissaoCientifica*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                         <a id="cadastrarComissao" href="{{ route('coord.cadastrarComissao', ['eventoId' => $evento->id]) }}">
