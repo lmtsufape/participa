@@ -22,6 +22,6 @@ class CoordComissaoCientifica extends Pivot
 
     public function evento()
     {
-        return $this->belongsTo('App\Models\Submissao\Evento');
+        return $this->belongsTo('App\Models\Submissao\Evento', 'eventos_id');
     }
 }
