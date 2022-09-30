@@ -34,33 +34,45 @@
                         </div>
                         {{-- nome | Tipo--}}
                         <div class="row justify-content-center">
-                            <div class="@if($evento->evento_pai_id != null) col-sm-4 @else col-sm-6 @endif">{{--Nome do evento--}}
+                            <div class="col-sm-6">
                                 <label for="nome" class="col-form-label">{{ __('Nome*') }}</label>
-                                <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" @if(old('nome') != null) value="{{ old('nome') }}"
-                                       @else value="{{$evento->nome}}" @endif required autocomplete="nome" autofocus>
+                                <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome', $evento->nome) }}"
+                                       required autocomplete="nome" autofocus>
 
                                 @error('nome')
-                                <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
                                 @enderror
                             </div>
 
-                            @if($evento->evento_pai_id != null)
-                                <div class="col-sm-4">
-                                    <label for="email" class="col-form-label">{{ __('Email*') }}</label>
-                                    <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" @if(old('email') != null) value="{{ old('email') }}"
-                                           @else value="{{$evento->email}}" @endif required autocomplete="email" autofocus>
+                            <div class="col-sm-6">
+                                <label for="email" class="col-form-label">{{ __('E-mail de contato*') }}</label>
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $evento->email) }}"
+                                       required autocomplete="email" autofocus>
 
-                                    @error('email')
+                                @error('email')
                                     <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            @if($evento->evento_pai_id != null)
+                                <div class="col-sm-6">
+                                    <label for="email_coordenador" class="col-form-label">{{ __('E-mail do coordenador') }}</label>
+                                    @if($evento->coordenadoresEvento()->exists())
+                                        <input class="form-control @error('email_coordenador') is-invalid @enderror" type="email" value="{{old('email_coordenador', $evento->coordenadoresEvento()->first()->email)}}" name="email_coordenador" id="email_coordenador">
+                                    @else
+                                        <input class="form-control @error('email_coordenador') is-invalid @enderror" type="email" value="{{old('email_coordenador')}}" name="email_coordenador" id="email_coordenador">
+                                    @endif
+
+                                    @error('email_coordenador')
+                                    <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
                                     @enderror
                                 </div>
-
                             @endif
-                            {{--End Nome do evento--}}
                             {{--Número de Participantes--}}
                             {{-- <div class="col-sm-3">
                                 <label for="numeroParticipantes" class="col-form-label">{{ __('N° de Participantes') }}</label>
@@ -72,8 +84,7 @@
                                 </span>
                                 @enderror
                             </div> --}}
-                            {{-- Tipo do evento --}}
-                            <div class="@if($evento->evento_pai_id != null) col-sm-2 @else col-sm-3 @endif">
+                            <div class="@if($evento->evento_pai_id != null) col-sm-3 @else col-sm-6 @endif">
                                 <label for="tipo" class="col-form-label">{{ __('Tipo*') }}</label>
                             <!-- <input value="{{$evento->tipo}}" id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" value="{{ old('tipo') }}" required autocomplete="tipo" autofocus> -->
                                 <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" required>
@@ -115,7 +126,7 @@
                             </span>
                                 @enderror
                             </div>{{-- Tipo do evento --}}
-                            <div class="@if($evento->evento_pai_id != null) col-sm-2 @else col-sm-3 @endif">
+                            <div class="@if($evento->evento_pai_id != null) col-sm-3 @else col-sm-6 @endif">
                                 <label for="recolhimento" class="col-form-label">{{ __('Recolhimento*') }}</label>
                                 <select name="recolhimento" id="recolhimento" class="form-control @error('recolhimento') is-invalid @enderror">
                                     @if (old('recolhimento') != null)
@@ -141,7 +152,7 @@
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="exampleFormControlTextarea1">Descrição*</label>
+                                    <label for="descricao">Descrição*</label>
                                     <textarea class="form-control @error('descricao') is-invalid @enderror" id="descricao" name="descricao"
                                               rows="8">@if(old('descricao') != null) {{ old('descricao') }} @else {{$evento->descricao}} @endif</textarea>
                                     @error('descricao')
@@ -202,7 +213,7 @@
                             <div class="col-sm-3">
                                 <label for="dataInicio" class="col-form-label">{{ __('Início*') }}</label>
                                 <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror" name="dataInicio"
-                                       @if(old('dataInicio') != null) value="{{ old('dataInicio') }}" @else value="{{$evento->dataInicio}}" @endif required autocomplete="dataInicio" autofocus>
+                                       value="{{ old('dataInicio', $evento->dataInicio) }}" required autocomplete="dataInicio" autofocus>
 
                                 @error('dataInicio')
                                 <span class="invalid-feedback" role="alert">
@@ -214,8 +225,8 @@
                             <div class="col-sm-3">
                                 <label for="dataFim" class="col-form-label">{{ __('Fim*') }}</label>
                                 <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror" name="dataFim"
-                                       @if(old('dataFim') != null) value="{{ old('dataFim') }}"
-                                       @else value="{{$evento->dataFim}}" @endif required autocomplete="dataFim" autofocus>
+                                       value="{{ old('dataFim', $evento->dataFim) }}"
+                                       required autocomplete="dataFim" autofocus>
 
                                 @error('dataFim')
                                 <span class="invalid-feedback" role="alert">
@@ -255,7 +266,7 @@
                             <div class="col-sm-4">
                                 <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
                                 <input onblur="pesquisacep(this.value);" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep"
-                                       @if(old('cep') != null) value="{{ old('cep') }}" @else value="{{$endereco->cep}}" @endif required autocomplete="cep" autofocus>
+                                       value="{{ old('cep', $endereco->cep) }}" required autocomplete="cep" autofocus>
 
                                 @error('cep')
                                 <span class="invalid-feedback" role="alert">
@@ -265,8 +276,8 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="rua" class="col-form-label">{{ __('Rua*') }}</label>
-                                <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" @if(old('rua') != null) value="{{ old('rua') }}"
-                                       @else value="{{$endereco->rua}}" @endif required autocomplete="rua" autofocus>
+                                <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" value="{{ old('rua', $endereco->rua) }}"
+                                       required autocomplete="rua" autofocus>
 
                                 @error('rua')
                                 <span class="invalid-feedback" role="alert">
@@ -276,8 +287,8 @@
                             </div>
                             <div class="col-sm-2">
                                 <label for="numero" class="col-form-label">{{ __('Número*') }}</label>
-                                <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}"
-                                       @else value="{{$endereco->numero}}" @endif required autocomplete="numero" autofocus maxlength="10">
+                                <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" value="{{ old('numero', $endereco->numero) }}"
+                                       required autocomplete="numero" autofocus maxlength="10">
 
                                 @error('numero')
                                 <span class="invalid-feedback" role="alert">
@@ -292,8 +303,8 @@
                         <div class="row justify-content-center">
                             <div class="col-sm-3">
                                 <label for="bairro" class="col-form-label">{{ __('Bairro*') }}</label>
-                                <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" @if(old('bairro') != null) value="{{ old('bairro') }}"
-                                       @else value="{{$endereco->bairro}}" @endif required autocomplete="bairro" autofocus>
+                                <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" value="{{ old('bairro', $endereco->bairro) }}"
+                                       required autocomplete="bairro" autofocus>
 
                                 @error('bairro')
                                 <span class="invalid-feedback" role="alert">
@@ -304,7 +315,7 @@
                             <div class="col-sm-3">
                                 <label for="cidade" class="col-form-label">{{ __('Cidade*') }}</label>
                                 <input id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade"
-                                       @if(old('cidade') != null) value="{{ old('cidade') }}" @else value="{{$endereco->cidade}}" @endif required autocomplete="cidade" autofocus>
+                                       value="{{ old('cidade', $endereco->cidade) }}" required autocomplete="cidade" autofocus>
 
                                 @error('cidade')
                                 <span class="invalid-feedback" role="alert">
@@ -326,7 +337,7 @@
                             <div class="col-sm-2">
                                 <label for="uf" class="col-form-label">{{ __('UF*') }}</label>
                                 {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
-                                <select value="{{$endereco->uf}}" class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
+                                <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                                     @if(old('uf') != null)
                                         <option value="" disabled selected hidden>-- UF --</option>
                                         <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>

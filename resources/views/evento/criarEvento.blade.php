@@ -54,7 +54,7 @@
                         </div>
                         {{-- nome | Participantes | Tipo--}}
                         <div class="row justify-content-center">
-                            <div class="@if ($eventoPai ?? '')col-sm-4 @else col-sm-6 @endif">
+                            <div class="col-sm-6">
                                 <label for="nome" class="col-form-label">{{ __('Nome*') }}</label>
                                 <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
 
@@ -65,9 +65,9 @@
                                 @enderror
                             </div>
 
-                            <div class="col-sm-4">
-                                <label for="email" class="col-form-label">{{ __('Email*') }}</label>
-                                <input class="form-control @error('nome') is-invalid @enderror" type="email" value="{{old('email')}}" name="email" id="email" required autofocus
+                            <div class="col-sm-6">
+                                <label for="email" class="col-form-label">{{ __('E-mail de contato*') }}</label>
+                                <input class="form-control @error('email') is-invalid @enderror" type="email" value="{{old('email')}}" name="email" id="email" required autofocus
                                        autocomplete="email">
 
                                 @error('email')
@@ -87,8 +87,19 @@
                                 </span>
                                 @enderror
                             </div> --}}
+                            @if ($eventoPai ?? '')
+                                <div class="col-sm-6">
+                                    <label for="email_coordenador" class="col-form-label">{{ __('E-mail do coordenador') }}</label>
+                                    <input class="form-control @error('email_coordenador') is-invalid @enderror" type="email" value="{{old('email_coordenador')}}" name="email_coordenador" id="email_coordenador">
 
-                            <div class="@if ($eventoPai ?? '')col-sm-2 @else col-sm-3 @endif">
+                                    @error('email_coordenador')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            @endif
+                            <div class="@if ($eventoPai ?? '') col-sm-3 @else col-sm-6 @endif">
                                 <label for="tipo" class="col-form-label">{{ __('Tipo*') }}</label>
                                 <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" required>
                                     <option disabled selected hidden value="">-- Tipo --</option>
@@ -115,7 +126,7 @@
                                 @enderror
                             </div>
 
-                            <div class="@if ($eventoPai ?? '')col-sm-2 @else col-sm-3 @endif">
+                            <div class="@if ($eventoPai ?? '') col-sm-3 @else col-sm-6 @endif">
                                 <label for="recolhimento" class="col-form-label">{{ __('Recolhimento') }}</label>
                                 <select name="recolhimento" id="recolhimento" class="form-control @error('recolhimento') is-invalid @enderror">
                                     @if (old('recolhimento') != null)

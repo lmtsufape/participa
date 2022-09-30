@@ -25,7 +25,6 @@ class StoreEventoRequest extends FormRequest
      */
     public function rules()
     {
-        // Log::info("Final");
         return [
             'nome'        => ['required', 'string'],
             'descricao'   => ['required', 'string'],
@@ -42,6 +41,7 @@ class StoreEventoRequest extends FormRequest
             'cep'         => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
             'eventoPai'   => ['nullable', new NaoESubEvento],
+            'email_coordenador' => ['exclude_if:eventoPai,null','exclude_if:email_coordenador,null', 'nullable', 'email'],
             'termos'      => ['required'],
             'dataLimiteInscricao'   => ['nullable', 'date'],
         ];
