@@ -88,7 +88,7 @@ class EventoPolicy
 
     public function isCoordenadorDaComissaoOrganizadora(User $user, Evento $evento)
     {
-        return $evento->userIsCoordComissaoOrganizadora($user) || ($evento->eventoPai()->exists() && $this->isCoordenadorDaComissaoOrganizadora($user, $evento->eventoPai));
+        return $evento->userIsCoordComissaoOrganizadora($user);
     }
 
     public function isCoordenadorOrCoordenadorDaComissaoCientifica(User $user, Evento $evento)

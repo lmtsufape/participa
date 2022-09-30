@@ -38,8 +38,6 @@ class HomeController extends Controller
         }
         if ($user->coordComissaoOrganizadora()->exists()) {
             $eventos = $eventos->concat($user->coordComissaoOrganizadora);
-            $subeventos = Evento::whereIn('evento_pai_id', ($user->coordComissaoOrganizadora()->pluck('eventos_id')))->get();
-            $eventos = $eventos->concat($subeventos);
         }
         $eventos = $eventos->concat($user->eventos);
         $eventos = $eventos->concat($user->eventosCoordenador);
