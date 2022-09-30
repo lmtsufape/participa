@@ -41,6 +41,7 @@ class UpdateEventoRequest extends FormRequest
             'uf'          => ['required', 'string'],
             'cep'         => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
+            'email_coordenador' => ['nullable', 'exclude_if:email_coordenador,null', 'email'],
         ];
     }
 }

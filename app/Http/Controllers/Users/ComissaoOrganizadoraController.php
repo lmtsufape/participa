@@ -21,7 +21,7 @@ class ComissaoOrganizadoraController extends Controller
     public function index($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $usuariosDaComissao = $evento->usuariosDaComissaoOrganizadora;
 
@@ -155,9 +155,7 @@ class ComissaoOrganizadoraController extends Controller
         } else {
             $validationData['coordComissaoId'] = [];
         }
-        $idsCoordenadores = $evento->coordComissaoOrganizadora->map(function ($coord) {
-            return $coord->id;
-        })->all();
+        $idsCoordenadores = $evento->coordComissaoOrganizadora->pluck('id')->all();
         $removidos = array_diff($idsCoordenadores, $validationData['coordComissaoId']);
         CoordComissaoOrganizadora::whereIn('user_id', $removidos)->where('eventos_id', $evento->id)->delete();
 

@@ -3,7 +3,7 @@
     <div id="divListarCriterio" class="comissao">
         <div class="row">
             <div class="col-lg-12">
-                <h3 class="titulo-detalhes">Adicionar formulario na molidade:
+                <h3 class="titulo-detalhes">Adicionar formulário na modalidade:
                     <p>
                         <strong>{{$modalidade->nome}}</strong>
                     </p>
