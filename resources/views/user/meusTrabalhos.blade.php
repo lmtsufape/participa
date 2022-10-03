@@ -119,6 +119,7 @@
                   <th>Evento</th>
                   <th>ID</th>
                   <th>Título</th>
+                  <th>Apresentação</th>
                   <th style="text-align:center">Coautores</th>
                   <th style="text-align:center">Baixar</th>
                   <th style="text-align:center">Editar</th>
@@ -134,6 +135,7 @@
                   <td>{{$trabalho->evento->nome}}</td>
                   <td>{{$trabalho->id}}</td>
                   <td>{{$trabalho->titulo}}</td>
+                  <td>{{$trabalho->tipo_apresentacao}}</td>
                   <td style="text-align:center">
                     <a data-toggle="modal" data-target="#modalCoautoresTrabalho_{{$trabalho->id}}" style="cursor: pointer;">
                       <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">

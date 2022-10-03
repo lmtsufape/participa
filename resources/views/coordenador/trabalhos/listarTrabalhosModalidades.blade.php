@@ -106,6 +106,9 @@
                         <i class="fas fa-arrow-alt-circle-down"></i>
                       </a>
                     </th>
+                    @if ($modalidade->apresentacao)
+                    <th scope="col">Apresentação</th>
+                    @endif
                     <th scope="col">Revisores</th>
                     <th scope="col">Avaliações</th>
                     <th scope="col">Data</th>
@@ -143,6 +146,9 @@
 
                       </td>
                       <td>{{$trabalho->autor->name}}</td>
+                      @if ($modalidade->apresentacao)
+                        <td>{{$trabalho->tipo_apresentacao}}</td>
+                      @endif
                       <td>
                         {{count($trabalho->atribuicoes)}}
                       </td>
