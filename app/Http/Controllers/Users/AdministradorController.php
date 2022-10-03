@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\Submissao\Endereco;
+use App\Models\Submissao\Evento;
 use App\Models\Users\Administrador;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
@@ -96,6 +97,12 @@ class AdministradorController extends Controller
         $this->authorize('isAdmin', Administrador::class);
 
         return view('administrador.index');
+    }
+
+    public function eventos()
+    {
+        $eventos = Evento::all();
+        return view('coordenador.index', ['eventos' => $eventos]);
     }
 
     public function areas()
