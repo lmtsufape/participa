@@ -78,7 +78,7 @@
                                                 <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
                                             </a>
                                         </div>
-                                        @can('isCoordenador', $evento)
+                                        @can('isCriador', $evento)
                                         <div class="row col-md-12">
                                             <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
                                                 {{ csrf_field() }}

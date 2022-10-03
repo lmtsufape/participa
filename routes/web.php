@@ -72,6 +72,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::prefix('/admin')->name('admin.')->group(function(){
         Route::get('/home', 'AdministradorController@index')->name('home');
         Route::get('/editais', 'AdministradorController@editais')->name('editais');
+        Route::get('/eventos', 'AdministradorController@eventos')->name('eventos');
         Route::get('/areas', 'AdministradorController@areas')->name('areas');
         Route::get('/users', 'AdministradorController@users')->name('users');
         Route::get('/edit/user/{id}', 'AdministradorController@editUser')->name('editUser');

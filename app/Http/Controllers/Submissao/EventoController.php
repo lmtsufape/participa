@@ -1436,7 +1436,7 @@ class EventoController extends Controller
     public function destroy($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCriador', $evento);
 
         $evento->deletado = true;
         $evento->update();
