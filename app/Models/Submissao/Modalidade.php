@@ -47,4 +47,9 @@ class Modalidade extends Model
     {
         return $this->hasMany('App\Models\Submissao\MensagemParecer');
     }
+
+    public function tiposApresentacao()
+    {
+        return $this->hasMany('App\Models\Submissao\TipoApresentacao');
+    }
 }

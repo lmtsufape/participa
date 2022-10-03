@@ -698,6 +698,13 @@
                 this.parentElement.parentElement.children[1].style.display = "none";
             }
         })
+        $('.apresentacao').on("change", function() {
+            if (this.checked) {
+                this.parentElement.parentElement.parentElement.children[1].style.display = "block";
+            } else {
+                this.parentElement.parentElement.parentElement.children[1].style.display = "none";
+            }
+        });
     });
 
     $(document).ready(function() {

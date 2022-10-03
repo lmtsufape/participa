@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Submissao;
 use App\Http\Controllers\Controller;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Modalidade;
+use App\Models\Submissao\TipoApresentacao;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -72,6 +73,7 @@ class ModalidadeController extends Controller
             'texto'             => ['nullable'],
             'limit'             => ['nullable'],
             'arquivo'           => ['nullable'],
+            'apresentacao'      => ['nullable'],
             'pdf'               => ['nullable'],
             'jpg'               => ['nullable'],
             'jpeg'              => ['nullable'],
@@ -130,6 +132,12 @@ class ModalidadeController extends Controller
             }
         }
 
+        if ($request->apresentacao) {
+            if (! $request->presencial && ! $request->remoto && ! $request->a_distancia && ! $request->semipresencial) {
+                return redirect()->back()->withErrors(['apresentacao' => 'Selecione pelos menos um tipo de apresentação.'])->withInput($validatedData);
+            }
+        }
+
         // Campo TEXTO boolean removido?
         // $modalidade = Modalidade::create($request->all());
         $modalidade = new Modalidade();
@@ -160,6 +168,7 @@ class ModalidadeController extends Controller
         $modalidade->zip = $request->zip;
         $modalidade->svg = $request->svg;
         $modalidade->evento_id = $request->eventoId;
+        $modalidade->apresentacao = $request->apresentacao ? true : false;
         $modalidade->save();
 
         if (isset($request->arquivoRegras)) {
@@ -190,6 +199,33 @@ class ModalidadeController extends Controller
             Storage::putFileAs($pathModelos, $fileModelos, $nomeModelos);
 
             $modalidade->modelo_apresentacao = $pathModelos.$nomeModelos;
+        }
+
+        if ($request->apresentacao) {
+            if ($request->presencial) {
+                $tipo = new TipoApresentacao();
+                $tipo->tipo = "Presencial";
+                $tipo->modalidade_id = $modalidade->id;
+                $tipo->save();
+            }
+            if ($request->remoto) {
+                $tipo = new TipoApresentacao();
+                $tipo->tipo = "Remoto";
+                $tipo->modalidade_id = $modalidade->id;
+                $tipo->save();
+            }
+            if ($request->a_distancia) {
+                $tipo = new TipoApresentacao();
+                $tipo->tipo = "À distância";
+                $tipo->modalidade_id = $modalidade->id;
+                $tipo->save();
+            }
+            if ($request->semipresencial) {
+                $tipo = new TipoApresentacao();
+                $tipo->tipo = "Semipresencial";
+                $tipo->modalidade_id = $modalidade->id;
+                $tipo->save();
+            }
         }
 
         $modalidade->save();
@@ -249,6 +285,7 @@ class ModalidadeController extends Controller
             'texto'.$request->modalidadeEditId                  => ['nullable'],
             'limit'.$request->modalidadeEditId                  => ['nullable'],
             'arquivoEdit'.$request->modalidadeEditId            => ['nullable'],
+            'apresentacao'                                      => ['nullable'],
             'pdf'.$request->modalidadeEditId                    => ['nullable'],
             'jpg'.$request->modalidadeEditId                    => ['nullable'],
             'jpeg'.$request->modalidadeEditId                   => ['nullable'],
@@ -347,6 +384,12 @@ class ModalidadeController extends Controller
             $modalidadeEdit->svg = false;
         }
 
+        if ($request->apresentacao) {
+            if (! $request->presencial && ! $request->remoto && ! $request->a_distancia && ! $request->semipresencial) {
+                return redirect()->back()->withErrors(['apresentacao' => 'Selecione pelos menos um tipo de apresentação.'])->withInput($validatedData);
+            }
+        }
+
         $modalidadeEdit->nome = $request->input('nome'.$request->modalidadeEditId);
         $modalidadeEdit->inicioSubmissao = $request->input('inícioSubmissão'.$request->modalidadeEditId);
         $modalidadeEdit->fimSubmissao = $request->input('fimSubmissão'.$request->modalidadeEditId);
@@ -361,6 +404,7 @@ class ModalidadeController extends Controller
         $modalidadeEdit->arquivo = $request->input('arquivoEdit'.$request->modalidadeEditId);
         $modalidadeEdit->caracteres = $caracteres;
         $modalidadeEdit->palavras = $palavras;
+        $modalidadeEdit->apresentacao = $request->apresentacao ? true : false;
 
         // dd($request->file('arquivoRegras'.$request->modalidadeEditId));
         if ($request->file('arquivoRegras'.$request->modalidadeEditId) != null) {
@@ -432,6 +476,50 @@ class ModalidadeController extends Controller
             }
             $modalidadeEdit->modelo_apresentacao = null;
         }
+
+        if ($request->apresentacao) {
+            $presencial = $modalidadeEdit->tiposApresentacao()->where('tipo', "Presencial")->first();
+            $remoto = $modalidadeEdit->tiposApresentacao()->where('tipo', "Remoto")->first();
+            $a_distancia = $modalidadeEdit->tiposApresentacao()->where('tipo', "À distância")->first();
+            $semipresencial = $modalidadeEdit->tiposApresentacao()->where('tipo', "Semipresencial")->first();
+
+            if ($request->presencial && is_null($presencial)) {
+                $tipo = new TipoApresentacao();
+                $tipo->tipo = "Presencial";
+                $tipo->modalidade_id = $modalidadeEdit->id;
+                $tipo->save();
+            } elseif (! $request->presencial && ! is_null($presencial)) {
+                $presencial->delete();
+            }
+
+            if ($request->remoto  && is_null($remoto)) {
+                $tipo = new TipoApresentacao();
+                $tipo->tipo = "Remoto";
+                $tipo->modalidade_id = $modalidadeEdit->id;
+                $tipo->save();
+            } elseif (! $request->remoto && ! is_null($remoto)) {
+                $remoto->delete();
+            }
+
+            if ($request->a_distancia  && is_null($a_distancia)) {
+                $tipo = new TipoApresentacao();
+                $tipo->tipo = "À distância";
+                $tipo->modalidade_id = $modalidadeEdit->id;
+                $tipo->save();
+            } elseif (! $request->a_distancia && ! is_null($a_distancia)) {
+                $a_distancia->delete();
+            }
+
+            if ($request->semipresencial  && is_null($semipresencial)) {
+                $tipo = new TipoApresentacao();
+                $tipo->tipo = "Semipresencial";
+                $tipo->modalidade_id = $modalidadeEdit->id;
+                $tipo->save();
+            } elseif (! $request->semipresencial && ! is_null($semipresencial)) {
+                $semipresencial->delete();
+            }
+        }
+
         $modalidadeEdit->save();
         // dd($modalidadeEdit);
 

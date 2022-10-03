@@ -116,6 +116,10 @@ class TrabalhoController extends Controller
           Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
             }
 
+            if ($modalidade->apresentacao && ! $request->tipo_apresentacao) {
+                return redirect()->back()->withErrors(['tipo_apresentacao' => 'Selecione o tipo de apresentação do trabalho.'])->withInput($validatedData);
+            }
+
             $autor = User::where('email', $request->emailCoautor[0])->first();
             if ($autor == null) {
                 $passwordTemporario = Str::random(8);
@@ -196,6 +200,9 @@ class TrabalhoController extends Controller
             }
             if (isset($request->campoextra5grande)) {
                 $trabalho->campoextra5grande = $request->campoextra5grande;
+            }
+            if ($trabalho->modalidade->apresentacao) {
+                $trabalho->tipo_apresentacao = $request->tipo_apresentacao;
             }
 
             $trabalho->save();

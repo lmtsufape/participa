@@ -169,7 +169,7 @@
                         {{-- Inicio - Tipo de submissão --}}
                         <div class="row">
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="form-check" style="margin-top: 10px">
                                     <input class="form-check-input incluir-resumo" type="checkbox" name="texto" id="id-custom_field-account-1-2" @if (old('texto') == true) checked @endif>
                                     <label class="form-check-label" for="resumo">
@@ -250,7 +250,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-6" id="tipo-arquivo" @if(old('arquivo') == true) style="display: block" @else style="display: none" @endif>
+                            <div class="col-sm-12" id="tipo-arquivo" @if(old('arquivo') == true) style="display: block" @else style="display: none" @endif>
 
                                 <div class="titulo-detalhes" style="margin-top: 10px"></div>
                                 <label class="col-form-label">{{ __('Tipos de extensão aceitas') }}</label>
@@ -301,6 +301,51 @@
                                     <input class="form-check-input" type="checkbox" id="defaultCheck1" name="svg" @if(old('svg')) checked @endif>
                                     <label class="form-check-label" for="defaultCheck1">
                                         .svg
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12">
+                                <div class="form-check">
+                                    <input class="form-check-input apresentacao" type="checkbox" name="apresentacao" id="apresentacao" @if(old('apresentacao') == true) checked @endif>
+                                    <label class="form-check-label" for="apresentacao">
+                                        {{ __('Habilitar escolha do tipo de apresentação do trabalho') }}
+                                    </label>
+                                    @error('apresentacao')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-sm-12" id="tipo-apresentacao" @if(old('apresentacao') == true) style="display: block" @else style="display: none" @endif>
+
+                                <div class="titulo-detalhes" style="margin-top: 10px"></div>
+                                <label class="col-form-label">{{ __('Selecione os tipos de apresentação') }}</label>
+
+                                <div class="form-check" style="margin-top: 10px">
+                                    <input class="form-check-input" type="checkbox" name="remoto" @if(old('remoto')) checked @endif>
+                                    <label class="form-check-label" for="remoto">
+                                        Remoto
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="presencial" @if(old('presencial')) checked @endif>
+                                    <label class="form-check-label" for="presencial">
+                                        Presencial
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="a_distancia" @if(old('a_distancia')) checked @endif>
+                                    <label class="form-check-label" for="a_distancia">
+                                        À distância
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="semipresencial" @if(old('semipresencial')) checked @endif>
+                                    <label class="form-check-label" for="semipresencial">
+                                        Semipresencial
                                     </label>
                                 </div>
                             </div>
