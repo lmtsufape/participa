@@ -17,6 +17,7 @@ class CreateTipoApresentacaosTable extends Migration
             $table->bigIncrements('id');
             $table->string('tipo');
             $table->unsignedBigInteger('modalidade_id');
+            $table->foreign('modalidade_id')->references('id')->on('modalidades');
             $table->timestamps();
         });
     }
