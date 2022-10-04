@@ -421,6 +421,10 @@ class TrabalhoController extends Controller
             $trabalho->modalidadeId = $request->input('modalidade'.$id);
         }
 
+        if ($trabalho->modalidade->apresentacao && ! $request->tipo_apresentacao) {
+            return redirect()->back()->withErrors(['tipo_apresentacao' => 'Selecione o tipo de apresentação do trabalho.'])->withInput($validatedData);
+        }
+
         $usuarios_dos_coautores = collect();
         foreach ($trabalho->coautors as $coautor_id) {
             $usuarios_dos_coautores->push(User::find($coautor_id->autorId));
@@ -545,6 +549,9 @@ class TrabalhoController extends Controller
         }
         if (isset($request->campoextra5grande)) {
             $trabalho->campoextra5grande = $request->campoextra5grande;
+        }
+        if ($trabalho->modalidade->apresentacao) {
+            $trabalho->tipo_apresentacao = $request->tipo_apresentacao;
         }
 
         if ($request->file('arquivo'.$id) != null) {

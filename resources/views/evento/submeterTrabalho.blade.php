@@ -571,7 +571,7 @@
                                             <label for="area"
                                                 class="col-form-label"><strong>{{ __('Tipo de apresentação do trabalho') }}</strong>
                                             </label>
-                                            <select name="tipo_apresentacao" id="tipo_apresentacao" class="form-control @error('tipo_apresentacao') is-invalid @enderror" >
+                                            <select name="tipo_apresentacao" id="tipo_apresentacao" class="form-control @error('tipo_apresentacao') is-invalid @enderror" required>
                                                 <option value="" selected disabled>{{__('-- Selecione o tipo de apresentação do trabalho --')}}</option>
                                                 @foreach ($modalidade->tiposApresentacao as $tipo)
                                                 <option @if(old('tipo_apresentacao') == $tipo->tipo) selected @endif value="{{$tipo->tipo}}">{{__($tipo->tipo)}}</option>
