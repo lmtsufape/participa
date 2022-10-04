@@ -51,6 +51,7 @@ class TrabalhoController extends Controller
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
         $ordemCampos = explode(',', $formSubTraba->ordemCampos);
+        array_splice( $ordemCampos, 5, 0, "apresentacao");
         $modalidade = Modalidade::find($idModalidade);
 
         $mytime = Carbon::now('America/Recife');
@@ -114,6 +115,10 @@ class TrabalhoController extends Controller
             if ($this->validarTipoDoArquivo($request->arquivo, $modalidade)) {
                 return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
           Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
+            }
+
+            if ($modalidade->apresentacao && ! $request->tipo_apresentacao) {
+                return redirect()->back()->withErrors(['tipo_apresentacao' => 'Selecione a forma de apresentação do trabalho.'])->withInput($validatedData);
             }
 
             $autor = User::where('email', $request->emailCoautor[0])->first();
@@ -196,6 +201,9 @@ class TrabalhoController extends Controller
             }
             if (isset($request->campoextra5grande)) {
                 $trabalho->campoextra5grande = $request->campoextra5grande;
+            }
+            if ($trabalho->modalidade->apresentacao) {
+                $trabalho->tipo_apresentacao = $request->tipo_apresentacao;
             }
 
             $trabalho->save();
@@ -414,6 +422,10 @@ class TrabalhoController extends Controller
             $trabalho->modalidadeId = $request->input('modalidade'.$id);
         }
 
+        if ($trabalho->modalidade->apresentacao && ! $request->tipo_apresentacao) {
+            return redirect()->back()->withErrors(['tipo_apresentacao' => 'Selecione a forma de apresentação do trabalho.'])->withInput($validatedData);
+        }
+
         $usuarios_dos_coautores = collect();
         foreach ($trabalho->coautors as $coautor_id) {
             $usuarios_dos_coautores->push(User::find($coautor_id->autorId));
@@ -538,6 +550,9 @@ class TrabalhoController extends Controller
         }
         if (isset($request->campoextra5grande)) {
             $trabalho->campoextra5grande = $request->campoextra5grande;
+        }
+        if ($trabalho->modalidade->apresentacao) {
+            $trabalho->tipo_apresentacao = $request->tipo_apresentacao;
         }
 
         if ($request->file('arquivo'.$id) != null) {

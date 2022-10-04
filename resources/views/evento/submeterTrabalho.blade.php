@@ -201,6 +201,29 @@
                                             </div>
                                         </div>
                                     @endif
+                                    @if ($indice == "apresentacao")
+                                        @if ($modalidade->apresentacao)
+                                            <div class="row justify-content-center mt-4">
+                                                <div class="col-sm-12">
+                                                    <label for="area"
+                                                        class="col-form-label"><strong>{{ __('Forma de apresentação do trabalho') }}</strong>
+                                                    </label>
+                                                    <select name="tipo_apresentacao" id="tipo_apresentacao" class="form-control @error('tipo_apresentacao') is-invalid @enderror" required>
+                                                        <option value="" selected disabled>{{__('-- Selecione a forma de apresentação do trabalho --')}}</option>
+                                                        @foreach ($modalidade->tiposApresentacao as $tipo)
+                                                        <option @if(old('tipo_apresentacao') == $tipo->tipo) selected @endif value="{{$tipo->tipo}}">{{__($tipo->tipo)}}</option>
+                                                        @endforeach
+                                                    </select>
+
+                                                    @error('tipo_apresentacao')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endif
                                     @if ($indice == "etiquetauploadtrabalho")
                                         <div class="row justify-content-center">
                                             {{-- Submeter trabalho --}}

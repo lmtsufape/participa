@@ -22,7 +22,7 @@
                             <input type="hidden" name="eventoId" value="{{$evento->id}}">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label for="nomeModalidade" class="col-form-label">*{{ __('Nome') }}</label>
+                                    <label for="nomeModalidade" class="col-form-label font-weight-bold">*{{ __('Nome') }}</label>
 
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                                 date_default_timezone_set('America/Recife');
                             @endphp --}}
                             <div class="col-sm-6">
-                                <label for="inicioSubmissao" class="col-form-label">{{ __('Início da Submissão') }}</label>
+                                <label for="inicioSubmissao" class="col-form-label font-weight-bold">{{ __('Início da Submissão') }}</label>
                                 <input id="inicioSubmissao" type="datetime-local" class="form-control @error('inícioDaSubmissão') is-invalid @enderror" name="inícioDaSubmissão" value="{{ old('inícioDaSubmissão') }}" autocomplete="inicioSubmissao" autofocus>
 
                                 @error('inícioDaSubmissão')
@@ -57,7 +57,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-6">
-                                <label for="fimSubmissao" class="col-form-label">{{ __('Fim da Submissão') }}</label>
+                                <label for="fimSubmissao" class="col-form-label font-weight-bold">{{ __('Fim da Submissão') }}</label>
                                 <input id="fimSubmissao" type="datetime-local" class="form-control @error('fimDaSubmissão') is-invalid @enderror" name="fimDaSubmissão" value="{{ old('fimDaSubmissão') }}" autocomplete="fimSubmissao" autofocus>
 
                                 @error('fimDaSubmissão')
@@ -73,7 +73,7 @@
                         <div class="row justify-content-center">
 
                             <div class="col-sm-6">
-                                <label for="inicioRevisao" class="col-form-label">{{ __('Início da Revisão') }}</label>
+                                <label for="inicioRevisao" class="col-form-label font-weight-bold">{{ __('Início da Revisão') }}</label>
                                 <input id="inicioRevisao" type="datetime-local" class="form-control @error('inícioDaRevisão') is-invalid @enderror" name="inícioDaRevisão" value="{{ old('inícioDaRevisão') }}" autocomplete="inicioRevisao" autofocus>
 
                                 @error('inícioDaRevisão')
@@ -83,7 +83,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-6">
-                                <label for="fimRevisao" class="col-form-label">{{ __('Fim da Revisão') }}</label>
+                                <label for="fimRevisao" class="col-form-label font-weight-bold">{{ __('Fim da Revisão') }}</label>
                                 <input id="fimRevisao" type="datetime-local" class="form-control @error('fimDaRevisão') is-invalid @enderror" name="fimDaRevisão" value="{{ old('fimDaRevisão') }}" autocomplete="fimRevisao" autofocus>
 
                                 @error('fimDaRevisão')
@@ -99,7 +99,7 @@
                         <div class="row justify-content-center">
 
                             <div class="col-sm-6">
-                                <label for="inicioCorrecao" class="col-form-label">{{ __('Início da Correção') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                <label for="inicioCorrecao" class="col-form-label font-weight-bold">{{ __('Início da Correção') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
                                 <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inícioCorreção') is-invalid @enderror" name="inícioCorreção" value="{{ old('inícioCorreção') }}" autocomplete="inicioCorrecao" autofocus>
 
                                 @error('inícioCorreção')
@@ -109,7 +109,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-6">
-                                <label for="fimCorrecao" class="col-form-label">{{ __('Fim da Correção') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                <label for="fimCorrecao" class="col-form-label font-weight-bold">{{ __('Fim da Correção') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
                                 <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorreção') is-invalid @enderror" name="fimCorreção" value="{{ old('fimCorreção') }}" autocomplete="fimCorrecao" autofocus>
 
                                 @error('fimCorreção')
@@ -125,7 +125,7 @@
                         <div class="row justify-content-center">
 
                             <div class="col-sm-6">
-                                <label for="inicioValidacao" class="col-form-label">
+                                <label for="inicioValidacao" class="col-form-label font-weight-bold">
                                     {{ __('Início da Validação') }}
                                     <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i>
                                 </label>
@@ -138,7 +138,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-6">
-                                <label for="fimValidacao" class="col-form-label">{{ __('Fim da Validação') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                <label for="fimValidacao" class="col-form-label font-weight-bold">{{ __('Fim da Validação') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
                                 <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidação') is-invalid @enderror" name="fimValidação" value="{{ old('fimValidação') }}" autocomplete="fimValidacao" autofocus>
 
                                 @error('fimValidação')
@@ -154,7 +154,7 @@
                         <div class="row">
 
                             <div class="col-sm-6">
-                                <label for="inicioResultado" class="col-form-label">{{ __('Resultado') }}</label>
+                                <label for="inicioResultado" class="col-form-label font-weight-bold">{{ __('Resultado') }}</label>
                                 <input id="inicioResultado" type="datetime-local" class="form-control @error('resultado') is-invalid @enderror" name="resultado" value="{{ old('resultado') }}" autocomplete="inicioResultado" autofocus>
 
                                 @error('resultado')
@@ -169,10 +169,10 @@
                         {{-- Inicio - Tipo de submissão --}}
                         <div class="row">
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="form-check" style="margin-top: 10px">
                                     <input class="form-check-input incluir-resumo" type="checkbox" name="texto" id="id-custom_field-account-1-2" @if (old('texto') == true) checked @endif>
-                                    <label class="form-check-label" for="resumo">
+                                    <label class="form-check-label font-weight-bold" for="resumo">
                                         Adicionar campo resumo por texto
                                     </label>
                                     @error('resumo')
@@ -182,7 +182,7 @@
                                     @enderror
                                 </div>
                                 <div id="restricoes-resumo-texto" @if (old('texto') == true) style="display: block;" @else style="display: none;" @endif>
-                                    <label class="col-form-label">{{ __('Restrições de resumo:') }}</label>
+                                    <label class="col-form-label font-weight-bold">{{ __('Restrições de resumo:') }}</label>
 
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="limit" id="id-limit-custom_field-account-1-1" value="limit-option1" @if (old('limit') == "limit-option1") checked @endif>
@@ -236,7 +236,7 @@
 
                                 <div class="form-check" style="margin-top: 10px">
                                     <input class="form-check-input incluirarquivo" type="checkbox" name="arquivo" id="id-custom_field-account-1-2" @if(old('arquivo') == true) checked @endif>
-                                    <label class="form-check-label" for="arquivo">
+                                    <label class="form-check-label font-weight-bold" for="arquivo">
                                         Incluir submissão por arquivo
                                     </label>
                                     @error('arquivo')
@@ -250,10 +250,10 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-6" id="tipo-arquivo" @if(old('arquivo') == true) style="display: block" @else style="display: none" @endif>
+                            <div class="col-sm-12" id="tipo-arquivo" @if(old('arquivo') == true) style="display: block" @else style="display: none" @endif>
 
                                 <div class="titulo-detalhes" style="margin-top: 10px"></div>
-                                <label class="col-form-label">{{ __('Tipos de extensão aceitas') }}</label>
+                                <label class="col-form-label font-weight-bold">{{ __('Tipos de extensão aceitas') }}</label>
 
                                 <div class="form-check" style="margin-top: 10px">
                                     <input class="form-check-input" type="checkbox" id="defaultCheck1" name="pdf" @if(old('pdf')) checked @endif>
@@ -305,10 +305,55 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12">
+                                <div class="form-check">
+                                    <input class="form-check-input apresentacao" type="checkbox" name="apresentacao" id="apresentacao" @if(old('apresentacao') == true) checked @endif>
+                                    <label class="form-check-label font-weight-bold" for="apresentacao">
+                                        {{ __('Habilitar escolha da forma de apresentação do trabalho:') }}
+                                    </label>
+                                    @error('apresentacao')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-sm-12" id="tipo-apresentacao" @if(old('apresentacao') == true) style="display: block" @else style="display: none" @endif>
+
+                                <div class="titulo-detalhes" style="margin-top: 10px"></div>
+                                <label class="col-form-label font-weight-bold">{{ __('Selecione a(s) forma(s) de apresentação do trabalho que poderá(ão) ser escolhida(s) pelo(a) autor(a) ') }} <span style="color: red">{{ __('(não obrigatório)')}}</span>:</label>
+
+                                <div class="form-check" style="margin-top: 10px">
+                                    <input class="form-check-input" type="checkbox" name="remoto" @if(old('remoto')) checked @endif>
+                                    <label class="form-check-label" for="remoto">
+                                        Remoto
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="presencial" @if(old('presencial')) checked @endif>
+                                    <label class="form-check-label" for="presencial">
+                                        Presencial
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="a_distancia" @if(old('a_distancia')) checked @endif>
+                                    <label class="form-check-label" for="a_distancia">
+                                        À distância
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="semipresencial" @if(old('semipresencial')) checked @endif>
+                                    <label class="form-check-label" for="semipresencial">
+                                        Semipresencial
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row justify-content-center">
                             {{-- Arquivo de Modelos --}}
                             <div class="col-sm-12" style="margin-top: 20px;" >
-                                <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarapresentacao}}:</label>
+                                <label for="nomeTrabalho" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarapresentacao}}:</label>
 
                                 <div class="custom-file">
                                   <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoModelos">
@@ -322,7 +367,7 @@
                             </div>
                             {{-- Arquivo de Regras  --}}
                             <div class="col-sm-12" style="margin-top: 20px;">
-                              <label for="arquivoRegras" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarregra}}:</label>
+                              <label for="arquivoRegras" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarregra}}:</label>
 
                               <div class="custom-file">
                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegras">
@@ -336,7 +381,7 @@
                             </div>
                             {{-- Arquivo de Templates --}}
                             <div class="col-sm-12" id="area-template" style="margin-top: 20px; @if(old('arquivo')) display:block; @else display:none; @endif" >
-                                <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixartemplate}}:</label>
+                                <label for="nomeTrabalho" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixartemplate}}:</label>
 
                                 <div class="custom-file">
                                   <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates">

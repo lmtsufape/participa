@@ -119,6 +119,7 @@
                   <th>Evento</th>
                   <th>ID</th>
                   <th>Título</th>
+                  <th>Apresentação</th>
                   <th style="text-align:center">Coautores</th>
                   <th style="text-align:center">Baixar</th>
                   <th style="text-align:center">Editar</th>
@@ -134,6 +135,7 @@
                   <td>{{$trabalho->evento->nome}}</td>
                   <td>{{$trabalho->id}}</td>
                   <td>{{$trabalho->titulo}}</td>
+                  <td>{{$trabalho->tipo_apresentacao}}</td>
                   <td style="text-align:center">
                     <a data-toggle="modal" data-target="#modalCoautoresTrabalho_{{$trabalho->id}}" style="cursor: pointer;">
                       <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
@@ -356,6 +358,7 @@
               @php
                 $formSubTraba = $trabalho->evento->formSubTrab;
                 $ordem = explode(",", $formSubTraba->ordemCampos);
+                array_splice( $ordem, 5, 0, "apresentacao");
                 $modalidade = $trabalho->modalidade;
                 $areas = $trabalho->evento->areas;
               @endphp
@@ -539,6 +542,29 @@
                           @enderror
                       </div>
                   </div>
+                @endif
+                @if ($indice == "apresentacao")
+                    @if ($trabalho->modalidade->apresentacao)
+                        <div class="row justify-content-center mt-4">
+                            <div class="col-sm-12">
+                                <label for="area"
+                                    class="col-form-label"><strong>{{ __('Forma de apresentação do trabalho') }}</strong>
+                                </label>
+                                <select name="tipo_apresentacao" id="tipo_apresentacao" class="form-control @error('tipo_apresentacao') is-invalid @enderror" required>
+                                    <option value="" selected disabled>{{__('-- Selecione a forma de apresentação do trabalho --')}}</option>
+                                    @foreach ($trabalho->modalidade->tiposApresentacao as $tipo)
+                                    <option @if(old('tipo_apresentacao') == $tipo->tipo || $trabalho->tipo_apresentacao == $tipo->tipo) selected @endif value="{{$tipo->tipo}}">{{__($tipo->tipo)}}</option>
+                                    @endforeach
+                                </select>
+
+                                @error('tipo_apresentacao')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                    @endif
                 @endif
                 @if ($indice == "etiquetauploadtrabalho")
                   <div class="row justify-content-center">
