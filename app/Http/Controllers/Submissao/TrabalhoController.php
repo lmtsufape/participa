@@ -51,6 +51,7 @@ class TrabalhoController extends Controller
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
         $ordemCampos = explode(',', $formSubTraba->ordemCampos);
+        array_splice( $ordemCampos, 5, 0, "apresentacao");
         $modalidade = Modalidade::find($idModalidade);
 
         $mytime = Carbon::now('America/Recife');
@@ -117,7 +118,7 @@ class TrabalhoController extends Controller
             }
 
             if ($modalidade->apresentacao && ! $request->tipo_apresentacao) {
-                return redirect()->back()->withErrors(['tipo_apresentacao' => 'Selecione o tipo de apresentação do trabalho.'])->withInput($validatedData);
+                return redirect()->back()->withErrors(['tipo_apresentacao' => 'Selecione a forma de apresentação do trabalho.'])->withInput($validatedData);
             }
 
             $autor = User::where('email', $request->emailCoautor[0])->first();
@@ -422,7 +423,7 @@ class TrabalhoController extends Controller
         }
 
         if ($trabalho->modalidade->apresentacao && ! $request->tipo_apresentacao) {
-            return redirect()->back()->withErrors(['tipo_apresentacao' => 'Selecione o tipo de apresentação do trabalho.'])->withInput($validatedData);
+            return redirect()->back()->withErrors(['tipo_apresentacao' => 'Selecione a forma de apresentação do trabalho.'])->withInput($validatedData);
         }
 
         $usuarios_dos_coautores = collect();

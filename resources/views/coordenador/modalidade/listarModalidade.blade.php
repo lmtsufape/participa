@@ -140,7 +140,7 @@
                                             <input type="hidden" name="eventoId" value="{{$evento->id}}">
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <label for="nomeModalidadeEdit" class="col-form-label">*{{ __('Nome') }}</label>
+                                                    <label for="nomeModalidadeEdit" class="col-form-label font-weight-bold">*{{ __('Nome') }}</label>
                                                 </div>
                                             </div>
                                             <div class="row justify-content-center">
@@ -162,7 +162,7 @@
                                         <div class="row justify-content-center">
 
                                             <div class="col-sm-6">
-                                                <label for="inicioSubmissaoEdit" class="col-form-label">{{ __('Início da Submissão') }}</label>
+                                                <label for="inicioSubmissaoEdit" class="col-form-label font-weight-bold">{{ __('Início da Submissão') }}</label>
                                                 <input id="inicioSubmissaoEdit" type="datetime-local" class="form-control @error('inícioSubmissão'.$modalidade->id) is-invalid @enderror" name="inícioSubmissão{{$modalidade->id}}" value="@if(old('inícioSubmissão'.$modalidade->id)!=null){{old('inícioSubmissão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioSubmissao))}}@endif" autocomplete="inícioSubmissão" autofocus>
 
                                                 @error('inícioSubmissão'.$modalidade->id)
@@ -172,7 +172,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-sm-6">
-                                                <label for="fimSubmissaoEdit" class="col-form-label">{{ __('Fim da Submissão') }}</label>
+                                                <label for="fimSubmissaoEdit" class="col-form-label font-weight-bold">{{ __('Fim da Submissão') }}</label>
                                                 <input id="fimSubmissaoEdit" type="datetime-local" class="form-control @error('fimSubmissão'.$modalidade->id) is-invalid @enderror" name="fimSubmissão{{$modalidade->id}}" value="@if(old('fimSubmissão'.$modalidade->id)!=null){{old('fimSubmissão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimSubmissao))}}@endif" autocomplete="fimSubmissão" autofocus>
 
                                                 @error('fimSubmissão'.$modalidade->id)
@@ -188,7 +188,7 @@
                                         <div class="row justify-content-center">
 
                                             <div class="col-sm-6">
-                                                <label for="inicioRevisaoEdit" class="col-form-label">{{ __('Início da Revisão') }}</label>
+                                                <label for="inicioRevisaoEdit" class="col-form-label font-weight-bold">{{ __('Início da Revisão') }}</label>
                                                 <input id="inicioRevisaoEdit" type="datetime-local" class="form-control @error('inícioRevisão'.$modalidade->id) is-invalid @enderror" name="inícioRevisão{{$modalidade->id}}" value="{{old('inicioRevisão'.$modalidade->id, $modalidade->inicioRevisao ? date('Y-m-d\TH:i', strtotime($modalidade->inicioRevisao)) : '')}}" autocomplete="inícioRevisão" autofocus>
 
                                                 @error('inícioRevisão'.$modalidade->id)
@@ -198,7 +198,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-sm-6">
-                                                <label for="fimRevisaoEdit" class="col-form-label">{{ __('Fim da Revisão') }}</label>
+                                                <label for="fimRevisaoEdit" class="col-form-label font-weight-bold">{{ __('Fim da Revisão') }}</label>
                                                 <input id="fimRevisaoEdit" type="datetime-local" class="form-control @error('fimRevisão'.$modalidade->id) is-invalid @enderror" name="fimRevisão{{$modalidade->id}}" value="{{old('fimRevisão'.$modalidade->id, $modalidade->fimRevisao ? date('Y-m-d\TH:i', strtotime($modalidade->fimRevisao)) : '')}}" autocomplete="fimRevisão" autofocus>
 
                                                 @error('fimRevisão'.$modalidade->id)
@@ -214,7 +214,7 @@
                                         <div class="row justify-content-center">
 
                                             <div class="col-sm-6">
-                                                <label for="inicioCorrecao" class="col-form-label">{{ __('Início da Correção') }}</label>
+                                                <label for="inicioCorrecao" class="col-form-label font-weight-bold">{{ __('Início da Correção') }}</label>
                                                 <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inícioCorreção'.$modalidade->id) is-invalid @enderror" name="inícioCorreção{{$modalidade->id}}" @if(old('inicioCorreção'.$modalidade->id) != null) value="{{old('inicioCorreção'.$modalidade->id)}}" @else @if($modalidade->inicioCorrecao != null) value="{{date('Y-m-d\TH:i', strtotime($modalidade->inicioCorrecao))}}" @endif @endif autocomplete="inicioCorrecao" autofocus>
 
                                                 @error('inícioCorreção'.$modalidade->id)
@@ -224,7 +224,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-sm-6">
-                                                <label for="fimCorrecao" class="col-form-label">{{ __('Fim da Correção') }}</label>
+                                                <label for="fimCorrecao" class="col-form-label font-weight-bold">{{ __('Fim da Correção') }}</label>
                                                 <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorreção'.$modalidade->id) is-invalid @enderror" name="fimCorreção{{$modalidade->id}}" @if(old('fimCorreção'.$modalidade->id)!=null) value="{{old('fimCorreção'.$modalidade->id)}}" @else @if($modalidade->fimCorrecao) value="{{date('Y-m-d\TH:i',strtotime($modalidade->fimCorrecao))}}" @endif @endif autocomplete="fimCorrecao" autofocus>
 
                                                 @error('fimCorreção'.$modalidade->id)
@@ -241,7 +241,7 @@
                                         <div class="row justify-content-center">
 
                                             <div class="col-sm-6">
-                                                <label for="inicioValidacao" class="col-form-label">{{ __('Início da Validação') }}</label>
+                                                <label for="inicioValidacao" class="col-form-label font-weight-bold">{{ __('Início da Validação') }}</label>
                                                 <input id="inicioValidacao" type="datetime-local" class="form-control @error('inícioValidação'.$modalidade->id) is-invalid @enderror" name="inícioValidação{{$modalidade->id}}" @if(old('inícioValidação'.$modalidade->id)!=null) value="{{old('inícioValidação'.$modalidade->id)}}" @else @if($modalidade->inicioValidacao) value="{{date('Y-m-d\TH:i',strtotime($modalidade->inicioValidacao))}}" @endif @endif autocomplete="inicioValidacao" autofocus>
 
                                                 @error('inícioValidação'.$modalidade->id)
@@ -251,7 +251,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-sm-6">
-                                                <label for="fimValidacao" class="col-form-label">{{ __('Fim da Validação') }}</label>
+                                                <label for="fimValidacao" class="col-form-label font-weight-bold">{{ __('Fim da Validação') }}</label>
                                                 <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidação'.$modalidade->id) is-invalid @enderror" name="fimValidação{{$modalidade->id}}" @if(old('fimValidação'.$modalidade->id)!=null) value="{{old('fimValidação'.$modalidade->id)}}" @else @if($modalidade->fimValidacao) value="{{date('Y-m-d\TH:i',strtotime($modalidade->fimValidacao))}}" @endif @endif autocomplete="fimValidacao" autofocus>
 
                                                 @error('fimValidação'.$modalidade->id)
@@ -267,7 +267,7 @@
                                         <div class="row">
 
                                             <div class="col-sm-6">
-                                                <label for="inicioResultado" class="col-form-label">{{ __('Resultado') }}</label>
+                                                <label for="inicioResultado" class="col-form-label font-weight-bold">{{ __('Resultado') }}</label>
                                                 <input id="inicioResultado" type="datetime-local" class="form-control @error('resultado'.$modalidade->id) is-invalid @enderror" name="resultado{{$modalidade->id}}" value="@if(old('resultado'.$modalidade->id)){{old('resultado'.$modalidade->id)}}@else{{ date('Y-m-d\TH:i',strtotime($modalidade->inicioResultado))}}@endif" autocomplete="inicioResultado" autofocus>
 
                                                 @error('resultado'.$modalidade->id)
@@ -285,7 +285,7 @@
                                             <div class="col-sm-6">
                                                 <div class="form-check" style="margin-top: 10px">
                                                     <input class="form-check-input incluir-resumo-edit" type="checkbox" name="texto{{$modalidade->id}}" id="id-custom_field-account-1-2" @if(old('texto'.$modalidade->id)) checked @elseif(old('texto'.$modalidade->id) == null && $modalidade->texto) checked @endif>
-                                                    <label class="form-check-label" for="resumo">
+                                                    <label class="form-check-label font-weight-bold" for="resumo">
                                                         Adicionar campo resumo por texto
                                                     </label>
                                                     @error('resumo'.$modalidade->id)
@@ -350,7 +350,7 @@
 
                                                 <div class="form-check" style="margin-top: 10px">
                                                     <input class="form-check-input incluirarquivoEdit" type="checkbox" onchange="exibirTiposArquivo({{$modalidade->id}},this)" name="arquivoEdit{{$modalidade->id}}" id="id-custom_field-accountEdit-1-2" @if(old('arquivoEdit'.$modalidade->id) == "on") checked @elseif (old('arquivoEdit'.$modalidade->id) == null && $modalidade->arquivo == true) checked @endif>
-                                                    <label class="form-check-label" for="arquivoEdit">
+                                                    <label class="form-check-label font-weight-bold" for="arquivoEdit">
                                                         Incluir submissão por arquivo
                                                     </label>
                                                     @error('arquivoEdit'.$modalidade->id)
@@ -367,7 +367,7 @@
                                             <div class="col-sm-6" id="tipo-arquivoEdit">
 
                                                 <div class="titulo-detalhes" style="margin-top: 10px"></div>
-                                                <label class="col-form-label">{{ __('Tipos de extensão aceitas') }}</label>
+                                                <label class="col-form-label font-weight-bold">{{ __('Tipos de extensão aceitas') }}</label>
 
                                                 <div class="form-check" style="margin-top: 10px">
                                                     <input class="form-check-input" type="checkbox" id="pdfEdit" name="pdf{{$modalidade->id}}" @if(old('pdf'.$modalidade->id) == "on") checked @elseif (old('pdf'.$modalidade->id) == null && $modalidade->pdf == true) checked @endif>
@@ -423,8 +423,8 @@
                                             <div class="col-sm-12">
                                                 <div class="form-check">
                                                     <input class="form-check-input apresentacao" type="checkbox" name="apresentacao" id="apresentacao" @if(old('apresentacao') == true || $modalidade->apresentacao) checked @endif>
-                                                    <label class="form-check-label" for="apresentacao">
-                                                        {{ __('Habilitar escolha do tipo de apresentação do trabalho') }}
+                                                    <label class="form-check-label font-weight-bold" for="apresentacao">
+                                                        {{ __('Habilitar escolha da forma de apresentação do trabalho:') }}
                                                     </label>
                                                     @error('apresentacao')
                                                         <span class="invalid-feedback" role="alert">
@@ -436,7 +436,7 @@
                                             <div class="col-sm-12" id="tipo-apresentacao" @if(old('apresentacao') || $modalidade->apresentacao) style="display: block" @else style="display: none" @endif>
 
                                                 <div class="titulo-detalhes" style="margin-top: 10px"></div>
-                                                <label class="col-form-label">{{ __('Selecione os tipos de apresentação') }}</label>
+                                                <label class="col-form-label font-weight-bold">{{ __('Selecione a(s) forma(s) de apresentação do trabalho que poderá(ão) ser escolhida(s) pelo(a) autor(a) ') }} <span style="color: red">{{ __('(não obrigatório)')}}</span>:</label>
 
                                                 <div class="form-check" style="margin-top: 10px">
                                                     <input class="form-check-input" type="checkbox" name="remoto" @if(old('remoto') || ! is_null($modalidade->tiposApresentacao()->where('tipo', "Remoto")->first())) checked @endif>
@@ -467,7 +467,7 @@
                                         <div class="row justify-content-center">
                                             {{-- Arquivo de Modelos  --}}
                                             <div class="col-sm-12" style="margin-top: 20px;">
-                                                <label for="arquivoModelos" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarapresentacao}}:</label> @if ($modalidade->modelo_apresentacao != null) <a href="{{route('modalidade.modelos.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
+                                                <label for="arquivoModelos" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarapresentacao}}:</label> @if ($modalidade->modelo_apresentacao != null) <a href="{{route('modalidade.modelos.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
                                                 @if ($modalidade->modelo_apresentacao)
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="deleteapresentacao" id="deleteapresentacao{{$modalidade->id}}" @if(old('deleteapresentacao') == "on") checked @endif>
@@ -494,7 +494,7 @@
                                             </div>
                                             {{-- Arquivo de Regras  --}}
                                             <div class="col-sm-12" style="margin-top: 20px;">
-                                                <label for="arquivoRegras" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarregra}}:</label> @if ($modalidade->regra != null) <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
+                                                <label for="arquivoRegras" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarregra}}:</label> @if ($modalidade->regra != null) <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
                                                 @if ($modalidade->regra)
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="deleteregra" id="deleteregra{{$modalidade->id}}" @if(old('deleteregra') == "on") checked @endif>
@@ -521,7 +521,7 @@
                                             </div>
                                             {{-- Arquivo de Templates --}}
                                             <div class="col-sm-12 tiposDeArquivos{{$modalidade->id}}" id="area-templateEdit" style="@if(old('arquivoEdit'.$modalidade->id)=="on") display: block @elseif(old('arquivoEdit'.$modalidade->id) == null && $modalidade->arquivo == true) display: block; @else display: none; @endif">
-                                                <label for="nomeTrabalho" class="col-form-label">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixartemplate}}:</label> @if ($modalidade->template != null) <a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
+                                                <label for="nomeTrabalho" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixartemplate}}:</label> @if ($modalidade->template != null) <a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
                                                 @if ($modalidade->template)
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="deletetemplate" id="deletetemplate{{$modalidade->id}}" @if(old('deletetemplate') == "on") checked @endif>
