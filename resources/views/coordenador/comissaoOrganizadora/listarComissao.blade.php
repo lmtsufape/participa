@@ -21,7 +21,7 @@
                                     <th>Especialidade</th>
                                     <th>Celular</th>
                                     <th>E-mail</th>
-                                    @can('isCoordenadorDaComissaoOrganizadora', $evento)
+                                    @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
                                         <th>Direção</th>
                                         <th style="text-align:center">Remover</th>
                                     @endcan
@@ -30,7 +30,7 @@
                                 @if ($users != null)
                                   @foreach ($users as $user)
                                   <!-- Modal de exclusão do evento -->
-                                    @can('isCoordenadorDaComissaoOrganizadora', $evento)
+                                    @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
                                     <div class="modal fade" id="modalRemoverComissao{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
                                       <div class="modal-dialog" role="document">
                                       <div class="modal-content">
@@ -60,7 +60,7 @@
                                           <td>{{$user->especProfissional}}</td>
                                           <td>{{$user->celular}}</td>
                                           <td>{{$user->email}}</td>
-                                          @can('isCoordenadorDaComissaoOrganizadora', $evento)
+                                          @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
                                               <td>
                                                 Coordenador
                                               </td>
@@ -79,7 +79,7 @@
                                           <td>Usuário temporário - Sem Especialidade</td>
                                           <td>Usuário temporário - Sem Celular</td>
                                           <td>{{$user->email}}</td>
-                                          @can('isCoordenadorDaComissaoOrganizadora', $evento)
+                                          @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
                                               <td>
                                                 Coordenador
                                               </td>
