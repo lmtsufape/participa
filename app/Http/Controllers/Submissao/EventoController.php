@@ -1363,7 +1363,7 @@ class EventoController extends Controller
     public function update(UpdateEventoRequest $request, $id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $data = $request->all();
         $evento->update($data);
 
