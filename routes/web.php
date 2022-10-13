@@ -47,6 +47,8 @@ Route::get('/', function () {
 
 Route::namespace('Submissao')->group(function () {
   Route::get('/evento/{id}','EventoController@show')->name('evento.visualizar');
+  Route::get('/evento/visualizar/{id}', function ($id) {
+    return redirect()->route('evento.visualizar', $id);});
   Route::view('validarCertificado', 'validar')->name('validarCertificado');
   Route::post('validarCertificado', 'CertificadoController@validar')->name('validarCertificadoPost');
   Route::get('/home', 'Submissao\CertificadoController@validar')->name('home')->middleware('verified', 'isTemp');
