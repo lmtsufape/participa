@@ -231,7 +231,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
 
     });
     //Evento
-    Route::get(   '/evento/criar',          'EventoController@create'                    )->name('evento.criar');
+    Route::get(   '/criar/evento',          'EventoController@create'                    )->name('evento.criar');
     Route::post(  '/evento/criar',          'EventoController@store'                     )->name('evento.criar');
     Route::delete('/evento/excluir/{id}',   'EventoController@destroy'                   )->name('evento.deletar');
     Route::get(   '/evento/editar/{id}',    'EventoController@edit'                      )->name('evento.editar');
