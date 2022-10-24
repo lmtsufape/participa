@@ -89,6 +89,11 @@ class Trabalho extends Model
         return $this->hasMany('App\Models\Submissao\Resposta');
     }
 
+    public function midiaExtra()
+    {
+        return $this->hasOne('App\Models\Submissao\MidiaExtra');
+    }
+
     public function avaliado(User $user)
     {
         $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
