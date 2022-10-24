@@ -39,7 +39,24 @@ class FileType implements Rule
     public function message(): string
     {
         $types = implode(', ', $this->acceptedTypes);
-        return 'Arquivo inválido. Os tipos válidos são: ' . $types. '. O tamanho para arquivos .mp3 é de 20 MB, para mp4 é de 50 MB, e os demais tipos apenas 2 MB.';
+        $texto = 'Arquivo inválido. Os tipos válidos são: ' . $types;
+        $diff = false;
+        if (in_array('mp3', $this->acceptedTypes)) {
+            $texto .= ". O tamanho máximo para arquivos .mp3 é de 20 MB";
+            $diff = true;
+        }
+        if (in_array('mp4', $this->acceptedTypes)) {
+            $texto .= ". O tamanho máximo para arquivos .mp4 é de 50 MB";
+            $diff = true;
+        }
+
+        if ($diff && ($types != "mp4, mp3" && count($this->acceptedTypes) > 1)) {
+            $texto .= ". Os demais tipos possuem tamanho máximo de  2 MB.";
+        } elseif (! $diff) {
+            $texto .= ". O tamanho máximo é de 2 MB.";
+        }
+
+        return $texto;
     }
 
     public function checkTamanhoTipo(string $type, float $tamanhoMB): bool

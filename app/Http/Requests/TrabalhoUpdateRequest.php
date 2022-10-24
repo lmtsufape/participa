@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Submissao\Trabalho;
+use App\Rules\FileType;
 use App\Rules\MaxTrabalhosAutorUpdate;
 use App\Rules\MaxTrabalhosCoautorUpdate;
 use Carbon\Carbon;
@@ -36,6 +37,7 @@ class TrabalhoUpdateRequest extends FormRequest
     {
         $id = request()->id;
         $evento = Trabalho::find($id)->evento;
+        $modalidade = Trabalho::find(request()->trabalhoEditId)->modalidade;
 
         return [
             'trabalhoEditId'                       => ['required'],
@@ -47,7 +49,7 @@ class TrabalhoUpdateRequest extends FormRequest
             'nomeCoautor_'.$id.'.*'            => ['string'],
             'emailCoautor_'.$id.'.0'           => ['string', new MaxTrabalhosAutorUpdate($evento->numMaxTrabalhos)],
             'emailCoautor_'.$id.'.*'           => ['string', new MaxTrabalhosCoautorUpdate($evento->numMaxCoautores)],
-            'arquivo'.$id                        => ['nullable', 'file', 'max:2048'],
+            'arquivo'.$id                        => ['nullable', 'file', new FileType($modalidade, request()->arquivo)],
             'campoextra1arquivo'                   => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo'                   => ['nullable', 'file', 'max:2048'],
             'campoextra3arquivo'                   => ['nullable', 'file', 'max:2048'],
