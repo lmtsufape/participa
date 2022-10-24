@@ -27,8 +27,8 @@ class AddMp4AndMp3ToModalidadesTable extends Migration
     public function down()
     {
         Schema::table('modalidades', function (Blueprint $table) {
-            Schema::dropIfExists('mp4');
-            Schema::dropIfExists('mp3');
+            $table->dropColumn('mp4');
+            $table->dropColumn('mp3');
         });
     }
 }
