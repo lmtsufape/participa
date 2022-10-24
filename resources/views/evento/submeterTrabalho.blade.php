@@ -262,6 +262,12 @@
                                                         @endif
                                                         @if($modalidade->svg == true)
                                                             <span> / ".svg"</span>
+                                                        @endif
+                                                        @if($modalidade->mp4 == true)
+                                                            <span> / ".mp4"</span>
+                                                        @endif
+                                                        @if($modalidade->mp3 == true)
+                                                            <span> / ".mp3"</span>
                                                         @endif. </small>
                                                     @error('arquivo')
                                                     <span class="invalid-feedback" role="alert"
