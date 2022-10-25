@@ -265,14 +265,16 @@
                           <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo{{$trabalho->id}}">
                         </div>
                         <small>Arquivos aceitos nos formatos
-                          @if($modalidade->pdf == true)<span> - pdf</span>@endif
-                          @if($modalidade->jpg == true)<span> - jpg</span>@endif
-                          @if($modalidade->jpeg == true)<span> - jpeg</span>@endif
-                          @if($modalidade->png == true)<span> - png</span>@endif
-                          @if($modalidade->docx == true)<span> - docx</span>@endif
-                          @if($modalidade->odt == true)<span> - odt</span>@endif
-                          @if($modalidade->zip == true)<span> - zip</span>@endif
-                          @if($modalidade->svg == true)<span> - svg</span>@endif.
+                          @if($trabalho->modalidade->pdf == true)<span> - pdf</span>@endif
+                          @if($trabalho->modalidade->jpg == true)<span> - jpg</span>@endif
+                          @if($trabalho->modalidade->jpeg == true)<span> - jpeg</span>@endif
+                          @if($trabalho->modalidade->png == true)<span> - png</span>@endif
+                          @if($trabalho->modalidade->docx == true)<span> - docx</span>@endif
+                          @if($trabalho->modalidade->odt == true)<span> - odt</span>@endif
+                          @if($trabalho->modalidade->zip == true)<span> - zip</span>@endif
+                          @if($trabalho->modalidade->svg == true)<span> - svg</span>@endif
+                          @if($trabalho->modalidade->mp4 == true)<span> - mp4</span>@endif
+                          @if($trabalho->modalidade->mp3 == true)<span> - mp3</span>@endif.
                         </small>
                         @error('arquivo'.$trabalho->id)
                           <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
