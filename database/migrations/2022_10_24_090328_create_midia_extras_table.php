@@ -19,6 +19,7 @@ class CreateMidiaExtrasTable extends Migration
             $table->boolean('pdf')->default(false);
             $table->boolean('jpg')->default(false);
             $table->boolean('jpeg')->default(false);
+            $table->boolean('png')->default(false);
             $table->boolean('docx')->default(false);
             $table->boolean('odt')->default(false);
             $table->boolean('zip')->default(false);
