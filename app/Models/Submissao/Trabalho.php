@@ -89,9 +89,9 @@ class Trabalho extends Model
         return $this->hasMany('App\Models\Submissao\Resposta');
     }
 
-    public function midiaExtra()
+    public function midiasExtra()
     {
-        return $this->hasOne('App\Models\Submissao\MidiaExtra');
+        return $this->belongsToMany(MidiaExtra::class, 'midia_extras_trabalho', 'trabalho_id', 'midia_extra_id')->withPivot('caminho');
     }
 
     public function avaliado(User $user)

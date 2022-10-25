@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Submissao\Evento;
+use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Modalidade;
 use App\Rules\FileType;
 use App\Rules\MaxTrabalhosCoautor;
@@ -42,8 +43,7 @@ class TrabalhoPostRequest extends FormRequest
     {
         $evento = Evento::find(request()->eventoId);
         $modalidade = Modalidade::find(request()->modalidadeId);
-
-        return [
+        $validate_array = [
             'nomeTrabalho'       => ['required', 'string'],
             'areaId'             => ['required', 'integer'],
             'modalidadeId'       => ['required', 'integer'],
@@ -51,7 +51,7 @@ class TrabalhoPostRequest extends FormRequest
             'resumo'             => ['nullable', 'string'],
             'nomeCoautor.*'      => ['string'],
             'emailCoautor.*'     => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores)],
-            'arquivo'            => ['nullable', 'file', new FileType($modalidade, request()->arquivo)],
+            'arquivo'            => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra3arquivo' => ['nullable', 'file', 'max:2048'],
@@ -68,6 +68,13 @@ class TrabalhoPostRequest extends FormRequest
             'campoextra4grande'  => ['nullable', 'string'],
             'campoextra5grande'  => ['nullable', 'string'],
         ];
+
+
+        foreach ($modalidade->midiasExtra as $midia) {
+            $validate_array[$midia->nome] = ['required', 'file', new FileType($modalidade, $midia, request()[$midia->nome], false)];
+        }
+
+        return $validate_array;
     }
 
     public function messages()

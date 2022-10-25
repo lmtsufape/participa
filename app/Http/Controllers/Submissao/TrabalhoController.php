@@ -51,7 +51,8 @@ class TrabalhoController extends Controller
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
         $ordemCampos = explode(',', $formSubTraba->ordemCampos);
-        array_splice( $ordemCampos, 5, 0, "apresentacao");
+        array_splice($ordemCampos, 6, 0, "midiaExtra");
+        array_splice($ordemCampos, 5, 0, "apresentacao");
         $modalidade = Modalidade::find($idModalidade);
 
         $mytime = Carbon::now('America/Recife');
@@ -239,6 +240,15 @@ class TrabalhoController extends Controller
                     'trabalhoId'  => $trabalho->id,
                     'versaoFinal' => true,
                 ]);
+            }
+
+            if ($modalidade->midiasExtra) {
+                foreach ($modalidade->midiasExtra as $midia) {
+                    $trabalho->midiasExtra()->attach($midia->id);
+                    $documento = $trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first()->pivot;
+                    $documento->caminho = $request[$midia->nome]->store("trabalhos/{$evento->id}/{$trabalho->id}");
+                    $documento->update();
+                }
             }
 
             if (isset($request->campoextra1arquivo)) {
