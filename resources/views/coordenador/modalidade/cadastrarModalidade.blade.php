@@ -395,6 +395,101 @@
                             </div>
                         </div>
                         <br>
+                        <div class="row" style="text-align: right">
+                            <div class="col-md-12">
+                                <button type="button" id="btn-adicionar-escolhar" onclick="addDoc()"
+                                    class="btn btn-primary">Requisitar novo documento
+                                </button>
+                            </div>
+                        </div><br>
+                        <div id="docs" class="row form-group">
+                            @if (old('documentosExtra') == null)
+                                <input type="hidden" id="docs_indice" value="0">
+                            @else
+                                <input type="hidden" id="docs_indice" value="{{ count(old('documentosExtra')) - 1 }}">
+                                @foreach (old('documentosExtra') as $i => $doc)
+                                    <div class="col-md-12" @if($i > 0) style="margin-top: 10px;" @endif>
+                                        <label for="documentosExtra" class="form-label font-weight-bold">Nome do documento<span style="color: red;">*</span></label>
+                                        <div class="d-flex">
+                                            <input name="documentosExtra.".$i type="text" class="form-control @error('documentosExtra.'.$i) is-invalid @enderror" placeholder="Digite o nome do documento aqui..." required value="{{old('documentosExtra.'.$i)[0]}}">
+                                            <a onclick="this.parentElement.parentElement.remove()" style="margin-top: 10px; cursor: pointer">
+                                                <img width="20px;" src="{{asset('img/trashVermelho.svg')}}" alt="Apagar" title="Apagar">
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="titulo-detalhes" style="margin-top: 10px"></div>
+                                            <label class="col-form-label font-weight-bold">{{ __('Tipos de extensão aceitas') }}</label>
+
+                                            <div class="form-check" style="margin-top: 10px">
+                                                <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="pdf" @if (in_array('pdf', old('documentosExtra.'.$i))) checked @endif>
+                                                <label class="form-check-label">
+                                                    .pdf
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="jpg" @if (in_array('jpg', old('documentosExtra.'.$i))) checked @endif>
+                                                <label class="form-check-label">
+                                                    .jpg
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="jpeg" @if (in_array('jpeg', old('documentosExtra.'.$i))) checked @endif>
+                                                <label class="form-check-label">
+                                                    .jpeg
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="png" @if (in_array('png', old('documentosExtra.'.$i))) checked @endif>
+                                                <label class="form-check-label">
+                                                    .png
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="docx" @if (in_array('docx', old('documentosExtra.'.$i))) checked @endif>
+                                                <label class="form-check-label">
+                                                    .docx
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="odt" @if (in_array('odt', old('documentosExtra.'.$i))) checked @endif>
+                                                <label class="form-check-label">
+                                                    .odt
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="zip" @if (in_array('zip', old('documentosExtra.'.$i))) checked @endif>
+                                                <label class="form-check-label">
+                                                    .zip
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="svg" @if (in_array('svg', old('documentosExtra.'.$i))) checked @endif>
+                                                <label class="form-check-label">
+                                                    .svg
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="mp4" @if (in_array('mp4', old('documentosExtra.'.$i))) checked @endif>
+                                                <label class="form-check-label">
+                                                    .mp4
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="mp3" @if (in_array('mp3', old('documentosExtra.'.$i))) checked @endif>
+                                                <label class="form-check-label">
+                                                    .mp3
+                                                </label>
+                                            </div>
+                                        </div>
+                                        @error('documentosExtra.'. $i)
+                                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
                         <div class="row justify-content-center">
                             <div class="col-md-12">
                                 <button type="submit" class="btn btn-primary" style="width:100%">
@@ -464,5 +559,87 @@
             </div> --}}
         </div>{{-- end row card --}}
     </div>
+    <script>
+        function addDoc() {
+            var indice = document.getElementById("docs_indice");
+            var doc_indice = parseInt(document.getElementById("docs_indice").value) + 1;
+            indice.value = doc_indice;
+            var doc = `<div class="col-md-12" style="margin-top: 10px;">
+                            <label for="documentosExtra" class="form-label font-weight-bold">Nome do documento<span style="color: red;">*</span></label>
+                            <div class="d-flex">
+                                <input name="documentosExtra[`+doc_indice+`][]" type="text" class="form-control" placeholder="Digite o nome do documento aqui..." required">
+                                <a onclick="this.parentElement.parentElement.remove()" style="margin-top: 10px; margin-left: 5px; cursor: pointer">
+                                    <img width="20px;" src="{{asset('img/trashVermelho.svg')}}" alt="Apagar" title="Apagar">
+                                </a>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="titulo-detalhes" style="margin-top: 10px"></div>
+                                <label class="col-form-label font-weight-bold">{{ __('Tipos de extensão aceitas') }}</label>
+
+                                <div class="form-check" style="margin-top: 10px">
+                                    <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="pdf">
+                                    <label class="form-check-label">
+                                        .pdf
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="jpg">
+                                    <label class="form-check-label">
+                                        .jpg
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="jpeg">
+                                    <label class="form-check-label">
+                                        .jpeg
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="png">
+                                    <label class="form-check-label">
+                                        .png
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="docx">
+                                    <label class="form-check-label">
+                                        .docx
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="odt">
+                                    <label class="form-check-label">
+                                        .odt
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="zip">
+                                    <label class="form-check-label">
+                                        .zip
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="svg">
+                                    <label class="form-check-label">
+                                        .svg
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="mp4">
+                                    <label class="form-check-label">
+                                        .mp4
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="mp3">
+                                    <label class="form-check-label">
+                                        .mp3
+                                    </label>
+                                </div>
+                            </div>
+                        </div>`;
+            $('#docs').append(doc);
+        }
+    </script>
 
 @endsection

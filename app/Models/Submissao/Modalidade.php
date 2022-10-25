@@ -52,4 +52,9 @@ class Modalidade extends Model
     {
         return $this->hasMany('App\Models\Submissao\TipoApresentacao');
     }
+
+    public function midiasExtra()
+    {
+        return $this->hasMany('App\Models\Submissao\MidiaExtra');
+    }
 }
