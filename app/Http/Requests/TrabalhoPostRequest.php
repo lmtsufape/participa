@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Modalidade;
+use App\Rules\FileType;
 use App\Rules\MaxTrabalhosCoautor;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
@@ -38,6 +39,7 @@ class TrabalhoPostRequest extends FormRequest
     public function rules()
     {
         $evento = Evento::find(request()->eventoId);
+        $modalidade = Modalidade::find(request()->modalidadeId);
 
         return [
             'nomeTrabalho'       => ['required', 'string'],
@@ -47,7 +49,7 @@ class TrabalhoPostRequest extends FormRequest
             'resumo'             => ['nullable', 'string'],
             'nomeCoautor.*'      => ['string'],
             'emailCoautor.*'     => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores)],
-            'arquivo'            => ['nullable', 'max:2048'],
+            'arquivo'            => ['nullable', 'file', new FileType($modalidade, request()->arquivo)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra3arquivo' => ['nullable', 'file', 'max:2048'],

@@ -1183,6 +1183,12 @@ class TrabalhoController extends Controller
             if ($tiposExtensao->svg == true) {
                 array_push($tiposcadastrados, 'svg');
             }
+            if ($tiposExtensao->mp4 == true) {
+                array_push($tiposcadastrados, 'mp4');
+            }
+            if ($tiposExtensao->mp3 == true) {
+                array_push($tiposcadastrados, 'mp3');
+            }
 
             $extensao = $arquivo->getClientOriginalExtension();
             if (! in_array($extensao, $tiposcadastrados)) {

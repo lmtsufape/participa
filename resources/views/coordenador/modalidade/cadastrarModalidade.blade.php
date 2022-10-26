@@ -366,6 +366,18 @@
                                         .svg
                                     </label>
                                 </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="mp4" @if(old('mp4')) checked @endif>
+                                    <label class="form-check-label">
+                                        .mp4
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="mp3" @if(old('mp3')) checked @endif>
+                                    <label class="form-check-label">
+                                        .mp3
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-2">

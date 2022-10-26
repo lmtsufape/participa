@@ -480,6 +480,18 @@
                                                         .svg
                                                     </label>
                                                 </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="mp4Edit" name="mp4{{$modalidade->id}}" @if(old('mp4'.$modalidade->id) == "on") checked @elseif (old('mp4'.$modalidade->id) == null && $modalidade->mp4 == true) checked @endif>
+                                                    <label class="form-check-label" for="mp4Edit">
+                                                        .mp4
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="mp3Edit" name="mp3{{$modalidade->id}}" @if(old('mp3'.$modalidade->id) == "on") checked @elseif (old('mp3'.$modalidade->id) == null && $modalidade->mp3 == true) checked @endif>
+                                                    <label class="form-check-label" for="mp3Edit">
+                                                        .mp3
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
