@@ -391,6 +391,19 @@
                               </span>
                               @enderror
                             </div>
+                            {{-- Arquivo de Regras  --}}
+                            <div class="col-sm-12" style="margin-top: 20px;">
+                                <label for="arquivoInstrucoes" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarinstrucoes}}:</label>
+                                <div class="custom-file">
+                                    <input id="arquivoInstrucoes" type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoInstrucoes">
+                                </div>
+                                <small>O arquivo selecionado deve ser no formato PDF de até 2 MB.</small>
+                                @error('arquivoInstrucoes')
+                                    <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                             {{-- Arquivo de Templates --}}
                             <div class="col-sm-12" id="area-template" style="margin-top: 20px; @if(old('arquivo')) display:block; @else display:none; @endif" >
                                 <label for="nomeTrabalho" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixartemplate}}:</label>

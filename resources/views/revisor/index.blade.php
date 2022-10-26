@@ -123,6 +123,9 @@
                         @if ($trabalhosDoRevisor[0]->modalidade->regra != null)
                             <h5 class="card-title">Regras de submissão: <span class="card-subtitle mb-2 text-muted"><a href="{{route('modalidade.regras.download', ['id' => $trabalhosDoRevisor[0]->modalidade->id])}}" target="_blank">Arquivo</a></span></h5>
                         @endif
+                        @if ($trabalhosDoRevisor[0]->modalidade->instrucoes != null)
+                            <h5 class="card-title"> {{$trabalhosDoRevisor[0]->modalidade->evento->formEvento->etiquetabaixarinstrucoes}}: <span class="card-subtitle mb-2 text-muted"><a href="{{route('modalidade.instrucoes.download', ['modalidade' => $trabalhosDoRevisor[0]->modalidade->id])}}" target="_blank">Arquivo</a></span></h5>
+                        @endif
                         <p class="card-text">
                             <div class="col-sm-12">
                             <table class="table table-hover table-responsive-lg table-sm">
