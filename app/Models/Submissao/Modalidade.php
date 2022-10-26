@@ -73,4 +73,23 @@ class Modalidade extends Model
     {
         return $this->hasMany(DataExtra::class)->where('permitir_submissao', true);
     }
+
+    public function estaEmPeriodoDeSubmissao()
+    {
+        $agora = now();
+        if ($this->inicioSubmissao <= $agora && $this->fimSubmissao >= $agora) {
+            return true;
+        }
+        return $this->datasExtrasComSubmissao()->where('inicio', '<=', $agora)->where('fim', '>=', $agora)->exists();
+    }
+
+    public function getUltimaDataAttribute()
+    {
+        if ($this->datasExtras()->exists()) {
+            $maiorDataExtra = $this->datasExtras()->max('fim');
+            return max($maiorDataExtra, $this->inicioResultado);
+        } else {
+            return $this->inicioResultado;
+        }
+    }
 }

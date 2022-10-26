@@ -519,7 +519,7 @@
                                                     {{-- <h5>{{$etiquetas->etiquetasubmissoes}}</h5> --}}
                                                     <div class="accordion" id="accordion_modalidades" style="font-size: 10px;">
                                                         @foreach ($modalidades as $modalidade)
-                                                            @if (Carbon\Carbon::parse($modalidade->inicioResultado) >= $mytime)
+                                                            @if (Carbon\Carbon::parse($modalidade->ultima_data) >= $mytime)
                                                                 <div class="accordion-group">
                                                                     <div class="accordion-heading">
                                                                         <a class="accordion-button accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion_modalidades" href="{{ '#collapse_' . $modalidade->id }}">
@@ -579,13 +579,21 @@
                                                                                         <td>Resultado:</td>
                                                                                         <td>{{ date('d/m/Y  H:i', strtotime($modalidade->inicioResultado)) }}</td>
                                                                                     </tr>
+                                                                                    @foreach ($modalidade->datasExtras as $data)
+                                                                                    <tr>
+                                                                                        <td><img class="" src="{{ asset('img/icons/calendar-yellow.png') }}" alt="" style="width:20px;"></td>
+                                                                                        <td>{{$data->nome}}:</td>
+                                                                                        <td>{{ date('d/m/Y H:i', strtotime($data->inicio)) }}</td>
+                                                                                        <td>- {{ date('d/m/Y H:i', strtotime($data->fim)) }}</td>
+                                                                                    </tr>
+                                                                                    @endforeach
                                                                                 </table>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row">
                                                                             <div class="col-sm-12">
                                                                                 @if (Carbon\Carbon::parse($modalidade->inicioSubmissao) <= $mytime)
-                                                                                    @if ($mytime <= Carbon\Carbon::parse($modalidade->fimSubmissao))
+                                                                                    @if ($modalidade->estaEmPeriodoDeSubmissao())
                                                                                         @if ($modalidade->arquivo == true)
                                                                                             @if (isset($modalidade->regra))
                                                                                                 <div style="margin-top: 20px; margin-bottom: 10px;">
