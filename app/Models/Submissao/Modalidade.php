@@ -3,6 +3,7 @@
 namespace App\Models\Submissao;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Modalidade extends Model
 {
@@ -51,5 +52,25 @@ class Modalidade extends Model
     public function tiposApresentacao()
     {
         return $this->hasMany('App\Models\Submissao\TipoApresentacao');
+    }
+
+    /**
+     * Get all of the datasExtras for the Modalidade
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function datasExtras(): HasMany
+    {
+        return $this->hasMany(DataExtra::class);
+    }
+
+    /**
+     * Pega todas as datas extras com que permitem submissão
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function datasExtrasComSubmissao(): HasMany
+    {
+        return $this->hasMany(DataExtra::class)->where('permitir_submissao', true);
     }
 }
