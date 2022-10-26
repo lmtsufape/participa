@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Submissao;
 
 use App\Http\Controllers\Controller;
+use App\Models\Submissao\DataExtra;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\TipoApresentacao;
@@ -170,6 +171,20 @@ class ModalidadeController extends Controller
         $modalidade->evento_id = $request->eventoId;
         $modalidade->apresentacao = $request->apresentacao ? true : false;
         $modalidade->save();
+
+        if($request->has('nomeDataExtra')) {
+            foreach ($request->nomeDataExtra as $index => $value) {
+                $modalidade->datasExtras()
+                    ->save(
+                        new DataExtra([
+                            'nome' => $value,
+                            'inicio' => $request->inicioDataExtra[$index],
+                            'fim' => $request->finalDataExtra[$index],
+                            'permitir_submissao' => $request->submissaoDataExtra!= null && array_key_exists($index, $request->submissaoDataExtra),
+                        ])
+                    );
+            }
+        }
 
         if (isset($request->arquivoRegras)) {
             $fileRegras = $request->arquivoRegras;
