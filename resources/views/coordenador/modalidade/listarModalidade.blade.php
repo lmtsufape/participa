@@ -88,7 +88,7 @@
         </div>
 
 
-        @foreach ($modalidades as $modalidade)
+        @foreach ($modalidades as $index => $modalidade)
         <!-- Modal excluir modalida -->
 
         <!-- Modal de exclusão da área -->
@@ -133,7 +133,7 @@
                                         <div>
                                             @include('componentes.mensagens')
                                         </div>
-                                        <form method="POST" action="{{route('modalidade.update')}}" enctype="multipart/form-data">
+                                        <form method="POST" action="{{route('modalidade.update')}}" enctype="multipart/form-data" x-data="handler({{$modalidade->datasExtras}})">
                                         @csrf
                                         <p class="card-text">
                                             <input type="hidden" name="modalidadeEditId" value="{{$modalidade->id}}">
@@ -278,6 +278,69 @@
                                             </div>
                                         </div>
                                         {{-- end Data: resultado --}}
+
+                                        <div id="datas">
+                                            <template x-for="(data, index) in datas" :key="index">
+                                                <div class="row mt-2 justify-content-center">
+                                                    <div class="col-sm-3" x-data="{ id: $id('data-extra-nome') }">
+                                                        <label :for="id" class="col-form-label font-weight-bold">
+                                                            {{ __('Nome da data') }}*
+                                                        </label>
+                                                        <input :id="id" type="text" class="form-control" x-model="data.nome" :name="'nomeDataExtra['+index+']'" required>
+                                                        @error('nomeDataExtra[]')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3" x-data="{ id: $id('data-extra-inicio') }">
+                                                        <label :for="id" class="col-form-label font-weight-bold">
+                                                            {{ __('Data inicial') }}*
+                                                        </label>
+                                                        <input :id="id" type="datetime-local" class="form-control" x-model="data.inicio" :name="'inicioDataExtra['+index+']'" required>
+                                                        @error('inicioDataExtra[]')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3" x-data="{ id: $id('data-extra-final') }">
+                                                        <label :for="id" class="col-form-label font-weight-bold">
+                                                            {{ __('Data final') }}*
+                                                        </label>
+                                                        <input :id="id" type="datetime-local" class="form-control" x-model="data.fim" :name="'finalDataExtra['+index+']'" required>
+                                                        @error('finalDataExtra[]')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-sm-3" x-data="{ id: $id('data-extra-submissao') }">
+                                                        <div class="form-check mt-2">
+                                                            <input class="form-check-input" value="on" type="checkbox" x-model="data.permitirSubmissao" :id="id" :name="'submissaoDataExtra[' + index + ']'">
+                                                            <label class="form-check-label" :for="id" >
+                                                                <strong>Permitir submissão</strong>
+                                                            </label>
+                                                            <div class="d-flex justify-content-center">
+                                                                <button title="Remover data" type="button" @click="removeData(index)" style="color: #d30909;" class="btn pb-0">
+                                                                    <img class="mt-2 text-danger" src="{{asset('img/icons/calendar-times-solid.svg')}}"
+                                                                         alt="ícone de adicionar data extra" width="30px">
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <div class="row mt-3 ml-1">
+                                                <button @click="adicionaData" class="btn btn-primary btn-padding border mb-2"
+                                                        style="text-decoration: none; border-radius: 14px; background-color: #E5B300"
+                                                        title="Clique aqui para adicionar datas extras" type="button">
+                                                    <img class="mt-2" src="{{asset('img/icons/calendar-plus-black-solid.svg')}}"
+                                                         alt="ícone de adicionar data extra" width="30px">
+                                                    <br> Adicionar data
+                                                </button>
+                                            </div>
+                                        </div>
 
                                         {{-- Inicio - Tipo de submissão --}}
                                         <div class="row">
@@ -573,4 +636,49 @@
             </div>
         @endforeach
         {{-- Fim Modal --}}
+@endsection
+@section('javascript')
+@parent
+<script>
+    function handler(datas) {
+        inicial = {};
+        maiorId = 0;
+        oldDatas = @json(old('datasExtras'));
+        if (oldDatas != null) {
+            oldDatas.forEach((element, index) => {
+                inicial[index] = {
+                    inicio: oldDatas[index].inicio,
+                    fim: oldDatas[index].fim,
+                    permitirSubmissao: oldDatas[index].permitirSubmissao,
+                    nome: oldDatas[index].nome
+                }
+            });
+            maiorId = oldDatas.at(-1);
+        } else if (datas.length > 0) {
+            datas.forEach(element => {
+                inicial[element.id] = {
+                    inicio: element.inicio,
+                    fim: element.fim,
+                    permitirSubmissao: element.permitir_submissao,
+                    nome: element.nome
+                }
+            });
+            maiorId = Object.keys(inicial).map(i => parseInt(i)).at(-1);
+        }
+        return {
+            datas: inicial,
+            maior: maiorId,
+            adicionaData() {
+                this.datas[++this.maior] = {
+                    inicio: '',
+                    fim: '',
+                    permitirSubmissao: ''
+                };
+            },
+            removeData(index) {
+                delete this.datas[index];
+            },
+        }
+    }
+</script>
 @endsection

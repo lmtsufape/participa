@@ -536,7 +536,36 @@ class ModalidadeController extends Controller
         }
 
         $modalidadeEdit->save();
-        // dd($modalidadeEdit);
+
+        if ($request->has('nomeDataExtra')) {
+            $editadas = $modalidadeEdit->datasExtras()->whereIn('id', array_keys($request->nomeDataExtra))->get();
+            $idsEditadas = $editadas->pluck('id')->all();
+            $modalidadeEdit->datasExtras()->whereNotIn('id', array_keys($request->nomeDataExtra))->delete();
+            foreach ($request->nomeDataExtra as $index => $value) {
+                if (in_array($index, $idsEditadas)) {
+                    $data = $modalidadeEdit->datasExtras()->where('id', $index)->first();
+                    $data->nome = $value;
+                    $data->inicio = $request->inicioDataExtra[$index];
+                    $data->fim = $request->finalDataExtra[$index];
+                    $data->permitir_submissao = $request->submissaoDataExtra!= null && array_key_exists($index, $request->submissaoDataExtra);
+                    if ($data->isDirty()) {
+                        $data->save();
+                    }
+                } else {
+                    $modalidadeEdit->datasExtras()
+                        ->save(
+                            new DataExtra([
+                                'nome' => $value,
+                                'inicio' => $request->inicioDataExtra[$index],
+                                'fim' => $request->finalDataExtra[$index],
+                                'permitir_submissao' => array_key_exists($index, $request->submissaoDataExtra),
+                            ])
+                        );
+                }
+            }
+        } else {
+            $modalidadeEdit->datasExtras()->delete();
+        }
 
         return redirect()->back()->with(['mensagem' => 'Modalidade salva com sucesso!']);
     }
