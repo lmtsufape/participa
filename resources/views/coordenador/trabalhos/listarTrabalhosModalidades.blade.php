@@ -169,10 +169,10 @@
                         {{count($trabalho->atribuicoes)}}
                       </td>
                       <td>{{$trabalho->getQuantidadeAvaliacoes()}}</td>
-                      <td>
+                      {{--<td>
                         {{ date("d/m/Y H:i", strtotime($trabalho->created_at) ) }}
 
-                      </td>
+                      </td>--}}
                       <td style="text-align:center">
                         <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}">
                           <i class="fas fa-file-alt"></i>

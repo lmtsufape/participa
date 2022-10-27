@@ -33,6 +33,8 @@
               @php
                 $formSubTraba = $trabalho->evento->formSubTrab;
                 $ordem = explode(",", $formSubTraba->ordemCampos);
+                array_splice($ordem, 6, 0, "midiaExtra");
+                array_splice($ordem, 5, 0, "apresentacao");
                 $modalidade = $trabalho->modalidade;
                 $areas = $trabalho->evento->areas;
               @endphp
@@ -233,12 +235,12 @@
                         <select id="modalidade_{{$trabalho->id}}" class="form-control @error('modalidadeError'.$trabalho->id) is-invalid @enderror" name="modalidade{{$trabalho->id}}" required>
                             <option value="" disabled selected hidden>-- Modalidade --</option>
                             @if (old('modalidade'.$trabalho->id) != null)
-                              @foreach($modalidades as $modalidade)
-                                <option value="{{$modalidade->id}}" @if(old('modalidade'.$trabalho->id) == $modalidade->id) selected @endif>{{$modalidade->nome}}</option>
+                              @foreach($modalidades as $modalidade_for)
+                                <option value="{{$modalidade_for->id}}" @if(old('modalidade'.$trabalho->id) == $modalidade_for->id) selected @endif>{{$modalidade_for->nome}}</option>
                               @endforeach
                             @else
-                              @foreach($modalidades as $modalidade)
-                                <option value="{{$modalidade->id}}" @if($trabalho->modalidadeId == $modalidade->id) selected @endif>{{$modalidade->nome}}</option>
+                              @foreach($modalidades as $modalidade_for)
+                                <option value="{{$modalidade_for->id}}" @if($trabalho->modalidadeId == $modalidade_for->id) selected @endif>{{$modalidade_for->nome}}</option>
                               @endforeach
                             @endif
 
@@ -264,7 +266,7 @@
                         <div class="custom-file">
                           <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo{{$trabalho->id}}">
                         </div>
-                        <small>Arquivos aceitos nos formatos
+                        <small>Extensão de arquivos aceitas:
                           @if($trabalho->modalidade->pdf == true)<span> - pdf</span>@endif
                           @if($trabalho->modalidade->jpg == true)<span> - jpg</span>@endif
                           @if($trabalho->modalidade->jpeg == true)<span> - jpeg</span>@endif
@@ -284,6 +286,85 @@
                       </div>
                     @endif
                   </div>
+                @endif
+                @if ($indice == "apresentacao")
+                    @if ($trabalho->modalidade->apresentacao)
+                        <div class="row justify-content-center mt-4">
+                            <div class="col-sm-12">
+                                <label for="area"
+                                    class="col-form-label"><strong>{{ __('Forma de apresentação do trabalho') }}</strong>
+                                </label>
+                                <select name="tipo_apresentacao" id="tipo_apresentacao" class="form-control @error('tipo_apresentacao') is-invalid @enderror" required>
+                                    <option value="" selected disabled>{{__('-- Selecione a forma de apresentação do trabalho --')}}</option>
+                                    @foreach ($trabalho->modalidade->tiposApresentacao as $tipo)
+                                    <option @if(old('tipo_apresentacao') == $tipo->tipo || $trabalho->tipo_apresentacao == $tipo->tipo) selected @endif value="{{$tipo->tipo}}">{{__($tipo->tipo)}}</option>
+                                    @endforeach
+                                </select>
+
+                                @error('tipo_apresentacao')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                    @endif
+                @endif
+                @if ($indice == "midiaExtra")
+                    <div class="row justify-content-center">
+                        @foreach ($modalidade->midiasExtra as $midia)
+                            <div class="col-sm-12" style="margin-top: 20px;">
+                                <label for="{{$midia->nome}}"
+                                    class="col-form-label"><strong>{{$midia->nome}}</strong>
+                                </label>
+                                <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">Arquivo atual</a>
+                                <br>
+                                <small>Para trocar o arquivo envie um novo.</small>
+                                <div class="custom-file">
+                                    <input type="file" class="filestyle"
+                                        data-placeholder="Nenhum arquivo" data-text="Selecionar"
+                                        data-btnClass="btn-primary-lmts" name="{{$midia->nome}}">
+                                </div>
+                                <small><strong>Extensão de arquivos aceitas:</strong>
+                                    @if($midia->pdf == true)
+                                        <span> / ".pdf"</span>
+                                    @endif
+                                    @if($midia->jpg == true)
+                                        <span> / ".jpg"</span>
+                                    @endif
+                                    @if($midia->jpeg == true)
+                                        <span> / ".jpeg"</span>
+                                    @endif
+                                    @if($midia->png == true)
+                                        <span> / ".png"</span>
+                                    @endif
+                                    @if($midia->docx == true)
+                                        <span> / ".docx"</span>
+                                    @endif
+                                    @if($midia->odt == true)
+                                        <span> / ".odt"</span>
+                                    @endif
+                                    @if($midia->zip == true)
+                                        <span> / ".zip"</span>
+                                    @endif
+                                    @if($midia->svg == true)
+                                        <span> / ".svg"</span>
+                                    @endif
+                                    @if($midia->mp4 == true)
+                                        <span> / ".mp4"</span>
+                                    @endif
+                                    @if($midia->mp3 == true)
+                                        <span> / ".mp3"</span>
+                                    @endif. </small>
+                                @error($midia->nome)
+                                <span class="invalid-feedback" role="alert"
+                                    style="overflow: visible; display:block">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        @endforeach
+                    </div>
                 @endif
                 @if ($indice == "etiquetacampoextra1")
                   @if ($formSubTraba->checkcampoextra1 == true)

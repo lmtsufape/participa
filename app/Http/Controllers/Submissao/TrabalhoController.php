@@ -594,6 +594,16 @@ class TrabalhoController extends Controller
             }*/
         }
 
+        if ($trabalho->modalidade->midiasExtra) {
+            foreach ($trabalho->modalidade->midiasExtra as $midia) {
+                if ($request[$midia->nome]) {
+                    $documento = $trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first()->pivot;
+                    $documento->caminho = $request[$midia->nome]->store("trabalhos/{$evento->id}/{$trabalho->id}");
+                    $documento->update();
+                }
+            }
+        }
+
         if (isset($request->campoextra1arquivo)) {
             $file = $request->campoextra1arquivo;
             $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
