@@ -55,7 +55,7 @@ class TrabalhoController extends Controller
         $modalidade = Modalidade::find($idModalidade);
 
         $mytime = Carbon::now('America/Recife');
-        if ($mytime > $modalidade->fimSubmissao) {
+        if (!$modalidade->estaEmPeriodoDeSubmissao()) {
             $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         }
         // dd($formSubTraba);
