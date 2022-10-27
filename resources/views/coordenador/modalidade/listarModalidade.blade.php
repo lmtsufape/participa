@@ -659,9 +659,9 @@
                                                 @foreach (old('documentosExtra') as $i => $doc)
                                                     @if($i > $modalidade->midiasExtra->count()-1)
                                                         <div class="col-md-12" @if($i > 0) style="margin-top: 10px;" @endif>
-                                                            <label for="documentosExtra.".$i class="form-label font-weight-bold">Nome do documento<span style="color: red;">*</span></label>
+                                                            <label class="form-label font-weight-bold">Nome do documento<span style="color: red;">*</span></label>
                                                             <div class="d-flex">
-                                                                <input name="documentosExtra.".$i type="text" class="form-control @error('documentosExtra.'.$i) is-invalid @enderror" placeholder="Digite o nome do documento aqui..." required value="{{old('documentosExtra.'.$i)[0]}}">
+                                                                <input name="documentosExtra[{{$i}}][]" type="text" class="form-control @error('documentosExtra.'.$i) is-invalid @enderror" placeholder="Digite o nome do documento aqui..." required value="{{old('documentosExtra.'.$i)[0]}}">
                                                                 <a onclick="this.parentElement.parentElement.remove()" style="margin-top: 10px; margin-left: 5px; cursor: pointer">
                                                                     <img width="20px;" src="{{asset('img/trashVermelho.svg')}}" alt="Apagar" title="Apagar">
                                                                 </a>
@@ -671,61 +671,61 @@
                                                                 <label class="col-form-label font-weight-bold">{{ __('Tipos de extensão aceitas') }}</label>
 
                                                                 <div class="form-check" style="margin-top: 10px">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="pdf" @if (in_array('pdf', old('documentosExtra.'.$i))) checked @endif>
+                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="pdf" @if (in_array('pdf', old('documentosExtra.'.$i))) checked @endif>
                                                                     <label class="form-check-label">
                                                                         .pdf
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="jpg" @if (in_array('jpg', old('documentosExtra.'.$i))) checked @endif>
+                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="jpg" @if (in_array('jpg', old('documentosExtra.'.$i))) checked @endif>
                                                                     <label class="form-check-label">
                                                                         .jpg
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="jpeg" @if (in_array('jpeg', old('documentosExtra.'.$i))) checked @endif>
+                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="jpeg" @if (in_array('jpeg', old('documentosExtra.'.$i))) checked @endif>
                                                                     <label class="form-check-label">
                                                                         .jpeg
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="png" @if (in_array('png', old('documentosExtra.'.$i))) checked @endif>
+                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="png" @if (in_array('png', old('documentosExtra.'.$i))) checked @endif>
                                                                     <label class="form-check-label">
                                                                         .png
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="docx" @if (in_array('docx', old('documentosExtra.'.$i))) checked @endif>
+                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="docx" @if (in_array('docx', old('documentosExtra.'.$i))) checked @endif>
                                                                     <label class="form-check-label">
                                                                         .docx
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="odt" @if (in_array('odt', old('documentosExtra.'.$i))) checked @endif>
+                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="odt" @if (in_array('odt', old('documentosExtra.'.$i))) checked @endif>
                                                                     <label class="form-check-label">
                                                                         .odt
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="zip" @if (in_array('zip', old('documentosExtra.'.$i))) checked @endif>
+                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="zip" @if (in_array('zip', old('documentosExtra.'.$i))) checked @endif>
                                                                     <label class="form-check-label">
                                                                         .zip
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="svg" @if (in_array('svg', old('documentosExtra.'.$i))) checked @endif>
+                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="svg" @if (in_array('svg', old('documentosExtra.'.$i))) checked @endif>
                                                                     <label class="form-check-label">
                                                                         .svg
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="mp4" @if (in_array('mp4', old('documentosExtra.'.$i))) checked @endif>
+                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="mp4" @if (in_array('mp4', old('documentosExtra.'.$i))) checked @endif>
                                                                     <label class="form-check-label">
                                                                         .mp4
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra.".$i value="mp3" @if (in_array('mp3', old('documentosExtra.'.$i))) checked @endif>
+                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="mp3" @if (in_array('mp3', old('documentosExtra.'.$i))) checked @endif>
                                                                     <label class="form-check-label">
                                                                         .mp3
                                                                     </label>
