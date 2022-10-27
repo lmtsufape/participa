@@ -246,7 +246,7 @@ class TrabalhoController extends Controller
                 foreach ($modalidade->midiasExtra as $midia) {
                     $trabalho->midiasExtra()->attach($midia->id);
                     $documento = $trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first()->pivot;
-                    $documento->caminho = $request[$midia->nome]->store("trabalhos/{$evento->id}/{$trabalho->id}");
+                    $documento->caminho = $request[$midia->hyphenizeNome()]->store("trabalhos/{$evento->id}/{$trabalho->id}");
                     $documento->update();
                 }
             }
@@ -596,9 +596,9 @@ class TrabalhoController extends Controller
 
         if ($trabalho->modalidade->midiasExtra) {
             foreach ($trabalho->modalidade->midiasExtra as $midia) {
-                if ($request[$midia->nome]) {
+                if ($request[$midia->hyphenizeNome()]) {
                     $documento = $trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first()->pivot;
-                    $documento->caminho = $request[$midia->nome]->store("trabalhos/{$evento->id}/{$trabalho->id}");
+                    $documento->caminho = $request[$midia->hyphenizeNome()]->store("trabalhos/{$evento->id}/{$trabalho->id}");
                     $documento->update();
                 }
             }
