@@ -70,7 +70,7 @@ class TrabalhoUpdateRequest extends FormRequest
         ];
 
         foreach ($modalidade->midiasExtra as $midia) {
-            $validate_array[$midia->nome] = ['nullable', 'file', new FileType($modalidade, $midia, request()[$midia->nome], false)];
+            $validate_array[$midia->hyphenizeNome()] = ['nullable', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome()], false)];
         }
 
         return $validate_array;

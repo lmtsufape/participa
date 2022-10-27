@@ -283,13 +283,13 @@
                                         <div class="row justify-content-center">
                                             @foreach ($modalidade->midiasExtra as $midia)
                                                 <div class="col-sm-12" style="margin-top: 20px;">
-                                                    <label for="{{$midia->nome}}"
+                                                    <label for="{{$midia->hyphenizeNome()}}"
                                                         class="col-form-label"><strong>{{$midia->nome}}</strong>
                                                     </label>
                                                     <div class="custom-file">
                                                         <input type="file" class="filestyle"
                                                             data-placeholder="Nenhum arquivo" data-text="Selecionar"
-                                                            data-btnClass="btn-primary-lmts" name="{{$midia->nome}}" required>
+                                                            data-btnClass="btn-primary-lmts" name="{{$midia->hyphenizeNome()}}" required>
                                                     </div>
                                                     <small><strong>Extensão de arquivos aceitas:</strong>
                                                         @if($midia->pdf == true)
