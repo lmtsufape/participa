@@ -180,11 +180,13 @@
                                                 @if ($trabalho->modalidade->midiasExtra)
                                                     @foreach ($trabalho->modalidade->midiasExtra as $midia)
                                                         <td>
-                                                            <a @if($trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first() != null) href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}" @endif>
-                                                                <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
-                                                                    <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                                                                </span>
-                                                            </a>
+                                                            @if($trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first() != null)
+                                                                <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">
+                                                                    <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
+                                                                        <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                                                    </span>
+                                                                </a>
+                                                            @endif
                                                         </td>
                                                     @endforeach
                                                 @endif
