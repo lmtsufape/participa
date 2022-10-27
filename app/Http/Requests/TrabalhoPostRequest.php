@@ -71,7 +71,7 @@ class TrabalhoPostRequest extends FormRequest
 
 
         foreach ($modalidade->midiasExtra as $midia) {
-            $validate_array[$midia->nome] = ['required', 'file', new FileType($modalidade, $midia, request()[$midia->nome], false)];
+            $validate_array[$midia->hyphenizeNome()] = ['required', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome()], false)];
         }
 
         return $validate_array;
