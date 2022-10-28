@@ -11,12 +11,12 @@
         </div>
         {{-- row card --}}
         <div class="row justify-content-center">
-            <div class="col-sm-8">
+            <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Nova Modalidade</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova modalidade para o seu evento</h6>
-                        <form method="POST" action="{{route('modalidade.store')}}" enctype="multipart/form-data">
+                        <form method="POST" action="{{route('modalidade.store')}}" enctype="multipart/form-data" x-data="handler()">
                         @csrf
                         <p class="card-text">
                             <input type="hidden" name="eventoId" value="{{$evento->id}}">
@@ -165,6 +165,69 @@
                             </div>
                         </div>
                         {{-- end Data: resultado --}}
+
+                        <div id="datas">
+                            <template x-for="(data, index) in datas" :key="index">
+                                <div class="row mt-2 justify-content-center">
+                                    <div class="col-sm-3" x-data="{ id: $id('data-extra-nome') }">
+                                        <label :for="id" class="col-form-label font-weight-bold">
+                                            {{ __('Nome da data') }}*
+                                        </label>
+                                        <input :id="id" type="text" class="form-control" x-model="data.nome" name="nomeDataExtra[]" required>
+                                        @error('nomeDataExtra[]')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-3" x-data="{ id: $id('data-extra-inicio') }">
+                                        <label :for="id" class="col-form-label font-weight-bold">
+                                            {{ __('Data inicial') }}*
+                                        </label>
+                                        <input :id="id" type="datetime-local" class="form-control" x-model="data.inicio" name="inicioDataExtra[]" required>
+                                        @error('inicioDataExtra[]')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-3" x-data="{ id: $id('data-extra-final') }">
+                                        <label :for="id" class="col-form-label font-weight-bold">
+                                            {{ __('Data final') }}*
+                                        </label>
+                                        <input :id="id" type="datetime-local" class="form-control" x-model="data.fim" name="finalDataExtra[]" required>
+                                        @error('finalDataExtra[]')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-3" x-data="{ id: $id('data-extra-submissao') }">
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" x-model="data.permitirSubmissao" :id="id" :name="'submissaoDataExtra[' + index + ']'">
+                                            <label class="form-check-label" :for="id" >
+                                                <strong>Permitir submissão</strong>
+                                            </label>
+                                            <div class="d-flex justify-content-center">
+                                                <button title="Remover data" type="button" @click="removeData(index)" style="color: #d30909;" class="btn pb-0">
+                                                    <img class="mt-2 text-danger" src="{{asset('img/icons/calendar-times-solid.svg')}}"
+                                                         alt="ícone de adicionar data extra" width="30px">
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <div class="row mt-3 ml-1">
+                                <button @click="adicionaData" class="btn btn-primary btn-padding border mb-2"
+                                        style="text-decoration: none; border-radius: 14px; background-color: #E5B300"
+                                        title="Clique aqui para adicionar datas extras" type="button">
+                                    <img class="mt-2" src="{{asset('img/icons/calendar-plus-black-solid.svg')}}"
+                                        alt="ícone de adicionar data extra" width="30px">
+                                    <br> Adicionar data
+                                </button>
+                            </div>
+                        </div>
 
                         {{-- Inicio - Tipo de submissão --}}
                         <div class="row">
@@ -667,4 +730,39 @@
         }
     </script>
 
+@endsection
+
+@section('javascript')
+@parent
+<script>
+    function handler() {
+        inicial = [];
+        oldDatas = @json(old('datasExtras'));
+        if (oldDatas != null) {
+            for (let index = 0; index < oldDatas.length; index++) {
+                inicial.push({
+                    inicio: oldDatas[index].inicio,
+                    fim: oldDatas[index].fim,
+                    permitirSubmissao: oldDatas[index].permitirSubmissao,
+                    nome: oldDatas[index].nome
+                })
+
+            }
+        }
+        return {
+            datas: inicial,
+            adicionaData() {
+                this.datas.push({
+                    inicio: '',
+                    fim: '',
+                    permitirSubmissao: '',
+                    nome: ''
+                });
+            },
+            removeData(index) {
+                this.datas.splice(index, 1);
+            },
+        }
+    }
+</script>
 @endsection

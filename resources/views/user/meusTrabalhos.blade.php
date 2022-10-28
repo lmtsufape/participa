@@ -153,12 +153,12 @@
                     @endif
                   </td>
                   <td style="text-align:center">
-                      <a href="#" onclick="return false;" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A edição do trabalho só é permitida durante o periodo de submissão." @endif>
+                      <a href="#" onclick="return false;" @if($trabalho->modalidade->estaEmPeriodoDeSubmissao()) data-toggle="modal" data-target="#modalEditarTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A edição do trabalho só é permitida durante o periodo de submissão." @endif>
                         <img class="" src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px">
                       </a>
                   </td>
                   <td style="text-align:center">
-                    <a href="#" onclick="return false;" @if($agora <= $trabalho->modalidade->fimSubmissao) data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A exclusão do trabalho só é permitida durante o periodo de submissão." @endif>
+                    <a href="#" onclick="return false;" @if($trabalho->modalidade->estaEmPeriodoDeSubmissao()) data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}" style="color:#114048ff" @else data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A exclusão do trabalho só é permitida durante o periodo de submissão." @endif>
                       <img class="" src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:20px">
                     </a>
                   </td>
@@ -313,7 +313,7 @@
 
 
 @foreach ($trabalhos as $trabalho)
-  @if($agora <= $trabalho->modalidade->fimSubmissao)
+  @if($trabalho->modalidade->estaEmPeriodoDeSubmissao())
     <!-- Modal  excluir trabalho -->
     <div class="modal fade" id="modalExcluirTrabalho_{{$trabalho->id}}" tabindex="-1" aria-labelledby="modalExcluirTrabalho_{{$trabalho->id}}Label" aria-hidden="true">
       <div class="modal-dialog" role="document">

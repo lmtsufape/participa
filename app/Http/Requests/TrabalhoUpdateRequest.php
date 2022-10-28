@@ -22,7 +22,7 @@ class TrabalhoUpdateRequest extends FormRequest
         $trabalho = Trabalho::find($this->route('id'));
         $evento = $trabalho->evento;
         $mytime = Carbon::now('America/Recife');
-        if ($mytime > $trabalho->modalidade->fimSubmissao) {
+        if (!$trabalho->modalidade->estaEmPeriodoDeSubmissao()) {
             return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
         } else {
             return $this->user()->can('isCoordenadorOrComissaoOrAutor', $trabalho);

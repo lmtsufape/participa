@@ -22,13 +22,11 @@ class TrabalhoPostRequest extends FormRequest
         $modalidade = Modalidade::find($this->route('id'));
         $mytime = Carbon::now('America/Recife');
         $evento = Evento::find(request()->eventoId);
-        if ($mytime > $modalidade->fimSubmissao) {
+        if (!$modalidade->estaEmPeriodoDeSubmissao()) {
             return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
         }
-        if ($evento->inicioSubmissao > $mytime) {
-            if ($mytime >= $evento->fimSubmissao) {
-                return redirect()->route('home');
-            }
+        if (!$modalidade->estaEmPeriodoDeSubmissao()) {
+            return redirect()->route('home');
         }
 
         return 1;

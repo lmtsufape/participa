@@ -56,7 +56,7 @@ class TrabalhoController extends Controller
         $modalidade = Modalidade::find($idModalidade);
 
         $mytime = Carbon::now('America/Recife');
-        if ($mytime > $modalidade->fimSubmissao) {
+        if (!$modalidade->estaEmPeriodoDeSubmissao()) {
             $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         }
         // dd($formSubTraba);
@@ -679,7 +679,7 @@ class TrabalhoController extends Controller
     {
         $trabalho = Trabalho::find($id);
         $agora = Carbon::now();
-        if (auth()->user()->id != $trabalho->autorId || $agora > $trabalho->modalidade->fimSubmissao) {
+        if (auth()->user()->id != $trabalho->autorId || !$trabalho->modalidade->estaEmPeriodoDeSubmissao()) {
             return abort(403);
         }
 
@@ -725,11 +725,8 @@ class TrabalhoController extends Controller
             'trabalhoId' => ['required', 'integer'],
         ]);
 
-        // dd($validatedData);
-        if ($modalidade->inicioSubmissao > $mytime) {
-            if ($mytime >= $modalidade->fimSubmissao) {
-                return redirect()->back()->withErrors(['error' => 'O periodo de submissão para esse trabalho se encerrou.']);
-            }
+        if (!$modalidade->estaEmPeriodoDeSubmissao()) {
+            return redirect()->back()->withErrors(['error' => 'O periodo de submissão para esse trabalho se encerrou.']);
         }
 
         if ($this->validarTipoDoArquivo($request, $trabalho->modalidade)) {

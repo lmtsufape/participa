@@ -3,6 +3,7 @@
 namespace App\Models\Submissao;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Modalidade extends Model
 {
@@ -53,6 +54,45 @@ class Modalidade extends Model
     public function tiposApresentacao()
     {
         return $this->hasMany('App\Models\Submissao\TipoApresentacao');
+    }
+
+    /**
+     * Get all of the datasExtras for the Modalidade
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function datasExtras(): HasMany
+    {
+        return $this->hasMany(DataExtra::class);
+    }
+
+    /**
+     * Pega todas as datas extras com que permitem submissão
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function datasExtrasComSubmissao(): HasMany
+    {
+        return $this->hasMany(DataExtra::class)->where('permitir_submissao', true);
+    }
+
+    public function estaEmPeriodoDeSubmissao()
+    {
+        $agora = now();
+        if ($this->inicioSubmissao <= $agora && $this->fimSubmissao >= $agora) {
+            return true;
+        }
+        return $this->datasExtrasComSubmissao()->where('inicio', '<=', $agora)->where('fim', '>=', $agora)->exists();
+    }
+
+    public function getUltimaDataAttribute()
+    {
+        if ($this->datasExtras()->exists()) {
+            $maiorDataExtra = $this->datasExtras()->max('fim');
+            return max($maiorDataExtra, $this->inicioResultado);
+        } else {
+            return $this->inicioResultado;
+        }
     }
 
     public function midiasExtra()
