@@ -558,6 +558,32 @@
                                                 </span>
                                                 @enderror
                                             </div>
+                                            <div class="col-sm-12" style="margin-top: 20px;">
+                                                <label for="arquivoInstrucoes" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarinstrucoes}}:</label> @if ($modalidade->instrucoes != null) <a href="{{route('modalidade.instrucoes.download', ['modalidade' => $modalidade->id])}}">Arquivo atual</a> @endif
+                                                @if ($modalidade->instrucoes)
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="checkbox" name="deleteinstrucoes" id="deleteinstrucoes{{$modalidade->id}}" @if(old('deleteinstrucoes') == "on") checked @endif>
+                                                        <label class="form-check-label" for="deleteinstrucoes{{$modalidade->id}}">
+                                                            Excluir arquivo enviado
+                                                        </label>
+                                                        @error('deleteinstrucoes')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                @endif
+                                                <div class="custom-file">
+                                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" id="arquivoInstrucoes" name="arquivoInstrucoes{{$modalidade->id}}">
+                                                </div>
+                                                <small>O arquivo selecionado deve ser no formato PDF de até 2mb.</small><br>
+                                                <small>Se deseja alterar o arquivo, envie a nova versão.</small>
+                                                @error('arquivoInstrucoes'.$modalidade->id)
+                                                    <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                         <br>
                                         <div class="row" style="text-align: right">

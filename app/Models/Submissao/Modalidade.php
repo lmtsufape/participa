@@ -17,6 +17,7 @@ class Modalidade extends Model
         'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg',
         'mp4', 'mp3',
         'regra', 'template', 'modelo_apresentacao',
+        'instrucoes',
     ];
 
     public function trabalho()

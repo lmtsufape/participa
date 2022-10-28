@@ -91,6 +91,7 @@ class ModalidadeController extends Controller
             'minpalavras'       => ['nullable', 'integer'],
             'maxpalavras'       => ['nullable', 'integer'],
             'arquivoRegras'     => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
+            'arquivoInstrucoes' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
             'arquivoModelo'     => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,pdf,ppt,pptx,odp', 'max:2048'],
             'arquivoTemplates'  => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2048'],
         ]);
@@ -192,6 +193,10 @@ class ModalidadeController extends Controller
             Storage::putFileAs($pathRegras, $fileRegras, $nomeRegras);
 
             $modalidade->regra = $pathRegras.$nomeRegras;
+        }
+
+        if (isset($request->arquivoInstrucoes)) {
+            $modalidade->instrucoes = $request->arquivoInstrucoes->store('instrucoes/'.$modalidade->nome);
         }
 
         if (isset($request->arquivoTemplates)) {
@@ -334,14 +339,16 @@ class ModalidadeController extends Controller
             'deleteapresentacao'                                => ['nullable'],
             'deleteregra'                                       => ['nullable'],
             'deletetemplate'                                    => ['nullable'],
+            'deleteinstrucoes'                                  => ['nullable'],
 
             'mincaracteres'.$request->modalidadeEditId          => ['nullable', 'integer'],
             'maxcaracteres'.$request->modalidadeEditId          => ['nullable', 'integer'],
             'minpalavras'.$request->modalidadeEditId            => ['nullable', 'integer'],
             'maxpalavras'.$request->modalidadeEditId            => ['nullable', 'integer'],
-            'arquivoRegras'.$request->modalidadeEditId          => ['nullable', 'file', 'max:5120'],
-            'arquivoModelos'.$request->modalidadeEditId         => ['nullable', 'file', 'max:5120'],
-            'arquivoTemplates'.$request->modalidadeEditId       => ['nullable', 'file', 'max:5120'],
+            'arquivoRegras'.$request->modalidadeEditId          => ['nullable', 'file', 'max:2048'],
+            'arquivoInstrucoes'.$request->modalidadeEditId      => ['nullable', 'file', 'max:2048'],
+            'arquivoModelos'.$request->modalidadeEditId         => ['nullable', 'file', 'max:2048'],
+            'arquivoTemplates'.$request->modalidadeEditId       => ['nullable', 'file', 'max:2048'],
         ]);
         $caracteres = $modalidadeEdit->caracteres;
         $palavras = $modalidadeEdit->palavras;
@@ -469,6 +476,25 @@ class ModalidadeController extends Controller
                 Storage::delete($path);
             }
             $modalidadeEdit->regra = null;
+        }
+
+        if ($request->file('arquivoInstrucoes'.$request->modalidadeEditId) != null) {
+            $path = $modalidadeEdit->instrucoes;
+            if (Storage::disk()->exists($path)) {
+                Storage::delete($path);
+            }
+
+            $modalidadeEdit->instrucoes = $request->file('arquivoInstrucoes'.$request->modalidadeEditId)->store('instrucoes/'.$modalidadeEdit->nome);
+            $modalidadeEdit->save();
+        }
+
+        if ($request->input('deleteinstrucoes') != null) {
+            $path = $modalidadeEdit->instrucoes;
+            if (Storage::disk()->exists($path)) {
+                Storage::delete($path);
+            }
+            $modalidadeEdit->instrucoes = null;
+            $modalidadeEdit->save();
         }
 
         if ($request->file('arquivoTemplates'.$request->modalidadeEditId)) {
@@ -674,6 +700,15 @@ class ModalidadeController extends Controller
             ]);
 
             return $response;
+        }
+
+        return abort(404);
+    }
+
+    public function downloadInstrucoes(Modalidade $modalidade)
+    {
+        if (Storage::exists($modalidade->instrucoes)) {
+            return Storage::download($modalidade->instrucoes);
         }
 
         return abort(404);
