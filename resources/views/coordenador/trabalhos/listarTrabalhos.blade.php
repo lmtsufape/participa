@@ -122,6 +122,11 @@
                                                     <i class="fas fa-arrow-alt-circle-down"></i>
                                                 </a>
                                                 </th>
+                                                @if ($trabalhos->first() && $trabalhos->first()->modalidade->midiasExtra)
+                                                    @foreach ($trabalhos->first()->modalidade->midiasExtra as $midia)
+                                                        <th scope="col">{{$midia->nome}}</th>
+                                                    @endforeach
+                                                @endif
                                                 <th scope="col">
                                                 Área
                                                 <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'asc', $status])}}">
@@ -172,6 +177,19 @@
                                                         </span>
                                                     @endif
                                                 </td>
+                                                @if ($trabalho->modalidade->midiasExtra)
+                                                    @foreach ($trabalho->modalidade->midiasExtra as $midia)
+                                                        <td>
+                                                            @if($trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first() != null)
+                                                                <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">
+                                                                    <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
+                                                                        <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                                                    </span>
+                                                                </a>
+                                                            @endif
+                                                        </td>
+                                                    @endforeach
+                                                @endif
                                                 <td>
                                                     <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
                                                     {{$trabalho->area->nome}}

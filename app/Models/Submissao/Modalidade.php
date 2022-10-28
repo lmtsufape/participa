@@ -54,6 +54,11 @@ class Modalidade extends Model
         return $this->hasMany('App\Models\Submissao\TipoApresentacao');
     }
 
+    public function midiasExtra()
+    {
+        return $this->hasMany('App\Models\Submissao\MidiaExtra');
+    }
+
     public function tiposAceitos()
     {
         $tiposcadastrados = [];
@@ -93,3 +98,4 @@ class Modalidade extends Model
         return $tiposcadastrados;
     }
 }
+

@@ -51,7 +51,8 @@ class TrabalhoController extends Controller
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
         $ordemCampos = explode(',', $formSubTraba->ordemCampos);
-        array_splice( $ordemCampos, 5, 0, "apresentacao");
+        array_splice($ordemCampos, 6, 0, "midiaExtra");
+        array_splice($ordemCampos, 5, 0, "apresentacao");
         $modalidade = Modalidade::find($idModalidade);
 
         $mytime = Carbon::now('America/Recife');
@@ -239,6 +240,15 @@ class TrabalhoController extends Controller
                     'trabalhoId'  => $trabalho->id,
                     'versaoFinal' => true,
                 ]);
+            }
+
+            if ($modalidade->midiasExtra) {
+                foreach ($modalidade->midiasExtra as $midia) {
+                    $trabalho->midiasExtra()->attach($midia->id);
+                    $documento = $trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first()->pivot;
+                    $documento->caminho = $request[$midia->hyphenizeNome()]->store("trabalhos/{$evento->id}/{$trabalho->id}");
+                    $documento->update();
+                }
             }
 
             if (isset($request->campoextra1arquivo)) {
@@ -584,6 +594,16 @@ class TrabalhoController extends Controller
             }*/
         }
 
+        if ($trabalho->modalidade->midiasExtra) {
+            foreach ($trabalho->modalidade->midiasExtra as $midia) {
+                if ($request[$midia->hyphenizeNome()]) {
+                    $documento = $trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first()->pivot;
+                    $documento->caminho = $request[$midia->hyphenizeNome()]->store("trabalhos/{$evento->id}/{$trabalho->id}");
+                    $documento->update();
+                }
+            }
+        }
+
         if (isset($request->campoextra1arquivo)) {
             $file = $request->campoextra1arquivo;
             $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
@@ -800,6 +820,65 @@ class TrabalhoController extends Controller
             'revisores' => $revisoresAux,
             'revisoresDisponiveis' => $revisoresAux1,
         ], 200);
+    }
+
+    public function downloadMidiaExtra($id, $idMidia)
+    {
+        $trabalho = Trabalho::find($id);
+        $revisor = Revisor::where([['evento_id', '=', $trabalho->eventoId], ['user_id', '=', auth()->user()->id]])->first();
+        $midia = $trabalho->midiasExtra()->where('midia_extra_id', $idMidia)->first()->pivot;
+
+        /*
+          O usuário só tera permissão para baixar o arquivo se for revisor do trabalho
+          ou se for coordenador do evento, coordenador da comissão, se pertencer a comissão
+          do evento, se for autor do trabalho ou se for coautor.
+        */
+        $comoCoautor = Coautor::where('autorId', auth()->user()->id)->first();
+        $trabalhosCoautor = collect();
+        if ($comoCoautor != null) {
+            $trabalhosC = $comoCoautor->trabalhos;
+            foreach ($trabalhosC as $trab) {
+                if ($trab->autorId != auth()->user()->id) {
+                    $trabalhosCoautor->push($trab->id);
+                }
+            }
+        }
+
+        $evento = $trabalho->evento;
+        $usuariosDaComissaoCientifica = $evento->usuariosDaComissao;
+        $usuariosDaComissaoOrganizadora = $evento->usuariosDaComissaoOrganizadora;
+        $usuarioLogado = auth()->user();
+
+        if ($evento->coordenadorId == $usuarioLogado->id
+        || $usuariosDaComissaoCientifica->contains($usuarioLogado)
+        || $usuariosDaComissaoOrganizadora->contains($usuarioLogado)
+        || $evento->userIsCoordComissaoCientifica($usuarioLogado)
+        || $evento->userIsCoordComissaoOrganizadora($usuarioLogado)
+        || $trabalho->autorId == $usuarioLogado->id
+        || $trabalhosCoautor->contains($trabalho->id)) {
+            // dd($arquivo);
+            if ($midia != null && Storage::disk()->exists($midia->caminho)) {
+                return Storage::download($midia->caminho);
+            }
+
+            return abort(404);
+        } elseif ($revisor != null) {
+            if ($revisor->trabalhosAtribuidos->contains($trabalho)) {
+                if (Storage::disk()->exists($midia->caminho)) {
+                    return Storage::download($midia->caminho);
+                }
+
+                return abort(404);
+            } else {
+                if (Storage::disk()->exists($midia->caminho)) {
+                    return Storage::download($midia->caminho);
+                }
+
+                return abort(404);
+            }
+        }
+
+        return abort(403);
     }
 
     //função para download do arquivo do trabalho
