@@ -230,13 +230,9 @@ class TrabalhoController extends Controller
             }
 
             if (isset($request->arquivo)) {
-                $file = $request->arquivo;
-                $path = 'trabalhos/'.$request->eventoId.'/'.$trabalho->id.'/';
-                $nome = $request->arquivo->getClientOriginalName();
-                Storage::putFileAs($path, $file, $nome);
-
-                $arquivo = Arquivo::create([
-                    'nome'  => $path.$nome,
+                $path = $request->arquivo->store("trabalhos/{$evento->id}/{$trabalho->id}");
+                Arquivo::create([
+                    'nome'  => $path,
                     'trabalhoId'  => $trabalho->id,
                     'versaoFinal' => true,
                 ]);
@@ -252,61 +248,41 @@ class TrabalhoController extends Controller
             }
 
             if (isset($request->campoextra1arquivo)) {
-                $file = $request->campoextra1arquivo;
-                $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
-                $nome = $request->campoextra1arquivo->getClientOriginalName();
-                Storage::putFileAs($path, $file, $nome);
-
-                $arquivoExtra1 = Arquivoextra::create([
-                    'nome'  => $path.$nome,
+                $path = $request->campoextra1arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
+                Arquivoextra::create([
+                    'nome'  => $path,
                     'trabalhoId'  => $trabalho->id,
                 ]);
             }
 
             if (isset($request->campoextra2arquivo)) {
-                $file = $request->campoextra2arquivo;
-                $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
-                $nome = $request->campoextra2arquivo->getClientOriginalName();
-                Storage::putFileAs($path, $file, $nome);
-
-                $arquivoExtra2 = Arquivoextra::create([
-                    'nome'  => $path.$nome,
+                $path = $request->campoextra2arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
+                Arquivoextra::create([
+                    'nome'  => $path,
                     'trabalhoId'  => $trabalho->id,
                 ]);
             }
 
             if (isset($request->campoextra3arquivo)) {
-                $file = $request->campoextra3arquivo;
-                $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
-                $nome = $request->campoextra3arquivo->getClientOriginalName();
-                Storage::putFileAs($path, $file, $nome);
-
-                $arquivoExtra3 = Arquivoextra::create([
-                    'nome'  => $path.$nome,
+                $path = $request->campoextra3arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
+                Arquivoextra::create([
+                    'nome'  => $path,
                     'trabalhoId'  => $trabalho->id,
                 ]);
             }
 
             if (isset($request->campoextra4arquivo)) {
-                $file = $request->campoextra4arquivo;
-                $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
-                $nome = $request->campoextra4arquivo->getClientOriginalName();
-                Storage::putFileAs($path, $file, $nome);
-
-                $arquivoExtra4 = Arquivoextra::create([
-                    'nome'  => $path.$nome,
+                $path = $request->campoextra4arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
+                Arquivoextra::create([
+                    'nome'  => $path,
                     'trabalhoId'  => $trabalho->id,
                 ]);
             }
 
             if (isset($request->campoextra5arquivo)) {
-                $file = $request->campoextra5arquivo;
-                $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
-                $nome = $request->campoextra5arquivo->getClientOriginalName();
-                Storage::putFileAs($path, $file, $nome);
-
-                $arquivoExtra5 = Arquivoextra::create([
-                    'nome'  => $path.$nome,
+                $path = $request->campoextra5arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
+                Arquivoextra::create([
+                    'nome'  => $path,
                     'trabalhoId'  => $trabalho->id,
                 ]);
             }
@@ -566,10 +542,7 @@ class TrabalhoController extends Controller
         }
 
         if ($request->file('arquivo'.$id) != null) {
-            $file = $request->file('arquivo'.$id);
-            $path = 'trabalhos/'.$evento->id.'/'.$trabalho->id.'/';
-            $nome = $request->file('arquivo'.$id)->getClientOriginalName();
-            Storage::putFileAs($path, $file, $nome);
+            $path = $request->file('arquivo'.$id)->store("trabalhos/{$evento->id}/{$trabalho->id}");
 
             //É necessário excluir o arquivo da tabela de arquivo também ao editar um trabalho
             //Não só fazer o Storage::delete() do arquivo
@@ -582,7 +555,7 @@ class TrabalhoController extends Controller
             }
 
             $arquivo = Arquivo::create([
-                'nome'  => $path.$nome,
+                'nome'  => $path,
                 'trabalhoId'  => $trabalho->id,
                 'versaoFinal' => true,
             ]);
@@ -605,61 +578,41 @@ class TrabalhoController extends Controller
         }
 
         if (isset($request->campoextra1arquivo)) {
-            $file = $request->campoextra1arquivo;
-            $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
-            $nome = $request->campoextra1arquivo->getClientOriginalName();
-            Storage::putFileAs($path, $file, $nome);
-
+            $path = $request->campoextra1arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
             $arquivoExtra1 = Arquivoextra::create([
-                'nome'  => $path.$nome,
+                'nome'  => $path,
                 'trabalhoId'  => $trabalho->id,
             ]);
         }
 
         if (isset($request->campoextra2arquivo)) {
-            $file = $request->campoextra2arquivo;
-            $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
-            $nome = $request->campoextra2arquivo->getClientOriginalName();
-            Storage::putFileAs($path, $file, $nome);
-
+            $path = $request->campoextra2arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
             $arquivoExtra2 = Arquivoextra::create([
-                'nome'  => $path.$nome,
+                'nome'  => $path,
                 'trabalhoId'  => $trabalho->id,
             ]);
         }
 
         if (isset($request->campoextra3arquivo)) {
-            $file = $request->campoextra3arquivo;
-            $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
-            $nome = $request->campoextra3arquivo->getClientOriginalName();
-            Storage::putFileAs($path, $file, $nome);
-
+            $path = $request->campoextra3arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
             $arquivoExtra3 = Arquivoextra::create([
-                'nome'  => $path.$nome,
+                'nome'  => $path,
                 'trabalhoId'  => $trabalho->id,
             ]);
         }
 
         if (isset($request->campoextra4arquivo)) {
-            $file = $request->campoextra4arquivo;
-            $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
-            $nome = $request->campoextra4arquivo->getClientOriginalName();
-            Storage::putFileAs($path, $file, $nome);
-
+            $path = $request->campoextra4arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
             $arquivoExtra4 = Arquivoextra::create([
-                'nome'  => $path.$nome,
+                'nome'  => $path,
                 'trabalhoId'  => $trabalho->id,
             ]);
         }
 
         if (isset($request->campoextra5arquivo)) {
-            $file = $request->campoextra5arquivo;
-            $path = 'arquivosextra/'.$request->eventoId.'/'.$trabalho->id.'/';
-            $nome = $request->campoextra5arquivo->getClientOriginalName();
-            Storage::putFileAs($path, $file, $nome);
-
+            $path = $request->campoextra5arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
             $arquivoExtra5 = Arquivoextra::create([
-                'nome'  => $path.$nome,
+                'nome'  => $path,
                 'trabalhoId'  => $trabalho->id,
             ]);
         }
@@ -748,13 +701,9 @@ class TrabalhoController extends Controller
             $count++;
         }
 
-        $file = $request->arquivo;
-        $path = 'trabalhos/'.$request->eventoId.'/'.$trabalho->id.'/';
-        $nome = $count.'.pdf';
-        Storage::putFileAs($path, $file, $nome);
-
+        $path = $request->arquivo->store("trabalhos/{$evento->id}/{$trabalho->id}");
         $arquivo = Arquivo::create([
-            'nome'  => $path.$nome,
+            'nome'  => $path,
             'trabalhoId'  => $trabalho->id,
             'versaoFinal' => true,
         ]);
@@ -997,6 +946,7 @@ class TrabalhoController extends Controller
     public function correcaoTrabalho(Request $request)
     {
         $trabalho = Trabalho::find($request->trabalhoCorrecaoId);
+        $evento = $trabalho->evento;
         $this->authorize('permissaoCorrecao', $trabalho);
         if ($request->arquivoCorrecao != null) {
             if ($this->validarTipoDoArquivo($request->arquivoCorrecao, $trabalho->modalidade)) {
@@ -1015,13 +965,9 @@ class TrabalhoController extends Controller
                 $arquivoCorrecao->delete();
             }
 
-            $file = $request->arquivoCorrecao;
-            $path = 'correcoes/'.$trabalho->evento->id.'/'.$trabalho->id.'/';
-            $nome = $request->arquivoCorrecao->getClientOriginalName();
-            Storage::putFileAs($path, $file, $nome);
-
+            $path = $request->arquivoCorrecao->store("correcoes/{$evento->id}/{$trabalho->id}");
             $arquivo = ArquivoCorrecao::create([
-                'caminho'  => $path.$nome,
+                'caminho'  => $path,
                 'trabalhoId'  => $trabalho->id,
             ]);
         }
