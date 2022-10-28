@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Submissao;
 use App\Http\Controllers\Controller;
 use App\Models\Submissao\DataExtra;
 use App\Models\Submissao\Evento;
+use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\TipoApresentacao;
 use Carbon\Carbon;
@@ -91,6 +92,7 @@ class ModalidadeController extends Controller
             'minpalavras'       => ['nullable', 'integer'],
             'maxpalavras'       => ['nullable', 'integer'],
             'arquivoRegras'     => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
+            'arquivoInstrucoes' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
             'arquivoModelo'     => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,pdf,ppt,pptx,odp', 'max:2048'],
             'arquivoTemplates'  => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2048'],
         ]);
@@ -100,20 +102,20 @@ class ModalidadeController extends Controller
         if ($request->texto == true) {
             // Verificar se o limite máximo de palavra ou caractere é menor que o limite mínimo
             if (isset($request->maxcaracteres) && isset($request->mincaracteres) && $request->maxcaracteres <= $request->mincaracteres) {
-                return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!'])->withInput($validatedData);
+                return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!'])->withInput($request->all());
             }
             if (isset($request->maxpalavras) && isset($request->minpalavras) && $request->maxpalavras <= $request->minpalavras) {
-                return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!'])->withInput($validatedData);
+                return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!'])->withInput($request->all());
             }
 
             if ($request->limit == null) {
-                return redirect()->back()->withErrors(['caracteresoupalavras' => 'O tipo caracteres ou palavras não foi selecionado.'])->withInput($validatedData);
+                return redirect()->back()->withErrors(['caracteresoupalavras' => 'O tipo caracteres ou palavras não foi selecionado.'])->withInput($request->all());
             }
 
             if ($request->limit == 'limit-option1') {
                 // Verifica se um campo foi deixado em branco
                 if ($request->mincaracteres == null || $request->maxcaracteres == null) {
-                    return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($validatedData);
+                    return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($request->all());
                 }
                 $caracteres = true;
                 $palavras = false;
@@ -121,7 +123,7 @@ class ModalidadeController extends Controller
             if ($request->limit == 'limit-option2') {
                 // Verifica se um campo foi deixado em branco
                 if ($request->minpalavras == null || $request->maxpalavras == null) {
-                    return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($validatedData);
+                    return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($request->all());
                 }
                 $caracteres = false;
                 $palavras = true;
@@ -131,13 +133,21 @@ class ModalidadeController extends Controller
         if ($request->arquivo == true) {
             // Verifica se um campo foi deixado em branco
             if ($request->pdf == null && $request->jpg == null && $request->jpeg == null && $request->png == null && $request->docx == null && $request->odt == null && $request->mp3 == null && $request->mp4 == null) {
-                return redirect()->back()->withErrors(['marcarextensao' => 'O campo arquivo foi selecionado, mas nenhuma extensão foi selecionada.'])->withInput($validatedData);
+                return redirect()->back()->withErrors(['marcarextensao' => 'O campo arquivo foi selecionado, mas nenhuma extensão foi selecionada.'])->withInput($request->all());
             }
         }
 
         if ($request->apresentacao) {
             if (! $request->presencial && ! $request->remoto && ! $request->a_distancia && ! $request->semipresencial) {
-                return redirect()->back()->withErrors(['apresentacao' => 'Selecione pelos menos um tipo de apresentação.'])->withInput($validatedData);
+                return redirect()->back()->withErrors(['apresentacao' => 'Selecione pelos menos um tipo de apresentação.'])->withInput($request->all());
+            }
+        }
+
+        if ($request->documentosExtra != null) {
+            foreach ($request->documentosExtra as $doc) {
+                if (count($doc) <= 1) {
+                    return redirect()->back()->withErrors(['documentosExtra' => 'Selecione pelos menos um tipo de extensão.'])->withInput($request->all());
+                }
             }
         }
 
@@ -200,6 +210,10 @@ class ModalidadeController extends Controller
             $modalidade->regra = $pathRegras.$nomeRegras;
         }
 
+        if (isset($request->arquivoInstrucoes)) {
+            $modalidade->instrucoes = $request->arquivoInstrucoes->store('instrucoes/'.$modalidade->nome);
+        }
+
         if (isset($request->arquivoTemplates)) {
             $fileTemplates = $request->arquivoTemplates;
             $pathTemplates = 'templates/'.$modalidade->nome.'/';
@@ -247,9 +261,30 @@ class ModalidadeController extends Controller
             }
         }
 
+        if ($request->documentosExtra != null) {
+            foreach ($request->documentosExtra as $doc) {
+                $this->saveMidiaExtra($doc, $modalidade);
+            }
+        }
+
         $modalidade->save();
 
         return redirect()->back()->with(['mensagem' => 'Modalidade cadastrada com sucesso!']);
+    }
+
+    private function saveMidiaExtra($doc, Modalidade $modalidade)
+    {
+        $documento = new MidiaExtra();
+        $documento->modalidade_id = $modalidade->id;
+
+        foreach ($doc as $indice => $parametro) {
+            if ($indice != 0) {
+                $documento->$parametro = true;
+            } else {
+                $documento->nome = $parametro;
+            }
+        }
+        $documento->save();
     }
 
     /**
@@ -319,30 +354,32 @@ class ModalidadeController extends Controller
             'deleteapresentacao'                                => ['nullable'],
             'deleteregra'                                       => ['nullable'],
             'deletetemplate'                                    => ['nullable'],
+            'deleteinstrucoes'                                  => ['nullable'],
 
             'mincaracteres'.$request->modalidadeEditId          => ['nullable', 'integer'],
             'maxcaracteres'.$request->modalidadeEditId          => ['nullable', 'integer'],
             'minpalavras'.$request->modalidadeEditId            => ['nullable', 'integer'],
             'maxpalavras'.$request->modalidadeEditId            => ['nullable', 'integer'],
-            'arquivoRegras'.$request->modalidadeEditId          => ['nullable', 'file', 'max:5120'],
-            'arquivoModelos'.$request->modalidadeEditId         => ['nullable', 'file', 'max:5120'],
-            'arquivoTemplates'.$request->modalidadeEditId       => ['nullable', 'file', 'max:5120'],
+            'arquivoRegras'.$request->modalidadeEditId          => ['nullable', 'file', 'max:2048'],
+            'arquivoInstrucoes'.$request->modalidadeEditId      => ['nullable', 'file', 'max:2048'],
+            'arquivoModelos'.$request->modalidadeEditId         => ['nullable', 'file', 'max:2048'],
+            'arquivoTemplates'.$request->modalidadeEditId       => ['nullable', 'file', 'max:2048'],
         ]);
         $caracteres = $modalidadeEdit->caracteres;
         $palavras = $modalidadeEdit->palavras;
 
         if ($request->input('maxcaracteres'.$request->modalidadeEditId) != null && $request->input('mincaracteres'.$request->modalidadeEditId) != null && $request->input('maxcaracteres'.$request->modalidadeEditId) <= $request->input('mincaracteres'.$request->modalidadeEditId)) {
-            return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!']);
+            return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!'])->withInput($request->all());;
         }
         if ($request->input('maxpalavras'.$request->modalidadeEditId) != null && $request->input('minpalavras'.$request->modalidadeEditId) != null && $request->input('maxpalavras'.$request->modalidadeEditId) <= $request->input('minpalavras'.$request->modalidadeEditId)) {
-            return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!']);
+            return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!'])->withInput($request->all());;
         }
 
         // Condição para opção de caracteres escolhida
         if ($request->input('limit'.$request->modalidadeEditId) == 'limit-option1') {
             // Verifica se um campo foi deixado em branco
             if ($request->input('mincaracteres'.$request->modalidadeEditId) == null || $request->input('maxcaracteres'.$request->modalidadeEditId) == null) {
-                return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado']);
+                return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($request->all());;
             }
             $caracteres = true;
             $palavras = false;
@@ -355,7 +392,7 @@ class ModalidadeController extends Controller
         if ($request->input('limit'.$request->modalidadeEditId) == 'limit-option2') {
             // Verifica se um campo foi deixado em branco
             if ($request->input('minpalavras'.$request->modalidadeEditId) == null || $request->input('maxpalavras'.$request->modalidadeEditId) == null) {
-                return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado']);
+                return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($request->all());;
             }
             $caracteres = false;
             $palavras = true;
@@ -383,7 +420,7 @@ class ModalidadeController extends Controller
         // Condição para opção de arquivo escolhida
         if ($request->input('arquivoEdit'.$request->modalidadeEditId) == true) {
             if ($request->input('pdf'.$request->modalidadeEditId) == null && $request->input('jpg'.$request->modalidadeEditId) == null && $request->input('jpeg'.$request->modalidadeEditId) == null && $request->input('png'.$request->modalidadeEditId) == null && $request->input('docx'.$request->modalidadeEditId) == null && $request->input('odt'.$request->modalidadeEditId) == null && $request->input('odt'.$request->modalidadeEditId) == null && $request->input('svg'.$request->modalidadeEditId) == null && $request->input('mp4'.$request->modalidadeEditId) == null && $request->input('mp3'.$request->modalidadeEditId) == null) {
-                return redirect()->back()->withErrors(['marcarextensao' => 'O campo arquivo foi selecionado, mas nenhuma extensão foi selecionada.']);
+                return redirect()->back()->withErrors(['marcarextensao' => 'O campo arquivo foi selecionado, mas nenhuma extensão foi selecionada.'])->withInput($request->all());;
             }
 
             $modalidadeEdit->pdf = $request->input('pdf'.$request->modalidadeEditId);
@@ -411,7 +448,7 @@ class ModalidadeController extends Controller
 
         if ($request->apresentacao) {
             if (! $request->presencial && ! $request->remoto && ! $request->a_distancia && ! $request->semipresencial) {
-                return redirect()->back()->withErrors(['apresentacao' => 'Selecione pelos menos um tipo de apresentação.'])->withInput($validatedData);
+                return redirect()->back()->withErrors(['apresentacao' => 'Selecione pelos menos um tipo de apresentação.'])->withInput($request->all());
             }
         }
 
@@ -454,6 +491,25 @@ class ModalidadeController extends Controller
                 Storage::delete($path);
             }
             $modalidadeEdit->regra = null;
+        }
+
+        if ($request->file('arquivoInstrucoes'.$request->modalidadeEditId) != null) {
+            $path = $modalidadeEdit->instrucoes;
+            if (Storage::disk()->exists($path)) {
+                Storage::delete($path);
+            }
+
+            $modalidadeEdit->instrucoes = $request->file('arquivoInstrucoes'.$request->modalidadeEditId)->store('instrucoes/'.$modalidadeEdit->nome);
+            $modalidadeEdit->save();
+        }
+
+        if ($request->input('deleteinstrucoes') != null) {
+            $path = $modalidadeEdit->instrucoes;
+            if (Storage::disk()->exists($path)) {
+                Storage::delete($path);
+            }
+            $modalidadeEdit->instrucoes = null;
+            $modalidadeEdit->save();
         }
 
         if ($request->file('arquivoTemplates'.$request->modalidadeEditId)) {
@@ -544,6 +600,7 @@ class ModalidadeController extends Controller
                 $semipresencial->delete();
             }
         }
+        $this->editMidiaExtras($request, $modalidadeEdit);
 
         $modalidadeEdit->save();
 
@@ -578,6 +635,74 @@ class ModalidadeController extends Controller
         }
 
         return redirect()->back()->with(['mensagem' => 'Modalidade salva com sucesso!']);
+    }
+
+    private function editMidiaExtras(Request $request, Modalidade $modalidade)
+    {
+        if($request->docsID != null){
+            $docsEditados = MidiaExtra::whereIn('id', $request->docsID)->get();
+            $indice = count($request->docsID);
+        }else{
+            $docsEditados = collect();
+            $indice = 0;
+        }
+        $docsExcluidos = $modalidade->midiasExtra->diff($docsEditados);
+        if($request->documentosExtra != null){
+            if(count($request->documentosExtra) - $docsEditados->count() != 0){
+                $docsNovos = array_slice($request->documentosExtra, -(count($request->documentosExtra) - $docsEditados->count()));
+            }else{
+                $docsNovos = collect();
+            }
+        }else{
+            $docsNovos = collect();
+            $indice = 0;
+        }
+
+        //novos documentos
+
+        foreach($docsNovos as $i => $doc){
+            $documento = new MidiaExtra();
+            $documento->modalidade_id = $modalidade->id;
+            if (count($doc) <= 1) {
+                return redirect()->back()->withErrors(['documentosExtra'.$indice => 'Selecione pelos menos um tipo de extensão.'])->withInput($request->all());
+            }
+            foreach ($doc as $indice => $parametro) {
+                if ($indice != 0) {
+                    $documento->$parametro = true;
+                } else {
+                    $documento->nome = $parametro;
+                }
+            }
+            $documento->save();
+        }
+
+        //Excluindo docs
+        if ($docsExcluidos != null && $docsExcluidos->count() > 0) {
+            foreach ($docsExcluidos as $doc) {
+                $doc->delete();
+            }
+        }
+
+        //Editando docs
+        if ($docsEditados != null && $docsEditados->count() > 0) {
+            foreach($request->docsID as $i => $id) {
+                $doc = MidiaExtra::find($id);
+                if ($doc) {
+                    if (count($request->documentosExtra[$i]) <= 1) {
+                        return redirect()->back()->withErrors(['documentosExtra'.$i => 'Selecione pelos menos um tipo de extensão.'])->withInput($request->all());
+                    }
+                    foreach ($request->documentosExtra[$i] as $indice => $parametro) {
+                        if ($indice != 0) {
+                            $doc->$parametro = true;
+                        } else {
+                            $doc->nome = $parametro;
+                        }
+                    }
+                    $doc->update();
+                }
+
+            }
+        }
     }
 
     /**
@@ -619,6 +744,15 @@ class ModalidadeController extends Controller
             ]);
 
             return $response;
+        }
+
+        return abort(404);
+    }
+
+    public function downloadInstrucoes(Modalidade $modalidade)
+    {
+        if (Storage::exists($modalidade->instrucoes)) {
+            return Storage::download($modalidade->instrucoes);
         }
 
         return abort(404);

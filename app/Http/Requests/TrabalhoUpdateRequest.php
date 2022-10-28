@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Trabalho;
 use App\Rules\FileType;
 use App\Rules\MaxTrabalhosAutorUpdate;
@@ -36,10 +37,11 @@ class TrabalhoUpdateRequest extends FormRequest
     public function rules()
     {
         $id = request()->id;
+        $request = request();
         $evento = Trabalho::find($id)->evento;
         $modalidade = Trabalho::find(request()->trabalhoEditId)->modalidade;
 
-        return [
+        $validate_array = [
             'trabalhoEditId'                       => ['required'],
             'nomeTrabalho'.$id                   => ['required', 'string'],
             'area'.$id                           => ['required', 'integer'],
@@ -49,7 +51,7 @@ class TrabalhoUpdateRequest extends FormRequest
             'nomeCoautor_'.$id.'.*'            => ['string'],
             'emailCoautor_'.$id.'.0'           => ['string', new MaxTrabalhosAutorUpdate($evento->numMaxTrabalhos)],
             'emailCoautor_'.$id.'.*'           => ['string', new MaxTrabalhosCoautorUpdate($evento->numMaxCoautores)],
-            'arquivo'.$id                        => ['nullable', 'file', new FileType($modalidade, request()->arquivo)],
+            'arquivo'.$id                        => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, $request['arquivo'.$id], true)],
             'campoextra1arquivo'                   => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo'                   => ['nullable', 'file', 'max:2048'],
             'campoextra3arquivo'                   => ['nullable', 'file', 'max:2048'],
@@ -66,6 +68,12 @@ class TrabalhoUpdateRequest extends FormRequest
             'campoextra4grande'                    => ['nullable', 'string'],
             'campoextra5grande'                    => ['nullable', 'string'],
         ];
+
+        foreach ($modalidade->midiasExtra as $midia) {
+            $validate_array[$midia->hyphenizeNome()] = ['nullable', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome()], false)];
+        }
+
+        return $validate_array;
     }
 
     public function messages()

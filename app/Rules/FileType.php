@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Modalidade;
 use Illuminate\Contracts\Validation\Rule;
 use Throwable;
@@ -15,9 +16,13 @@ class FileType implements Rule
      *
      * @return void
      */
-    public function __construct(Modalidade $modalidade, $arquivo)
+    public function __construct(Modalidade $modalidade, MidiaExtra $midia, $arquivo, $eh_modalidade)
     {
-        $this->acceptedTypes = $modalidade->tiposAceitos();
+        if ($eh_modalidade) {
+            $this->acceptedTypes = $modalidade->tiposAceitos();
+        } else {
+            $this->acceptedTypes = $midia->tiposAceitos();
+        }
         $this->arquivo = $arquivo;
     }
 

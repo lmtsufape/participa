@@ -278,6 +278,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
 
     // rota download do arquivo do trabalho
     Route::get(   '/download-trabalho/{id}',     'TrabalhoController@downloadArquivo'    )->name('downloadTrabalho');
+    Route::get(   '/download-trabalho/{id}/midia-extra/{id_midia}',     'TrabalhoController@downloadMidiaExtra'    )->name('downloadMidiaExtra');
     //rota download do arquivo do trabalho
     Route::get(   '/download-avaliacao',     'TrabalhoController@downloadArquivoAvaliacao'    )->name('downloadAvaliacao');
     Route::get(   '/trabalho/{id}/download-correcao',     'TrabalhoController@downloadArquivoCorrecao'    )->name('downloadCorrecao');
@@ -408,6 +409,7 @@ Route::get('/home', 'HomeController@home')->name('home')->middleware('verified',
 
 Route::namespace('Submissao')->group(function () {
   Route::get('{id}/regras',  'ModalidadeController@downloadRegras'  )->name('modalidade.regras.download');
+  Route::get('{modalidade}/instrucoes',  'ModalidadeController@downloadInstrucoes'  )->name('modalidade.instrucoes.download');
   Route::get('{id}/modalidade-arquivo-modelos',  'ModalidadeController@downloadModelos'  )->name('modalidade.modelos.download');
   Route::get('{id}/modalidade-template',      'ModalidadeController@downloadTemplate'  )->name('modalidade.template.download');
 
