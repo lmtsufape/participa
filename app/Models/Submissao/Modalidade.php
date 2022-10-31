@@ -13,12 +13,11 @@ class Modalidade extends Model
      * @var array
      */
     protected $fillable = [
-        'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao',
-        'inicioResultado', 'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres',
-        'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg',
-        'mp4', 'mp3',
-        'regra', 'template', 'modelo_apresentacao',
-        'instrucoes',
+        'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao', 'inicioCorrecao', 'fimCorrecao', 'inicioValidacao', 'fimValidacao', 'inicioResultado',
+        'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres',
+        'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras',
+        'pdf,jpg,jpeg,png,docx,odt,zip,svg,mp4,mp3,ogg,wav,ogv,mpg,mpeg,mkv,avi,odp,pptx,csv,ods,xlsx',
+        'regra', 'template', 'modelo_apresentacao', 'instrucoes',
     ];
 
     public function trabalho()
@@ -102,40 +101,11 @@ class Modalidade extends Model
 
     public function tiposAceitos()
     {
-        $tiposcadastrados = [];
-        if ($this->arquivo == true) {
-            if ($this->pdf == true) {
-                array_push($tiposcadastrados, 'pdf');
-            }
-            if ($this->jpg == true) {
-                array_push($tiposcadastrados, 'jpg');
-            }
-            if ($this->jpeg == true) {
-                array_push($tiposcadastrados, 'jpeg');
-            }
-            if ($this->png == true) {
-                array_push($tiposcadastrados, 'png');
-            }
-            if ($this->docx == true) {
-                array_push($tiposcadastrados, 'docx');
-            }
-            if ($this->odt == true) {
-                array_push($tiposcadastrados, 'odt');
-            }
-            if ($this->zip == true) {
-                array_push($tiposcadastrados, 'zip');
-            }
-            if ($this->svg == true) {
-                array_push($tiposcadastrados, 'svg');
-            }
-            if ($this->mp4 == true) {
-                array_push($tiposcadastrados, 'mp4');
-            }
-            if ($this->mp3 == true) {
-                array_push($tiposcadastrados, 'mp3');
-            }
+        $extensoes = ['ogg', 'wav', 'ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'odp', 'pptx', 'csv', 'ods', 'xlsx', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg', 'mp4', 'mp3'];
+        $tiposcadastrados = array_filter($this->getAttributes(), function ($attribute) use ($extensoes) {
+            return $attribute == true && in_array($attribute, $extensoes);
+        });
 
-        }
         return $tiposcadastrados;
     }
 }
