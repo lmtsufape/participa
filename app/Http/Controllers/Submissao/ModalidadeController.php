@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Submissao;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ModalidadeStoreRequest;
 use App\Models\Submissao\DataExtra;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\MidiaExtra;
@@ -48,55 +49,13 @@ class ModalidadeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ModalidadeStoreRequest $request)
     {
-        // dd($request->all());
+        dd($request->validated());
         $mytime = Carbon::now('America/Recife');
         $yesterday = Carbon::yesterday('America/Recife');
         $yesterday = $yesterday->toDateString();
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-
-        // dd($request->eventoId);
-        $validatedData = $request->validate([
-            'nomeModalidade'    => ['required', 'string'],
-            'inícioDaSubmissão' => ['required', 'date'],
-            'fimDaSubmissão'    => ['required', 'date', 'after:inícioDaSubmissão'],
-            'inícioDaRevisão'   => ['nullable', 'date', 'after:inícioDaSubmissão'],
-            'fimDaRevisão'      => ['nullable', 'date', 'after:inícioDaRevisão'],
-
-            'inícioCorreção'   => ['nullable', 'date', 'after:fimDaRevisão', 'required_with:fimCorreção'],
-            'fimCorreção'      => ['nullable', 'date', 'after:inícioCorreção', 'required_with:inícioCorreção'],
-            'inícioValidação'   => ['nullable', 'date', 'after:fimCorreção', 'required_with:fimValidação'],
-            'fimValidação'      => ['nullable', 'date', 'after:inícioValidação', 'required_with:inícioValidação'],
-
-            'resultado'         => ['required', 'date', 'after:fimDaSubmissão'],
-
-            'texto'             => ['nullable'],
-            'limit'             => ['nullable'],
-            'arquivo'           => ['nullable'],
-            'apresentacao'      => ['nullable'],
-            'pdf'               => ['nullable'],
-            'jpg'               => ['nullable'],
-            'jpeg'              => ['nullable'],
-            'png'               => ['nullable'],
-            'docx'              => ['nullable'],
-            'odt'               => ['nullable'],
-            'zip'               => ['nullable'],
-            'svg'               => ['nullable'],
-            'mp4'               => ['nullable'],
-            'mp3'               => ['nullable'],
-
-            'mincaracteres'     => ['nullable', 'integer'],
-            'maxcaracteres'     => ['nullable', 'integer'],
-            'minpalavras'       => ['nullable', 'integer'],
-            'maxpalavras'       => ['nullable', 'integer'],
-            'arquivoRegras'     => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
-            'arquivoInstrucoes' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
-            'arquivoModelo'     => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,pdf,ppt,pptx,odp', 'max:2048'],
-            'arquivoTemplates'  => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2048'],
-        ]);
-        // dd($request);
         $caracteres = false;
         $palavras = false;
         if ($request->texto == true) {
@@ -154,34 +113,8 @@ class ModalidadeController extends Controller
         // Campo TEXTO boolean removido?
         // $modalidade = Modalidade::create($request->all());
         $modalidade = new Modalidade();
-        $modalidade->nome = $request->nomeModalidade;
-        $modalidade->inicioSubmissao = $request->input('inícioDaSubmissão');
-        $modalidade->fimSubmissao = $request->input('fimDaSubmissão');
-        $modalidade->inicioRevisao = $request->input('inícioDaRevisão');
-        $modalidade->fimRevisao = $request->input('fimDaRevisão');
-        $modalidade->inicioCorrecao = $request->input('inícioCorreção');
-        $modalidade->fimCorrecao = $request->input('fimCorreção');
-        $modalidade->inicioValidacao = $request->input('inícioValidação');
-        $modalidade->fimValidacao = $request->input('fimValidação');
-        $modalidade->inicioResultado = $request->resultado;
-        $modalidade->texto = $request->texto;
-        $modalidade->arquivo = $request->arquivo;
         $modalidade->caracteres = $caracteres;
         $modalidade->palavras = $palavras;
-        $modalidade->mincaracteres = $request->mincaracteres;
-        $modalidade->maxcaracteres = $request->maxcaracteres;
-        $modalidade->minpalavras = $request->minpalavras;
-        $modalidade->maxpalavras = $request->maxpalavras;
-        $modalidade->pdf = $request->pdf;
-        $modalidade->jpg = $request->jpg;
-        $modalidade->jpeg = $request->jpeg;
-        $modalidade->png = $request->png;
-        $modalidade->docx = $request->docx;
-        $modalidade->odt = $request->odt;
-        $modalidade->zip = $request->zip;
-        $modalidade->svg = $request->svg;
-        $modalidade->mp4 = $request->mp4;
-        $modalidade->mp3 = $request->mp3;
         $modalidade->evento_id = $request->eventoId;
         $modalidade->apresentacao = $request->apresentacao ? true : false;
         $modalidade->save();

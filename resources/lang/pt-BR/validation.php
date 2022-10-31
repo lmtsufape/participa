@@ -36,11 +36,23 @@ return [
     'email'                => ':Attribute deve ser um endereço de e-mail válido.',
     'exists'               => 'O :attribute selecionado é inválido.',
     'filled'               => ':Attribute é um campo obrigatório.',
+    'gte' => [
+        'numeric' => 'O campo :attribute deve ser maior ou igual a :value.',
+        'file'    => 'O campo :attribute deve ser maior ou igual a :value kilobytes.',
+        'string'  => 'O campo :attribute deve ser maior ou igual a :value caracteres.',
+        'array'   => 'O campo :attribute deve conter :value itens ou mais.',
+    ],
     'image'                => ':Attribute deve ser uma imagem.',
     'in'                   => ':Attribute é inválido.',
     'integer'              => ':Attribute deve ser um inteiro.',
     'ip'                   => ':Attribute deve ser um endereço IP válido.',
     'json'                 => ':Attribute deve ser um JSON válido.',
+    'lte' => [
+        'numeric' => 'O campo :attribute deve ser menor ou igual a :value.',
+        'file'    => 'O campo :attribute deve ser menor ou igual a :value kilobytes.',
+        'string'  => 'O campo :attribute deve ser menor ou igual a :value caracteres.',
+        'array'   => 'O campo :attribute não deve conter mais que :value itens.',
+    ],
     'max'                  => [
         'numeric' => ':Attribute não deve ser maior que :max.',
         'file'    => ':Attribute não deve ter mais que :max kilobytes.',
@@ -90,7 +102,7 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
-        'dataDeInício.*' => [
+        'dataInício.*' => [
             'required'  => 'O campo data de início é obrigatório.',
             'date'      => 'O campo deve ter uma data válida.'
         ],
@@ -193,55 +205,55 @@ return [
             'required'  => 'Selecione a área do evento a qual o trabalho pertence',
         ],
         // Editar modalidade
-        'inícioSubmissão*' => [
+        'inicioSubmissao*' => [
             'required'  => 'O campo é obrigatório.',
             'date'      => 'O campo deve ter uma data válida.',
         ],
-        'fimSubmissão*' => [
+        'fimSubmissao*' => [
             'required'  => 'O campo é obrigatório.',
             'date'      => 'O campo deve ter uma data válida.',
             'after'     => 'Fim da submissão deve ser uma data depois do início da submissão.',
         ],
-        'inícioRevisão*' => [
+        'inicioRevisao*' => [
             'required'  => 'O campo é obrigatório.',
             'date'      => 'O campo deve ter uma data válida.',
             'after'     => 'Início da revisão deve ser uma data depois do fim da submissão.',
         ],
-        'fimRevisão*' => [
+        'fimRevisao*' => [
             'required'  => 'O campo é obrigatório.',
             'date'      => 'O campo deve ter uma data válida.',
             'after'     => 'Fim da revisão deve ser uma data depois do início da submissão.',
         ],
-        'inícioCorreção*' => [
+        'inicioCorrecao*' => [
             'required'      => 'O campo é obrigatório.',
             'date'          => 'O campo deve ter uma data válida.',
-            'after'         => 'Início da correção deve ser uma data depois do fim da revissão.',
+            'after'         => 'Início da correção deve ser uma data depois do fim da revisão.',
             'required_with' => 'O campo início da correção é obrigatório quando fim da correção está presente.'
         ],
-        'fimCorreção*' => [
+        'fimCorrecao*' => [
             'required'      => 'O campo é obrigatório.',
             'date'          => 'O campo deve ter uma data válida.',
             'after'         => 'Fim da correção deve ser uma data depois do início da correção.',
             'required_with' => 'O campo fim da correção é obrigatório quando início da correção está presente.'
         ],
-        'inícioValidação*' => [
+        'inicioValidacao*' => [
             'required'      => 'O campo é obrigatório.',
             'date'          => 'O campo deve ter uma data válida.',
             'after'         => 'Início da validação deve ser uma data depois do fim da correção.',
             'required_with' => 'O campo início da validação é obrigatório quando fim da validação está presente.'
         ],
-        'fimValidação*' => [
+        'fimValidacao*' => [
             'required'      => 'O campo é obrigatório.',
             'date'          => 'O campo deve ter uma data válida.',
             'after'         => 'Fim da validação deve ser uma data depois do início da validação.',
             'required_with' => 'O campo fim da validação é obrigatório quando início da validação está presente.'
         ],
-        'resultado*' => [
+        'inicioResultado*' => [
             'required'      => 'O campo é obrigatório.',
             'date'          => 'O campo deve ter uma data válida.',
             'after'         => 'Resultado deve ser uma data depois do fim da revisão.',
         ],
-        'inícioSubmissão*' => [
+        'inicioSubmissao*' => [
             'required'  => 'O campo é obrigatório.',
             'date'     => 'O campo deve ter uma data válida.',
         ],
