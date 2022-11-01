@@ -290,28 +290,51 @@ class ModalidadeController extends Controller
             if ($request->input('pdf'.$request->modalidadeEditId) == null && $request->input('jpg'.$request->modalidadeEditId) == null && $request->input('jpeg'.$request->modalidadeEditId) == null && $request->input('png'.$request->modalidadeEditId) == null && $request->input('docx'.$request->modalidadeEditId) == null && $request->input('odt'.$request->modalidadeEditId) == null && $request->input('odt'.$request->modalidadeEditId) == null && $request->input('svg'.$request->modalidadeEditId) == null && $request->input('mp4'.$request->modalidadeEditId) == null && $request->input('mp3'.$request->modalidadeEditId) == null) {
                 return redirect()->back()->withErrors(['marcarextensao' => 'O campo arquivo foi selecionado, mas nenhuma extensão foi selecionada.'])->withInput($request->all());;
             }
-
-            $modalidadeEdit->pdf = $request->input('pdf'.$request->modalidadeEditId);
-            $modalidadeEdit->jpg = $request->input('jpg'.$request->modalidadeEditId);
-            $modalidadeEdit->jpeg = $request->input('jpeg'.$request->modalidadeEditId);
-            $modalidadeEdit->png = $request->input('png'.$request->modalidadeEditId);
+            $modalidadeEdit->pdf  = $request->input('pdf' .$request->modalidadeEditId);
             $modalidadeEdit->docx = $request->input('docx'.$request->modalidadeEditId);
-            $modalidadeEdit->odt = $request->input('odt'.$request->modalidadeEditId);
-            $modalidadeEdit->zip = $request->input('zip'.$request->modalidadeEditId);
-            $modalidadeEdit->svg = $request->input('svg'.$request->modalidadeEditId);
-            $modalidadeEdit->mp4 = $request->input('mp4'.$request->modalidadeEditId);
-            $modalidadeEdit->mp3 = $request->input('mp3'.$request->modalidadeEditId);
+            $modalidadeEdit->odt  = $request->input('odt' .$request->modalidadeEditId);
+            $modalidadeEdit->odp  = $request->input('odp' .$request->modalidadeEditId);
+            $modalidadeEdit->pptx = $request->input('pptx'.$request->modalidadeEditId);
+            $modalidadeEdit->ods  = $request->input('ods' .$request->modalidadeEditId);
+            $modalidadeEdit->xlsx = $request->input('xlsx'.$request->modalidadeEditId);
+            $modalidadeEdit->csv  = $request->input('csv' .$request->modalidadeEditId);
+            $modalidadeEdit->zip  = $request->input('zip' .$request->modalidadeEditId);
+            $modalidadeEdit->mp3  = $request->input('mp3' .$request->modalidadeEditId);
+            $modalidadeEdit->ogg  = $request->input('ogg' .$request->modalidadeEditId);
+            $modalidadeEdit->wav  = $request->input('wav' .$request->modalidadeEditId);
+            $modalidadeEdit->mp4  = $request->input('mp4' .$request->modalidadeEditId);
+            $modalidadeEdit->ogv  = $request->input('ogv' .$request->modalidadeEditId);
+            $modalidadeEdit->mpg  = $request->input('mpg' .$request->modalidadeEditId);
+            $modalidadeEdit->mpeg = $request->input('mpeg'.$request->modalidadeEditId);
+            $modalidadeEdit->mkv  = $request->input('mkv' .$request->modalidadeEditId);
+            $modalidadeEdit->avi  = $request->input('avi' .$request->modalidadeEditId);
+            $modalidadeEdit->jpg  = $request->input('jpg' .$request->modalidadeEditId);
+            $modalidadeEdit->jpeg = $request->input('jpeg'.$request->modalidadeEditId);
+            $modalidadeEdit->png  = $request->input('png' .$request->modalidadeEditId);
+            $modalidadeEdit->svg  = $request->input('svg' .$request->modalidadeEditId);
         } else {
-            $modalidadeEdit->pdf = false;
-            $modalidadeEdit->jpg = false;
-            $modalidadeEdit->jpeg = false;
-            $modalidadeEdit->png = false;
+            $modalidadeEdit->pdf  = false;
             $modalidadeEdit->docx = false;
-            $modalidadeEdit->odt = false;
-            $modalidadeEdit->zip = false;
-            $modalidadeEdit->svg = false;
-            $modalidadeEdit->mp4 = false;
-            $modalidadeEdit->mp3 = false;
+            $modalidadeEdit->odt  = false;
+            $modalidadeEdit->odp  = false;
+            $modalidadeEdit->pptx = false;
+            $modalidadeEdit->ods  = false;
+            $modalidadeEdit->xlsx = false;
+            $modalidadeEdit->csv  = false;
+            $modalidadeEdit->zip  = false;
+            $modalidadeEdit->mp3  = false;
+            $modalidadeEdit->ogg  = false;
+            $modalidadeEdit->wav  = false;
+            $modalidadeEdit->mp4  = false;
+            $modalidadeEdit->ogv  = false;
+            $modalidadeEdit->mpg  = false;
+            $modalidadeEdit->mpeg = false;
+            $modalidadeEdit->mkv  = false;
+            $modalidadeEdit->avi  = false;
+            $modalidadeEdit->jpg  = false;
+            $modalidadeEdit->jpeg = false;
+            $modalidadeEdit->png  = false;
+            $modalidadeEdit->svg  = false;
         }
 
         if ($request->apresentacao) {
