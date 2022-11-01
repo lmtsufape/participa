@@ -5,15 +5,6 @@
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Cadastrar Modalidade</h1>
             </div>
-            @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
         </div>
         <div class="row">
             <div class="col-sm-12">
@@ -66,8 +57,8 @@
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label for="fimRevisao" class="col-form-label font-weight-bold">{{ __('Fim da Revisão') }}</label>
-                                        <input id="fimRevisao" type="datetime-local" class="form-control @error('fimDaRevisão') is-invalid @enderror" name="fimDaRevisão" value="{{ old('fimDaRevisão') }}" autocomplete="fimRevisao" autofocus>
-                                        @error('fimDaRevisão')
+                                        <input id="fimRevisao" type="datetime-local" class="form-control @error('fimRevisao') is-invalid @enderror" name="fimRevisao" value="{{ old('fimRevisao') }}" autocomplete="fimRevisao" autofocus>
+                                        @error('fimRevisao')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -201,13 +192,13 @@
                                         <div style="margin-top: -1rem; margin-left: 1.3rem;">
                                             <label class="col-form-label font-weight-bold">{{ __('Restrições de resumo:') }}</label>
                                             <div class="form-check">
-                                                <input class="form-check-input id="caracterestextocheck" type="radio" x-model="limit" name="limit" value="limit-option1" @if (old('limit') == "limit-option1") checked @endif>
+                                                <input class="form-check-input" id="caracterestextocheck" type="radio" x-model="limit" name="limit" value="limit-option1" @if (old('limit') == "limit-option1") checked @endif>
                                                 <label class="form-check-label" for="caracterestextocheck">
                                                     Quantidade de caracteres
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input id="palavrastextocheck" type="radio" x-model="limit" name="limit" value="limit-option2" @if (old('limit') == "limit-option2") checked @endif>
+                                                <input class="form-check-input" id="palavrastextocheck" type="radio" x-model="limit" name="limit" value="limit-option2" @if (old('limit') == "limit-option2") checked @endif>
                                                 <label class="form-check-label" for="palavrastextocheck">
                                                     Quantidade de palavras
                                                 </label>
@@ -267,15 +258,15 @@
                                 <div x-data="{arquivo: '{{old('arquivo')}}' == 'on'}">
                                     <div class="form-group">
                                         <div class="form-check">
-                                            <input class="form-check-input incluirarquivo" id="arquivocheck" x-model="arquivo" type="checkbox" name="arquivo" value="on">
+                                            <input class="form-check-input incluirarquivo @error('arquivo') is-invalid @enderror" id="arquivocheck" x-model="arquivo" type="checkbox" name="arquivo" value="on">
                                             <label class="form-check-label font-weight-bold" for="arquivocheck">
                                                 Incluir submissão por arquivo
                                             </label>
                                         </div>
                                         @error('arquivo')
-                                            <span class="invalid-feedback" role="alert">
+                                            <div class="invalid-feedback d-flex mt-0" role="alert">
                                                 <strong>{{ $message }}</strong>
-                                            </span>
+                                            </div>
                                         @enderror
                                     </div>
                                     <template x-if="arquivo==true">
@@ -431,16 +422,16 @@
                                 <div x-data="{apresentacao: '{{old('apresentacao')}}' == 'on'}">
                                     <div class="form-group">
                                         <div class="form-check">
-                                            <input class="form-check-input apresentacao" id="apresentacaocheck" value="on" x-model="apresentacao" type="checkbox" name="apresentacao">
+                                            <input class="form-check-input apresentacao @error('apresentacao') is-invalid @enderror" id="apresentacaocheck" value="on" x-model="apresentacao" type="checkbox" name="apresentacao">
                                             <label class="form-check-label font-weight-bold" for="apresentacaocheck">
                                                 {{ __('Habilitar escolha da forma de apresentação do trabalho:') }}
                                             </label>
-                                            @error('apresentacao')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
                                         </div>
+                                        @error('apresentacao')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
                                     <template x-if="apresentacao == true">
                                         <div style="margin-top:-1rem; margin-left:1.3rem;">
@@ -503,11 +494,11 @@
                                         </span>
                                     @enderror
                                 </div>
-                                <div class="form-group" style=" @if(old('arquivo')) display:block; @else display:none; @endif" >
+                                <div class="form-group">
                                     <label for="nomeTrabalho" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixartemplate}}:</label>
-                                    <input type="file" class="filestyle custom-file" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplate">
+                                    <input type="file" class="filestyle custom-file" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates">
                                     <small>O arquivo selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF, TXT ou PDF de até 2 MB.</small>
-                                    @error('arquivoTemplate')
+                                    @error('arquivoTemplates')
                                         <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -530,6 +521,11 @@
                                                             <img width="20px;" src="{{asset('img/trashVermelho.svg')}}" alt="Apagar" title="Apagar">
                                                         </a>
                                                     </div>
+                                                    @error('documentosExtra.*')
+                                                        <div class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                                            <strong>{{ $message }}</strong>
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <label class="col-form-label font-weight-bold ml-3">{{ __('Tipos de extensão aceitas') }}</label>
                                                 <div class="form-row mr-0 ml-3 row-cols-4 row-cols-md-5">

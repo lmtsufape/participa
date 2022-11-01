@@ -16,7 +16,7 @@ class Modalidade extends Model
         'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao', 'inicioCorrecao', 'fimCorrecao', 'inicioValidacao', 'fimValidacao', 'inicioResultado',
         'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres',
         'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras',
-        'pdf,jpg,jpeg,png,docx,odt,zip,svg,mp4,mp3,ogg,wav,ogv,mpg,mpeg,mkv,avi,odp,pptx,csv,ods,xlsx',
+        'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg', 'mp4', 'mp3', 'ogg', 'wav', 'ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'odp', 'pptx', 'csv', 'ods', 'xlsx',
         'regra', 'template', 'modelo_apresentacao', 'instrucoes',
     ];
 

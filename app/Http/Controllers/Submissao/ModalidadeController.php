@@ -51,70 +51,10 @@ class ModalidadeController extends Controller
      */
     public function store(ModalidadeStoreRequest $request)
     {
-        dd($request->validated());
-        $mytime = Carbon::now('America/Recife');
-        $yesterday = Carbon::yesterday('America/Recife');
-        $yesterday = $yesterday->toDateString();
-        $evento = Evento::find($request->eventoId);
-        $caracteres = false;
-        $palavras = false;
-        if ($request->texto == true) {
-            // Verificar se o limite máximo de palavra ou caractere é menor que o limite mínimo
-            if (isset($request->maxcaracteres) && isset($request->mincaracteres) && $request->maxcaracteres <= $request->mincaracteres) {
-                return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!'])->withInput($request->all());
-            }
-            if (isset($request->maxpalavras) && isset($request->minpalavras) && $request->maxpalavras <= $request->minpalavras) {
-                return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!'])->withInput($request->all());
-            }
-
-            if ($request->limit == null) {
-                return redirect()->back()->withErrors(['caracteresoupalavras' => 'O tipo caracteres ou palavras não foi selecionado.'])->withInput($request->all());
-            }
-
-            if ($request->limit == 'limit-option1') {
-                // Verifica se um campo foi deixado em branco
-                if ($request->mincaracteres == null || $request->maxcaracteres == null) {
-                    return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($request->all());
-                }
-                $caracteres = true;
-                $palavras = false;
-            }
-            if ($request->limit == 'limit-option2') {
-                // Verifica se um campo foi deixado em branco
-                if ($request->minpalavras == null || $request->maxpalavras == null) {
-                    return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($request->all());
-                }
-                $caracteres = false;
-                $palavras = true;
-            }
-        }
-
-        if ($request->arquivo == true) {
-            // Verifica se um campo foi deixado em branco
-            if ($request->pdf == null && $request->jpg == null && $request->jpeg == null && $request->png == null && $request->docx == null && $request->odt == null && $request->mp3 == null && $request->mp4 == null) {
-                return redirect()->back()->withErrors(['marcarextensao' => 'O campo arquivo foi selecionado, mas nenhuma extensão foi selecionada.'])->withInput($request->all());
-            }
-        }
-
-        if ($request->apresentacao) {
-            if (! $request->presencial && ! $request->remoto && ! $request->a_distancia && ! $request->semipresencial) {
-                return redirect()->back()->withErrors(['apresentacao' => 'Selecione pelos menos um tipo de apresentação.'])->withInput($request->all());
-            }
-        }
-
-        if ($request->documentosExtra != null) {
-            foreach ($request->documentosExtra as $doc) {
-                if (count($doc) <= 1) {
-                    return redirect()->back()->withErrors(['documentosExtra' => 'Selecione pelos menos um tipo de extensão.'])->withInput($request->all());
-                }
-            }
-        }
-
-        // Campo TEXTO boolean removido?
-        // $modalidade = Modalidade::create($request->all());
         $modalidade = new Modalidade();
-        $modalidade->caracteres = $caracteres;
-        $modalidade->palavras = $palavras;
+        $modalidade->fill($request->validated());
+        $modalidade->caracteres = $request->limit == 'limit-option1';
+        $modalidade->palavras = $request->limit == 'limit-option2';
         $modalidade->evento_id = $request->eventoId;
         $modalidade->apresentacao = $request->apresentacao ? true : false;
         $modalidade->save();
@@ -127,20 +67,14 @@ class ModalidadeController extends Controller
                             'nome' => $value,
                             'inicio' => $request->inicioDataExtra[$index],
                             'fim' => $request->finalDataExtra[$index],
-                            'permitir_submissao' => $request->submissaoDataExtra!= null && array_key_exists($index, $request->submissaoDataExtra),
+                            'permitir_submissao' => $request->submissaoDataExtra != null && array_key_exists($index, $request->submissaoDataExtra),
                         ])
                     );
             }
         }
 
         if (isset($request->arquivoRegras)) {
-            $fileRegras = $request->arquivoRegras;
-            $pathRegras = 'regras/'.$modalidade->nome.'/';
-            $nomeRegras = $request->arquivoRegras->getClientOriginalName();
-
-            Storage::putFileAs($pathRegras, $fileRegras, $nomeRegras);
-
-            $modalidade->regra = $pathRegras.$nomeRegras;
+            $modalidade->regra = $request->arquivoRegras->store('regras/'.$modalidade->nome);
         }
 
         if (isset($request->arquivoInstrucoes)) {
@@ -148,23 +82,11 @@ class ModalidadeController extends Controller
         }
 
         if (isset($request->arquivoTemplates)) {
-            $fileTemplates = $request->arquivoTemplates;
-            $pathTemplates = 'templates/'.$modalidade->nome.'/';
-            $nomeTemplates = $request->arquivoTemplates->getClientOriginalName();
-
-            Storage::putFileAs($pathTemplates, $fileTemplates, $nomeTemplates);
-
-            $modalidade->template = $pathTemplates.$nomeTemplates;
+            $modalidade->template = $request->arquivoTemplates->store('templates/'.$modalidade->nome);
         }
 
         if (isset($request->arquivoModelos)) {
-            $fileModelos = $request->arquivoModelos;
-            $pathModelos = 'modelos/'.$modalidade->nome.'/';
-            $nomeModelos = $request->arquivoModelos->getClientOriginalName();
-
-            Storage::putFileAs($pathModelos, $fileModelos, $nomeModelos);
-
-            $modalidade->modelo_apresentacao = $pathModelos.$nomeModelos;
+            $modalidade->modelo_apresentacao = $request->arquivoModelos->store('modelos/'.$modalidade->nome);
         }
 
         if ($request->apresentacao) {
