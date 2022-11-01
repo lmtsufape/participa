@@ -32,7 +32,7 @@
 
                     </div>
 
-                    <form action="{{route('evento.criar')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{route('evento.store')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @if ($eventoPai ?? '')
                             <input type="hidden" name="eventoPai" value="{{$eventoPai->id}}">
