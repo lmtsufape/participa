@@ -97,11 +97,46 @@ class TrabalhoController extends Controller
         return $trabalhoResumo;
     }
 
+    private function salvarArquivoComNomeOriginal($file, $path)
+    {
+        $originalName = $file->getClientOriginalName();
+        $originalName = str_replace('.'.$file->extension(), '', $originalName);
+        $originalName = $this->removerCaracteresEspeciais($originalName);
+        $path = $file->storeAs($path, $originalName);
+        return $path;
+    }
+
     private function removerCaracteresEspeciais($string)
     {
         $string = str_replace(' ', '_', $string);
         $string = str_replace('-', '_', $string);
+        $string = preg_replace('/_+/', '_', $string);
+        $string = $this->substituirCaracteresEspeciais($string);
         return preg_replace('/[^A-Za-z0-9\_]/', '', $string);
+    }
+
+    private function substituirCaracteresEspeciais($text) {
+        $utf8 = array(
+            '/[áàâãªä]/u'   =>   'a',
+            '/[ÁÀÂÃÄ]/u'    =>   'A',
+            '/[ÍÌÎÏ]/u'     =>   'I',
+            '/[íìîï]/u'     =>   'i',
+            '/[éèêë]/u'     =>   'e',
+            '/[ÉÈÊË]/u'     =>   'E',
+            '/[óòôõºö]/u'   =>   'o',
+            '/[ÓÒÔÕÖ]/u'    =>   'O',
+            '/[úùûü]/u'     =>   'u',
+            '/[ÚÙÛÜ]/u'     =>   'U',
+            '/ç/'           =>   'c',
+            '/Ç/'           =>   'C',
+            '/ñ/'           =>   'n',
+            '/Ñ/'           =>   'N',
+            '/–/'           =>   '-',
+            '/[’‘‹›‚]/u'    =>   ' ',
+            '/[“”«»„]/u'    =>   ' ',
+            '/ /'           =>   ' ',
+        );
+        return preg_replace(array_keys($utf8), array_values($utf8), $text);
     }
 
     /**
@@ -237,8 +272,9 @@ class TrabalhoController extends Controller
             }
 
             if (isset($request->arquivo)) {
-                $originalName = $this->removerCaracteresEspeciais($request->file('arquivo')->getClientOriginalName());
-                $path = $request->arquivo->storeAs("trabalhos/{$evento->id}/{$trabalho->id}", $originalName);
+                $path = "trabalhos/{$evento->id}/{$trabalho->id}";
+                $file = $request->file('arquivo');
+                $path = $this->salvarArquivoComNomeOriginal($file, $path);
                 Arquivo::create([
                     'nome'  => $path,
                     'trabalhoId'  => $trabalho->id,
@@ -550,8 +586,9 @@ class TrabalhoController extends Controller
         }
 
         if ($request->file('arquivo'.$id) != null) {
-            $originalName = $this->removerCaracteresEspeciais($request->file('arquivo'.$id)->getClientOriginalName());
-                $path = $request->file('arquivo'.$id)->storeAs("trabalhos/{$evento->id}/{$trabalho->id}", $originalName);
+            $path = "trabalhos/{$evento->id}/{$trabalho->id}";
+            $file = $request->file('arquivo'.$id);
+            $path = $this->salvarArquivoComNomeOriginal($file, $path);
 
             //É necessário excluir o arquivo da tabela de arquivo também ao editar um trabalho
             //Não só fazer o Storage::delete() do arquivo
