@@ -87,7 +87,11 @@
                                 @if($atv->vagas > 0 && Auth::user()->atividades()->find($atv->id) == null)
                                     <a type="button" class="btn btn-primary" href="{{route('atividades.inscricao', ['id'=>$atv->id])}}">Inscrever-se</a>
                                 @elseif(Auth::user()->atividades()->find($atv->id) != null)
-                                    <a type="button" class="btn btn-primary"  href="{{route('atividades.cancelarInscricao', ['id'=>$atv->id,'user'=>Auth::user()->id])}}">Cancelar Inscrição</a>
+                                    @if (!$atv->terminou())
+                                        <a type="button" class="btn btn-primary"  href="{{route('atividades.cancelarInscricao', ['id'=>$atv->id,'user'=>Auth::user()->id])}}">Cancelar Inscrição</a>
+                                    @else
+                                        <button type="button" class="btn btn-primary" disabled>Inscrito</button>
+                                    @endif
                                 @else
                                     <button type="button" class="btn btn-danger"  style="pointer-events: none">Sem Vagas</button>
                                 @endif

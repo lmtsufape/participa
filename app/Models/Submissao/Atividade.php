@@ -3,6 +3,7 @@
 namespace App\Models\Submissao;
 
 use App\Models\Users\User;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
 
@@ -60,5 +61,12 @@ class Atividade extends Model
         }
 
         return $encerrada;
+    }
+
+    public function terminou()
+    {
+        $dataAtividade = $this->datasAtividade()->orderBy('data', 'desc')->orderBy('hora_inicio', 'desc')->first();
+        $dataFim = new Carbon($dataAtividade->data.' '.$dataAtividade->hora_fim);
+        return now() > $dataFim;
     }
 }
