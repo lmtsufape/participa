@@ -14,15 +14,15 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
 
     public function headings(): array
     {
-        return [
+        $campos = [
             'evento/subevento',
             'nome',
-            'email',
-            'instituicao',
+            'e-mail',
+            'instituição',
             'celular',
             'cpf',
             'passaporte',
-            'especialicazao profissional',
+            'especialização profissional',
             'rua',
             'numero',
             'bairro',
@@ -30,8 +30,9 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             'estado',
             'cep',
             'complemento',
-            'pais',
+            'país',
         ];
+        return array_merge($campos, $this->evento->camposFormulario()->pluck('titulo')->all());
     }
 
     public function __construct(Evento $evento)
@@ -46,7 +47,7 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
 
     public function map($inscricao): array
     {
-        return [
+        $valores = [
             $inscricao->evento->nome,
             $inscricao->user->name,
             $inscricao->user->email,
@@ -64,5 +65,6 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             $inscricao->user->endereco ? $inscricao->user->endereco->complemento : '',
             $inscricao->user->endereco ? $inscricao->user->endereco->pais : '',
         ];
+        return array_merge($valores, $inscricao->camposPreenchidos->pluck('pivot.valor')->all());
     }
 }
