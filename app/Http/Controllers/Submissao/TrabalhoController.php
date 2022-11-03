@@ -97,6 +97,13 @@ class TrabalhoController extends Controller
         return $trabalhoResumo;
     }
 
+    private function removerCaracteresEspeciais($string)
+    {
+        $string = str_replace(' ', '_', $string);
+        $string = str_replace('-', '_', $string);
+        return preg_replace('/[^A-Za-z0-9\_]/', '', $string);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -230,7 +237,8 @@ class TrabalhoController extends Controller
             }
 
             if (isset($request->arquivo)) {
-                $path = $request->arquivo->store("trabalhos/{$evento->id}/{$trabalho->id}");
+                $originalName = $this->removerCaracteresEspeciais($request->file('arquivo')->getClientOriginalName());
+                $path = $request->arquivo->storeAs("trabalhos/{$evento->id}/{$trabalho->id}", $originalName);
                 Arquivo::create([
                     'nome'  => $path,
                     'trabalhoId'  => $trabalho->id,
@@ -542,7 +550,8 @@ class TrabalhoController extends Controller
         }
 
         if ($request->file('arquivo'.$id) != null) {
-            $path = $request->file('arquivo'.$id)->store("trabalhos/{$evento->id}/{$trabalho->id}");
+            $originalName = $this->removerCaracteresEspeciais($request->file('arquivo'.$id)->getClientOriginalName());
+                $path = $request->file('arquivo'.$id)->storeAs("trabalhos/{$evento->id}/{$trabalho->id}", $originalName);
 
             //É necessário excluir o arquivo da tabela de arquivo também ao editar um trabalho
             //Não só fazer o Storage::delete() do arquivo
