@@ -594,92 +594,53 @@
                                                                         </div>
                                                                         <div class="row">
                                                                             <div class="col-sm-12">
-                                                                                @if (Carbon\Carbon::parse($modalidade->inicioSubmissao) <= $mytime)
-                                                                                    @if ($modalidade->estaEmPeriodoDeSubmissao())
-                                                                                        @if ($modalidade->arquivo == true)
-                                                                                            @if (isset($modalidade->regra))
-                                                                                                <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                                    <a href="{{ route('modalidade.regras.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                                                        <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixarregra }}
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                            @endif
-                                                                                            @if (isset($modalidade->modelo_apresentacao))
-                                                                                                <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                                    <a href="{{ route('modalidade.modelos.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                                                        <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{$evento->formEvento->etiquetabaixarapresentacao}}
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                            @endif
-                                                                                            @if (isset($modalidade->template))
-                                                                                                <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                                    <a href="{{ route('modalidade.template.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                                                        <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixartemplate }}
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                            @endif
-                                                                                        @else
-                                                                                            @if (isset($modalidade->modelo_apresentacao))
-                                                                                                <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                                    <a href="{{ route('modalidade.modelos.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                                                        <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{$evento->formEvento->etiquetabaixarapresentacao}}
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                            @endif
-                                                                                            @if (isset($modalidade->regra))
-                                                                                                <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                                    <a href="{{ route('modalidade.regras.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                                                        <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixarregra }}
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                            @endif
-                                                                                        @endif
-                                                                                        <a class="btn button-card-visualizar-evento" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
-                                                                                    @else
-                                                                                        {{-- Permitindo Coordenador ou Comissao Cientifica submeter trabalhos mesmo passada a data de submissao --}}
-                                                                                        @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
-                                                                                            @if (isset($modalidade->modelo_apresentacao))
-                                                                                                <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                                    <a href="{{ route('modalidade.modelos.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                                                        <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{$evento->formEvento->etiquetabaixarapresentacao}}
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                            @endif
-                                                                                            @if ($modalidade->arquivo == true)
-                                                                                                @if (isset($modalidade->regra))
-                                                                                                    <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                                        <a href="{{ route('modalidade.regras.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                                                            <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px">&nbsp;{{ $evento->formEvento->etiquetabaixarregra }}
-                                                                                                        </a>
-                                                                                                    </div>
-                                                                                                @endif
-                                                                                                @if (isset($modalidade->template))
-                                                                                                    <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                                        <a href="{{ route('modalidade.template.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                                                            <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px">&nbsp;{{ $evento->formEvento->etiquetabaixartemplate }}
-                                                                                                        </a>
-                                                                                                    </div>
-                                                                                                @endif
-                                                                                            @else
-                                                                                                @if (isset($modalidade->modelo_apresentacao))
-                                                                                                    <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                                        <a href="{{ route('modalidade.modelos.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                                                            <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{$evento->formEvento->etiquetabaixarapresentacao}}
-                                                                                                        </a>
-                                                                                                    </div>
-                                                                                                @endif
-                                                                                                @if (isset($modalidade->regra))
-                                                                                                    <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                                                        <a href="{{ route('modalidade.regras.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                                                            <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px">&nbsp;{{ $evento->formEvento->etiquetabaixarregra }}
-                                                                                                        </a>
-                                                                                                    </div>
-                                                                                                @endif
-                                                                                            @endif
-                                                                                            <a class="btn button-card-visualizar-evento white-color" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
-                                                                                        @endcan
+                                                                                @if ($modalidade->arquivo)
+                                                                                    @if (isset($modalidade->regra))
+                                                                                        <div style="margin-top: 20px; margin-bottom: 10px;">
+                                                                                            <a href="{{ route('modalidade.regras.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
+                                                                                                <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixarregra }}
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                    @if (isset($modalidade->modelo_apresentacao))
+                                                                                        <div style="margin-top: 20px; margin-bottom: 10px;">
+                                                                                            <a href="{{ route('modalidade.modelos.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
+                                                                                                <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{$evento->formEvento->etiquetabaixarapresentacao}}
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                    @if (isset($modalidade->template))
+                                                                                        <div style="margin-top: 20px; margin-bottom: 10px;">
+                                                                                            <a href="{{ route('modalidade.template.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
+                                                                                                <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixartemplate }}
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                @else
+                                                                                    @if (isset($modalidade->modelo_apresentacao))
+                                                                                        <div style="margin-top: 20px; margin-bottom: 10px;">
+                                                                                            <a href="{{ route('modalidade.modelos.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
+                                                                                                <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{$evento->formEvento->etiquetabaixarapresentacao}}
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                    @if (isset($modalidade->regra))
+                                                                                        <div style="margin-top: 20px; margin-bottom: 10px;">
+                                                                                            <a href="{{ route('modalidade.regras.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
+                                                                                                <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixarregra }}
+                                                                                            </a>
+                                                                                        </div>
                                                                                     @endif
                                                                                 @endif
+                                                                                @auth
+                                                                                    @if ($modalidade->estaEmPeriodoDeSubmissao())
+                                                                                        <a class="btn button-card-visualizar-evento" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
+                                                                                    @else
+                                                                                        @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
+                                                                                            <a class="btn button-card-visualizar-evento" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
+                                                                                        @endcan
+                                                                                    @endif
+                                                                                @endauth
                                                                             </div>
                                                                         </div>
                                                                         {{-- </div> --}}
