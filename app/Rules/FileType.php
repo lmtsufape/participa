@@ -47,7 +47,7 @@ class FileType implements Rule
         $texto = 'Arquivo inválido. Os tipos válidos são: ' . $types;
         $diff = false;
         if ($this->array_any(['mp3', 'ogg', 'wav'], $this->acceptedTypes)) {
-            $texto .= ". O tamanho máximo para arquivos de aúdio é de 20 MB";
+            $texto .= ". O tamanho máximo para arquivos de áudio é de 20 MB";
             $diff = true;
         }
         if ($this->array_any(['ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'mp4'], $this->acceptedTypes)) {
