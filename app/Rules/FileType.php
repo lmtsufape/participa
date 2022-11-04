@@ -46,17 +46,17 @@ class FileType implements Rule
         $types = implode(', ', $this->acceptedTypes);
         $texto = 'Arquivo inválido. Os tipos válidos são: ' . $types;
         $diff = false;
-        if (in_array('mp3', $this->acceptedTypes)) {
-            $texto .= ". O tamanho máximo para arquivos .mp3 é de 20 MB";
+        if ($this->array_any(['mp3', 'ogg', 'wav'], $this->acceptedTypes)) {
+            $texto .= ". O tamanho máximo para arquivos de aúdio é de 20 MB";
             $diff = true;
         }
-        if (in_array('mp4', $this->acceptedTypes)) {
-            $texto .= ". O tamanho máximo para arquivos .mp4 é de 50 MB";
+        if ($this->array_any(['ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'mp4'], $this->acceptedTypes)) {
+            $texto .= ". O tamanho máximo para arquivos de vídeo é de 50 MB";
             $diff = true;
         }
 
         if ($diff && ($types != "mp4, mp3" && count($this->acceptedTypes) > 1)) {
-            $texto .= ". Os demais tipos possuem tamanho máximo de  2 MB.";
+            $texto .= ". Os demais tipos possuem tamanho máximo de 2 MB.";
         } elseif (! $diff) {
             $texto .= ". O tamanho máximo é de 2 MB.";
         }
@@ -64,14 +64,23 @@ class FileType implements Rule
         return $texto;
     }
 
+    private function array_any($needle, $haystack) {
+        foreach ($needle as $value) {
+            if(in_array($value, $haystack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function checkTamanhoTipo(string $type, float $tamanhoMB): bool
     {
-        if ($type == "mp3") {
+        if (in_array($type, ['mp3', 'ogg', 'wav'])) {
             if ($tamanhoMB > 20) {
                 return false;
             }
             return  true;
-        } elseif ($type == "mp4") {
+        } elseif (in_array($type, ['ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'mp4'])) {
             if ($tamanhoMB > 50) {
                 return false;
             }
