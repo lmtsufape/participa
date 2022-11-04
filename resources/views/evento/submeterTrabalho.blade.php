@@ -239,36 +239,13 @@
                                                             data-btnClass="btn-primary-lmts" name="arquivo" required>
                                                     </div>
                                                     <small><strong>Extensão de arquivos aceitas:</strong>
-                                                        @if($modalidade->pdf == true)
-                                                            <span> / ".pdf"</span>
-                                                        @endif
-                                                        @if($modalidade->jpg == true)
-                                                            <span> / ".jpg"</span>
-                                                        @endif
-                                                        @if($modalidade->jpeg == true)
-                                                            <span> / ".jpeg"</span>
-                                                        @endif
-                                                        @if($modalidade->png == true)
-                                                            <span> / ".png"</span>
-                                                        @endif
-                                                        @if($modalidade->docx == true)
-                                                            <span> / ".docx"</span>
-                                                        @endif
-                                                        @if($modalidade->odt == true)
-                                                            <span> / ".odt"</span>
-                                                        @endif
-                                                        @if($modalidade->zip == true)
-                                                            <span> / ".zip"</span>
-                                                        @endif
-                                                        @if($modalidade->svg == true)
-                                                            <span> / ".svg"</span>
-                                                        @endif
-                                                        @if($modalidade->mp4 == true)
-                                                            <span> / ".mp4"</span>
-                                                        @endif
-                                                        @if($modalidade->mp3 == true)
-                                                            <span> / ".mp3"</span>
-                                                        @endif. </small>
+                                                        @foreach ($modalidade->tiposAceitos() as $item)
+                                                            @if ($loop->last)
+                                                                <span> .{{$item}}.</span>
+                                                            @else
+                                                                <span> .{{$item}},</span>
+                                                            @endif
+                                                        @endforeach</small>
                                                     @error('arquivo')
                                                     <span class="invalid-feedback" role="alert"
                                                         style="overflow: visible; display:block">
@@ -292,36 +269,15 @@
                                                             data-btnClass="btn-primary-lmts" name="{{$midia->hyphenizeNome()}}" required>
                                                     </div>
                                                     <small><strong>Extensão de arquivos aceitas:</strong>
-                                                        @if($midia->pdf == true)
-                                                            <span> / ".pdf"</span>
-                                                        @endif
-                                                        @if($midia->jpg == true)
-                                                            <span> / ".jpg"</span>
-                                                        @endif
-                                                        @if($midia->jpeg == true)
-                                                            <span> / ".jpeg"</span>
-                                                        @endif
-                                                        @if($midia->png == true)
-                                                            <span> / ".png"</span>
-                                                        @endif
-                                                        @if($midia->docx == true)
-                                                            <span> / ".docx"</span>
-                                                        @endif
-                                                        @if($midia->odt == true)
-                                                            <span> / ".odt"</span>
-                                                        @endif
-                                                        @if($midia->zip == true)
-                                                            <span> / ".zip"</span>
-                                                        @endif
-                                                        @if($midia->svg == true)
-                                                            <span> / ".svg"</span>
-                                                        @endif
-                                                        @if($midia->mp4 == true)
-                                                            <span> / ".mp4"</span>
-                                                        @endif
-                                                        @if($midia->mp3 == true)
-                                                            <span> / ".mp3"</span>
-                                                        @endif. </small>
+                                                        @foreach ($midia->tiposAceitos() as $item)
+                                                            @if ($loop->first)
+                                                                <span> .{{$item}}</span>
+                                                            @elseif ($loop->last)
+                                                                <span> .{{$item}}.</span>
+                                                            @else
+                                                                <span> .{{$item}},</span>
+                                                            @endif
+                                                        @endforeach</small>
                                                     @error($midia->nome)
                                                     <span class="invalid-feedback" role="alert"
                                                         style="overflow: visible; display:block">
