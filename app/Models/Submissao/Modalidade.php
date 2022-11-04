@@ -102,10 +102,14 @@ class Modalidade extends Model
     public function tiposAceitos()
     {
         $extensoes = ['ogg', 'wav', 'ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'odp', 'pptx', 'csv', 'ods', 'xlsx', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg', 'mp4', 'mp3'];
-        $tiposcadastrados = array_filter($this->getAttributes(), function ($attribute) use ($extensoes) {
-            return $attribute == true && in_array($attribute, $extensoes);
-        });
-
+        $tiposcadastrados = array_filter($this->getAttributes(), function ($value, $key) use ($extensoes) {
+            if($value == true && in_array($key, $extensoes)) {
+                return $key;
+            };
+        }, ARRAY_FILTER_USE_BOTH);
+        if ($tiposcadastrados != null) {
+            $tiposcadastrados = array_keys($tiposcadastrados);
+        }
         return $tiposcadastrados;
     }
 }
