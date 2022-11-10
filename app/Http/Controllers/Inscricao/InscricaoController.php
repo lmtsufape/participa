@@ -304,6 +304,9 @@ class InscricaoController extends Controller
     {
         auth()->user() != null;
         $evento = Evento::find($request->evento_id);
+        if (Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->exists()) {
+            return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição já realizada.');
+        }
         if ($evento->eventoInscricoesEncerradas()) {
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrições encerradas.');
         }
