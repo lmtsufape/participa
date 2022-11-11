@@ -102,7 +102,7 @@ class TrabalhoController extends Controller
         $originalName = $file->getClientOriginalName();
         $originalName = str_replace('.'.$file->extension(), '', $originalName);
         $originalName = $this->removerCaracteresEspeciais($originalName);
-        $path = $file->storeAs($path, $originalName).'.'.$file->extension();
+        $path = $file->storeAs($path, $originalName.'.'.$file->extension());
         return $path;
     }
 
