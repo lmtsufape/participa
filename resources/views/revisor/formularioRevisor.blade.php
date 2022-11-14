@@ -48,7 +48,7 @@
                             <input type="hidden" name="trabalho_id" value="{{$data['trabalho']->id}}">
                             <input type="hidden" name="modalidade_id" value="{{$data['modalidade']->id}}">
                             <input type="hidden" name="form_id[]" value="{{$form->id}}">
-                            @foreach ($form->perguntas as $pergunta)
+                            @foreach ($form->perguntas->sortBy("id") as $pergunta)
                                 <div class="card">
                                     <div class="card-body">
                                         <p><b>{{$pergunta->pergunta}}</b></p>
