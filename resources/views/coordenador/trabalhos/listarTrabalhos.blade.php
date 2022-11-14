@@ -436,7 +436,7 @@
                         <option value="" disabled selected>-- E-mail do revisor --</option>
                         @foreach ($evento->revisors()->where([['modalidadeId', $trabalho->modalidade->id], ['areaId', $trabalho->area->id]])->get() as $revisor)
                         @if (!$trabalho->atribuicoes->contains($revisor) && is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first()) && $trabalho->autorId != $revisor->user_id)
-                            <option value="{{$revisor->id}}">{{$revisor->user->name}} ({{$revisor->user->email}})</option>
+                            <option value="{{$revisor->id}}">{{$revisor->user->name}} ({{$revisor->user->email}}) ({{trans_choice('messages.qtd_revisores', $revisor->user->revisor()->where('evento_id', $evento->id)->withCount('trabalhosAtribuidosPendentes')->get()->sum('trabalhos_atribuidos_pendentes_count'), ['value' => $revisor->user->revisor()->where('evento_id', $evento->id)->withCount('trabalhosAtribuidosPendentes')->get()->sum('trabalhos_atribuidos_pendentes_count')])}})</option>
                         @endif
                         @endforeach
                     </select>

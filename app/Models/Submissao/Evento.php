@@ -4,6 +4,7 @@ namespace App\Models\Submissao;
 
 use App\Models\Users\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -87,6 +88,18 @@ class Evento extends Model
     public function revisors()
     {
         return $this->hasMany('App\Models\Users\Revisor', 'evento_id');
+    }
+
+    public function revisoresDaAreaEModalidadeComContadorDeAtribuicoes($area_id, $modalidade_id)
+    {
+        $id = $this->id;
+        return $this->revisors()
+            ->withCount(['trabalhosAtribuidos' => function(Builder $query) use ($id) {
+                $query->where('eventoId', $id)->where('parecer', 'processando');
+            }])
+            ->get()
+            ->where('modalidadeId', $modalidade_id)
+            ->where('areaId', $area_id);
     }
 
     public function usuariosDaComissao()
