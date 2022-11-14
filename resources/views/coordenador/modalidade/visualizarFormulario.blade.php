@@ -206,7 +206,7 @@
                                                                                                  @if($opcao->check) checked @endif>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control">
+                                                                                        <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control" required>
                                                                                     </div>
                                                                                     <!--
                                                                                     Botões de Adicionar e Remover Opção
