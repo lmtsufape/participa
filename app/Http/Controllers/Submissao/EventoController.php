@@ -235,6 +235,16 @@ class EventoController extends Controller
                             $direction == 'desc');
                         $trabalhos[$i] = $modalidade;
                     }
+                } elseif ($column == 'created_at') {
+                    foreach ($trabalhos as $i => $modalidade) {
+                        $modalidade = $modalidade->sortBy(
+                            function ($trabalho) {
+                                return $trabalho->created_at;
+                            },
+                            SORT_REGULAR,
+                            $direction == 'desc');
+                        $trabalhos[$i] = $modalidade;
+                    }
                 }
 
                 $trabalhos = $trabalhos->sortBy(function ($modalidade) {
@@ -277,6 +287,16 @@ class EventoController extends Controller
                         $modalidade = $modalidade->sortBy(function ($trabalho) {
                             return $trabalho->area->nome;
                         },
+                            SORT_REGULAR,
+                            $direction == 'desc');
+                        $trabalhos[$i] = $modalidade;
+                    }
+                } elseif ($column == 'created_at') {
+                    foreach ($trabalhos as $i => $modalidade) {
+                        $modalidade = $modalidade->sortBy(
+                            function ($trabalho) {
+                                return $trabalho->created_at;
+                            },
                             SORT_REGULAR,
                             $direction == 'desc');
                         $trabalhos[$i] = $modalidade;
@@ -868,7 +888,7 @@ class EventoController extends Controller
                 } else {
                     $pergunta->visibilidade = false;
                 }
-                
+
                 //Verificação de alteração em multipla escolha já existente
                 if($data['tipo'][$key] == 'radio'){
                     //dd($request->tituloRadio);
@@ -882,10 +902,10 @@ class EventoController extends Controller
                         }
 
                         $opcoes->first()->update();
-                        $opcoes->shift();             
+                        $opcoes->shift();
                     }
                 }
-                
+
                 $pergunta->update();
 
                 array_push($perguntasMantidas, $pergunta->id);

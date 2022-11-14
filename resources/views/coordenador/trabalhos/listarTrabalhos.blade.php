@@ -150,7 +150,15 @@
                                                 @endif
                                                 <th scope="col">Revisores</th>
                                                 <th scope="col">Avaliações</th>
-                                                <th scope="col">Data</th>
+                                                <th scope="col">
+                                                    Data
+                                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'created_at', 'asc', $status])}}">
+                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                    </a>
+                                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'created_at', 'desc', $status])}}">
+                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                    </a>
+                                                </th>
                                                 <th scope="col">Atribuir</th>
                                                 <th scope="col">Arquivar</th>
                                                 <th scope="col">Editar</th>
