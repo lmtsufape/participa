@@ -860,11 +860,32 @@ class EventoController extends Controller
             foreach ($request->pergunta_id as $key => $pergunta_id) {
                 $pergunta = Pergunta::find($pergunta_id);
                 $pergunta->pergunta = $request->pergunta[$key];
+
+                $opcoes = $pergunta->respostas->first()->opcoes->sortBy("id");
+
                 if (isset($data['checkboxVisibilidade_'.$pergunta->id])) {
                     $pergunta->visibilidade = true;
                 } else {
                     $pergunta->visibilidade = false;
                 }
+                
+                //Verificação de alteração em multipla escolha já existente
+                if($data['tipo'][$key] == 'radio'){
+                    //dd($request->tituloRadio);
+                    foreach($request->tituloRadio['row'.$key] as $i => $titulo){
+                        $opcoes->first()->titulo = $titulo;
+                        //Verificação de marcação da resposta da multipla escolha
+                        if(isset($request->checkbox[$opcoes->first()->id])){
+                            $opcoes->first()->check = true;
+                        } else {
+                            $opcoes->first()->check = false;
+                        }
+
+                        $opcoes->first()->update();
+                        $opcoes->shift();             
+                    }
+                }
+                
                 $pergunta->update();
 
                 array_push($perguntasMantidas, $pergunta->id);

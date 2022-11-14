@@ -49,13 +49,13 @@
 
             <p class="card-text">
 
-                @foreach ($form->perguntas->sortBy("created_at") as $pergunta)
+                @foreach ($form->perguntas->sortBy("id") as $pergunta)
                     <div class="card">
                         <div class="card-body">
                             <p>Pergunta: {{$pergunta->pergunta}}</p>
                             @if($pergunta->respostas->first()->opcoes->count())
                                 <p>Resposta com Multipla escolha:</p>
-                                @foreach ($pergunta->respostas->first()->opcoes as $opcao)
+                                @foreach ($pergunta->respostas->first()->opcoes->sortBy("id") as $opcao)
                                     <div class="col-md-10 itemRadio">
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
@@ -181,7 +181,7 @@
                                                     @enderror
                                                 </div>
 
-                                                @foreach ($form->perguntas->sortBy("created_at") as $index => $pergunta)
+                                                @foreach ($form->perguntas()->orderBy("id")->get() as $index => $pergunta)
                                                 <div class="col-md-12">
                                                     <div id="coautores" class="flexContainer">
                                                         <div class="item card" style="order:{{$index}}">
@@ -196,16 +196,17 @@
                                                                     <div class="row" id="row{{$index}}">
                                                                         @if ($pergunta->respostas->first()->opcoes->count())
                                                                         <div class="col-sm-12 opcoes itemRadio">
-                                                                            @foreach ($pergunta->respostas->first()->opcoes as $indice => $opcao)
+                                                                            @foreach ($pergunta->respostas->first()->opcoes->sortBy("id") as $indice => $opcao)
                                                                             <div class="opcao col-sm-12">
                                                                                 <div class="row">
                                                                                     <div class="input-group pl-0 col-sm-10 mb-3">
                                                                                         <div class="input-group-prepend">
                                                                                             <div class="input-group-text">
-                                                                                                <input name="checkbox" type="checkbox" aria-label="Checkbox for following text input" disabled @if($opcao->check) checked @endif>
+                                                                                                <input name="checkbox[{{ $opcao->id }}]" type="checkbox" aria-label="Checkbox for following text input" 
+                                                                                                 @if($opcao->check) checked @endif>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control" readonly>
+                                                                                        <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control">
                                                                                     </div>
                                                                                     <!--
                                                                                     Botões de Adicionar e Remover Opção
