@@ -588,7 +588,6 @@ class TrabalhoController extends Controller
         if ($request->file('arquivo'.$id) != null) {
             $path = "trabalhos/{$evento->id}/{$trabalho->id}";
             $file = $request->file('arquivo'.$id);
-            $path = $this->salvarArquivoComNomeOriginal($file, $path);
 
             //É necessário excluir o arquivo da tabela de arquivo também ao editar um trabalho
             //Não só fazer o Storage::delete() do arquivo
@@ -599,7 +598,7 @@ class TrabalhoController extends Controller
                 }
                 $arquivoTrabalho->delete();
             }
-
+            $path = $this->salvarArquivoComNomeOriginal($file, $path);
             $arquivo = Arquivo::create([
                 'nome'  => $path,
                 'trabalhoId'  => $trabalho->id,
