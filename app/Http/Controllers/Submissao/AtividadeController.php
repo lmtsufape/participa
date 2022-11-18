@@ -515,6 +515,8 @@ class AtividadeController extends Controller
         $atividade = Atividade::find($id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $atividade->evento);
 
+        $atividade->users()->detach();
+
         foreach ($atividade->datasAtividade as $da) {
             $da->delete();
         }
