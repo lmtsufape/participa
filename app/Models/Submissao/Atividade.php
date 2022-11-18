@@ -52,6 +52,7 @@ class Atividade extends Model
 
     public function atividadeInscricoesEncerradas()
     {
+        if (!$this->visibilidade_participante) return true;
         $primeiraAtividade = $this->datasAtividade()->orderBy('data', 'ASC')->orderBy('hora_inicio', 'ASC')->first();
         $dataPrimeiraAtividade = new DateTime($primeiraAtividade->data.$primeiraAtividade->hora_inicio);
         if ($dataPrimeiraAtividade < now()) {
