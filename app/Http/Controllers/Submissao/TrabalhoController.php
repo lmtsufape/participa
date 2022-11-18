@@ -100,11 +100,9 @@ class TrabalhoController extends Controller
     private function salvarArquivoComNomeOriginal($file, $path)
     {
         $originalName = $file->getClientOriginalName();
-        $explode = explode('.', $originalName);
-        $extension = end($explode);
-        $originalName = str_replace('.'.$extension, '', $originalName);
+        $originalName = str_replace('.'.$file->extension(), '', $originalName);
         $originalName = $this->removerCaracteresEspeciais($originalName);
-        $path = $file->storeAs($path, $originalName.'.'.$extension);
+        $path = $file->storeAs($path, $originalName.'.'.$file->extension());
         return $path;
     }
 
@@ -590,6 +588,7 @@ class TrabalhoController extends Controller
         if ($request->file('arquivo'.$id) != null) {
             $path = "trabalhos/{$evento->id}/{$trabalho->id}";
             $file = $request->file('arquivo'.$id);
+            $path = $this->salvarArquivoComNomeOriginal($file, $path);
 
             //É necessário excluir o arquivo da tabela de arquivo também ao editar um trabalho
             //Não só fazer o Storage::delete() do arquivo
@@ -600,7 +599,7 @@ class TrabalhoController extends Controller
                 }
                 $arquivoTrabalho->delete();
             }
-            $path = $this->salvarArquivoComNomeOriginal($file, $path);
+
             $arquivo = Arquivo::create([
                 'nome'  => $path,
                 'trabalhoId'  => $trabalho->id,
@@ -617,7 +616,11 @@ class TrabalhoController extends Controller
         if ($trabalho->modalidade->midiasExtra) {
             foreach ($trabalho->modalidade->midiasExtra as $midia) {
                 if ($request[$midia->hyphenizeNome()]) {
-                    $documento = $trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first()->pivot;
+                    $consulta = $trabalho->midiasExtra()->where('midia_extra_id', $midia->id);
+                    if (!$consulta->exists()) {
+                        $trabalho->midiasExtra()->attach($midia->id);
+                    }
+                    $documento = $consulta->first()->pivot;
                     $documento->caminho = $request[$midia->hyphenizeNome()]->store("trabalhos/{$evento->id}/{$trabalho->id}");
                     $documento->update();
                 }
