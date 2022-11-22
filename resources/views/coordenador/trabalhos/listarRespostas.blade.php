@@ -76,6 +76,7 @@
                                                 <th scope="col">Avaliador(es)</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col" style="text-align:center">Parecer</th>
+                                                <th scope="col" class="text-center">Encaminhado para o autor</th>
                                             </tr>
                                         </thead>
 
@@ -125,6 +126,20 @@
                                                             <img src="{{ asset('img/icons/eye-regular.svg') }}"
                                                                 style="width:20px">
                                                         </a>
+                                                        <br>
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-center">
+                                                    @foreach($trabalho->atribuicoes as $revisor)
+                                                        @if($trabalho->avaliado($revisor->user))
+                                                            @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
+                                                                Não
+                                                            @else
+                                                                Sim
+                                                            @endif
+                                                        @else
+                                                            Processando
+                                                        @endif
                                                         <br>
                                                     @endforeach
                                                 </td>
