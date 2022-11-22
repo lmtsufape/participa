@@ -506,7 +506,7 @@
                                             </div>
                                         @endif
                                         @foreach ($evento->arquivoInfos as $arquivo)
-                                            <div class="form-row justify-content-center">
+                                            <div class="form-row justify-content-center @if(!$loop->last) mb-3 @endif">
                                                 <div class="col-sm-3 form-group " style="position: relative; text-align: center;">
                                                     <div class="div-icon-programacao">
                                                         <img class="icon-programacao" src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}" alt="">
