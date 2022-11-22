@@ -15,6 +15,6 @@ class Form extends Model
 
     public function perguntas()
     {
-        return $this->hasMany('App\Models\Submissao\Pergunta');
+        return $this->hasMany('App\Models\Submissao\Pergunta')->orderBy('id');
     }
 }
