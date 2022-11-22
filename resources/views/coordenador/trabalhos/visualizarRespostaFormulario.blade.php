@@ -44,7 +44,7 @@
                 <h5 class="card-title">{{$form->titulo}}</h5>
 
                 <p class="card-text">
-                    @foreach ($form->perguntas as $index => $pergunta)
+                    @foreach ($form->perguntas()->orderBy('id')->get() as $index => $pergunta)
                     <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
                         <div class="card">
                             <div class="card-body">
@@ -52,11 +52,11 @@
                                 </p>
 
                                 @if($pergunta->respostas->first()->opcoes->count())
+                                    <input type="hidden" name="opcao_id[]" value="{{$respostas[$index]->opcoes[0]->id}}">
                                     @foreach ($pergunta->respostas->first()->opcoes as $opcao)
                                     <div class="form-check">
                                         @if ($respostas[$index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo))
                                             <input class="form-check-input" type="radio" name="{{$pergunta->id}}" checked value="{{$respostas[$index]->opcoes[0]->titulo}}" id="{{$opcao->id}}">
-                                            <input type="hidden" name="opcao_id[]" value="{{$respostas[$index]->opcoes[0]->id}}">
                                         @else
                                             <input class="form-check-input" type="radio" name="{{$pergunta->id}}" value="{{$opcao->titulo}}" id="{{$opcao->id}}">
                                         @endif
