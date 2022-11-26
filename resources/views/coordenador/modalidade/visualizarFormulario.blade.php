@@ -52,7 +52,7 @@
                 @foreach ($form->perguntas->sortBy("id") as $pergunta)
                     <div class="card">
                         <div class="card-body">
-                            <p>Pergunta: {{$pergunta->pergunta}}</p>
+                            <p>{{$pergunta->pergunta}}</p>
                             @if($pergunta->respostas->first()->opcoes->count())
                                 <p>Resposta com Multipla escolha:</p>
                                 @foreach ($pergunta->respostas->first()->opcoes->sortBy("id") as $opcao)
