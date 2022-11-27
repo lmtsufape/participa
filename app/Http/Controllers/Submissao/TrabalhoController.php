@@ -737,8 +737,6 @@ class TrabalhoController extends Controller
           Verifique no formulário, quais os tipos permitidos.', 'trabalhoId' => $trabalho->id]);
         }
 
-        dd($modalidade);
-
         if (Auth::user()->id != $trabalho->autorId) {
             return abort(403);
         }
