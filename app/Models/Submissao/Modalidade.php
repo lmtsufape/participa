@@ -81,6 +81,12 @@ class Modalidade extends Model
         if ($this->inicioSubmissao <= $agora && $this->fimSubmissao >= $agora) {
             return true;
         }
+        return false;
+    }
+
+    public function estaEmPeriodoExtraDeCorrecao()
+    {
+        $agora = now();
         return $this->datasExtrasComSubmissao()->where('inicio', '<=', $agora)->where('fim', '>=', $agora)->exists();
     }
 

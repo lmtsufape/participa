@@ -749,7 +749,7 @@ class TrabalhoController extends Controller
             $count++;
         }
 
-        $path = $request->arquivo->store("trabalhos/{$evento->id}/{$trabalho->id}");
+        $path = $this->salvarArquivoComNomeOriginal($request->arquivo, "trabalhos/{$evento->id}/{$trabalho->id}/correcoes/{$count}/");
         $arquivo = Arquivo::create([
             'nome'  => $path,
             'trabalhoId'  => $trabalho->id,
@@ -1013,7 +1013,7 @@ class TrabalhoController extends Controller
                 $arquivoCorrecao->delete();
             }
 
-            $path = $request->arquivoCorrecao->store("correcoes/{$evento->id}/{$trabalho->id}");
+            $path = $this->salvarArquivoComNomeOriginal($request->arquivoCorrecao, "correcoes/{$evento->id}/{$trabalho->id}");
             $arquivo = ArquivoCorrecao::create([
                 'caminho'  => $path,
                 'trabalhoId'  => $trabalho->id,
