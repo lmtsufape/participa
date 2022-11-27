@@ -36,7 +36,7 @@ class TrabalhoPolicy
         $resultado = false;
         if ($user->id == $trabalho->evento->coordenadorId || ! (is_null($membro))) {
             $resultado = true;
-        } elseif ($trabalho->autorId == $user->id && ($trabalho->modalidade->inicioCorrecao <= now() && now() <= $trabalho->modalidade->fimCorrecao)) {
+        } elseif ($trabalho->autorId == $user->id && ($trabalho->modalidade->estaEmPeriodoDeCorrecao() || $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao())) {
             $resultado = true;
         }
 

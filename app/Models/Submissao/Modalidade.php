@@ -90,6 +90,12 @@ class Modalidade extends Model
         return $this->datasExtrasComSubmissao()->where('inicio', '<=', $agora)->where('fim', '>=', $agora)->exists();
     }
 
+
+    public function estaEmPeriodoDeCorrecao()
+    {
+        return $this->inicioCorrecao <= now() && now() <= $this->fimCorrecao;
+    }
+
     public function getUltimaDataAttribute()
     {
         if ($this->datasExtras()->exists()) {
