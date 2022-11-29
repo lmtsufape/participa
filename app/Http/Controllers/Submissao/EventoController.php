@@ -562,9 +562,15 @@ class EventoController extends Controller
                 ];
             })->collect();
 
-        return (new TrabalhosExport($trabalhos))->download($evento->nome.'- Trabalhos.csv', \Maatwebsite\Excel\Excel::CSV, [
+        $nome = $this->somenteLetrasNumeros($evento->nome);
+        return (new TrabalhosExport($trabalhos))->download($nome.'- Trabalhos.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
+    }
+
+    private function somenteLetrasNumeros($string)
+    {
+        return preg_replace('/[^A-Za-z0-9\_ ]/', '', $string);
     }
 
     private function coautoresToString(Trabalho $trabalho, $campo)
