@@ -478,7 +478,7 @@
                                             </div>
                                         </div>
                                         @if ($evento->exibir_pdf && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null)
-                                            <div class="form-row justify-content-center">
+                                            <div class="form-row justify-content-center @if($evento->exibir_pdf && $etiquetas->modprogramacao && $evento->pdf_programacao) mb-3 @endif">
                                                 <div class="col-sm-3 form-group " style="position: relative; text-align: center;">
                                                     <div class="div-icon-programacao">
                                                         <img class="icon-programacao" src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}" alt="PDF com a programação">
@@ -507,7 +507,7 @@
                                         @endif
                                         @foreach ($evento->arquivoInfos as $arquivo)
                                             <div class="form-row justify-content-center @if(!$loop->last) mb-3 @endif">
-                                                <div class="col-sm-3 form-group " style="position: relative; text-align: center;">
+                                                <div class="col-sm-3 form-group  d-flex align-items-center" style="position: relative; text-align: center;">
                                                     <div class="div-icon-programacao">
                                                         <img class="icon-programacao" src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}" alt="">
                                                     </div>
