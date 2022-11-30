@@ -10,7 +10,7 @@
         </div>
         <div class="col-sm-4">
             <a href="{{route('coord.mensagem.parecer.create', $evento)}}" class="btn btn-primary" style="width:100%">
-                {{ __('Mensanges de parecer') }}
+                {{ __('Mensagens de parecer') }}
             </a>
         </div>
     </div>

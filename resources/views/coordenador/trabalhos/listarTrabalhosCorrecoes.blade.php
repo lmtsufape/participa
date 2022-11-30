@@ -58,8 +58,8 @@
                                 <table class="table table-hover table-responsive-lg table-sm table-striped">
                                     <thead>
                                         <tr>
-                                            <th scope="col" >Trabalhos inicial</th>
-                                            <th scope="col" >Trabalhos revisado</th>
+                                            <th scope="col" >Trabalho inicial</th>
+                                            <th scope="col" >Trabalho revisado</th>
                                             <th scope="col" >Autor</th>
                                             <th scope="col">
                                                 Data
