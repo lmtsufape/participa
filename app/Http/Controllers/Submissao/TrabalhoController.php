@@ -100,9 +100,10 @@ class TrabalhoController extends Controller
     private function salvarArquivoComNomeOriginal($file, $path)
     {
         $originalName = $file->getClientOriginalName();
-        $originalName = str_replace('.'.$file->extension(), '', $originalName);
+        $extension = $file->getClientOriginalExtension();
+        $originalName = str_replace('.'.$extension, '', $originalName);
         $originalName = $this->removerCaracteresEspeciais($originalName);
-        $path = $file->storeAs($path, $originalName.'.'.$file->extension());
+        $path = $file->storeAs($path, $originalName.'.'.$extension);
         return $path;
     }
 
