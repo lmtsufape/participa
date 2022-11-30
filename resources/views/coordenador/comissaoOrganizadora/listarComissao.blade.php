@@ -62,7 +62,9 @@
                                           <td>{{$user->email}}</td>
                                           @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
                                               <td>
-                                                Coordenador
+                                                @if($evento->userIsCoordComissaoOrganizadora($user))
+                                                    Coordenador
+                                                @endif
                                               </td>
                                               <td style="text-align:center">
                                                 <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao.organizadora', ['id' => $user->id])}}" method="POST">
