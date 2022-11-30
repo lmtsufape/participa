@@ -133,7 +133,7 @@ class ComissaoOrganizadoraController extends Controller
     public function definirCoordenador($id)
     {
         $evento = Evento::find($id);
-        $this->authorize('isCoordenador', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         $users = $evento->usuariosDaComissaoOrganizadora;
         $coordenadores = $evento->coordComissaoOrganizadora->pluck('id')->all();
