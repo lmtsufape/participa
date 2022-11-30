@@ -539,7 +539,8 @@ class EventoController extends Controller
 
     public function exportInscritos(Evento $evento, Request $request)
     {
-        return (new InscritosExport($evento))->download($evento->nome.'.csv', \Maatwebsite\Excel\Excel::CSV, [
+        $nome = $this->somenteLetrasNumeros($evento->nome);
+        return (new InscritosExport($evento))->download($nome.'.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
     }
@@ -617,7 +618,8 @@ class EventoController extends Controller
             })->collect();
         $trabalhosCollect = $trabalhosCollect->filter();
 
-        return (new AvaliacoesExport($trabalhosCollect, $this->makeHeadingsExportAvaliacoes($form)))->download($evento->nome.' - Avaliacões - '.$modalidade->nome.' - '.$form->titulo.'.csv', \Maatwebsite\Excel\Excel::CSV, [
+        $nome = $this->somenteLetrasNumeros($evento->nome);
+        return (new AvaliacoesExport($trabalhosCollect, $this->makeHeadingsExportAvaliacoes($form)))->download($nome.' - Avaliacões - '.$modalidade->nome.' - '.$form->titulo.'.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
     }
