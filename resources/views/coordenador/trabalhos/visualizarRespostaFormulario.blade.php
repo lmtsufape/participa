@@ -51,7 +51,7 @@
                                 <p><strong>{{$pergunta->pergunta}}</strong> <span><small style="float: right">Pergunta visível para o autor? <input type="checkbox" name="pergunta_checkBox[]" value="{{$pergunta->id}}" {{  ($pergunta->visibilidade == true ? ' checked' : '') }} disabled></small></span>
                                 </p>
 
-                                @if($pergunta->respostas->first()->opcoes->count())
+                                @if($pergunta->respostas()->exists() && $pergunta->respostas->first()->opcoes->count())
                                     <input type="hidden" name="opcao_id[]" value="{{$respostas[$index]->opcoes[0]->id}}">
                                     @foreach ($pergunta->respostas->first()->opcoes as $opcao)
                                     <div class="form-check">
