@@ -52,7 +52,7 @@
                                 </p>
 
                                 @if($pergunta->respostas()->exists() && $pergunta->respostas->first()->opcoes->count())
-                                    <input type="hidden" name="opcao_id[]" value="{{$respostas[$index]->opcoes[0]->id}}">
+                                    <input type="hidden" name="opcao_id[]" value="{{ $pergunta->respostas->first()->opcoes[0]->id }}">
                                     @foreach ($pergunta->respostas->first()->opcoes as $opcao)
                                     <div class="form-check">
                                         @if ($respostas[$index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo))
