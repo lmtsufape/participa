@@ -46,15 +46,15 @@
                                   <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->name}}</td>
                                   <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
                                   <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
-                                    @if($contadores->where('user_id', $revisor->id)->where('avaliado', 'processando')->first())
-                                        {{$contadores->where('user_id', $revisor->id)->where('avaliado', 'processando')->first()->count}}
+                                    @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
+                                        {{$contadores->where('user_id', $revisor->id)->sum('processando_count')}}
                                     @else
                                         0
                                     @endif
                                 </td>
                                   <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
-                                    @if($contadores->where('user_id', $revisor->id)->where('avaliado', 'Avaliado')->first())
-                                        {{$contadores->where('user_id', $revisor->id)->where('avaliado', 'Avaliado')->first()->count}}
+                                    @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
+                                        {{$contadores->where('user_id', $revisor->id)->sum('avaliados_count')}}
                                     @else
                                         0
                                     @endif

@@ -32,6 +32,7 @@ use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -478,21 +479,19 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
 
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-        $revisores = User::join('revisors', 'users.id', '=', 'revisors.user_id')->where('revisors.evento_id', '=', $evento->id)->selectRaw('DISTINCT users.*')->get()->sortBy(
-            function ($revisor) {
-                return $revisor->name;
+        $revisores = User::whereHas('revisor', function(Builder $query) use ($evento) {
+            $query->where('evento_id', $evento->id);
+        })->orderBy('name')->get();
+        $contadores = $evento->revisors()->withCount([
+            'trabalhosAtribuidos as avaliados_count' => function(Builder $query) {
+                $query->where('parecer', 'Avaliado')->orWhere('parecer', 'encaminhado');
             },
-            SORT_REGULAR);
-        // $revs = Revisor::where('evento_id', $evento->id)->with('user')->get();
-        $contadores = DB::table('revisors AS r')
-            ->select(['r.user_id', 't.avaliado', DB::raw('COUNT(r.user_id) AS count')])
-            ->join('atribuicaos AS a', 'r.id', 'a.revisor_id')
-            ->join('trabalhos AS t', 't.id', 'a.trabalho_id')
-            ->where('r.evento_id', $evento->id)
-            ->groupBy('r.user_id', 't.avaliado')
-            ->get();
-        $areas = Area::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
+            'trabalhosAtribuidos as processando_count' => function(Builder $query) {
+                $query->where('parecer', 'processando');
+            }
+            ])->get();
+        $areas = $evento->areas;
+        $modalidades = $evento->modalidades;
 
         return view('coordenador.revisores.listarRevisores', [
             'evento' => $evento,
