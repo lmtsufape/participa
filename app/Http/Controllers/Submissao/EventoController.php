@@ -484,7 +484,7 @@ class EventoController extends Controller
         })->orderBy('name')->get();
         $contadores = $evento->revisors()->withCount([
             'trabalhosAtribuidos as avaliados_count' => function(Builder $query) {
-                $query->where('parecer', 'Avaliado')->orWhere('parecer', 'encaminhado');
+                $query->where('parecer', 'avaliado')->orWhere('parecer', 'encaminhado');
             },
             'trabalhosAtribuidos as processando_count' => function(Builder $query) {
                 $query->where('parecer', 'processando');
