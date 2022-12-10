@@ -232,7 +232,13 @@
                                 <tr>
                                   <td>
                                       <a href="{{route('coord.listarTrabalhos', [ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}#trab{{$trabalho->id}}">{{$trabalho->titulo}}</a></td>
-                                  <td>{{$trabalho->avaliado}}</td>
+                                  <td>
+                                    @if ($trabalho->avaliado($revisor))
+                                      Avaliado
+                                    @else
+                                      Processando
+                                    @endif
+                                  </td>
                                 </tr>
                               @endforeach
                             </tbody>
