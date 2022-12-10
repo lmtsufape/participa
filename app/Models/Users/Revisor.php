@@ -40,6 +40,11 @@ class Revisor extends Model
         return $this->belongsToMany('App\Models\Submissao\Trabalho', 'atribuicaos', 'revisor_id', 'trabalho_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
     }
 
+    public function trabalhosAtribuidosPendentes()
+    {
+        return $this->belongsToMany('App\Models\Submissao\Trabalho', 'atribuicaos', 'revisor_id', 'trabalho_id')->withPivot('confirmacao', 'parecer')->withTimestamps()->where('parecer', 'processando');
+    }
+
     public function avaliacoes()
     {
         return $this->hasMany('App\Models\Submissao\Avaliacao', 'trabalho_id');
