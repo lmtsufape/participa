@@ -52,8 +52,8 @@
                                 </p>
 
                                 @if($pergunta->respostas()->exists() && $pergunta->respostas->first()->opcoes->count())
-                                    <input type="hidden" name="opcao_id[]" value="{{ $pergunta->respostas->first()->opcoes[0]->id }}">
-                                    @foreach ($pergunta->respostas->first()->opcoes as $opcao)
+                                    <input type="hidden" name="opcao_id[]" value="{{$respostas[$index]->opcoes[0]->id}}">
+                                @foreach ($pergunta->respostas->first()->opcoes->sortBy('id') as $opcao)
                                     <div class="form-check">
                                         @if ($respostas[$index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo))
                                             <input class="form-check-input" type="radio" name="{{$pergunta->id}}" checked value="{{$respostas[$index]->opcoes[0]->titulo}}" id="{{$opcao->id}}">
