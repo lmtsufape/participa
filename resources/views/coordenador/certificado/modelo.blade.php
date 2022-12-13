@@ -72,32 +72,12 @@
                     },
             });
             layer.add(imagemTransformer);
-            
-                       
-            let ConvertStringToHTML = function (str) {
-                let parser = new DOMParser();
-                let doc = parser.parseFromString(str, 'text/html');
-                return doc.body;
-            };
-
-            var info = '{!! json_encode($certificado->texto) !!}';
-            var info_html = ConvertStringToHTML(info)
-            
-            let valor = 14;
-            for(let i = 0; i < info_html.children.length; i++){
-                if(info_html.children[i].children.length > 0){
-                    let font_size = info_html.children[i].children[0].attributes.style.nodeValue
-                    let inicio = font_size.search(':');
-                    let fim = font_size.search('px');
-                    valor = font_size.slice(inicio+1, fim)
-                }
-            }
 
             texto = new Konva.Text({
                 x: parseInt(medida.x),
                 y: parseInt(medida.y),
                 width: parseInt(medida.largura),
-                fontSize: valor,
+                fontSize: medida.fontSize,
                 text: '{!! html_entity_decode(json_encode(strip_tags($certificado->texto))) !!}',
                 draggable: true,
                 id: 'texto',
