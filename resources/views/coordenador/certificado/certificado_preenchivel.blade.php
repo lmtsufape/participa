@@ -46,7 +46,7 @@
                 font-size: {{$certificado->medidas->where("tipo", $tipos["data"])->first()->fontSize}}px;
                 top: {{$certificado->medidas->where("tipo", $tipos["data"])->first()->y}}px;
                 width: {{$certificado->medidas->where("tipo", $tipos["data"])->first()->largura}}px;">
-                {{ $certificado->local }} , {{ $dataHoje }}
+                {{ $certificado->local }}, {{ $dataHoje }}
             </div>
             @foreach ($certificado->assinaturas as $assinatura)
                 @php
