@@ -1329,6 +1329,7 @@ class EventoController extends Controller
     public function show($id)
     {
         $evento = Evento::find($id);
+        if (! $evento) return abort(404);
         $encerrada = $evento->eventoInscricoesEncerradas();
         if (auth()->user()) {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
