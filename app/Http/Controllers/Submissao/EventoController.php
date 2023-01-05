@@ -1273,15 +1273,15 @@ class EventoController extends Controller
             $evento->save();
         }
 
-        $subject = 'Evento Criado';
-        Mail::to($user->email)->send(new EventoCriado($user, $subject, $evento));
-
         FormEvento::create([
             'eventoId' => $evento->id,
         ]);
         FormSubmTraba::create([
             'eventoId' => $evento->id,
         ]);
+
+        $subject = 'Evento Criado';
+        Mail::to($user->email)->send(new EventoCriado($user, $subject, $evento));
 
         return redirect()->route('home')->with(['message' => 'Evento criado com sucesso!']);
     }
