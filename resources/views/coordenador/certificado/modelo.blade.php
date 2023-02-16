@@ -21,7 +21,7 @@
     </style>
 
 </head>
-    <body style="text-align: center;">
+<body style="text-align: center;">
         <div id="container"></div>
         @if($certificado->verso)
             <div id="back" style="margin-top: 10px"></div>
@@ -48,19 +48,34 @@
                 @endforeach
             @endforeach
         </form>
-        <script>
+
+        <script>   
             stage = new Konva.Stage({
                 container: 'container',
                 width: 1118,
                 height: 790,
             });
-
+            
             layer = new Konva.Layer();
             stage.add(layer);
+            
+            
             medidas = @json($medidas);
             medida = medidas.find(m => m.tipo == 1);
-            if(medida === undefined)
+            console.log(medidas);
+            if(medida === undefined){
                 medida = {x: 50, y: 300, largura: 1000, fontSize: 14}
+            } else {
+                var textoCertificado = '{!! json_encode($certificado->texto) !!}';
+                console.log(textoCertificado);
+                let inicio = textoCertificado.search(':');
+                let fim = textoCertificado.search('px');
+
+                let valor = textoCertificado.slice(inicio+1, fim)
+                valor = parseInt(valor);
+                medida.fontSize = valor;
+            }
+
             imagemTransformer = new Konva.Transformer({
                 keepRatio: true,
                 enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
@@ -83,7 +98,7 @@
                 id: 'texto',
                 name: 'texto',
             });
-
+            
             texto.on('transform click tap move', (event) => {
             });
 
@@ -307,7 +322,7 @@
                         });
                     }
                 });
-
+                //assinatura
                 layer.add(simpleText);
                 var simpleText;
                 medida = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
