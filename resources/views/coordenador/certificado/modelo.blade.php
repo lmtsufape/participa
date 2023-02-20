@@ -49,22 +49,44 @@
             @endforeach
         </form>
 
-        <script>   
+        <script>
             stage = new Konva.Stage({
                 container: 'container',
                 width: 1118,
                 height: 790,
+                draggable: true,
             });
             
             layer = new Konva.Layer();
             stage.add(layer);
             
+            //funcao para salvar os componentes dps que são movidos de local pelo mouse
+
+            function applyTransformerLogic(shape) {
+                shape.on('transform', (event) => {
+                    if(['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(shape.getStage().getActiveTransformer().getActiveAnchor()) ) {
+                        shape.setAttrs({
+                            fontSize: Math.max(shape.fontSize() * shape.scaleX(), 2),
+                            width: Math.max(shape.width() * shape.scaleX(), MIN_WIDTH),
+                            scaleX: 1,
+                            scaleY: 1,
+                        });
+                    } else if ( ['midle-right', 'middle-left'].includes(shape.getStage().getActiveTransformer().getActiveAnchor()) ) {
+                        shape.setAttrs({
+                            width: Math.max(shape.width() * shape.scaleX(), MIN_WIDTH),
+                            scaleX: 1,
+                            scaleY: 1,
+                        });
+                    }
+                })
+            }
             
             medidas = @json($medidas);
             medida = medidas.find(m => m.tipo == 1);
             console.log(medidas);
             if(medida === undefined){
                 medida = {x: 50, y: 300, largura: 1000, fontSize: 14}
+                
             } else {
                 var textoCertificado = '{!! json_encode($certificado->texto) !!}';
                 console.log(textoCertificado);
@@ -138,46 +160,10 @@
             });
             layer.add(textoTransformer);
 
-            texto.on('transform', (event) => {
-                // with enabled anchors we can only change scaleX
-                // so we don't need to reset height
-                // just width
-                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer.getActiveAnchor()) ) {
-                texto.setAttrs({
-                    fontSize: Math.max(texto.fontSize() * texto.scaleX(), 2),
-                    width: Math.max(texto.width() * texto.scaleX(), MIN_WIDTH),
-                    scaleX: 1,
-                    scaleY: 1,
-                });
-                } else if ( ['middle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
-                texto.setAttrs({
-                    width: Math.max(texto.width() * texto.scaleX(), MIN_WIDTH),
-                    scaleX: 1,
-                    scaleY: 1,
-                });
-                }
-            });
+            applyTransformerLogic(texto);
             layer.add(texto);
 
-            local.on('transform', (event) => {
-                // with enabled anchors we can only change scaleX
-                // so we don't need to reset height
-                // just width
-                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer.getActiveAnchor()) ) {
-                local.setAttrs({
-                    fontSize: Math.max(local.fontSize() * local.scaleX(), 2),
-                    width: Math.max(local.width() * local.scaleX(), MIN_WIDTH),
-                    scaleX: 1,
-                    scaleY: 1,
-                });
-                } else if ( ['middle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
-                local.setAttrs({
-                    width: Math.max(local.width() * local.scaleX(), MIN_WIDTH),
-                    scaleX: 1,
-                    scaleY: 1,
-                });
-                }
-            });
+            applyTransformerLogic(local);
 
             let assinaturas = @json($certificado->assinaturas);
             let posicao_inicial_x;
@@ -303,27 +289,10 @@
                     });
                 }
 
-                simpleText.on('transform', (event) => {
-                    // with enabled anchors we can only change scaleX
-                    // so we don't need to reset height
-                    // just width
-                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer.getActiveAnchor()) ) {
-                        event.target.setAttrs({
-                            fontSize: Math.max(event.target.fontSize() * event.target.scaleX(), 2),
-                            width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
-                            scaleX: 1,
-                            scaleY: 1,
-                        });
-                    } else if ( ['middle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
-                            event.target.setAttrs({
-                            width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
-                            scaleX: 1,
-                            scaleY: 1,
-                        });
-                    }
-                });
                 //assinatura
+                applyTransformerLogic(simpleText);
                 layer.add(simpleText);
+
                 var simpleText;
                 medida = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
                 if(medida === undefined) {
@@ -357,26 +326,7 @@
                     });
                 }
 
-                simpleText.on('transform', (event) => {
-                    // with enabled anchors we can only change scaleX
-                    // so we don't need to reset height
-                    // just width
-                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer.getActiveAnchor()) ) {
-                    event.target.setAttrs({
-                        fontSize: Math.max(event.target.fontSize() * event.target.scaleX(), 2),
-                        width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
-                        scaleX: 1,
-                        scaleY: 1,
-                    });
-                    } else if ( ['middle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
-                    event.target.setAttrs({
-                        width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
-                        scaleX: 1,
-                        scaleY: 1,
-                    });
-                    }
-                });
-
+               applyTransformerLogic(simpleText);
                 layer.add(simpleText);
             });
 
