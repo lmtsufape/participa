@@ -9,10 +9,11 @@
         @page { margin: 0; }
         #container, #back{
             background-image: url({{ "/storage/" .$certificado->caminho }});
-            background-repeat: no-repeat,
-            background-size: 100% 100%,
-            width: 1118px,
-            height: 790px,
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            width: 1118px;
+            height: 790px;
+            
         }
         .d-none {
             display: none;
