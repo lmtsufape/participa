@@ -9,12 +9,11 @@
         @page { margin: 0; }
         #container, #back{
             background-image: url({{ "/storage/" .$certificado->caminho }});
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            width: 1118px;
-            height: 790px;
+            background-repeat: no-repeat,
+            background-size: 100% 100%,
+            width: 1118px,
+            height: 790px,
         }
-
         .d-none {
             display: none;
         }
@@ -61,7 +60,6 @@
             stage.add(layer);
             
             //funcao para salvar os componentes dps que são movidos de local pelo mouse
-
             function applyTransformerLogic(shape) {
                 shape.on('transform', (event) => {
                     if(['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(shape.getStage().getActiveTransformer().getActiveAnchor()) ) {
@@ -92,12 +90,10 @@
                 console.log(textoCertificado);
                 let inicio = textoCertificado.search(':');
                 let fim = textoCertificado.search('px');
-
                 let valor = textoCertificado.slice(inicio+1, fim)
                 valor = parseInt(valor);
                 medida.fontSize = valor;
             }
-
             imagemTransformer = new Konva.Transformer({
                 keepRatio: true,
                 enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
@@ -109,7 +105,6 @@
                     },
             });
             layer.add(imagemTransformer);
-
             texto = new Konva.Text({
                 x: parseInt(medida.x),
                 y: parseInt(medida.y),
@@ -123,11 +118,9 @@
             
             texto.on('transform click tap move', (event) => {
             });
-
             medida = medidas.find(m => m.tipo == 2);
             if(medida === undefined)
                 medida = {x: 915, y: 350, largura: 450, fontSize: 14};
-
             templocal = @json($certificado->local);
             tempdata = @json($dataHoje);
             localdata =  templocal + ', ' + tempdata;
@@ -142,7 +135,6 @@
                 id: 'data',
             });
             layer.add(local);
-
             let MIN_WIDTH = 100;
             textoTransformer = new Konva.Transformer({
                 padding: 5,
@@ -159,12 +151,9 @@
                 },
             });
             layer.add(textoTransformer);
-
             applyTransformerLogic(texto);
             layer.add(texto);
-
             applyTransformerLogic(local);
-
             let assinaturas = @json($certificado->assinaturas);
             let posicao_inicial_x;
             if (assinaturas.length > 1) {
@@ -229,7 +218,6 @@
                     });
                 };
                 imageObj.src = '/storage/' + assinatura.caminho;
-
                 medida = medidas.find(m => m.tipo == 6 && m.assinatura.id == assinatura.id);
                 if(medida === undefined) {
                     redLine = new Konva.Line({
@@ -254,7 +242,6 @@
                     });
                     layer.add(redLine);
                 }
-
                 medida = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
                 var simpleText;
                 if(medida === undefined) {
@@ -288,11 +275,9 @@
                         name: 'texto',
                     });
                 }
-
                 //assinatura
                 applyTransformerLogic(simpleText);
                 layer.add(simpleText);
-
                 var simpleText;
                 medida = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
                 if(medida === undefined) {
@@ -325,33 +310,26 @@
                         name: 'texto',
                     });
                 }
-
                applyTransformerLogic(simpleText);
                 layer.add(simpleText);
             });
-
             stage.on('mouseover', function () {
                 document.body.style.cursor = 'pointer';
             });
-
             stage.on('mouseover', function () {
                 document.body.style.cursor = 'default';
             });
-
             // clicks should select/deselect shapes
             stage.on('click tap', function (e) {
-
                 // if click on empty area - remove all selections
                 if (e.target === stage) {
                     imagemTransformer.nodes([]);
                     textoTransformer.nodes([]);
                     return;
                 }
-
                 // do we pressed shift or ctrl?
                 let metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
                 let isSelected = imagemTransformer.nodes().indexOf(e.target) >= 0;
-
                 if (!metaPressed && !isSelected) {
                     // if no key pressed and the node is not selected
                     // select just one
@@ -377,11 +355,9 @@
                     }
                 }
             });
-
             var stage1;
             var textoTransformer1;
             var imagemTransformer1;
-
             if(@json($certificado->verso)) {
                 stage1 = new Konva.Stage({
                     container: 'back',
@@ -390,7 +366,6 @@
                 });
                 var layer1 = new Konva.Layer();
                 stage1.add(layer1);
-
                 textoTransformer1 = new Konva.Transformer({
                     padding: 5,
                     rotateEnabled: false,
@@ -406,7 +381,6 @@
                     },
                 });
                 layer1.add(textoTransformer1);
-
                 imagemTransformer1 = new Konva.Transformer({
                     keepRatio: true,
                     enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
@@ -424,7 +398,6 @@
                 textoTransformer1 = textoTransformer;
                 imagemTransformer1 = imagemTransformer;
             }
-
             medida = medidas.find(m => m.tipo == 8);
             if(medida === undefined) {
                 if(@json($certificado->verso))
@@ -443,7 +416,6 @@
                 name: 'texto',
             });
             layer1.add(hash);
-
             medida = medidas.find(m => m.tipo == 10);
             if(medida === undefined) {
                 if(@json($certificado->verso))
@@ -464,7 +436,6 @@
                 name: 'texto',
             });
             layer1.add(emissao);
-
             var imageObj = new Image();
             imageObj.onload = function () {
                 medida = medidas.find(m => m.tipo == 7);
@@ -517,7 +488,6 @@
                 });
             };
             imageObj.src = "/img/qrcode.png";
-
             var logoImageObj = new Image();
             logoImageObj.onload = function () {
                 medida = medidas.find(m => m.tipo == 9);
@@ -570,8 +540,6 @@
                 });
             };
             logoImageObj.src = "/img/logo-icone.png";
-
-
             hash.on('transform', (event) => {
                 // with enabled anchors we can only change scaleX
                 // so we don't need to reset height
@@ -591,7 +559,6 @@
                 });
                 }
             });
-
             emissao.on('transform', (event) => {
                 // with enabled anchors we can only change scaleX
                 // so we don't need to reset height
@@ -612,18 +579,15 @@
                 }
             });
             stage1.on('click tap', function (e) {
-
                 // if click on empty area - remove all selections
                 if (e.target === stage1) {
                     textoTransformer1.nodes([]);
                     imagemTransformer1.nodes([]);
                     return;
                 }
-
                 // do we pressed shift or ctrl?
                 let metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
                 let isSelected = imagemTransformer1.nodes().indexOf(e.target) >= 0;
-
                 if (!metaPressed && !isSelected) {
                     // if no key pressed and the node is not selected
                     // select just one
@@ -649,7 +613,6 @@
                     }
                 }
                 });
-
             function send() {
                 ['nome','cargo'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
@@ -687,23 +650,19 @@
                 document.querySelectorAll("input[name=qrcode-y]")[0].value = qrcode[0].attrs.y;
                 document.querySelectorAll("input[name=qrcode-largura]")[0].value = qrcode[0].attrs.width;
                 document.querySelectorAll("input[name=qrcode-altura]")[0].value = qrcode[0].attrs.height;
-
                 document.querySelectorAll("input[name=hash-x]")[0].value = hash.attrs.x;
                 document.querySelectorAll("input[name=hash-y]")[0].value = hash.attrs.y;
                 document.querySelectorAll("input[name=hash-largura]")[0].value = hash.attrs.width;
                 document.querySelectorAll("input[name=hash-fontSize]")[0].value = hash.attrs.fontSize;
-
                 let logo = stage1.find('#logo');
                 document.querySelectorAll("input[name=logo-x]")[0].value = logo[0].attrs.x;
                 document.querySelectorAll("input[name=logo-y]")[0].value = logo[0].attrs.y;
                 document.querySelectorAll("input[name=logo-largura]")[0].value = logo[0].attrs.width;
                 document.querySelectorAll("input[name=logo-altura]")[0].value = logo[0].attrs.height;
-
                 document.querySelectorAll("input[name=emissao-x]")[0].value = emissao.attrs.x;
                 document.querySelectorAll("input[name=emissao-y]")[0].value = emissao.attrs.y;
                 document.querySelectorAll("input[name=emissao-largura]")[0].value = emissao.attrs.width;
                 document.querySelectorAll("input[name=emissao-fontSize]")[0].value = emissao.attrs.fontSize;
-
                 document.getElementById("form").submit();
             }
         </script>
