@@ -43,7 +43,7 @@ class CertificadoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $certificados = Certificado::where('evento_id', $evento->id)->get();
-
+        //dd($certificados);
         return view('coordenador.certificado.index', [
             'evento'=> $evento,
             'certificados' => $certificados,
@@ -62,7 +62,7 @@ class CertificadoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
         $tipos = Certificado::TIPO_ENUM;
-
+        //dd($tipos[]);
         return view('coordenador.certificado.create', compact('evento', 'assinaturas', 'tipos'));
     }
 
@@ -271,8 +271,9 @@ class CertificadoController extends Controller
     }
 
     public function modelo($id)
-    {
+    {   
         $certificado = Certificado::find($id);
+        //dd($certificado);
         $medidas = $certificado->medidas()->with('assinatura')->get();
         $evento = $certificado->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
@@ -280,7 +281,7 @@ class CertificadoController extends Controller
         date_default_timezone_set('America/Recife');
         $dataHoje = utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data)));
 
-        return view('coordenador.certificado.modelo', compact('certificado', 'dataHoje', 'evento', 'medidas'));
+        return view('coordenador.certificado.modelo', compact('certificado','medidas','evento', 'dataHoje'));
     }
 
     public function previewCertificado($certificadoId, $destinatarioId, $trabalhoId)
