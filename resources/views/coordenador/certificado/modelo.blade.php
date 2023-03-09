@@ -119,10 +119,16 @@
             
             texto.on('transform click tap move', (event) => {
             });
+
+            //medidas da data
             medida = medidas.find(m => m.tipo == 2);
             if(medida === undefined)
                 medida = {x: 915, y: 350, largura: 450, fontSize: 14};
+        
+            //temp local == local do evento
             templocal = @json($certificado->local);
+
+            //tempdata == dataCertificado
             tempdata = @json($dataHoje);
             localdata =  templocal + ', ' + tempdata;
             local = new Konva.Text({
@@ -167,9 +173,11 @@
                 let assinaturaArray = [];
                 let imageObj = new Image();
                 imageObj.onload = function () {
+                    //medida da assinatura
                     let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     // add the shape to the layer
                     if(medida === undefined) {
+                        //imagem da assinatura
                         yoda = new Konva.Image({
                             x: posicao_inicial_x + (index * 350),
                             y: 600,
@@ -186,7 +194,9 @@
                             scaleY: 1,
                         });
                     } else {
+                        //medida da imagem da assinatura
                         let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
+                        //imagem da assinatura
                         yoda = new Konva.Image({
                             x: parseInt(medida.x),
                             y: parseInt(medida.y),
@@ -243,7 +253,10 @@
                     });
                     layer.add(redLine);
                 }
+
+                //medida do cargo
                 medida = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
+                //simpletext == cargo
                 var simpleText;
                 if(medida === undefined) {
                     medida = {x: 915, y: 350, largura: 450, fontSize: 14}
@@ -279,7 +292,11 @@
                 //assinatura
                 applyTransformerLogic(simpleText);
                 layer.add(simpleText);
+
+                //simpletext == assinatura
                 var simpleText;
+
+                //medida da assinatura
                 medida = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
                 if(medida === undefined) {
                     simpleText = new Konva.Text({
@@ -399,6 +416,7 @@
                 textoTransformer1 = textoTransformer;
                 imagemTransformer1 = imagemTransformer;
             }
+            //medida do hash
             medida = medidas.find(m => m.tipo == 8);
             if(medida === undefined) {
                 if(@json($certificado->verso))
@@ -417,6 +435,8 @@
                 name: 'texto',
             });
             layer1.add(hash);
+
+            //medida da emissao
             medida = medidas.find(m => m.tipo == 10);
             if(medida === undefined) {
                 if(@json($certificado->verso))
@@ -437,8 +457,12 @@
                 name: 'texto',
             });
             layer1.add(emissao);
+
+            //imagem assinatura
             var imageObj = new Image();
             imageObj.onload = function () {
+                
+                //medida qrcode
                 medida = medidas.find(m => m.tipo == 7);
                 // add the shape to the layer
                 if(medida === undefined) {
@@ -456,6 +480,7 @@
                         width: medida.largura,
                     });
                 } else {
+                    //medida qrcode e imagem qrcode
                     medida = medidas.find(m => m.tipo == 7);
                     yoda = new Konva.Image({
                         x: parseInt(medida.x),
@@ -489,8 +514,10 @@
                 });
             };
             imageObj.src = "/img/qrcode.png";
+            //imagem da logo
             var logoImageObj = new Image();
             logoImageObj.onload = function () {
+                //medida da logo
                 medida = medidas.find(m => m.tipo == 9);
                 // add the shape to the layer
                 if(medida === undefined) {

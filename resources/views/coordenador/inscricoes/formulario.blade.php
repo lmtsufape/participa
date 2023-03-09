@@ -13,6 +13,7 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <h5 class="card-title">Campos do formulário</h5>
+                                <h1>EH AQUI?</h1>
                                 <h6 class="card-subtitle mb-2 text-muted">Campos que o formulário de inscrição vai ter.</h6>
                             </div>
                             <div class="col-sm-6">
