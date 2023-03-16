@@ -57,15 +57,12 @@
         </form>
 
         <script>
-
             let MIN_WIDTH = 100;
             //funcao para salvar os componentes dps que são movidos de local pelo mouse
             function applyTransformerLogic(shape) {
                 shape.on('transform', (event) => {
-                    console.log("Chegou", textoTransformer.getActiveAnchor(),)
-
+                    console.log("Chegou", textoTransformer.getActiveAnchor())
                     if(stage.find('.texto').includes(shape)) {
-
                         console.log("Texto", shape.getFontSize())
                         if(['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer.getActiveAnchor()) ) {
                             console.log("diagonal")
@@ -75,7 +72,6 @@
                                 scaleX: 1,
                                 scaleY: 1,
                             });
-
                         } else if (['midle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor())) {
                             // ['midle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
                             console.log("e aqui")
@@ -96,7 +92,7 @@
                     } else {
                         //imagem
                         console.log("Imagem")
-                        if( ['top-left', 'top-right', 'bottom-left', 'bottom-right', ].includes(textoTransformer.getActiveAnchor()) ) {
+                        if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer.getActiveAnchor()) ) {
                             console.log("diagonal")
                             shape.setAttrs({
                                 height: event.target.height() * event.target.scaleY(),
@@ -120,11 +116,9 @@
                                 scaleY: 1,
                             });
                         }
-
                     }
                 })
             }
-
             stage = new Konva.Stage({
                 container: 'container',
                 width: 1118,
@@ -132,7 +126,6 @@
                 draggable: true,
                 
             });
-
             layer = new Konva.Layer();
             
             textoTransformer = new Konva.Transformer({
@@ -151,11 +144,9 @@
                 },
             });
             layer.add(textoTransformer);
-
             stage.add(layer);
              
             medidas = @json($medidas);
-
             //medidas texto 
             medida = medidas.find(m => m.tipo == 1);
             
@@ -176,12 +167,12 @@
             applyTransformerLogic(texto);
             layer.add(texto);
 
-
             //medidas da data
             medida = medidas.find(m => m.tipo == 2);
             if(medida === undefined) {
                 medida = {x: 915, y: 350, largura: 450, fontSize: 14};
             }
+
             templocal = @json($certificado->local);
             tempdata = @json($dataHoje);
             localdata =  templocal + ', ' + tempdata;
@@ -195,10 +186,10 @@
                 name: 'data',
                 id: 'data',
             });
+
             applyTransformerLogic(local);
             layer.add(local);
-
-
+            
             let assinaturas = @json($certificado->assinaturas);
             let posicao_inicial_x;
             if (assinaturas.length > 1) {
@@ -211,7 +202,6 @@
                 let assinaturaArray = [];
                 let imageObj = new Image();
                 imageObj.onload = function () {
-
                     //imagem da assinatura
                     let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     // add the shape to the layer
@@ -233,7 +223,6 @@
                             scaleY: 1,
                         });
                     } else {
-
                         //medida da imagem da assinatura
                         let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                        // console.log(medida);
@@ -272,9 +261,7 @@
                     });*/
                 };
                 //aqui acaba a funcao onload
-
                 imageObj.src = '/storage/' + assinatura.caminho;
-
                 //medida da linha da assinatura
                 medida = medidas.find(m => m.tipo == 6 && m.assinatura.id == assinatura.id);
                 if(medida === undefined) {
@@ -301,7 +288,6 @@
                     // layer.add(redLine);
                 }
                 layer.add(redLine);
-
                 //assinatura do cargo
                 medida = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
                 var simpleText;
@@ -339,7 +325,6 @@
                 //assinatura
                 applyTransformerLogic(simpleText);
                 layer.add(simpleText);
-
                 //nome da assinatura
                 var simpleText;
                 medida = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
@@ -373,20 +358,16 @@
                         name: 'texto',
                     });
                 }
-               applyTransformerLogic(simpleText);
-
-                layer.add(simpleText);
+            applyTransformerLogic(simpleText);
+            layer.add(simpleText);
             });
             //aqui acaba foreach assinatura
-
-
             stage.on('mouseover', function () {
                 document.body.style.cursor = 'pointer';
             });
             stage.on('mouseover', function () {
                 document.body.style.cursor = 'default';
             });
-
             
             // clicks should select/deselect shapes
             stage.on('click tap', function (e) {
@@ -411,10 +392,8 @@
                     textoTransformer.nodes(nodes);
                 }
             });
-
-            //aaa
             
-
+            //verso certificado
             
             var stage1;
             var textoTransformer1;
@@ -427,6 +406,7 @@
                 });
                 var layer1 = new Konva.Layer();
                 stage1.add(layer1);
+
                 textoTransformer1 = new Konva.Transformer({
                     padding: 5,
                     rotateEnabled: false,
@@ -442,6 +422,7 @@
                     },
                 });
                 layer1.add(textoTransformer1);
+
                 imagemTransformer1 = new Konva.Transformer({
                     keepRatio: true,
                     enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
@@ -459,15 +440,16 @@
                 textoTransformer1 = textoTransformer;
                 imagemTransformer1 = imagemTransformer;
             }
-
             //medida do hash
             medida = medidas.find(m => m.tipo == 8);
             if(medida === undefined) {
-                if(@json($certificado->verso))
+                if(@json($certificado->verso)) {
                     medida = {x: 74, y: 512, largura: 500, fontSize: 14}
-                else
+                } else {
                     medida = {x: 26, y: 742, largura: 500, fontSize: 14}
+                }
             }
+
             var hash = new Konva.Text({
                 x: parseInt(medida.x),
                 y: parseInt(medida.y),
@@ -478,8 +460,9 @@
                 id: 'hash',
                 name: 'texto',
             });
+            //applyTransformerLogic(hash);
+            console.log(applyTransformerLogic(hash));
             layer1.add(hash);
-
             //medida da emissao
             medida = medidas.find(m => m.tipo == 10);
             if(medida === undefined) {
@@ -488,9 +471,10 @@
                 else
                     medida = {x: 700, y: 750, largura: 500, fontSize: 14}
             }
+
             var options = { year: 'numeric', month: 'long', day: 'numeric' };
             var today  = new Date();
-            var emissao = new Konvsenda.Text({
+            var emissao = new Konva.Text({
                 x: parseInt(medida.x),
                 y: parseInt(medida.y),
                 width: parseInt(medida.largura),
@@ -503,7 +487,6 @@
             layer1.add(emissao);
             var imageObj = new Image();
             imageObj.onload = function () {
-
                 //medida qrcode
                 medida = medidas.find(m => m.tipo == 7);
                 // add the shape to the layer
@@ -522,7 +505,6 @@
                         width: medida.largura,
                     });
                 } else {
-
                     //medida qrcode
                     medida = medidas.find(m => m.tipo == 7);
                     yoda = new Konva.Image({
@@ -559,7 +541,6 @@
             imageObj.src = "/img/qrcode.png";
             var logoImageObj = new Image();
             logoImageObj.onload = function () {
-
                 //medida da logo
                 medida = medidas.find(m => m.tipo == 9);
                 // add the shape to the layer
@@ -693,7 +674,6 @@
                 let yGlobal = (stage.attrs.y == undefined)?0:stage.attrs.y;                 
                // console.log(xGlobal)
                //console.log();
-
                 ['nome','cargo'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
                         let box = stage.find('#'+objeto+''+assinatura.id);
