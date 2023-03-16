@@ -202,28 +202,14 @@
                     //imagem da assinatura
                     let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     // add the shape to the layer
+
+
+
                     if(medida === undefined) {
-                        yoda = new Konva.Image({
-                            x: posicao_inicial_x + (index * 350),
-                            y: 600,
-                            image: imageObj,
-                            draggable: true,
-                            id: 'imagem' + assinatura.id,
-                            name: 'imagem' + assinatura.id,
-                            scaleX: 0.2,
-                            scaleY: 0.2,
-                        });
-                        yoda.setAttrs({
-                            height: yoda.height() * yoda.scaleY(),
-                            width: yoda.width() * yoda.scaleX(),
-                            scaleX: 1,
-                            scaleY: 1,
-                        });
-                    } else {
-                        //medida da imagem da assinatura
-                        let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
-                       // console.log(medida);
-                        yoda = new Konva.Image({
+                        medida = {x:posicao_inicial_x + (index *350), y:600};
+                    }
+
+                    yoda = new Konva.Image({
                             x: parseInt(medida.x),
                             y: parseInt(medida.y),
                             image: imageObj,
@@ -233,9 +219,30 @@
                             height: parseInt(medida.altura),
                             width: parseInt(medida.largura),
                         });
-                    }
+
+                    //     yoda = new Konva.Image({
+                    //         x: posicao_inicial_x + (index * 350),
+                    //         y: 600,
+                    //         image: imageObj,
+                    //         draggable: true,
+                    //         id: 'imagem' + assinatura.id,
+                    //         name: 'imagem' + assinatura.id,
+                    //         scaleX: 0.2,
+                    //         scaleY: 0.2,
+                    //     });
+                    //     yoda.setAttrs({
+                    //         height: yoda.height() * yoda.scaleY(),
+                    //         width: yoda.width() * yoda.scaleX(),
+                    //         scaleX: 1,
+                    //         scaleY: 1,
+                    //     });
+                    // } else {
+                        //medida da imagem da assinatura
+                       // console.log(medida);
+                        
                     layer.add(yoda);
                     applyTransformerLogic(yoda);
+
                     /*
                     yoda.on('transform', (event) => {
                         // with enabled anchoyodars we can only change scaleX
@@ -262,66 +269,97 @@
                 //medida da linha da assinatura
                 medida = medidas.find(m => m.tipo == 6 && m.assinatura.id == assinatura.id);
                 if(medida === undefined) {
-                    redLine = new Konva.Line({
-                        points: [posicao_inicial_x + (index * 350), 550 + 106, posicao_inicial_x + (index * 350) + 256, 550 + 106],
-                        stroke: 'black',
-                        strokeWidth: 3,
-                        draggable: true,
-                        id: 'linha' + assinatura.id,
-                    });
-                    //layer.add(redLine);
-                } else {
-                    let x = parseInt(medida.x)
-                    let y = parseInt(medida.y)
-                    let width = parseInt(medida.largura)
-                   // console.log(x, y, x + width, y)
-                    redLine = new Konva.Line({
-                        points: [x, y, x + width, y],
-                        stroke: 'black',
-                        strokeWidth: 2,
-                        draggable: true,
-                        id: 'linha' + assinatura.id,
-                    });
-                    // layer.add(redLine);
+                    medida = {x: posicao_inicial_x + (index * 350), y: 550 + 106, width: x + 256};
                 }
+                console.log(medida);
+                let x = parseInt(medida.x)
+                let y = parseInt(medida.y)
+                let sum = parseInt(medida.sum);
+                let width = parseInt(medida.largura)
+                let largura = parseInt(medida.largura);
+                console.log(x, y, x + width, y)
+                let redLine = new Konva.Line({
+                    points: [x, y, x + width, y],
+                    stroke: 'black',
+                    strokeWidth: 2,
+                    draggable: true,
+                    id: 'linha' + assinatura.id,
+                });
+
+                //     redLine = new Konva.Line({
+                //         points: [posicao_inicial_x + (index * 350), 550 + 106, posicao_inicial_x + (index * 350) + 256, 550 + 106],
+                //         stroke: 'black',
+                //         strokeWidth: 3,
+                //         draggable: true,
+                //         id: 'linha' + assinatura.id,
+                //     });
+                //     //layer.add(redLine);
+                // } else {
+                //     let x = parseInt(medida.x)
+                //     let y = parseInt(medida.y)
+                //     let width = parseInt(medida.largura)
+                //    // console.log(x, y, x + width, y)
+                //     redLine = new Konva.Line({
+                //         points: [x, y, x + width, y],
+                //         stroke: 'black',
+                //         strokeWidth: 2,
+                //         draggable: true,
+                //         id: 'linha' + assinatura.id,
+                //     });
+                
                 layer.add(redLine);
+
                 //assinatura do cargo
                 medida = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
+                
                 var simpleText;
                 if(medida === undefined) {
                     medida = {x: 915, y: 350, largura: 450, fontSize: 14}
-                    simpleText = new Konva.Text({
-                        x: posicao_inicial_x + (index * 350) + redLine.width() / 2,
-                        y: 682,
-                        text: assinatura.cargo,
-                        fontSize: 12,
-                        fontFamily: 'Arial, Helvetica, sans-serif',
-                        draggable: true,
-                        id: 'cargo' + assinatura.id,
-                        name: 'cargo' + assinatura.id,
-                    });
-                    simpleText.setAttrs({
-                        x: simpleText.x() - simpleText.width() / 2,
-                        width: simpleText.width() * simpleText.scaleX(),
-                        scaleX: 1,
-                        scaleY: 1,
-                    });
-                } else {
-                    simpleText = new Konva.Text({
-                        x: parseInt(medida.x),
-                        y: parseInt(medida.y),
-                        text: assinatura.cargo,
-                        width: parseInt(medida.largura),
-                        fontSize: parseInt(medida.fontSize),
-                        fontFamily: 'Arial, Helvetica, sans-serif',
-                        draggable: true,
-                        id: 'cargo' + assinatura.id,
-                        name: 'cargo' + assinatura.id,
-                    });
                 }
+                simpleText = new Konva.Text({
+                    x: parseInt(medida.x),
+                    y: parseInt(medida.y),
+                    text: assinatura.cargo,
+                    width: parseInt(medida.largura),
+                    fontSize: parseInt(medida.fontSize),
+                    fontFamily: 'Arial, Helvetica, sans-serif',
+                    draggable: true,
+                    id: 'cargo' + assinatura.id,
+                    name: 'cargo' + assinatura.id,
+                });
+                //     simpleText = new Konva.Text({
+                //         x: posicao_inicial_x + (index * 350) + redLine.width() / 2,
+                //         y: 682,
+                //         text: assinatura.cargo,
+                //         fontSize: 12,
+                //         fontFamily: 'Arial, Helvetica, sans-serif',
+                //         draggable: true,
+                //         id: 'cargo' + assinatura.id,
+                //         name: 'cargo' + assinatura.id,
+                //     simpleText.setAttrs({
+                //     });
+                //         x: simpleText.x() - simpleText.width() / 2,
+                //         width: simpleText.width() * simpleText.scaleX(),
+                //         scaleX: 1,
+                //         scaleY: 1,
+                //     });
+                // } else {
+                //     simpleText = new Konva.Text({
+                //         x: parseInt(medida.x),
+                //         y: parseInt(medida.y),
+                //         text: assinatura.cargo,
+                //         width: parseInt(medida.largura),
+                //         fontSize: parseInt(medida.fontSize),
+                //         fontFamily: 'Arial, Helvetica, sans-serif',
+                //         draggable: true,
+                //         id: 'cargo' + assinatura.id,
+                //         name: 'cargo' + assinatura.id,
+                //     });
+                // }
                 //assinatura
                 applyTransformerLogic(simpleText);
                 layer.add(simpleText);
+
                 //nome da assinatura
                 var simpleText;
                 medida = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
@@ -455,7 +493,7 @@
                 name: 'texto',
             });
             //applyTransformerLogic(hash);
-            console.log(applyTransformerLogic(hash));
+
             layer1.add(hash);
             //medida da emissao
             medida = medidas.find(m => m.tipo == 10);
