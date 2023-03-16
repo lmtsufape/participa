@@ -61,10 +61,10 @@
             //funcao para salvar os componentes dps que são movidos de local pelo mouse
             function applyTransformerLogic(shape) {
                 shape.on('transform', (event) => {
-                    console.log("Chegou", textoTransformer.getActiveAnchor())
+                    console.log("Chegou", transformer.getActiveAnchor())
                     if(stage.find('.texto').includes(shape)) {
                         console.log("Texto", shape.getFontSize())
-                        if(['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer.getActiveAnchor()) ) {
+                        if(['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(transformer.getActiveAnchor()) ) {
                             console.log("diagonal")
                             shape.setAttrs({
                                 fontSize: Math.max(shape.fontSize() * shape.scaleX(), 2),
@@ -72,7 +72,7 @@
                                 scaleX: 1,
                                 scaleY: 1,
                             });
-                        } else if (['midle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor())) {
+                        } else if (['midle-right', 'middle-left'].includes(transformer.getActiveAnchor())) {
                             // ['midle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
                             console.log("e aqui")
                             shape.setAttrs({
@@ -80,7 +80,7 @@
                                 scaleX: 1,
                                 scaleY: 1,
                             });
-                        } else if (['bottom-center', 'top-center'].includes(textoTransformer.getActiveAnchor())) {
+                        } else if (['bottom-center', 'top-center'].includes(transformer.getActiveAnchor())) {
                             // ['midle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
                             console.log("e aqui")
                             shape.setAttrs({
@@ -92,7 +92,7 @@
                     } else {
                         //imagem
                         console.log("Imagem")
-                        if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer.getActiveAnchor()) ) {
+                        if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(transformer.getActiveAnchor()) ) {
                             console.log("diagonal")
                             shape.setAttrs({
                                 height: event.target.height() * event.target.scaleY(),
@@ -100,14 +100,14 @@
                                 scaleX: 1,
                                 scaleY: 1,
                             });
-                        } else if ( ['middle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
+                        } else if ( ['middle-right', 'middle-left'].includes(transformer.getActiveAnchor()) ) {
                             console.log("lateral")
                             shape.setAttrs({
                                 width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
                                 scaleX: 1,
                                 scaleY: 1,
                             });
-                        } else if(['bottom-center', 'top-center'].includes(textoTransformer.getActiveAnchor())) {
+                        } else if(['bottom-center', 'top-center'].includes(transformer.getActiveAnchor())) {
                             console.log("top, bottom", event.target.height(), event.target.scaleY())
                             console.log(shape.attrs.height, shape.attrs.scaleY)
                             shape.setAttrs({
@@ -128,7 +128,7 @@
             });
             layer = new Konva.Layer();
             
-            textoTransformer = new Konva.Transformer({
+            transformer = new Konva.Transformer({
                 padding: 5,
                 rotateEnabled: false,
                 keepRatio: true,
@@ -143,7 +143,7 @@
                 return newBox;
                 },
             });
-            layer.add(textoTransformer);
+            layer.add(transformer);
             stage.add(layer);
              
             medidas = @json($medidas);
@@ -166,13 +166,11 @@
             });
             applyTransformerLogic(texto);
             layer.add(texto);
-
             //medidas da data
             medida = medidas.find(m => m.tipo == 2);
             if(medida === undefined) {
                 medida = {x: 915, y: 350, largura: 450, fontSize: 14};
             }
-
             templocal = @json($certificado->local);
             tempdata = @json($dataHoje);
             localdata =  templocal + ', ' + tempdata;
@@ -186,7 +184,6 @@
                 name: 'data',
                 id: 'data',
             });
-
             applyTransformerLogic(local);
             layer.add(local);
             
@@ -373,23 +370,23 @@
             stage.on('click tap', function (e) {
                 // if click on empty area - remove all selections
                 if (e.target === stage) {
-                    textoTransformer.nodes([]);
+                    transformer.nodes([]);
                     return;
                 }
                 // do we pressed shift or ctrl?
                 let metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-                let isSelected = textoTransformer.nodes().indexOf(e.target) >= 0;
+                let isSelected = transformer.nodes().indexOf(e.target) >= 0;
                 console.log(metaPressed, isSelected);
                 if (!metaPressed && !isSelected) {
-                    textoTransformer.nodes([e.target]);
+                    transformer.nodes([e.target]);
                 } else if (metaPressed && isSelected) {
-                    let nodes = textoTransformer.nodes().slice(); // use slice to have new copy of array
+                    let nodes = transformer.nodes().slice(); // use slice to have new copy of array
                     // remove node from array
                     nodes.splice(nodes.indexOf(e.target), 1);
-                    textoTransformer.nodes(nodes);
+                    transformer.nodes(nodes);
                 } else if (metaPressed && !isSelected) {
-                    let nodes = textoTransformer.nodes().concat([e.target]);
-                    textoTransformer.nodes(nodes);
+                    let nodes = transformer.nodes().concat([e.target]);
+                    transformer.nodes(nodes);
                 }
             });
             
@@ -406,7 +403,6 @@
                 });
                 var layer1 = new Konva.Layer();
                 stage1.add(layer1);
-
                 textoTransformer1 = new Konva.Transformer({
                     padding: 5,
                     rotateEnabled: false,
@@ -422,7 +418,6 @@
                     },
                 });
                 layer1.add(textoTransformer1);
-
                 imagemTransformer1 = new Konva.Transformer({
                     keepRatio: true,
                     enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
@@ -449,7 +444,6 @@
                     medida = {x: 26, y: 742, largura: 500, fontSize: 14}
                 }
             }
-
             var hash = new Konva.Text({
                 x: parseInt(medida.x),
                 y: parseInt(medida.y),
@@ -471,7 +465,6 @@
                 else
                     medida = {x: 700, y: 750, largura: 500, fontSize: 14}
             }
-
             var options = { year: 'numeric', month: 'long', day: 'numeric' };
             var today  = new Date();
             var emissao = new Konva.Text({
