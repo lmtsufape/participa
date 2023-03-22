@@ -578,7 +578,7 @@ class CertificadoController extends Controller
                 'certificados' => $certificados,
             ];
         }
-        return $data;
+        echo json_encode($data);
     }
 
     public function enviarCertificacao(Request $request)
