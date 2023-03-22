@@ -172,7 +172,7 @@ class CertificadoController extends Controller
 
     public function salvarMedida(Request $request)
     {
-        
+
         $certificado = Certificado::find($request->certificado_id);
         $evento = $certificado->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
@@ -272,7 +272,7 @@ class CertificadoController extends Controller
     }
 
     public function modelo($id)
-    {   
+    {
         $certificado = Certificado::find($id);
         //dd($certificado);
         $medidas = $certificado->medidas()->with('assinatura')->get();
@@ -444,7 +444,7 @@ class CertificadoController extends Controller
     {
         if ($request->destinatario == Certificado::TIPO_ENUM['apresentador']) {
             $destinatarios = collect();
-            $trab = Trabalho::where('eventoId', '=', $request->eventoId)->orderBy('titulo')->get();
+            $trab = Trabalho::select(['trabalhos.*', 'users.name as user_name'])->join('users', 'trabalhos.autorId', 'users.id')->where('eventoId', '=', $request->eventoId)->orderBy('user_name')->get();
             $trabalhos = collect();
             foreach ($trab as $trabalho) {
                 $destinatarios->push($trabalho->autor);
@@ -459,19 +459,19 @@ class CertificadoController extends Controller
                 function ($membro) {
                     return $membro->name;
                 },
-                SORT_REGULAR);
+                SORT_REGULAR)->values()->all();
         } elseif ($request->destinatario == Certificado::TIPO_ENUM['comissao_organizadora']) {
             $destinatarios = User::join('comissao_organizadora_eventos', 'users.id', '=', 'comissao_organizadora_eventos.user_id')->where('comissao_organizadora_eventos.evento_id', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
                 function ($membro) {
                     return $membro->name;
                 },
-                SORT_REGULAR);
+                SORT_REGULAR)->values()->all();
         } elseif ($request->destinatario == Certificado::TIPO_ENUM['revisor']) {
             $destinatarios = User::join('revisors', 'users.id', '=', 'revisors.user_id')->where('revisors.evento_id', '=', $request->eventoId)->selectRaw('DISTINCT users.*')->get()->sortBy(
                 function ($revisor) {
                     return $revisor->name;
                 },
-                SORT_REGULAR);
+                SORT_REGULAR)->values()->all();
         } elseif ($request->destinatario == Certificado::TIPO_ENUM['participante']) {
             $autores = Trabalho::where('eventoId', $request->eventoId)->get()->pluck('autor');
             $cientifica = Evento::find($request->eventoId)->usuariosDaComissao;
@@ -484,15 +484,15 @@ class CertificadoController extends Controller
                 ->merge($revisores)
                 ->merge($coautores)
                 ->merge($inscritos)
-                ->sortBy('name');
+                ->sortBy('name')->values()->all();
         } elseif ($request->destinatario == Certificado::TIPO_ENUM['expositor']) {
-            $destinatarios = Evento::find($request->eventoId)->palestrantes;
+            $destinatarios = Evento::find($request->eventoId)->palestrantes()->orderBy('nome')->get();
             $palestras = $destinatarios->map(function ($destinatario) {
                 return $destinatario->palestra;
             });
         } elseif ($request->destinatario == Certificado::TIPO_ENUM['outras_comissoes']) {
             $comissao = TipoComissao::find($request->tipo_comissao_id);
-            $destinatarios = $comissao->membros;
+            $destinatarios = $comissao->membros()->orderBy('name')->get();
         } elseif ($request->destinatario == Certificado::TIPO_ENUM['inscrito_atividade']) {
             $destinatarios = collect();
             if ($request->atividade == '0') {
@@ -502,7 +502,7 @@ class CertificadoController extends Controller
             }
             $atividades = collect();
             foreach ($ativ as $atividade) {
-                foreach ($atividade->users as $destinatario) {
+                foreach ($atividade->users()->orderBy('name')->get() as $destinatario) {
                     $destinatarios->push($destinatario);
                     $atividades->push($atividade);
                 }
