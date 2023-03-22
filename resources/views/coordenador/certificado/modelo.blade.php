@@ -33,25 +33,25 @@
             <div id="back" style="margin-top: 10px"></div>
         @endif
         <button onclick="send()" id="btn">Salvar</button>
-        <form id="form" action="{{route('coord.cadastrarmedida')}}" method="POST">
-        <!--<form id="form" action="{{route('coord.cadastrarmedida')}}" class="d-none" method="POST">-->
-            @csrf
-            <input type="text" name="certificado_id" value="{{$certificado->id}}"><br>
+        <!--<form id="form" action="{{route('coord.cadastrarmedida')}}" method="POST">-->
+        <form id="form" action="{{route('coord.cadastrarmedida')}}" class="d-none" method="POST">
+        @csrf
+            <input type="text" name="certificado_id" value="{{$certificado->id}}">
             @foreach ($certificado->assinaturas as $assinatura)
                 @foreach (['nome', 'imagem', 'cargo', 'linha'] as $objeto)
                     @foreach (['x', 'y', 'largura', 'altura', 'fontSize'] as $medida)
-                    {{$objeto}}-{{$medida}}-{{$assinatura->id}} <input type="text" name="{{$objeto}}-{{$medida}}-{{$assinatura->id}}" value="0"> <br>
+                        <input type="text" name="{{$objeto}}-{{$medida}}-{{$assinatura->id}}" value="0">
                     @endforeach
                 @endforeach
             @endforeach
             @foreach (['texto', 'data', 'hash', 'emissao'] as $objeto)
                 @foreach (['largura', 'x', 'y', 'fontSize'] as $medida)
-                    {{$objeto}}-{{$medida}} <input type="text" name="{{$objeto}}-{{$medida}}" value="0"><br>
+                    <input type="text" name="{{$objeto}}-{{$medida}}" value="0">
                 @endforeach
             @endforeach
             @foreach (['qrcode', 'logo'] as $objeto)
                 @foreach (['x', 'y', 'largura', 'altura'] as $medida)
-                    {{$objeto}}-{{$medida}}<input type="text" name="{{$objeto}}-{{$medida}}" value="0"><br>
+                    <input type="text" name="{{$objeto}}-{{$medida}}" value="0">
                 @endforeach
             @endforeach
         </form>
@@ -202,13 +202,9 @@
                     //imagem da assinatura
                     let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     // add the shape to the layer
-
-
-
                     if(medida === undefined) {
                         medida = {x:posicao_inicial_x + (index *350), y:600};
                     }
-
                     yoda = new Konva.Image({
                             x: parseInt(medida.x),
                             y: parseInt(medida.y),
@@ -219,7 +215,6 @@
                             height: parseInt(medida.altura),
                             width: parseInt(medida.largura),
                         });
-
                     //     yoda = new Konva.Image({
                     //         x: posicao_inicial_x + (index * 350),
                     //         y: 600,
@@ -242,7 +237,6 @@
                         
                     layer.add(yoda);
                     applyTransformerLogic(yoda);
-
                     /*
                     yoda.on('transform', (event) => {
                         // with enabled anchoyodars we can only change scaleX
@@ -285,7 +279,6 @@
                     draggable: true,
                     id: 'linha' + assinatura.id,
                 });
-
                 //     redLine = new Konva.Line({
                 //         points: [posicao_inicial_x + (index * 350), 550 + 106, posicao_inicial_x + (index * 350) + 256, 550 + 106],
                 //         stroke: 'black',
@@ -308,7 +301,6 @@
                 //     });
                 
                 layer.add(redLine);
-
                 //assinatura do cargo
                 medida = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
                 
@@ -359,7 +351,6 @@
                 //assinatura
                 applyTransformerLogic(simpleText);
                 layer.add(simpleText);
-
                 //nome da assinatura
                 var simpleText;
                 medida = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
@@ -493,7 +484,6 @@
                 name: 'texto',
             });
             //applyTransformerLogic(hash);
-
             layer1.add(hash);
             //medida da emissao
             medida = medidas.find(m => m.tipo == 10);
