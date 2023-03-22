@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://unpkg.com/konva@8.3.5/konva.min.js"></script>
     <style>
-        @page { margin: 0; }
+        @page { margin:0px; }
         #container, #back{
             background-image: url({{ "/storage/" .$certificado->caminho }});
             background-repeat: no-repeat;
@@ -18,6 +18,12 @@
         .d-none {
             display: none;
         }
+        #btn {
+            align-self: center;
+            width: 100px;
+            height: 50px;
+            
+        }
     </style>
 
 </head>
@@ -26,9 +32,10 @@
         @if($certificado->verso)
             <div id="back" style="margin-top: 10px"></div>
         @endif
-        <button onclick="send()">Salvar</button>
+        <button onclick="send()" id="btn">Salvar</button>
+        <!--<form id="form" action="{{route('coord.cadastrarmedida')}}" method="POST">-->
         <form id="form" action="{{route('coord.cadastrarmedida')}}" class="d-none" method="POST">
-            @csrf
+        @csrf
             <input type="text" name="certificado_id" value="{{$certificado->id}}">
             @foreach ($certificado->assinaturas as $assinatura)
                 @foreach (['nome', 'imagem', 'cargo', 'linha'] as $objeto)
@@ -50,62 +57,103 @@
         </form>
 
         <script>
+            let MIN_WIDTH = 100;
+            //funcao para salvar os componentes dps que são movidos de local pelo mouse
+            function applyTransformerLogic(shape) {
+                shape.on('transform', (event) => {
+                    console.log("Chegou", transformer.getActiveAnchor())
+                    if(stage.find('.texto').includes(shape)) {
+                        console.log("Texto", shape.getFontSize())
+                        if(['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(transformer.getActiveAnchor()) ) {
+                            console.log("diagonal")
+                            shape.setAttrs({
+                                fontSize: Math.max(shape.fontSize() * shape.scaleX(), 2),
+                                width: Math.max(shape.width() * shape.scaleX(), MIN_WIDTH),
+                                scaleX: 1,
+                                scaleY: 1,
+                            });
+                        } else if (['midle-right', 'middle-left'].includes(transformer.getActiveAnchor())) {
+                            // ['midle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
+                            console.log("e aqui")
+                            shape.setAttrs({
+                                width: Math.max(shape.width() * shape.scaleX(), MIN_WIDTH),
+                                scaleX: 1,
+                                scaleY: 1,
+                            });
+                        } else if (['bottom-center', 'top-center'].includes(transformer.getActiveAnchor())) {
+                            // ['midle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
+                            console.log("e aqui")
+                            shape.setAttrs({
+                                height: event.target.height() * event.target.scaleY(),
+                                scaleX: 1,
+                                scaleY: 1,
+                            });
+                        }
+                    } else {
+                        //imagem
+                        console.log("Imagem")
+                        if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(transformer.getActiveAnchor()) ) {
+                            console.log("diagonal")
+                            shape.setAttrs({
+                                height: event.target.height() * event.target.scaleY(),
+                                width: event.target.width() * event.target.scaleX(),
+                                scaleX: 1,
+                                scaleY: 1,
+                            });
+                        } else if ( ['middle-right', 'middle-left'].includes(transformer.getActiveAnchor()) ) {
+                            console.log("lateral")
+                            shape.setAttrs({
+                                width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
+                                scaleX: 1,
+                                scaleY: 1,
+                            });
+                        } else if(['bottom-center', 'top-center'].includes(transformer.getActiveAnchor())) {
+                            console.log("top, bottom", event.target.height(), event.target.scaleY())
+                            console.log(shape.attrs.height, shape.attrs.scaleY)
+                            shape.setAttrs({
+                                height: event.target.height() * event.target.scaleY(),
+                                scaleX: 1,
+                                scaleY: 1,
+                            });
+                        }
+                    }
+                })
+            }
             stage = new Konva.Stage({
                 container: 'container',
                 width: 1118,
                 height: 790,
                 draggable: true,
+                
             });
-            
             layer = new Konva.Layer();
+            
+            transformer = new Konva.Transformer({
+                padding: 5,
+                rotateEnabled: false,
+                keepRatio: true,
+                enabledAnchors: ['top-left', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-right', 'bottom-center', 'top-center'],
+                draggable: true,
+                // enable only side anchors
+                // limit transformer size
+                boundBoxFunc: (oldBox, newBox) => {
+                /*if (newBox.width < MIN_WIDTH) {
+                    return oldBox;
+                }*/
+                return newBox;
+                },
+            });
+            layer.add(transformer);
             stage.add(layer);
-            
-            //funcao para salvar os componentes dps que são movidos de local pelo mouse
-            function applyTransformerLogic(shape) {
-                shape.on('transform', (event) => {
-                    if(['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(shape.getStage().getActiveTransformer().getActiveAnchor()) ) {
-                        shape.setAttrs({
-                            fontSize: Math.max(shape.fontSize() * shape.scaleX(), 2),
-                            width: Math.max(shape.width() * shape.scaleX(), MIN_WIDTH),
-                            scaleX: 1,
-                            scaleY: 1,
-                        });
-                    } else if ( ['midle-right', 'middle-left'].includes(shape.getStage().getActiveTransformer().getActiveAnchor()) ) {
-                        shape.setAttrs({
-                            width: Math.max(shape.width() * shape.scaleX(), MIN_WIDTH),
-                            scaleX: 1,
-                            scaleY: 1,
-                        });
-                    }
-                })
-            }
-            
+             
             medidas = @json($medidas);
+            //medidas texto 
             medida = medidas.find(m => m.tipo == 1);
-            console.log(medidas);
+            
             if(medida === undefined){
                 medida = {x: 50, y: 300, largura: 1000, fontSize: 14}
-                
-            } else {
-                var textoCertificado = '{!! json_encode($certificado->texto) !!}';
-                console.log(textoCertificado);
-                let inicio = textoCertificado.search(':');
-                let fim = textoCertificado.search('px');
-                let valor = textoCertificado.slice(inicio+1, fim)
-                valor = parseInt(valor);
-                medida.fontSize = valor;
-            }
-            imagemTransformer = new Konva.Transformer({
-                keepRatio: true,
-                enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
-                boundBoxFunc: (oldBox, newBox) => {
-                    if (newBox.width < 50) {
-                        return oldBox;
-                    }
-                    return newBox;
-                    },
-            });
-            layer.add(imagemTransformer);
+            } 
+            
             texto = new Konva.Text({
                 x: parseInt(medida.x),
                 y: parseInt(medida.y),
@@ -116,12 +164,13 @@
                 id: 'texto',
                 name: 'texto',
             });
-            
-            texto.on('transform click tap move', (event) => {
-            });
+            applyTransformerLogic(texto);
+            layer.add(texto);
+            //medidas da data
             medida = medidas.find(m => m.tipo == 2);
-            if(medida === undefined)
+            if(medida === undefined) {
                 medida = {x: 915, y: 350, largura: 450, fontSize: 14};
+            }
             templocal = @json($certificado->local);
             tempdata = @json($dataHoje);
             localdata =  templocal + ', ' + tempdata;
@@ -132,29 +181,12 @@
                 fontSize: parseInt(medida.fontSize),
                 text: localdata.replace(/[\n\r]/g,' ').replace('"', '').replace('"', ''),
                 draggable: true,
-                name: 'texto',
+                name: 'data',
                 id: 'data',
             });
-            layer.add(local);
-            let MIN_WIDTH = 100;
-            textoTransformer = new Konva.Transformer({
-                padding: 5,
-                rotateEnabled: false,
-                keepRatio: true,
-                enabledAnchors: ['top-left', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-right'],
-                // enable only side anchors
-                // limit transformer size
-                boundBoxFunc: (oldBox, newBox) => {
-                if (newBox.width < MIN_WIDTH) {
-                    return oldBox;
-                }
-                return newBox;
-                },
-            });
-            layer.add(textoTransformer);
-            applyTransformerLogic(texto);
-            layer.add(texto);
             applyTransformerLogic(local);
+            layer.add(local);
+            
             let assinaturas = @json($certificado->assinaturas);
             let posicao_inicial_x;
             if (assinaturas.length > 1) {
@@ -167,39 +199,47 @@
                 let assinaturaArray = [];
                 let imageObj = new Image();
                 imageObj.onload = function () {
+                    //imagem da assinatura
                     let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     // add the shape to the layer
                     if(medida === undefined) {
-                        yoda = new Konva.Image({
-                            x: posicao_inicial_x + (index * 350),
-                            y: 600,
-                            image: imageObj,
-                            draggable: true,
-                            id: 'imagem' + assinatura.id,
-                            scaleX: 0.2,
-                            scaleY: 0.2,
-                        });
-                        yoda.setAttrs({
-                            height: yoda.height() * yoda.scaleY(),
-                            width: yoda.width() * yoda.scaleX(),
-                            scaleX: 1,
-                            scaleY: 1,
-                        });
-                    } else {
-                        let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
-                        yoda = new Konva.Image({
+                        medida = {x:posicao_inicial_x + (index *350), y:600};
+                    }
+                    yoda = new Konva.Image({
                             x: parseInt(medida.x),
                             y: parseInt(medida.y),
                             image: imageObj,
                             draggable: true,
                             id: 'imagem' + assinatura.id,
+                            name: 'imagem' + assinatura.id,
                             height: parseInt(medida.altura),
                             width: parseInt(medida.largura),
                         });
-                    }
+                    //     yoda = new Konva.Image({
+                    //         x: posicao_inicial_x + (index * 350),
+                    //         y: 600,
+                    //         image: imageObj,
+                    //         draggable: true,
+                    //         id: 'imagem' + assinatura.id,
+                    //         name: 'imagem' + assinatura.id,
+                    //         scaleX: 0.2,
+                    //         scaleY: 0.2,
+                    //     });
+                    //     yoda.setAttrs({
+                    //         height: yoda.height() * yoda.scaleY(),
+                    //         width: yoda.width() * yoda.scaleX(),
+                    //         scaleX: 1,
+                    //         scaleY: 1,
+                    //     });
+                    // } else {
+                        //medida da imagem da assinatura
+                       // console.log(medida);
+                        
                     layer.add(yoda);
+                    applyTransformerLogic(yoda);
+                    /*
                     yoda.on('transform', (event) => {
-                        // with enabled anchors we can only change scaleX
+                        // with enabled anchoyodars we can only change scaleX
                         // so we don't need to reset height
                         // just width
                         if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(imagemTransformer.getActiveAnchor()) ) {
@@ -216,69 +256,102 @@
                                 scaleY: 1,
                             });
                         }
-                    });
+                    });*/
                 };
+                //aqui acaba a funcao onload
                 imageObj.src = '/storage/' + assinatura.caminho;
+                //medida da linha da assinatura
                 medida = medidas.find(m => m.tipo == 6 && m.assinatura.id == assinatura.id);
                 if(medida === undefined) {
-                    redLine = new Konva.Line({
-                        points: [posicao_inicial_x + (index * 350), 550 + 106, posicao_inicial_x + (index * 350) + 256, 550 + 106],
-                        stroke: 'black',
-                        strokeWidth: 3,
-                        draggable: true,
-                        id: 'linha' + assinatura.id,
-                    });
-                    layer.add(redLine);
-                } else {
-                    let x = parseInt(medida.x)
-                    let y = parseInt(medida.y)
-                    let width = parseInt(medida.largura)
-                    console.log(x, y, x + width, y)
-                    redLine = new Konva.Line({
-                        points: [x, y, x + width, y],
-                        stroke: 'black',
-                        strokeWidth: 2,
-                        draggable: true,
-                        id: 'linha' + assinatura.id,
-                    });
-                    layer.add(redLine);
+                    medida = {x: posicao_inicial_x + (index * 350), y: 550 + 106, width: x + 256};
                 }
+                console.log(medida);
+                let x = parseInt(medida.x)
+                let y = parseInt(medida.y)
+                let sum = parseInt(medida.sum);
+                let width = parseInt(medida.largura)
+                let largura = parseInt(medida.largura);
+                console.log(x, y, x + width, y)
+                let redLine = new Konva.Line({
+                    points: [x, y, x + width, y],
+                    stroke: 'black',
+                    strokeWidth: 2,
+                    draggable: true,
+                    id: 'linha' + assinatura.id,
+                });
+                //     redLine = new Konva.Line({
+                //         points: [posicao_inicial_x + (index * 350), 550 + 106, posicao_inicial_x + (index * 350) + 256, 550 + 106],
+                //         stroke: 'black',
+                //         strokeWidth: 3,
+                //         draggable: true,
+                //         id: 'linha' + assinatura.id,
+                //     });
+                //     //layer.add(redLine);
+                // } else {
+                //     let x = parseInt(medida.x)
+                //     let y = parseInt(medida.y)
+                //     let width = parseInt(medida.largura)
+                //    // console.log(x, y, x + width, y)
+                //     redLine = new Konva.Line({
+                //         points: [x, y, x + width, y],
+                //         stroke: 'black',
+                //         strokeWidth: 2,
+                //         draggable: true,
+                //         id: 'linha' + assinatura.id,
+                //     });
+                
+                layer.add(redLine);
+                //assinatura do cargo
                 medida = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
+                
                 var simpleText;
                 if(medida === undefined) {
                     medida = {x: 915, y: 350, largura: 450, fontSize: 14}
-                    simpleText = new Konva.Text({
-                        x: posicao_inicial_x + (index * 350) + redLine.width() / 2,
-                        y: 682,
-                        text: assinatura.cargo,
-                        fontSize: 12,
-                        fontFamily: 'Arial, Helvetica, sans-serif',
-                        draggable: true,
-                        id: 'cargo' + assinatura.id,
-                        name: 'texto',
-                    });
-                    simpleText.setAttrs({
-                        x: simpleText.x() - simpleText.width() / 2,
-                        width: simpleText.width() * simpleText.scaleX(),
-                        scaleX: 1,
-                        scaleY: 1,
-                    });
-                } else {
-                    simpleText = new Konva.Text({
-                        x: parseInt(medida.x),
-                        y: parseInt(medida.y),
-                        text: assinatura.cargo,
-                        width: parseInt(medida.largura),
-                        fontSize: parseInt(medida.fontSize),
-                        fontFamily: 'Arial, Helvetica, sans-serif',
-                        draggable: true,
-                        id: 'cargo' + assinatura.id,
-                        name: 'texto',
-                    });
                 }
+                simpleText = new Konva.Text({
+                    x: parseInt(medida.x),
+                    y: parseInt(medida.y),
+                    text: assinatura.cargo,
+                    width: parseInt(medida.largura),
+                    fontSize: parseInt(medida.fontSize),
+                    fontFamily: 'Arial, Helvetica, sans-serif',
+                    draggable: true,
+                    id: 'cargo' + assinatura.id,
+                    name: 'cargo' + assinatura.id,
+                });
+                //     simpleText = new Konva.Text({
+                //         x: posicao_inicial_x + (index * 350) + redLine.width() / 2,
+                //         y: 682,
+                //         text: assinatura.cargo,
+                //         fontSize: 12,
+                //         fontFamily: 'Arial, Helvetica, sans-serif',
+                //         draggable: true,
+                //         id: 'cargo' + assinatura.id,
+                //         name: 'cargo' + assinatura.id,
+                //     simpleText.setAttrs({
+                //     });
+                //         x: simpleText.x() - simpleText.width() / 2,
+                //         width: simpleText.width() * simpleText.scaleX(),
+                //         scaleX: 1,
+                //         scaleY: 1,
+                //     });
+                // } else {
+                //     simpleText = new Konva.Text({
+                //         x: parseInt(medida.x),
+                //         y: parseInt(medida.y),
+                //         text: assinatura.cargo,
+                //         width: parseInt(medida.largura),
+                //         fontSize: parseInt(medida.fontSize),
+                //         fontFamily: 'Arial, Helvetica, sans-serif',
+                //         draggable: true,
+                //         id: 'cargo' + assinatura.id,
+                //         name: 'cargo' + assinatura.id,
+                //     });
+                // }
                 //assinatura
                 applyTransformerLogic(simpleText);
                 layer.add(simpleText);
+                //nome da assinatura
                 var simpleText;
                 medida = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
                 if(medida === undefined) {
@@ -311,51 +384,43 @@
                         name: 'texto',
                     });
                 }
-               applyTransformerLogic(simpleText);
-                layer.add(simpleText);
+            applyTransformerLogic(simpleText);
+            layer.add(simpleText);
             });
+            //aqui acaba foreach assinatura
             stage.on('mouseover', function () {
                 document.body.style.cursor = 'pointer';
             });
             stage.on('mouseover', function () {
                 document.body.style.cursor = 'default';
             });
+            
             // clicks should select/deselect shapes
             stage.on('click tap', function (e) {
                 // if click on empty area - remove all selections
                 if (e.target === stage) {
-                    imagemTransformer.nodes([]);
-                    textoTransformer.nodes([]);
+                    transformer.nodes([]);
                     return;
                 }
                 // do we pressed shift or ctrl?
                 let metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-                let isSelected = imagemTransformer.nodes().indexOf(e.target) >= 0;
+                let isSelected = transformer.nodes().indexOf(e.target) >= 0;
+                console.log(metaPressed, isSelected);
                 if (!metaPressed && !isSelected) {
-                    // if no key pressed and the node is not selected
-                    // select just one
-                    if(stage.find('.texto').includes(e.target)) {
-                        textoTransformer.nodes([e.target]);
-                    } else {
-                        imagemTransformer.nodes([e.target]);
-                    }
+                    transformer.nodes([e.target]);
                 } else if (metaPressed && isSelected) {
-                    // if we pressed keys and node was selected
-                    // we need to remove it from selection:
-                    let nodes = imagemTransformer.nodes().slice(); // use slice to have new copy of array
+                    let nodes = transformer.nodes().slice(); // use slice to have new copy of array
                     // remove node from array
                     nodes.splice(nodes.indexOf(e.target), 1);
-                    imagemTransformer.nodes(nodes);
+                    transformer.nodes(nodes);
                 } else if (metaPressed && !isSelected) {
-                    if(stage.find('.texto').includes(e.target)) {
-                        let nodes = textoTransformer.nodes().concat([e.target]);
-                        textoTransformer.nodes(nodes);
-                    } else {
-                        let nodes = imagemTransformer.nodes().concat([e.target]);
-                        imagemTransformer.nodes(nodes);
-                    }
+                    let nodes = transformer.nodes().concat([e.target]);
+                    transformer.nodes(nodes);
                 }
             });
+            
+            //verso certificado
+            
             var stage1;
             var textoTransformer1;
             var imagemTransformer1;
@@ -399,12 +464,14 @@
                 textoTransformer1 = textoTransformer;
                 imagemTransformer1 = imagemTransformer;
             }
+            //medida do hash
             medida = medidas.find(m => m.tipo == 8);
             if(medida === undefined) {
-                if(@json($certificado->verso))
+                if(@json($certificado->verso)) {
                     medida = {x: 74, y: 512, largura: 500, fontSize: 14}
-                else
+                } else {
                     medida = {x: 26, y: 742, largura: 500, fontSize: 14}
+                }
             }
             var hash = new Konva.Text({
                 x: parseInt(medida.x),
@@ -416,7 +483,9 @@
                 id: 'hash',
                 name: 'texto',
             });
+            //applyTransformerLogic(hash);
             layer1.add(hash);
+            //medida da emissao
             medida = medidas.find(m => m.tipo == 10);
             if(medida === undefined) {
                 if(@json($certificado->verso))
@@ -439,6 +508,7 @@
             layer1.add(emissao);
             var imageObj = new Image();
             imageObj.onload = function () {
+                //medida qrcode
                 medida = medidas.find(m => m.tipo == 7);
                 // add the shape to the layer
                 if(medida === undefined) {
@@ -456,6 +526,7 @@
                         width: medida.largura,
                     });
                 } else {
+                    //medida qrcode
                     medida = medidas.find(m => m.tipo == 7);
                     yoda = new Konva.Image({
                         x: parseInt(medida.x),
@@ -491,6 +562,7 @@
             imageObj.src = "/img/qrcode.png";
             var logoImageObj = new Image();
             logoImageObj.onload = function () {
+                //medida da logo
                 medida = medidas.find(m => m.tipo == 9);
                 // add the shape to the layer
                 if(medida === undefined) {
@@ -508,6 +580,7 @@
                         width: medida.largura,
                     });
                 } else {
+                    //medida da logo
                     medida = medidas.find(m => m.tipo == 9);
                     yoda = new Konva.Image({
                         x: parseInt(medida.x),
@@ -579,6 +652,7 @@
                 });
                 }
             });
+            
             stage1.on('click tap', function (e) {
                 // if click on empty area - remove all selections
                 if (e.target === stage1) {
@@ -614,12 +688,18 @@
                     }
                 }
                 });
+                
             function send() {
+                
+                let xGlobal = (stage.attrs.x == undefined)?0:stage.attrs.x;       
+                let yGlobal = (stage.attrs.y == undefined)?0:stage.attrs.y;                 
+               // console.log(xGlobal)
+               //console.log();
                 ['nome','cargo'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
                         let box = stage.find('#'+objeto+''+assinatura.id);
-                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x;
-                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y;
+                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x + xGlobal;
+                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y + yGlobal;
                         document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
                         document.querySelectorAll("input[name="+objeto+"-fontSize-"+assinatura.id+"]")[0].value = box[0].attrs.fontSize;
                     });
@@ -632,16 +712,16 @@
                 });
                 ['texto','data'].forEach(objeto => {
                     let box = stage.find('#'+objeto);
-                    document.querySelectorAll("input[name="+objeto+"-x]")[0].value = box[0].attrs.x;
-                    document.querySelectorAll("input[name="+objeto+"-y]")[0].value = box[0].attrs.y;
+                    document.querySelectorAll("input[name="+objeto+"-x]")[0].value = box[0].attrs.x + xGlobal;
+                    document.querySelectorAll("input[name="+objeto+"-y]")[0].value = box[0].attrs.y + yGlobal;
                     document.querySelectorAll("input[name="+objeto+"-largura]")[0].value = box[0].attrs.width;
                     document.querySelectorAll("input[name="+objeto+"-fontSize]")[0].value = box[0].attrs.fontSize;
                 });
                 ['imagem'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
                         let box = stage.find('#' + objeto + '' + assinatura.id);
-                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x;
-                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y;
+                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x + xGlobal;
+                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y + yGlobal;
                         document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
                         document.querySelectorAll("input[name="+objeto+"-altura-"+assinatura.id+"]")[0].value = box[0].attrs.height;
                     });

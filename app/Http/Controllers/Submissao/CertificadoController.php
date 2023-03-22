@@ -172,6 +172,7 @@ class CertificadoController extends Controller
 
     public function salvarMedida(Request $request)
     {
+        
         $certificado = Certificado::find($request->certificado_id);
         $evento = $certificado->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
