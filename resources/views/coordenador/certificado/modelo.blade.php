@@ -137,9 +137,9 @@
                 // enable only side anchors
                 // limit transformer size
                 boundBoxFunc: (oldBox, newBox) => {
-                /*if (newBox.width < MIN_WIDTH) {
+                if (newBox.width < MIN_WIDTH) {
                     return oldBox;
-                }*/
+                }
                 return newBox;
                 },
             });
@@ -169,7 +169,7 @@
             //medidas da data
             medida = medidas.find(m => m.tipo == 2);
             if(medida === undefined) {
-                medida = {x: 915, y: 350, largura: 450, fontSize: 14};
+                medida = {x: 800, y: 350, largura: 450, fontSize: 14};
             }
             templocal = @json($certificado->local);
             tempdata = @json($dataHoje);
@@ -205,7 +205,7 @@
                     console.log(medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id))
                     if(medida === undefined) {
                         yoda = new Konva.Image({
-                            x: posicao_inicial_x + (index * 350) - 150,
+                            x: posicao_inicial_x + (index * 350) - 100,
                             y: 600,
                             image: imageObj,
                             draggable: true,
@@ -245,10 +245,9 @@
                 imageObj.src = '/storage/' + assinatura.caminho;
                 //medida da linha da assinatura
                 medida = medidas.find(m => m.tipo == 6 && m.assinatura.id == assinatura.id);
-
-                if(medida === undefined) {
-                    medida = {x: posicao_inicial_x + (index * 350) - 150,y: 550 + 106, largura: (index * 250) + 256};
-                }
+                //if(medida === undefined) {
+                medida = {x: posicao_inicial_x + (index * 350) - 100,y: 550 + 106, largura: (index * 250) + 256};
+                //}
                 
                 let x = parseInt(medida.x)
                 let y = parseInt(medida.y)
@@ -262,40 +261,13 @@
                     draggable: true,
                     id: 'linha' + assinatura.id,
                 });
-
                 layer.add(redLine);
-                //medida da linha da assinatura
-                // medida = medidas.find(m => m.tipo == 6 && m.assinatura.id == assinatura.id);
-                // if(medida === undefined) {
-                //     redLine = new Konva.Line({
-                //         points: [posicao_inicial_x + (index * 350), 550 + 106, posicao_inicial_x + (index * 350) + 256, 550 + 106],
-                //         stroke: 'black',
-                //         strokeWidth: 3,
-                //         draggable: true,
-                //         id: 'linha' + assinatura.id,
-                //     });
-                //     //layer.add(redLine);
-                // } else {
-                //     let x = parseInt(medida.x)
-                //     let y = parseInt(medida.y)
-                //     let width = parseInt(medida.largura)
-                //    // console.log(x, y, x + width, y)
-                //     redLine = new Konva.Line({
-                //         points: [x, y, x + width, y],
-                //         stroke: 'black',
-                //         strokeWidth: 2,
-                //         draggable: true,
-                //         id: 'linha' + assinatura.id,
-                //     });
-                //     // layer.add(redLine);
-                // }
-                // layer.add(redLine);
                 
                 //assinatura do cargo
                 var medida = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
                 var simpleText;
                 if(medida === undefined) {
-                    medida = {x: posicao_inicial_x + (index * 350) - 50, y: 682, largura: 500, fontSize: 14}
+                    medida = {x: posicao_inicial_x + (index * 350) + 10, y: 682, largura: 500, fontSize: 14}
                 }
                 simpleText = new Konva.Text({
                     x: parseInt(medida.x),
@@ -308,45 +280,15 @@
                     id: 'cargo' + assinatura.id,
                     name: 'cargo' + assinatura.id,
                 });
-                //     simpleText = new Konva.Text({
-                //         x: posicao_inicial_x + (index * 350) + redLine.width() / 2,
-                //         y: 682,
-                //         text: assinatura.cargo,
-                //         fontSize: 12,
-                //         fontFamily: 'Arial, Helvetica, sans-serif',
-                //         draggable: true,
-                //         id: 'cargo' + assinatura.id,
-                //         name: 'cargo' + assinatura.id,
-                //     });
-                //     simpleText.setAttrs({
-                //         x: simpleText.x() - simpleText.width() / 2,
-                //         width: simpleText.width() * simpleText.scaleX(),
-                //         scaleX: 1,
-                //         scaleY: 1,
-                //     });
-                // } else {
-                //     simpleText = new Konva.Text({
-                //         x: parseInt(medida.x),
-                //         y: parseInt(medida.y),
-                //         text: assinatura.cargo,
-                //         width: parseInt(medida.largura),
-                //         fontSize: parseInt(medida.fontSize),
-                //         fontFamily: 'Arial, Helvetica, sans-serif',
-                //         draggable: true,
-                //         id: 'cargo' + assinatura.id,
-                //         name: 'cargo' + assinatura.id,
-                //     });
-                // }
+
                 //assinatura
                 applyTransformerLogic(simpleText);
                 layer.add(simpleText);
-
                 //nome da assinatura
                 var simpleText;
-
                 medida = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
                 if(medida === undefined) {
-                    medida = {x:posicao_inicial_x + (index * 350) - 160 + (redLine.width() / 2), y: 666, fontSize: 14 }
+                    medida = {x:posicao_inicial_x + (index * 350) - 140 + (redLine.width() / 2), y: 666, fontSize: 14 }
                 }
                 simpleText = new Konva.Text({
                     x: parseInt(medida.x),
@@ -361,36 +303,7 @@
                     id: 'nome' + assinatura.id,
                     name: 'texto',
                 });
-                // if(medida === undefined) {
-                //     simpleText = new Konva.Text({
-                //         x: posicao_inicial_x + (index * 350) - 160 + redLine.width() / 2,
-                //         y: 666,
-                //         text: assinatura.nome,
-                //         fontSize: 12,
-                //         fontFamily: 'Arial, Helvetica, sans-serif',
-                //         draggable: true,
-                //         id: 'nome' + assinatura.id,
-                //         name: 'texto',
-                //     });
-                //     simpleText.setAttrs({
-                //         x: simpleText.x() - simpleText.width() / 2,
-                //         width: simpleText.width() * simpleText.scaleX(),
-                //         scaleX: 1,
-                //         scaleY: 1,
-                //     });
-                // } else {
-                //     simpleText = new Konva.Text({
-                //         x: parseInt(medida.x),
-                //         y: parseInt(medida.y),
-                //         text: assinatura.nome,
-                //         width: parseInt(medida.largura),
-                //         fontSize: parseInt(medida.fontSize),
-                //         fontFamily: 'Arial, Helvetica, sans-serif',
-                //         draggable: true,
-                //         id: 'nome' + assinatura.id,
-                //         name: 'texto',
-                //     });
-                // }
+                
             applyTransformerLogic(simpleText);
             layer.add(simpleText);
             });
@@ -434,7 +347,6 @@
             var verso;
             var versoTransformer;
             if(@json($certificado->verso)) {
-
                 verso = new Konva.Stage({
                     container: 'back',
                     width: 1118,
@@ -443,9 +355,7 @@
                 });
 
                 var layer1 = new Konva.Layer();
-
                 verso.add(layer1);
-
                 versoTransformer = new Konva.Transformer({
                     padding: 5,
                     rotateEnabled: false,
@@ -454,24 +364,11 @@
                      'bottom-right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
                    
                     boundBoxFunc: (oldBox, newBox) => {
-                    // if (newBox.width < MIN_WIDTH) {
-                    //     return oldBox;
-                    // }
                     return newBox;
                     },
                 });
                 layer1.add(versoTransformer);
-                // versoTransformer = new Konva.Transformer({
-                //     keepRatio: true,
-                //     enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
-                //     boundBoxFunc: (oldBox, newBox) => {
-                //     if (newBox.width < MIN_WIDTH) {
-                //         return oldBox;
-                //     }
-                //     return newBox;
-                //     },
-                // });
-                // layer1.add(versoTransformer);
+                //layer1.add(transformer)
             } else {
                 verso = stage;
                 layer1 = layer;
@@ -498,7 +395,7 @@
                 name: 'texto',
             });
             //applyTransformerLogic(hash);
-            console.log(applyTransformerLogic(hash));
+
             layer1.add(hash);
             //medida da emissao
             medida = medidas.find(m => m.tipo == 10);
@@ -521,118 +418,63 @@
                 name: 'texto',
             });
             layer1.add(emissao);
-            var imageObj = new Image();
-            imageObj.onload = function () {
+
+            var qrCodeImageObj = new Image();
+            qrCodeImageObj.onload = function () {
                 //medida qrcode
                 medida = medidas.find(m => m.tipo == 7);
-                // add the shape to the layer
                 if(medida === undefined) {
                     if(@json($certificado->verso))
                         medida = {x: 175, y: 280, altura: 200, largura: 200}
-                    else
+                    else 
                         medida = {x: 170, y: 600, altura: 100, largura: 100}
-                    yoda = new Konva.Image({
-                        x: medida.x,
-                        y: medida.y,
-                        image: imageObj,
-                        draggable: true,
-                        id: 'qrcode',
-                        height: medida.altura,
-                        width: medida.largura,
-                    });
-                } else {
-                    //medida qrcode
-                    medida = medidas.find(m => m.tipo == 7);
-                    yoda = new Konva.Image({
-                        x: parseInt(medida.x),
-                        y: parseInt(medida.y),
-                        image: imageObj,
-                        draggable: true,
-                        id: 'qrcode',
-                        height: parseInt(medida.altura),
-                        width: parseInt(medida.largura),
-                    });
-                }
-                layer1.add(yoda);
-                yoda.on('transform', (event) => {
-                    // with enabled anchors we can only change scaleX
-                    // so we don't need to reset height
-                    // just width
-                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
-                        event.target.setAttrs({
-                            height: event.target.height() * event.target.scaleY(),
-                            width: event.target.width() * event.target.scaleX(),
-                            scaleX: 1,
-                            scaleY: 1,
-                        });
-                    } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
-                        event.target.setAttrs({
-                            width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
-                            scaleX: 1,
-                            scaleY: 1,
-                        });
-                    }
+                };
+                let qrCode = new Konva.Image({
+                    x: parseInt(medida.x),
+                    y: parseInt(medida.y),
+                    image: qrCodeImageObj,
+                    height: parseInt(medida.altura),
+                    width: parseInt(medida.largura),
+                    draggable: true,
+                    id: 'qrcode',
                 });
+
+                applyTransformerLogic(qrCode);
+                layer1.add(qrCode);
+               
             };
-            imageObj.src = "/img/qrcode.png";
+            qrCodeImageObj.src = "/img/qrcode.png";
+
             var logoImageObj = new Image();
+
             logoImageObj.onload = function () {
                 //medida da logo
+
                 medida = medidas.find(m => m.tipo == 9);
                 // add the shape to the layer
                 if(medida === undefined) {
                     if(@json($certificado->verso))
-                        medida = {x: 750, y: 280, altura: 200, largura: 200}
+                        medida = {x: 750, y: 280, altura: 200, largura: 200};
                     else
-                        medida = {x: 900, y: 600, altura: 100, largura: 100}
-                    yoda = new Konva.Image({
-                        x: medida.x,
-                        y: medida.y,
-                        image: logoImageObj,
-                        draggable: true,
-                        id: 'logo',
-                        height: medida.altura,
-                        width: medida.largura,
-                    });
-                } else {
-                    //medida da logo
-                    medida = medidas.find(m => m.tipo == 9);
-                    yoda = new Konva.Image({
-                        x: parseInt(medida.x),
-                        y: parseInt(medida.y),
-                        image: logoImageObj,
-                        draggable: true,
-                        id: 'logo',
-                        height: parseInt(medida.altura),
-                        width: parseInt(medida.largura),
-                    });
-                }
-                layer1.add(yoda);
-                yoda.on('transform', (event) => {
-                    // with enabled anchors we can only change scaleX
-                    // so we don't need to reset height
-                    // just width
-                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
-                        event.target.setAttrs({
-                            height: event.target.height() * event.target.scaleY(),
-                            width: event.target.width() * event.target.scaleX(),
-                            scaleX: 1,
-                            scaleY: 1,
-                        });
-                    } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
-                        event.target.setAttrs({
-                            width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
-                            scaleX: 1,
-                            scaleY: 1,
-                        });
-                    }
+                         medida = {x: 900, y: 600, altura: 100, largura: 100};
+                };
+                let logo = new Konva.Image({
+                    x: parseInt(medida.x),
+                    y: parseInt(medida.y),
+                    height: parseInt(medida.altura),
+                    width: parseInt(medida.largura),
+                    image: logoImageObj,
+                    draggable: true,
+                    id: 'logo',
+                    name: 'logo',
+                    
                 });
+                applyTransformerLogic(logo);
+                layer1.add(logo);
+                
             };
             logoImageObj.src = "/img/logo-icone.png";
             hash.on('transform', (event) => {
-                // with enabled anchors we can only change scaleX
-                // so we don't need to reset height
-                // just width
                 if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                 hash.setAttrs({
                     fontSize: Math.max(hash.fontSize() * hash.scaleX(), 2),
@@ -649,9 +491,7 @@
                 }
             });
             emissao.on('transform', (event) => {
-                // with enabled anchors we can only change scaleX
-                // so we don't need to reset height
-                // just width
+
                 if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                 emissao.setAttrs({
                     fontSize: Math.max(emissao.fontSize() * emissao.scaleX(), 2),
@@ -679,16 +519,14 @@
                 let metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
                 let isSelected = versoTransformer.nodes().indexOf(e.target) >= 0;
                 if (!metaPressed && !isSelected) {
-                    // if no key pressed and the node is not selected
-                    // select just one
+
                     if(verso.find('.texto').includes(e.target)) {
                         versoTransformer.nodes([e.target]);
                     } else {
                         versoTransformer.nodes([e.target]);
                     }
                 } else if (metaPressed && isSelected) {
-                    // if we pressed keys and node was selected
-                    // we need to remove it from selection:
+
                     let nodes = versoTransformer.nodes().slice(); // use slice to have new copy of array
                     // remove node from array
                     nodes.splice(nodes.indexOf(e.target), 1);
@@ -711,7 +549,6 @@
                
                 let xGlobalVerso = (verso.attrs.x == undefined)?0:verso.attrs.x;       
                 let yGlobalVerso = (verso.attrs.y == undefined)?0:verso.attrs.y;  
-
                 ['nome','cargo'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
                         let box = stage.find('#'+objeto+''+assinatura.id);
