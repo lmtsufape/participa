@@ -151,7 +151,7 @@
             medida = medidas.find(m => m.tipo == 1);
             
             if(medida === undefined){
-                medida = {x: 50, y: 300, largura: 1000, fontSize: 14}
+                medida = {x: 50, y: 300, largura: 1000, fontSize: 18}
             } 
             
             texto = new Konva.Text({
@@ -249,7 +249,7 @@
                 if(medida === undefined) {
                     medida = {x: posicao_inicial_x + (index * 350) - 150,y: 550 + 106, largura: (index * 250) + 256};
                 }
-                console.log(medida);
+                
                 let x = parseInt(medida.x)
                 let y = parseInt(medida.y)
                 let sum = parseInt(medida.sum);
@@ -346,7 +346,7 @@
 
                 medida = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
                 if(medida === undefined) {
-                    medida = {x:posicao_inicial_x + (index * 350) - 160 + redLine.width() / 2, y: 666, fontSize: 14 }
+                    medida = {x:posicao_inicial_x + (index * 350) - 160 + (redLine.width() / 2), y: 666, fontSize: 14 }
                 }
                 simpleText = new Konva.Text({
                     x: parseInt(medida.x),
@@ -355,6 +355,8 @@
                     width: parseInt(medida.largura),
                     fontSize: parseInt(medida.fontSize),
                     fontFamily: 'Arial, Helvetica, sans-serif',
+                    scaleX: 1,
+                    scaleY: 1,
                     draggable: true,
                     id: 'nome' + assinatura.id,
                     name: 'texto',
@@ -427,48 +429,54 @@
             
             //verso certificado
             
-            var stage1;
-            var textoTransformer1;
-            var imagemTransformer1;
+             //verso certificado
+            
+            var verso;
+            var versoTransformer;
             if(@json($certificado->verso)) {
-                stage1 = new Konva.Stage({
+
+                verso = new Konva.Stage({
                     container: 'back',
                     width: 1118,
                     height: 790,
+                    draggable: true,
                 });
+
                 var layer1 = new Konva.Layer();
-                stage1.add(layer1);
-                textoTransformer1 = new Konva.Transformer({
+
+                verso.add(layer1);
+
+                versoTransformer = new Konva.Transformer({
                     padding: 5,
                     rotateEnabled: false,
                     keepRatio: true,
-                    enabledAnchors: ['top-left', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-right'],
-                    // enable only side anchors
-                    // limit transformer size
+                    enabledAnchors: ['top-left', 'top-right', 'middle-right', 'middle-left', 'bottom-left',
+                     'bottom-right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
+                   
                     boundBoxFunc: (oldBox, newBox) => {
-                    if (newBox.width < MIN_WIDTH) {
-                        return oldBox;
-                    }
+                    // if (newBox.width < MIN_WIDTH) {
+                    //     return oldBox;
+                    // }
                     return newBox;
                     },
                 });
-                layer1.add(textoTransformer1);
-                imagemTransformer1 = new Konva.Transformer({
-                    keepRatio: true,
-                    enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
-                    boundBoxFunc: (oldBox, newBox) => {
-                    if (newBox.width < MIN_WIDTH) {
-                        return oldBox;
-                    }
-                    return newBox;
-                    },
-                });
-                layer1.add(imagemTransformer1);
+                layer1.add(versoTransformer);
+                // versoTransformer = new Konva.Transformer({
+                //     keepRatio: true,
+                //     enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+                //     boundBoxFunc: (oldBox, newBox) => {
+                //     if (newBox.width < MIN_WIDTH) {
+                //         return oldBox;
+                //     }
+                //     return newBox;
+                //     },
+                // });
+                // layer1.add(versoTransformer);
             } else {
-                stage1 = stage;
+                verso = stage;
                 layer1 = layer;
-                textoTransformer1 = textoTransformer;
-                imagemTransformer1 = imagemTransformer;
+                versoTransformer = transformer;
+                //versoTransformer = imagemTransformer;
             }
             //medida do hash
             medida = medidas.find(m => m.tipo == 8);
@@ -550,14 +558,14 @@
                     // with enabled anchors we can only change scaleX
                     // so we don't need to reset height
                     // just width
-                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             height: event.target.height() * event.target.scaleY(),
                             width: event.target.width() * event.target.scaleX(),
                             scaleX: 1,
                             scaleY: 1,
                         });
-                    } else if ( ['middle-right', 'middle-left'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                    } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
                             scaleX: 1,
@@ -604,14 +612,14 @@
                     // with enabled anchors we can only change scaleX
                     // so we don't need to reset height
                     // just width
-                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             height: event.target.height() * event.target.scaleY(),
                             width: event.target.width() * event.target.scaleX(),
                             scaleX: 1,
                             scaleY: 1,
                         });
-                    } else if ( ['middle-right', 'middle-left'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                    } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
                             scaleX: 1,
@@ -625,14 +633,14 @@
                 // with enabled anchors we can only change scaleX
                 // so we don't need to reset height
                 // just width
-                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer1.getActiveAnchor()) ) {
+                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                 hash.setAttrs({
                     fontSize: Math.max(hash.fontSize() * hash.scaleX(), 2),
                     width: Math.max(hash.width() * hash.scaleX(), MIN_WIDTH),
                     scaleX: 1,
                     scaleY: 1,
                 });
-                } else if ( ['middle-right', 'middle-left'].includes(textoTransformer1.getActiveAnchor()) ) {
+                } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
                 hash.setAttrs({
                     width: Math.max(hash.width() * hash.scaleX(), MIN_WIDTH),
                     scaleX: 1,
@@ -644,14 +652,14 @@
                 // with enabled anchors we can only change scaleX
                 // so we don't need to reset height
                 // just width
-                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer1.getActiveAnchor()) ) {
+                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                 emissao.setAttrs({
                     fontSize: Math.max(emissao.fontSize() * emissao.scaleX(), 2),
                     width: Math.max(emissao.width() * emissao.scaleX(), MIN_WIDTH),
                     scaleX: 1,
                     scaleY: 1,
                 });
-                } else if ( ['middle-right', 'middle-left'].includes(textoTransformer1.getActiveAnchor()) ) {
+                } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
                 emissao.setAttrs({
                     width: Math.max(emissao.width() * emissao.scaleX(), MIN_WIDTH),
                     scaleX: 1,
@@ -660,38 +668,38 @@
                 }
             });
             
-            stage1.on('click tap', function (e) {
+            verso.on('click tap', function (e) {
                 // if click on empty area - remove all selections
-                if (e.target === stage1) {
-                    textoTransformer1.nodes([]);
-                    imagemTransformer1.nodes([]);
+                if (e.target === verso) {
+                    versoTransformer.nodes([]);
+                    versoTransformer.nodes([]);
                     return;
                 }
                 // do we pressed shift or ctrl?
                 let metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-                let isSelected = imagemTransformer1.nodes().indexOf(e.target) >= 0;
+                let isSelected = versoTransformer.nodes().indexOf(e.target) >= 0;
                 if (!metaPressed && !isSelected) {
                     // if no key pressed and the node is not selected
                     // select just one
-                    if(stage1.find('.texto').includes(e.target)) {
-                        textoTransformer1.nodes([e.target]);
+                    if(verso.find('.texto').includes(e.target)) {
+                        versoTransformer.nodes([e.target]);
                     } else {
-                        imagemTransformer1.nodes([e.target]);
+                        versoTransformer.nodes([e.target]);
                     }
                 } else if (metaPressed && isSelected) {
                     // if we pressed keys and node was selected
                     // we need to remove it from selection:
-                    let nodes = imagemTransformer1.nodes().slice(); // use slice to have new copy of array
+                    let nodes = versoTransformer.nodes().slice(); // use slice to have new copy of array
                     // remove node from array
                     nodes.splice(nodes.indexOf(e.target), 1);
-                    imagemTransformer1.nodes(nodes);
+                    versoTransformer.nodes(nodes);
                 } else if (metaPressed && !isSelected) {
-                    if(stage1.find('.texto').includes(e.target)) {
-                        let nodes = textoTransformer1.nodes().concat([e.target]);
-                        textoTransformer1.nodes(nodes);
+                    if(verso.find('.texto').includes(e.target)) {
+                        let nodes = versoTransformer.nodes().concat([e.target]);
+                        versoTransformer.nodes(nodes);
                     } else {
-                        let nodes = imagemTransformer1.nodes().concat([e.target]);
-                        imagemTransformer1.nodes(nodes);
+                        let nodes = versoTransformer.nodes().concat([e.target]);
+                        versoTransformer.nodes(nodes);
                     }
                 }
                 });
@@ -700,8 +708,10 @@
                 
                 let xGlobal = (stage.attrs.x == undefined)?0:stage.attrs.x;       
                 let yGlobal = (stage.attrs.y == undefined)?0:stage.attrs.y;                 
-               // console.log(xGlobal)
-               //console.log();
+               
+                let xGlobalVerso = (verso.attrs.x == undefined)?0:verso.attrs.x;       
+                let yGlobalVerso = (verso.attrs.y == undefined)?0:verso.attrs.y;  
+
                 ['nome','cargo'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
                         let box = stage.find('#'+objeto+''+assinatura.id);
@@ -733,22 +743,22 @@
                         document.querySelectorAll("input[name="+objeto+"-altura-"+assinatura.id+"]")[0].value = box[0].attrs.height;
                     });
                 });
-                let qrcode = stage1.find('#qrcode');
-                document.querySelectorAll("input[name=qrcode-x]")[0].value = qrcode[0].attrs.x;
-                document.querySelectorAll("input[name=qrcode-y]")[0].value = qrcode[0].attrs.y;
+                let qrcode = verso.find('#qrcode');
+                document.querySelectorAll("input[name=qrcode-x]")[0].value = qrcode[0].attrs.x + xGlobalVerso;
+                document.querySelectorAll("input[name=qrcode-y]")[0].value = qrcode[0].attrs.y + yGlobalVerso;
                 document.querySelectorAll("input[name=qrcode-largura]")[0].value = qrcode[0].attrs.width;
                 document.querySelectorAll("input[name=qrcode-altura]")[0].value = qrcode[0].attrs.height;
-                document.querySelectorAll("input[name=hash-x]")[0].value = hash.attrs.x;
-                document.querySelectorAll("input[name=hash-y]")[0].value = hash.attrs.y;
+                document.querySelectorAll("input[name=hash-x]")[0].value = hash.attrs.x + xGlobalVerso;
+                document.querySelectorAll("input[name=hash-y]")[0].value = hash.attrs.y + yGlobalVerso;
                 document.querySelectorAll("input[name=hash-largura]")[0].value = hash.attrs.width;
                 document.querySelectorAll("input[name=hash-fontSize]")[0].value = hash.attrs.fontSize;
-                let logo = stage1.find('#logo');
-                document.querySelectorAll("input[name=logo-x]")[0].value = logo[0].attrs.x;
-                document.querySelectorAll("input[name=logo-y]")[0].value = logo[0].attrs.y;
+                let logo = verso.find('#logo');
+                document.querySelectorAll("input[name=logo-x]")[0].value = logo[0].attrs.x + xGlobalVerso;
+                document.querySelectorAll("input[name=logo-y]")[0].value = logo[0].attrs.y + yGlobalVerso;
                 document.querySelectorAll("input[name=logo-largura]")[0].value = logo[0].attrs.width;
                 document.querySelectorAll("input[name=logo-altura]")[0].value = logo[0].attrs.height;
-                document.querySelectorAll("input[name=emissao-x]")[0].value = emissao.attrs.x;
-                document.querySelectorAll("input[name=emissao-y]")[0].value = emissao.attrs.y;
+                document.querySelectorAll("input[name=emissao-x]")[0].value = emissao.attrs.x + xGlobalVerso;
+                document.querySelectorAll("input[name=emissao-y]")[0].value = emissao.attrs.y + yGlobalVerso;
                 document.querySelectorAll("input[name=emissao-largura]")[0].value = emissao.attrs.width;
                 document.querySelectorAll("input[name=emissao-fontSize]")[0].value = emissao.attrs.fontSize;
                 document.getElementById("form").submit();
