@@ -14,14 +14,9 @@
             width: 1118px;
             height: 790px;
         }
+
         .d-none {
             display: none;
-        }
-        #btn {
-            align-self: center;
-            width: 100px;
-            height: 50px;
-            
         }
     </style>
 
@@ -31,7 +26,7 @@
         @if($certificado->verso)
             <div id="back" style="margin-top: 10px"></div>
         @endif
-        <button onclick="send()" id="btn">Salvar</button>
+        <button onclick="send()">Salvar</button>
         <form id="form" action="{{route('coord.cadastrarmedida')}}" class="d-none" method="POST">
             @csrf
             <input type="text" name="certificado_id" value="{{$certificado->id}}">
@@ -55,68 +50,6 @@
         </form>
 
         <script>
-            
-            //funcao para salvar os componentes dps que são movidos de local pelo mouse
-            function applyTransformerLogic(shape) {
-                shape.on('transform', (event) => {
-                    console.log("Chegou", transformer.getActiveAnchor())
-                    if(stage.find('.texto').includes(shape)) {
-                        console.log("Texto", shape.getFontSize())
-                        if(['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(transformer.getActiveAnchor()) ) {
-                            console.log("diagonal")
-                            shape.setAttrs({
-                                fontSize: Math.max(shape.fontSize() * shape.scaleX(), 2),
-                                width: Math.max(shape.width() * shape.scaleX(), MIN_WIDTH),
-                                scaleX: 1,
-                                scaleY: 1,
-                            });
-                        } else if (['midle-right', 'middle-left'].includes(transformer.getActiveAnchor())) {
-                            // ['midle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
-                            console.log("e aqui")
-                            shape.setAttrs({
-                                width: Math.max(shape.width() * shape.scaleX(), MIN_WIDTH),
-                                scaleX: 1,
-                                scaleY: 1,
-                            });
-                        } else if (['bottom-center', 'top-center'].includes(transformer.getActiveAnchor())) {
-                            // ['midle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
-                            console.log("e aqui")
-                            shape.setAttrs({
-                                height: event.target.height() * event.target.scaleY(),
-                                scaleX: 1,
-                                scaleY: 1,
-                            });
-                        }
-                    } else {
-                        //imagem
-                        console.log("Imagem")
-                        if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(transformer.getActiveAnchor()) ) {
-                            console.log("diagonal")
-                            shape.setAttrs({
-                                height: event.target.height() * event.target.scaleY(),
-                                width: event.target.width() * event.target.scaleX(),
-                                scaleX: 1,
-                                scaleY: 1,
-                            });
-                        } else if ( ['middle-right', 'middle-left'].includes(transformer.getActiveAnchor()) ) {
-                            console.log("lateral")
-                            shape.setAttrs({
-                                width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
-                                scaleX: 1,
-                                scaleY: 1,
-                            });
-                        } else if(['bottom-center', 'top-center'].includes(transformer.getActiveAnchor())) {
-                            console.log("top, bottom", event.target.height(), event.target.scaleY())
-                            console.log(shape.attrs.height, shape.attrs.scaleY)
-                            shape.setAttrs({
-                                height: event.target.height() * event.target.scaleY(),
-                                scaleX: 1,
-                                scaleY: 1,
-                            });
-                        }
-                    }
-                })
-            }
             stage = new Konva.Stage({
                 container: 'container',
                 width: 1118,
@@ -127,51 +60,55 @@
             layer = new Konva.Layer();
             stage.add(layer);
             
-            let MIN_WIDTH = 50;
-            transformer = new Konva.Transformer({
-                padding: 5,
-                rotateEnabled: false,
-                keepRatio: false,
-                enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
-                draggable: true,
+            //funcao para salvar os componentes dps que são movidos de local pelo mouse
 
-                boundBoxFunc: (oldBox, newBox) => {
-                if (newBox.width < MIN_WIDTH) {
-                    return oldBox;
-                };
-                return newBox;
-                },
-            });
-            layer.add(transformer);
-
+            function applyTransformerLogic(shape) {
+                shape.on('transform', (event) => {
+                    if(['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(shape.getStage().getActiveTransformer().getActiveAnchor()) ) {
+                        shape.setAttrs({
+                            fontSize: Math.max(shape.fontSize() * shape.scaleX(), 2),
+                            width: Math.max(shape.width() * shape.scaleX(), MIN_WIDTH),
+                            scaleX: 1,
+                            scaleY: 1,
+                        });
+                    } else if ( ['midle-right', 'middle-left'].includes(shape.getStage().getActiveTransformer().getActiveAnchor()) ) {
+                        shape.setAttrs({
+                            width: Math.max(shape.width() * shape.scaleX(), MIN_WIDTH),
+                            scaleX: 1,
+                            scaleY: 1,
+                        });
+                    }
+                })
+            }
+            
             medidas = @json($medidas);
             medida = medidas.find(m => m.tipo == 1);
             console.log(medidas);
             if(medida === undefined){
                 medida = {x: 50, y: 300, largura: 1000, fontSize: 14}
+                
+            } else {
+                var textoCertificado = '{!! json_encode($certificado->texto) !!}';
+                console.log(textoCertificado);
+                let inicio = textoCertificado.search(':');
+                let fim = textoCertificado.search('px');
+
+                let valor = textoCertificado.slice(inicio+1, fim)
+                valor = parseInt(valor);
+                medida.fontSize = valor;
             }
-            // } else {
-            //     var textoCertificado = '{!! json_encode($certificado->texto) !!}';
-            //     console.log(textoCertificado);
-            //     let inicio = textoCertificado.search(':');
-            //     let fim = textoCertificado.search('px');
 
-            //     let valor = textoCertificado.slice(inicio+1, fim)
-            //     valor = parseInt(valor);
-            //     medida.fontSize = valor;
-            // }
-
-            // imagemTransformer = new Konva.Transformer({
-            //     keepRatio: true,
-            //     enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
-            //     boundBoxFunc: (oldBox, newBox) => {
-            //         if (newBox.width < 50) {
-            //             return oldBox;
-            //         }
-            //         return newBox;
-            //         },
-            // });
-            // layer.add(imagemTransformer);
+            imagemTransformer = new Konva.Transformer({
+                keepRatio: true,
+                enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+                boundBoxFunc: (oldBox, newBox) => {
+                    if (newBox.width < 50) {
+                        return oldBox;
+                    }
+                    return newBox;
+                    },
+            });
+            layer.add(imagemTransformer);
 
             texto = new Konva.Text({
                 x: parseInt(medida.x),
@@ -206,22 +143,22 @@
             });
             layer.add(local);
 
-           //let MIN_WIDTH = 100;
-            // textoTransformer = new Konva.Transformer({
-            //     padding: 5,
-            //     rotateEnabled: false,
-            //     keepRatio: true,
-            //     enabledAnchors: ['top-left', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-right'],
-            //     // enable only side anchors
-            //     // limit transformer size
-            //     boundBoxFunc: (oldBox, newBox) => {
-            //     if (newBox.width < MIN_WIDTH) {
-            //         return oldBox;
-            //     }
-            //     return newBox;
-            //     },
-            // });
-            //layer.add(textoTransformer);
+            let MIN_WIDTH = 100;
+            textoTransformer = new Konva.Transformer({
+                padding: 5,
+                rotateEnabled: false,
+                keepRatio: true,
+                enabledAnchors: ['top-left', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-right'],
+                // enable only side anchors
+                // limit transformer size
+                boundBoxFunc: (oldBox, newBox) => {
+                if (newBox.width < MIN_WIDTH) {
+                    return oldBox;
+                }
+                return newBox;
+                },
+            });
+            layer.add(textoTransformer);
 
             applyTransformerLogic(texto);
             layer.add(texto);
@@ -275,14 +212,14 @@
                         // with enabled anchors we can only change scaleX
                         // so we don't need to reset height
                         // just width
-                        if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(transformer.getActiveAnchor()) ) {
+                        if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(imagemTransformer.getActiveAnchor()) ) {
                             event.target.setAttrs({
                                 height: event.target.height() * event.target.scaleY(),
                                 width: event.target.width() * event.target.scaleX(),
                                 scaleX: 1,
                                 scaleY: 1,
                             });
-                        } else if ( ['middle-right', 'middle-left'].includes(transformer.getActiveAnchor()) ) {
+                        } else if ( ['middle-right', 'middle-left'].includes(imagemTransformer.getActiveAnchor()) ) {
                             event.target.setAttrs({
                                 width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
                                 scaleX: 1,
@@ -406,43 +343,43 @@
 
                 // if click on empty area - remove all selections
                 if (e.target === stage) {
-                    transformer.nodes([]);
-                    //textoTransformer.nodes([]);
+                    imagemTransformer.nodes([]);
+                    textoTransformer.nodes([]);
                     return;
                 }
 
                 // do we pressed shift or ctrl?
                 let metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-                let isSelected = transformer.nodes().indexOf(e.target) >= 0;
+                let isSelected = imagemTransformer.nodes().indexOf(e.target) >= 0;
 
                 if (!metaPressed && !isSelected) {
                     // if no key pressed and the node is not selected
                     // select just one
                     if(stage.find('.texto').includes(e.target)) {
-                        transformer.nodes([e.target]);
+                        textoTransformer.nodes([e.target]);
                     } else {
-                        transformer.nodes([e.target]);
+                        imagemTransformer.nodes([e.target]);
                     }
                 } else if (metaPressed && isSelected) {
                     // if we pressed keys and node was selected
                     // we need to remove it from selection:
-                    let nodes = transformer.nodes().slice(); // use slice to have new copy of array
+                    let nodes = imagemTransformer.nodes().slice(); // use slice to have new copy of array
                     // remove node from array
                     nodes.splice(nodes.indexOf(e.target), 1);
-                    transformer.nodes(nodes);
+                    imagemTransformer.nodes(nodes);
                 } else if (metaPressed && !isSelected) {
                     if(stage.find('.texto').includes(e.target)) {
-                        let nodes = transformer.nodes().concat([e.target]);
-                        transformer.nodes(nodes);
+                        let nodes = textoTransformer.nodes().concat([e.target]);
+                        textoTransformer.nodes(nodes);
                     } else {
-                        let nodes = transformer.nodes().concat([e.target]);
-                        transformer.nodes(nodes);
+                        let nodes = imagemTransformer.nodes().concat([e.target]);
+                        imagemTransformer.nodes(nodes);
                     }
                 }
             });
 
             var stage1;
-            var versoTransformer;
+            var textoTransformer1;
             var imagemTransformer1;
 
             if(@json($certificado->verso)) {
@@ -450,15 +387,14 @@
                     container: 'back',
                     width: 1118,
                     height: 790,
-                    draggable: true
                 });
                 var layer1 = new Konva.Layer();
                 stage1.add(layer1);
 
-                versoTransformer = new Konva.Transformer({
+                textoTransformer1 = new Konva.Transformer({
                     padding: 5,
                     rotateEnabled: false,
-                    keepRatio: false,
+                    keepRatio: true,
                     enabledAnchors: ['top-left', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-right'],
                     // enable only side anchors
                     // limit transformer size
@@ -469,7 +405,7 @@
                     return newBox;
                     },
                 });
-                layer1.add(versoTransformer);
+                layer1.add(textoTransformer1);
 
                 imagemTransformer1 = new Konva.Transformer({
                     keepRatio: true,
@@ -485,8 +421,8 @@
             } else {
                 stage1 = stage;
                 layer1 = layer;
-                versoTransformer = transformer;
-                versoTransformer = transformer;
+                textoTransformer1 = textoTransformer;
+                imagemTransformer1 = imagemTransformer;
             }
 
             medida = medidas.find(m => m.tipo == 8);
@@ -564,14 +500,14 @@
                     // with enabled anchors we can only change scaleX
                     // so we don't need to reset height
                     // just width
-                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
+                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(imagemTransformer1.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             height: event.target.height() * event.target.scaleY(),
                             width: event.target.width() * event.target.scaleX(),
                             scaleX: 1,
                             scaleY: 1,
                         });
-                    } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
+                    } else if ( ['middle-right', 'middle-left'].includes(imagemTransformer1.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
                             scaleX: 1,
@@ -617,14 +553,14 @@
                     // with enabled anchors we can only change scaleX
                     // so we don't need to reset height
                     // just width
-                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
+                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(imagemTransformer1.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             height: event.target.height() * event.target.scaleY(),
                             width: event.target.width() * event.target.scaleX(),
                             scaleX: 1,
                             scaleY: 1,
                         });
-                    } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
+                    } else if ( ['middle-right', 'middle-left'].includes(imagemTransformer1.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
                             scaleX: 1,
@@ -640,14 +576,14 @@
                 // with enabled anchors we can only change scaleX
                 // so we don't need to reset height
                 // just width
-                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
+                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer1.getActiveAnchor()) ) {
                 hash.setAttrs({
                     fontSize: Math.max(hash.fontSize() * hash.scaleX(), 2),
                     width: Math.max(hash.width() * hash.scaleX(), MIN_WIDTH),
                     scaleX: 1,
                     scaleY: 1,
                 });
-                } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
+                } else if ( ['middle-right', 'middle-left'].includes(textoTransformer1.getActiveAnchor()) ) {
                 hash.setAttrs({
                     width: Math.max(hash.width() * hash.scaleX(), MIN_WIDTH),
                     scaleX: 1,
@@ -660,14 +596,14 @@
                 // with enabled anchors we can only change scaleX
                 // so we don't need to reset height
                 // just width
-                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
+                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer1.getActiveAnchor()) ) {
                 emissao.setAttrs({
                     fontSize: Math.max(emissao.fontSize() * emissao.scaleX(), 2),
                     width: Math.max(emissao.width() * emissao.scaleX(), MIN_WIDTH),
                     scaleX: 1,
                     scaleY: 1,
                 });
-                } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
+                } else if ( ['middle-right', 'middle-left'].includes(textoTransformer1.getActiveAnchor()) ) {
                 emissao.setAttrs({
                     width: Math.max(emissao.width() * emissao.scaleX(), MIN_WIDTH),
                     scaleX: 1,
@@ -679,52 +615,47 @@
 
                 // if click on empty area - remove all selections
                 if (e.target === stage1) {
-                    versoTransformer.nodes([]);
-                    versoTransformer.nodes([]);
+                    textoTransformer1.nodes([]);
+                    imagemTransformer1.nodes([]);
                     return;
                 }
 
                 // do we pressed shift or ctrl?
                 let metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-                let isSelected = versoTransformer.nodes().indexOf(e.target) >= 0;
+                let isSelected = imagemTransformer1.nodes().indexOf(e.target) >= 0;
 
                 if (!metaPressed && !isSelected) {
                     // if no key pressed and the node is not selected
                     // select just one
                     if(stage1.find('.texto').includes(e.target)) {
-                        versoTransformer.nodes([e.target]);
+                        textoTransformer1.nodes([e.target]);
                     } else {
-                        versoTransformer.nodes([e.target]);
+                        imagemTransformer1.nodes([e.target]);
                     }
                 } else if (metaPressed && isSelected) {
                     // if we pressed keys and node was selected
                     // we need to remove it from selection:
-                    let nodes = versoTransformer.nodes().slice(); // use slice to have new copy of array
+                    let nodes = imagemTransformer1.nodes().slice(); // use slice to have new copy of array
                     // remove node from array
                     nodes.splice(nodes.indexOf(e.target), 1);
-                    versoTransformer.nodes(nodes);
+                    imagemTransformer1.nodes(nodes);
                 } else if (metaPressed && !isSelected) {
                     if(stage1.find('.texto').includes(e.target)) {
-                        let nodes = versoTransformer.nodes().concat([e.target]);
-                        versoTransformer.nodes(nodes);
+                        let nodes = textoTransformer1.nodes().concat([e.target]);
+                        textoTransformer1.nodes(nodes);
                     } else {
-                        let nodes = versoTransformer.nodes().concat([e.target]);
-                        versoTransformer.nodes(nodes);
+                        let nodes = imagemTransformer1.nodes().concat([e.target]);
+                        imagemTransformer1.nodes(nodes);
                     }
                 }
                 });
 
             function send() {
-                let xGlobal = (stage.attrs.x == undefined)?0:stage.attrs.x;       
-                let yGlobal = (stage.attrs.y == undefined)?0:stage.attrs.y;                 
-               
-                let xGlobalVerso = (stage1.attrs.x == undefined)?0:stage1.attrs.x;       
-                let yGlobalVerso = (stage1.attrs.y == undefined)?0:stage1.attrs.y;  
                 ['nome','cargo'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
                         let box = stage.find('#'+objeto+''+assinatura.id);
-                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x + xGlobal;
-                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y + yGlobal;
+                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x;
+                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y;
                         document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
                         document.querySelectorAll("input[name="+objeto+"-fontSize-"+assinatura.id+"]")[0].value = box[0].attrs.fontSize;
                     });
@@ -737,38 +668,42 @@
                 });
                 ['texto','data'].forEach(objeto => {
                     let box = stage.find('#'+objeto);
-                    document.querySelectorAll("input[name="+objeto+"-x]")[0].value = box[0].attrs.x + xGlobal;
-                    document.querySelectorAll("input[name="+objeto+"-y]")[0].value = box[0].attrs.y + yGlobal;
+                    document.querySelectorAll("input[name="+objeto+"-x]")[0].value = box[0].attrs.x;
+                    document.querySelectorAll("input[name="+objeto+"-y]")[0].value = box[0].attrs.y;
                     document.querySelectorAll("input[name="+objeto+"-largura]")[0].value = box[0].attrs.width;
                     document.querySelectorAll("input[name="+objeto+"-fontSize]")[0].value = box[0].attrs.fontSize;
                 });
                 ['imagem'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
                         let box = stage.find('#' + objeto + '' + assinatura.id);
-                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x + xGlobal;
-                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y + yGlobal;
+                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x;
+                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y;
                         document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
                         document.querySelectorAll("input[name="+objeto+"-altura-"+assinatura.id+"]")[0].value = box[0].attrs.height;
                     });
                 });
                 let qrcode = stage1.find('#qrcode');
-                document.querySelectorAll("input[name=qrcode-x]")[0].value = qrcode[0].attrs.x + xGlobalVerso;
-                document.querySelectorAll("input[name=qrcode-y]")[0].value = qrcode[0].attrs.y + yGlobalVerso;
+                document.querySelectorAll("input[name=qrcode-x]")[0].value = qrcode[0].attrs.x;
+                document.querySelectorAll("input[name=qrcode-y]")[0].value = qrcode[0].attrs.y;
                 document.querySelectorAll("input[name=qrcode-largura]")[0].value = qrcode[0].attrs.width;
                 document.querySelectorAll("input[name=qrcode-altura]")[0].value = qrcode[0].attrs.height;
-                document.querySelectorAll("input[name=hash-x]")[0].value = hash.attrs.x + xGlobalVerso;
-                document.querySelectorAll("input[name=hash-y]")[0].value = hash.attrs.y + yGlobalVerso;
+
+                document.querySelectorAll("input[name=hash-x]")[0].value = hash.attrs.x;
+                document.querySelectorAll("input[name=hash-y]")[0].value = hash.attrs.y;
                 document.querySelectorAll("input[name=hash-largura]")[0].value = hash.attrs.width;
                 document.querySelectorAll("input[name=hash-fontSize]")[0].value = hash.attrs.fontSize;
+
                 let logo = stage1.find('#logo');
-                document.querySelectorAll("input[name=logo-x]")[0].value = logo[0].attrs.x + xGlobalVerso;
-                document.querySelectorAll("input[name=logo-y]")[0].value = logo[0].attrs.y + yGlobalVerso;
+                document.querySelectorAll("input[name=logo-x]")[0].value = logo[0].attrs.x;
+                document.querySelectorAll("input[name=logo-y]")[0].value = logo[0].attrs.y;
                 document.querySelectorAll("input[name=logo-largura]")[0].value = logo[0].attrs.width;
                 document.querySelectorAll("input[name=logo-altura]")[0].value = logo[0].attrs.height;
-                document.querySelectorAll("input[name=emissao-x]")[0].value = emissao.attrs.x + xGlobalVerso;
-                document.querySelectorAll("input[name=emissao-y]")[0].value = emissao.attrs.y + yGlobalVerso;
+
+                document.querySelectorAll("input[name=emissao-x]")[0].value = emissao.attrs.x;
+                document.querySelectorAll("input[name=emissao-y]")[0].value = emissao.attrs.y;
                 document.querySelectorAll("input[name=emissao-largura]")[0].value = emissao.attrs.width;
                 document.querySelectorAll("input[name=emissao-fontSize]")[0].value = emissao.attrs.fontSize;
+
                 document.getElementById("form").submit();
             }
         </script>
