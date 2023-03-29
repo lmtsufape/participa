@@ -119,6 +119,8 @@ class AssinaturaController extends Controller
                 Storage::delete('storage/'.$assinatura->caminho);
             }
             $imagem = $request->fotoAssinatura;
+
+            dd($imagem);
             $path = 'assinaturas/'.$evento->id.'/';
             $nome = $imagem->getClientOriginalName();
             $nomeSemEspaco = str_replace(' ', '', $nome);

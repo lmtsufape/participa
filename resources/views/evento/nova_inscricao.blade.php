@@ -476,6 +476,7 @@
                                 <a href="{{route('evento.visualizar', ['id' => $evento->id])}}" class="btn btn-secondary" style="width: 100%; padding: 25px;">Voltar</a>
                                 </div>
                                 <div class="col-sm-6">
+
                                     <button type="submit" class="btn btn-primary" style="width: 100%; padding: 30px;" form="form-inscricao">Avançar</button>
                                 </div>
                             </div>
@@ -811,7 +812,9 @@
                                 <a href="{{route('evento.visualizar', ['id' => $evento->id])}}" class="btn btn-secondary" style="width: 100%">Voltar</a>
                                 </div>
                                 <div class="col-sm-6">
-                                    <button type="submit" class="btn btn-primary" style="width: 100%" form="form-inscricao">Avançar</button>
+
+
+                                    <button id="confirmar-inscricao" onclick="submitOnClick()"  type="submit" class="btn btn-primary" style="width: 100%" form="form-inscricao">Avançar</button>
                                 </div>
                             </div>
                         </div>
@@ -1027,7 +1030,7 @@
 
 
 @endsection
-@section('javascript')
+@section('javascript')submit
 <script type="text/javascript">
     @if (old('valorTotal') != null)
         $(document).ready(function() {
@@ -1051,6 +1054,49 @@
         };
       $('.celular').mask(SPMaskBehavior, spOptions);
     })
+
+    //Funcao para deixar o botao da submissao onclick
+    function submitOnClick() {
+        document.getElementById("confirmar-inscricao").disabled = true;
+        //enviar form
+        document.getElementById("form-inscricao").submit();
+        // adiciona um manipulador de eventos para o evento 'onsubmit'
+        document.getElementById("form-inscricao").addEventListener("submit", function(event) {
+        // ativa o botão de envio do formulário novamente após a submissão
+        document.getElementById("confirmar-inscricao").disabled = false;
+        });
+    }   
+    //caso eu queira colocar uma funcao anonima que ativará o botao dps de um certo tempo:
+    /**
+     * function submitOnClick() {
+        document.getElementById("confirmar-inscricao").disabled = true;
+        setTimeout(function() {
+            document.getElementById("confirmar-inscricao").disabled = false;
+        }, 1000)
+    }
+     * 
+     */
+    //outra forma que pode funcionar seria:
+    /**
+     * aqui o form
+     * <form id="meu-form" action="/submit-form" method="post">
+        <!-- campos do formulário aqui -->
+        <button type="submit" id="confirmar-inscricao">Confirmar inscrição</button>
+        </form>
+
+     * aqui a função:
+    const form = document.getElementById('meu-form');
+    const botao = document.getElementById('confirmar-inscricao');
+
+    form.addEventListener('submit', function(event) {
+    botao.disabled = true;
+    });
+    estamos adicionando um listener de event ao form que escuta o evento submit.
+    QUando ele for acionado, a funcao anonima passada como argumento eh executada.
+    Isso significa que quando o user apertar o botao para confirmar inscricao, ele desabitará o botao
+    e fcara assim até que o form seja enviado e a página recarregada ou redirecionada
+     */     
+
     function adicionarAtividadeAhInscricao(id) {
         var divAtividadesInscricao = document.getElementById('atividadesAdicionadas');
         var atividade = document.getElementById('atv'+id);
