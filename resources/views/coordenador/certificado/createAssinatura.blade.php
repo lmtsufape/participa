@@ -2,6 +2,8 @@
 
 @section('menu')
 
+dd();
+
     <div id="divCadastrarAssinatura" class="comissao">
         <div class="row">
             <div class="col-sm-12">
@@ -68,6 +70,8 @@
         </form>
     </div>
 
+  
+
 @endsection
 
 @section('javascript')
@@ -82,7 +86,8 @@
                         file.onload = function(e) {
                             document.getElementById("logo-preview").src = e.target.result;
                         };
-                        file.readAsDataURL(this.files[0]);
+                        
+                        console.log(file.readAsDataURL(this.files[0]));
                     }
                 });
             });
