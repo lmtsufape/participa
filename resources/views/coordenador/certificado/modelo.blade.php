@@ -131,7 +131,7 @@
             transformer = new Konva.Transformer({
                 padding: 5,
                 rotateEnabled: false,
-                keepRatio: true,
+                keepRatio: false,
                 enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
                 draggable: true,
 
@@ -206,7 +206,7 @@
             });
             layer.add(local);
 
-           // let MIN_WIDTH = 100;
+           //let MIN_WIDTH = 100;
             // textoTransformer = new Konva.Transformer({
             //     padding: 5,
             //     rotateEnabled: false,
@@ -275,14 +275,14 @@
                         // with enabled anchors we can only change scaleX
                         // so we don't need to reset height
                         // just width
-                        if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(imagemTransformer.getActiveAnchor()) ) {
+                        if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(transformer.getActiveAnchor()) ) {
                             event.target.setAttrs({
                                 height: event.target.height() * event.target.scaleY(),
                                 width: event.target.width() * event.target.scaleX(),
                                 scaleX: 1,
                                 scaleY: 1,
                             });
-                        } else if ( ['middle-right', 'middle-left'].includes(imagemTransformer.getActiveAnchor()) ) {
+                        } else if ( ['middle-right', 'middle-left'].includes(transformer.getActiveAnchor()) ) {
                             event.target.setAttrs({
                                 width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
                                 scaleX: 1,
@@ -564,14 +564,14 @@
                     // with enabled anchors we can only change scaleX
                     // so we don't need to reset height
                     // just width
-                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             height: event.target.height() * event.target.scaleY(),
                             width: event.target.width() * event.target.scaleX(),
                             scaleX: 1,
                             scaleY: 1,
                         });
-                    } else if ( ['middle-right', 'middle-left'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                    } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
                             scaleX: 1,
@@ -617,14 +617,14 @@
                     // with enabled anchors we can only change scaleX
                     // so we don't need to reset height
                     // just width
-                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                    if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             height: event.target.height() * event.target.scaleY(),
                             width: event.target.width() * event.target.scaleX(),
                             scaleX: 1,
                             scaleY: 1,
                         });
-                    } else if ( ['middle-right', 'middle-left'].includes(imagemTransformer1.getActiveAnchor()) ) {
+                    } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
                         event.target.setAttrs({
                             width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
                             scaleX: 1,
@@ -640,14 +640,14 @@
                 // with enabled anchors we can only change scaleX
                 // so we don't need to reset height
                 // just width
-                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer1.getActiveAnchor()) ) {
+                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                 hash.setAttrs({
                     fontSize: Math.max(hash.fontSize() * hash.scaleX(), 2),
                     width: Math.max(hash.width() * hash.scaleX(), MIN_WIDTH),
                     scaleX: 1,
                     scaleY: 1,
                 });
-                } else if ( ['middle-right', 'middle-left'].includes(textoTransformer1.getActiveAnchor()) ) {
+                } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
                 hash.setAttrs({
                     width: Math.max(hash.width() * hash.scaleX(), MIN_WIDTH),
                     scaleX: 1,
@@ -660,14 +660,14 @@
                 // with enabled anchors we can only change scaleX
                 // so we don't need to reset height
                 // just width
-                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(textoTransformer1.getActiveAnchor()) ) {
+                if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                 emissao.setAttrs({
                     fontSize: Math.max(emissao.fontSize() * emissao.scaleX(), 2),
                     width: Math.max(emissao.width() * emissao.scaleX(), MIN_WIDTH),
                     scaleX: 1,
                     scaleY: 1,
                 });
-                } else if ( ['middle-right', 'middle-left'].includes(textoTransformer1.getActiveAnchor()) ) {
+                } else if ( ['middle-right', 'middle-left'].includes(versoTransformer.getActiveAnchor()) ) {
                 emissao.setAttrs({
                     width: Math.max(emissao.width() * emissao.scaleX(), MIN_WIDTH),
                     scaleX: 1,
@@ -692,7 +692,7 @@
                     // if no key pressed and the node is not selected
                     // select just one
                     if(stage1.find('.texto').includes(e.target)) {
-                        textoTransformer1.nodes([e.target]);
+                        versoTransformer.nodes([e.target]);
                     } else {
                         versoTransformer.nodes([e.target]);
                     }
