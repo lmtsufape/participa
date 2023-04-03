@@ -2,7 +2,7 @@
 
 @section('menu')
 
-dd();
+//dd();
 
     <div id="divCadastrarAssinatura" class="comissao">
         <div class="row">
