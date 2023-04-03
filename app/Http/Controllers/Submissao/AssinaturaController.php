@@ -120,7 +120,7 @@ class AssinaturaController extends Controller
             }
             $imagem = $request->fotoAssinatura;
 
-            dd($imagem);
+            
             $path = 'assinaturas/'.$evento->id.'/';
             $nome = $imagem->getClientOriginalName();
             $nomeSemEspaco = str_replace(' ', '', $nome);

@@ -18,7 +18,7 @@ class AfterTimeValidation
     public function validate($attribute, $value, $parameters)
     {
         $this->requireParameterCount(1, $parameters, 'min_time');
-        dd($attribute);
+        //dd($attribute);
         $valid = $this->validateTime($attribute, $value, $parameters);
 
         if (! $valid) {

@@ -1064,7 +1064,7 @@ class EventoController extends Controller
                         SORT_REGULAR,
                         $direction == 'desc'));
                 }
-                dd($trabalhos);
+                //dd($trabalhos);
             }
         } else {
             if ($status == 'rascunho') {
