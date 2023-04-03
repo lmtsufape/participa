@@ -318,7 +318,7 @@
                     });
                 }
 
-               applyTransformerLogic(simpleText);
+                applyTransformerLogic(simpleText);
                 layer.add(simpleText);
             });
 
@@ -340,11 +340,12 @@
 
                 if (!metaPressed && !isSelected) {
                     transformer.nodes([e.target]);
-                } else if (metaPressed && isSelected) {
-                    let nodes = transformer.nodes().slice(); // use slice to have new copy of array
 
+                } else if (metaPressed && isSelected) {
+                    let nodes = transformer.nodes().slice();
                     nodes.splice(nodes.indexOf(e.target), 1);
                     transformer.nodes(nodes);
+
                 } else if (metaPressed && !isSelected) {
                     let nodes = transformer.nodes().concat([e.target]);
                     transformer.nodes(nodes);
