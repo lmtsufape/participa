@@ -194,18 +194,19 @@
             if (assinaturas.length > 1) {
                 posicao_inicial_x = ((1268 - 100) / assinaturas.length) / assinaturas.length;
             } else {
-                posicao_inicial_x = 1268 / 2 - 100;
+                posicao_inicial_x = (1268 / 2) - 100;
             }
             let i = 0;
             assinaturas.forEach((assinatura, index) => {
                 let assinaturaArray = [];
                 let imageObj = new Image();
+                var imagemAssinatura;
                 imageObj.onload = function () {
-                    let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
+                    let medidaImagemAssinatra = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     //imagem da assinatura
                     // let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
-                    if(medida === undefined) {
-                        var imagemAssinatura = new Konva.Image({
+                    if(medidaImagemAssinatra === undefined) {
+                        imagemAssinatura = new Konva.Image({
                             x: posicao_inicial_x + (index * 350),
                             y: 600,
                             image: imageObj,
@@ -223,14 +224,14 @@
                     } else {
                     //     //medida da imagem da assinatura
                     //     let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
-                        var imagemAssinatura = new Konva.Image({
-                            x: parseInt(medida.x),
-                            y: parseInt(medida.y),
+                        imagemAssinatura = new Konva.Image({
+                            x: parseInt(medidaImagemAssinatra.x),
+                            y: parseInt(medidaImagemAssinatra.y),
                             image: imageObj,
                             draggable: true,
                             id: 'imagem' + assinatura.id,
-                            height: parseInt(medida.altura),
-                            width: parseInt(medida.largura),
+                            height: parseInt(medidaImagemAssinatra.altura),
+                            width: parseInt(medidaImagemAssinatra.largura),
                         });
                     }
                     
@@ -240,17 +241,18 @@
                 //aqui acaba a funcao onload
                 imageObj.src = '/storage/' + assinatura.caminho;
 
-                medida = medidas.find(m => m.tipo == 6 && m.assinatura.id == assinatura.id);
+                //medida da linha da assinatura
+                var medidaLinha = medidas.find(m => m.tipo == 6 && m.assinatura.id == assinatura.id);
 
-               if(medida === undefined) {
-                medida = {x: posicao_inicial_x + (index * 350) - 100,y: 550 + 106, largura: (index * 250) + 256};
+                if(medidaLinha === undefined) {
+                    medidaLinha = {x: posicao_inicial_x + (index * 350) - 100, y: 550 + 106, largura: (index * 250) + 256};
                 }
-                let x = parseInt(medida.x)
-                let y = parseInt(medida.y)
-                let sum = parseInt(medida.sum);
-                let width = parseInt(medida.largura)
-                let largura = parseInt(medida.largura);
-                let redLine = new Konva.Line({
+                let x = parseInt(medidaLinha.x)
+                let y = parseInt(medidaLinha.y)
+                //let sum = parseInt(medidaLinha.sum);
+                let width = parseInt(medidaLinha.largura)
+                let largura = parseInt(medidaLinha.largura);
+                let linha = new Konva.Line({
                     points: [x, y, x + width, y],
                     stroke: 'black',
                     strokeWidth: 2,
@@ -258,39 +260,36 @@
                     id: 'linha' + assinatura.id,
                 });
                 
-                layer.add(redLine);
+                layer.add(linha);
                 
-                //assinatura do cargo
-                medida = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
-                var simpleText;
-                if(medida === undefined) {
-                    medida = {x: posicao_inicial_x + (index * 350) + 10, y: 682, largura: 500, fontSize: 14}
+                //cargo
+                var cargo;
+                medidaCargo = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
+                if(medidaCargo === undefined) {
+                    medidaCargo = {x: posicao_inicial_x + (index * 350) + 10, y: 682, largura: 500, fontSize: 14}
                 }
-                simpleText = new Konva.Text({
-                    x: parseInt(medida.x),
-                    y: parseInt(medida.y),
-                    width: parseInt(medida.largura),
+                cargo = new Konva.Text({
+                    x: parseInt(medidaCargo.x),
+                    y: parseInt(medidaCargo.y),
+                    width: parseInt(medidaCargo.largura),
                     text: assinatura.cargo,
-                    fontSize: parseInt(medida.fontSize),
+                    fontSize: parseInt(medidaCargo.fontSize),
                     fontFamily: 'Arial, Helvetica, sans-serif',
                     draggable: true,
                     id: 'cargo' + assinatura.id,
                     name: 'cargo' + assinatura.id,
                 });
-
-                //assinatura
-                applyTransformerLogic(simpleText);
-                layer.add(simpleText);
+                //cargo
+                applyTransformerLogic(cargo);
+                layer.add(cargo);
 
                 //nome da assinatura
-                var simpleText;
-                medida = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
-                if(medida === undefined) {
-                    
-                }
-                if(medida === undefined) {
+                var assinatura;
+                var medidaAssinatura = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
+    
+                if(medidaAssinatura === undefined) {
                     simpleText = new Konva.Text({
-                        x: posicao_inicial_x + (index * 350) + redLine.width() / 2,
+                        x: posicao_inicial_x + (index * 350) + linha.width() / 2,
                         y: 666,
                         text: assinatura.nome,
                         fontSize: 12,
@@ -307,11 +306,11 @@
                     });
                 } else {
                     simpleText = new Konva.Text({
-                        x: parseInt(medida.x),
-                        y: parseInt(medida.y),
+                        x: parseInt(medidaAssinatura.x),
+                        y: parseInt(medidaAssinatura.y),
                         text: assinatura.nome,
-                        width: parseInt(medida.largura),
-                        fontSize: parseInt(medida.fontSize),
+                        width: parseInt(medidaAssinatura.largura),
+                        fontSize: parseInt(medidaAssinatura.fontSize),
                         fontFamily: 'Arial, Helvetica, sans-serif',
                         draggable: true,
                         id: 'nome' + assinatura.id,
