@@ -203,8 +203,6 @@
                 var imagemAssinatura;
                 imageObj.onload = function () {
                     let medidaImagemAssinatra = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
-                    //imagem da assinatura
-                    // let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     if(medidaImagemAssinatra === undefined) {
                         imagemAssinatura = new Konva.Image({
                             x: posicao_inicial_x + (index * 350),
@@ -222,8 +220,6 @@
                             scaleY: 1,
                         });
                     } else {
-                    //     //medida da imagem da assinatura
-                    //     let medida = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                         imagemAssinatura = new Konva.Image({
                             x: parseInt(medidaImagemAssinatra.x),
                             y: parseInt(medidaImagemAssinatra.y),
@@ -259,7 +255,6 @@
                     draggable: true,
                     id: 'linha' + assinatura.id,
                 });
-                
                 layer.add(linha);
                 
                 //cargo
@@ -350,8 +345,7 @@
                     let nodes = transformer.nodes().concat([e.target]);
                     transformer.nodes(nodes);
                 } else {
-                    let nodes = transformer.nodes().concat([e.target]);
-                    transformer.nodes(nodes);
+                    return;
                 }
             });
 
@@ -385,7 +379,6 @@
                     versoLayer = layer;
                     versoTransformer = transformer
                 }
-            
             versoLayer.add(versoTransformer);
             //medida do hash
             medidaHash = medidas.find(m => m.tipo == 8);
@@ -406,7 +399,6 @@
                 name: 'texto',
             });
             versoLayer.add(hash);
-
             //medida da emissao
             medidaEmissao = medidas.find(m => m.tipo == 10);
             if(medidaEmissao === undefined) {
@@ -460,6 +452,7 @@
                     });
                 }
                 versoLayer.add(qrcode);
+
                 qrcode.on('transform', (event) => {
                     if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                         event.target.setAttrs({
@@ -516,7 +509,6 @@
             };
             logoImageObj.src = "/img/logo-icone.png";
 
-
             hash.on('transform', (event) => {
                 if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
                 hash.setAttrs({
@@ -564,6 +556,8 @@
                         let nodes = versoTransformer.nodes().concat([e.target]);
                         versoTransformer.nodes(nodes);
                     }
+                } else {
+                    return;
                 }
                 });
 
