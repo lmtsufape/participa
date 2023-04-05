@@ -71,22 +71,6 @@
                                 scaleX: 1,
                                 scaleY: 1,
                             });
-                        } else if (['midle-right', 'middle-left'].includes(transformer.getActiveAnchor())) {
-                            // ['midle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
-                            console.log("e aqui")
-                            shape.setAttrs({
-                                width: Math.max(shape.width() * shape.scaleX(), MIN_WIDTH),
-                                scaleX: 1,
-                                scaleY: 1,
-                            });
-                        } else if (['bottom-center', 'top-center'].includes(transformer.getActiveAnchor())) {
-                            // ['midle-right', 'middle-left'].includes(textoTransformer.getActiveAnchor()) ) {
-                            console.log("e aqui")
-                            shape.setAttrs({
-                                height: event.target.height() * event.target.scaleY(),
-                                scaleX: 1,
-                                scaleY: 1,
-                            });
                         }
                     } else {
                         //imagem
@@ -100,22 +84,6 @@
                                 scaleY: 1,
                             });
                         }
-                        //  else if ( ['middle-right', 'middle-left'].includes(transformer.getActiveAnchor()) ) {
-                        //     console.log("lateral")
-                        //     shape.setAttrs({
-                        //         width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
-                        //         scaleX: 1,
-                        //         scaleY: 1,
-                        //     });
-                        // } else if(['bottom-center', 'top-center'].includes(transformer.getActiveAnchor())) {
-                        //     console.log("top, bottom", event.target.height(), event.target.scaleY())
-                        //     console.log(shape.attrs.height, shape.attrs.scaleY)
-                        //     shape.setAttrs({
-                        //         height: event.target.height() * event.target.scaleY(),
-                        //         scaleX: 1,
-                        //         scaleY: 1,
-                        //     });
-                        // }
                     }
                 })
             }
@@ -150,13 +118,13 @@
             medidaDescricao = medidas.find(m => m.tipo == 1);
             
             if(medidaDescricao === undefined){
-                medidaDescricao = {x: 50, y: 300, largura: 1000, fontSize: 14}
+                medidaDescricao = {x: 50, y: 300, largura: 1000, fontSize: 18}
             }
 
             var descricao = new Konva.Text({
                 x: parseInt(medidaDescricao.x),
                 y: parseInt(medidaDescricao.y),
-                width: parseInt(medidaDescricao.largura),
+                width: parseInt(medidaDescricao.largura / 1.2),
                 fontSize: medidaDescricao.fontSize,
                 text: '{!! html_entity_decode(json_encode(strip_tags($certificado->texto))) !!}',
                 draggable: true,
@@ -171,15 +139,15 @@
 
             medidaData = medidas.find(m => m.tipo == 2);
             if(medidaData === undefined)
-            medidaData = {x: 915, y: 350, largura: 450, fontSize: 14};
+                medidaData = {x: 915, y: 350, largura: 450, fontSize: 16};
 
             var templocal = @json($certificado->local);
             var tempdata = @json($dataHoje);
             var localdata =  templocal + ', ' + tempdata;
             var local = new Konva.Text({
-                x: parseInt(medidaData.x),
+                x: parseInt(medidaData.x - 100),
                 y: parseInt(medidaData.y),
-                width: parseInt(medidaData.largura),
+                width: parseInt(medidaData.largura / 1.3),
                 fontSize: parseInt(medidaData.fontSize),
                 text: localdata.replace(/[\n\r]/g,' ').replace('"', '').replace('"', ''),
                 draggable: true,
@@ -205,7 +173,7 @@
                     let medidaImagemAssinatra = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
                     if(medidaImagemAssinatra === undefined) {
                         imagemAssinatura = new Konva.Image({
-                            x: posicao_inicial_x + (index * 350),
+                            x: posicao_inicial_x + (index * 350) - 100,
                             y: 600,
                             image: imageObj,
                             draggable: true,
@@ -261,7 +229,7 @@
                 var cargo;
                 medidaCargo = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
                 if(medidaCargo === undefined) {
-                    medidaCargo = {x: posicao_inicial_x + (index * 350) + 10, y: 682, largura: 500, fontSize: 14}
+                    medidaCargo = {x: posicao_inicial_x + (index * 350) - 50, y: 682, largura: 500, fontSize: 14}
                 }
                 cargo = new Konva.Text({
                     x: parseInt(medidaCargo.x),
@@ -284,7 +252,7 @@
     
                 if(medidaAssinatura === undefined) {
                     simpleText = new Konva.Text({
-                        x: posicao_inicial_x + (index * 350) + linha.width() / 2,
+                        x: posicao_inicial_x + (index * 350) + (linha.width() / 2) - 100,
                         y: 666,
                         text: assinatura.nome,
                         fontSize: 12,
@@ -357,6 +325,7 @@
                     container: 'back',
                     width: 1118,
                     height: 790,
+                    draggable: true,
                 });
                 var versoLayer = new Konva.Layer();
                 verso.add(versoLayer);
@@ -565,8 +534,8 @@
                 let xGlobal = (stage.attrs.x == undefined)?0:stage.attrs.x;       
                 let yGlobal = (stage.attrs.y == undefined)?0:stage.attrs.y;                 
                
-                // let xGlobalVerso = (verso.attrs.x == undefined)?0:verso.attrs.x;       
-                // let yGlobalVerso = (verso.attrs.y == undefined)?0:verso.attrs.y;  
+                let xGlobalVerso = (verso.attrs.x == undefined)?0:verso.attrs.x;       
+                let yGlobalVerso = (verso.attrs.y == undefined)?0:verso.attrs.y;  
                 ['nome','cargo'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
                         let box = stage.find('#'+objeto+''+assinatura.id);
@@ -599,24 +568,24 @@
                     });
                 });
                 let qrcode = verso.find('#qrcode');
-                document.querySelectorAll("input[name=qrcode-x]")[0].value = qrcode[0].attrs.x;
-                document.querySelectorAll("input[name=qrcode-y]")[0].value = qrcode[0].attrs.y;
+                document.querySelectorAll("input[name=qrcode-x]")[0].value = qrcode[0].attrs.x + xGlobalVerso;
+                document.querySelectorAll("input[name=qrcode-y]")[0].value = qrcode[0].attrs.y + yGlobalVerso;
                 document.querySelectorAll("input[name=qrcode-largura]")[0].value = qrcode[0].attrs.width;
                 document.querySelectorAll("input[name=qrcode-altura]")[0].value = qrcode[0].attrs.height;
 
-                document.querySelectorAll("input[name=hash-x]")[0].value = hash.attrs.x;
-                document.querySelectorAll("input[name=hash-y]")[0].value = hash.attrs.y;
+                document.querySelectorAll("input[name=hash-x]")[0].value = hash.attrs.x + xGlobalVerso;
+                document.querySelectorAll("input[name=hash-y]")[0].value = hash.attrs.y + yGlobalVerso;
                 document.querySelectorAll("input[name=hash-largura]")[0].value = hash.attrs.width;
                 document.querySelectorAll("input[name=hash-fontSize]")[0].value = hash.attrs.fontSize;
 
                 let logo = verso.find('#logo');
-                document.querySelectorAll("input[name=logo-x]")[0].value = logo[0].attrs.x;
-                document.querySelectorAll("input[name=logo-y]")[0].value = logo[0].attrs.y;
+                document.querySelectorAll("input[name=logo-x]")[0].value = logo[0].attrs.x + xGlobalVerso;
+                document.querySelectorAll("input[name=logo-y]")[0].value = logo[0].attrs.y + yGlobalVerso;
                 document.querySelectorAll("input[name=logo-largura]")[0].value = logo[0].attrs.width;
                 document.querySelectorAll("input[name=logo-altura]")[0].value = logo[0].attrs.height;
 
-                document.querySelectorAll("input[name=emissao-x]")[0].value = emissao.attrs.x;
-                document.querySelectorAll("input[name=emissao-y]")[0].value = emissao.attrs.y;
+                document.querySelectorAll("input[name=emissao-x]")[0].value = emissao.attrs.x + xGlobalVerso;
+                document.querySelectorAll("input[name=emissao-y]")[0].value = emissao.attrs.y + yGlobalVerso;
                 document.querySelectorAll("input[name=emissao-largura]")[0].value = emissao.attrs.width;
                 document.querySelectorAll("input[name=emissao-fontSize]")[0].value = emissao.attrs.fontSize;
 
