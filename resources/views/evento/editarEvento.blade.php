@@ -430,7 +430,7 @@
     <script type="text/javascript">
         $(document).ready(function ($) {
 
-            CKEDITOR.replace('descricao');
+            // CKEDITOR.replace('descricao');
 
             $('#cep').mask('00000-000');
             $(".apenasLetras").mask("#", {
