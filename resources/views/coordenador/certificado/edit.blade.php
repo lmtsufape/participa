@@ -2,6 +2,13 @@
 
 @section('menu')
 @include('componentes.mensagens')
+
+<style>
+    #texto {
+        height: 100px;
+    }
+
+</style>
     <div id="divCadastrarAssinatura" class="comissao">
         <div class="row">
             <div class="col-sm-12">
@@ -200,7 +207,6 @@
 @section('javascript')
     @parent
     <script type="text/javascript" >
-        CKEDITOR.replace('texto');
         function logoPreview(input) {
             $('#logo-preview').attr('src', window.URL.createObjectURL(input.files[0]))
         }
