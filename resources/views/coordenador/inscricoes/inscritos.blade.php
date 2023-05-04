@@ -25,6 +25,7 @@
                     <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
                         <thead>
                             <th>
+                                <th>#</th>
                                 @if ($evento->subeventos->count() > 0)
                                     <th>Evento/Subevento</th>
                                 @endif
@@ -37,6 +38,7 @@
                         @foreach ($inscricoes as $inscricao)
                             <tbody>
                                 <th>
+                                    <td>{{$loop->iteration}}</td>
                                     @if ($evento->subeventos->count() > 0)
                                         <td>{{$inscricao->evento->nome}}</td>
                                     @endif
