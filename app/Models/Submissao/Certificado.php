@@ -13,6 +13,10 @@ class Certificado extends Model
 
     protected $fillable = ['caminho', 'data', 'local', 'nome', 'texto', 'tipo', 'tipo_comissao_id', 'atividade_id'];
 
+    protected $casts = [
+        'mostrar_assinaturas' => 'boolean',
+    ];
+
     public const TIPO_ENUM = [
         'apresentador'          => 1,
         'comissao_cientifica'   => 2,
@@ -68,6 +72,7 @@ class Certificado extends Model
         $this->texto = $request['texto'];
         $this->tipo = $request['tipo'];
         $this->data = $request['data'];
+        $this->imagem_assinada = $request['imagem_assinada'];
         if (array_key_exists('tipo_comissao_id', $request)) {
             $this->tipo_comissao_id = $request['tipo_comissao_id'];
         }
