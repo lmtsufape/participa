@@ -143,38 +143,6 @@
             </div>
             <div class="form-row">
                 <div class="col-sm-12 form-group">
-                    <label for="assinatura"><b>{{ __('Assinaturas') }}</b></label>
-                    <input type="hidden" class="checkbox_assinatura @error('assinaturas') is-invalid @enderror">
-                    <div class="row cards-eventos-index">
-                        @foreach ($assinaturas as $assinatura)
-                            <div class="card" style="width: 16rem;">
-                                <img src="{{asset('storage/'.$assinatura->caminho)}}" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="card-title">
-                                                <div class="row">
-                                                    <div class="form-check">
-                                                        <input class="checkbox_assinatura" type="checkbox" name="assinaturas[]" value="{{$assinatura->id}}" id="assinatura_{{$assinatura->id}}">
-                                                        <label for="assinatura_{{$assinatura->id}}">{{$assinatura->nome}}</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    @error('assinaturas')
-                        <div id="validationServer03Feedback" class="invalid-feedback">
-                            <strong>{{$message}}</strong>
-                        </div>
-                    @enderror
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="col-sm-12 form-group">
                     <label for="fotoCertificado"><b>Imagem do Certificado</b></label>
                     <div id="imagem-loader" class="imagem-loader">
                         <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="" style="max-width: 80%;">
@@ -189,6 +157,45 @@
                             <strong>{{$message}}</strong>
                         </span>
                     @enderror
+                </div>
+            </div>
+            <div class="form-row" x-data="{ imagemassinada: {{old('imagem_assinada', 'false')}} }">
+                <div class="col-sm-12 form-group">
+                    <div>
+                        <label>
+                            <input type="checkbox" name="imagem_assinada" x-model="imagemassinada">
+                            <b>A imagem do certificado já possui assinaturas?</b>
+                        </label>
+                    </div>
+                    <input type="hidden" class="checkbox_assinatura @error('assinaturas') is-invalid @enderror">
+                    <div x-show="!imagemassinada">
+                        <div class="row cards-eventos-index">
+                            @foreach ($assinaturas as $assinatura)
+                                <div class="card" style="width: 16rem;">
+                                    <img src="{{asset('storage/'.$assinatura->caminho)}}" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="card-title">
+                                                    <div class="row">
+                                                        <div class="form-check">
+                                                            <input class="checkbox_assinatura" type="checkbox" name="assinaturas[]" value="{{$assinatura->id}}" id="assinatura_{{$assinatura->id}}">
+                                                            <label for="assinatura_{{$assinatura->id}}">{{$assinatura->nome}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        @error('assinaturas')
+                        <div id="validationServer03Feedback" class="invalid-feedback">
+                            <strong>{{$message}}</strong>
+                        </div>
+                        @enderror
+                    </div>
                 </div>
             </div>
             <div class="row justify-content-center">

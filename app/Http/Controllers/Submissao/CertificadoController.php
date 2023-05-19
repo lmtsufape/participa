@@ -87,8 +87,10 @@ class CertificadoController extends Controller
         $certificado->caminho = $novo_caminho;
         $certificado->save();
 
-        foreach ($request->assinaturas as $assinatura_id) {
-            $certificado->assinaturas()->attach(Assinatura::find($assinatura_id));
+        if (!$request->imagem_assinada) {
+            foreach ($request->assinaturas as $assinatura_id) {
+                $certificado->assinaturas()->attach(Assinatura::find($assinatura_id));
+            }
         }
 
         return redirect(route('coord.listarCertificados', ['eventoId' => $evento->id]))->with(['success' => 'Certificado cadastrado com sucesso.']);
@@ -153,15 +155,17 @@ class CertificadoController extends Controller
             $certificado->caminho = $novo_caminho;
         }
 
-        foreach ($request->assinaturas as $assinatura_id) {
-            if ($certificado->assinaturas()->where('assinatura_id', $assinatura_id)->first() == null) {
-                $certificado->assinaturas()->attach(Assinatura::find($assinatura_id));
+        if (!$request->imagem_assinada) {
+            foreach ($request->assinaturas as $assinatura_id) {
+                if ($certificado->assinaturas()->where('assinatura_id', $assinatura_id)->first() == null) {
+                    $certificado->assinaturas()->attach(Assinatura::find($assinatura_id));
+                }
             }
-        }
 
-        foreach ($certificado->assinaturas as $assinatura) {
-            if (! (in_array($assinatura->id, $request->assinaturas))) {
-                $certificado->assinaturas()->detach($assinatura->id);
+            foreach ($certificado->assinaturas as $assinatura) {
+                if (! (in_array($assinatura->id, $request->assinaturas))) {
+                    $certificado->assinaturas()->detach($assinatura->id);
+                }
             }
         }
 
@@ -220,33 +224,35 @@ class CertificadoController extends Controller
         $medida->altura = intval($request['logo-altura']);
         $medida->save();
 
-        foreach ($assinaturas_id as $id) {
-            $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['cargo_assinatura'], 'assinatura_id' => $id]);
-            $medida->x = $request['cargo-x-'.$id];
-            $medida->y = $request['cargo-y-'.$id];
-            $medida->largura = $request['cargo-largura-'.$id];
-            $medida->fontSize = intval($request['cargo-fontSize-'.$id]);
-            $medida->save();
+        if (!$certificado->imagem_assinada) {
+            foreach ($assinaturas_id as $id) {
+                $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['cargo_assinatura'], 'assinatura_id' => $id]);
+                $medida->x = $request['cargo-x-'.$id];
+                $medida->y = $request['cargo-y-'.$id];
+                $medida->largura = $request['cargo-largura-'.$id];
+                $medida->fontSize = intval($request['cargo-fontSize-'.$id]);
+                $medida->save();
 
-            $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['nome_assinatura'], 'assinatura_id' => $id]);
-            $medida->x = $request['nome-x-'.$id];
-            $medida->y = $request['nome-y-'.$id];
-            $medida->largura = $request['nome-largura-'.$id];
-            $medida->fontSize = intval($request['nome-fontSize-'.$id]);
-            $medida->save();
+                $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['nome_assinatura'], 'assinatura_id' => $id]);
+                $medida->x = $request['nome-x-'.$id];
+                $medida->y = $request['nome-y-'.$id];
+                $medida->largura = $request['nome-largura-'.$id];
+                $medida->fontSize = intval($request['nome-fontSize-'.$id]);
+                $medida->save();
 
-            $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['imagem_assinatura'], 'assinatura_id' => $id]);
-            $medida->x = $request['imagem-x-'.$id];
-            $medida->y = $request['imagem-y-'.$id];
-            $medida->largura = $request['imagem-largura-'.$id];
-            $medida->altura = $request['imagem-altura-'.$id];
-            $medida->save();
+                $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['imagem_assinatura'], 'assinatura_id' => $id]);
+                $medida->x = $request['imagem-x-'.$id];
+                $medida->y = $request['imagem-y-'.$id];
+                $medida->largura = $request['imagem-largura-'.$id];
+                $medida->altura = $request['imagem-altura-'.$id];
+                $medida->save();
 
-            $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['linha_assinatura'], 'assinatura_id' => $id]);
-            $medida->x = $request['linha-x-'.$id];
-            $medida->y = $request['linha-y-'.$id];
-            $medida->largura = $request['linha-largura-'.$id];
-            $medida->save();
+                $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['linha_assinatura'], 'assinatura_id' => $id]);
+                $medida->x = $request['linha-x-'.$id];
+                $medida->y = $request['linha-y-'.$id];
+                $medida->largura = $request['linha-largura-'.$id];
+                $medida->save();
+            }
         }
 
         return redirect()->route('coord.listarCertificados', ['eventoId' => $certificado->evento->id]);
