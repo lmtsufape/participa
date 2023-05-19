@@ -19,6 +19,10 @@
             position: absolute;
         }
 
+        #texto {
+            text-align: justify;
+        }
+
         .page_break { page-break-before: always; }
 
     </style>
