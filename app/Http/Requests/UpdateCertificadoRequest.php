@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 class UpdateCertificadoRequest extends FormRequest
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -33,6 +36,7 @@ class UpdateCertificadoRequest extends FormRequest
             'verso' => 'nullable|boolean',
             'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8',
             'atividade_id' => 'required_if:tipo,9|exclude_unless:tipo,9',
+            'imagem_assinada' => 'nullable|boolean',
         ];
     }
 
@@ -48,6 +52,7 @@ class UpdateCertificadoRequest extends FormRequest
     {
         $this->merge([
             'verso' => $this->has('verso'),
+            'imagem_assinada' => $this->has('imagem_assinada'),
         ]);
     }
 }
