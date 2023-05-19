@@ -52,13 +52,14 @@
                 width: {{$certificado->medidas->where("tipo", $tipos["data"])->first()->largura}}px;">
                 {{ $certificado->local }}, {{ $dataHoje }}
             </div>
-            @foreach ($certificado->assinaturas as $assinatura)
-                @php
-                    $medida = $certificado->medidas->where('tipo', $tipos["imagem_assinatura"])->where('assinatura_id', $assinatura->id)->first();
-                @endphp
-                <img id="data"
-                    src="{{ storage_path('/app/public/'.$assinatura->caminho)}}"
-                    style="
+            @if(!$certificado->imagem_assinada)
+                @foreach ($certificado->assinaturas as $assinatura)
+                    @php
+                        $medida = $certificado->medidas->where('tipo', $tipos["imagem_assinatura"])->where('assinatura_id', $assinatura->id)->first();
+                    @endphp
+                    <img id="data"
+                         src="{{ storage_path('/app/public/'.$assinatura->caminho)}}"
+                         style="
                     left: {{$medida->x}}px;
                     top: {{$medida->y}}px;
                     width: {{$medida->largura}}px;
@@ -68,39 +69,40 @@
                     @endif
                     "
                     >
-                @php
-                    $medida = $certificado->medidas->where('tipo', $tipos["nome_assinatura"])->where('assinatura_id', $assinatura->id)->first();
-                @endphp
-                <div id="data" style="
+                    @php
+                        $medida = $certificado->medidas->where('tipo', $tipos["nome_assinatura"])->where('assinatura_id', $assinatura->id)->first();
+                    @endphp
+                    <div id="data" style="
                     left: {{$medida->x}}px;
                     font-size: {{$medida->fontSize}}px;
                     top: {{$medida->y}}px;
                     width: {{$medida->largura}}px;">
-                    {{ $assinatura->nome }}
-                </div>
-                @php
-                    $medida = $certificado->medidas->where('tipo', $tipos["linha_assinatura"])->where('assinatura_id', $assinatura->id)->first();
-                @endphp
-                @if($medida != null)
-                    <div id="data" style="
+                        {{ $assinatura->nome }}
+                    </div>
+                    @php
+                        $medida = $certificado->medidas->where('tipo', $tipos["linha_assinatura"])->where('assinatura_id', $assinatura->id)->first();
+                    @endphp
+                    @if($medida != null)
+                        <div id="data" style="
                         left: {{$medida->x}}px;
                         top: {{$medida->y}}px;
                         width: {{$medida->largura}}px;
                         background-color: blue;
                         border-bottom: 2px solid black;">
-                    </div>
-                @endif
-                @php
-                    $medida = $certificado->medidas->where('tipo', $tipos["cargo_assinatura"])->where('assinatura_id', $assinatura->id)->first();
-                @endphp
-                <div id="data" style="
+                        </div>
+                    @endif
+                    @php
+                        $medida = $certificado->medidas->where('tipo', $tipos["cargo_assinatura"])->where('assinatura_id', $assinatura->id)->first();
+                    @endphp
+                    <div id="data" style="
                     left: {{$medida->x}}px;
                     font-size: {{$medida->fontSize}}px;
                     top: {{$medida->y}}px;
                     width: {{$medida->largura}}px;">
-                    {{ $assinatura->cargo }}
-                </div>
-            @endforeach
+                        {{ $assinatura->cargo }}
+                    </div>
+                @endforeach
+            @endif
         @if ($certificado->verso)
             </div>
 

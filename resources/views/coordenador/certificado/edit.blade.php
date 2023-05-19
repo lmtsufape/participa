@@ -138,9 +138,36 @@
             </div>
             <div class="form-row">
                 <div class="col-sm-12 form-group">
-                    <label for="assinatura"><b>{{ __('Assinaturas') }}</b></label>
+                    <label for="fotoCertificado"><b>Imagem do Certificado</b></label>
+                    <div id="imagem-loader" class="imagem-loader">
+                        @if ($certificado->caminho != null)
+                            <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$certificado->caminho)}}" alt="">
+                        @else
+                            <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                        @endif
+                    </div>
+                    <div style="display: none;">
+                        <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoCertificado') is-invalid @enderror" name="fotoCertificado" value="{{ old('fotoCertificado') }}">
+                    </div>
+                    <small style="position: relative; top: 5px;">Tamanho mínimo: 1268 x 792;<br>Formato: JPEG, JPG, PNG</small>
+                    <br>
+                    @error('fotoCertificado')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{$message}}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+            <div class="form-row" x-data="{ imagemassinada: {{$certificado->imagem_assinada ? 'true' : 'false'}} }">
+                <div class="col-sm-12 form-group">
+                    <div>
+                        <label>
+                            <input type="checkbox" name="imagem_assinada" x-model="imagemassinada">
+                            <b>A imagem do certificado já possui assinaturas?</b>
+                        </label>
+                    </div>
                     <input type="hidden" class="checkbox_assinatura @error('assinaturas') is-invalid @enderror">
-                    <div class="row cards-eventos-index">
+                    <div class="row cards-eventos-index" x-show="!imagemassinada">
                         @foreach ($assinaturas as $assinatura)
                             <div class="card" style="width: 16rem;">
                                 <img src="{{asset('storage/'.$assinatura->caminho)}}" class="card-img-top" alt="...">
@@ -162,36 +189,12 @@
                         @endforeach
                     </div>
                     @error('assinaturas')
-                        <div id="validationServer03Feedback" class="invalid-feedback">
-                            <strong>{{$message}}</strong>
-                        </div>
+                    <div id="validationServer03Feedback" class="invalid-feedback">
+                        <strong>{{$message}}</strong>
+                    </div>
                     @enderror
                 </div>
             </div>
-
-            <div class="form-row">
-                <div class="col-sm-12 form-group">
-                    <label for="fotoCertificado"><b>Certificado</b></label>
-                    <div id="imagem-loader" class="imagem-loader">
-                        @if ($certificado->caminho != null)
-                            <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$certificado->caminho)}}" alt="">
-                        @else
-                            <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
-                        @endif
-                    </div>
-                    <div style="display: none;">
-                        <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoCertificado') is-invalid @enderror" name="fotoCertificado" value="{{ old('fotoCertificado') }}">
-                    </div>
-                    <small style="position: relative; top: 5px;">Tamanho mínimo: 1268 x 792;<br>Formato: JPEG, JPG, PNG</small>
-                    <br>
-                    @error('fotoCertificado')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{$message}}</strong>
-                        </span>
-                    @enderror
-                </div>
-            </div>
-
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary" style="width:100%">

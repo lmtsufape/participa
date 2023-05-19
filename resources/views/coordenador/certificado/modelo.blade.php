@@ -166,125 +166,130 @@
                 posicao_inicial_x = (1268 / 2) - 100;
             }
             let i = 0;
-            assinaturas.forEach((assinatura, index) => {
-                let assinaturaArray = [];
-                let imageObj = new Image();
-                var imagemAssinatura;
-                imageObj.onload = function () {
-                    let medidaImagemAssinatra = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
-                    if(medidaImagemAssinatra === undefined) {
-                        imagemAssinatura = new Konva.Image({
-                            x: posicao_inicial_x + (index * 350) - 100,
-                            y: 600,
-                            image: imageObj,
+
+            let mostrar_assinaturas = ! @json($certificado->imagem_assinada);
+
+            if (mostrar_assinaturas) {
+                assinaturas.forEach((assinatura, index) => {
+                    let assinaturaArray = [];
+                    let imageObj = new Image();
+                    var imagemAssinatura;
+                    imageObj.onload = function () {
+                        let medidaImagemAssinatra = medidas.find(m => m.tipo == 5 && m.assinatura.id == assinatura.id);
+                        if(medidaImagemAssinatra === undefined) {
+                            imagemAssinatura = new Konva.Image({
+                                x: posicao_inicial_x + (index * 350) - 100,
+                                y: 600,
+                                image: imageObj,
+                                draggable: true,
+                                id: 'imagem' + assinatura.id,
+                                scaleX: 0.2,
+                                scaleY: 0.2,
+                            });
+                            imagemAssinatura.setAttrs({
+                                height: imagemAssinatura.height() * imagemAssinatura.scaleY(),
+                                width: imagemAssinatura.width() * imagemAssinatura.scaleX(),
+                                scaleX: 1,
+                                scaleY: 1,
+                            });
+                        } else {
+                            imagemAssinatura = new Konva.Image({
+                                x: parseInt(medidaImagemAssinatra.x),
+                                y: parseInt(medidaImagemAssinatra.y),
+                                image: imageObj,
+                                draggable: true,
+                                id: 'imagem' + assinatura.id,
+                                height: parseInt(medidaImagemAssinatra.altura),
+                                width: parseInt(medidaImagemAssinatra.largura),
+                            });
+                        }
+
+                        layer.add(imagemAssinatura);
+                        applyTransformerLogic(imagemAssinatura);
+                    };
+                    //aqui acaba a funcao onload
+                    imageObj.src = '/storage/' + assinatura.caminho;
+
+                    //medida da linha da assinatura
+                    var medidaLinha = medidas.find(m => m.tipo == 6 && m.assinatura.id == assinatura.id);
+
+                    if(medidaLinha === undefined) {
+                        medidaLinha = {x: posicao_inicial_x + (index * 350) - 100, y: 550 + 106, largura: (index * 250) + 256};
+                    }
+                    let x = parseInt(medidaLinha.x)
+                    let y = parseInt(medidaLinha.y)
+                    //let sum = parseInt(medidaLinha.sum);
+                    let width = parseInt(medidaLinha.largura)
+                    let largura = parseInt(medidaLinha.largura);
+                    let linha = new Konva.Line({
+                        points: [x, y, x + width, y],
+                        stroke: 'black',
+                        strokeWidth: 2,
+                        draggable: true,
+                        id: 'linha' + assinatura.id,
+                    });
+                    layer.add(linha);
+
+                    //cargo
+                    var cargo;
+                    medidaCargo = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
+                    if(medidaCargo === undefined) {
+                        medidaCargo = {x: posicao_inicial_x + (index * 350) - 50, y: 682, largura: 500, fontSize: 14}
+                    }
+                    cargo = new Konva.Text({
+                        x: parseInt(medidaCargo.x),
+                        y: parseInt(medidaCargo.y),
+                        width: parseInt(medidaCargo.largura),
+                        text: assinatura.cargo,
+                        fontSize: parseInt(medidaCargo.fontSize),
+                        fontFamily: 'Arial, Helvetica, sans-serif',
+                        draggable: true,
+                        id: 'cargo' + assinatura.id,
+                        name: 'cargo' + assinatura.id,
+                    });
+                    //cargo
+                    applyTransformerLogic(cargo);
+                    layer.add(cargo);
+
+                    //nome da assinatura
+                    var assinatura;
+                    var medidaAssinatura = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
+
+                    if(medidaAssinatura === undefined) {
+                        simpleText = new Konva.Text({
+                            x: posicao_inicial_x + (index * 350) + (linha.width() / 2) - 100,
+                            y: 666,
+                            text: assinatura.nome,
+                            fontSize: 12,
+                            fontFamily: 'Arial, Helvetica, sans-serif',
                             draggable: true,
-                            id: 'imagem' + assinatura.id,
-                            scaleX: 0.2,
-                            scaleY: 0.2,
+                            id: 'nome' + assinatura.id,
+                            name: 'texto',
                         });
-                        imagemAssinatura.setAttrs({
-                            height: imagemAssinatura.height() * imagemAssinatura.scaleY(),
-                            width: imagemAssinatura.width() * imagemAssinatura.scaleX(),
+                        simpleText.setAttrs({
+                            x: simpleText.x() - simpleText.width() / 2,
+                            width: simpleText.width() * simpleText.scaleX(),
                             scaleX: 1,
                             scaleY: 1,
                         });
                     } else {
-                        imagemAssinatura = new Konva.Image({
-                            x: parseInt(medidaImagemAssinatra.x),
-                            y: parseInt(medidaImagemAssinatra.y),
-                            image: imageObj,
+                        simpleText = new Konva.Text({
+                            x: parseInt(medidaAssinatura.x),
+                            y: parseInt(medidaAssinatura.y),
+                            text: assinatura.nome,
+                            width: parseInt(medidaAssinatura.largura),
+                            fontSize: parseInt(medidaAssinatura.fontSize),
+                            fontFamily: 'Arial, Helvetica, sans-serif',
                             draggable: true,
-                            id: 'imagem' + assinatura.id,
-                            height: parseInt(medidaImagemAssinatra.altura),
-                            width: parseInt(medidaImagemAssinatra.largura),
+                            id: 'nome' + assinatura.id,
+                            name: 'texto',
                         });
                     }
 
-                    layer.add(imagemAssinatura);
-                    applyTransformerLogic(imagemAssinatura);
-                };
-                //aqui acaba a funcao onload
-                imageObj.src = '/storage/' + assinatura.caminho;
-
-                //medida da linha da assinatura
-                var medidaLinha = medidas.find(m => m.tipo == 6 && m.assinatura.id == assinatura.id);
-
-                if(medidaLinha === undefined) {
-                    medidaLinha = {x: posicao_inicial_x + (index * 350) - 100, y: 550 + 106, largura: (index * 250) + 256};
-                }
-                let x = parseInt(medidaLinha.x)
-                let y = parseInt(medidaLinha.y)
-                //let sum = parseInt(medidaLinha.sum);
-                let width = parseInt(medidaLinha.largura)
-                let largura = parseInt(medidaLinha.largura);
-                let linha = new Konva.Line({
-                    points: [x, y, x + width, y],
-                    stroke: 'black',
-                    strokeWidth: 2,
-                    draggable: true,
-                    id: 'linha' + assinatura.id,
+                    applyTransformerLogic(simpleText);
+                    layer.add(simpleText);
                 });
-                layer.add(linha);
-
-                //cargo
-                var cargo;
-                medidaCargo = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
-                if(medidaCargo === undefined) {
-                    medidaCargo = {x: posicao_inicial_x + (index * 350) - 50, y: 682, largura: 500, fontSize: 14}
-                }
-                cargo = new Konva.Text({
-                    x: parseInt(medidaCargo.x),
-                    y: parseInt(medidaCargo.y),
-                    width: parseInt(medidaCargo.largura),
-                    text: assinatura.cargo,
-                    fontSize: parseInt(medidaCargo.fontSize),
-                    fontFamily: 'Arial, Helvetica, sans-serif',
-                    draggable: true,
-                    id: 'cargo' + assinatura.id,
-                    name: 'cargo' + assinatura.id,
-                });
-                //cargo
-                applyTransformerLogic(cargo);
-                layer.add(cargo);
-
-                //nome da assinatura
-                var assinatura;
-                var medidaAssinatura = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
-
-                if(medidaAssinatura === undefined) {
-                    simpleText = new Konva.Text({
-                        x: posicao_inicial_x + (index * 350) + (linha.width() / 2) - 100,
-                        y: 666,
-                        text: assinatura.nome,
-                        fontSize: 12,
-                        fontFamily: 'Arial, Helvetica, sans-serif',
-                        draggable: true,
-                        id: 'nome' + assinatura.id,
-                        name: 'texto',
-                    });
-                    simpleText.setAttrs({
-                        x: simpleText.x() - simpleText.width() / 2,
-                        width: simpleText.width() * simpleText.scaleX(),
-                        scaleX: 1,
-                        scaleY: 1,
-                    });
-                } else {
-                    simpleText = new Konva.Text({
-                        x: parseInt(medidaAssinatura.x),
-                        y: parseInt(medidaAssinatura.y),
-                        text: assinatura.nome,
-                        width: parseInt(medidaAssinatura.largura),
-                        fontSize: parseInt(medidaAssinatura.fontSize),
-                        fontFamily: 'Arial, Helvetica, sans-serif',
-                        draggable: true,
-                        id: 'nome' + assinatura.id,
-                        name: 'texto',
-                    });
-                }
-
-                applyTransformerLogic(simpleText);
-                layer.add(simpleText);
-            });
+            }
 
             stage.on('mouseover', function () {
                 document.body.style.cursor = 'pointer';
@@ -537,36 +542,38 @@
 
                 let xGlobalVerso = (verso.attrs.x == undefined)?0:verso.attrs.x;
                 let yGlobalVerso = (verso.attrs.y == undefined)?0:verso.attrs.y;
-                ['nome','cargo'].forEach(objeto => {
-                    assinaturas.forEach(assinatura => {
-                        let box = stage.find('#'+objeto+''+assinatura.id);
-                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x + xGlobal;
-                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y + yGlobal;
-                        document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
-                        document.querySelectorAll("input[name="+objeto+"-fontSize-"+assinatura.id+"]")[0].value = box[0].attrs.fontSize;
+                if (mostrar_assinaturas) {
+                    ['nome','cargo'].forEach(objeto => {
+                        assinaturas.forEach(assinatura => {
+                            let box = stage.find('#'+objeto+''+assinatura.id);
+                            document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x + xGlobal;
+                            document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y + yGlobal;
+                            document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
+                            document.querySelectorAll("input[name="+objeto+"-fontSize-"+assinatura.id+"]")[0].value = box[0].attrs.fontSize;
+                        });
                     });
-                });
-                assinaturas.forEach(assinatura => {
-                    let box = stage.find('#linha'+assinatura.id);
-                    document.querySelectorAll("input[name=linha-x-"+assinatura.id+"]")[0].value = box[0].position().x + box[0].points()[0] + xGlobal;
-                    document.querySelectorAll("input[name=linha-y-"+assinatura.id+"]")[0].value = box[0].position().y + box[0].points()[1] + yGlobal;
-                    document.querySelectorAll("input[name=linha-largura-"+assinatura.id+"]")[0].value = box[0].attrs.points[2] - box[0].attrs.points[0];
-                });
+                    ['imagem'].forEach(objeto => {
+                        assinaturas.forEach(assinatura => {
+                            let box = stage.find('#' + objeto + '' + assinatura.id);
+                            document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x + xGlobal;
+                            document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y + yGlobal;
+                            document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
+                            document.querySelectorAll("input[name="+objeto+"-altura-"+assinatura.id+"]")[0].value = box[0].attrs.height;
+                        });
+                    });
+                    assinaturas.forEach(assinatura => {
+                        let box = stage.find('#linha'+assinatura.id);
+                        document.querySelectorAll("input[name=linha-x-"+assinatura.id+"]")[0].value = box[0].position().x + box[0].points()[0] + xGlobal;
+                        document.querySelectorAll("input[name=linha-y-"+assinatura.id+"]")[0].value = box[0].position().y + box[0].points()[1] + yGlobal;
+                        document.querySelectorAll("input[name=linha-largura-"+assinatura.id+"]")[0].value = box[0].attrs.points[2] - box[0].attrs.points[0];
+                    });
+                }
                 ['texto','data'].forEach(objeto => {
                     let box = stage.find('#'+objeto);
                     document.querySelectorAll("input[name="+objeto+"-x]")[0].value = box[0].attrs.x + xGlobal;
                     document.querySelectorAll("input[name="+objeto+"-y]")[0].value = box[0].attrs.y + yGlobal;
                     document.querySelectorAll("input[name="+objeto+"-largura]")[0].value = box[0].attrs.width;
                     document.querySelectorAll("input[name="+objeto+"-fontSize]")[0].value = box[0].attrs.fontSize;
-                });
-                ['imagem'].forEach(objeto => {
-                    assinaturas.forEach(assinatura => {
-                        let box = stage.find('#' + objeto + '' + assinatura.id);
-                        document.querySelectorAll("input[name="+objeto+"-x-"+assinatura.id+"]")[0].value = box[0].attrs.x + xGlobal;
-                        document.querySelectorAll("input[name="+objeto+"-y-"+assinatura.id+"]")[0].value = box[0].attrs.y + yGlobal;
-                        document.querySelectorAll("input[name="+objeto+"-largura-"+assinatura.id+"]")[0].value = box[0].attrs.width;
-                        document.querySelectorAll("input[name="+objeto+"-altura-"+assinatura.id+"]")[0].value = box[0].attrs.height;
-                    });
                 });
                 let qrcode = verso.find('#qrcode');
                 document.querySelectorAll("input[name=qrcode-x]")[0].value = qrcode[0].attrs.x + xGlobalVerso;

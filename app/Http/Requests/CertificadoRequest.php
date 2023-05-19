@@ -29,11 +29,12 @@ class CertificadoRequest extends FormRequest
             'texto'              => 'required|string|min:5',
             'tipo'              => 'required',
             'fotoCertificado'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
-            'assinaturas' => 'required',
+            'assinaturas' => 'required_if:imagem_assinada,false',
             'data' => 'required|date',
             'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8',
             'atividade_id' => 'required_if:tipo,9|exclude_unless:tipo,9',
             'verso' => 'required|boolean',
+            'imagem_assinada' => 'nullable|boolean'
         ];
     }
 
@@ -59,6 +60,7 @@ class CertificadoRequest extends FormRequest
     {
         $this->merge([
             'verso' => $this->has('verso'),
+            'imagem_assinada' => $this->has('imagem_assinada'),
         ]);
     }
 }
