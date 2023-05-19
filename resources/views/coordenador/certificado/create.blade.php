@@ -132,7 +132,6 @@
             </div>
             <div class="form-row">
                 <div class="col-sm-12 form-group">
-                    <H1>KKADKAJDADADÇL</H1>
                     <label for="texto"><b>{{ __('Texto') }}</b></label>
                     <textarea id="texto" class="form-control @error('texto') is-invalid @enderror" type="text" name="texto" required autofocus autocomplete="texto">{{old('texto')}}</textarea>
                     @error('texto')
