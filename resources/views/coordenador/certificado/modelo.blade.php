@@ -22,7 +22,7 @@
             align-self: center;
             width: 100px;
             height: 50px;
-            
+
         }
     </style>
 
@@ -92,7 +92,7 @@
                 width: 1118,
                 height: 790,
                 draggable: true,
-                
+
             });
 
             layer = new Konva.Layer();
@@ -110,13 +110,13 @@
                 return newBox;
                 },
             });
-            
+
             layer.add(transformer);
             stage.add(layer);
-            
+
             medidas = @json($medidas);
             medidaDescricao = medidas.find(m => m.tipo == 1);
-            
+
             if(medidaDescricao === undefined){
                 medidaDescricao = {x: 50, y: 300, largura: 1000, fontSize: 18}
             }
@@ -130,8 +130,9 @@
                 draggable: true,
                 id: 'texto',
                 name: 'texto',
+                align: 'justify',
             });
-            
+
             applyTransformerLogic(descricao);
             layer.add(descricao);
             descricao.on('transform click tap move', (event) => {
@@ -198,7 +199,7 @@
                             width: parseInt(medidaImagemAssinatra.largura),
                         });
                     }
-                    
+
                     layer.add(imagemAssinatura);
                     applyTransformerLogic(imagemAssinatura);
                 };
@@ -224,7 +225,7 @@
                     id: 'linha' + assinatura.id,
                 });
                 layer.add(linha);
-                
+
                 //cargo
                 var cargo;
                 medidaCargo = medidas.find(m => m.tipo == 4 && m.assinatura.id == assinatura.id);
@@ -249,7 +250,7 @@
                 //nome da assinatura
                 var assinatura;
                 var medidaAssinatura = medidas.find(m => m.tipo == 3 && m.assinatura.id == assinatura.id);
-    
+
                 if(medidaAssinatura === undefined) {
                     simpleText = new Konva.Text({
                         x: posicao_inicial_x + (index * 350) + (linha.width() / 2) - 100,
@@ -531,11 +532,11 @@
                 });
 
             function send() {
-                let xGlobal = (stage.attrs.x == undefined)?0:stage.attrs.x;       
-                let yGlobal = (stage.attrs.y == undefined)?0:stage.attrs.y;                 
-               
-                let xGlobalVerso = (verso.attrs.x == undefined)?0:verso.attrs.x;       
-                let yGlobalVerso = (verso.attrs.y == undefined)?0:verso.attrs.y;  
+                let xGlobal = (stage.attrs.x == undefined)?0:stage.attrs.x;
+                let yGlobal = (stage.attrs.y == undefined)?0:stage.attrs.y;
+
+                let xGlobalVerso = (verso.attrs.x == undefined)?0:verso.attrs.x;
+                let yGlobalVerso = (verso.attrs.y == undefined)?0:verso.attrs.y;
                 ['nome','cargo'].forEach(objeto => {
                     assinaturas.forEach(assinatura => {
                         let box = stage.find('#'+objeto+''+assinatura.id);
