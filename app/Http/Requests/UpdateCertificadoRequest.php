@@ -30,13 +30,15 @@ class UpdateCertificadoRequest extends FormRequest
             'local' => 'required|string|min:3|max:40',
             'nome' => 'required|string|min:5|max:290',
             'texto' => 'required|string|min:5',
-            'assinaturas' => 'required',
+            'assinaturas' => 'required_if:imagem_assinada,false',
             'data' => 'required|date',
             'tipo' => 'required',
-            'verso' => 'nullable|boolean',
+            'verso' => 'boolean',
             'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8',
             'atividade_id' => 'required_if:tipo,9|exclude_unless:tipo,9',
-            'imagem_assinada' => 'nullable|boolean',
+            'imagem_assinada' => 'boolean',
+            'has_imagem_verso' => 'exclude_if:verso,false',
+            'imagem_verso' => 'exclude_if:verso,false,|exclude_if:has_imagem_verso,false|nullable|image|max:2048'
         ];
     }
 
@@ -53,6 +55,7 @@ class UpdateCertificadoRequest extends FormRequest
         $this->merge([
             'verso' => $this->has('verso'),
             'imagem_assinada' => $this->has('imagem_assinada'),
+            'has_imagem_verso' => $this->has('has_imagem_verso'),
         ]);
     }
 }

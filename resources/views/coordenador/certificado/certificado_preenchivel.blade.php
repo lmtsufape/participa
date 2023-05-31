@@ -107,7 +107,11 @@
             </div>
 
             <div class="page_break"></div>
-            <div class="container" style="background-image: url({{ storage_path('/app/public/'.$certificado->caminho) }});">
+            @if ($certificado->has_imagem_verso)
+                <div class="container" style="background-image: url({{ storage_path('/app/public/'.$certificado->imagem_verso) }});">
+            @else
+                <div class="container" style="background-image: url({{ storage_path('/app/public/'.$certificado->caminho) }});">
+            @endif
         @endif
             @php
                 $medida = $certificado->medidas->where('tipo', $tipos["qrcode"])->first();

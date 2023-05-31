@@ -34,7 +34,9 @@ class CertificadoRequest extends FormRequest
             'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8',
             'atividade_id' => 'required_if:tipo,9|exclude_unless:tipo,9',
             'verso' => 'required|boolean',
-            'imagem_assinada' => 'nullable|boolean'
+            'imagem_assinada' => 'nullable|boolean',
+            'has_imagem_verso' => 'exclude_if:verso,false',
+            'imagem_verso' => 'exclude_if:verso,false,|exclude_if:has_imagem_verso,false|required_if:has_imagem_verso,true|image'
         ];
     }
 
@@ -61,6 +63,7 @@ class CertificadoRequest extends FormRequest
         $this->merge([
             'verso' => $this->has('verso'),
             'imagem_assinada' => $this->has('imagem_assinada'),
+            'has_imagem_verso' => $this->has('has_imagem_verso'),
         ]);
     }
 }

@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" x-data="{verso: {{old('verso', $certificado->verso ? 'true' : 'false')}}}">
         <form id="formCadastrarCertificado" action="{{route('coord.certificado.update', ['id' => $certificado->id])}}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="col-sm-4 form-check form-check pl-4 ml-0">
-                    <input id="verso" type="checkbox" class="form-check-input @error('verso') is-invalid @enderror" name="verso" value="1" {{ old('verso', $certificado->verso) ? 'checked="checked"' : '' }} autocomplete="verso" autofocus autocomplete="verso">
+                    <input id="verso" type="checkbox" class="form-check-input @error('verso') is-invalid @enderror" name="verso" x-model="verso">
                     <label class="form-check-label" for="verso" ><b>{{ __('Folha de verso') }}</b></label>
                     @error('verso')
                     <span class="invalid-feedback" role="alert">
@@ -147,7 +147,7 @@
                         @endif
                     </div>
                     <div style="display: none;">
-                        <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoCertificado') is-invalid @enderror" name="fotoCertificado" value="{{ old('fotoCertificado') }}">
+                        <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoCertificado') is-invalid @enderror" name="fotoCertificado" onchange="logoPreview(this, 'logo-preview')">
                     </div>
                     <small style="position: relative; top: 5px;">Tamanho mínimo: 1268 x 792;<br>Formato: JPEG, JPG, PNG</small>
                     <br>
@@ -156,6 +156,35 @@
                             <strong>{{$message}}</strong>
                         </span>
                     @enderror
+                </div>
+            </div>
+            <div x-show="verso">
+                <div class="form-row" x-data="{ has_imagem_verso: {{old('has_imagem_verso', $certificado->has_imagem_verso ? 'true' : 'false')}} }">
+                    <div class="col-sm-12 form-group">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="has_imagem_verso" name="has_imagem_verso" x-model="has_imagem_verso">
+                            <label class="form-check-label" for="has_imagem_verso"><b>Enviar outra imagem para o verso?</b></label>
+                        </div>
+                        <div x-show="has_imagem_verso">
+                            <label class="imagem-loader">
+                                @if ($certificado->imagem_verso != null)
+                                    <img id="verso-preview" class="img-fluid" src="{{asset('storage/'.$certificado->imagem_verso)}}" alt="">
+                                @else
+                                    <img id="verso-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                @endif
+                                <input hidden type="file" accept="image/*" class="form-control @error('imagem_verso') is-invalid @enderror" name="imagem_verso" onchange="logoPreview(this, 'verso-preview')">
+                            </label>
+                            <div>
+                                <small style="position: relative; top: 5px;">Tamanho recomendado: 1268 x 792;<br>Formato: JPEG, JPG, PNG</small>
+                                <br>
+                                @error('imagemVerso')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{$message}}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-row" x-data="{ imagemassinada: {{$certificado->imagem_assinada ? 'true' : 'false'}} }">
@@ -210,8 +239,8 @@
 @section('javascript')
     @parent
     <script type="text/javascript" >
-        function logoPreview(input) {
-            $('#logo-preview').attr('src', window.URL.createObjectURL(input.files[0]))
+        function logoPreview(input, id) {
+            $('#' + id).attr('src', window.URL.createObjectURL(input.files[0]))
         }
         $('#imagem-loader').click(function() {
             $('#logo-input').click()
