@@ -11,7 +11,7 @@ class Certificado extends Model
 {
     use SoftDeletes, FormatFileNames;
 
-    protected $fillable = ['caminho', 'data', 'local', 'nome', 'texto', 'tipo', 'tipo_comissao_id', 'atividade_id'];
+    protected $fillable = ['caminho', 'data', 'local', 'nome', 'texto', 'tipo', 'tipo_comissao_id', 'atividade_id', 'has_imagem_verso'];
 
     protected $casts = [
         'mostrar_assinaturas' => 'boolean',
@@ -68,6 +68,9 @@ class Certificado extends Model
     {
         $this->local = $request['local'];
         $this->verso = $request['verso'];
+        if ($this->verso) {
+            $this->has_imagem_verso = $request['has_imagem_verso'];
+        }
         $this->nome = $request['nome'];
         $this->texto = $request['texto'];
         $this->tipo = $request['tipo'];
