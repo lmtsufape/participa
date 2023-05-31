@@ -85,6 +85,11 @@ class CertificadoController extends Controller
         $path = 'certificados/'.$evento->id;
         $novo_caminho = $certificado->uploadArquivo($path, true, $imagem);
         $certificado->caminho = $novo_caminho;
+        if ($certificado->has_imagem_verso) {
+            $verso = $validated['imagem_verso'];
+            $caminho_verso = $certificado->uploadArquivo($path, true, $verso);
+            $certificado->imagem_verso = $caminho_verso;
+        }
         $certificado->save();
 
         if (!$request->imagem_assinada) {
@@ -142,7 +147,7 @@ class CertificadoController extends Controller
         $certificado->setAtributes($validatedData);
 
         if ($request->fotoCertificado != null) {
-            $validatedData = $request->validate([
+            $request->validate([
                 'fotoCertificado'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
             ]);
             if (Storage::disk()->exists('public/'.$certificado->caminho)) {
@@ -153,6 +158,20 @@ class CertificadoController extends Controller
             $path = 'certificados/'.$evento->id;
             $novo_caminho = $certificado->uploadArquivo($path, true, $imagem);
             $certificado->caminho = $novo_caminho;
+        }
+
+        if ($request->imagem_verso != null || !$validatedData['verso'] || !$validatedData['has_imagem_verso']) {
+            if (Storage::disk()->exists('public/'.$certificado->imagem_verso)) {
+                Storage::delete('public/'.$certificado->imagem_verso);
+            }
+            $certificado->imagem_verso = null;
+        }
+
+        if ($request->imagem_verso != null) {
+            $imagem = $request->imagem_verso;
+            $path = 'certificados/'.$evento->id;
+            $novo_caminho = $certificado->uploadArquivo($path, true, $imagem);
+            $certificado->imagem_verso = $novo_caminho;
         }
 
         if (!$request->imagem_assinada) {
