@@ -8,11 +8,14 @@
     <style>
         @page { margin: 0; }
         #container, #back{
-            background-image: url({{ "/storage/" .$certificado->caminho }});
             background-repeat: no-repeat;
             background-size: 100% 100%;
             width: 1118px;
             height: 790px;
+        }
+
+        #container {
+            background-image: url({{ "/storage/" .$certificado->caminho }});
         }
 
         .d-none {
@@ -30,7 +33,11 @@
 <body style="text-align: center;">
         <div id="container"></div>
         @if($certificado->verso)
-            <div id="back" style="margin-top: 10px"></div>
+            @if ($certificado->has_imagem_verso)
+                <div id="back" style="margin-top: 10px; background-image: url('/storage/{{$certificado->imagem_verso }}')"></div>
+            @else
+                <div id="back" style="margin-top: 10px; background-image: url('/storage/{{$certificado->caminho }}')"></div>
+            @endif
         @endif
         <button id="btn" onclick="send()">Salvar</button>
         <form id="form" action="{{route('coord.cadastrarmedida')}}" class="d-none" method="POST">
