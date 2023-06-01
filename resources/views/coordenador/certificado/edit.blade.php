@@ -114,6 +114,7 @@
                 <div class="col-sm-6 form-group">
                     <label for="tags"><b>{{ __('Tags que podem ser utilizadas para recuperar informações no certificado:') }}</b></label>
                     <p style="display: none;" id="tagNOME_PESSOA">%NOME_PESSOA% para preencher o nome da pessoa que está sendo certificada</p>
+                    <p style="display: none;" id="tagAUTOR">%AUTOR% para preencher o nome do autor principal do trabalho</p>
                     <p style="display: none;" id="tagCPF">%CPF% para preencher o CPF da pessoa que está sendo certicidada</p>
                     <p style="display: none;" id="tagTITULO_TRABALHO">%TITULO_TRABALHO% para preencher o título do trabalho do autor ou coautor</p>
                     <p style="display: none;" id="tagNOME_EVENTO">%NOME_EVENTO% para preencher o nome do evento</p>
@@ -263,6 +264,7 @@
             switch($("#tipo").val()){
                 case '1':
                     esconderTags();
+                    $("#tagAUTOR").show();
                     $("#tagCPF").show();
                     $("#tagTITULO_TRABALHO").show();
                     $("#tagCOAUTORES").show();

@@ -39,8 +39,8 @@
                 width: {{$certificado->medidas->where("tipo", $tipos["texto"])->first()->largura}}px;">
                 {!!
                     str_replace(
-                        ['%NOME_PESSOA%', '%TITULO_TRABALHO%', '%NOME_EVENTO%', '%TITULO_PALESTRA%', '%CPF%', '%NOME_COMISSAO%', '%COAUTORES%', '%NOME_ATIVIDADE%', '%CARGA_HORARIA%'],
-                        [$user->name ?: $user->nome,$trabalho->titulo ?? "VARIAVEL INDEFINIDA", $evento->nome, $palestra->titulo ?? 'VARIAVEL INDEFINIDA', $user->cpf, $comissao->nome ?? 'VARIAVEL INDEFINIDA', $coautores ?? '', $atividade->titulo ?? 'VARIAVEL INDEFINIDA', $atividade->carga_horaria ?? 'VARIABLE INDEFINIDA'],
+                        ['%AUTOR%', '%NOME_PESSOA%', '%TITULO_TRABALHO%', '%NOME_EVENTO%', '%TITULO_PALESTRA%', '%CPF%', '%NOME_COMISSAO%', '%COAUTORES%', '%NOME_ATIVIDADE%', '%CARGA_HORARIA%'],
+                        [$trabalho->autor->name, $user->name ?: $user->nome,$trabalho->titulo ?? "VARIAVEL INDEFINIDA", $evento->nome, $palestra->titulo ?? 'VARIAVEL INDEFINIDA', $user->cpf, $comissao->nome ?? 'VARIAVEL INDEFINIDA', $coautores ?? '', $atividade->titulo ?? 'VARIAVEL INDEFINIDA', $atividade->carga_horaria ?? 'VARIABLE INDEFINIDA'],
                         $texto
                     )
                 !!}
