@@ -62,6 +62,11 @@
                                 </a>
                             </div>
                             <div>
+                                <a data-toggle="modal" data-target="#modalStaticDuplicarCertificado_{{$certificado->id}}" style="color: #3490dc; cursor: pointer;">
+                                    <i class="fas fa-copy" style="color: black"></i>&nbsp;&nbsp;Duplicar
+                                </a>
+                            </div>
+                            <div>
                                 <a href="{{route('coord.listarEmissoes', $certificado)}}">
                                     <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Listar certificados emitidos
                                 </a>
@@ -81,7 +86,7 @@
 
 @endsection
 
-<!-- Modal deletar certificado -->
+<!-- Modal deletar e duplicar certificado -->
 @foreach($certificados as $certificado)
     <div class="modal fade" id="modalStaticDeletarCertificado_{{$certificado->id}}" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -101,6 +106,32 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-danger" form="deletar-certificado-form-{{$certificado->id}}">Sim</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalStaticDuplicarCertificado_{{$certificado->id}}" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #114048ff; color: white;">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Duplicar certificado</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="duplicar-certificado-form-{{$certificado->id}}" method="POST" action="{{route('coord.certificado.duplicar', $certificado->id)}}">
+                        @csrf
+                        <div class="form-group">
+                            <label for="nome">Nome do certificado <span style="color: red">*</span> </label>
+                            <input type="text" name="nome" required class="form-control" id="nome">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" form="duplicar-certificado-form-{{$certificado->id}}">Salvar</button>
                 </div>
             </div>
         </div>
