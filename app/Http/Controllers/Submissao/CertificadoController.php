@@ -21,6 +21,7 @@ use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\File;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -99,6 +100,35 @@ class CertificadoController extends Controller
         }
 
         return redirect(route('coord.listarCertificados', ['eventoId' => $evento->id]))->with(['success' => 'Certificado cadastrado com sucesso.']);
+    }
+
+    public function duplicar(Request $request, Certificado $certificado)
+    {
+        $evento = $certificado->evento;
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        $novo = $certificado->replicate();
+        $novo->nome = $request->nome;
+        $novo->save();
+        $path = 'certificados/'.$evento->id;
+        $imagem = Storage::disk('public')->path($novo->caminho);
+        $novo_caminho = Storage::disk('public')->putFile($path, new File($imagem));
+        $novo->caminho = $novo_caminho;
+        if ($novo->has_imagem_verso) {
+            $verso = Storage::disk('public')->path($novo->imagem_verso);
+            $caminho_verso = Storage::disk('public')->putFile($path, new File($verso));
+            $novo->imagem_verso = $caminho_verso;
+        }
+        if ($certificado->assinaturas()->exists()) {
+            $novo->assinaturas()->saveMany($certificado->assinaturas);
+        }
+        $medidas = $certificado->medidas;
+        $novas_medidas = collect();
+        foreach ($medidas as $medida) {
+            $novas_medidas->push($medida->replicate(['certificado_id']));
+        }
+        $novo->save();
+        $novo->medidas()->saveMany($novas_medidas);
+        return redirect(route('coord.listarCertificados', ['eventoId' => $evento->id]))->with(['success' => 'Certificado duplicado com sucesso.']);
     }
 
     /**
