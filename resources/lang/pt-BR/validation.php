@@ -217,17 +217,27 @@ return [
         'inicioRevisao*' => [
             'required'  => 'O campo é obrigatório.',
             'date'      => 'O campo deve ter uma data válida.',
-            'after'     => 'Início da revisão deve ser uma data depois do fim da submissão.',
+            'after'     => 'Início da Avaliação deve ser uma data depois do fim da submissão.',
+        ],
+        'inícioRevisão*' => [
+            'required'  => 'O campo é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+            'after'     => 'Início da Avaliação deve ser uma data depois do fim da submissão.',
         ],
         'fimRevisao*' => [
             'required'  => 'O campo é obrigatório.',
             'date'      => 'O campo deve ter uma data válida.',
-            'after'     => 'Fim da revisão deve ser uma data depois do início da submissão.',
+            'after'     => 'Fim da Avaliação deve ser uma data depois do início da submissão.',
+        ],
+        'fimRevisão*' => [
+            'required'  => 'O campo é obrigatório.',
+            'date'      => 'O campo deve ter uma data válida.',
+            'after'     => 'Fim da Avaliação deve ser uma data depois do início da submissão.',
         ],
         'inicioCorrecao*' => [
             'required'      => 'O campo é obrigatório.',
             'date'          => 'O campo deve ter uma data válida.',
-            'after'         => 'Início da correção deve ser uma data depois do fim da revisão.',
+            'after'         => 'Início da correção deve ser uma data depois do fim da avaliação.',
             'required_with' => 'O campo início da correção é obrigatório quando fim da correção está presente.'
         ],
         'fimCorrecao*' => [
@@ -251,7 +261,7 @@ return [
         'inicioResultado*' => [
             'required'      => 'O campo é obrigatório.',
             'date'          => 'O campo deve ter uma data válida.',
-            'after'         => 'Resultado deve ser uma data depois do fim da revisão.',
+            'after'         => 'Resultado deve ser uma data depois do fim da avaliação.',
         ],
         'inicioSubmissao*' => [
             'required'  => 'O campo é obrigatório.',
