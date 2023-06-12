@@ -393,7 +393,7 @@
                     <div class="flexContainer" style="margin-top:20px">
                         <div class="row">
                             <div class="col">
-                                <h4>Autor(a)</h4>
+                                <label><b>{{$trabalho->evento->formSubTrab->etiquetaautortrabalho}}</b></label>
                             </div>
                             <div class="col mr-5">
                                 <div class="float-right">
@@ -406,7 +406,7 @@
                         <div id="coautores{{$trabalho->id}}" class="flexContainer " >
                             @if (old('nomeCoautor_'.$trabalho->id) != null)
                                 @foreach (old('nomeCoautor_'.$trabalho->id) as $i => $nomeCoautor)
-                                    <div class="item card">
+                                    <div class="item card mt-0">
                                         <div class="row card-body">
                                             <div class="col-sm-4">
                                                 <label>E-mail</label>
@@ -431,7 +431,7 @@
                                     </div>
                                 @endforeach
                             @else
-                                <div class="item card">
+                                <div class="item card mt-0">
                                     <div class="row card-body">
                                         <div class="col-sm-4">
                                             <label>E-mail</label>
@@ -455,10 +455,10 @@
                                     </div>
                                 </div>
                                 @if(! $trabalho->coautors->isEmpty())
-                                    <h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">Coautor(es)</h4>
+                                    <label id="title-coautores{{$trabalho->id}}" style="margin-top:20px"><b>{{$trabalho->evento->formSubTrab->etiquetacoautortrabalho}}</b></label>
                                 @endif
                                 @foreach ($trabalho->coautors as $i => $coautor)
-                                <div class="item card">
+                                <div class="item card mt-0">
                                     <div class="row card-body">
                                         <div class="col-sm-4">
                                             <label>E-mail</label>
@@ -996,7 +996,7 @@
                             @if($trabalho->coautors->first() != null)
                                 <h4>Co-autores</h4>
                                 @foreach ($trabalho->coautors as $i => $coautor)
-                                <div class="item card">
+                                <div class="item card mt-0">
                                     <div class="row card-body">
                                         <div class="col-sm-4">
                                             <label>E-mail</label>
@@ -1094,11 +1094,11 @@
     var coautores = document.getElementById("coautores"+id);
     var html = "";
     if (coautores.children.length==1){
-        html = `<h4 id="title-coautores${id}" style="margin-top:20px">Coautor(es)</h4>`;
+        html = `<label id="title-coautores${id}" style="margin-top:20px"><b>{{$trabalho->evento->formSubTrab->etiquetacoautortrabalho}}</b></label>`;
     }
     event.preventDefault();
     html += `
-    <div class="item card">
+    <div class="item card mt-0">
         <div class="row card-body">
             <div class="col-sm-4">
                 <label>E-mail</label>

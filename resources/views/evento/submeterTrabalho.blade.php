@@ -79,19 +79,19 @@
                                             <div class="row align-items-center justify-content-between"
                                                 style="flex-wrap: unset">
                                                 <div class="col-md-12">
-                                                    <h4>{{$evento->formSubTrab->etiquetaautortrabalho}}</h4>
+                                                    <label><b>{{$evento->formSubTrab->etiquetaautortrabalho}}</b></label>
                                                 </div>
                                             </div>
-                                            <div id="coautores">
+                                            <div id="coautores" class="mb-2">
                                                 <template x-for="(autor, index) in autores" :key="index">
                                                     <div class="row">
                                                         <template x-if="index == 1">
-                                                            <h4 class="col-sm-12" id="title-coautores"
+                                                            <label class="col-sm-12" id="title-coautores"
                                                                 style="margin-top:20px">
-                                                                {{$evento->formSubTrab->etiquetacoautortrabalho}}
-                                                            </h4>
+                                                                <b>{{$evento->formSubTrab->etiquetacoautortrabalho}}</b>
+                                                            </label>
                                                         </template>
-                                                        <div class="item card w-100">
+                                                        <div class="item card w-100 mt-0">
                                                             <div class="row card-body">
                                                                 <div :class="index == 0 ? 'col-md-6' : 'col-md-4 col-lg-4'">
                                                                     <label :for="'email' + index">E-mail</label>

@@ -75,7 +75,7 @@
                   <div class="flexContainer" style="margin-top:20px">
                     <div class="row">
                         <div class="col">
-                            <h4>{{$evento->formSubTrab->etiquetaautortrabalho}}</h4>
+                            <label><b>{{$evento->formSubTrab->etiquetaautortrabalho}}</b></label>
                         </div>
                         <div class="col mr-5">
                             <div class="float-right">
@@ -89,9 +89,9 @@
                           @if (old('nomeCoautor_'.$trabalho->id) != null)
                             @foreach (old('nomeCoautor_'.$trabalho->id) as $i => $nomeCoautor)
                                 @if($i == 1)
-                                    <h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">{{$evento->formSubTrab->etiquetacoautortrabalho}}</h4>
+                                    <label id="title-coautores{{$trabalho->id}}" style="margin-top:20px"><b>{{$evento->formSubTrab->etiquetacoautortrabalho}}</b></label>
                                 @endif
-                                <div class="item card">
+                                <div class="item card mt-0">
                                     <div class="row card-body">
                                         <div class="col-sm-4">
                                             <label>E-mail</label>
@@ -116,7 +116,7 @@
                                 </div>
                             @endforeach
                           @else
-                            <div class="item card">
+                            <div class="item card mt-0">
                                 <div class="row card-body">
                                     <div class="col-sm-4">
                                         <label>E-mail</label>
@@ -140,10 +140,10 @@
                                 </div>
                             </div>
                             @if(! $trabalho->coautors->isEmpty())
-                                <h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">{{$evento->formSubTrab->etiquetacoautortrabalho}}</h4>
+                                <label id="title-coautores{{$trabalho->id}}" style="margin-top:20px"><b>{{$evento->formSubTrab->etiquetacoautortrabalho}}</b></label>
                             @endif
                             @foreach ($trabalho->coautors as $i => $coautor)
-                                <div class="item card">
+                                <div class="item card mt-0">
                                     <div class="row card-body">
                                         <div class="col-sm-4">
                                             <label>E-mail</label>
@@ -206,7 +206,7 @@
                   <!-- Areas -->
                   <div class="row justify-content-center">
                       <div class="col-sm-12">
-                          <label for="area_{{$trabalho->id}}" class="col-form-label">{{$formSubTraba->etiquetaareatrabalho}}</label>
+                          <label for="area_{{$trabalho->id}}" class="col-form-label"><b>{{$formSubTraba->etiquetaareatrabalho}}</b></label>
                           <select id="area_{{$trabalho->id}}" class="form-control @error('area'.$trabalho->id) is-invalid @enderror" name="area{{$trabalho->id}}" required>
                               <option value="" disabled selected hidden>-- Área --</option>
                               {{-- Apenas um teste abaixo --}}
@@ -231,7 +231,7 @@
                   <!-- Modalidades -->
                 <div class="row justify-content-center">
                     <div class="col-sm-12">
-                        <label for="modalidade_{{$trabalho->id}}" class="col-form-label">Modalidade</label>
+                        <label for="modalidade_{{$trabalho->id}}" class="col-form-label"><b>Modalidade</b></label>
                         <select id="modalidade_{{$trabalho->id}}" class="form-control @error('modalidadeError'.$trabalho->id) is-invalid @enderror" name="modalidade{{$trabalho->id}}" required>
                             <option value="" disabled selected hidden>-- Modalidade --</option>
                             @if (old('modalidade'.$trabalho->id) != null)
@@ -259,7 +259,7 @@
 
                     @if ($modalidade->arquivo == true)
                       <div class="col-sm-12" style="margin-top: 20px;">
-                        <label for="nomeTrabalho" class="col-form-label">{{$formSubTraba->etiquetauploadtrabalho}}:</label>
+                        <label for="nomeTrabalho" class="col-form-label"><b>{{$formSubTraba->etiquetauploadtrabalho}}:</b></label>
                           <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">Arquivo atual</a>
                         <br>
                         <small>Para trocar o arquivo envie um novo.</small>
@@ -318,7 +318,6 @@
                                     class="col-form-label"><strong>{{$midia->nome}}</strong>
                                 </label>
                                 <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">Arquivo atual</a>
-                                <br>
                                 <small>Para trocar o arquivo envie um novo.</small>
                                 <div class="custom-file">
                                     <input type="file" class="filestyle"
@@ -606,11 +605,9 @@
                   @endif
                 @endif
               @endforeach
-            <br>
             {{-- <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" target="_new" class="m-2" style="font-size: 20px; color: #114048ff;" >
                 <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
             </a> --}}
-                <br>
                 <br>
                 <button type="submit" class="btn btn-primary mr-4" form="formEditarTrab{{$trabalho->id}}">Salvar</button>
                 <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}'">Cancelar</button>
@@ -635,11 +632,11 @@
     var coautores = document.getElementById("coautores"+id);
     var html = "";
     if (coautores.children.length==1){
-        html = `<h4 id="title-coautores{{$trabalho->id}}" style="margin-top:20px">${@json($evento->formSubTrab->etiquetacoautortrabalho)}</h4>`;
+        html = `<label id="title-coautores{{$trabalho->id}}" style="margin-top:20px"><b>${@json($evento->formSubTrab->etiquetacoautortrabalho)}</b></label>`;
     }
     event.preventDefault();
     html += `
-    <div class="item card">
+    <div class="item card mt-0">
         <div class="row card-body">
             <div class="col-sm-4">
                 <label>E-mail</label>
