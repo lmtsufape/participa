@@ -142,12 +142,12 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
 
         DB::table('form_subm_trabas')->insert([
           'eventoId'                       => 1,
-          'etiquetatitulotrabalho'         => 'Titulo',
-          'etiquetaautortrabalho'          => 'Autor',
-          'etiquetacoautortrabalho'        => 'Co-Autor',
+          'etiquetatitulotrabalho'         => 'Título',
+          'etiquetaautortrabalho'          => 'Autor(a)',
+          'etiquetacoautortrabalho'        => 'Coautor(a)',
           'etiquetaresumotrabalho'         => 'Resumo',
           'etiquetaareatrabalho'           => 'Área',
-          'etiquetauploadtrabalho'         => 'Upload de Trabalho',
+          'etiquetauploadtrabalho'         => 'Envio de Trabalho',
           'etiquetacampoextra1'            => 'Campo Extra',
           'etiquetacampoextra2'            => 'Campo Extra',
           'etiquetacampoextra3'            => 'Campo Extra',

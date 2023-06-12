@@ -47,7 +47,7 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
-                                        <label for="inicioRevisao" class="col-form-label font-weight-bold">{{ __('Início da Revisão') }}</label>
+                                        <label for="inicioRevisao" class="col-form-label font-weight-bold">{{ __('Início da Avaliação') }}</label>
                                         <input id="inicioRevisao" type="datetime-local" class="form-control @error('inicioRevisao') is-invalid @enderror" name="inicioRevisao" value="{{ old('inicioRevisao') }}" autocomplete="inicioRevisao" autofocus>
                                         @error('inicioRevisao')
                                             <span class="invalid-feedback" role="alert">
@@ -56,7 +56,7 @@
                                         @enderror
                                     </div>
                                     <div class="form-group col-sm-6">
-                                        <label for="fimRevisao" class="col-form-label font-weight-bold">{{ __('Fim da Revisão') }}</label>
+                                        <label for="fimRevisao" class="col-form-label font-weight-bold">{{ __('Fim da Avaliação') }}</label>
                                         <input id="fimRevisao" type="datetime-local" class="form-control @error('fimRevisao') is-invalid @enderror" name="fimRevisao" value="{{ old('fimRevisao') }}" autocomplete="fimRevisao" autofocus>
                                         @error('fimRevisao')
                                             <span class="invalid-feedback" role="alert">

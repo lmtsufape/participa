@@ -188,7 +188,7 @@
                                         <div class="row justify-content-center">
 
                                             <div class="col-sm-6">
-                                                <label for="inicioRevisaoEdit" class="col-form-label font-weight-bold">{{ __('Início da Revisão') }}</label>
+                                                <label for="inicioRevisaoEdit" class="col-form-label font-weight-bold">{{ __('Início da Avaliação') }}</label>
                                                 <input id="inicioRevisaoEdit" type="datetime-local" class="form-control @error('inícioRevisão'.$modalidade->id) is-invalid @enderror" name="inícioRevisão{{$modalidade->id}}" value="{{old('inicioRevisão'.$modalidade->id, $modalidade->inicioRevisao ? date('Y-m-d\TH:i', strtotime($modalidade->inicioRevisao)) : '')}}" autocomplete="inícioRevisão" autofocus>
 
                                                 @error('inícioRevisão'.$modalidade->id)
@@ -198,7 +198,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-sm-6">
-                                                <label for="fimRevisaoEdit" class="col-form-label font-weight-bold">{{ __('Fim da Revisão') }}</label>
+                                                <label for="fimRevisaoEdit" class="col-form-label font-weight-bold">{{ __('Fim da Avaliação') }}</label>
                                                 <input id="fimRevisaoEdit" type="datetime-local" class="form-control @error('fimRevisão'.$modalidade->id) is-invalid @enderror" name="fimRevisão{{$modalidade->id}}" value="{{old('fimRevisão'.$modalidade->id, $modalidade->fimRevisao ? date('Y-m-d\TH:i', strtotime($modalidade->fimRevisao)) : '')}}" autocomplete="fimRevisão" autofocus>
 
                                                 @error('fimRevisão'.$modalidade->id)
