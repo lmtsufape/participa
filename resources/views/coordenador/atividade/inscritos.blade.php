@@ -55,7 +55,10 @@
                                 <div class="modal-body"> Tem certeza que deseja cancelar a inscrição de {{$inscrito->name}}? </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                                    <a href="{{route('atividades.cancelarInscricao', ['id'=>$atividade->id, 'user'=>$inscrito->id])}}" class="btn btn-primary">Sim</a>
+                                    <form method="POST" action="{{route('atividades.cancelarInscricao', ['id'=>$atividade->id, 'user'=>$inscrito->id])}}">
+                                        @csrf
+                                        <button type="submit" class="button-prevent-multiple-submits btn btn-primary">Sim</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

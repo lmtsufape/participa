@@ -85,10 +85,16 @@
                         @if ($isInscrito)
                             @if(!$atv->atividadeInscricoesEncerradas())
                                 @if($atv->vagas > 0 && Auth::user()->atividades()->find($atv->id) == null)
-                                    <a type="button" class="btn btn-primary" href="{{route('atividades.inscricao', ['id'=>$atv->id])}}">Inscrever-se</a>
+                                    <form method="POST" action="{{route('atividades.inscricao', ['id'=>$atv->id])}}">
+                                        @csrf
+                                        <button type="submit" class="button-prevent-multiple-submits btn btn-primary">Inscrever-se</button>
+                                    </form>
                                 @elseif(Auth::user()->atividades()->find($atv->id) != null)
                                     @if (!$atv->terminou())
-                                        <a type="button" class="btn btn-primary"  href="{{route('atividades.cancelarInscricao', ['id'=>$atv->id,'user'=>Auth::user()->id])}}">Cancelar Inscrição</a>
+                                    <form method="POST" action="{{route('atividades.cancelarInscricao', ['id'=>$atv->id, 'user'=> Auth::id()])}}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Cancelar inscrição</button>
+                                    </form>
                                     @else
                                         <button type="button" class="btn btn-primary" disabled>Inscrito</button>
                                     @endif
@@ -96,7 +102,7 @@
                                     <button type="button" class="btn btn-danger"  style="pointer-events: none">Sem Vagas</button>
                                 @endif
                             @else
-                                @if(Auth::user()->atividades()->find($atv->id) != null)
+                                @if(Auth::user()->atvs()->find($atv->id) != null)
                                     <button type="button" class="btn btn-primary" disabled>Inscrito</button>
                                 @else
                                     <button type="button" class="btn btn-danger" disabled>Inscrições encerradas</button>

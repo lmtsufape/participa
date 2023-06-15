@@ -109,8 +109,8 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     Route::get('/coordenador/home','EventoController@index')->name('coord.home');
 
     //Inscrição em atividade
-    Route::get('atividades/{id}/inscrever', 'AtividadeController@inscrever')->name('atividades.inscricao');
-    Route::get('atividades/{id}/{user}/cancelarInscricao', 'AtividadeController@cancelarInscricao')->name('atividades.cancelarInscricao');
+    Route::post('atividades/{id}/inscrever', 'AtividadeController@inscrever')->name('atividades.inscricao');
+    Route::post('atividades/{id}/{user}/cancelarInscricao', 'AtividadeController@cancelarInscricao')->name('atividades.cancelarInscricao');
     Route::get('atividades/{id}/exportar', 'AtividadeController@exportInscritos')->name('atividades.exportar');
     Route::get('atividades/{id}/inscritos', 'AtividadeController@listarInscritos')->name('atividades.inscritos');
 

@@ -616,8 +616,11 @@ class AtividadeController extends Controller
         if ($atividade->atividadeInscricoesEncerradas()) {
             return redirect()->back()->with(['error' => ''.$atividade->titulo.' já iniciada. Não aceitamos mais inscritos.']);
         }
+        $user = Auth::user();
+        if ($atividade->users()->where('user_id', $user->id)->exists()) {
+            return redirect()->back()->with(['error' => 'Usuário já inscrito na atividade '.$atividade->titulo]);
+        }
         if ($atividade->vagas > 0) {
-            $user = Auth::user();
             $atividade->vagas -= 1;
             $atividade->users()->attach($user->id);
             $atividade->update();
