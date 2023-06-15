@@ -644,6 +644,15 @@ class AtividadeController extends Controller
         return redirect()->back()->with(['message' => 'Inscrição em '.$atividade->titulo.' cancelada sucesso!']);
     }
 
+    public function cancelarUmaInscricao($id, $user)
+    {
+        $atividade = Atividade::find($id);
+        $atividade->vagas += 1;
+        DB::table('atividades_user')->where('user_id', $user)->where('atividade_id', $id)->limit(1)->delete();
+        $atividade->update();
+        return redirect()->back()->with(['message' => 'Inscrição em '.$atividade->titulo.' cancelada sucesso!']);
+    }
+
     public function exportInscritos($id)
     {
         $atividade = Atividade::find($id);
