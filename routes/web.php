@@ -111,6 +111,7 @@ Route::group(['middleware' => [ 'auth','verified', 'isTemp']], function(){
     //Inscrição em atividade
     Route::post('atividades/{id}/inscrever', 'AtividadeController@inscrever')->name('atividades.inscricao');
     Route::post('atividades/{id}/{user}/cancelarInscricao', 'AtividadeController@cancelarInscricao')->name('atividades.cancelarInscricao');
+    Route::post('atividades/{id}/{user}/cancelarUmaInscricao', 'AtividadeController@cancelarUmaInscricao')->name('atividades.cancelarUmaInscricao');
     Route::get('atividades/{id}/exportar', 'AtividadeController@exportInscritos')->name('atividades.exportar');
     Route::get('atividades/{id}/inscritos', 'AtividadeController@listarInscritos')->name('atividades.inscritos');
 
