@@ -17,8 +17,8 @@ class CreateArquivoInfosTable extends Migration
             $table->bigIncrements('id');
             $table->string('nome');
             $table->string('path');
-            $table->bigInteger("evento_id");
-            $table->foreign("evento_id")->references("id")->on("eventos");
+            $table->bigInteger('evento_id');
+            $table->foreign('evento_id')->references('id')->on('eventos');
             $table->timestamps();
         });
     }

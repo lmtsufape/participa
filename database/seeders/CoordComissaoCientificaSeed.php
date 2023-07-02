@@ -14,10 +14,10 @@ class CoordComissaoCientificaSeed extends Seeder
      */
     public function run()
     {
-        $user_id = DB::table('users')->where('name','CoordComissaoCientifica')->pluck('id');
+        $user_id = DB::table('users')->where('name', 'CoordComissaoCientifica')->pluck('id');
 
-		DB::table('coord_comissao_cientificas')->insert([
-		'user_id' => $user_id[0],
-		]);
+        DB::table('coord_comissao_cientificas')->insert([
+            'user_id' => $user_id[0],
+        ]);
     }
 }

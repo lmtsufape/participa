@@ -59,20 +59,19 @@ class ComissaoController extends Controller
         $numeroComissao = count($evento->usuariosDaComissao);
 
         return view('coordenador.informacoes', [
-            'evento'                  => $evento,
-            'trabalhosEnviados'       => $trabalhosEnviados,
-            'trabalhosArquivados'     => $trabalhosArquivados,
-            'trabalhosAvaliados'      => $trabalhosAvaliados,
-            'trabalhosPendentes'      => $trabalhosPendentes,
-            'numeroRevisores'         => $numeroRevisores,
-            'numeroComissao'          => $numeroComissao,
+            'evento' => $evento,
+            'trabalhosEnviados' => $trabalhosEnviados,
+            'trabalhosArquivados' => $trabalhosArquivados,
+            'trabalhosAvaliados' => $trabalhosAvaliados,
+            'trabalhosPendentes' => $trabalhosPendentes,
+            'numeroRevisores' => $numeroRevisores,
+            'numeroComissao' => $numeroComissao,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -160,7 +159,6 @@ class ComissaoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

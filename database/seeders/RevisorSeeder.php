@@ -19,7 +19,7 @@ class RevisorSeeder extends Seeder
             'user_id' => 2,
             'areaId' => 2,
             'modalidadeId' => 2,
-            'evento_id' => 2
+            'evento_id' => 2,
         ]);
 
         DB::table('revisors')->insert([  //
@@ -27,7 +27,7 @@ class RevisorSeeder extends Seeder
             'user_id' => 3,
             'areaId' => 2,
             'modalidadeId' => 2,
-            'evento_id' => 2
+            'evento_id' => 2,
         ]);
     }
 }

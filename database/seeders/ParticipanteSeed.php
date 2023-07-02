@@ -14,10 +14,10 @@ class ParticipanteSeed extends Seeder
      */
     public function run()
     {
-        $user_id = DB::table('users')->where('name','Participante')->pluck('id');
+        $user_id = DB::table('users')->where('name', 'Participante')->pluck('id');
 
-		DB::table('participantes')->insert([
-		'user_id' => $user_id[0],
-		]);
+        DB::table('participantes')->insert([
+            'user_id' => $user_id[0],
+        ]);
     }
 }

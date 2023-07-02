@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Rules\NaoESubEvento;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 class StoreEventoRequest extends FormRequest
 {
@@ -26,24 +25,24 @@ class StoreEventoRequest extends FormRequest
     public function rules()
     {
         return [
-            'nome'        => ['required', 'string'],
-            'descricao'   => ['required', 'string'],
-            'tipo'        => ['required', 'string'],
-            'dataInicio'  => ['required', 'date', 'after:yesterday'],
-            'dataFim'     => ['required', 'date'],
-            'fotoEvento'  => ['file', 'mimes:png, jpg,jpeg'],
-            'icone'  => ['file', 'mimes:png, jpg,jpeg'],
-            'rua'         => ['required', 'string'],
-            'numero'      => ['required', 'string'],
-            'bairro'      => ['required', 'string'],
-            'cidade'      => ['required', 'string'],
-            'uf'          => ['required', 'string'],
-            'cep'         => ['required', 'string'],
+            'nome' => ['required', 'string'],
+            'descricao' => ['required', 'string'],
+            'tipo' => ['required', 'string'],
+            'dataInicio' => ['required', 'date', 'after:yesterday'],
+            'dataFim' => ['required', 'date'],
+            'fotoEvento' => ['file', 'mimes:png, jpg,jpeg'],
+            'icone' => ['file', 'mimes:png, jpg,jpeg'],
+            'rua' => ['required', 'string'],
+            'numero' => ['required', 'string'],
+            'bairro' => ['required', 'string'],
+            'cidade' => ['required', 'string'],
+            'uf' => ['required', 'string'],
+            'cep' => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
-            'eventoPai'   => ['nullable', new NaoESubEvento],
-            'email_coordenador' => ['exclude_if:eventoPai,null','exclude_if:email_coordenador,null', 'nullable', 'email'],
-            'termos'      => ['required'],
-            'dataLimiteInscricao'   => ['nullable', 'date'],
+            'eventoPai' => ['nullable', new NaoESubEvento],
+            'email_coordenador' => ['exclude_if:eventoPai,null', 'exclude_if:email_coordenador,null', 'nullable', 'email'],
+            'termos' => ['required'],
+            'dataLimiteInscricao' => ['nullable', 'date'],
         ];
     }
 

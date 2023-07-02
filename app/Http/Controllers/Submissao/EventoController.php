@@ -35,10 +35,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -479,17 +477,17 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
 
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-        $revisores = User::whereHas('revisor', function(Builder $query) use ($evento) {
+        $revisores = User::whereHas('revisor', function (Builder $query) use ($evento) {
             $query->where('evento_id', $evento->id);
         })->orderBy('name')->get();
         $contadores = $evento->revisors()->withCount([
-            'trabalhosAtribuidos as avaliados_count' => function(Builder $query) {
+            'trabalhosAtribuidos as avaliados_count' => function (Builder $query) {
                 $query->where('parecer', 'avaliado')->orWhere('parecer', 'encaminhado');
             },
-            'trabalhosAtribuidos as processando_count' => function(Builder $query) {
+            'trabalhosAtribuidos as processando_count' => function (Builder $query) {
                 $query->where('parecer', 'processando');
-            }
-            ])->get();
+            },
+        ])->get();
         $areas = $evento->areas;
         $modalidades = $evento->modalidades;
 
@@ -539,6 +537,7 @@ class EventoController extends Controller
     public function exportInscritos(Evento $evento, Request $request)
     {
         $nome = $this->somenteLetrasNumeros($evento->nome);
+
         return (new InscritosExport($evento))->download($nome.'.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
@@ -563,6 +562,7 @@ class EventoController extends Controller
             })->collect();
 
         $nome = $this->somenteLetrasNumeros($evento->nome);
+
         return (new TrabalhosExport($trabalhos))->download($nome.'- Trabalhos.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
@@ -618,6 +618,7 @@ class EventoController extends Controller
         $trabalhosCollect = $trabalhosCollect->filter();
 
         $nome = $this->somenteLetrasNumeros($evento->nome);
+
         return (new AvaliacoesExport($trabalhosCollect, $this->makeHeadingsExportAvaliacoes($form)))->download($nome.' - Avaliacões - '.$modalidade->nome.' - '.$form->titulo.'.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
@@ -888,7 +889,7 @@ class EventoController extends Controller
                 $pergunta = Pergunta::find($pergunta_id);
                 $pergunta->pergunta = $request->pergunta[$key];
 
-                $opcoes = $pergunta->respostas->first()->opcoes->sortBy("id");
+                $opcoes = $pergunta->respostas->first()->opcoes->sortBy('id');
 
                 if (isset($data['checkboxVisibilidade_'.$pergunta->id])) {
                     $pergunta->visibilidade = true;
@@ -897,12 +898,12 @@ class EventoController extends Controller
                 }
 
                 //Verificação de alteração em multipla escolha já existente
-                if($data['tipo'][$key] == 'radio'){
+                if ($data['tipo'][$key] == 'radio') {
                     //dd($request->tituloRadio);
-                    foreach($request->tituloRadio['row'.$key] as $i => $titulo){
+                    foreach ($request->tituloRadio['row'.$key] as $i => $titulo) {
                         $opcoes->first()->titulo = $titulo;
                         //Verificação de marcação da resposta da multipla escolha
-                        if(isset($request->checkbox[$opcoes->first()->id])){
+                        if (isset($request->checkbox[$opcoes->first()->id])) {
                             $opcoes->first()->check = true;
                         } else {
                             $opcoes->first()->check = false;
@@ -1155,7 +1156,7 @@ class EventoController extends Controller
         }
 
         // Verificando se o revisor já realizou a revisão do trabalho
-        if($respostas->contains(null)){
+        if ($respostas->contains(null)) {
             return redirect()->back()->withErrors('Trabalho ainda não revisado');
         }
 
@@ -1235,7 +1236,7 @@ class EventoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreEventoRequest $request)
@@ -1323,13 +1324,15 @@ class EventoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Evento $evento
+     * @param  \App\Evento  $evento
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $evento = Evento::find($id);
-        if (! $evento) return abort(404);
+        if (! $evento) {
+            return abort(404);
+        }
         $encerrada = $evento->eventoInscricoesEncerradas();
         if (auth()->user()) {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
@@ -1395,7 +1398,7 @@ class EventoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Evento $evento
+     * @param  \App\Evento  $evento
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -1410,9 +1413,8 @@ class EventoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateEventoRequest $request
-     * @param $id
      * @return RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function update(UpdateEventoRequest $request, $id)
@@ -1472,7 +1474,7 @@ class EventoController extends Controller
 
         if ($request->dataLimiteInscricao != null) {
             $request->validate([
-                'dataLimiteInscricao'   => ['required', 'date'],
+                'dataLimiteInscricao' => ['required', 'date'],
             ]);
             $evento->data_limite_inscricao = $request->dataLimiteInscricao;
         }
@@ -1485,7 +1487,7 @@ class EventoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Evento $evento
+     * @param  \App\Evento  $evento
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -1753,10 +1755,7 @@ class EventoController extends Controller
 
     /**
      * Cria um usuário para o coordenador, caso o coordenador não tenha um usuário
-     * @param $coordenador
-     * @param $evento
-     * @param $email_coordenador
-     * @param $user
+     *
      * @return mixed
      */
     private function criarUsuarioDoCoordenador($coordenador, $evento, $email_coordenador, $user)
@@ -1771,6 +1770,7 @@ class EventoController extends Controller
                 'usuarioTemp' => true,
             ]);
         }
+
         return $coordenador;
     }
 }

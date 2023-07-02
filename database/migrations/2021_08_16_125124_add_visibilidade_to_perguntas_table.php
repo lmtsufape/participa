@@ -14,7 +14,7 @@ class AddVisibilidadeToPerguntasTable extends Migration
     public function up()
     {
         Schema::table('perguntas', function (Blueprint $table) {
-            $table->boolean('visibilidade')->nullable();;
+            $table->boolean('visibilidade')->nullable();
         });
     }
 

@@ -165,14 +165,14 @@ return [
     */
 
     'attributes' => [
-        "cpf" => "CPF",
-        "passaporte" => "passport",
-        "celular" => "cellphone",
-        "instituicao" => "institution",
-        "rua" => "street",
-        "numero" => "number",
-        "cidade" => "city",
-        "cep" => "ZIP",
+        'cpf' => 'CPF',
+        'passaporte' => 'passport',
+        'celular' => 'cellphone',
+        'instituicao' => 'institution',
+        'rua' => 'street',
+        'numero' => 'number',
+        'cidade' => 'city',
+        'cep' => 'ZIP',
     ],
 
 ];

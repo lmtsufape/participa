@@ -14,11 +14,11 @@ class CoordComissaoOrganizadoraSeed extends Seeder
      */
     public function run()
     {
-        $user_id = DB::table('users')->where('name','CoordComissaoOrganizadora')->pluck('id');
+        $user_id = DB::table('users')->where('name', 'CoordComissaoOrganizadora')->pluck('id');
 
-		DB::table('coord_comissao_organizadoras')->insert([
-		'user_id' => $user_id[0],
-        'eventos_id' => 1,
-		]);
+        DB::table('coord_comissao_organizadoras')->insert([
+            'user_id' => $user_id[0],
+            'eventos_id' => 1,
+        ]);
     }
 }

@@ -20,8 +20,8 @@ class CreateValorCampoExtrasTable extends Migration
             $table->text('valor');
             $table->timestamps();
 
-            $table->foreign("inscricao_id")->references("id")->on("inscricaos");
-            $table->foreign("campo_formulario_id")->references("id")->on("campo_formularios");
+            $table->foreign('inscricao_id')->references('id')->on('inscricaos');
+            $table->foreign('campo_formulario_id')->references('id')->on('campo_formularios');
         });
     }
 

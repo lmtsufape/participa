@@ -49,6 +49,7 @@ class Evento extends Model
 
     /**
      * Retorna o usuário criador do evento
+     *
      * @return BelongsTo
      */
     public function coordenador()
@@ -58,6 +59,7 @@ class Evento extends Model
 
     /**
      * Retorna os usuários coordenadores atribuídos pelo usuário criador do evento
+     *
      * @return BelongsToMany
      */
     public function coordenadoresEvento()
@@ -93,8 +95,9 @@ class Evento extends Model
     public function revisoresDaAreaEModalidadeComContadorDeAtribuicoes($area_id, $modalidade_id)
     {
         $id = $this->id;
+
         return $this->revisors()
-            ->withCount(['trabalhosAtribuidos' => function(Builder $query) use ($id) {
+            ->withCount(['trabalhosAtribuidos' => function (Builder $query) use ($id) {
                 $query->where('eventoId', $id)->where('parecer', 'processando');
             }])
             ->get()
@@ -213,7 +216,7 @@ class Evento extends Model
     /**
      * Tells if the event subscriptions are done.
      *
-     * @param \App\Evento $evento
+     * @param  \App\Evento  $evento
      * @return bool
      */
     public function eventoInscricoesEncerradas()

@@ -34,9 +34,9 @@ class SubmissaoTrabalho extends Mailable
     public function build()
     {
         return $this->from('lmtsteste@gmail.com', 'Participa ')
-                    ->subject($this->subject)
-                    ->markdown('emails.submissaoTrabalho')->with([
-                        'user'     => $this->user,
+            ->subject($this->subject)
+            ->markdown('emails.submissaoTrabalho')->with([
+                        'user' => $this->user,
                         'trabalho' => $this->trabalho,
                     ]);
     }

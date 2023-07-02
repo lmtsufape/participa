@@ -29,8 +29,8 @@ class EmailParaUsuarioNaoCadastrado extends Mailable
      *
      * @return void
      */
-    public function __construct(String $nomeUsuarioPai, String $nomeTrabalho,
-        String $nomeFuncao, String $nomeEvento, String $senhaTemporaria, String $email, $coord)
+    public function __construct(string $nomeUsuarioPai, string $nomeTrabalho,
+        string $nomeFuncao, string $nomeEvento, string $senhaTemporaria, string $email, $coord)
     {
         $this->nomeUsuarioPai = $nomeUsuarioPai;
         $this->nomeTrabalho = $nomeTrabalho;
@@ -48,9 +48,9 @@ class EmailParaUsuarioNaoCadastrado extends Mailable
      */
     public function build()
     {
-        return  $this->from('lmtsteste@gmail.com', 'Participa ')
-                    ->subject('Ative sua conta')
-                    ->markdown('emails.usuarioNaoCadastrado')->with([
+        return $this->from('lmtsteste@gmail.com', 'Participa ')
+            ->subject('Ative sua conta')
+            ->markdown('emails.usuarioNaoCadastrado')->with([
                         'user' => $this->nomeUsuarioPai,
                         'evento' => $this->nomeEvento,
                         'funcao' => $this->nomeFuncao,

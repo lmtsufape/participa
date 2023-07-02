@@ -54,13 +54,13 @@ class EmailConviteRevisor extends Mailable
         //     'info'      => $this->informacoes,
         //     'evento'    => $this->evento,
         // ]);
-        return  $this->from('lmtsteste@gmail.com', 'Participa')
-                    ->subject($this->subject)
-                    ->markdown('emails.emailConviteRevisor', [
-                        'user'      => $this->user,
-                        'info'      => $this->informacoes,
-                        'evento'    => $this->evento,
-                        'coord'    => $this->coord,
-                    ]);
+        return $this->from('lmtsteste@gmail.com', 'Participa')
+            ->subject($this->subject)
+            ->markdown('emails.emailConviteRevisor', [
+                'user' => $this->user,
+                'info' => $this->informacoes,
+                'evento' => $this->evento,
+                'coord' => $this->coord,
+            ]);
     }
 }

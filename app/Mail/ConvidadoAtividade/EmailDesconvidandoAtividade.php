@@ -36,12 +36,12 @@ class EmailDesconvidandoAtividade extends Mailable
      */
     public function build()
     {
-        return  $this->from('lmtsteste@gmail.com', 'Eventos - LMTS')
-                    ->subject($this->subject)
-                    ->view('emails.convidadoAtividade.desconvidandoAtividade')
-                    ->with([
-                        'convidado' => $this->convidado,
-                        'info' => $this->informacoes,
-                    ]);
+        return $this->from('lmtsteste@gmail.com', 'Eventos - LMTS')
+            ->subject($this->subject)
+            ->view('emails.convidadoAtividade.desconvidandoAtividade')
+            ->with([
+                'convidado' => $this->convidado,
+                'info' => $this->informacoes,
+            ]);
     }
 }

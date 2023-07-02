@@ -23,7 +23,7 @@ class AssinaturaController extends Controller
         $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
 
         return view('coordenador.certificado.indexAssinatura', [
-            'evento'=> $evento,
+            'evento' => $evento,
             'assinaturas' => $assinaturas,
         ]);
     }
@@ -39,7 +39,7 @@ class AssinaturaController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         return view('coordenador.certificado.createAssinatura', [
-            'evento'=> $evento,
+            'evento' => $evento,
         ]);
     }
 
@@ -67,7 +67,6 @@ class AssinaturaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Submissao\Assinatura  $assinatura
      * @return \Illuminate\Http\Response
      */
     public function show(Assinatura $assinatura)
@@ -89,14 +88,13 @@ class AssinaturaController extends Controller
 
         return view('coordenador.certificado.editAssinatura', [
             'assinatura' => $assinatura,
-            'evento'=> $evento,
+            'evento' => $evento,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Submissao\Assinatura  $assinatura
      * @return \Illuminate\Http\Response
      */
@@ -105,22 +103,21 @@ class AssinaturaController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $validatedData = $request->validate([
-            'nome'              => 'required|string|min:10|max:290',
-            'cargo'              => 'required|string|max:290',
+            'nome' => 'required|string|min:10|max:290',
+            'cargo' => 'required|string|max:290',
         ]);
         $assinatura = Assinatura::find($id);
         $assinatura->setAtributes($request);
 
         if ($request->fotoAssinatura != null) {
             $validatedData = $request->validate([
-                'fotoAssinatura'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
+                'fotoAssinatura' => 'required|file|mimes:png,jpeg,jpg|max:2048',
             ]);
             if (Storage::disk()->exists('public/'.$assinatura->caminho)) {
                 Storage::delete('storage/'.$assinatura->caminho);
             }
             $imagem = $request->fotoAssinatura;
 
-            
             $path = 'assinaturas/'.$evento->id.'/';
             $nome = $imagem->getClientOriginalName();
             $nomeSemEspaco = str_replace(' ', '', $nome);

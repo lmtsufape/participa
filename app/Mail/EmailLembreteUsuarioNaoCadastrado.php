@@ -23,7 +23,7 @@ class EmailLembreteUsuarioNaoCadastrado extends Mailable
      *
      * @return void
      */
-    public function __construct(String $nomeEvento, String $senhaTemporaria, String $email, $coord)
+    public function __construct(string $nomeEvento, string $senhaTemporaria, string $email, $coord)
     {
         $this->nomeEvento = $nomeEvento;
         $this->senhaTemporaria = $senhaTemporaria;
@@ -38,9 +38,9 @@ class EmailLembreteUsuarioNaoCadastrado extends Mailable
      */
     public function build()
     {
-        return  $this->from('lmtsteste@gmail.com', 'Participa ')
-                    ->subject('Sistema Participa - Lembrete de cadastro')
-                    ->markdown('emails.emailLembreteCadastro')->with([
+        return $this->from('lmtsteste@gmail.com', 'Participa ')
+            ->subject('Sistema Participa - Lembrete de cadastro')
+            ->markdown('emails.emailLembreteCadastro')->with([
                         'evento' => $this->nomeEvento,
                         'senha' => $this->senhaTemporaria,
                         'email' => $this->email,

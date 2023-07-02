@@ -24,11 +24,11 @@ class CertificadoRequest extends FormRequest
     public function rules()
     {
         return [
-            'local'              => 'required|string|min:3|max:40',
-            'nome'              => 'required|string|min:5|max:290',
-            'texto'              => 'required|string|min:5',
-            'tipo'              => 'required',
-            'fotoCertificado'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
+            'local' => 'required|string|min:3|max:40',
+            'nome' => 'required|string|min:5|max:290',
+            'texto' => 'required|string|min:5',
+            'tipo' => 'required',
+            'fotoCertificado' => 'required|file|mimes:png,jpeg,jpg|max:2048',
             'assinaturas' => 'required_if:imagem_assinada,false',
             'data' => 'required|date',
             'tipo_comissao_id' => 'required_if:tipo,8|exclude_unless:tipo,8',
@@ -36,7 +36,7 @@ class CertificadoRequest extends FormRequest
             'verso' => 'required|boolean',
             'imagem_assinada' => 'nullable|boolean',
             'has_imagem_verso' => 'exclude_if:verso,false',
-            'imagem_verso' => 'exclude_if:verso,false,|exclude_if:has_imagem_verso,false|required_if:has_imagem_verso,true|image'
+            'imagem_verso' => 'exclude_if:verso,false,|exclude_if:has_imagem_verso,false|required_if:has_imagem_verso,true|image',
         ];
     }
 
@@ -51,10 +51,10 @@ class CertificadoRequest extends FormRequest
     public function messages()
     {
         return [
-            'assinaturas.required'     => 'Selecione ao menos uma assinatura para o certificado',
+            'assinaturas.required' => 'Selecione ao menos uma assinatura para o certificado',
             'fotoCertificado.required' => 'A imagem do certificado é obrigatória',
-            'fotoCertificado.max'      => 'A imagem do certificado deve ter no máximo 2MB',
-            'fotoCertificado.mimes'    => 'A imagem do certificado deve ser em um dos formatos permitidos',
+            'fotoCertificado.max' => 'A imagem do certificado deve ter no máximo 2MB',
+            'fotoCertificado.mimes' => 'A imagem do certificado deve ser em um dos formatos permitidos',
         ];
     }
 

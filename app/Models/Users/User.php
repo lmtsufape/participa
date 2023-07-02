@@ -120,6 +120,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Retorna os eventos que o usuário criou
+     *
      * @return HasMany
      */
     public function eventos()
@@ -129,6 +130,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Retorna os eventos em que o usuário foi atribuído como coordenador pelo usuário criador do evento
+     *
      * @return BelongsToMany
      */
     public function eventosCoordenador()

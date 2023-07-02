@@ -54,8 +54,8 @@ class UserController extends Controller
 
             $validator = $request->validate([
                 'name' => 'bail|required|string|max:255',
-                'cpf'           => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
-                'passaporte'    => ($request->cpf == null ? 'bail|required|max:10' : 'nullable'),
+                'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
+                'passaporte' => ($request->cpf == null ? 'bail|required|max:10' : 'nullable'),
                 'celular' => 'required|string|max:20',
                 'instituicao' => 'required|string| max:255',
                 'especialidade' => 'nullable|string',
@@ -108,8 +108,8 @@ class UserController extends Controller
             $user = User::find($request->id);
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
-                'cpf'           => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
-                'passaporte'    => ($request->cpf == null && $request->cpf == null ? ['bail', 'required', 'max:10'] : ['nullable']),
+                'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
+                'passaporte' => ($request->cpf == null && $request->cpf == null ? ['bail', 'required', 'max:10'] : ['nullable']),
                 'celular' => 'required|string|max:20',
                 'instituicao' => 'required|string| max:255',
                 // 'especProfissional' => 'nullable|string',
@@ -121,10 +121,10 @@ class UserController extends Controller
                 'uf' => 'required|string',
                 'cep' => 'required|string',
                 'pais' => 'required',
-                'email'             => 'required|string|email|max:255',
-                'senha_atual'       => 'nullable|string|min:8',
-                'password'          => 'nullable|string|min:8',
-                'password-confirm'  => 'nullable|string|min:8',
+                'email' => 'required|string|email|max:255',
+                'senha_atual' => 'nullable|string|min:8',
+                'password' => 'nullable|string|min:8',
+                'password-confirm' => 'nullable|string|min:8',
             ]);
 
             // User
@@ -220,9 +220,9 @@ class UserController extends Controller
         }
 
         return view('user.meusTrabalhos', [
-            'trabalhos'           => $trabalhos,
-            'trabalhosCoautor'    => $trabalhosCoautor,
-            'agora'               => $agora,
+            'trabalhos' => $trabalhos,
+            'trabalhosCoautor' => $trabalhosCoautor,
+            'agora' => $agora,
         ]);
     }
 

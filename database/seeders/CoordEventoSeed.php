@@ -14,10 +14,10 @@ class CoordEventoSeed extends Seeder
      */
     public function run()
     {
-        $user_id = DB::table('users')->where('name','coord')->pluck('id');
+        $user_id = DB::table('users')->where('name', 'coord')->pluck('id');
 
-		DB::table('coordenador_eventos')->insert([
-		'user_id' => $user_id[0],
-		]);
+        DB::table('coordenador_eventos')->insert([
+            'user_id' => $user_id[0],
+        ]);
     }
 }

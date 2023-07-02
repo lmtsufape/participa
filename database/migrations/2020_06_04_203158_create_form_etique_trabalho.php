@@ -22,7 +22,7 @@ class CreateFormEtiqueTrabalho extends Migration
             $table->string('etiquetaresumotrabalho')->default('Resumo');
             $table->string('etiquetaareatrabalho')->default('Área');
             $table->string('etiquetauploadtrabalho')->default('Upload de Trabalho');
-            
+
             // Etiquetas de campos extras
             $table->string('etiquetacampoextra1')->default('Campo Extra');
             $table->string('etiquetacampoextra2')->default('Campo Extra');
@@ -36,8 +36,8 @@ class CreateFormEtiqueTrabalho extends Migration
             $table->string('tipocampoextra3')->nullable();
             $table->string('tipocampoextra4')->nullable();
             $table->string('tipocampoextra5')->nullable();
-            
-            // Checkboxes para exibição ou não dos campos extras 
+
+            // Checkboxes para exibição ou não dos campos extras
             $table->boolean('checkcampoextra1')->nullable();
             $table->boolean('checkcampoextra2')->nullable();
             $table->boolean('checkcampoextra3')->nullable();
@@ -46,8 +46,8 @@ class CreateFormEtiqueTrabalho extends Migration
 
             $table->text('ordemCampos')->default('etiquetatitulotrabalho,etiquetaautortrabalho,etiquetacoautortrabalho,etiquetaresumotrabalho,etiquetaareatrabalho,etiquetauploadtrabalho,checkcampoextra1,etiquetacampoextra1,select_campo1,checkcampoextra2,etiquetacampoextra2,select_campo2,checkcampoextra3,etiquetacampoextra3,select_campo3,checkcampoextra4,etiquetacampoextra4,select_campo4,checkcampoextra5,etiquetacampoextra5,select_campo5');
 
-            $table->bigInteger("eventoId")->nullable();
-            $table->foreign("eventoId")->references("id")->on("eventos");
+            $table->bigInteger('eventoId')->nullable();
+            $table->foreign('eventoId')->references('id')->on('eventos');
             $table->timestamps();
         });
     }

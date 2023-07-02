@@ -44,35 +44,33 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         // dd($data);
         return Validator::make($data, [
-            'name'          => ['required', 'string', 'max:255'],
-            'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password'      => ['required', 'string', 'min:8', 'confirmed'],
-            'cpf'           => ($data['passaporte'] == null ? ['required', 'cpf'] : 'nullable'),
-            'passaporte'    => ($data['cpf'] == null ? 'required|max:10' : 'nullable'),
-            'celular'       => ['required', 'string', 'max:20'],
-            'instituicao'   => ['required', 'string', 'max:255'],
-            'pais'          => ['required', 'string', 'max:255'],
-            'rua'           => ['required', 'string', 'max:255'],
-            'numero'        => ['required', 'string'],
-            'bairro'        => ['required', 'string', 'max:255'],
-            'cidade'        => ['required', 'string', 'max:255'],
-            'uf'            => ['required', 'string'],
-            'cep'           => ['required', 'string'],
-            'complemento'   => ['nullable', 'string'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'cpf' => ($data['passaporte'] == null ? ['required', 'cpf'] : 'nullable'),
+            'passaporte' => ($data['cpf'] == null ? 'required|max:10' : 'nullable'),
+            'celular' => ['required', 'string', 'max:20'],
+            'instituicao' => ['required', 'string', 'max:255'],
+            'pais' => ['required', 'string', 'max:255'],
+            'rua' => ['required', 'string', 'max:255'],
+            'numero' => ['required', 'string'],
+            'bairro' => ['required', 'string', 'max:255'],
+            'cidade' => ['required', 'string', 'max:255'],
+            'uf' => ['required', 'string'],
+            'cep' => ['required', 'string'],
+            'complemento' => ['nullable', 'string'],
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
      * @return \App\User
      */
     protected function create(array $data)

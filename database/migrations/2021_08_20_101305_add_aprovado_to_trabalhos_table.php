@@ -9,12 +9,13 @@ class AddAprovadoToTrabalhosTable extends Migration
     /**
      * Run the migrations.
      * Adicionar coluna para controle de aprovação do trabalho pelos revisores
+     *
      * @return void
      */
     public function up()
     {
         Schema::table('trabalhos', function (Blueprint $table) {
-            $table->boolean('aprovado')->nullable();;
+            $table->boolean('aprovado')->nullable();
         });
     }
 

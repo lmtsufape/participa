@@ -8,7 +8,6 @@ class TipoApresentacao extends Model
 {
     protected $fillable = [
         'tipo',
-        'modalidade_id'
+        'modalidade_id',
     ];
-
 }

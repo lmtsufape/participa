@@ -17,8 +17,8 @@ class CreateParagrafosTable extends Migration
             $table->bigIncrements('id');
             $table->text('resposta')->nullable();
 
-            $table->bigInteger("resposta_id");
-            $table->foreign("resposta_id")->references("id")->on("respostas")->onDelete('cascade');
+            $table->bigInteger('resposta_id');
+            $table->foreign('resposta_id')->references('id')->on('respostas')->onDelete('cascade');
             $table->timestamps();
         });
     }

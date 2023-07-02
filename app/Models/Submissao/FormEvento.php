@@ -15,7 +15,7 @@ class FormEvento extends Model
         'etiquetanomeevento', 'etiquetatipoevento', 'etiquetadescricaoevento', 'etiquetadatas',
         'etiquetasubmissoes', 'etiquetabaixarregra', 'etiquetabaixartemplate', 'etiquetaenderecoevento', 'etiquetamoduloinscricao', 'etiquetamoduloprogramacao', 'etiquetamoduloorganizacao',
         'modinscricao', 'modprogramacao', 'modorganizacao', 'modsubmissao', 'eventoId',
-        'etiquetaarquivo', 'etiquetabaixarinstrucoes'
+        'etiquetaarquivo', 'etiquetabaixarinstrucoes',
     ];
 
     public function evento()

@@ -21,7 +21,7 @@ class CreateMemoriasTable extends Migration
 
             $table->unsignedBigInteger('evento_id');
             $table->foreign('evento_id')->references('id')->on('eventos');
-            
+
             $table->timestamps();
         });
     }

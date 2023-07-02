@@ -12,7 +12,6 @@ use App\Models\Submissao\Area;
 use App\Models\Submissao\ArquivoAvaliacao;
 use App\Models\Submissao\Atribuicao;
 use App\Models\Submissao\Evento;
-use App\Models\Submissao\Form;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\Opcao;
 use App\Models\Submissao\Paragrafo;
@@ -86,7 +85,6 @@ class RevisorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -94,8 +92,8 @@ class RevisorController extends Controller
         // dd($request);
         $validatedData = $request->validate([
             'emailRevisor' => ['required', 'string', 'email', 'max:255'],
-            'areas'        => ['required'],
-            'modalidades'  => ['required'],
+            'areas' => ['required'],
+            'modalidades' => ['required'],
         ]);
 
         $usuario = User::where('email', $request->emailRevisor)->first();
@@ -171,7 +169,6 @@ class RevisorController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Revisor  $revisor
      * @return \Illuminate\Http\Response
      */
@@ -182,7 +179,7 @@ class RevisorController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $validatedData = $request->validate([
-            'editarRevisor'   => 'required',
+            'editarRevisor' => 'required',
             'areasEditadas_'.$user->id => 'required',
             'modalidadesEditadas_'.$user->id => 'required',
         ]);
@@ -306,7 +303,7 @@ class RevisorController extends Controller
         $evento = Evento::find($request->evento_id);
 
         Mail::to($user->email)
-          ->send(new EmailLembrete($user, $request->assunto, ' ', ' ', ' ', $evento, $evento->coordenador));
+            ->send(new EmailLembrete($user, $request->assunto, ' ', ' ', ' ', $evento, $evento->coordenador));
 
         return redirect()->back()->with(['mensagem' => 'E-mail de lembrete de revisão enviado para '.$user->email.'.']);
     }
@@ -339,7 +336,7 @@ class RevisorController extends Controller
                 }
                 if ($flag) {
                     Mail::to($revisor->email)
-                    ->send(new EmailLembrete($user, $subject, ' ', $trabalhosMail, $dataLimite, $evento, $coord));
+                        ->send(new EmailLembrete($user, $subject, ' ', $trabalhosMail, $dataLimite, $evento, $coord));
                 }
             }
         }
@@ -350,14 +347,15 @@ class RevisorController extends Controller
     public function enviarEmailCadastroTodosRevisores(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-        $revisores_ainda_nao_cadastrados = $evento->revisors()->whereHas('user', function(Builder $query){
+        $revisores_ainda_nao_cadastrados = $evento->revisors()->whereHas('user', function (Builder $query) {
             $query->where('usuarioTemp', true);
-        })->get()->map(function($revisor){
+        })->get()->map(function ($revisor) {
             return $revisor->user;
         })->unique('id');
         foreach ($revisores_ainda_nao_cadastrados as $user) {
             $user->notify(new LembreteRevisorCompletarCadastro($evento, auth()->user()));
         }
+
         return redirect()->back()->with(['mensagem' => 'E-mails de lembrete enviados!']);
     }
 
@@ -369,9 +367,9 @@ class RevisorController extends Controller
 
         // dd($revisores[0]);
 
-        return view('coordenador.revisores.revisoresCadastrados')->with(['evento'    => $evento,
+        return view('coordenador.revisores.revisoresCadastrados')->with(['evento' => $evento,
             'revisores' => $revisores,
-            'areas'     => $areas, ]);
+            'areas' => $areas, ]);
     }
 
     public function conviteParaEvento(Request $request, $id)
@@ -389,13 +387,13 @@ class RevisorController extends Controller
             return redirect()->back()->with(['error' => 'Esse usuário já aceitou o convite!']);
         }
 
-        $evento->revisores()->attach($user->revisor->id, ['convite_aceito'=> null]);
+        $evento->revisores()->attach($user->revisor->id, ['convite_aceito' => null]);
 
         //Log::debug('Revisores ' . gettype($user));
         //Log::debug('Revisores ' . $request->input('user'));
         return $request->all();
         Mail::to($user->email)
-          ->send(new EmailConviteRevisor($user, $evento, $subject, Auth::user()));
+            ->send(new EmailConviteRevisor($user, $evento, $subject, Auth::user()));
 
         return redirect()->back()->with(['mensagem' => 'Convite enviado']);
     }
@@ -408,11 +406,11 @@ class RevisorController extends Controller
 
         foreach ($revisores as $revisor) {
             $revisor = [
-                'id'    => $revisor->user->id,
+                'id' => $revisor->user->id,
                 'email' => $revisor->user->email,
                 'area' => $revisor->area->nome,
                 'emAndamento' => $revisor->correcoesEmAndamento,
-                'concluido'   => $revisor->trabalhosCorrigidos,
+                'concluido' => $revisor->trabalhosCorrigidos,
             ];
 
             $revsPorArea->push($revisor);
@@ -507,9 +505,9 @@ class RevisorController extends Controller
             Storage::putFileAs($path, $file, $nome);
 
             $arquivo = ArquivoAvaliacao::create([
-                'nome'  => $path.$nome,
+                'nome' => $path.$nome,
                 'revisorId' => $data['revisor_id'],
-                'trabalhoId'  => $trabalho->id,
+                'trabalhoId' => $trabalho->id,
                 'versaoFinal' => true,
             ]);
         }
@@ -582,9 +580,9 @@ class RevisorController extends Controller
             Storage::putFileAs($path, $file, $nome);
 
             ArquivoAvaliacao::create([
-                'nome'  => $path.$nome,
+                'nome' => $path.$nome,
                 'revisorId' => $revisor->id,
-                'trabalhoId'  => $trabalho->id,
+                'trabalhoId' => $trabalho->id,
                 'versaoFinal' => true,
             ]);
         }

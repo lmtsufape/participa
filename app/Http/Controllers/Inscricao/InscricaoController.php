@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Submissao\EventoController;
-use App\Http\Requests\InscricaoRequest;
 use App\Models\Inscricao\CampoFormulario;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\CupomDeDesconto;
@@ -37,13 +36,13 @@ class InscricaoController extends Controller
         $camposDoFormulario = CampoFormulario::where('evento_id', $id)->get();
         $users = $evento->inscritos();
 
-        return view('coordenador.programacao.inscricoes', ['evento'     => $evento,
-            'promocoes'  => $promocoes,
+        return view('coordenador.programacao.inscricoes', ['evento' => $evento,
+            'promocoes' => $promocoes,
             'atividades' => $atividades,
-            'cupons'     => $cuponsDeDescontro,
+            'cupons' => $cuponsDeDescontro,
             'categorias' => $categoriasParticipante,
-            'users'      => $users,
-            'campos'     => $camposDoFormulario, ]);
+            'users' => $users,
+            'campos' => $camposDoFormulario, ]);
     }
 
     public function inscritos(Evento $evento)
@@ -86,19 +85,18 @@ class InscricaoController extends Controller
             }
         }
 
-        return view('evento.nova_inscricao', ['evento'              => $evento,
-            'eventoVoltar'        => null,
-            'valorTotalVoltar'    => null,
-            'promocaoVoltar'      => null,
-            'atividadesVoltar'    => null,
-            'cupomVoltar'         => null,
-            'inscricao'           => null, ]);
+        return view('evento.nova_inscricao', ['evento' => $evento,
+            'eventoVoltar' => null,
+            'valorTotalVoltar' => null,
+            'promocaoVoltar' => null,
+            'atividadesVoltar' => null,
+            'cupomVoltar' => null,
+            'inscricao' => null, ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -140,7 +138,6 @@ class InscricaoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -181,14 +178,14 @@ class InscricaoController extends Controller
     public function checarDados(Request $request, $id)
     {
         $validatorData = $request->validate([
-            'categoria'         => 'required',
-            'promocao'          => 'nullable',
-            'valorTotal'        => 'required',
-            'atividades'        => 'nullable',
-            'cupom'             => 'nullable',
-            'atividadesPromo'   => 'nullable',
-            'valorPromocao'     => 'nullable',
-            'descricaoPromo'    => 'nullable',
+            'categoria' => 'required',
+            'promocao' => 'nullable',
+            'valorTotal' => 'required',
+            'atividades' => 'nullable',
+            'cupom' => 'nullable',
+            'atividadesPromo' => 'nullable',
+            'valorPromocao' => 'nullable',
+            'descricaoPromo' => 'nullable',
         ]);
 
         $categoria = CategoriaParticipante::find($request->categoria);
@@ -278,13 +275,13 @@ class InscricaoController extends Controller
             $this->salvarCamposExtras($inscricao, $request, $categoria);
         }
 
-        return view('evento.revisar_inscricao', ['evento'           => $evento,
-            'valor'             => $valorDaInscricao,
-            'promocao'          => $promocao,
-            'atividades'        => $atividades,
-            'cupom'             => $cupom,
-            'valorComDesconto'  => $valorComDesconto,
-            'inscricao'         => $inscricao, ]);
+        return view('evento.revisar_inscricao', ['evento' => $evento,
+            'valor' => $valorDaInscricao,
+            'promocao' => $promocao,
+            'atividades' => $atividades,
+            'cupom' => $cupom,
+            'valorComDesconto' => $valorComDesconto,
+            'inscricao' => $inscricao, ]);
     }
 
     public function cadastrarInscricaoRetornarProEvento(Evento $evento, Request $request, CategoriaParticipante $categoria)
@@ -313,7 +310,7 @@ class InscricaoController extends Controller
         $categoria = CategoriaParticipante::find($request->categoria);
         $possuiFormulario = $evento->possuiFormularioDeInscricao();
         if ($possuiFormulario) {
-            $validator = Validator::make($request->all(), ['categoria' => 'required',]);
+            $validator = Validator::make($request->all(), ['categoria' => 'required']);
             if ($validator->fails()) {
                 return redirect()
                     ->back()
@@ -358,10 +355,10 @@ class InscricaoController extends Controller
 
         return view('evento.nova_inscricao',
             [
-                'evento'              => $inscricao->evento,
-                'inscricao'           => $inscricao,
-                'atividadesExtras'    => $atividadeExtras,
-                'valorTotal'          => $valorTotal,
+                'evento' => $inscricao->evento,
+                'inscricao' => $inscricao,
+                'atividadesExtras' => $atividadeExtras,
+                'valorTotal' => $valorTotal,
             ]
         );
     }

@@ -98,7 +98,7 @@ class CartaoCredito
 
         // Set the installment quantity and value (could be obtained using the Installments
         // service, that have an example here in \public\getInstallments.php)
-        list($quantity, $installmentAmount) = explode('|', $this->cardInfo['installment']);
+        [$quantity, $installmentAmount] = explode('|', $this->cardInfo['installment']);
         $installmentAmount = number_format($installmentAmount, 2, '.', '');
         // dd($installmentAmount);
         $creditCard->setInstallment()->withParameters($quantity, $installmentAmount);

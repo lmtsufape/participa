@@ -9,8 +9,8 @@ trait FormatFileNames
     /**
      * Formata um nome de arquivo sem caracteres especiais, salva no diretório e caso o mesmo nome estiver presente no diretório, um novo nome é definido.
      *
-     * @param string $diretorio diretório da pasta onde o arquivo será salvo
-     * @param bool $public indicativo se o diretório está em pasta pública
+     * @param  string  $diretorio diretório da pasta onde o arquivo será salvo
+     * @param  bool  $public indicativo se o diretório está em pasta pública
      * @param $arquivo arquivo salvo
      * @return string $path caminho com o nome do arquivo salvo
      */

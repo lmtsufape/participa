@@ -46,7 +46,7 @@ class CertificadoController extends Controller
         $certificados = Certificado::where('evento_id', $evento->id)->get();
         //dd($certificados);
         return view('coordenador.certificado.index', [
-            'evento'=> $evento,
+            'evento' => $evento,
             'certificados' => $certificados,
         ]);
     }
@@ -55,6 +55,7 @@ class CertificadoController extends Controller
      * Show the form for creating a new resource.
      *
      * @return View
+     *
      * @throws AuthorizationException
      */
     public function create(Request $request)
@@ -93,7 +94,7 @@ class CertificadoController extends Controller
         }
         $certificado->save();
 
-        if (!$request->imagem_assinada) {
+        if (! $request->imagem_assinada) {
             foreach ($request->assinaturas as $assinatura_id) {
                 $certificado->assinaturas()->attach(Assinatura::find($assinatura_id));
             }
@@ -128,13 +129,13 @@ class CertificadoController extends Controller
         }
         $novo->save();
         $novo->medidas()->saveMany($novas_medidas);
+
         return redirect(route('coord.listarCertificados', ['eventoId' => $evento->id]))->with(['success' => 'Certificado duplicado com sucesso.']);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Submissao\Certificado  $certificado
      * @return Response
      */
     public function show(Certificado $certificado)
@@ -145,8 +146,7 @@ class CertificadoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Request $request
-     * @param int $id
+     * @param  int  $id
      * @return View
      */
     public function edit(Request $request, $id)
@@ -163,9 +163,9 @@ class CertificadoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateCertificadoRequest $request
-     * @param int $id
+     * @param  int  $id
      * @return RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function update(UpdateCertificadoRequest $request, $id)
@@ -178,7 +178,7 @@ class CertificadoController extends Controller
 
         if ($request->fotoCertificado != null) {
             $request->validate([
-                'fotoCertificado'  => 'required|file|mimes:png,jpeg,jpg|max:2048',
+                'fotoCertificado' => 'required|file|mimes:png,jpeg,jpg|max:2048',
             ]);
             if (Storage::disk()->exists('public/'.$certificado->caminho)) {
                 Storage::delete('public/'.$certificado->caminho);
@@ -190,7 +190,7 @@ class CertificadoController extends Controller
             $certificado->caminho = $novo_caminho;
         }
 
-        if ($request->imagem_verso != null || !$validatedData['verso'] || !$validatedData['has_imagem_verso']) {
+        if ($request->imagem_verso != null || ! $validatedData['verso'] || ! $validatedData['has_imagem_verso']) {
             if (Storage::disk()->exists('public/'.$certificado->imagem_verso)) {
                 Storage::delete('public/'.$certificado->imagem_verso);
             }
@@ -204,7 +204,7 @@ class CertificadoController extends Controller
             $certificado->imagem_verso = $novo_caminho;
         }
 
-        if (!$request->imagem_assinada) {
+        if (! $request->imagem_assinada) {
             foreach ($request->assinaturas as $assinatura_id) {
                 if ($certificado->assinaturas()->where('assinatura_id', $assinatura_id)->first() == null) {
                     $certificado->assinaturas()->attach(Assinatura::find($assinatura_id));
@@ -273,7 +273,7 @@ class CertificadoController extends Controller
         $medida->altura = intval($request['logo-altura']);
         $medida->save();
 
-        if (!$certificado->imagem_assinada) {
+        if (! $certificado->imagem_assinada) {
             foreach ($assinaturas_id as $id) {
                 $medida = Medida::firstOrNew(['certificado_id' => $certificado->id, 'tipo' => Medida::TIPO_ENUM['cargo_assinatura'], 'assinatura_id' => $id]);
                 $medida->x = $request['cargo-x-'.$id];
@@ -337,7 +337,7 @@ class CertificadoController extends Controller
         date_default_timezone_set('America/Recife');
         $dataHoje = utf8_encode(strftime('%d de %B de %Y', strtotime($certificado->data)));
 
-        return view('coordenador.certificado.modelo', compact('certificado','medidas','evento', 'dataHoje'));
+        return view('coordenador.certificado.modelo', compact('certificado', 'medidas', 'evento', 'dataHoje'));
     }
 
     public function previewCertificado($certificadoId, $destinatarioId, $trabalhoId)
@@ -489,7 +489,7 @@ class CertificadoController extends Controller
         $destinatarios = [1 => 'Apresentadores', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Revisores', 'Participantes', 'Palestrante', 'Coordenador da comissão científica', 'Membro de outra comissão', 'Inscrito em uma atividade'];
 
         return view('coordenador.certificado.emissao', [
-            'evento'=> $evento,
+            'evento' => $evento,
             'certificados' => $certificados,
             'destinatarios' => $destinatarios,
         ]);

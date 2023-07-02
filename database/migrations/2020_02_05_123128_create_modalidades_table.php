@@ -29,7 +29,7 @@ class CreateModalidadesTable extends Migration
 
             $table->boolean('texto')->nullable();
             $table->boolean('arquivo')->nullable();
-            
+
             $table->boolean('caracteres')->nullable();
             $table->bigInteger('mincaracteres')->nullable();
             $table->bigInteger('maxcaracteres')->nullable();
@@ -37,7 +37,7 @@ class CreateModalidadesTable extends Migration
             $table->boolean('palavras')->nullable();
             $table->bigInteger('minpalavras')->nullable();
             $table->bigInteger('maxpalavras')->nullable();
-            
+
             $table->boolean('pdf')->nullable();
             $table->boolean('jpg')->nullable();
             $table->boolean('jpeg')->nullable();

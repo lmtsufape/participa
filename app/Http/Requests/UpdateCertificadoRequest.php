@@ -2,13 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
 
 class UpdateCertificadoRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -38,7 +35,7 @@ class UpdateCertificadoRequest extends FormRequest
             'atividade_id' => 'required_if:tipo,9|exclude_unless:tipo,9',
             'imagem_assinada' => 'boolean',
             'has_imagem_verso' => 'exclude_if:verso,false',
-            'imagem_verso' => 'exclude_if:verso,false,|exclude_if:has_imagem_verso,false|nullable|image|max:2048'
+            'imagem_verso' => 'exclude_if:verso,false,|exclude_if:has_imagem_verso,false|nullable|image|max:2048',
         ];
     }
 

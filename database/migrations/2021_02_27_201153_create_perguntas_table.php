@@ -17,8 +17,8 @@ class CreatePerguntasTable extends Migration
             $table->bigIncrements('id');
             $table->string('pergunta');
 
-            $table->bigInteger("form_id");
-            $table->foreign("form_id")->references("id")->on("forms")->onDelete('cascade');
+            $table->bigInteger('form_id');
+            $table->foreign('form_id')->references('id')->on('forms')->onDelete('cascade');
             $table->timestamps();
         });
     }

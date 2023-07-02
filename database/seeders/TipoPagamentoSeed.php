@@ -15,11 +15,11 @@ class TipoPagamentoSeed extends Seeder
     public function run()
     {
         DB::table('tipo_pagamentos')->insert([  //
-          'descricao' => 'cartao',
+            'descricao' => 'cartao',
         ]);
 
         DB::table('tipo_pagamentos')->insert([  //
-          'descricao' => 'boleto',
+            'descricao' => 'boleto',
         ]);
     }
 }

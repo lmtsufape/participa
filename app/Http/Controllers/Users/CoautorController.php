@@ -42,7 +42,6 @@ class CoautorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -75,7 +74,6 @@ class CoautorController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Coautor  $coautor
      * @return \Illuminate\Http\Response
      */

@@ -32,6 +32,7 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             'complemento',
             'país',
         ];
+
         return array_merge($campos, $this->evento->camposFormulario()->pluck('titulo')->all());
     }
 
@@ -65,6 +66,7 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             $inscricao->user->endereco ? $inscricao->user->endereco->complemento : '',
             $inscricao->user->endereco ? $inscricao->user->endereco->pais : '',
         ];
+
         return array_merge($valores, $inscricao->camposPreenchidos->pluck('pivot.valor')->all());
     }
 }

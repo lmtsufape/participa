@@ -19,11 +19,11 @@ class CreatePagamentosTable extends Migration
             $table->string('descricao')->nullable();
             $table->string('reference');
             $table->string('pagseguro_code');
-            $table->integer('pagseguro_status');            
+            $table->integer('pagseguro_status');
             $table->timestamps();
 
-            $table->bigInteger("tipo_pagamento_id")->nullable();
-            $table->foreign("tipo_pagamento_id")->references("id")->on("tipo_pagamentos");
+            $table->bigInteger('tipo_pagamento_id')->nullable();
+            $table->foreign('tipo_pagamento_id')->references('id')->on('tipo_pagamentos');
         });
     }
 

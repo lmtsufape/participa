@@ -11,13 +11,13 @@ class CoordEventoController extends Controller
     {
         $eventos = Evento::all();
 
-        return view('coordenador.index', ['eventos'=>$eventos]);
+        return view('coordenador.index', ['eventos' => $eventos]);
     }
 
     public function listaEventos()
     {
         $eventos = Evento::all();
 
-        return view('coordenador.lista_eventos', ['eventos'=>$eventos]);
+        return view('coordenador.lista_eventos', ['eventos' => $eventos]);
     }
 }
