@@ -13,6 +13,8 @@
 
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Inscricao\CampoFormularioController;
+use App\Http\Controllers\Inscricao\CategoriaController;
 use App\Http\Controllers\Inscricao\CheckoutController;
 use App\Http\Controllers\Inscricao\InscricaoController;
 use App\Http\Controllers\Inscricao\PromocaoController;
