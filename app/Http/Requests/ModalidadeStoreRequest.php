@@ -114,7 +114,7 @@ class ModalidadeStoreRequest extends FormRequest
         ];
     }
 
-    public function validated()
+    public function validated($key = null, $default = null)
     {
         $validated = $this->validator->validated();
         $validated = array_merge($validated, [
