@@ -102,7 +102,7 @@
                                     <button type="button" class="btn btn-danger"  style="pointer-events: none">Sem Vagas</button>
                                 @endif
                             @else
-                                @if(Auth::user()->atvs()->find($atv->id) != null)
+                                @if(Auth::user()->atividades()->find($atv->id) != null)
                                     <button type="button" class="btn btn-primary" disabled>Inscrito</button>
                                 @else
                                     <button type="button" class="btn btn-danger" disabled>Inscrições encerradas</button>
