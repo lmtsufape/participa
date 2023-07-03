@@ -644,10 +644,10 @@
                                                                                 @endif
                                                                                 @auth
                                                                                     @if ($modalidade->estaEmPeriodoDeSubmissao())
-                                                                                        <a class="btn button-card-visualizar-evento" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
+                                                                                        <a class="btn btn-primary" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
                                                                                     @else
                                                                                         @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
-                                                                                            <a class="btn button-card-visualizar-evento" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
+                                                                                            <a class="btn btn-primary" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
                                                                                         @endcan
                                                                                     @endif
                                                                                 @endauth
