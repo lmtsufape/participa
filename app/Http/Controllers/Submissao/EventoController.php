@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -1025,7 +1025,7 @@ class EventoController extends Controller
     {
         $evento = $modalidade->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-        $pdf = PDF::loadView('coordenador.modalidade.respostasPdf', ['modalidade' => $modalidade])->setOptions(['defaultFont' => 'sans-serif']);
+        $pdf = Pdf::loadView('coordenador.modalidade.respostasPdf', ['modalidade' => $modalidade])->setOptions(['defaultFont' => 'sans-serif']);
 
         return $pdf->stream("respostas-{$modalidade->nome}.pdf");
     }
@@ -1085,7 +1085,7 @@ class EventoController extends Controller
             }
         }
 
-        $pdf = PDF::loadView('coordenador.trabalhos.resumosPdf', ['trabalhosPorModalidade' => $trabalhos, 'evento' => $evento])->setOptions(['defaultFont' => 'sans-serif']);
+        $pdf = Pdf::loadView('coordenador.trabalhos.resumosPdf', ['trabalhosPorModalidade' => $trabalhos, 'evento' => $evento])->setOptions(['defaultFont' => 'sans-serif']);
 
         return $pdf->download("resumos - {$evento->nome}.pdf");
     }
