@@ -20,9 +20,9 @@ class CreateCoautorsTable extends Migration
 
             $table->unsignedBigInteger('eventos_id');
             $table->foreign('eventos_id')->references('id')->on('eventos');
-            
-            $table->unsignedBigInteger('autorId');                       
-            $table->integer('trabalhoId')->nullable();            
+
+            $table->unsignedBigInteger('autorId');
+            $table->integer('trabalhoId')->nullable();
 
         });
     }

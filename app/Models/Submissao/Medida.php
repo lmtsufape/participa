@@ -16,7 +16,7 @@ class Medida extends Model
         'qrcode' => 7,
         'hash' => 8,
         'logo' => 9,
-        'emissao' => 10
+        'emissao' => 10,
     ];
 
     protected $fillable = [

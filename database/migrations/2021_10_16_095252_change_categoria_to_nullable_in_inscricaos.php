@@ -14,7 +14,7 @@ class ChangeCategoriaToNullableInInscricaos extends Migration
     public function up()
     {
         Schema::table('inscricaos', function (Blueprint $table) {
-            $table->bigInteger("categoria_participante_id")->nullable()->change();
+            $table->bigInteger('categoria_participante_id')->nullable()->change();
         });
     }
 

@@ -14,13 +14,13 @@ class CreateSubmissaoregrasTable extends Migration
     public function up()
     {
         Schema::create('regra_submis', function (Blueprint $table) {
-            
+
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('nome');
 
-            $table->bigInteger("modalidadeId")->nullable();
-            $table->foreign("modalidadeId")->references("id")->on("modalidades");
+            $table->bigInteger('modalidadeId')->nullable();
+            $table->foreign('modalidadeId')->references('id')->on('modalidades');
 
         });
     }

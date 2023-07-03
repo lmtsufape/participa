@@ -87,11 +87,11 @@ class CheckoutController extends Controller
 
             // 'valor', 'descricao', 'reference', 'pagseguro_code', 'pagseguro_status', 'tipo_pagamento_id'
             $pag = [
-                'valor' =>  $dataPost['valorTotal'],
-                'descricao' =>  $item,
-                'reference' =>  $reference,
-                'pagseguro_code' =>  $result->getCode(),
-                'pagseguro_status' =>  $result->getStatus(),
+                'valor' => $dataPost['valorTotal'],
+                'descricao' => $item,
+                'reference' => $reference,
+                'pagseguro_code' => $result->getCode(),
+                'pagseguro_status' => $result->getStatus(),
                 'tipo_pagamento_id' => 1,
             ];
 
@@ -158,32 +158,32 @@ class CheckoutController extends Controller
             $cpf = str_replace('.', '', $user->cpf);
             $cpf = str_replace('-', '', $cpf);
             $pagseguro = PagSeguro::setReference('1')
-            ->setSenderInfo([
-                'senderName' => $user->name, //Deve conter nome e sobrenome
-                'senderPhone' => $user->celular, //Código de área enviado junto com o telefone
-                'senderEmail' => $user->email,
-                'senderHash' => $request->hash,
-                'senderCPF' => $cpf, //Ou CPF se for Pessoa Física
-            ])
-            ->setShippingAddress([
-                'shippingAddressStreet' => 'Av. Lions',
-                'shippingAddressNumber' => '166',
-                'shippingAddressDistrict' => 'Centro',
-                'shippingAddressPostalCode' => '55325-000',
-                'shippingAddressCity' => 'Garanhuns',
-                'shippingAddressState' => 'PE',
-            ])
-             ->setItems([
-                 [
-                     'itemId' => '1',
-                     'itemDescription' => 'Inscricao',
-                     'itemAmount' => $request->valorTotal, //Valor unitário
-                     'itemQuantity' => '1', // Quantidade de itens
-                 ],
-             ])
-            ->send([
-                'paymentMethod' => 'boleto',
-            ]);
+                ->setSenderInfo([
+                    'senderName' => $user->name, //Deve conter nome e sobrenome
+                    'senderPhone' => $user->celular, //Código de área enviado junto com o telefone
+                    'senderEmail' => $user->email,
+                    'senderHash' => $request->hash,
+                    'senderCPF' => $cpf, //Ou CPF se for Pessoa Física
+                ])
+                ->setShippingAddress([
+                    'shippingAddressStreet' => 'Av. Lions',
+                    'shippingAddressNumber' => '166',
+                    'shippingAddressDistrict' => 'Centro',
+                    'shippingAddressPostalCode' => '55325-000',
+                    'shippingAddressCity' => 'Garanhuns',
+                    'shippingAddressState' => 'PE',
+                ])
+                ->setItems([
+                    [
+                        'itemId' => '1',
+                        'itemDescription' => 'Inscricao',
+                        'itemAmount' => $request->valorTotal, //Valor unitário
+                        'itemQuantity' => '1', // Quantidade de itens
+                    ],
+                ])
+                ->send([
+                    'paymentMethod' => 'boleto',
+                ]);
 
             return response()->json([
                 'data' => [

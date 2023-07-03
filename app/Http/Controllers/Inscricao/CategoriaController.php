@@ -35,7 +35,6 @@ class CategoriaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -45,12 +44,12 @@ class CategoriaController extends Controller
 
         $validateData = $request->validate(
             [
-                'nome'                  => 'required',
-                'valor_total'           => 'required|numeric|min:0',
-                'tipo_valor.*'          => 'nullable',
-                'valorDesconto.*'       => 'required_with:tipo_valor.*|numeric|min:0',
-                'inícioDesconto.*'      => 'required_with:tipo_valor.*|date',
-                'fimDesconto.*'         => 'required_with:tipo_valor.*|date|after:inícioDesconto.*',
+                'nome' => 'required',
+                'valor_total' => 'required|numeric|min:0',
+                'tipo_valor.*' => 'nullable',
+                'valorDesconto.*' => 'required_with:tipo_valor.*|numeric|min:0',
+                'inícioDesconto.*' => 'required_with:tipo_valor.*|date',
+                'fimDesconto.*' => 'required_with:tipo_valor.*|date|after:inícioDesconto.*',
             ],
             [
                 'valor_total.min' => 'Digite um valor positivo ou 0 para gratuito.',
@@ -106,7 +105,6 @@ class CategoriaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -118,13 +116,13 @@ class CategoriaController extends Controller
 
         $request->validate(
             [
-                'editarCategoria'  => 'required',
-                "nome_{$categoria->id}"             => 'required',
-                "valor_total_{$categoria->id}"      => 'required|numeric|min:0',
-                "tipo_valor_{$categoria->id}.*"     => 'nullable',
-                "valorDesconto_{$categoria->id}.*"  => "required_with:tipo_valor_{$categoria->id}.*|numeric|min:0",
+                'editarCategoria' => 'required',
+                "nome_{$categoria->id}" => 'required',
+                "valor_total_{$categoria->id}" => 'required|numeric|min:0',
+                "tipo_valor_{$categoria->id}.*" => 'nullable',
+                "valorDesconto_{$categoria->id}.*" => "required_with:tipo_valor_{$categoria->id}.*|numeric|min:0",
                 "inícioDesconto_{$categoria->id}.*" => "required_with:tipo_valor_{$categoria->id}.*|date",
-                "fimDesconto_{$categoria->id}.*"    => "required_with:tipo_valor_{$categoria->id}.*|date|after:inícioDesconto_{$categoria->id}.*",
+                "fimDesconto_{$categoria->id}.*" => "required_with:tipo_valor_{$categoria->id}.*|date|after:inícioDesconto_{$categoria->id}.*",
             ],
             [
                 "valorDesconto_[{$categoria->id}].*" => 'Digite um valor positivo ou 0 para gratuito.',

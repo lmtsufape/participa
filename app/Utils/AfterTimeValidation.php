@@ -9,10 +9,9 @@ class AfterTimeValidation
     /**
      * Valid after time.
      *
-     * @param string $attribute
-     * @param string $value
-     * @param string $parameters
-     *
+     * @param  string  $attribute
+     * @param  string  $value
+     * @param  string  $parameters
      * @return bool
      */
     public function validate($attribute, $value, $parameters)
@@ -44,11 +43,10 @@ class AfterTimeValidation
     /**
      * Replace all params the AfterTime rule.
      *
-     * @param string $message
-     * @param string $attribute
-     * @param string $rule
-     * @param array  $parameters
-     *
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array  $parameters
      * @return string
      */
     protected function replaceAfterTime($message, $attribute, $rule, $parameters)

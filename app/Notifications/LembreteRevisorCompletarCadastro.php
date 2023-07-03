@@ -5,7 +5,6 @@ namespace App\Notifications;
 use App\Models\Submissao\Evento;
 use App\Models\Users\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -16,6 +15,7 @@ class LembreteRevisorCompletarCadastro extends Notification
     public $evento;
 
     public $coord;
+
     /**
      * Create a new notification instance.
      *
@@ -47,9 +47,9 @@ class LembreteRevisorCompletarCadastro extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                ->subject('Lembrete para completar o cadastro')
-                ->line("Este e-mail é um lembrete de que você foi indicado(a) pela coordenação do evento {$this->evento->nome} ({$this->coord->email}) para atuar como avaliador(a) ou parecerista de atividades e/ou trabalhos acadêmicos e que **necessita completar o seu cadastro para ter acesso aos trabalhos para avaliação**")
-                ->line('Agradecemos de antemão pela sua disponibilidade para colaborar com a realização deste evento.');
+            ->subject('Lembrete para completar o cadastro')
+            ->line("Este e-mail é um lembrete de que você foi indicado(a) pela coordenação do evento {$this->evento->nome} ({$this->coord->email}) para atuar como avaliador(a) ou parecerista de atividades e/ou trabalhos acadêmicos e que **necessita completar o seu cadastro para ter acesso aos trabalhos para avaliação**")
+            ->line('Agradecemos de antemão pela sua disponibilidade para colaborar com a realização deste evento.');
     }
 
     /**

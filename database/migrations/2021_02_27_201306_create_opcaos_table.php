@@ -16,11 +16,11 @@ class CreateOpcaosTable extends Migration
         Schema::create('opcaos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('titulo');
-            $table->enum('tipo', ['checkbox', 'radio'])->default('checkbox');      
-            $table->boolean('check')->default(false); ;
+            $table->enum('tipo', ['checkbox', 'radio'])->default('checkbox');
+            $table->boolean('check')->default(false);
 
-            $table->bigInteger("resposta_id");
-            $table->foreign("resposta_id")->references("id")->on("respostas")->onDelete('cascade');
+            $table->bigInteger('resposta_id');
+            $table->foreign('resposta_id')->references('id')->on('respostas')->onDelete('cascade');
             $table->timestamps();
         });
     }

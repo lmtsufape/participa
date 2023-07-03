@@ -44,7 +44,7 @@
                         <input type="hidden" name="" value=""> --}}
                         <div class="row subtitulo">
                             <div class="col-sm-12">
-                                <p>Informações Gerais</p>
+                                Informações Gerais
                                 @error('eventoPai')
                                 <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -53,8 +53,8 @@
                             </div>
                         </div>
                         {{-- nome | Participantes | Tipo--}}
-                        <div class="row justify-content-center">
-                            <div class="col-sm-6">
+                        <div class="form-row">
+                            <div class="col-sm-6 form-group">
                                 <label for="nome" class="col-form-label">{{ __('Nome*') }}</label>
                                 <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
 
@@ -65,7 +65,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 form-group">
                                 <label for="email" class="col-form-label">{{ __('E-mail de contato*') }}</label>
                                 <input class="form-control @error('email') is-invalid @enderror" type="email" value="{{old('email')}}" name="email" id="email" required autofocus
                                        autocomplete="email">
@@ -88,7 +88,7 @@
                                 @enderror
                             </div> --}}
                             @if ($eventoPai ?? '')
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 form-group">
                                     <label for="email_coordenador" class="col-form-label">{{ __('E-mail do coordenador') }}</label>
                                     <input class="form-control @error('email_coordenador') is-invalid @enderror" type="email" value="{{old('email_coordenador')}}" name="email_coordenador" id="email_coordenador">
 
@@ -99,7 +99,7 @@
                                     @enderror
                                 </div>
                             @endif
-                            <div class="@if ($eventoPai ?? '') col-sm-3 @else col-sm-6 @endif">
+                            <div class="@if ($eventoPai ?? '') col-sm-3 @else col-sm-6 @endif form-group">
                                 <label for="tipo" class="col-form-label">{{ __('Tipo*') }}</label>
                                 <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" required>
                                     <option disabled selected hidden value="">-- Tipo --</option>
@@ -126,7 +126,7 @@
                                 @enderror
                             </div>
 
-                            <div class="@if ($eventoPai ?? '') col-sm-3 @else col-sm-6 @endif">
+                            <div class="@if ($eventoPai ?? '') col-sm-3 @else col-sm-6 @endif form-group">
                                 <label for="recolhimento" class="col-form-label">{{ __('Recolhimento') }}</label>
                                 <select name="recolhimento" id="recolhimento" class="form-control @error('recolhimento') is-invalid @enderror">
                                     @if (old('recolhimento') != null)
@@ -149,51 +149,46 @@
                                 @enderror
                             </div>
                         </div>{{-- end nome | Participantes | Tipo--}}
-                        <br>
                         {{-- Descricao Evento --}}
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="exampleFormControlTextarea1">Descrição*</label>
-                                    <textarea class="form-control @error('descricao') is-invalid @enderror" required autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">{{ old('descricao') }}</textarea>
-                                    @error('descricao')
-                                    <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                    @enderror
-                                </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Descrição*</label>
+                                <textarea class="form-control @error('descricao') is-invalid @enderror" required autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">{{ old('descricao') }}</textarea>
+                                @error('descricao')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                                @enderror
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-7">
-                                <div class="form-group">
-                                    <label for="fotoEvento">Banner</label>
-                                    <div id="imagem-loader" class="imagem-loader">
-                                        <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
-                                    </div>
-                                    <div style="display: none;">
-                                        <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror" name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
-                                    </div>
-                                    <small style="position: relative; top: 5px;">Tamanho minimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
+                        <div class="form-row">
+                            <div class="col-sm-7 form-group">
+                                <label for="fotoEvento">Banner</label>
+                                <div id="imagem-loader" class="imagem-loader">
+                                    <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                 </div>
+                                <div style="display: none;">
+                                    <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror" name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
+                                </div>
+                                <small style="position: relative; top: 5px;">Tamanho minimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
                                 @error('fotoEvento')
+                                <br>
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
                                 @enderror
                             </div>
-                            <div class="col-sm-5">
-                                <div class="form-group">
-                                    <label for="icone">Ícone</label>
-                                    <div id="imagem-loader-icone" class="imagem-loader">
-                                        <img id="icone-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
-                                    </div>
-                                    <div style="display: none;">
-                                        <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror" name="icone" value="{{ old('icone') }}" id="icone">
-                                    </div>
-                                    <small style="position: relative; top: 5px;">O arquivo será redimensionado para 600 x 600;<br>Formato: JPEG, JPG, PNG</small>
+                            <div class="col-sm-5 form-group">
+                                <label for="icone">Ícone</label>
+                                <div id="imagem-loader-icone" class="imagem-loader">
+                                    <img id="icone-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                 </div>
+                                <div style="display: none;">
+                                    <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror" name="icone" value="{{ old('icone') }}" id="icone">
+                                </div>
+                                <small style="position: relative; top: 5px;">O arquivo será redimensionado para 600 x 600;<br>Formato: JPEG, JPG, PNG</small>
                                 @error('icone')
+                                <br>
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
@@ -201,25 +196,25 @@
                             </div>
                         </div>
                         <!-- Inicio e fim do evento -->
-                        <div class="row">
-                            <div class="col-sm-3">
+                        <div class="form-row">
+                            <div class="col-sm-3 form-group">
                                 <label for="dataInicio" class="col-form-label">{{ __('Início*') }}</label>
                                 <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror" name="dataInicio" value="{{ old('dataInicio') }}" required autocomplete="dataInicio" autofocus>
 
                                 @error('dataInicio')
                                 <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-3 form-group">
                                 <label for="dataFim" class="col-form-label">{{ __('Fim*') }}</label>
                                 <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror" name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim" autofocus>
 
                                 @error('dataFim')
                                 <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
                             {{-- <div class="col-sm-3">
@@ -239,17 +234,18 @@
                             </div> --}}
                         </div><!-- end Inicio e fim do evento -->
 
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-sm-12">
-                                <label for="dataLimiteInscricao" class="col-form-label">{{ __('Data de encerramento de inscrições') }}</label>
-                                <small>
-                                    (<span style="color: red">Disponível ao habilitar o módulo de inscrição!</span>)<br>
-                                    Informe uma data para encerramento das inscrições no evento. Caso não informada, a data limite para inscrição no evento será um dia prévio a data de início do evento.
-                                </small>
+                                <label for="dataLimiteInscricao" class="col-form-label">
+                                    {{ __('Data de encerramento de inscrições') }}
+                                    <small>
+                                        (<span style="color: red">Disponível ao habilitar o módulo de inscrição!</span>)<br>
+                                        Informe uma data para encerramento das inscrições no evento. Caso não informada, a data limite para inscrição no evento será um dia prévio a data de início do evento.
+                                    </small>
+                                </label>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-3 form-group">
                                 <input id="dataLimiteInscricao" type="datetime-local" class="form-control @error('dataLimiteInscricao') is-invalid @enderror" name="dataLimiteInscricao" value="{{ old('dataLimiteInscricao') }}" autocomplete="dataLimiteInscricao" autofocus>
-
                                 @error('dataLimiteInscricao')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -263,59 +259,59 @@
 
                         </div>
 
-                        <div class="row subtitulo" style="margin-top:20px">
+                        <div class="row subtitulo">
                             <div class="col-sm-12">
-                                <p>Endereço</p>
+                                Endereço
                             </div>
                         </div>
                         {{-- Rua | Número | Bairro --}}
-                        <div class="row justify-content-center">
-                            <div class="col-sm-4">
+                        <div class="form-row">
+                            <div class="col-sm-4 form-group">
                                 <label for="cep" class="col-form-label">{{ __('CEP*') }}</label>
                                 <input value="{{ old('cep') }}" onblur="pesquisacep(this.value);" id="cep" name="cep" type="text" class="form-control @error('cep') is-invalid @enderror" required autocomplete="cep">
 
                                 @error('cep')
                                 <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 form-group">
                                 <label for="rua" class="col-form-label">{{ __('Rua*') }}</label>
                                 <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" value="{{ old('rua') }}" required autocomplete="rua" autofocus>
 
                                 @error('rua')
                                 <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-2 form-group">
                                 <label for="numero" class="col-form-label">{{ __('Número*') }}</label>
                                 <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" value="{{ old('numero') }}" required autocomplete="numero" autofocus maxlength="10">
 
                                 @error('numero')
                                 <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
 
 
                         </div>{{--end Rua | Número | Bairro --}}
 
-                        <div class="row justify-content-center">
-                            <div class="col-sm-3">
+                        <div class="form-row">
+                            <div class="col-sm-3 form-group">
                                 <label for="bairro" class="col-form-label">{{ __('Bairro*') }}</label>
                                 <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" value="{{ old('bairro') }}" required autocomplete="bairro" autofocus>
 
                                 @error('bairro')
                                 <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-3 form-group">
                                 <label for="cidade" class="col-form-label">{{ __('Cidade*') }}</label>
                                 <input id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" value="{{ old('cidade') }}" required autocomplete="cidade" autofocus>
 
@@ -325,17 +321,17 @@
                             </span>
                                 @enderror
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4 form-group">
                                 <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
                                 <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" value="{{ old('complemento') }}" autocomplete="complemento" autofocus>
 
                                 @error('complemento')
                                 <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-2 form-group">
                                 <label for="uf" class="col-form-label">{{ __('UF*') }}</label>
                                 {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
                                 <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
@@ -371,14 +367,14 @@
 
                                 @error('uf')
                                 <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
 
                         </div>
 
-                        <div class="row justify-content-start" style="margin: 30px 0 20px 0">
+                        <div class="form-group">
                             <div class="form-check">
                                 <input name="termos" class="form-check-input @error('termos') is-invalid @enderror" type="checkbox" value="true" id="termos">
                                 <label class="form-check-label" for="termos">
@@ -392,13 +388,9 @@
                             </div>
                         </div>
 
-                        <div class="row justify-content-center" style="margin: 20px 0 20px 0">
-
-                            <div class="col-md-7" style="padding-left:0">
-                                {{-- <a class="btn btn-secondary botao-form" href="{{route('coord.home')}}" style="width:100%">Cancelar</a> --}}
-                            </div>
-                            <div class="col-md-5" style="padding-right:0">
-                                <button type="submit" class="btn btn-atualizar-perfil botao-form" style="width:100%">
+                        <div class="row justify-content-end">
+                            <div class="col-md-5">
+                                <button type="submit" class="btn btn-primary button-prevent-multiple-submits" style="width:100%">
                                     @if ($eventoPai ?? '')
                                         {{ __('Criar Subevento') }}
                                     @else

@@ -12,33 +12,30 @@ use App\Policies\CertificadoPolicy;
 use App\Policies\EventoPolicy;
 use App\Policies\TipoComissaoPolicy;
 use App\Policies\TrabalhoPolicy;
+// use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
     /**
-     * The policy mappings for the application.
+     * The model to policy mappings for the application.
      *
-     * @var array
+     * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
-        Evento::class  =>  EventoPolicy::class,
+        Evento::class => EventoPolicy::class,
         Administrador::class => AdministradorPolicy::class,
         Trabalho::class => TrabalhoPolicy::class,
         Certificado::class => CertificadoPolicy::class,
         TipoComissao::class => TipoComissaoPolicy::class,
+
     ];
 
     /**
      * Register any authentication / authorization services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->registerPolicies();
-
         //
     }
 }

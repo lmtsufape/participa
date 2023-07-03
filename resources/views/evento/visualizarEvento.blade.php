@@ -170,7 +170,7 @@
         </div>
     </div>
     <div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog @if($evento->possuiFormularioDeInscricao()) modal-lg @endif" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #114048ff; color: white;">
                     <h5 class="modal-title" id="#label">Confirmação</h5>
@@ -178,7 +178,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('inscricao.inscrever', ['evento_id' => $evento->id]) }}" method="POST">
+                <form action="{{ route('inscricao.inscrever', ['evento_id' => $evento->id]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
                         @if ($evento->possuiFormularioDeInscricao())
@@ -644,10 +644,10 @@
                                                                                 @endif
                                                                                 @auth
                                                                                     @if ($modalidade->estaEmPeriodoDeSubmissao())
-                                                                                        <a class="btn button-card-visualizar-evento" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
+                                                                                        <a class="btn btn-primary" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
                                                                                     @else
                                                                                         @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
-                                                                                            <a class="btn button-card-visualizar-evento" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
+                                                                                            <a class="btn btn-primary" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
                                                                                         @endcan
                                                                                     @endif
                                                                                 @endauth

@@ -18,12 +18,12 @@ class Certificado extends Model
     ];
 
     public const TIPO_ENUM = [
-        'apresentador'          => 1,
-        'comissao_cientifica'   => 2,
+        'apresentador' => 1,
+        'comissao_cientifica' => 2,
         'comissao_organizadora' => 3,
-        'revisor'               => 4,
-        'participante'          => 5,
-        'expositor'             => 6,
+        'revisor' => 4,
+        'participante' => 5,
+        'expositor' => 6,
         'coordenador_comissao_cientifica' => 7,
         'outras_comissoes' => 8,
         'inscrito_atividade' => 9,

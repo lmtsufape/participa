@@ -7,11 +7,9 @@ use App\Http\Requests\AtribuicaoRevisorRequest;
 use App\Mail\EmailConviteRevisor;
 use App\Mail\EmailLembrete;
 use App\Models\Submissao\Area;
-use App\Models\Submissao\Atribuicao;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Revisor;
-use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -41,14 +39,13 @@ class AtribuicaoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'revisorId'      => ['required', 'integer'],
-            'trabalhoId'     => ['required', 'integer'],
+            'revisorId' => ['required', 'integer'],
+            'trabalhoId' => ['required', 'integer'],
         ]);
 
         $trabalho = Trabalho::find($request->trabalhoId);
@@ -86,7 +83,6 @@ class AtribuicaoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Atribuicao  $atribuicao
      * @return \Illuminate\Http\Response
      */
@@ -139,8 +135,8 @@ class AtribuicaoController extends Controller
     public function distribuicaoPorArea(Request $request)
     {
         $validatedData = $request->validate([
-            'eventoId'                     => ['required', 'integer'],
-            'área'                       => ['required', 'integer', 'min:1'],
+            'eventoId' => ['required', 'integer'],
+            'área' => ['required', 'integer', 'min:1'],
             'numeroDeRevisoresPorTrabalho' => ['required', 'integer'],
         ]);
 
@@ -164,6 +160,7 @@ class AtribuicaoController extends Controller
                     if ($i == $numRevisores) {
                         $i = 0;
                     }
+
                     continue;
                 }
                 // atribui para um revisor
@@ -189,8 +186,8 @@ class AtribuicaoController extends Controller
     public function distribuicaoManual(Request $request)
     {
         $validatedData = $request->validate([
-            'eventoId'  => ['required', 'integer'],
-            'trabalhoId'=> ['required', 'integer'],
+            'eventoId' => ['required', 'integer'],
+            'trabalhoId' => ['required', 'integer'],
             'revisorId' => ['required', 'integer'],
         ]);
 
@@ -220,7 +217,7 @@ class AtribuicaoController extends Controller
         //   Mail::to($revisor->user->email)
         //         ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
         Mail::to($revisor->user->email)
-        ->send(new EmailConviteRevisor($revisor->user, $evento, $subject, Auth::user()));
+            ->send(new EmailConviteRevisor($revisor->user, $evento, $subject, Auth::user()));
 
         $mensagem = $trabalho->titulo.' atribuído ao revisor '.$revisor->user->name.' com sucesso!';
 
@@ -231,8 +228,8 @@ class AtribuicaoController extends Controller
     {
         // dd($id);
         $validatedData = $request->validate([
-            'eventoId'      => ['required', 'integer'],
-            'trabalhoId'   => ['required', 'integer'],
+            'eventoId' => ['required', 'integer'],
+            'trabalhoId' => ['required', 'integer'],
         ]);
 
         $evento = Evento::find($request->eventoId);

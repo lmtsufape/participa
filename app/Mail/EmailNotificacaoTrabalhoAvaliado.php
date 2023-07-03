@@ -23,7 +23,7 @@ class EmailNotificacaoTrabalhoAvaliado extends Mailable
      *
      * @return void
      */
-    public function __construct($user, $autor, String $nomeEvento, $trabalho, $revisor)
+    public function __construct($user, $autor, string $nomeEvento, $trabalho, $revisor)
     {
         $this->user = $user;
         $this->autor = $autor;
@@ -39,14 +39,14 @@ class EmailNotificacaoTrabalhoAvaliado extends Mailable
      */
     public function build()
     {
-        return  $this->from('lmtsteste@gmail.com', 'Participa ')
-                    ->subject('Sistema Participa - Trabalho/Atividade avaliada')
-                    ->markdown('emails.emailTrabalhoAvaliado')->with([
-                        'user'     => $this->user,
-                        'autor'    => $this->autor,
-                        'evento'   => $this->nomeEvento,
+        return $this->from('lmtsteste@gmail.com', 'Participa ')
+            ->subject('Sistema Participa - Trabalho/Atividade avaliada')
+            ->markdown('emails.emailTrabalhoAvaliado')->with([
+                        'user' => $this->user,
+                        'autor' => $this->autor,
+                        'evento' => $this->nomeEvento,
                         'trabalho' => $this->trabalho,
-                        'revisor'  => $this->revisor,
+                        'revisor' => $this->revisor,
                     ]);
     }
 }

@@ -37,12 +37,12 @@ class EventoCriado extends Mailable
     public function build()
     {
         return $this->from('lmtsteste@gmail.com', 'Participa ')
-                    ->subject($this->subject)
-                    ->markdown('emails.emailEventoCriado')
-                    ->with([
-                        'user' => $this->user,
-                        'info' => $this->informacoes,
-                        'evento' => $this->evento,
-                    ]);
+            ->subject($this->subject)
+            ->markdown('emails.emailEventoCriado')
+            ->with([
+                'user' => $this->user,
+                'info' => $this->informacoes,
+                'evento' => $this->evento,
+            ]);
     }
 }

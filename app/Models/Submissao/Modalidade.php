@@ -57,8 +57,6 @@ class Modalidade extends Model
 
     /**
      * Get all of the datasExtras for the Modalidade
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function datasExtras(): HasMany
     {
@@ -67,8 +65,6 @@ class Modalidade extends Model
 
     /**
      * Pega todas as datas extras com que permitem submissão
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function datasExtrasComSubmissao(): HasMany
     {
@@ -81,15 +77,16 @@ class Modalidade extends Model
         if ($this->inicioSubmissao <= $agora && $this->fimSubmissao >= $agora) {
             return true;
         }
+
         return false;
     }
 
     public function estaEmPeriodoExtraDeCorrecao()
     {
         $agora = now();
+
         return $this->datasExtrasComSubmissao()->where('inicio', '<=', $agora)->where('fim', '>=', $agora)->exists();
     }
-
 
     public function estaEmPeriodoDeCorrecao()
     {
@@ -100,6 +97,7 @@ class Modalidade extends Model
     {
         if ($this->datasExtras()->exists()) {
             $maiorDataExtra = $this->datasExtras()->max('fim');
+
             return max($maiorDataExtra, $this->inicioResultado);
         } else {
             return $this->inicioResultado;
@@ -115,14 +113,14 @@ class Modalidade extends Model
     {
         $extensoes = ['ogg', 'wav', 'ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'odp', 'pptx', 'csv', 'ods', 'xlsx', 'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg', 'mp4', 'mp3'];
         $tiposcadastrados = array_filter($this->getAttributes(), function ($value, $key) use ($extensoes) {
-            if($value == true && in_array($key, $extensoes)) {
+            if ($value == true && in_array($key, $extensoes)) {
                 return $key;
-            };
+            }
         }, ARRAY_FILTER_USE_BOTH);
         if ($tiposcadastrados != null) {
             $tiposcadastrados = array_keys($tiposcadastrados);
         }
+
         return $tiposcadastrados;
     }
 }
-

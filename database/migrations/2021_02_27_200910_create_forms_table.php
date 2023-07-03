@@ -16,8 +16,8 @@ class CreateFormsTable extends Migration
         Schema::create('forms', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('titulo');
-            $table->bigInteger("modalidadeId");
-            $table->foreign("modalidadeId")->references("id")->on("modalidades")->onDelete('cascade');
+            $table->bigInteger('modalidadeId');
+            $table->foreign('modalidadeId')->references('id')->on('modalidades')->onDelete('cascade');
             $table->timestamps();
         });
     }

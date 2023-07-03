@@ -14,7 +14,7 @@ class AddVisibilidadeToParagrafosTable extends Migration
     public function up()
     {
         Schema::table('paragrafos', function (Blueprint $table) {
-            $table->boolean('visibilidade')->nullable();;
+            $table->boolean('visibilidade')->nullable();
         });
     }
 

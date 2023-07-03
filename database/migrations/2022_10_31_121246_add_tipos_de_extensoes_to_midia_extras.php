@@ -25,7 +25,7 @@ class AddTiposDeExtensoesToMidiaExtras extends Migration
             $table->boolean('pptx')->default(false);
             $table->boolean('csv')->default(false);
             $table->boolean('ods')->default(false);
-            $table->boolean('xlsx')->default(false);//
+            $table->boolean('xlsx')->default(false); //
         });
     }
 
@@ -38,7 +38,7 @@ class AddTiposDeExtensoesToMidiaExtras extends Migration
     {
         Schema::table('midia_extras', function (Blueprint $table) {
             $table->dropColumn(
-                ['ogg','wav','ogv','mpg','mpeg','mkv','avi','odp','pptx','csv','ods','xlsx']
+                ['ogg', 'wav', 'ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'odp', 'pptx', 'csv', 'ods', 'xlsx']
             );
         });
     }

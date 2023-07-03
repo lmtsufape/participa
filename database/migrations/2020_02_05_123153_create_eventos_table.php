@@ -24,7 +24,7 @@ class CreateEventosTable extends Migration
 
             $table->boolean('exibir_calendario_programacao')->nullable();
             $table->string('pdf_programacao')->nullable();
-            
+
             $table->integer('numMaxTrabalhos')->nullable();
             $table->integer('numMaxCoautores')->nullable();
             // $table->boolean('possuiTaxa');

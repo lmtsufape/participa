@@ -48,13 +48,13 @@ class SubmissaoTrabalhoNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->from('lmtsteste@gmail.com', 'Participa ')
-                    ->subject($this->subject)
-                    ->greeting("Olá {$this->user->name}!")
-                    ->line("O sistema Participa recebeu o seu trabalho intitulado '{$this->trabalho->titulo }' com sucesso!")
-                    ->line('Acompanhe o calendário do seu evento para estar ciente das próximas etapas.')
+            ->from('lmtsteste@gmail.com', 'Participa ')
+            ->subject($this->subject)
+            ->greeting("Olá {$this->user->name}!")
+            ->line("O sistema Participa recebeu o seu trabalho intitulado '{$this->trabalho->titulo }' com sucesso!")
+            ->line('Acompanhe o calendário do seu evento para estar ciente das próximas etapas.')
                     // ->action('Redefinir Senha', route('password.reset', $this->token))
-                    ->markdown('vendor.notifications.email');
+            ->markdown('vendor.notifications.email');
     }
 
     /**

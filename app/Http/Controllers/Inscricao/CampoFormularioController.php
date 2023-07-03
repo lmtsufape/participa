@@ -33,7 +33,6 @@ class CampoFormularioController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -42,10 +41,10 @@ class CampoFormularioController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         $validateData = $request->validate([
-            'criarCampo'      => 'required',
+            'criarCampo' => 'required',
             'titulo_do_campo' => 'required',
-            'tipo_campo'      => 'required',
-            'categoria.*'     => 'nullable',
+            'tipo_campo' => 'required',
+            'categoria.*' => 'nullable',
         ]);
 
         if ($request->para_todas == null && $request->categoria == null) {
@@ -95,7 +94,6 @@ class CampoFormularioController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -105,10 +103,10 @@ class CampoFormularioController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         $validateData = $request->validate([
-            'campo_id'        => 'required',
+            'campo_id' => 'required',
             'titulo_do_campo' => 'required',
-            'categoria'       => 'nullable',
-            'categoria.*'     => 'nullable',
+            'categoria' => 'nullable',
+            'categoria.*' => 'nullable',
         ]);
 
         if ($request->para_todas == null && $request->categoria == null) {

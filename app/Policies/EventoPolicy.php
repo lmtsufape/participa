@@ -88,6 +88,7 @@ class EventoPolicy
         if ($evento->eventoPai) {
             return $this->isCoordenadorOrCoordenadorDaComissaoOrganizadora($user, $evento->eventoPai);
         }
+
         return false;
     }
 

@@ -24,7 +24,7 @@ class CreateAtividadesTable extends Migration
             $table->integer('carga_horaria')->nullable();
             $table->string('palavras_chave')->nullable();
             $table->boolean('visibilidade_participante');
-            
+
             $table->integer('eventoId')->refereces('id')->on('eventos');
         });
     }

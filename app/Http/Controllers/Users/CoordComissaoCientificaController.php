@@ -63,7 +63,7 @@ class CoordComissaoCientificaController extends Controller
     public function novoUsuario(Request $request)
     {
         $validationData = $this->validate($request, [
-            'emailUsuario'=>'required|string|email',
+            'emailUsuario' => 'required|string|email',
         ]);
 
         $user = User::where('email', $request->input('emailUsuario'))->first();

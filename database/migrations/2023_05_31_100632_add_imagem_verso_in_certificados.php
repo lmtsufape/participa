@@ -30,4 +30,4 @@ class AddImagemVersoInCertificados extends Migration
             $table->dropColumn(['has_imagem_verso', 'imagem_verso']);
         });
     }
-};
+}

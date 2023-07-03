@@ -33,8 +33,8 @@ class CreateFormEtiqueEventoTable extends Migration
             $table->boolean('modorganizacao')->nullable();
             $table->boolean('modsubmissao')->nullable();
 
-            $table->bigInteger("eventoId")->nullable();
-            $table->foreign("eventoId")->references("id")->on("eventos");
+            $table->bigInteger('eventoId')->nullable();
+            $table->foreign('eventoId')->references('id')->on('eventos');
             $table->timestamps();
         });
     }

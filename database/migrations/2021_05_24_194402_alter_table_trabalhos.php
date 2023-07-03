@@ -14,9 +14,9 @@ class AlterTableTrabalhos extends Migration
     public function up()
     {
         Schema::table('trabalhos', function (Blueprint $table) {
-            $table->enum('status',['rascunho','submetido', 'avaliado', 'corrigido','aprovado','reprovado', 'arquivado'])->default('rascunho') // Nome da coluna
-                    ->nullable() // Preenchimento não obrigatório
-                    ->after('avaliado'); // Ordenado após a coluna "password"
+            $table->enum('status', ['rascunho', 'submetido', 'avaliado', 'corrigido', 'aprovado', 'reprovado', 'arquivado'])->default('rascunho') // Nome da coluna
+                ->nullable() // Preenchimento não obrigatório
+                ->after('avaliado'); // Ordenado após a coluna "password"
             $table->softDeletes();
         });
     }

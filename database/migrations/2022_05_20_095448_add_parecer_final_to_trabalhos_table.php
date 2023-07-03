@@ -9,12 +9,13 @@ class AddParecerFinalToTrabalhosTable extends Migration
     /**
      * Run the migrations.
      * Adicionar coluna para definir o parecer final da comissão.
+     *
      * @return void
      */
     public function up()
     {
         Schema::table('trabalhos', function (Blueprint $table) {
-            $table->boolean('parecer_final')->nullable();;
+            $table->boolean('parecer_final')->nullable();
         });
     }
 

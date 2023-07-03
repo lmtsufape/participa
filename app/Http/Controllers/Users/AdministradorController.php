@@ -37,7 +37,6 @@ class AdministradorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -70,7 +69,6 @@ class AdministradorController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -102,6 +100,7 @@ class AdministradorController extends Controller
     public function eventos()
     {
         $eventos = Evento::all();
+
         return view('coordenador.index', ['eventos' => $eventos]);
     }
 
@@ -126,7 +125,7 @@ class AdministradorController extends Controller
         $user = User::find($id);
         $end = $user->endereco;
 
-        return view('administrador.editUser', ['user'=>$user, 'end'=>$end]);
+        return view('administrador.editUser', ['user' => $user, 'end' => $end]);
     }
 
     public function updateUser(Request $request, $id)
@@ -141,8 +140,8 @@ class AdministradorController extends Controller
         if ($user->usuarioTemp == true) {
             $validator = $request->validate([
                 'name' => 'bail|required|string|max:255',
-                'cpf'           => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
-                'passaporte'    => ($request->cpf == null ? 'bail|required|max:10' : 'nullable'),
+                'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
+                'passaporte' => ($request->cpf == null ? 'bail|required|max:10' : 'nullable'),
                 'celular' => 'required|string|max:16',
                 'instituicao' => 'required|string| max:255',
                 'especialidade' => 'nullable|string',
@@ -192,9 +191,9 @@ class AdministradorController extends Controller
             }
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
-                'email'         => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-                'cpf'           => ($request->passaporte == null ? ['bail', 'required', 'cpf', Rule::unique('users')->ignore($user->id)] : 'nullable'),
-                'passaporte'    => ($request->cpf == null && $request->cpf == null ? ['bail', 'required', 'max:10', Rule::unique('users')->ignore($user->id)] : ['nullable']),
+                'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+                'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf', Rule::unique('users')->ignore($user->id)] : 'nullable'),
+                'passaporte' => ($request->cpf == null && $request->cpf == null ? ['bail', 'required', 'max:10', Rule::unique('users')->ignore($user->id)] : ['nullable']),
                 'celular' => 'required|string|max:16',
                 'instituicao' => 'required|string| max:255',
                 // 'especProfissional' => 'nullable|string',

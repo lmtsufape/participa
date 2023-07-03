@@ -19,22 +19,22 @@ class FormSubmTrabaController extends Controller
         $ordemString = implode(',', $array); //String com a ordem dos campos
 
         $validatedData = $request->validate([
-            'etiquetatitulotrabalho'    => ['nullable', 'string'],
-            'etiquetaautortrabalho'     => ['nullable', 'string'],
-            'etiquetacoautortrabalho'   => ['nullable', 'string'],
-            'etiquetaresumotrabalho'    => ['nullable', 'string'],
-            'etiquetaareatrabalho'      => ['nullable', 'string'],
-            'etiquetauploadtrabalho'    => ['nullable', 'string'],
-            'etiquetacampoextra1'       => ['nullable', 'string'],
-            'etiquetacampoextra2'       => ['nullable', 'string'],
-            'etiquetacampoextra3'       => ['nullable', 'string'],
-            'etiquetacampoextra4'       => ['nullable', 'string'],
-            'etiquetacampoextra5'       => ['nullable', 'string'],
-            'select_campo1'             => ['nullable', 'string'],
-            'select_campo2'             => ['nullable', 'string'],
-            'select_campo3'             => ['nullable', 'string'],
-            'select_campo4'             => ['nullable', 'string'],
-            'select_campo5'             => ['nullable', 'string'],
+            'etiquetatitulotrabalho' => ['nullable', 'string'],
+            'etiquetaautortrabalho' => ['nullable', 'string'],
+            'etiquetacoautortrabalho' => ['nullable', 'string'],
+            'etiquetaresumotrabalho' => ['nullable', 'string'],
+            'etiquetaareatrabalho' => ['nullable', 'string'],
+            'etiquetauploadtrabalho' => ['nullable', 'string'],
+            'etiquetacampoextra1' => ['nullable', 'string'],
+            'etiquetacampoextra2' => ['nullable', 'string'],
+            'etiquetacampoextra3' => ['nullable', 'string'],
+            'etiquetacampoextra4' => ['nullable', 'string'],
+            'etiquetacampoextra5' => ['nullable', 'string'],
+            'select_campo1' => ['nullable', 'string'],
+            'select_campo2' => ['nullable', 'string'],
+            'select_campo3' => ['nullable', 'string'],
+            'select_campo4' => ['nullable', 'string'],
+            'select_campo5' => ['nullable', 'string'],
         ]);
 
         $formevento = FormSubmTraba::where('eventoId', $id)->first();

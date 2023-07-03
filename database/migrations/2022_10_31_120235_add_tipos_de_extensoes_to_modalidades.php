@@ -38,7 +38,7 @@ class AddTiposDeExtensoesToModalidades extends Migration
     {
         Schema::table('modalidades', function (Blueprint $table) {
             $table->dropColumn(
-                ['ogg','wav','ogv','mpg','mpeg','mkv','avi','odp','pptx','csv','ods','xlsx']
+                ['ogg', 'wav', 'ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'odp', 'pptx', 'csv', 'ods', 'xlsx']
             );
         });
     }

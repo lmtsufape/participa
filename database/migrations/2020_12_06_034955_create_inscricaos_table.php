@@ -15,26 +15,26 @@ class CreateInscricaosTable extends Migration
     {
         Schema::create('inscricaos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->boolean("finalizada");
+            $table->boolean('finalizada');
             $table->timestamps();
 
-            $table->bigInteger("user_id")->nullable();
-            $table->foreign("user_id")->references("id")->on("users");
+            $table->bigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
 
-            $table->bigInteger("evento_id")->nullable();
-            $table->foreign("evento_id")->references("id")->on("eventos");
+            $table->bigInteger('evento_id')->nullable();
+            $table->foreign('evento_id')->references('id')->on('eventos');
 
-            $table->bigInteger("categoria_participante_id");
-            $table->foreign("categoria_participante_id")->references("id")->on("categoria_participantes");
-            
-            $table->bigInteger("pagamento_id")->nullable();
-            $table->foreign("pagamento_id")->references("id")->on("pagamentos");
+            $table->bigInteger('categoria_participante_id');
+            $table->foreign('categoria_participante_id')->references('id')->on('categoria_participantes');
 
-            $table->bigInteger("promocao_id")->nullable();
-            $table->foreign("promocao_id")->references("id")->on("promocaos");
+            $table->bigInteger('pagamento_id')->nullable();
+            $table->foreign('pagamento_id')->references('id')->on('pagamentos');
 
-            $table->bigInteger("cupom_desconto_id")->nullable();
-            $table->foreign("cupom_desconto_id")->references("id")->on("cupom_de_descontos");
+            $table->bigInteger('promocao_id')->nullable();
+            $table->foreign('promocao_id')->references('id')->on('promocaos');
+
+            $table->bigInteger('cupom_desconto_id')->nullable();
+            $table->foreign('cupom_desconto_id')->references('id')->on('cupom_de_descontos');
         });
     }
 

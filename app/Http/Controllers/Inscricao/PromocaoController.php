@@ -34,7 +34,6 @@ class PromocaoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -43,16 +42,16 @@ class PromocaoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         $validadeData = $request->validate([
-            'novaPromocao'          => 'required',
-            'identificador'         => 'required',
-            'valor'                 => 'required',
-            'descrição'             => 'nullable|max:1000',
-            'dataDeInício.*'        => 'required|date',
-            'dataDeFim.*'           => 'required|date|after:dataDeInício.*',
-            'disponibilidade.*'     => 'required',
-            'atividades.*'          => 'nullable',
+            'novaPromocao' => 'required',
+            'identificador' => 'required',
+            'valor' => 'required',
+            'descrição' => 'nullable|max:1000',
+            'dataDeInício.*' => 'required|date',
+            'dataDeFim.*' => 'required|date|after:dataDeInício.*',
+            'disponibilidade.*' => 'required',
+            'atividades.*' => 'nullable',
             'para_todas_categorias' => 'nullable',
-            'categorias.*'          => 'nullable',
+            'categorias.*' => 'nullable',
         ]);
 
         if ($request->valor < 0) {
@@ -135,7 +134,6 @@ class PromocaoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -148,16 +146,16 @@ class PromocaoController extends Controller
         $promocao = Promocao::find($id);
 
         $validateData = $request->validate([
-            'editarPromocao'                        => 'required',
-            'identificador_'.$promocao->id          => 'required',
-            'valor_'.$promocao->id                  => 'required',
-            'descrição_'.$promocao->id              => 'nullable',
-            'dataDeInício_'.$promocao->id.'.*'      => 'required|date',
-            'dataDeFim_'.$promocao->id.'.*'         => 'required|date|after:dataDeInício_'.$promocao->id.'.*',
-            'disponibilidade_'.$promocao->id.'.*'   => 'required',
-            'atividades_'.$promocao->id.'.*'        => 'nullable',
-            'para_todas_categorias_'.$promocao->id  => 'nullable',
-            'categorias_'.$promocao->id.'.*'        => 'nullable',
+            'editarPromocao' => 'required',
+            'identificador_'.$promocao->id => 'required',
+            'valor_'.$promocao->id => 'required',
+            'descrição_'.$promocao->id => 'nullable',
+            'dataDeInício_'.$promocao->id.'.*' => 'required|date',
+            'dataDeFim_'.$promocao->id.'.*' => 'required|date|after:dataDeInício_'.$promocao->id.'.*',
+            'disponibilidade_'.$promocao->id.'.*' => 'required',
+            'atividades_'.$promocao->id.'.*' => 'nullable',
+            'para_todas_categorias_'.$promocao->id => 'nullable',
+            'categorias_'.$promocao->id.'.*' => 'nullable',
         ]);
 
         if ($request->input('valor_'.$promocao->id) < 0) {
@@ -276,11 +274,11 @@ class PromocaoController extends Controller
             $atividades->push($promo);
             foreach ($promocao->atividades as $atv) {
                 $atividade = [
-                    'id'        => $atv->id,
-                    'titulo'    => $atv->titulo,
-                    'tipo'      => $atv->tipoAtividade->descricao,
-                    'valor'     => $atv->valor,
-                    'local'     => $atv->local,
+                    'id' => $atv->id,
+                    'titulo' => $atv->titulo,
+                    'tipo' => $atv->tipoAtividade->descricao,
+                    'valor' => $atv->valor,
+                    'local' => $atv->local,
                     'descricao' => $atv->descricao,
                 ];
                 $atividades->push($atividade);

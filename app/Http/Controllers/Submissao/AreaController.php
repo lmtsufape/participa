@@ -32,7 +32,6 @@ class AreaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,12 +40,12 @@ class AreaController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $validatedData = $request->validate([
-            'nome'  =>  'required|string',
+            'nome' => 'required|string',
         ]);
 
         Area::create([
-            'nome'      => $request->nome,
-            'eventoId'  => $request->eventoId,
+            'nome' => $request->nome,
+            'eventoId' => $request->eventoId,
         ]);
 
         return redirect()->back()->with(['mensagem' => 'Área cadastrada com sucesso!']);
@@ -77,7 +76,6 @@ class AreaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Area  $area
      * @return \Illuminate\Http\Response
      */

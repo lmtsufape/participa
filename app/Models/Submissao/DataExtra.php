@@ -11,8 +11,6 @@ class DataExtra extends Model
 
     /**
      * Get the modalidade that owns the DataExtra
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function modalidade(): BelongsTo
     {

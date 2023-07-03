@@ -22,10 +22,10 @@ class TrabalhoPostRequest extends FormRequest
         $modalidade = Modalidade::find($this->route('id'));
         $mytime = Carbon::now('America/Recife');
         $evento = Evento::find(request()->eventoId);
-        if (!$modalidade->estaEmPeriodoDeSubmissao()) {
+        if (! $modalidade->estaEmPeriodoDeSubmissao()) {
             return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
         }
-        if (!$modalidade->estaEmPeriodoDeSubmissao()) {
+        if (! $modalidade->estaEmPeriodoDeSubmissao()) {
             return redirect()->route('home');
         }
 
@@ -42,14 +42,14 @@ class TrabalhoPostRequest extends FormRequest
         $evento = Evento::find(request()->eventoId);
         $modalidade = Modalidade::find(request()->modalidadeId);
         $validate_array = [
-            'nomeTrabalho'       => ['required', 'string'],
-            'areaId'             => ['required', 'integer'],
-            'modalidadeId'       => ['required', 'integer'],
-            'eventoId'           => ['required', 'integer'],
-            'resumo'             => ['nullable', 'string'],
-            'nomeCoautor.*'      => ['string'],
-            'emailCoautor.*'     => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores)],
-            'arquivo'            => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
+            'nomeTrabalho' => ['required', 'string'],
+            'areaId' => ['required', 'integer'],
+            'modalidadeId' => ['required', 'integer'],
+            'eventoId' => ['required', 'integer'],
+            'resumo' => ['nullable', 'string'],
+            'nomeCoautor.*' => ['string'],
+            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores)],
+            'arquivo' => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra3arquivo' => ['nullable', 'file', 'max:2048'],
@@ -60,13 +60,12 @@ class TrabalhoPostRequest extends FormRequest
             'campoextra3simples' => ['nullable', 'string'],
             'campoextra4simples' => ['nullable', 'string'],
             'campoextra5simples' => ['nullable', 'string'],
-            'campoextra1grande'  => ['nullable', 'string'],
-            'campoextra2grande'  => ['nullable', 'string'],
-            'campoextra3grande'  => ['nullable', 'string'],
-            'campoextra4grande'  => ['nullable', 'string'],
-            'campoextra5grande'  => ['nullable', 'string'],
+            'campoextra1grande' => ['nullable', 'string'],
+            'campoextra2grande' => ['nullable', 'string'],
+            'campoextra3grande' => ['nullable', 'string'],
+            'campoextra4grande' => ['nullable', 'string'],
+            'campoextra5grande' => ['nullable', 'string'],
         ];
-
 
         foreach ($modalidade->midiasExtra as $midia) {
             $validate_array[$midia->hyphenizeNome()] = ['required', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome()], false)];

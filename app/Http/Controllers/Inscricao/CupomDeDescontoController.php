@@ -33,7 +33,6 @@ class CupomDeDescontoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -42,13 +41,13 @@ class CupomDeDescontoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $validadeData = $request->validate(
             [
-                'criarCupom'    => 'required',
+                'criarCupom' => 'required',
                 'identificador' => 'required|unique:cupom_de_descontos',
-                'quantidade'    => 'required|numeric|min:0',
-                'tipo_valor'    => 'required',
-                'valor'         => 'required|numeric|min:0',
-                'início'        => 'required|date',
-                'fim'           => 'required|date|after:início',
+                'quantidade' => 'required|numeric|min:0',
+                'tipo_valor' => 'required',
+                'valor' => 'required|numeric|min:0',
+                'início' => 'required|date',
+                'fim' => 'required|date|after:início',
             ],
             [],
             [
@@ -100,7 +99,6 @@ class CupomDeDescontoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -113,13 +111,13 @@ class CupomDeDescontoController extends Controller
 
         $validadeData = $request->validate(
             [
-                'editarCupom'                       => 'required',
-                'identificador_cupom_'.$cupom->id   => 'required',
-                'quantidade_cupom_'.$cupom->id      => 'required|numeric|min:0',
-                'tipo_valor_cupom_'.$cupom->id      => 'required',
-                'valor_cupom_'.$cupom->id           => 'required|numeric|min:0',
-                'início_cupom_'.$cupom->id          => 'required|date',
-                'fim_cupom_'.$cupom->id             => 'required|date|after:início_cupom_'.$cupom->id,
+                'editarCupom' => 'required',
+                'identificador_cupom_'.$cupom->id => 'required',
+                'quantidade_cupom_'.$cupom->id => 'required|numeric|min:0',
+                'tipo_valor_cupom_'.$cupom->id => 'required',
+                'valor_cupom_'.$cupom->id => 'required|numeric|min:0',
+                'início_cupom_'.$cupom->id => 'required|date',
+                'fim_cupom_'.$cupom->id => 'required|date|after:início_cupom_'.$cupom->id,
             ],
             [],
             [

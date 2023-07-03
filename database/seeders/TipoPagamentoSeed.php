@@ -1,6 +1,9 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class TipoPagamentoSeed extends Seeder
 {
@@ -12,11 +15,11 @@ class TipoPagamentoSeed extends Seeder
     public function run()
     {
         DB::table('tipo_pagamentos')->insert([  //
-          'descricao' => 'cartao',
+            'descricao' => 'cartao',
         ]);
 
         DB::table('tipo_pagamentos')->insert([  //
-          'descricao' => 'boleto',
+            'descricao' => 'boleto',
         ]);
     }
 }

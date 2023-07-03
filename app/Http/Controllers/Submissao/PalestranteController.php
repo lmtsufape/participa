@@ -72,7 +72,7 @@ class PalestranteController extends Controller
                     $palestrante->save();
                 }
             }
-        // else: só cadastrar novos palestrantes, não tem nenhum para atualizar
+            // else: só cadastrar novos palestrantes, não tem nenhum para atualizar
         } else {
             if ($request->nomeDoPalestrante != null) {
                 for ($i = 0; $i < count($request->nomeDoPalestrante); $i++) {

@@ -51,18 +51,18 @@ class TrabalhoController extends Controller
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
         $ordemCampos = explode(',', $formSubTraba->ordemCampos);
-        array_splice($ordemCampos, 6, 0, "midiaExtra");
-        array_splice($ordemCampos, 5, 0, "apresentacao");
+        array_splice($ordemCampos, 6, 0, 'midiaExtra');
+        array_splice($ordemCampos, 5, 0, 'apresentacao');
         $modalidade = Modalidade::find($idModalidade);
 
         $mytime = Carbon::now('America/Recife');
-        if (!$modalidade->estaEmPeriodoDeSubmissao()) {
+        if (! $modalidade->estaEmPeriodoDeSubmissao()) {
             $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         }
         // dd($formSubTraba);
         return view('evento.submeterTrabalho', [
-            'evento'                 => $evento,
-            'areas'                  => $areas,
+            'evento' => $evento,
+            'areas' => $areas,
             // 'revisores'              => $revisores,
             // 'modalidades'            => $modalidades,
             // 'areaModalidades'        => $areaModalidades,
@@ -72,11 +72,11 @@ class TrabalhoController extends Controller
             // 'regrasubarq'            => $formtiposubmissao,
             // 'areasEspecificas'       => $areasEspecificas,
             // 'modalidadeEspecifica'   => $idModalidade,
-            'formSubTraba'           => $formSubTraba,
-            'ordemCampos'            => $ordemCampos,
-            'regras'                 => $regra,
-            'templates'              => $template,
-            'modalidade'             => $modalidade,
+            'formSubTraba' => $formSubTraba,
+            'ordemCampos' => $ordemCampos,
+            'regras' => $regra,
+            'templates' => $template,
+            'modalidade' => $modalidade,
         ]);
     }
 
@@ -104,6 +104,7 @@ class TrabalhoController extends Controller
         $originalName = str_replace('.'.$extension, '', $originalName);
         $originalName = $this->removerCaracteresEspeciais($originalName);
         $path = $file->storeAs($path, $originalName.'.'.$extension);
+
         return $path;
     }
 
@@ -113,37 +114,39 @@ class TrabalhoController extends Controller
         $string = str_replace('-', '_', $string);
         $string = preg_replace('/_+/', '_', $string);
         $string = $this->substituirCaracteresEspeciais($string);
+
         return preg_replace('/[^A-Za-z0-9\_]/', '', $string);
     }
 
-    private function substituirCaracteresEspeciais($text) {
-        $utf8 = array(
-            '/[áàâãªä]/u'   =>   'a',
-            '/[ÁÀÂÃÄ]/u'    =>   'A',
-            '/[ÍÌÎÏ]/u'     =>   'I',
-            '/[íìîï]/u'     =>   'i',
-            '/[éèêë]/u'     =>   'e',
-            '/[ÉÈÊË]/u'     =>   'E',
-            '/[óòôõºö]/u'   =>   'o',
-            '/[ÓÒÔÕÖ]/u'    =>   'O',
-            '/[úùûü]/u'     =>   'u',
-            '/[ÚÙÛÜ]/u'     =>   'U',
-            '/ç/'           =>   'c',
-            '/Ç/'           =>   'C',
-            '/ñ/'           =>   'n',
-            '/Ñ/'           =>   'N',
-            '/–/'           =>   '-',
-            '/[’‘‹›‚]/u'    =>   ' ',
-            '/[“”«»„]/u'    =>   ' ',
-            '/ /'           =>   ' ',
-        );
+    private function substituirCaracteresEspeciais($text)
+    {
+        $utf8 = [
+            '/[áàâãªä]/u' => 'a',
+            '/[ÁÀÂÃÄ]/u' => 'A',
+            '/[ÍÌÎÏ]/u' => 'I',
+            '/[íìîï]/u' => 'i',
+            '/[éèêë]/u' => 'e',
+            '/[ÉÈÊË]/u' => 'E',
+            '/[óòôõºö]/u' => 'o',
+            '/[ÓÒÔÕÖ]/u' => 'O',
+            '/[úùûü]/u' => 'u',
+            '/[ÚÙÛÜ]/u' => 'U',
+            '/ç/' => 'c',
+            '/Ç/' => 'C',
+            '/ñ/' => 'n',
+            '/Ñ/' => 'N',
+            '/–/' => '-',
+            '/[’‘‹›‚]/u' => ' ',
+            '/[“”«»„]/u' => ' ',
+            '/ /' => ' ',
+        ];
+
         return preg_replace(array_keys($utf8), array_values($utf8), $text);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\TrabalhoPostRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(TrabalhoPostRequest $request, $modalidadeId)
@@ -209,10 +212,10 @@ class TrabalhoController extends Controller
             $trabalho = Trabalho::create([
                 'titulo' => $request->nomeTrabalho,
                 'resumo' => $request->resumo,
-                'modalidadeId'  => $request->modalidadeId,
-                'areaId'  => $request->areaId,
+                'modalidadeId' => $request->modalidadeId,
+                'areaId' => $request->areaId,
                 'autorId' => $autor->id,
-                'eventoId'  => $evento->id,
+                'eventoId' => $evento->id,
                 'avaliado' => 'nao',
             ]);
 
@@ -277,8 +280,8 @@ class TrabalhoController extends Controller
                 $file = $request->file('arquivo');
                 $path = $this->salvarArquivoComNomeOriginal($file, $path);
                 Arquivo::create([
-                    'nome'  => $path,
-                    'trabalhoId'  => $trabalho->id,
+                    'nome' => $path,
+                    'trabalhoId' => $trabalho->id,
                     'versaoFinal' => true,
                 ]);
             }
@@ -295,40 +298,40 @@ class TrabalhoController extends Controller
             if (isset($request->campoextra1arquivo)) {
                 $path = $request->campoextra1arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
                 Arquivoextra::create([
-                    'nome'  => $path,
-                    'trabalhoId'  => $trabalho->id,
+                    'nome' => $path,
+                    'trabalhoId' => $trabalho->id,
                 ]);
             }
 
             if (isset($request->campoextra2arquivo)) {
                 $path = $request->campoextra2arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
                 Arquivoextra::create([
-                    'nome'  => $path,
-                    'trabalhoId'  => $trabalho->id,
+                    'nome' => $path,
+                    'trabalhoId' => $trabalho->id,
                 ]);
             }
 
             if (isset($request->campoextra3arquivo)) {
                 $path = $request->campoextra3arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
                 Arquivoextra::create([
-                    'nome'  => $path,
-                    'trabalhoId'  => $trabalho->id,
+                    'nome' => $path,
+                    'trabalhoId' => $trabalho->id,
                 ]);
             }
 
             if (isset($request->campoextra4arquivo)) {
                 $path = $request->campoextra4arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
                 Arquivoextra::create([
-                    'nome'  => $path,
-                    'trabalhoId'  => $trabalho->id,
+                    'nome' => $path,
+                    'trabalhoId' => $trabalho->id,
                 ]);
             }
 
             if (isset($request->campoextra5arquivo)) {
                 $path = $request->campoextra5arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
                 Arquivoextra::create([
-                    'nome'  => $path,
-                    'trabalhoId'  => $trabalho->id,
+                    'nome' => $path,
+                    'trabalhoId' => $trabalho->id,
                 ]);
             }
 
@@ -340,13 +343,13 @@ class TrabalhoController extends Controller
                     } else {
                         $userCoautor = User::where('email', $value)->first();
                         Mail::to($userCoautor->email)
-                    ->send(new SubmissaoTrabalho($userCoautor, $subject, $trabalho));
+                            ->send(new SubmissaoTrabalho($userCoautor, $subject, $trabalho));
                     }
                 }
             }
 
-            return redirect()->route('evento.visualizar', ['id'=>$request->eventoId])
-                         ->with(['message' => 'Submissão concluída com sucesso!', 'class' => 'success']);
+            return redirect()->route('evento.visualizar', ['id' => $request->eventoId])
+                ->with(['message' => 'Submissão concluída com sucesso!', 'class' => 'success']);
         } catch (\Throwable $th) {
             Log::info('message'.$th->getMessage());
 
@@ -425,7 +428,6 @@ class TrabalhoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\TrabalhoUpdateRequest  $request
      * @param  \App\Trabalho  $trabalho
      * @return \Illuminate\Http\Response
      */
@@ -602,8 +604,8 @@ class TrabalhoController extends Controller
             }
 
             $arquivo = Arquivo::create([
-                'nome'  => $path,
-                'trabalhoId'  => $trabalho->id,
+                'nome' => $path,
+                'trabalhoId' => $trabalho->id,
                 'versaoFinal' => true,
             ]);
 
@@ -618,7 +620,7 @@ class TrabalhoController extends Controller
             foreach ($trabalho->modalidade->midiasExtra as $midia) {
                 if ($request[$midia->hyphenizeNome()]) {
                     $consulta = $trabalho->midiasExtra()->where('midia_extra_id', $midia->id);
-                    if (!$consulta->exists()) {
+                    if (! $consulta->exists()) {
                         $trabalho->midiasExtra()->attach($midia->id);
                     }
                     $documento = $consulta->first()->pivot;
@@ -631,40 +633,40 @@ class TrabalhoController extends Controller
         if (isset($request->campoextra1arquivo)) {
             $path = $request->campoextra1arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
             $arquivoExtra1 = Arquivoextra::create([
-                'nome'  => $path,
-                'trabalhoId'  => $trabalho->id,
+                'nome' => $path,
+                'trabalhoId' => $trabalho->id,
             ]);
         }
 
         if (isset($request->campoextra2arquivo)) {
             $path = $request->campoextra2arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
             $arquivoExtra2 = Arquivoextra::create([
-                'nome'  => $path,
-                'trabalhoId'  => $trabalho->id,
+                'nome' => $path,
+                'trabalhoId' => $trabalho->id,
             ]);
         }
 
         if (isset($request->campoextra3arquivo)) {
             $path = $request->campoextra3arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
             $arquivoExtra3 = Arquivoextra::create([
-                'nome'  => $path,
-                'trabalhoId'  => $trabalho->id,
+                'nome' => $path,
+                'trabalhoId' => $trabalho->id,
             ]);
         }
 
         if (isset($request->campoextra4arquivo)) {
             $path = $request->campoextra4arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
             $arquivoExtra4 = Arquivoextra::create([
-                'nome'  => $path,
-                'trabalhoId'  => $trabalho->id,
+                'nome' => $path,
+                'trabalhoId' => $trabalho->id,
             ]);
         }
 
         if (isset($request->campoextra5arquivo)) {
             $path = $request->campoextra5arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
             $arquivoExtra5 = Arquivoextra::create([
-                'nome'  => $path,
-                'trabalhoId'  => $trabalho->id,
+                'nome' => $path,
+                'trabalhoId' => $trabalho->id,
             ]);
         }
 
@@ -683,7 +685,7 @@ class TrabalhoController extends Controller
     {
         $trabalho = Trabalho::find($id);
         $agora = Carbon::now();
-        if (auth()->user()->id != $trabalho->autorId || !$trabalho->modalidade->estaEmPeriodoDeSubmissao()) {
+        if (auth()->user()->id != $trabalho->autorId || ! $trabalho->modalidade->estaEmPeriodoDeSubmissao()) {
             return abort(403);
         }
 
@@ -729,7 +731,7 @@ class TrabalhoController extends Controller
             'trabalhoId' => ['required', 'integer'],
         ]);
 
-        if (!$modalidade->estaEmPeriodoDeSubmissao()) {
+        if (! $modalidade->estaEmPeriodoDeSubmissao()) {
             return redirect()->back()->withErrors(['error' => 'O periodo de submissão para esse trabalho se encerrou.']);
         }
 
@@ -752,12 +754,12 @@ class TrabalhoController extends Controller
 
         $path = $this->salvarArquivoComNomeOriginal($request->arquivo, "trabalhos/{$evento->id}/{$trabalho->id}/correcoes/{$count}/");
         $arquivo = Arquivo::create([
-            'nome'  => $path,
-            'trabalhoId'  => $trabalho->id,
+            'nome' => $path,
+            'trabalhoId' => $trabalho->id,
             'versaoFinal' => true,
         ]);
 
-        return redirect()->route('evento.visualizar', ['id'=>$request->eventoId]);
+        return redirect()->route('evento.visualizar', ['id' => $request->eventoId]);
     }
 
     public function detalhesAjax(Request $request)
@@ -773,12 +775,12 @@ class TrabalhoController extends Controller
             if ($key->user->name != null) {
                 array_push($revisoresAux, [
                     'id' => $key->id,
-                    'nomeOuEmail'  => $key->user->name,
+                    'nomeOuEmail' => $key->user->name,
                 ]);
             } else {
                 array_push($revisoresAux, [
                     'id' => $key->id,
-                    'nomeOuEmail'  => $key->user->email,
+                    'nomeOuEmail' => $key->user->email,
                 ]);
             }
         }
@@ -798,12 +800,12 @@ class TrabalhoController extends Controller
                 if ($key->user->name != null) {
                     array_push($revisoresAux1, [
                         'id' => $key->id,
-                        'nomeOuEmail'  => $key->user->name,
+                        'nomeOuEmail' => $key->user->name,
                     ]);
                 } else {
                     array_push($revisoresAux1, [
                         'id' => $key->id,
-                        'nomeOuEmail'  => $key->user->email,
+                        'nomeOuEmail' => $key->user->email,
                     ]);
                 }
             }
@@ -811,7 +813,7 @@ class TrabalhoController extends Controller
 
         return response()->json([
             'titulo' => $trabalho->titulo,
-            'resumo'  => $trabalho->resumo,
+            'resumo' => $trabalho->resumo,
             'revisores' => $revisoresAux,
             'revisoresDisponiveis' => $revisoresAux1,
         ], 200);
@@ -1016,8 +1018,8 @@ class TrabalhoController extends Controller
 
             $path = $this->salvarArquivoComNomeOriginal($request->arquivoCorrecao, "correcoes/{$evento->id}/{$trabalho->id}");
             $arquivo = ArquivoCorrecao::create([
-                'caminho'  => $path,
-                'trabalhoId'  => $trabalho->id,
+                'caminho' => $path,
+                'trabalhoId' => $trabalho->id,
             ]);
         }
 
@@ -1081,11 +1083,11 @@ class TrabalhoController extends Controller
         }
 
         return view('coordenador.trabalhos.resultados', [
-            'evento'            => $evento,
-            'areas'             => $areas,
-            'trabalhos'         => $todosTrabalhos,
+            'evento' => $evento,
+            'areas' => $areas,
+            'trabalhos' => $todosTrabalhos,
             'trabalhosPorModalidade' => $trabalhos,
-            'agora'         => now(),
+            'agora' => now(),
         ]);
     }
 
@@ -1160,11 +1162,11 @@ class TrabalhoController extends Controller
                 $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
             }
             $trabalho = [
-                'id'          => $trab->id,
-                'titulo'      => $trab->titulo,
-                'nome'        => $trab->autor->name,
-                'area'        => $trab->area->nome,
-                'modalidade'  => $trab->modalidade->nome,
+                'id' => $trab->id,
+                'titulo' => $trab->titulo,
+                'nome' => $trab->autor->name,
+                'area' => $trab->area->nome,
+                'modalidade' => $trab->modalidade->nome,
                 'rota_download' => ! (empty($trab->arquivo->nome)) ? route('downloadTrabalho', ['id' => $trab->id]) : '#',
             ];
             $trabalhoJson->push($trabalho);
@@ -1178,9 +1180,9 @@ class TrabalhoController extends Controller
         // dd($request);
         $exibirValidacao = $request->validate([
             'avaliar_trabalho_id' => 'required',
-            'modalidade_id'       => 'required',
-            'area_id'             => 'required',
-            'evento_id'           => 'required',
+            'modalidade_id' => 'required',
+            'area_id' => 'required',
+            'evento_id' => 'required',
         ]);
 
         $modalidade = Modalidade::find($request->modalidade_id);
@@ -1208,7 +1210,7 @@ class TrabalhoController extends Controller
         }
 
         // Atualizando tabelas
-        $atribuicao = $trabalho->atribuicoes()->updateExistingPivot($revisor->id, ['confirmacao'=>true, 'parecer'=>'dado']);
+        $atribuicao = $trabalho->atribuicoes()->updateExistingPivot($revisor->id, ['confirmacao' => true, 'parecer' => 'dado']);
         $trabalho->avaliado = 'Avaliado';
         $trabalho->update();
 
