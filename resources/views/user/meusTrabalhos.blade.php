@@ -1089,145 +1089,146 @@
   </script>
 @endif
 
-<script>
-  function montarLinhaInput(div, id, event){
-    var coautores = document.getElementById("coautores"+id);
-    var html = "";
-    if (coautores.children.length==1){
-        html = `<label id="title-coautores${id}" style="margin-top:20px"><b>{{$trabalho->evento->formSubTrab->etiquetacoautortrabalho}}</b></label>`;
-    }
-    event.preventDefault();
-    html += `
-    <div class="item card mt-0">
-        <div class="row card-body">
-            <div class="col-sm-4">
-                <label>E-mail</label>
-                <input type="email" style="margin-bottom:10px" class="form-control emailCoautor" name="emailCoautor_${id}[]" placeholder="E-mail">
-            </div>
-            <div class="col-sm-5">
-                <label>Nome Completo</label>
-                <input type="text" style="margin-bottom:10px" class="form-control emailCoautor" name="nomeCoautor_${id}[]" placeholder="Nome">
-            </div>
-            <div class="col-sm-3">
-                <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, ${id}, event)" class="delete pr-2">
-                    <i class="fas fa-user-times fa-2x"></i>
-                </a>
-                <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, ${id}, event)">
-                    <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                </a>
-                <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, ${id}, event)">
-                    <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    `;
-
-    $('#coautores'+id).append(html);
-  }
-
-  function deletarCoautor(div, id, event) {
-    event.preventDefault();
-    var titulo = document.getElementById("title-coautores"+id);
-    var coautores = document.getElementById("coautores"+id);
-    $('#title-coautores'+id).remove();
-    div.parentElement.parentElement.parentElement.remove();
-    if(coautores.children.length >= 2) {
-        coautores.insertBefore(titulo, coautores.children[1]);
-    }
-  }
-
-  $(document).ready(function(){
-    $('.char-count').keyup(function() {
-
-        var maxLength = parseInt($(this).attr('maxlength'));
-        var length = $(this).val().length;
-        // var newLength = maxLength-length;
-
-        var name = $(this).attr("name");
-        $('#'+name).text(length);
-    });
-  });
-
-  $(document).ready(function(){
-    $('.palavra').keyup(function() {
-        var myText = this.value.trim();
-        var wordsArray = myText.split(/\s+/g);
-        var words = wordsArray.length;
-        var min = parseInt(($('#minpalavras').text()));
-        var max = parseInt(($('#maxpalavras').text()));
-        if(words < min || words > max) {
-            this.setCustomValidity('Número de palavras não permitido. Você possui atualmente '+words+' palavras.');
-        } else {
-            this.setCustomValidity('');
-        }
-        var name = $(this).attr("name");
-        $('#'+name).text(words);
-    });
-  });
-
-
-  function mover(div, direcao, id, event) {
-    event.preventDefault();
-    var coautores = document.getElementById("coautores"+id);
-
-    var hcoautores;
-    if(coautores.children.length > 2) {
-        hcoautores = coautores.children[1];
-        coautores.children[1].remove();
-    }
-    if(direcao == 0) {
-      for(var i = 0; i < coautores.children.length; i++) {
-        if (coautores.children[i] == div && coautores.children[i+1] != null) {
-          var baixo = coautores.children[i+1];
-          var cima = coautores.children[i];
-          coautores.children[i+1].remove();
-          coautores.insertBefore(baixo, cima);
-          break;
-        }
+@if(isset($trabalho))
+  <script>
+    function montarLinhaInput(div, id, event){
+      var coautores = document.getElementById("coautores"+id);
+      var html = "";
+      if (coautores.children.length==1){
+          html = `<label id="title-coautores${id}" style="margin-top:20px"><b>{{$trabalho->evento->formSubTrab->etiquetacoautortrabalho}}</b></label>`;
       }
-    } else if (direcao == 1) {
-      for(var i = 0; i < coautores.children.length; i++) {
-        if (coautores.children[i] == div && coautores.firstChild != div) {
-          var baixo = coautores.children[i];
-          var cima = coautores.children[i-1];
-          coautores.children[i].remove();
-          coautores.insertBefore(baixo, cima);
-          break;
-        }
+      event.preventDefault();
+      html += `
+      <div class="item card mt-0">
+          <div class="row card-body">
+              <div class="col-sm-4">
+                  <label>E-mail</label>
+                  <input type="email" style="margin-bottom:10px" class="form-control emailCoautor" name="emailCoautor_${id}[]" placeholder="E-mail">
+              </div>
+              <div class="col-sm-5">
+                  <label>Nome Completo</label>
+                  <input type="text" style="margin-bottom:10px" class="form-control emailCoautor" name="nomeCoautor_${id}[]" placeholder="Nome">
+              </div>
+              <div class="col-sm-3">
+                  <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, ${id}, event)" class="delete pr-2">
+                      <i class="fas fa-user-times fa-2x"></i>
+                  </a>
+                  <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, ${id}, event)">
+                      <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                  </a>
+                  <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, ${id}, event)">
+                      <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                  </a>
+              </div>
+          </div>
+      </div>
+      `;
+
+      $('#coautores'+id).append(html);
+    }
+
+    function deletarCoautor(div, id, event) {
+      event.preventDefault();
+      var titulo = document.getElementById("title-coautores"+id);
+      var coautores = document.getElementById("coautores"+id);
+      $('#title-coautores'+id).remove();
+      div.parentElement.parentElement.parentElement.remove();
+      if(coautores.children.length >= 2) {
+          coautores.insertBefore(titulo, coautores.children[1]);
       }
     }
-    if(coautores.children.length >= 2){
-        coautores.insertBefore(hcoautores, coautores.children[1]);
-        console.log('');
-    }
-  }
 
-  function buscarEmail(input) {
-    var emailBuscado = input.value;
-    var inputName = input.parentElement.parentElement.children[1].children[1];
+    $(document).ready(function(){
+      $('.char-count').keyup(function() {
 
-    let data = {email: emailBuscado,};
+          var maxLength = parseInt($(this).attr('maxlength'));
+          var length = $(this).val().length;
+          // var newLength = maxLength-length;
 
-    if (!(emailBuscado=="" || emailBuscado.indexOf('@')==-1 || emailBuscado.indexOf('.')==-1)) {
-      $.ajax({
-        type: 'GET',
-        url: '{{ route("search.user") }}',
-        data: data,
-        dataType: 'json',
-        success: function(res) {
-          if(res.user[0] != null) {
-            inputName.value = res.user[0]['name'];
-          }
-        },
-        error: function(err){
-            // console.log('err')
-            // console.log(err)
-        }
+          var name = $(this).attr("name");
+          $('#'+name).text(length);
       });
+    });
+
+    $(document).ready(function(){
+      $('.palavra').keyup(function() {
+          var myText = this.value.trim();
+          var wordsArray = myText.split(/\s+/g);
+          var words = wordsArray.length;
+          var min = parseInt(($('#minpalavras').text()));
+          var max = parseInt(($('#maxpalavras').text()));
+          if(words < min || words > max) {
+              this.setCustomValidity('Número de palavras não permitido. Você possui atualmente '+words+' palavras.');
+          } else {
+              this.setCustomValidity('');
+          }
+          var name = $(this).attr("name");
+          $('#'+name).text(words);
+      });
+    });
+
+
+    function mover(div, direcao, id, event) {
+      event.preventDefault();
+      var coautores = document.getElementById("coautores"+id);
+
+      var hcoautores;
+      if(coautores.children.length > 2) {
+          hcoautores = coautores.children[1];
+          coautores.children[1].remove();
+      }
+      if(direcao == 0) {
+        for(var i = 0; i < coautores.children.length; i++) {
+          if (coautores.children[i] == div && coautores.children[i+1] != null) {
+            var baixo = coautores.children[i+1];
+            var cima = coautores.children[i];
+            coautores.children[i+1].remove();
+            coautores.insertBefore(baixo, cima);
+            break;
+          }
+        }
+      } else if (direcao == 1) {
+        for(var i = 0; i < coautores.children.length; i++) {
+          if (coautores.children[i] == div && coautores.firstChild != div) {
+            var baixo = coautores.children[i];
+            var cima = coautores.children[i-1];
+            coautores.children[i].remove();
+            coautores.insertBefore(baixo, cima);
+            break;
+          }
+        }
+      }
+      if(coautores.children.length >= 2){
+          coautores.insertBefore(hcoautores, coautores.children[1]);
+          console.log('');
+      }
     }
-  }
 
-</script>
+    function buscarEmail(input) {
+      var emailBuscado = input.value;
+      var inputName = input.parentElement.parentElement.children[1].children[1];
 
+      let data = {email: emailBuscado,};
+
+      if (!(emailBuscado=="" || emailBuscado.indexOf('@')==-1 || emailBuscado.indexOf('.')==-1)) {
+        $.ajax({
+          type: 'GET',
+          url: '{{ route("search.user") }}',
+          data: data,
+          dataType: 'json',
+          success: function(res) {
+            if(res.user[0] != null) {
+              inputName.value = res.user[0]['name'];
+            }
+          },
+          error: function(err){
+              // console.log('err')
+              // console.log(err)
+          }
+        });
+      }
+    }
+
+  </script>
+@endif
 @endsection
