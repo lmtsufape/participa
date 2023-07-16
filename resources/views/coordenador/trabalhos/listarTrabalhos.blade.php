@@ -122,11 +122,6 @@
                                                     <i class="fas fa-arrow-alt-circle-down"></i>
                                                 </a>
                                                 </th>
-                                                @if ($trabalhos->first() && $trabalhos->first()->modalidade->midiasExtra)
-                                                    @foreach ($trabalhos->first()->modalidade->midiasExtra as $midia)
-                                                        <th scope="col">{{$midia->nome}}</th>
-                                                    @endforeach
-                                                @endif
                                                 <th scope="col">
                                                 Área
                                                 <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'asc', $status])}}">
@@ -145,6 +140,11 @@
                                                     <i class="fas fa-arrow-alt-circle-down"></i>
                                                 </a>
                                                 </th>
+                                                @if ($trabalhos->first() && $trabalhos->first()->modalidade->midiasExtra)
+                                                    @foreach ($trabalhos->first()->modalidade->midiasExtra as $midia)
+                                                        <th scope="col">{{$midia->nome}}</th>
+                                                    @endforeach
+                                                @endif
                                                 @if ($trabalhos->first() && $trabalhos->first()->modalidade->apresentacao)
                                                 <th scope="col">Apresentação</th>
                                                 @endif
@@ -175,22 +175,29 @@
                                                 <td>
                                                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
-                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                            <span class="d-inline-block" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}">
                                                                 {{$trabalho->titulo}}
                                                             </span>
                                                         </a>
                                                     @else
-                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                        <span class="d-inline-block" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}">
                                                             {{$trabalho->titulo}}
                                                         </span>
                                                     @endif
                                                 </td>
+                                                <td>
+                                                    <span class="d-inline-block" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
+                                                    {{$trabalho->area->nome}}
+                                                    </span>
+
+                                                </td>
+                                                <td>{{$trabalho->autor->name}}</td>
                                                 @if ($trabalho->modalidade->midiasExtra)
                                                     @foreach ($trabalho->modalidade->midiasExtra as $midia)
                                                         <td>
                                                             @if($trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first() != null)
                                                                 <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">
-                                                                    <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
+                                                                    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
                                                                         <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                                                                     </span>
                                                                 </a>
@@ -198,13 +205,6 @@
                                                         </td>
                                                     @endforeach
                                                 @endif
-                                                <td>
-                                                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
-                                                    {{$trabalho->area->nome}}
-                                                    </span>
-
-                                                </td>
-                                                <td>{{$trabalho->autor->name}}</td>
                                                 @if ($trabalho->modalidade->apresentacao)
                                                 <td>{{$trabalho->tipo_apresentacao}}</td>
                                                 @endif
