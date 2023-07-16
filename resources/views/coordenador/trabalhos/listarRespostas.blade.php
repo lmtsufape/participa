@@ -73,7 +73,17 @@
                                                         <i class="fas fa-arrow-alt-circle-down"></i>
                                                     </a>
                                                 </th>
-                                                <th scope="col">Área</th>
+                                                <th scope="col">
+                                                    Área
+                                                    <a
+                                                        href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'area', 'asc']) }}">
+                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                    </a>
+                                                    <a
+                                                        href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'area', 'desc']) }}">
+                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                    </a>
+                                                </th>
                                                 <th scope="col">Avaliador(es)</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col" style="text-align:center">Parecer</th>

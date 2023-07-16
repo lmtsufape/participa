@@ -353,6 +353,28 @@ class EventoController extends Controller
                         $direction == 'desc'));
                 }
             }
+        } elseif ($column == 'area') {
+            if ($status == 'rascunho') {
+                $trabalhos = collect();
+                foreach ($modalidades as $modalidade) {
+                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
+                        function ($trabalho) {
+                            return $trabalho->area->nome;
+                        },
+                        SORT_REGULAR,
+                        $direction == 'desc'));
+                }
+            } else {
+                $trabalhos = collect();
+                foreach ($modalidades as $modalidade) {
+                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
+                        function ($trabalho) {
+                            return $trabalho->area->nome;
+                        },
+                        SORT_REGULAR,
+                        $direction == 'desc'));
+                }
+            }
         } else {
             if ($status == 'rascunho') {
                 $trabalhos = collect();
