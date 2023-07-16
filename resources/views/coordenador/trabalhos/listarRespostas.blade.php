@@ -99,14 +99,14 @@
                                                             href="{{ route('downloadTrabalho', ['id' => $trabalho->id]) }}">
                                                             <span class="d-inline-block"
                                                                 class="d-inline-block" tabindex="0" data-toggle="tooltip"
-                                                                title="{{ $trabalho->titulo }}" style="max-width: 150px;">
+                                                                title="{{ $trabalho->titulo }}">
                                                                 {{ $trabalho->titulo }}
                                                             </span>
                                                         </a>
                                                     @else
                                                         <span class="d-inline-block" class="d-inline-block"
                                                             tabindex="0" data-toggle="tooltip"
-                                                            title="{{ $trabalho->titulo }}" style="max-width: 150px;">
+                                                            title="{{ $trabalho->titulo }}">
                                                             {{ $trabalho->titulo }}
                                                         </span>
                                                     @endif
