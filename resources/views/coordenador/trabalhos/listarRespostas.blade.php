@@ -97,14 +97,14 @@
                                                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                                                         <a
                                                             href="{{ route('downloadTrabalho', ['id' => $trabalho->id]) }}">
-                                                            <span class="d-inline-block text-truncate"
+                                                            <span class="d-inline-block"
                                                                 class="d-inline-block" tabindex="0" data-toggle="tooltip"
                                                                 title="{{ $trabalho->titulo }}" style="max-width: 150px;">
                                                                 {{ $trabalho->titulo }}
                                                             </span>
                                                         </a>
                                                     @else
-                                                        <span class="d-inline-block text-truncate" class="d-inline-block"
+                                                        <span class="d-inline-block" class="d-inline-block"
                                                             tabindex="0" data-toggle="tooltip"
                                                             title="{{ $trabalho->titulo }}" style="max-width: 150px;">
                                                             {{ $trabalho->titulo }}
