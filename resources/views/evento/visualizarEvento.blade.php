@@ -181,7 +181,7 @@
                 <form action="{{ route('inscricao.inscrever', ['evento_id' => $evento->id]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
-                        @if ($evento->possuiFormularioDeInscricao())
+                        @if ($evento->categoriasParticipantes()->exists())
                             <div id="formulario" x-data="{ categoria: 0 }">
                                 @include('componentes.mensagens')
                                 <div class="row form-group">
