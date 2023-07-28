@@ -394,6 +394,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::post('inscricoes/editar-campo/{id}', [CampoFormularioController::class, 'update'])->name('campo.edit');
     // Checkout
     Route::prefix('checkout')->name('checkout.')->group(function () {
+        Route::get('/tela-pagamento/{evento}', [CheckoutController::class, 'telaPagamento'])->name('telaPagamento');
+        Route::get('/status-pagamento/{evento}', [CheckoutController::class, 'statusPagamento'])->name('statusPagamento');
         Route::post('/confirmar-inscricao/{id}', [CheckoutController::class, 'index'])->name('index');
         Route::post('/proccess', [CheckoutController::class, 'proccess'])->name('proccess');
         Route::get('/obrigado', [CheckoutController::class, 'obrigado'])->name('obrigado');
