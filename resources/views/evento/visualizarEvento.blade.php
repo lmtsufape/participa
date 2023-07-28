@@ -464,10 +464,9 @@
                                                     <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{ $etiquetas->etiquetamoduloinscricao }}</h4>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <button id="btn-inscrevase" class="btn btn-primary" data-toggle="modal" data-target="#modalInscrever" @if ($isInscrito || $encerrada) disabled @endif>@if ($isInscrito) Já inscrito @elseif($encerrada) Encerradas @else Inscreva-se @endif</button>
-                                                </div>
+                                            <div class="row mx-1">
+                                                <button id="btn-inscrevase" class="btn btn-primary" data-toggle="modal" data-target="#modalInscrever" @if ($isInscrito || $encerrada) disabled @endif>@if ($isInscrito) Já inscrito @elseif($encerrada) Encerradas @else Inscreva-se @endif</button>
+                                                <a href="{{route('checkout.statusPagamento', $evento->id)}}" class="text-center mt-2 w-100">Visualizar status do pagamento</a>
                                             </div>
                                         </div>
                                     </div>
