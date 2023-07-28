@@ -23,9 +23,9 @@ class CheckoutController extends Controller
     {
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
-        $categoria = $inscricao->categoria;
+        $categoria = $inscricao?->categoria;
         if ($inscricao->pagamento != null) {
-            return redirect()->action([CheckoutController::class, 'statusPagamento'], ['evento' => $evento->id]);
+            return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
         }
 
         return view('inscricao.pagamento.brick', compact('evento', 'inscricao', 'user', 'categoria'));
@@ -35,9 +35,9 @@ class CheckoutController extends Controller
     {
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
-        $pagamento = $inscricao->pagamento;
+        $pagamento = $inscricao?->pagamento;
         if ($pagamento == null) {
-            return redirect()->action([EventoController::class, 'show'], ['id' => $evento->id])->with('message', 'Não existe um pagamento para esse evento.');
+            return redirect()->route('evento.visualizar', ['id' => $evento->id])->with('message', 'Não existe um pagamento para esse evento.');
         }
 
         return view('inscricao.pagamento.status', compact('pagamento'));
