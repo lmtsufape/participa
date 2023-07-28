@@ -71,7 +71,7 @@
                         formData.evento = evento.id;
                         // callback chamado quando há click no botão de envio de dados
                         return new Promise((resolve, reject) => {
-                            fetch("/process_payment", {
+                            fetch("/checkout/process_payment", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
