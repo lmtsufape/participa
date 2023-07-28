@@ -466,7 +466,11 @@
                                             </div>
                                             <div class="row mx-1">
                                                 <button id="btn-inscrevase" class="btn btn-primary" data-toggle="modal" data-target="#modalInscrever" @if ($isInscrito || $encerrada) disabled @endif>@if ($isInscrito) Já inscrito @elseif($encerrada) Encerradas @else Inscreva-se @endif</button>
-                                                <a href="{{route('checkout.statusPagamento', $evento->id)}}" class="text-center mt-2 w-100">Visualizar status do pagamento</a>
+                                                @isset($inscricao)
+                                                    @isset($inscricao->pagamento)
+                                                        <a href="{{route('checkout.statusPagamento', $evento->id)}}" class="text-center mt-2 w-100">Visualizar status do pagamento</a>
+                                                    @endisset
+                                                @endisset
                                             </div>
                                         </div>
                                     </div>
