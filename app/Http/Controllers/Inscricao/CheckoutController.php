@@ -262,7 +262,7 @@ class CheckoutController extends Controller
         ]);
         $inscricao->pagamento_id = $pagamento->id;
         $inscricao->save();
-        echo json_encode($response);
+        return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
     }
 
     private function pix(Request $request)
@@ -272,26 +272,28 @@ class CheckoutController extends Controller
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $categoria = $inscricao->categoria;
+        $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
+        $contents = $request->all();
 
         $payment = new \MercadoPago\Payment();
-        $payment->transaction_amount = 100;
-        $payment->description = "Título do produto";
+        $payment->transaction_amount = $categoria->valor_total;
+        $payment->description = $descricao;
         $payment->payment_method_id = "pix";
         $payment->payer = array(
-            "email" => "test@test.com",
-            "first_name" => "Test",
+            "email" => $contents['payer']['email'],
+            "first_name" => $user->name,
             "last_name" => "User",
             "identification" => array(
                 "type" => "CPF",
-                "number" => "19119119100",
+                "number" => $user->cpf,
             ),
             "address" =>  array(
-                "zip_code" => "06233200",
-                "street_name" => "Av. das Nações Unidas",
-                "street_number" => "3003",
-                "neighborhood" => "Bonfim",
-                "city" => "Osasco",
-                "federal_unit" => "SP",
+                "zip_code" => $user->endereco->cep,
+                "street_name" => $user->endereco->rua,
+                "street_number" => $user->endereco->numero,
+                "neighborhood" => $user->endereco->bairro,
+                "city" => $user->endereco->cidado,
+                "federal_unit" => $user->endereco->uf,
             ),
         );
 
@@ -312,7 +314,7 @@ class CheckoutController extends Controller
         ]);
         $inscricao->pagamento_id = $pagamento->id;
         $inscricao->save();
-        echo json_encode($response);
+        return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
     }
 
     private function boleto(Request $request)
@@ -363,10 +365,10 @@ class CheckoutController extends Controller
         ]);
         $inscricao->pagamento_id = $pagamento->id;
         $inscricao->save();
-        echo json_encode($response);
+        return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
     }
 
-    public function process_payment(Request $request)
+    public function processPayment(Request $request)
     {
         switch ($request['payment_method_id']) {
             case 'pix':
