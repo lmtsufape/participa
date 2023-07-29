@@ -16,7 +16,7 @@ class CreateArquivoCorrecaosTable extends Migration
         Schema::create('arquivo_correcaos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('caminho');
-            $table->integer('trabalhoId');
+            $table->unsignedBigInteger('trabalhoId');
             $table->timestamps();
         });
     }

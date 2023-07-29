@@ -15,7 +15,7 @@ class CreatePromocaosTable extends Migration
     {
         Schema::create('promocaos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('evento_id');
+            $table->unsignedBigInteger('evento_id');
             $table->string('identificador');
             $table->text('descricao');
             $table->float('valor');

@@ -18,8 +18,8 @@ class CreateAreasTable extends Migration
             $table->timestamps();
             $table->string('nome');
 
-            // $table->integer('modalidadeId')->nullable();
-            $table->integer('eventoId');
+            // $table->unsignedBigInteger('modalidadeId')->nullable();
+            $table->unsignedBigInteger('eventoId');
         });
     }
 

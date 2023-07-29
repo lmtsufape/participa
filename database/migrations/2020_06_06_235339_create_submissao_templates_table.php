@@ -19,7 +19,7 @@ class CreateSubmissaoTemplatesTable extends Migration
 
             $table->string('nome');
 
-            $table->bigInteger('modalidadeId')->nullable();
+            $table->unsignedBigInteger('modalidadeId')->nullable();
             $table->foreign('modalidadeId')->references('id')->on('modalidades');
         });
     }

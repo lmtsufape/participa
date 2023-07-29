@@ -22,10 +22,10 @@ class CreateTrabalhosTable extends Migration
             $table->text('resumo')->nullable();
             $table->text('avaliado')->nullable();
 
-            $table->integer('modalidadeId');
-            $table->integer('areaId');
-            $table->integer('autorId');
-            $table->integer('eventoId');
+            $table->unsignedBigInteger('modalidadeId');
+            $table->unsignedBigInteger('areaId');
+            $table->unsignedBigInteger('autorId');
+            $table->unsignedBigInteger('eventoId');
 
             // Campos extras: Texto simples e Texto maior
             $table->string('campoextra1simples')->nullable();

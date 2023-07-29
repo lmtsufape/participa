@@ -18,7 +18,7 @@ class CreateDatasAtividadesTable extends Migration
             $table->date('data');
             $table->time('hora_inicio');
             $table->time('hora_fim');
-            $table->bigInteger('atividade_id')->refereces('id')->on('atividades')->onDelete('cascade');
+            $table->unsignedBigInteger('atividade_id')->refereces('id')->on('atividades')->onDelete('cascade');
             $table->timestamps();
         });
     }

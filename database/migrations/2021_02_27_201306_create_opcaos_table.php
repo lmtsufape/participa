@@ -19,7 +19,7 @@ class CreateOpcaosTable extends Migration
             $table->enum('tipo', ['checkbox', 'radio'])->default('checkbox');
             $table->boolean('check')->default(false);
 
-            $table->bigInteger('resposta_id');
+            $table->unsignedBigInteger('resposta_id');
             $table->foreign('resposta_id')->references('id')->on('respostas')->onDelete('cascade');
             $table->timestamps();
         });

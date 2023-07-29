@@ -17,8 +17,8 @@ class CreatePertencesTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
 
-            $table->integer('revisorId');
-            $table->integer('areaId');
+            $table->unsignedBigInteger('revisorId');
+            $table->unsignedBigInteger('areaId');
         });
     }
 

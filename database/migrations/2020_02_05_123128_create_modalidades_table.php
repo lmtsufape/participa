@@ -49,7 +49,7 @@ class CreateModalidadesTable extends Migration
 
             $table->string('regra')->nullable();
             $table->string('template')->nullable();
-            $table->bigInteger('evento_id')->nullable();
+            $table->unsignedBigInteger('evento_id')->nullable();
         });
     }
 

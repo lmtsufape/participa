@@ -20,8 +20,8 @@ class CreateAtribuicaosTable extends Migration
             $table->boolean('confirmacao');
             $table->string('parecer');
 
-            $table->bigInteger('revisor_id');
-            $table->bigInteger('trabalho_id');
+            $table->unsignedBigInteger('revisor_id');
+            $table->unsignedBigInteger('trabalho_id');
         });
     }
 

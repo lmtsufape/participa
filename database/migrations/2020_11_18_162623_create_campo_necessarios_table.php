@@ -15,8 +15,8 @@ class CreateCampoNecessariosTable extends Migration
     {
         Schema::create('campo_necessarios', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('campo_formulario_id');
-            $table->bigInteger('categoria_participante_id');
+            $table->unsignedBigInteger('campo_formulario_id');
+            $table->unsignedBigInteger('categoria_participante_id');
             $table->timestamps();
 
             $table->foreign('campo_formulario_id')->references('id')->on('campo_formularios');

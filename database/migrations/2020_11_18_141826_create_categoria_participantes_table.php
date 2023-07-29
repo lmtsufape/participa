@@ -17,7 +17,7 @@ class CreateCategoriaParticipantesTable extends Migration
             $table->bigIncrements('id');
             $table->string('nome');
             $table->float('valor_total');
-            $table->bigInteger('evento_id');
+            $table->unsignedBigInteger('evento_id');
             $table->timestamps();
 
             $table->foreign('evento_id')->references('id')->on('eventos');

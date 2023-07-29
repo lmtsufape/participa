@@ -17,7 +17,7 @@ class CreateArquivoextraTable extends Migration
             $table->bigIncrements('id');
             $table->string('nome');
 
-            $table->bigInteger('trabalhoId')->nullable();
+            $table->unsignedBigInteger('trabalhoId')->nullable();
             $table->foreign('trabalhoId')->references('id')->on('trabalhos');
             $table->timestamps();
         });

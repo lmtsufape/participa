@@ -22,7 +22,7 @@ class CreateCupomDeDescontosTable extends Migration
             $table->date('inicio');
             $table->date('fim');
             $table->timestamps();
-            $table->bigInteger('evento_id');
+            $table->unsignedBigInteger('evento_id');
 
             $table->foreign('evento_id')->references('id')->on('eventos');
         });

@@ -15,8 +15,8 @@ class CreateValorCampoExtrasTable extends Migration
     {
         Schema::create('valor_campo_extras', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('inscricao_id');
-            $table->bigInteger('campo_formulario_id');
+            $table->unsignedBigInteger('inscricao_id');
+            $table->unsignedBigInteger('campo_formulario_id');
             $table->text('valor');
             $table->timestamps();
 

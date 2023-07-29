@@ -15,8 +15,8 @@ class CreateExibirPromocaosTable extends Migration
     {
         Schema::create('exibir_promocaos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('promocao_id');
-            $table->bigInteger('categoria_participante_id');
+            $table->unsignedBigInteger('promocao_id');
+            $table->unsignedBigInteger('categoria_participante_id');
             $table->timestamps();
 
             $table->foreign('categoria_participante_id')->references('id')->on('categoria_participantes');

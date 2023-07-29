@@ -14,7 +14,7 @@ class AddFkAtividade extends Migration
     public function up()
     {
         Schema::table('atividades', function (Blueprint $table) {
-            $table->bigInteger('tipo_id')->refereces('id')->on('tipo_atividades');
+            $table->unsignedBigInteger('tipo_id')->refereces('id')->on('tipo_atividades');
         });
     }
 

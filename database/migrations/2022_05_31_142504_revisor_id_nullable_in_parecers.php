@@ -14,7 +14,7 @@ class RevisorIdNullableInParecers extends Migration
     public function up()
     {
         Schema::table('parecers', function (Blueprint $table) {
-            $table->integer('revisorId')->nullable()->change();
+            $table->unsignedBigInteger('revisorId')->nullable()->change();
             $table->boolean('parecer_final')->default(false);
         });
     }

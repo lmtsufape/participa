@@ -25,7 +25,7 @@ class CreateAtividadesTable extends Migration
             $table->string('palavras_chave')->nullable();
             $table->boolean('visibilidade_participante');
 
-            $table->integer('eventoId')->refereces('id')->on('eventos');
+            $table->unsignedBigInteger('eventoId')->refereces('id')->on('eventos');
         });
     }
 

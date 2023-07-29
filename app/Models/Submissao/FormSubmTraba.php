@@ -23,4 +23,20 @@ class FormSubmTraba extends Model
     {
         return $this->belongsTo('App\Models\Submissao\Evento', 'eventoId');
     }
+
+    protected static function booted(): void
+    {
+        static::creating(function (FormSubmTraba $form) {
+            $form->helperOrdemCampos();
+        });
+
+        static::saving(function (FormSubmTraba $form) {
+            $form->helperOrdemCampos();
+        });
+    }
+
+    public function helperOrdemCampos()
+    {
+        if ($this->ordemCampos == null) $this->ordemCampos = 'etiquetatitulotrabalho,etiquetaautortrabalho,etiquetacoautortrabalho,etiquetaresumotrabalho,etiquetaareatrabalho,etiquetauploadtrabalho,checkcampoextra1,etiquetacampoextra1,select_campo1,checkcampoextra2,etiquetacampoextra2,select_campo2,checkcampoextra3,etiquetacampoextra3,select_campo3,checkcampoextra4,etiquetacampoextra4,select_campo4,checkcampoextra5,etiquetacampoextra5,select_campo5';
+    }
 }

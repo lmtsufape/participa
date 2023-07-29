@@ -27,7 +27,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-            $table->integer('enderecoId')->nullable();
+            $table->unsignedBigInteger('enderecoId')->nullable();
         });
     }
 

@@ -19,7 +19,7 @@ class CreateValorCategoriasTable extends Migration
             $table->float('valor');
             $table->date('inicio_prazo');
             $table->date('fim_prazo');
-            $table->bigInteger('categoria_participante_id');
+            $table->unsignedBigInteger('categoria_participante_id');
             $table->timestamps();
 
             $table->foreign('categoria_participante_id')->references('id')->on('categoria_participantes');

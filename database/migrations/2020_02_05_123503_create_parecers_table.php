@@ -19,8 +19,8 @@ class CreateParecersTable extends Migration
             $table->string('resultado');
             $table->text('justificativa')->nullable();
 
-            $table->integer('revisorId');
-            $table->integer('trabalhoId');
+            $table->unsignedBigInteger('revisorId');
+            $table->unsignedBigInteger('trabalhoId');
         });
     }
 

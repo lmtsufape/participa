@@ -18,7 +18,7 @@ class CreateTipoAtividadesTable extends Migration
             $table->string('descricao');
             $table->timestamps();
 
-            $table->bigInteger('evento_id');
+            $table->unsignedBigInteger('evento_id');
             $table->foreign('evento_id')->references('id')->on('eventos');
         });
     }

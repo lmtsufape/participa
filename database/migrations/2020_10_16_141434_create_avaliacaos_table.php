@@ -15,9 +15,9 @@ class CreateAvaliacaosTable extends Migration
     {
         Schema::create('avaliacaos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('opcao_criterio_id');
-            $table->bigInteger('revisor_id');
-            $table->bigInteger('trabalho_id');
+            $table->unsignedBigInteger('opcao_criterio_id');
+            $table->unsignedBigInteger('revisor_id');
+            $table->unsignedBigInteger('trabalho_id');
             $table->timestamps();
 
             $table->foreign('opcao_criterio_id')->references('id')->on('opcoes_criterios');

@@ -15,9 +15,9 @@ class CreateAssinaturaCertificadoTable extends Migration
     {
         Schema::create('assinatura_certificado', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('assinatura_id');
+            $table->unsignedBigInteger('assinatura_id');
             $table->foreign('assinatura_id')->references('id')->on('assinaturas');
-            $table->bigInteger('certificado_id');
+            $table->unsignedBigInteger('certificado_id');
             $table->foreign('certificado_id')->references('id')->on('certificados');
             $table->timestamps();
         });

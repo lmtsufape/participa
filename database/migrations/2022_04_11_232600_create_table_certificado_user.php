@@ -17,7 +17,7 @@ class CreateTableCertificadoUser extends Migration
             $table->bigIncrements('id');
 
             $table->string('validacao');
-            $table->boolean('valido')->default('true');
+            $table->boolean('valido')->default(true);
 
             $table->unsignedBigInteger('certificado_id');
             $table->foreign('certificado_id')->references('id')->on('certificados');

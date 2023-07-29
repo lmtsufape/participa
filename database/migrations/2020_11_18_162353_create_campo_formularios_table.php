@@ -18,7 +18,7 @@ class CreateCampoFormulariosTable extends Migration
             $table->string('titulo');
             $table->string('tipo');
             $table->boolean('obrigatorio');
-            $table->bigInteger('evento_id');
+            $table->unsignedBigInteger('evento_id');
             $table->timestamps();
 
             $table->foreign('evento_id')->references('id')->on('eventos');

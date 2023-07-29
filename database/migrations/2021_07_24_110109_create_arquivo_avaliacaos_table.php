@@ -21,8 +21,8 @@ class CreateArquivoAvaliacaosTable extends Migration
             $table->boolean('versaoFinal')->nullable();
             $table->date('data')->nullable();
 
-            $table->integer('revisorId');
-            $table->integer('trabalhoId');
+            $table->unsignedBigInteger('revisorId');
+            $table->unsignedBigInteger('trabalhoId');
         });
     }
 

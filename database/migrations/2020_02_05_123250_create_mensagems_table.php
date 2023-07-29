@@ -21,7 +21,7 @@ class CreateMensagemsTable extends Migration
             $table->date('data');
             $table->string('categoriaRemetente');
 
-            $table->integer('comissaoId');
+            $table->unsignedBigInteger('comissaoId');
         });
     }
 

@@ -15,8 +15,8 @@ class CreateAtividadesPromocaosTable extends Migration
     {
         Schema::create('atividades_promocaos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('atividade_id');
-            $table->bigInteger('promocao_id');
+            $table->unsignedBigInteger('atividade_id');
+            $table->unsignedBigInteger('promocao_id');
 
             $table->foreign('atividade_id')->references('id')->on('atividades');
             $table->foreign('promocao_id')->references('id')->on('promocaos');

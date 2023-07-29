@@ -22,7 +22,7 @@ class CreatePagamentosTable extends Migration
             $table->integer('pagseguro_status');
             $table->timestamps();
 
-            $table->bigInteger('tipo_pagamento_id')->nullable();
+            $table->unsignedBigInteger('tipo_pagamento_id')->nullable();
             $table->foreign('tipo_pagamento_id')->references('id')->on('tipo_pagamentos');
         });
     }

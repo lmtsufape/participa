@@ -15,8 +15,8 @@ class CreateComissaoOrganizadoraEventosTable extends Migration
     {
         Schema::create('comissao_organizadora_eventos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('user_id');
-            $table->bigInteger('evento_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('evento_id');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

@@ -20,8 +20,8 @@ class CreateRecursosTable extends Migration
             $table->text('corpoRecurso');
             $table->boolean('statusAvaliacao');
 
-            $table->integer('trabalhoId');
-            $table->integer('comissaoId');
+            $table->unsignedBigInteger('trabalhoId');
+            $table->unsignedBigInteger('comissaoId');
         });
     }
 

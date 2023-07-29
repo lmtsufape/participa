@@ -16,8 +16,8 @@ class CreateEventoRevisorsTable extends Migration
         Schema::create('evento_revisors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->boolean('convite_aceito')->nullable();
-            $table->bigInteger('evento_id')->nullable();
-            $table->bigInteger('revisor_id')->nullable();
+            $table->unsignedBigInteger('evento_id')->nullable();
+            $table->unsignedBigInteger('revisor_id')->nullable();
             $table->timestamps();
 
             $table->foreign('evento_id')->references('id')->on('eventos');

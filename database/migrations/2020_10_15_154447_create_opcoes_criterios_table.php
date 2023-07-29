@@ -16,7 +16,7 @@ class CreateOpcoesCriteriosTable extends Migration
         Schema::create('opcoes_criterios', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nome_opcao');
-            $table->bigInteger('criterio_id');
+            $table->unsignedBigInteger('criterio_id');
             $table->double('valor_real');
             $table->timestamps();
 

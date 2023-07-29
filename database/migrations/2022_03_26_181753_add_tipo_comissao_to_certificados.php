@@ -14,7 +14,7 @@ class AddTipoComissaoToCertificados extends Migration
     public function up()
     {
         Schema::table('certificados', function (Blueprint $table) {
-            $table->integer('tipo_comissao_id')->nullable();
+            $table->unsignedBigInteger('tipo_comissao_id')->nullable();
         });
     }
 
