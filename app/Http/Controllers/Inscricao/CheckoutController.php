@@ -330,7 +330,8 @@ class CheckoutController extends Controller
 
         $payment = new \MercadoPago\Payment();
         $payment->transaction_amount = $contents['transaction_amount'];
-        $payment->description = 'Título do produto';
+        $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
+        $payment->description = $descricao;
         $payment->payment_method_id = $contents['payment_method_id'];
 
         $payment->payer = array(
