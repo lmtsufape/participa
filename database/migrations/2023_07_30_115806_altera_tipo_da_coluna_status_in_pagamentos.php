@@ -12,10 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pagamentos', function (Blueprint $table) {
-            $table->decimal('valor')->change();
-            $table->dropColumn('reference');
-            $table->renameColumn('pagseguro_code', 'codigo');
-            $table->renameColumn('pagseguro_status', 'status');
+            $table->string('status')->change();
         });
     }
 
@@ -25,10 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('pagamentos', function (Blueprint $table) {
-            $table->integer('valor')->change();
-            $table->string('reference');
-            $table->renameColumn('codigo', 'pagseguro_code');
-            $table->renameColumn('status', 'pagseguro_status');
+            $table->integer('status')->change();
         });
     }
 };
