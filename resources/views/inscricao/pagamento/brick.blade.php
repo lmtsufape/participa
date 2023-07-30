@@ -80,9 +80,8 @@
                                 },
                                 body: JSON.stringify(formData),
                             })
-                            .then((response) => response.json())
+                            .then((response) => window.location.href = '/checkout/status-pagamento/' + evento.id)
                             .then((response) => {
-                                // receber o resultado do pagamento
                                 resolve();
                             })
                             .catch((error) => {
