@@ -73,34 +73,6 @@ class CheckoutController extends Controller
         return view('coordenador.programacao.obrigado');
     }
 
-    public function notifications()
-    {
-        try {
-            $notifications = new Notification();
-            $notifications = $notifications->getTransaction();
-            dd($notifications);
-            //Atualizar o pedido do usuario
-            $reference = base64_decode($notifications->getReference());
-            $pagamento = Pagamento::where('reference', $reference);
-            $pagamento->update([
-                'pagseguro_status' => $notifications->getStatus(),
-            ]);
-
-            //comentario sobre o pedido
-            if ($notifications->getStatus() == 3) {
-                //Liberar o pedido do usuario..., atualizar o status do pedido para em separacao
-                //Notificar o usuario que o pedido foi pago
-                //Notificar a loja da confirmação dod pedio
-            }
-
-            return response()->json([], 204);
-        } catch (Exception $e) {
-            $message = env('APP_DEBUG') ? $e->getMessage() : [];
-
-            return response()->json(['error' => $message], 500);
-        }
-    }
-
     public function proccess(Request $request)
     {
         try {
@@ -247,6 +219,7 @@ class CheckoutController extends Controller
             "number" => $contents['payer']['identification']['number'],
         );
         $payment->payer = $payer;
+        $payment->notification_url = route('checkout.notifications');
         $payment->save();
         $response = array(
             'status' => $payment->status,
@@ -299,6 +272,7 @@ class CheckoutController extends Controller
             ),
         );
 
+        $payment->notification_url = route('checkout.notifications');
         $payment->save();
         $response = array(
             'status' => $payment->status,
@@ -351,6 +325,7 @@ class CheckoutController extends Controller
                 "federal_unit" => $contents['payer']['address']['federal_unit'],
             ),
         );
+        $payment->notification_url = route('checkout.notifications');
         $payment->save();
         $response = array(
             'status' => $payment->status,
@@ -383,4 +358,30 @@ class CheckoutController extends Controller
                 return $this->cartao($request);
         }
     }
+
+    public function notifications(Request $request)
+    {
+        \MercadoPago\SDK::setAccessToken(env('MERCADOPAGO_ACCESS_TOKEN'));
+        $contents = $request->all();
+        switch($contents["type"]) {
+            case "payment":
+                $payment = \MercadoPago\Payment::find_by_id($contents["data"]["id"]);
+                $pagamento = Pagamento::where('codigo', $contents["data"]["id"])->first();
+                if ($payment->status == 'approved') {
+                    $inscricao = $pagamento->inscricao;
+                    $inscricao->finalizada = true;
+                    $inscricao->save();
+                }
+                $pagamento->status = $payment->status;
+                $pagamento->save();
+                break;
+            case "plan":
+            case "subscription":
+            case "invoice":
+            case "point_integration_wh":
+                break;
+        }
+        return response(status: 200);
+    }
+
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Inscricao\CheckoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,3 +28,5 @@ Route::namespace('Submissao')->group(function () {
 Route::namespace('Users')->group(function () {
     Route::get('/numeroRevisoresPorArea', 'RevisorController@numeroDeRevisoresAjax')->name('numeroDeRevisoresAjax');
 });
+
+Route::post('/checkout/notifications', [CheckoutController::class, 'notifications'])->name('checkout.notifications');

@@ -10,7 +10,7 @@ class Pagamento extends Model
         'valor', 'descricao', 'reference', 'codigo', 'status', 'tipo_pagamento_id',
     ];
 
-    public function inscricaos()
+    public function inscricao()
     {
         return $this->hasOne('App\Models\Inscricao\Inscricao');
     }
