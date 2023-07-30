@@ -21,6 +21,7 @@ class CheckoutController extends Controller
 
     public function telaPagamento(Evento $evento)
     {
+        $key = env('MERCADOPAGO_PUBLIC_KEY');
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $categoria = $inscricao?->categoria;
@@ -28,11 +29,12 @@ class CheckoutController extends Controller
             return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
         }
 
-        return view('inscricao.pagamento.brick', compact('evento', 'inscricao', 'user', 'categoria'));
+        return view('inscricao.pagamento.brick', compact('evento', 'inscricao', 'user', 'categoria', 'key'));
     }
 
     public function statusPagamento(Evento $evento)
     {
+        $key = env('MERCADOPAGO_PUBLIC_KEY');
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $pagamento = $inscricao?->pagamento;
@@ -40,7 +42,7 @@ class CheckoutController extends Controller
             return redirect()->route('evento.visualizar', ['id' => $evento->id])->with('message', 'Não existe um pagamento para esse evento.');
         }
 
-        return view('inscricao.pagamento.status', compact('pagamento'));
+        return view('inscricao.pagamento.status', compact('pagamento', 'key'));
     }
 
     public function index(Request $request, $id)

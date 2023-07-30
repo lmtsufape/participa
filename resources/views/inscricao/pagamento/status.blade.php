@@ -8,7 +8,8 @@
     @parent
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script>
-        const mp = new MercadoPago('', {
+        const key = @json($key);
+        const mp = new MercadoPago(key, {
             locale: 'pt-BR'
         });
         const bricksBuilder = mp.bricks();
