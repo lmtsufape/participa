@@ -56,7 +56,7 @@ class EmailLembrete extends Mailable
         //                 'info' => $this->informacoes,
 
         //             ]);
-        return $this->from('lmtsteste@gmail.com', 'Participa')
+        return $this
             ->subject($this->subject)
             ->markdown('emails.emailLembreteRevisor')->with([
                         'user' => $this->user,

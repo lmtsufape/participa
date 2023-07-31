@@ -44,7 +44,7 @@
 {{ $salutation }}
 @else
 Atenciosamente,<br><br>
-Participa - Sistema de Gestão de Eventos Técnico-Científicos<br>
+{{config('app.name')}}<br>
 Laboratório Multidisciplinar de Tecnologias Sociais<br>
 Universidade Federal do Agreste de Pernambuco
 @endif

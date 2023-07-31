@@ -38,8 +38,8 @@ class EmailLembreteUsuarioNaoCadastrado extends Mailable
      */
     public function build()
     {
-        return $this->from('lmtsteste@gmail.com', 'Participa ')
-            ->subject('Sistema Participa - Lembrete de cadastro')
+        return $this
+            ->subject(config('app.name').' - Lembrete de cadastro')
             ->markdown('emails.emailLembreteCadastro')->with([
                         'evento' => $this->nomeEvento,
                         'senha' => $this->senhaTemporaria,
