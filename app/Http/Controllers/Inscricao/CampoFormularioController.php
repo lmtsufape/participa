@@ -51,6 +51,10 @@ class CampoFormularioController extends Controller
             return redirect()->back()->withErrors(['erroCategoria' => 'Escolha a categoria que o campo será exibido.'])->withInput($validateData);
         }
 
+        if (!$evento->categoriasParticipantes()->exists()) {
+            return redirect()->back()->withErrors(['erroCategoria' => 'É necessário criar categoria antes de cadastrar os campos do formulário.'])->withInput($validateData);
+        }
+
         $campo = new CampoFormulario();
         $campo->titulo = $request->titulo_do_campo;
         $campo->tipo = $request->tipo_campo;
