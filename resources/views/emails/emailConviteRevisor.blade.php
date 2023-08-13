@@ -10,7 +10,7 @@ Pedimos que acesse o site para completar o seu cadastro, caso não o possua, e t
 Agradecemos de antemão pela sua disponibilidade para colaborar com a realização deste evento.
 
 
-@component('mail::button', ['url' => 'http://participa.ufape.edu.br'])
+@component('mail::button', ['url' => route('home')])
 Acessar site
 @endcomponent
 

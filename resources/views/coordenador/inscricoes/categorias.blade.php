@@ -53,31 +53,46 @@
                                                             action="{{ route('categoria.participante.store') }}">
                                                             @csrf
                                                             <input type="hidden"
-                                                                name="valor_total"
-                                                                value="0">
-                                                            <input type="hidden"
                                                                 name="evento_id"
                                                                 value="{{ $evento->id }}">
                                                             <p class="card-text">
-                                                            <div class="row justify-content-center">
-                                                                <div class="col-sm-12">
-                                                                    <label for="nome"
-                                                                        class="col-form-label">{{ __('Nome da Categoria') }}</label>
-                                                                    <input id="nome"
-                                                                        type="text"
-                                                                        class="form-control @error('nome') is-invalid @enderror"
-                                                                        name="nome"
-                                                                        value="{{ old('nome') }}"
-                                                                        required
-                                                                        autocomplete="nome"
-                                                                        autofocus>
-                                                                    @error('nome')
-                                                                        <span class="invalid-feedback"
-                                                                            role="alert">
-                                                                            <strong>{{ $message }}</strong>
-                                                                        </span>
-                                                                    @enderror
-                                                                </div>
+                                                            <div class="form-group">
+                                                                <label for="nome"
+                                                                    class="col-form-label">{{ __('Nome da Categoria') }}</label>
+                                                                <input id="nome"
+                                                                    type="text"
+                                                                    class="form-control @error('nome') is-invalid @enderror"
+                                                                    name="nome"
+                                                                    value="{{ old('nome') }}"
+                                                                    required
+                                                                    autocomplete="nome"
+                                                                    autofocus>
+                                                                @error('nome')
+                                                                    <span class="invalid-feedback"
+                                                                        role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="valor_total"
+                                                                    class="col-form-label">{{ __('Valor da inscrição') }}</label>
+                                                                <small>(0 para inscrição gratuita)</small>
+                                                                <input id="valor_total"
+                                                                    type="number"
+                                                                    step="0.1"
+                                                                    class="form-control @error('valor_total') is-invalid @enderror"
+                                                                    name="valor_total"
+                                                                    value="{{ old('valor_total') }}"
+                                                                    required
+                                                                    autocomplete="valor_total"
+                                                                    autofocus>
+                                                                @error('valor_total')
+                                                                    <span class="invalid-feedback"
+                                                                        role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
                                                             </div>
                                                             </p>
                                                             <div class="modal-footer">
@@ -103,6 +118,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">Nome</th>
+                                        <th scope="col">Valor</th>
                                         <th scope="col"
                                             style="text-align:center">Editar</th>
                                         <th scope="col"
@@ -113,6 +129,7 @@
                                     @foreach ($categorias as $categoria)
                                         <tr>
                                             <td>{{ $categoria->nome }}</td>
+                                            <td>{{ $categoria->valor_total }}</td>
                                             <td style="text-align:center">
                                                 <a href="#"
                                                     data-toggle="modal"
@@ -183,14 +200,30 @@
                             <div class="row form-group">
                                 <div class="col-md-12"
                                     style="margin-top: 20px; margin-bottom: 20px;">
-                                    <label for="nome_da_categoria">Nome*</label>
-                                    <input id="nome_da_categoria"
+                                    <label for="nome_">Nome*</label>
+                                    <input id="nome_"
                                         type="text"
-                                        class="form-control @error('nome_da_categoria') is-invalid @enderror"
+                                        class="form-control @error('nome_') is-invalid @enderror"
                                         name="nome_{{ $categoria->id }}"
-                                        value="{{ old('nome_da_categoria_'.$categoria->id, $categoria->nome) }}">
+                                        value="{{ old('nome_'.$categoria->id, $categoria->nome) }}">
 
-                                    @error('nome_da_categoria_'.$categoria->id)
+                                    @error('nome_'.$categoria->id)
+                                        <span class="invalid-feedback"
+                                            role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-12"
+                                    style="margin-top: 20px; margin-bottom: 20px;">
+                                    <label for="valor_total_">Valor*</label>
+                                    <input id="valor_total_"
+                                        type="text"
+                                        class="form-control @error('valor_total_') is-invalid @enderror"
+                                        name="valor_total_{{ $categoria->id }}"
+                                        value="{{ old('valor_total_'.$categoria->id, $categoria->valor_total) }}">
+
+                                    @error('valor_total_'.$categoria->id)
                                         <span class="invalid-feedback"
                                             role="alert">
                                             <strong>{{ $message }}</strong>

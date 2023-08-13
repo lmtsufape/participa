@@ -18,6 +18,8 @@ class EmailNotificacaoTrabalhoAvaliado extends Mailable
 
     public $revisor;
 
+    public $autor;
+
     /**
      * Create a new message instance.
      *
@@ -39,8 +41,8 @@ class EmailNotificacaoTrabalhoAvaliado extends Mailable
      */
     public function build()
     {
-        return $this->from('lmtsteste@gmail.com', 'Participa ')
-            ->subject('Sistema Participa - Trabalho/Atividade avaliada')
+        return $this
+            ->subject(config('app.name').' - Trabalho/Atividade avaliada')
             ->markdown('emails.emailTrabalhoAvaliado')->with([
                         'user' => $this->user,
                         'autor' => $this->autor,

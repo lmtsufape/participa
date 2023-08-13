@@ -21,5 +21,9 @@ class TipoPagamentoSeed extends Seeder
         DB::table('tipo_pagamentos')->insert([  //
             'descricao' => 'boleto',
         ]);
+
+        DB::table('tipo_pagamentos')->insert([  //
+            'descricao' => 'pix',
+        ]);
     }
 }

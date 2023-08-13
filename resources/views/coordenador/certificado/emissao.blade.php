@@ -212,7 +212,7 @@
                         else if (this.tipo == '6')
                             this.palestras = data.palestras;
                         else if (this.tipo == '8')
-                            this.comissao = data.comissao;
+                            this.comissao = data.comissao.id;
                         else if (this.tipo == '9')
                             this.atividades = data.atividades;
                     }

@@ -38,12 +38,13 @@ class EmailCertificado extends Mailable
      */
     public function build()
     {
-        return $this->from('lmtsteste@gmail.com', 'Participa ')
-            ->subject('Sistema Participa - Certificado')
-            ->markdown('emails.emailEnviarCertificado')->with([
-                        'user' => $this->user,
-                        'cargo' => $this->cargo,
-                        'evento' => $this->nomeEvento,
-                    ])->attachData($this->pdf->output(), 'Certificado.pdf');
+        return $this
+            ->subject(config('app.name').' - Certificado')
+            ->markdown('emails.emailEnviarCertificado')
+            ->with([
+                'user' => $this->user,
+                'cargo' => $this->cargo,
+                'evento' => $this->nomeEvento,
+            ])->attachData($this->pdf->output(), 'Certificado.pdf');
     }
 }

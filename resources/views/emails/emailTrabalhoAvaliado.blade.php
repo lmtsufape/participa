@@ -7,7 +7,7 @@ O trabalho ou atividade {{ $trabalho->titulo }}, submetido por {{ $autor->name }
 
 Acesse o sistema para verificar a avaliação.
 
-@component('mail::button', ['url' => 'http://participa.ufape.edu.br'])
+@component('mail::button', ['url' => route('home')])
 Acessar o sistema
 @endcomponent
 

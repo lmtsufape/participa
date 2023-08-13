@@ -73,6 +73,17 @@
                                                         <i class="fas fa-arrow-alt-circle-down"></i>
                                                     </a>
                                                 </th>
+                                                <th scope="col">
+                                                    Área
+                                                    <a
+                                                        href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'area', 'asc']) }}">
+                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                    </a>
+                                                    <a
+                                                        href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'area', 'desc']) }}">
+                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                    </a>
+                                                </th>
                                                 <th scope="col">Avaliador(es)</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col" style="text-align:center">Parecer</th>
@@ -86,21 +97,22 @@
                                                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                                                         <a
                                                             href="{{ route('downloadTrabalho', ['id' => $trabalho->id]) }}">
-                                                            <span class="d-inline-block text-truncate"
+                                                            <span class="d-inline-block"
                                                                 class="d-inline-block" tabindex="0" data-toggle="tooltip"
-                                                                title="{{ $trabalho->titulo }}" style="max-width: 150px;">
+                                                                title="{{ $trabalho->titulo }}">
                                                                 {{ $trabalho->titulo }}
                                                             </span>
                                                         </a>
                                                     @else
-                                                        <span class="d-inline-block text-truncate" class="d-inline-block"
+                                                        <span class="d-inline-block" class="d-inline-block"
                                                             tabindex="0" data-toggle="tooltip"
-                                                            title="{{ $trabalho->titulo }}" style="max-width: 150px;">
+                                                            title="{{ $trabalho->titulo }}">
                                                             {{ $trabalho->titulo }}
                                                         </span>
                                                     @endif
                                                 </td>
                                                 <td>{{ $trabalho->autor->name }}</td>
+                                                <td> {{$trabalho->area->nome}} </td>
                                                 <td>
                                                     @foreach ($trabalho->atribuicoes as $revisor)
                                                         {{ $revisor->user->name }}

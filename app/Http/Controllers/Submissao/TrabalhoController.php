@@ -852,7 +852,8 @@ class TrabalhoController extends Controller
         || $evento->userIsCoordComissaoCientifica($usuarioLogado)
         || $evento->userIsCoordComissaoOrganizadora($usuarioLogado)
         || $trabalho->autorId == $usuarioLogado->id
-        || $trabalhosCoautor->contains($trabalho->id)) {
+        || $trabalhosCoautor->contains($trabalho->id)
+        || $usuarioLogado->administradors()->exists()) {
             // dd($arquivo);
             if ($midia != null && Storage::disk()->exists($midia->caminho)) {
                 return Storage::download($midia->caminho);
@@ -914,7 +915,8 @@ class TrabalhoController extends Controller
         || $evento->userIsCoordComissaoCientifica($usuarioLogado)
         || $evento->userIsCoordComissaoOrganizadora($usuarioLogado)
         || $trabalho->autorId == $usuarioLogado->id
-        || $trabalhosCoautor->contains($trabalho->id)) {
+        || $trabalhosCoautor->contains($trabalho->id)
+        || $usuarioLogado->administradors()->exists()) {
             // dd($arquivo);
             if ($arquivo != null && Storage::disk()->exists($arquivo->nome)) {
                 return Storage::download($arquivo->nome);

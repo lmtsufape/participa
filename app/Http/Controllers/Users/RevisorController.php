@@ -310,7 +310,7 @@ class RevisorController extends Controller
 
     public function enviarEmailTodosRevisores(Request $request)
     {
-        $subject = 'Sistema Participa - Lembrete  de trabalho';
+        $subject = config('app.name').' - Lembrete  de trabalho';
 
         $revisores = json_decode($request->input('revisores'));
         foreach ($revisores as $revisor) {
@@ -374,7 +374,7 @@ class RevisorController extends Controller
 
     public function conviteParaEvento(Request $request, $id)
     {
-        $subject = 'Sistema Participa - Atribuição como avaliador(a) e/ou parecerista';
+        $subject = config('app.name').' - Atribuição como avaliador(a) e/ou parecerista';
         $evento = Evento::find($id);
 
         $user = User::find($request->id);

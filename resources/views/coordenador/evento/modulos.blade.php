@@ -18,7 +18,7 @@
                     @csrf
 
                     <p class="card-text">
-                        <input type="hidden" name="modinscricao" value="false">
+                        <input type="hidden" name="modinscricao" value="0">
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="modinscricao" class="col-form-label">{{ __('Inscrições') }}</label>
@@ -27,7 +27,7 @@
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" @if($modulos->modinscricao) checked @endif name="modinscricao" id="modinscricao">
+                                    <input class="form-check-input" type="checkbox" @if($modulos->modinscricao) checked @endif name="modinscricao" id="modinscricao" value="1">
                                     <label class="form-check-label" for="modinscricao">
                                     Habilitar
                                     </label>
@@ -43,7 +43,7 @@
                     </p>
 
                     <p class="card-text">
-                    <input type="hidden" name="modprogramacao" value="false">
+                    <input type="hidden" name="modprogramacao" value="0">
                     <div class="row">
                         <div class="col-sm-12">
                             <label for="modprogramacao" class="col-form-label">{{ __('Programação') }}</label>
@@ -52,7 +52,7 @@
                     <div class="row justify-content-start">
                         <div class="col-sm-12">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao) checked @endif name="modprogramacao" id="modprogramacao">
+                                <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao) checked @endif name="modprogramacao" id="modprogramacao" value="1">
                                 <label class="form-check-label" for="modprogramacao">
                                     Habilitar
                                 </label>
@@ -78,7 +78,7 @@
                         <div class="row justify-content-center">
                             <div class="col-sm-6">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao == true && $evento->exibir_calendario_programacao) checked @endif name="exibir_calendario" id="exibir_calendario">
+                                    <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao == true && $evento->exibir_calendario_programacao) checked @endif name="exibir_calendario" id="exibir_calendario" value="1">
                                     <label class="form-check-label" for="exibir_calendario">
                                     Exibir com calendário
                                     </label>
@@ -87,7 +87,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao == true && $evento->exibir_pdf) checked @endif name="exibir_pdf" id="exibir_pdf">
+                                    <input class="form-check-input" type="checkbox" @if($modulos->modprogramacao == true && $evento->exibir_pdf) checked @endif name="exibir_pdf" id="exibir_pdf" value="1">
                                     <label class="form-check-label" for="exibir_pdf">
                                     Exibir o pdf enviado
                                     </label>
@@ -98,7 +98,7 @@
                     </p>
 
                     <p class="card-text">
-                    <input type="hidden" name="modorganizacao" value="false">
+                    <input type="hidden" name="modorganizacao" value="0">
                     <div class="row">
                         <div class="col-sm-12">
                             <label for="modorganizacao" class="col-form-label">{{ __('Organização e Apoio') }}</label>
@@ -108,7 +108,7 @@
                         <div class="col-sm-12">
 
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" @if($modulos->modorganizacao) checked @endif name="modorganizacao" id="modorganizacao">
+                                <input class="form-check-input" type="checkbox" @if($modulos->modorganizacao) checked @endif name="modorganizacao" id="modorganizacao" value="1">
                                 <label class="form-check-label" for="modorganizacao">
                                     Habilitar
                                 </label>
@@ -126,7 +126,7 @@
                     </p>
 
                     <p class="card-text">
-                    <input type="hidden" name="modsubmissao" value="false">
+                    <input type="hidden" name="modsubmissao" value="0">
                     <div class="row">
                         <div class="col-sm-12">
                             <label for="modsubmissao" class="col-form-label">{{ __('Submissões de Trabalhos') }}</label>
@@ -136,7 +136,7 @@
                         <div class="col-sm-12">
 
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" @if($modulos->modsubmissao) checked @endif name="modsubmissao" id="modsubmissao">
+                                <input class="form-check-input" type="checkbox" @if($modulos->modsubmissao) checked @endif name="modsubmissao" id="modsubmissao" value="1">
                                 <label class="form-check-label" for="modsubmissao">
                                     Habilitar
                                 </label>
