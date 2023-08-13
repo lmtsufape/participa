@@ -77,13 +77,6 @@ class InscricaoController extends Controller
     public function create($id)
     {
         $evento = Evento::find($id);
-        $inscricoes = auth()->user()->inscricao()->where([['evento_id', '=', $evento->id], ['finalizada', '=', false]])->get();
-
-        foreach ($inscricoes as $inscricao) {
-            if ($inscricao != null) {
-                $this->destroy($inscricao->id);
-            }
-        }
 
         return view('evento.nova_inscricao', ['evento' => $evento,
             'eventoVoltar' => null,
