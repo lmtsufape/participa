@@ -424,7 +424,7 @@ class InscricaoController extends Controller
                         Storage::delete($campoSalvo->pivot->valor);
                     }
 
-                    $path = Storage::putFileAs('public/eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.pdf');
+                    $path = Storage::putFileAs('eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.pdf');
 
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $path]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {
@@ -454,7 +454,7 @@ class InscricaoController extends Controller
                 } elseif ($campo->tipo == 'text' && $request->input('text-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('text-'.$campo->id)]);
                 } elseif ($campo->tipo == 'file' && $request->file('file-'.$campo->id) != null) {
-                    $path = Storage::putFileAs('public/eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.pdf');
+                    $path = Storage::putFileAs('eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.pdf');
 
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $path]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {
@@ -481,12 +481,15 @@ class InscricaoController extends Controller
 
     public function downloadFileCampoExtra($idInscricao, $idCampo)
     {
-        $inscricao = Inscricao::find($idInscricao);
-        $caminho = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $idCampo)->first()->pivot->valor;
-        if (Storage::disk()->exists($caminho)) {
-            return Storage::download($caminho);
-        }
+        $inscricao = Inscricao::findOrFail($idInscricao);
+        if (auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $inscricao->evento) || auth()->user()->administradors()->exists()) {
+            $caminho = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $idCampo)->first()->pivot->valor;
+            if (Storage::disk()->exists($caminho)) {
+                return Storage::download($caminho);
+            }
 
-        return abort(404);
+            return abort(404);
+        }
+        return abort(403);
     }
 }
