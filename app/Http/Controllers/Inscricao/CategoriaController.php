@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoriaParticipanteRequest;
+use App\Models\Inscricao\CampoFormulario;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Inscricao\ValorCategoria;
@@ -49,6 +50,7 @@ class CategoriaController extends Controller
         $categoria->valor_total = $validateData['valor_total'];
         $categoria->permite_submissao = $request->boolean('permite_submissao');
         $categoria->save();
+        $categoria->camposNecessarios()->attach(CampoFormulario::all());
 
         if ($request->has('tipo_valor')) {
             foreach ($request->tipo_valor as $key => $tipo_valor) {
