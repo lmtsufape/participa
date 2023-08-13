@@ -34,13 +34,13 @@
                                     aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <div class="modal-header">
+                                            <div class="modal-header" style="background-color: #114048ff; color: white;">
                                                 <h5 class="modal-title"
                                                     id="exampleModalLabel">Cadastrar Categoria</h5>
                                                 <button type="button"
                                                     class="close"
                                                     data-dismiss="modal"
-                                                    aria-label="Close">
+                                                    aria-label="Close" style="color: white;">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
@@ -49,6 +49,7 @@
                                                     <div class="col-sm-12">
                                                         <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova categoria para o seu evento</h6>
                                                         <form method="POST"
+                                                            id="cadastrarmodalidade"
                                                             action="{{ route('categoria.participante.store') }}">
                                                             @csrf
                                                             <input type="hidden"
@@ -108,18 +109,19 @@
                                                                 </div>
                                                             </div>
                                                             </p>
-                                                            <div class="modal-footer">
-                                                                <button type="button"
-                                                                    class="btn btn-secondary"
-                                                                    data-dismiss="modal">Fechar</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">
-                                                                    {{ __('Confirmar') }}
-                                                                </button>
-                                                            </div>
                                                         </form>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                    class="btn btn-secondary"
+                                                    data-dismiss="modal">Fechar</button>
+                                                <button type="submit"
+                                                    form="cadastrarmodalidade"
+                                                    class="btn btn-primary">
+                                                    {{ __('Confirmar') }}
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
