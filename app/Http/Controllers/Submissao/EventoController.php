@@ -1244,6 +1244,9 @@ class EventoController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->administradors()->exists()) {
+            abort(403);
+        }
         return view('evento.criarEvento');
     }
 

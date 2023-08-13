@@ -11,9 +11,11 @@
                 <div class="col-sm-10">
                     <h1>Meus Eventos</h1>
                 </div>
-                <div class="col-sm-2">
-                    <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
-                </div>
+                    @if (auth()->user()->administradors()->exists())
+                    <div class="col-sm-2">
+                        <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

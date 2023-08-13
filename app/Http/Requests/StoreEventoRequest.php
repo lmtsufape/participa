@@ -14,7 +14,8 @@ class StoreEventoRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user() != null;
+        $user = auth()->user();
+        return $user != null && $user->administradors()->exists();
     }
 
     /**
