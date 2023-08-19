@@ -44,4 +44,12 @@ class Inscricao extends Model
     {
         return $this->belongsTo('App\Models\Inscricao\CategoriaParticipante', 'categoria_participante_id');
     }
+
+    public function podeSubmeterTrabalho()
+    {
+        if ($this->categoria()->exists()) {
+            return $this->finalizada && $this->categoria->permite_submissao;
+        }
+        return $this->finalizada;
+    }
 }

@@ -646,7 +646,7 @@
                                                                                     @endif
                                                                                 @endif
                                                                                 @auth
-                                                                                    @if ($modalidade->estaEmPeriodoDeSubmissao() && $inscricao->finalizada)
+                                                                                    @if ($modalidade->estaEmPeriodoDeSubmissao() && $inscricao?->podeSubmeterTrabalho())
                                                                                         <a class="btn btn-primary" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
                                                                                     @else
                                                                                         @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
