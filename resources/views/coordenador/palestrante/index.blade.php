@@ -298,30 +298,44 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Palestras</h5>
-                        <small>Clique em uma palestra para editar</small>
+                        <div class="row">
+                            <div class="col">
+                                <small>Clique em uma palestra para editar</small>
+                                <h6 class="card-subtitle mb-2 text-muted">Obs.: ao exportar o arquivo csv, usar o delimitador , (vírgula) para abrir o arquivo</h6>
+                            </div>
+                            <div class="col justify-content-end d-flex">
+                                <form action="{{route('coord.palestrantes.exportar', [$evento])}}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary float-md-right">Exportar .csv</button>
+                                </form>
+                            </div>
+
+                        </div>
                         <p class="card-text">
-                        <table class="table table-hover table-responsive-lg table-sm mt-3">
-                            <thead>
-                                <th>
-                                <th>Titulo</th>
-                                <th>Excluir</th>
-                                </th>
-                            </thead>
-                            @foreach ($palestras as $palestra)
-                                <tbody>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm mt-3">
+                                <thead>
                                     <th>
-                                    <td data-toggle="modal"
-                                        data-target="#modalPalestraEdit{{ $palestra->id }}">{{ $palestra->titulo }}</td>
-                                    <td data-toggle="modal"
-                                        data-target="#modalExcluirPalestra{{ $palestra->id }}"><button
-                                            style="border: none; background-color: rgba(255, 255, 255, 0);"><img
-                                                src="{{ asset('img/icons/trash-alt-regular.svg') }}"
-                                                class="icon-card"
-                                                alt=""></button></td>
+                                    <th>Titulo</th>
+                                    <th>Excluir</th>
                                     </th>
-                                </tbody>
-                            @endforeach
-                        </table>
+                                </thead>
+                                @foreach ($palestras as $palestra)
+                                    <tbody>
+                                        <th>
+                                        <td data-toggle="modal"
+                                            data-target="#modalPalestraEdit{{ $palestra->id }}">{{ $palestra->titulo }}</td>
+                                        <td data-toggle="modal"
+                                            data-target="#modalExcluirPalestra{{ $palestra->id }}"><button
+                                                style="border: none; background-color: rgba(255, 255, 255, 0);"><img
+                                                    src="{{ asset('img/icons/trash-alt-regular.svg') }}"
+                                                    class="icon-card"
+                                                    alt=""></button></td>
+                                        </th>
+                                    </tbody>
+                                @endforeach
+                            </table>
+                        </div>
                         </p>
                     </div>
                 </div>
