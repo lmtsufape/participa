@@ -290,7 +290,7 @@ class InscricaoController extends Controller
         $inscricao->user_id = auth()->user()->id;
         $inscricao->evento_id = $evento->id;
         $inscricao->categoria_participante_id = $categoria->id;
-        $inscricao->finalizada = true;
+        $inscricao->finalizada = !$evento->formEvento->modvalidarinscricao;
         $inscricao->save();
         $this->salvarCamposExtras($inscricao, $request, $categoria);
 
@@ -330,7 +330,7 @@ class InscricaoController extends Controller
         $inscricao = new Inscricao();
         $inscricao->user_id = auth()->user()->id;
         $inscricao->evento_id = $request->evento_id;
-        $inscricao->finalizada = true;
+        $inscricao->finalizada = !$evento->formEvento->modvalidarinscricao;
         $inscricao->save();
 
         auth()->user()->notify(new InscricaoEvento($evento));
