@@ -40,10 +40,10 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <input type="hidden" name="modvalidarinscricao" value="false">
+                                <input type="hidden" name="modvalidarinscricao" value="0">
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" @if($modulos->modvalidarinscricao) checked @endif name="modvalidarinscricao">
+                                        <input class="form-check-input" type="checkbox" @if($modulos->modvalidarinscricao) checked @endif name="modvalidarinscricao" value="1">
                                         Validar inscrição
                                     </label>
                                 </div>
