@@ -145,7 +145,7 @@
                                 <div class="card" id="bisavo">
                                     <div class="card-body">
                                         <div class="form-group row">
-                                            <input type="hidden" name="checkcampoextra1" value="false" id="checkcampoextra1">
+                                            <input type="hidden" name="checkcampoextra1" value="0" id="checkcampoextra1">
                                             <label for="etiquetacampoextra1" class="col-sm-auto col-form-label" id="classeh21">{{$etiquetasSubTrab->etiquetacampoextra1}}:</label>
                                             <div class="col-sm-auto">
                                             <input type="text" class="form-control" id="etiquetacampoextra1" name="etiquetacampoextra1" placeholder="Editar Etiqueta">
@@ -189,7 +189,7 @@
                                 <div class="card" id="bisavo">
                                     <div class="card-body">
                                         <div class="form-group row">
-                                            <input type="hidden" name="checkcampoextra2" value="false" id="checkcampoextra2">
+                                            <input type="hidden" name="checkcampoextra2" value="0" id="checkcampoextra2">
                                             <label for="etiquetacampoextra2" class="col-sm-auto col-form-label" id="classeh22">{{$etiquetasSubTrab->etiquetacampoextra2}}:</label>
                                             <div class="col-sm-auto">
                                             <input type="text" class="form-control" id="etiquetacampoextra2" name="etiquetacampoextra2" placeholder="Editar Etiqueta">
@@ -233,7 +233,7 @@
                                 <div class="card" id="bisavo">
                                     <div class="card-body">
                                         <div class="form-group row">
-                                            <input type="hidden" name="checkcampoextra3" value="false" id="checkcampoextra3">
+                                            <input type="hidden" name="checkcampoextra3" value="0" id="checkcampoextra3">
                                             <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh23">{{$etiquetasSubTrab->etiquetacampoextra3}}:</label>
                                             <div class="col-sm-auto">
                                             <input type="text" class="form-control" id="etiquetacampoextra3" name="etiquetacampoextra3" placeholder="Editar Etiqueta">
@@ -277,7 +277,7 @@
                                 <div class="card" id="bisavo">
                                     <div class="card-body">
                                         <div class="form-group row">
-                                            <input type="hidden" name="checkcampoextra4" value="false" id="checkcampoextra4">
+                                            <input type="hidden" name="checkcampoextra4" value="0" id="checkcampoextra4">
                                             <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh24">{{$etiquetasSubTrab->etiquetacampoextra4}}:</label>
                                             <div class="col-sm-auto">
                                             <input type="text" class="form-control" id="etiquetacampoextra4" name="etiquetacampoextra4" placeholder="Editar Etiqueta">
@@ -321,7 +321,7 @@
                                 <div class="card" id="bisavo">
                                     <div class="card-body">
                                         <div class="form-group row">
-                                            <input type="hidden" name="checkcampoextra5" value="false" id="checkcampoextra5">
+                                            <input type="hidden" name="checkcampoextra5" value="0" id="checkcampoextra5">
                                             <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh25">{{$etiquetasSubTrab->etiquetacampoextra5}}:</label>
                                             <div class="col-sm-auto">
                                             <input type="text" class="form-control" id="etiquetacampoextra5" name="etiquetacampoextra5" placeholder="Editar Etiqueta">
@@ -384,11 +384,11 @@
                                     <input type="hidden" name="select_campo3"           value="textosimples">
                                     <input type="hidden" name="select_campo4"           value="textosimples">
                                     <input type="hidden" name="select_campo5"           value="textosimples">
-                                    <input type="hidden" name="checkcampoextra1"        value="false">
-                                    <input type="hidden" name="checkcampoextra2"        value="false">
-                                    <input type="hidden" name="checkcampoextra3"        value="false">
-                                    <input type="hidden" name="checkcampoextra4"        value="false">
-                                    <input type="hidden" name="checkcampoextra5"        value="false">
+                                    <input type="hidden" name="checkcampoextra1"        value="0">
+                                    <input type="hidden" name="checkcampoextra2"        value="0">
+                                    <input type="hidden" name="checkcampoextra3"        value="0">
+                                    <input type="hidden" name="checkcampoextra4"        value="0">
+                                    <input type="hidden" name="checkcampoextra5"        value="0">
 
                                     <button type="submit" class="btn btn-primary" form="formSubmTrabaEtiquetasPadrao" onclick='return default_formsubmtraba()' style="width:100%">
                                         {{ __('Retornar ao Padrão') }}
