@@ -134,6 +134,7 @@
                                     <tr>
                                         <th scope="col">Nome</th>
                                         <th scope="col">Valor</th>
+                                        <th scope="col">Permite submissão</th>
                                         <th scope="col"
                                             style="text-align:center">Editar</th>
                                         <th scope="col"
@@ -145,6 +146,7 @@
                                         <tr>
                                             <td>{{ $categoria->nome }}</td>
                                             <td>{{ $categoria->valor_total }}</td>
+                                            <td>{{ $categoria->permite_submissao ? "Sim" : "Não" }}</td>
                                             <td style="text-align:center">
                                                 <a href="#"
                                                     data-toggle="modal"
