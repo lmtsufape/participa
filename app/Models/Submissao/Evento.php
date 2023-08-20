@@ -151,7 +151,7 @@ class Evento extends Model
 
     public function categoriasParticipantes()
     {
-        return $this->hasMany('App\Models\Inscricao\CategoriaParticipante', 'evento_id');
+        return $this->hasMany('App\Models\Inscricao\CategoriaParticipante', 'evento_id')->orderBy('created_at');
     }
 
     public function camposFormulario()
