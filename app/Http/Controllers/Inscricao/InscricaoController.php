@@ -48,7 +48,7 @@ class InscricaoController extends Controller
     public function inscritos(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        $inscricoes = $evento->inscritos();
+        $inscricoes = $evento->inscritos()->sortBy('finalizada');
 
         return view('coordenador.inscricoes.inscritos', compact('inscricoes', 'evento'));
     }
@@ -283,7 +283,7 @@ class InscricaoController extends Controller
         $inscricao->user_id = auth()->user()->id;
         $inscricao->evento_id = $evento->id;
         $inscricao->categoria_participante_id = $categoria->id;
-        $inscricao->finalizada = true;
+        $inscricao->finalizada = !$evento->formEvento->modvalidarinscricao;
         $inscricao->save();
         $this->salvarCamposExtras($inscricao, $request, $categoria);
 
@@ -370,6 +370,16 @@ class InscricaoController extends Controller
         return view('coordenador.programacao.pagamento', compact('evento'));
     }
 
+    public function aprovar(Inscricao $inscricao)
+    {
+        $evento = $inscricao->evento;
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
+        $inscricao->finalizada = true;
+        $inscricao->save();
+        return redirect()->back()->with('message', 'Inscrição aprovada com sucesso!');
+    }
+
     public function validarCamposExtras(Request $request, $categoria)
     {
         $regras = [];
@@ -382,7 +392,7 @@ class InscricaoController extends Controller
                     $regras['text-'.$campo->id] = $campo->obrigatorio ? 'required|string' : 'nullable|string';
                     break;
                 case 'file':
-                    $regras['file-'.$campo->id] = $campo->obrigatorio ? 'required|file|mimes:pdf|max:2000' : 'nullable|file|mimes:pdf|max:2000';
+                    $regras['file-'.$campo->id] = $campo->obrigatorio ? 'required|file|max:2000' : 'nullable|file|max:2000';
                     break;
                 case 'date':
                     $regras['date-'.$campo->id] = $campo->obrigatorio ? 'required|date' : 'nullable|date';

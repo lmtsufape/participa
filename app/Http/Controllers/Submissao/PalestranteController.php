@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Submissao;
 
+use App\Exports\PalestrasExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PalestranteStoreRequest;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Palestra;
 use App\Models\Submissao\Palestrante;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PalestranteController extends Controller
 {
@@ -40,6 +42,13 @@ class PalestranteController extends Controller
         }
 
         return redirect()->route('coord.palestrantes.index', ['eventoId' => $validated['eventoId']]);
+    }
+
+    public function exportar(Evento $evento)
+    {
+        return Excel::download(new PalestrasExport($evento), $evento->nome.'.csv', \Maatwebsite\Excel\Excel::CSV, [
+            'Content-Type' => 'text/csv',
+        ]);
     }
 
     public function update(Request $request)

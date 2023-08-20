@@ -197,6 +197,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('palestrantes/listarPalestrantes', [PalestranteController::class, 'index'])->name('palestrantes.index');
             Route::get('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'create'])->name('palestrantes.create');
             Route::post('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'store'])->name('palestrantes.store');
+            Route::post('palestrantes/exportar/{evento}', [PalestranteController::class, 'exportar'])->name('palestrantes.exportar');
             Route::put('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'update'])->name('palestrantes.update');
             Route::delete('palestrantes/{palestra}/deletePalestra', [PalestranteController::class, 'destroy'])->name('palestrantes.destroy');
             //Assinaturas
@@ -385,6 +386,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::get('{evento}/inscricoes/categorias', [InscricaoController::class, 'categorias'])->name('inscricao.categorias');
     Route::get('{id}/inscricoes/nova-inscricao', [InscricaoController::class, 'create'])->name('inscricao.create');
     Route::post('/inscricoes/inscrever', [InscricaoController::class, 'inscrever'])->name('inscricao.inscrever');
+    Route::post('inscricoes/{inscricao}/aprovar', [InscricaoController::class, 'aprovar'])->name('coord.inscricoes.aprovar');
     Route::get('inscricoes/atividades-da-promocao', [PromocaoController::class, 'atividades'])->name('promocao.atividades');
     Route::get('inscricoes/checar-cupom', [CupomDeDescontoController::class, 'checar'])->name('checar.cupom');
     Route::post('{id}/inscricoes/nova-inscricao/checar', [InscricaoController::class, 'checarDados'])->name('inscricao.checar');

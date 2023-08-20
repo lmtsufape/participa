@@ -82,7 +82,13 @@
                     <input type="hidden" name="criarCampo" id="" value="0">
                     <input type="hidden" id="tipo_campo" name="tipo_campo" value="">
                     <input type="hidden" name="para_todas" value="on">
-
+                    @if($errors->any())
+                    <div class="alert alert-danger">
+                        @foreach ($errors->all() as $error)
+                          <p>{{$error}}</p>
+                        @endforeach
+                      </div>
+                  @endif
                     <div class="container">
                         <div id="escolherInput">
                             <p>

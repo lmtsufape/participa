@@ -81,6 +81,9 @@ class FormEventoController extends Controller
         if (isset($request->modinscricao)) {
             $formevento->modinscricao = $request->modinscricao;
         }
+        if (isset($request->modvalidarinscricao)) {
+            $formevento->modvalidarinscricao = $request->modvalidarinscricao;
+        }
         if (isset($request->modprogramacao)) {
             $formevento->modprogramacao = $request->modprogramacao;
             $evento->exibir_calendario_programacao = isset($request->exibir_calendario);

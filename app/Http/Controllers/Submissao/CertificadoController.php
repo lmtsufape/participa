@@ -539,7 +539,7 @@ class CertificadoController extends Controller
                 ->merge($revisores)
                 ->merge($coautores)
                 ->merge($inscritos)
-                ->sortBy('name')->values()->all();
+                ->sortBy('name')->values()->unique('id')->all();
         } elseif ($request->destinatario == Certificado::TIPO_ENUM['expositor']) {
             $destinatarios = Evento::find($request->eventoId)->palestrantes()->orderBy('nome')->get();
             $palestras = $destinatarios->map(function ($destinatario) {
