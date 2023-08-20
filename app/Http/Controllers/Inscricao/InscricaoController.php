@@ -48,7 +48,7 @@ class InscricaoController extends Controller
     public function inscritos(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        $inscricoes = $evento->inscritos();
+        $inscricoes = $evento->inscritos()->sortBy('finalizada');
 
         return view('coordenador.inscricoes.inscritos', compact('inscricoes', 'evento'));
     }
@@ -368,6 +368,16 @@ class InscricaoController extends Controller
         $evento = Evento::find($request->evento_id);
 
         return view('coordenador.programacao.pagamento', compact('evento'));
+    }
+
+    public function aprovar(Inscricao $inscricao)
+    {
+        $evento = $inscricao->evento;
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
+        $inscricao->finalizada = true;
+        $inscricao->save();
+        return redirect()->back()->with('message', 'Inscrição aprovada com sucesso!');
     }
 
     public function validarCamposExtras(Request $request, $categoria)
