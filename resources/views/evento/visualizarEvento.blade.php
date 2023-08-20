@@ -156,18 +156,16 @@
         </div>
     </div>
     <div class="container-fluid content mt-n2">
-        <div class="row">
-            @if (isset($evento->fotoEvento))
-                <div class="banner-evento">
-                    <img style="background-size: cover" src="{{ asset('storage/' . $evento->fotoEvento) }}" alt="">
-                </div>
-            @else
-                <div class="banner-evento">
-                    <img style="background-size: cover" src="{{ asset('img/colorscheme.png') }}" alt="">
-                </div>
-                {{-- <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt=""> --}}
-            @endif
-        </div>
+        @if (isset($evento->fotoEvento))
+            <div class="banner-evento">
+                <img src="{{ asset('storage/' . $evento->fotoEvento) }}" alt="">
+            </div>
+        @else
+            <div class="banner-evento">
+                <img src="{{ asset('img/colorscheme.png') }}" alt="">
+            </div>
+            {{-- <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt=""> --}}
+        @endif
     </div>
     <div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
         <div class="modal-dialog @if($evento->possuiFormularioDeInscricao()) modal-lg @endif" role="document">

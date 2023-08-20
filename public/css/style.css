@@ -303,14 +303,12 @@ a.baixar-campo-form li {
 
 /* EVENTO */
 .banner-evento{
-    min-width: 100%;
-    min-height: 425px;
-    background-color:rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
 }
 .banner-evento img{
-    width: 100%;
-    min-height: 425px;
-    max-height: 425px;
+    height: 425px;
+    background-size: cover
 }
 .front-image-evento{
     margin-top: 25px;
