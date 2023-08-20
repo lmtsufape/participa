@@ -8,8 +8,8 @@
         </div>
     </div>
     {{-- Habilitar Modulos --}}
-    <div class="row justify-content-center">
-        <div class="col-sm-6">
+    <div class="justify-content-center container d-flex">
+        <div class="col-lg-10 col-xl-8">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Módulos</h5>
@@ -25,7 +25,7 @@
                             </div>
                         </div>
                         <div class="row justify-content-center">
-                            <div class="col-sm-12">
+                            <div class="col-md-6">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" @if($modulos->modinscricao) checked @endif name="modinscricao" id="modinscricao" value="1">
                                     <label class="form-check-label" for="modinscricao">
@@ -34,6 +34,21 @@
                                 </div>
 
                                 @error('modinscricao')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <input type="hidden" name="modvalidarinscricao" value="false">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" @if($modulos->modvalidarinscricao) checked @endif name="modvalidarinscricao">
+                                        Validar inscrição
+                                    </label>
+                                </div>
+
+                                @error('modvalidarinscricao')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

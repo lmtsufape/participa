@@ -33,6 +33,7 @@
                                 <th>Email</th>
                                 <th>Cidade</th>
                                 <th>Estado</th>
+                                <th>Aprovada</th>
                             </th>
                         </thead>
                         @foreach ($inscricoes as $inscricao)
@@ -46,6 +47,7 @@
                                     <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->email}}</td>
                                     <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->endereco ? $inscricao->user->endereco->cidade : 'Endereço não cadastrado'}}</td>
                                     <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->endereco ? $inscricao->user->endereco->uf : 'Endereço não cadastrado'}}</td>
+                                    <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->finalizada ? 'Sim' : 'Não'}}</td>
                                 </th>
                             </tbody>
                         @endforeach
@@ -147,7 +149,15 @@
                 @endforelse
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                @if ($evento->formEvento->modvalidarinscricao)
+                    <form action="{{route('coord.inscricoes.aprovar', ['inscricao' => $inscricao])}}" method="post">
+                        @csrf
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Aprovar inscrição</button>
+                    </form>
+                @else
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                @endif
             </div>
         </div>
     </div>
