@@ -331,7 +331,7 @@ class InscricaoController extends Controller
 
             return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $request->evento_id]);
         } else {
-            $inscricao->finalizada = true;
+            $inscricao->finalizada = !$evento->formEvento->modvalidarinscricao;
             $inscricao->save();
             auth()->user()->notify(new InscricaoEvento($evento));
             if ($possuiFormulario) {
