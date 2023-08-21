@@ -161,7 +161,7 @@
                 </div>
             </div>
             <div x-show="verso">
-                <div class="form-row" x-data="{ has_imagem_verso: {{old('has_imagem_verso', 'false')}} }">
+                <div class="form-row" x-data="{ has_imagem_verso: {{old('has_imagem_verso', '0')}} }">
                     <div class="col-sm-12 form-group">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="has_imagem_verso" name="has_imagem_verso" x-model="has_imagem_verso">
@@ -185,7 +185,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row" x-data="{ imagemassinada: {{old('imagem_assinada', 'false')}} }">
+            <div class="form-row" x-data="{ imagemassinada: {{old('imagem_assinada', '0')}} }">
                 <div class="col-sm-12 form-group">
                     <div>
                         <label>

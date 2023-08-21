@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <div class="row justify-content-center" x-data="{verso: {{old('verso', $certificado->verso ? 'true' : 'false')}}}">
+    <div class="row justify-content-center" x-data="{verso: {{old('verso', $certificado->verso ? 'true' : '0')}}}">
         <form id="formCadastrarCertificado" action="{{route('coord.certificado.update', ['id' => $certificado->id])}}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
@@ -160,7 +160,7 @@
                 </div>
             </div>
             <div x-show="verso">
-                <div class="form-row" x-data="{ has_imagem_verso: {{old('has_imagem_verso', $certificado->has_imagem_verso ? 'true' : 'false')}} }">
+                <div class="form-row" x-data="{ has_imagem_verso: {{old('has_imagem_verso', $certificado->has_imagem_verso ? '1' : '0')}} }">
                     <div class="col-sm-12 form-group">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="has_imagem_verso" name="has_imagem_verso" x-model="has_imagem_verso">
@@ -188,7 +188,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row" x-data="{ imagemassinada: {{$certificado->imagem_assinada ? 'true' : 'false'}} }">
+            <div class="form-row" x-data="{ imagemassinada: {{$certificado->imagem_assinada ? '1' : '0'}} }">
                 <div class="col-sm-12 form-group">
                     <div>
                         <label>

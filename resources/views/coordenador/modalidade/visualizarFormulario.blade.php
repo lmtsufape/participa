@@ -515,9 +515,9 @@
         {
             if (document.getElementById(marc).checked)
             {
-                document.getElementById('checked['+marc+']').value = 'true';
+                document.getElementById('checked['+marc+']').value = '1';
             } else {
-                document.getElementById('checked['+marc+']').value = 'false';
+                document.getElementById('checked['+marc+']').value = '0';
             }
         }
 
