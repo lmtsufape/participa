@@ -12,6 +12,7 @@ use App\Models\Inscricao\Promocao;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
+use App\Notifications\InscricaoAprovada;
 use App\Notifications\InscricaoEvento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -331,14 +332,19 @@ class InscricaoController extends Controller
 
             return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $request->evento_id]);
         } else {
-            $inscricao->finalizada = !$evento->formEvento->modvalidarinscricao;
+            $modvalidarinscricao = !$evento->formEvento->modvalidarinscricao;
+            $inscricao->finalizada = $modvalidarinscricao;
             $inscricao->save();
-            auth()->user()->notify(new InscricaoEvento($evento));
+            $message = 'Inscricao realizada, você receberá uma notificação no e-mail quando o coordenador aprovar sua inscrição.';
+            if (!$modvalidarinscricao) {
+                $message = 'Inscrição realizada com sucesso';
+                auth()->user()->notify(new InscricaoEvento($evento));
+            }
             if ($possuiFormulario) {
                 $this->salvarCamposExtras($inscricao, $request, $categoria);
             }
 
-            return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição realizada com sucesso');
+            return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', $message);
         }
     }
 
@@ -377,6 +383,7 @@ class InscricaoController extends Controller
 
         $inscricao->finalizada = true;
         $inscricao->save();
+        $inscricao->user->notify(new InscricaoAprovada($evento));
         return redirect()->back()->with('message', 'Inscrição aprovada com sucesso!');
     }
 
