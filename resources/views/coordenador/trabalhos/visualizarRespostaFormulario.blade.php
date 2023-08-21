@@ -212,7 +212,7 @@
                 <div class="modal-body">
                     <form id="form-reprovar-trabalho-{{$trabalho->id}}" method="POST" action="{{route('trabalho.aprovar-reprovar', $trabalho->id)}}">
                         <input type="hidden" name="trabalho_id" value={{$trabalho->id}}>
-                        <input type="hidden" name="aprovacao" value="false">
+                        <input type="hidden" name="aprovacao" value="0">
                         @csrf
                         Tem certeza que deseja reprovar este trabalho {{$trabalho->titulo}}?
                     </form>
@@ -237,7 +237,7 @@
                 <div class="modal-body">
                     <form id="form-aprovar-trabalho-{{$trabalho->id}}" method="POST" action="{{route('trabalho.aprovar-reprovar', $trabalho->id)}}">
                         <input type="hidden" name="trabalho_id" value={{$trabalho->id}}>
-                        <input type="hidden" name="aprovacao" value="true">
+                        <input type="hidden" name="aprovacao" value="1">
                         @csrf
                         Tem certeza que deseja aprovar este trabalho {{$trabalho->titulo}}?
                     </form>

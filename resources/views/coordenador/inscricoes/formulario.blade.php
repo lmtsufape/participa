@@ -81,7 +81,7 @@
                     <input type="hidden" name="evento_id" id="" value="{{$evento->id}}">
                     <input type="hidden" name="criarCampo" id="" value="0">
                     <input type="hidden" id="tipo_campo" name="tipo_campo" value="">
-                    <input type="hidden" name="para_todas" value="on">
+                    <input type="hidden" name="para_todas" value="1">
                     @if($errors->any())
                     <div class="alert alert-danger">
                         @foreach ($errors->all() as $error)
@@ -144,7 +144,7 @@
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-12">
-                                    <input type="checkbox" value="on" id="campo_obrigatorio" name="campo_obrigatorio" @if (old('campo_obrigatorio') != null) checked @endif>
+                                    <input type="checkbox" value="1" id="campo_obrigatorio" name="campo_obrigatorio" @if (old('campo_obrigatorio') != null) checked @endif>
                                     <label for="campo_obrigatorio">Campo obrigatório</label>
                                 </div>
 
@@ -275,7 +275,7 @@
                     @csrf
                     <input type="hidden" name="evento_id" value="{{$evento->id}}">
                     <input type="hidden" name="campo_id" value="{{$campo->id}}">
-                    <input type="hidden" name="para_todas" value="on">
+                    <input type="hidden" name="para_todas" value="1">
                     <div class="container">
                         <div class="row form-group">
                             <div class="col-sm-12">

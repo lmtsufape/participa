@@ -79,7 +79,7 @@
                             </span>
                             @enderror
                         </div>
-                        {{-- <input type="hidden" name="modarquivo" value="false"> --}}
+                        {{-- <input type="hidden" name="modarquivo" value="0"> --}}
                         {{-- <div class="col-sm-6">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" @if($evento->modarquivo) checked @endif name="modarquivo" id="modarquivo">

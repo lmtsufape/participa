@@ -179,7 +179,7 @@
                                     type="checkbox"
                                     class="form-check-input @error('isCoordenador') is-invalid @enderror"
                                     name="isCoordenador"
-                                    value="true"
+                                    value="1"
                                     @if($membro->pivot->isCoordenador) checked @endif>
                                 <label for="isCoordenador{{$membro->id}}"
                                     class="form-check-label">{{ __('Coordenador') }}</label>
@@ -256,7 +256,7 @@
                                 type="checkbox"
                                 class="form-check-input @error('isCoordenador') is-invalid @enderror"
                                 name="isCoordenador"
-                                value="true">
+                                value="1">
                             <label for="isCoordenador"
                                 class="form-check-label">{{ __('Coordenador') }}</label>
                             @error('isCoordenador')

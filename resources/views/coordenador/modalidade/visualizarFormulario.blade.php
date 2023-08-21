@@ -202,7 +202,7 @@
                                                                                     <div class="input-group pl-0 col-sm-10 mb-3">
                                                                                         <div class="input-group-prepend">
                                                                                             <div class="input-group-text">
-                                                                                                <input name="checkbox[{{ $opcao->id }}]" type="checkbox" aria-label="Checkbox for following text input" 
+                                                                                                <input name="checkbox[{{ $opcao->id }}]" type="checkbox" aria-label="Checkbox for following text input"
                                                                                                  @if($opcao->check) checked @endif>
                                                                                             </div>
                                                                                         </div>
@@ -473,7 +473,7 @@
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
                                 <input id="${rep}" name="checkbox" type="checkbox" aria-label="Checkbox for following text input" onclick="changeResposta(${rep});">
-                                 <input hidden id="checked[${rep}]" name="tituloCheckoxMarc[${check}][]"  type="text" value="false" >
+                                 <input hidden id="checked[${rep}]" name="tituloCheckoxMarc[${check}][]"  type="text" value="0" >
                                 </div>
                             </div>
                             <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox" required>
@@ -493,7 +493,7 @@
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                             <input id="${rep}" name="checkbox" type="checkbox" aria-label="Checkbox for following text input" onclick="changeResposta(${rep});">
-                            <input hidden id="checked[${rep}]" name="tituloCheckoxMarc[${check}][]"  type="text" value="false" >
+                            <input hidden id="checked[${rep}]" name="tituloCheckoxMarc[${check}][]"  type="text" value="0" >
                             </div>
                         </div>
                         <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox">

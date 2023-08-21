@@ -179,10 +179,10 @@
                                         <br> Adicionar data
                                     </button>
                                 </div>
-                                <div x-data="{texto: '{{old('texto', false)}}' == 'on', limit: '{{old('limit')}}'}">
+                                <div x-data="{texto: '{{old('texto', false)}}' == '1', limit: '{{old('limit')}}'}">
                                     <div class="form-group">
                                         <div class="form-check">
-                                            <input class="form-check-input" id="textocheck" x-model="texto" value="on" type="checkbox" name="texto">
+                                            <input class="form-check-input" id="textocheck" x-model="texto" value="1" type="checkbox" name="texto">
                                             <label class="form-check-label font-weight-bold" for="textocheck">
                                                 Adicionar campo resumo por texto
                                             </label>
@@ -255,10 +255,10 @@
                                         </div>
                                     </template>
                                 </div>
-                                <div x-data="{arquivo: '{{old('arquivo')}}' == 'on'}">
+                                <div x-data="{arquivo: '{{old('arquivo')}}' == '1'}">
                                     <div class="form-group">
                                         <div class="form-check">
-                                            <input class="form-check-input incluirarquivo @error('arquivo') is-invalid @enderror" id="arquivocheck" x-model="arquivo" type="checkbox" name="arquivo" value="on">
+                                            <input class="form-check-input incluirarquivo @error('arquivo') is-invalid @enderror" id="arquivocheck" x-model="arquivo" type="checkbox" name="arquivo" value="1">
                                             <label class="form-check-label font-weight-bold" for="arquivocheck">
                                                 Incluir submissão por arquivo
                                             </label>
@@ -419,10 +419,10 @@
                                         </div>
                                     </template>
                                 </div>
-                                <div x-data="{apresentacao: '{{old('apresentacao')}}' == 'on'}">
+                                <div x-data="{apresentacao: '{{old('apresentacao')}}' == '1'}">
                                     <div class="form-group">
                                         <div class="form-check">
-                                            <input class="form-check-input apresentacao @error('apresentacao') is-invalid @enderror" id="apresentacaocheck" value="on" x-model="apresentacao" type="checkbox" name="apresentacao">
+                                            <input class="form-check-input apresentacao @error('apresentacao') is-invalid @enderror" id="apresentacaocheck" value="1" x-model="apresentacao" type="checkbox" name="apresentacao">
                                             <label class="form-check-label font-weight-bold" for="apresentacaocheck">
                                                 {{ __('Habilitar escolha da forma de apresentação do trabalho:') }}
                                             </label>
