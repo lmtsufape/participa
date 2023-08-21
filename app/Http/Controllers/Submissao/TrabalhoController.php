@@ -983,10 +983,10 @@ class TrabalhoController extends Controller
         $trabalho = Trabalho::find($request->trabalho_id);
         $mensagem = '';
 
-        if ($request->aprovacao == 'true') {
+        if ($request->aprovacao == '1') {
             $trabalho->aprovado = true;
             $mensagem = 'Trabalho aprovado com sucesso!';
-        } elseif ($request->aprovacao == 'false') {
+        } elseif ($request->aprovacao == '0') {
             $trabalho->aprovado = false;
             $mensagem = 'Trabalho reprovado com sucesso!';
         }
@@ -1099,11 +1099,11 @@ class TrabalhoController extends Controller
         $trabalho = Trabalho::find($request->trabalho_id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento);
         $parecer = '';
-        if ($request->aprovar == 'true') {
+        if ($request->aprovar == '1') {
             $trabalho->parecer_final = true;
             $parecer = 'positivo';
             $msg = 'Parecer final do trabalho aprovado!';
-        } elseif ($request->aprovar == 'false') {
+        } elseif ($request->aprovar == '0') {
             $trabalho->parecer_final = false;
             $parecer = 'negativo';
             $msg = 'Parecer final do trabalho reprovado!';

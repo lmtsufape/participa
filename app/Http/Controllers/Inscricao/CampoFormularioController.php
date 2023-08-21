@@ -59,10 +59,10 @@ class CampoFormularioController extends Controller
         $campo->titulo = $request->titulo_do_campo;
         $campo->tipo = $request->tipo_campo;
         $campo->evento_id = $evento->id;
-        $campo->obrigatorio = $request->input('campo_obrigatorio') == 'on';
+        $campo->obrigatorio = $request->input('campo_obrigatorio') == '1';
         $campo->save();
 
-        if ($request->para_todas == 'on') {
+        if ($request->para_todas == '1') {
             $categorias = $evento->categoriasParticipantes->pluck('id');
             $campo->categorias()->attach($categorias);
         } elseif ($request->categoria != null) {
@@ -119,10 +119,10 @@ class CampoFormularioController extends Controller
 
         $campo = CampoFormulario::find($id);
         $campo->titulo = $request->titulo_do_campo;
-        $campo->obrigatorio = $request->input('campo_obrigatório') == 'on';
+        $campo->obrigatorio = $request->input('campo_obrigatório') == '1';
         $campo->update();
 
-        if ($request->para_todas == 'on') {
+        if ($request->para_todas == '1') {
             $categorias = $evento->categoriasParticipantes->pluck('id');
             $campo->categorias()->attach($categorias);
         } elseif ($request->categoria != null) {

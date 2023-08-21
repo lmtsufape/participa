@@ -75,7 +75,7 @@ class PromocaoController extends Controller
         $promocao->valor = $request->valor;
         $promocao->save();
 
-        if ($request->para_todas_categorias == 'on') {
+        if ($request->para_todas_categorias == '1') {
             $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
 
             foreach ($categorias as $categoria) {
@@ -190,7 +190,7 @@ class PromocaoController extends Controller
         $promocao->valor = $request->input('valor_'.$promocao->id);
         $promocao->update();
 
-        if ($request->input('para_todas_categorias_'.$promocao->id) == 'on') {
+        if ($request->input('para_todas_categorias_'.$promocao->id) == '1') {
             $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
 
             foreach ($categorias as $categoria) {
