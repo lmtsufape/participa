@@ -291,7 +291,7 @@
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                <input type="checkbox" id="campo_obrigatorio{{$campo->id}}" name="campo_obrigatório" @if (old('campo_obrigatorio') != null) checked @elseif($campo->obrigatorio) checked @endif>
+                                <input type="checkbox" value="1" id="campo_obrigatorio{{$campo->id}}" name="campo_obrigatório" @if (old('campo_obrigatorio') != null) checked @elseif($campo->obrigatorio) checked @endif>
                                 <label for="campo_obrigatorio{{$campo->id}}">Campo obrigatório</label>
 
                                 @error('campo_obrigatório')

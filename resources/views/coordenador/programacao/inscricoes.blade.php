@@ -610,7 +610,7 @@
                         <div class="row">
                             @if (count($categorias) > 0)
                                 <div class="col-sm-12">
-                                    <input id="para_todas_categorias" type="checkbox" name="para_todas_categorias" @if(old('para_todas_categorias') == "1") checked @endif onclick="mostrarCategorias(this,0)">
+                                    <input id="para_todas_categorias" type="checkbox" value="1" name="para_todas_categorias" @if(old('para_todas_categorias') == "1") checked @endif onclick="mostrarCategorias(this,0)">
                                     <label for="para_todas_categorias">Para todas categorias</label>
                                 </div>
                             @else
@@ -810,7 +810,7 @@
                         <div class="row">
                             @if (count($categorias) > 0)
                                 <div class="col-sm-12">
-                                    <input id="para_todas_categorias_{{$promocao->id}}" type="checkbox" name="para_todas_categorias_{{$promocao->id}}" @if(old('para_todas_categorias_'.$promocao->id) == "1") checked @elseif($promocao->categorias->diff($categorias)->isEmpty() && old('para_todas_categorias_'.$promocao->id) == null) checked @endif onclick="mostrarCategorias(this,{{$promocao->id}})">
+                                    <input id="para_todas_categorias_{{$promocao->id}}" type="checkbox" value="1" name="para_todas_categorias_{{$promocao->id}}" @if(old('para_todas_categorias_'.$promocao->id) == "1") checked @elseif($promocao->categorias->diff($categorias)->isEmpty() && old('para_todas_categorias_'.$promocao->id) == null) checked @endif onclick="mostrarCategorias(this,{{$promocao->id}})">
                                     <label for="para_todas_categorias_{{$promocao->id}}">Para todas categorias</label>
                                 </div>
                             @else
@@ -1607,7 +1607,7 @@
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-12">
-                                    <input type="checkbox" id="campo_obrigatorio" name="campo_obrigatório" @if (old('campo_obrigatorio') != null) checked @endif>
+                                    <input type="checkbox" value="1" id="campo_obrigatorio" name="campo_obrigatório" @if (old('campo_obrigatorio') != null) checked @endif>
                                     <label for="campo_obrigatorio">Campo obrigatório</label>
 
                                     @error('campo_obrigatório')
@@ -1617,7 +1617,7 @@
                                     @enderror
                                 </div>
                                 <div class="col-sm-12">
-                                    <input type="checkbox" id="para_todas" name="para_todas" @if (old('para_todas') == "1") checked @elseif(old('criarCampo') == null) checked @endif onchange="mostrarCheckBoxCategoria(this, 0)">
+                                    <input type="checkbox" value="1" id="para_todas" name="para_todas" @if (old('para_todas') == "1") checked @elseif(old('criarCampo') == null) checked @endif onchange="mostrarCheckBoxCategoria(this, 0)">
                                     <label for="para_todas">Necessário para todas as categorias de participante</label>
 
                                     @error('para_todas')
@@ -1780,7 +1780,7 @@
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                <input type="checkbox" id="campo_obrigatorio{{$campo->id}}" name="campo_obrigatório" @if (old('campo_obrigatorio') != null) checked @elseif($campo->obrigatorio) checked @endif>
+                                <input type="checkbox" value="1" id="campo_obrigatorio{{$campo->id}}" name="campo_obrigatório" @if (old('campo_obrigatorio') != null) checked @elseif($campo->obrigatorio) checked @endif>
                                 <label for="campo_obrigatorio{{$campo->id}}">Campo obrigatório</label>
 
                                 @error('campo_obrigatório')
@@ -1790,7 +1790,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-12">
-                                <input type="checkbox" id="para_todas{{$campo->id}}" name="para_todas" @if (old('para_todas') == "1") checked @elseif($categorias->diff($campo->categorias)->isEmpty() && old('campo_id') == null) checked @endif onchange="mostrarCheckBoxCategoria(this, {{$campo->id}})">
+                                <input type="checkbox" value="1" id="para_todas{{$campo->id}}" name="para_todas" @if (old('para_todas') == "1") checked @elseif($categorias->diff($campo->categorias)->isEmpty() && old('campo_id') == null) checked @endif onchange="mostrarCheckBoxCategoria(this, {{$campo->id}})">
                                 <label for="para_todas{{$campo->id}}">Necessário para todas as categorias de participante</label>
 
                                 @error('para_todas')

@@ -164,7 +164,7 @@
                 <div class="form-row" x-data="{ has_imagem_verso: {{old('has_imagem_verso', '0')}} }">
                     <div class="col-sm-12 form-group">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="has_imagem_verso" name="has_imagem_verso" x-model="has_imagem_verso">
+                            <input type="checkbox" value="1" class="form-check-input" id="has_imagem_verso" name="has_imagem_verso" x-model="has_imagem_verso">
                             <label class="form-check-label" for="has_imagem_verso"><b>Enviar outra imagem para o verso?</b></label>
                         </div>
                         <div x-show="has_imagem_verso">

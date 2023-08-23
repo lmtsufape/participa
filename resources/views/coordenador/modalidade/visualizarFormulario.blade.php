@@ -60,7 +60,7 @@
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                    <input type="checkbox" disabled @if($opcao->check) checked @endif>
+                                                    <input type="checkbox" value="1" disabled @if($opcao->check) checked @endif>
                                                 </div>
                                             </div>
                                             <input type="text" class="form-control" value=" {{$opcao->titulo}}" disabled>
@@ -75,7 +75,7 @@
                             @endif
                             <div class="col-md-5">
                                 <div class="col-form-label text-md-left">
-                                    <small>Visível para o autor? </small><input disabled type="checkbox" @if ($pergunta->visibilidade) checked @endif>
+                                    <small>Visível para o autor? </small><input disabled type="checkbox" value="1" @if ($pergunta->visibilidade) checked @endif>
                                 </div>
                             </div>
                         </div>
@@ -202,7 +202,7 @@
                                                                                     <div class="input-group pl-0 col-sm-10 mb-3">
                                                                                         <div class="input-group-prepend">
                                                                                             <div class="input-group-text">
-                                                                                                <input name="checkbox[{{ $opcao->id }}]" type="checkbox" aria-label="Checkbox for following text input"
+                                                                                                <input name="checkbox[{{ $opcao->id }}]" type="checkbox" value="1" aria-label="Checkbox for following text input"
                                                                                                  @if($opcao->check) checked @endif>
                                                                                             </div>
                                                                                         </div>
@@ -229,7 +229,7 @@
                                                                 </div>
                                                                 <div class="col-md-5">
                                                                     <div class="col-form-label text-md-left">
-                                                                        <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="checkboxVisibilidade_{{$pergunta->id}}" @if($pergunta->visibilidade) checked @endif>
+                                                                        <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" value="1" name="checkboxVisibilidade_{{$pergunta->id}}" @if($pergunta->visibilidade) checked @endif>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-4">
@@ -472,7 +472,7 @@
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                <input id="${rep}" name="checkbox" type="checkbox" aria-label="Checkbox for following text input" onclick="changeResposta(${rep});">
+                                <input id="${rep}" name="checkbox" type="checkbox" value="1" aria-label="Checkbox for following text input" onclick="changeResposta(${rep});">
                                  <input hidden id="checked[${rep}]" name="tituloCheckoxMarc[${check}][]"  type="text" value="0" >
                                 </div>
                             </div>
@@ -492,7 +492,7 @@
                     <div class="input-group mb-3 col-md-10">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                            <input id="${rep}" name="checkbox" type="checkbox" aria-label="Checkbox for following text input" onclick="changeResposta(${rep});">
+                            <input id="${rep}" name="checkbox" type="checkbox" value="1" aria-label="Checkbox for following text input" onclick="changeResposta(${rep});">
                             <input hidden id="checked[${rep}]" name="tituloCheckoxMarc[${check}][]"  type="text" value="0" >
                             </div>
                         </div>

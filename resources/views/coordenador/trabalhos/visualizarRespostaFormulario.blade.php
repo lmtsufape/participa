@@ -93,7 +93,7 @@
 
                     @endforeach
                     <div class="col-form-label text-md-left">
-                        <small>Selecionar todas as respostas </small><input id="selecionarTodas" type="checkbox" onclick="select_all()">
+                        <small>Selecionar todas as respostas </small><input id="selecionarTodas" type="checkbox" value="1" onclick="select_all()">
                     </div>
 
                 </p>

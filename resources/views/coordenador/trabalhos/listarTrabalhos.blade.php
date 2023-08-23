@@ -107,7 +107,7 @@
                                             <tr>
                                                 {{-- <th scope="col" style="text-align:center">
                                                     @if(!is_null($trabalhos->first()))
-                                                    <input type="checkbox" id="selectAllCheckboxes{{$trabalhos[0]->modalidade->id}}" onclick="marcarCheckboxes({{$trabalhos[0]->modalidade->id}})">
+                                                    <input type="checkbox" value="1" id="selectAllCheckboxes{{$trabalhos[0]->modalidade->id}}" onclick="marcarCheckboxes({{$trabalhos[0]->modalidade->id}})">
                                                     <label for="selectAllCheckboxes{{$trabalhos[0]->modalidade->id}}" style="margin-bottom: 0px;">Selecionar</label>
                                                     @else
                                                     Selecionar

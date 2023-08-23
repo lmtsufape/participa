@@ -76,7 +76,7 @@
                 <thead>
                   <tr>
                     <th scope="col">
-                        <input type="checkbox" id="selectAllCheckboxes" onclick="marcarCheckboxes()">
+                        <input type="checkbox" value="1" id="selectAllCheckboxes" onclick="marcarCheckboxes()">
                         <label for="selectAllCheckboxes" style="margin-bottom: 0px;">Selecionar</label>
                     </th>
                     <th scope="col">

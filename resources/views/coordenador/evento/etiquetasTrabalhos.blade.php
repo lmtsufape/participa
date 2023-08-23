@@ -173,7 +173,7 @@
                                             </div>
                                             <div class="form-group col-sm-2">
                                                 <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra1) checked @endif name="checkcampoextra1">
+                                                <input class="form-check-input" type="checkbox" value="1" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra1) checked @endif name="checkcampoextra1">
                                                 <label class="form-check-label" for="gridCheck">
                                                     Exibir
                                                 </label>
@@ -217,7 +217,7 @@
                                             </div>
                                             <div class="form-group col-sm-2">
                                                 <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra2) checked @endif name="checkcampoextra2">
+                                                <input class="form-check-input" type="checkbox" value="1" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra2) checked @endif name="checkcampoextra2">
                                                 <label class="form-check-label" for="gridCheck">
                                                     Exibir
                                                 </label>
@@ -261,7 +261,7 @@
                                             </div>
                                             <div class="form-group col-sm-2">
                                                 <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra3) checked @endif name="checkcampoextra3">
+                                                <input class="form-check-input" type="checkbox" value="1" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra3) checked @endif name="checkcampoextra3">
                                                 <label class="form-check-label" for="gridCheck">
                                                     Exibir
                                                 </label>
@@ -305,7 +305,7 @@
                                             </div>
                                             <div class="form-group col-sm-2">
                                                 <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra4) checked @endif name="checkcampoextra4">
+                                                <input class="form-check-input" type="checkbox" value="1" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra4) checked @endif name="checkcampoextra4">
                                                 <label class="form-check-label" for="gridCheck">
                                                     Exibir
                                                 </label>
@@ -349,7 +349,7 @@
                                             </div>
                                             <div class="form-group col-sm-2">
                                                 <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra5) checked @endif name="checkcampoextra5">
+                                                <input class="form-check-input" type="checkbox" value="1" id="gridCheck" @if($etiquetasSubTrab->checkcampoextra5) checked @endif name="checkcampoextra5">
                                                 <label class="form-check-label" for="gridCheck">
                                                     Exibir
                                                 </label>

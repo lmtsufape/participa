@@ -317,7 +317,7 @@
                                                     </div>
                                                     <div class="col-sm-3" x-data="{ id: $id('data-extra-submissao') }">
                                                         <div class="form-check mt-2">
-                                                            <input class="form-check-input" value="1" type="checkbox" x-model="data.permitirSubmissao" :id="id" :name="'submissaoDataExtra[' + index + ']'">
+                                                            <input class="form-check-input" type="checkbox" x-model="data.permitirSubmissao" :id="id" :name="'submissaoDataExtra[' + index + ']'">
                                                             <label class="form-check-label" :for="id" >
                                                                 <strong>Permitir submissão</strong>
                                                             </label>
@@ -347,7 +347,7 @@
 
                                             <div class="col-sm-6">
                                                 <div class="form-check" style="margin-top: 10px">
-                                                    <input class="form-check-input incluir-resumo-edit" type="checkbox" name="texto{{$modalidade->id}}" id="id-custom_field-account-1-2" @if(old('texto'.$modalidade->id)) checked @elseif(old('texto'.$modalidade->id) == null && $modalidade->texto) checked @endif>
+                                                    <input class="form-check-input incluir-resumo-edit" type="checkbox" value="1" name="texto{{$modalidade->id}}" id="id-custom_field-account-1-2" @if(old('texto'.$modalidade->id)) checked @elseif(old('texto'.$modalidade->id) == null && $modalidade->texto) checked @endif>
                                                     <label class="form-check-label font-weight-bold" for="resumo">
                                                         Adicionar campo resumo por texto
                                                     </label>
@@ -412,7 +412,7 @@
                                                 </div>
 
                                                 <div class="form-check" style="margin-top: 10px">
-                                                    <input class="form-check-input incluirarquivoEdit" type="checkbox" onchange="exibirTiposArquivo({{$modalidade->id}},this)" name="arquivoEdit{{$modalidade->id}}" id="id-custom_field-accountEdit-1-2" @if(old('arquivoEdit'.$modalidade->id) == "1") checked @elseif (old('arquivoEdit'.$modalidade->id) == null && $modalidade->arquivo == true) checked @endif>
+                                                    <input class="form-check-input incluirarquivoEdit" type="checkbox" value="1" onchange="exibirTiposArquivo({{$modalidade->id}},this)" name="arquivoEdit{{$modalidade->id}}" id="id-custom_field-accountEdit-1-2" @if(old('arquivoEdit'.$modalidade->id) == "1") checked @elseif (old('arquivoEdit'.$modalidade->id) == null && $modalidade->arquivo == true) checked @endif>
                                                     <label class="form-check-label font-weight-bold" for="arquivoEdit">
                                                         Incluir submissão por arquivo
                                                     </label>
@@ -434,31 +434,31 @@
                                             <div class="row ml-3 row-cols-xs-3 row-cols-sm-4 row-cols-md-5">
                                                 <div>
                                                     <div class="form-check" style="margin-top: 10px">
-                                                        <input class="form-check-input" type="checkbox" id="pdfEdit" name="pdf{{$modalidade->id}}" @if(old('pdf'.$modalidade->id) == "1") checked @elseif (old('pdf'.$modalidade->id) == null && $modalidade->pdf == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="pdfEdit" name="pdf{{$modalidade->id}}" @if(old('pdf'.$modalidade->id) == "1") checked @elseif (old('pdf'.$modalidade->id) == null && $modalidade->pdf == true) checked @endif>
                                                         <label class="form-check-label" for="pdfEdit">
                                                             .pdf
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="docxEdit" name="docx{{$modalidade->id}}" @if(old('docx'.$modalidade->id) == "1") checked @elseif (old('docx'.$modalidade->id) == null && $modalidade->docx == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="docxEdit" name="docx{{$modalidade->id}}" @if(old('docx'.$modalidade->id) == "1") checked @elseif (old('docx'.$modalidade->id) == null && $modalidade->docx == true) checked @endif>
                                                         <label class="form-check-label" for="docxEdit">
                                                             .docx
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="odtEdit" name="odt{{$modalidade->id}}" @if(old('odt'.$modalidade->id) == "1") checked @elseif (old('odt'.$modalidade->id) == null && $modalidade->odt == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="odtEdit" name="odt{{$modalidade->id}}" @if(old('odt'.$modalidade->id) == "1") checked @elseif (old('odt'.$modalidade->id) == null && $modalidade->odt == true) checked @endif>
                                                         <label class="form-check-label" for="odtEdit">
                                                             .odt
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="odpEdit" name="odp{{$modalidade->id}}" @if(old('odp'.$modalidade->id) == "1") checked @elseif (old('odp'.$modalidade->id) == null && $modalidade->odp == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="odpEdit" name="odp{{$modalidade->id}}" @if(old('odp'.$modalidade->id) == "1") checked @elseif (old('odp'.$modalidade->id) == null && $modalidade->odp == true) checked @endif>
                                                         <label class="form-check-label" for="odpEdit">
                                                             .odp
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="pptxEdit" name="pptx{{$modalidade->id}}" @if(old('pptx'.$modalidade->id) == "1") checked @elseif (old('pptx'.$modalidade->id) == null && $modalidade->pptx == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="pptxEdit" name="pptx{{$modalidade->id}}" @if(old('pptx'.$modalidade->id) == "1") checked @elseif (old('pptx'.$modalidade->id) == null && $modalidade->pptx == true) checked @endif>
                                                         <label class="form-check-label" for="pptxEdit">
                                                             .pptx
                                                         </label>
@@ -466,25 +466,25 @@
                                                 </div>
                                                 <div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="odsEdit" name="ods{{$modalidade->id}}" @if(old('ods'.$modalidade->id) == "1") checked @elseif (old('ods'.$modalidade->id) == null && $modalidade->ods == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="odsEdit" name="ods{{$modalidade->id}}" @if(old('ods'.$modalidade->id) == "1") checked @elseif (old('ods'.$modalidade->id) == null && $modalidade->ods == true) checked @endif>
                                                         <label class="form-check-label" for="odsEdit">
                                                             .ods
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="xlsxEdit" name="xlsx{{$modalidade->id}}" @if(old('xlsx'.$modalidade->id) == "1") checked @elseif (old('xlsx'.$modalidade->id) == null && $modalidade->xlsx == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="xlsxEdit" name="xlsx{{$modalidade->id}}" @if(old('xlsx'.$modalidade->id) == "1") checked @elseif (old('xlsx'.$modalidade->id) == null && $modalidade->xlsx == true) checked @endif>
                                                         <label class="form-check-label" for="xlsxEdit">
                                                             .xlsx
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="csvEdit" name="csv{{$modalidade->id}}" @if(old('csv'.$modalidade->id) == "1") checked @elseif (old('csv'.$modalidade->id) == null && $modalidade->csv == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="csvEdit" name="csv{{$modalidade->id}}" @if(old('csv'.$modalidade->id) == "1") checked @elseif (old('csv'.$modalidade->id) == null && $modalidade->csv == true) checked @endif>
                                                         <label class="form-check-label" for="csvEdit">
                                                             .csv
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="zipEdit" name="zip{{$modalidade->id}}" @if(old('zip'.$modalidade->id) == "1") checked @elseif (old('zip'.$modalidade->id) == null && $modalidade->zip == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="zipEdit" name="zip{{$modalidade->id}}" @if(old('zip'.$modalidade->id) == "1") checked @elseif (old('zip'.$modalidade->id) == null && $modalidade->zip == true) checked @endif>
                                                         <label class="form-check-label" for="zipEdit">
                                                             .zip
                                                         </label>
@@ -492,19 +492,19 @@
                                                 </div>
                                                 <div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="mp3Edit" name="mp3{{$modalidade->id}}" @if(old('mp3'.$modalidade->id) == "1") checked @elseif (old('mp3'.$modalidade->id) == null && $modalidade->mp3 == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="mp3Edit" name="mp3{{$modalidade->id}}" @if(old('mp3'.$modalidade->id) == "1") checked @elseif (old('mp3'.$modalidade->id) == null && $modalidade->mp3 == true) checked @endif>
                                                         <label class="form-check-label" for="mp3Edit">
                                                             .mp3
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="oggEdit" name="ogg{{$modalidade->id}}" @if(old('ogg'.$modalidade->id) == "1") checked @elseif (old('ogg'.$modalidade->id) == null && $modalidade->ogg == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="oggEdit" name="ogg{{$modalidade->id}}" @if(old('ogg'.$modalidade->id) == "1") checked @elseif (old('ogg'.$modalidade->id) == null && $modalidade->ogg == true) checked @endif>
                                                         <label class="form-check-label" for="oggEdit">
                                                             .ogg
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="wavEdit" name="wav{{$modalidade->id}}" @if(old('wav'.$modalidade->id) == "1") checked @elseif (old('wav'.$modalidade->id) == null && $modalidade->wav == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="wavEdit" name="wav{{$modalidade->id}}" @if(old('wav'.$modalidade->id) == "1") checked @elseif (old('wav'.$modalidade->id) == null && $modalidade->wav == true) checked @endif>
                                                         <label class="form-check-label" for="wavEdit">
                                                             .wav
                                                         </label>
@@ -512,37 +512,37 @@
                                                 </div>
                                                 <div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="mp4Edit" name="mp4{{$modalidade->id}}" @if(old('mp4'.$modalidade->id) == "1") checked @elseif (old('mp4'.$modalidade->id) == null && $modalidade->mp4 == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="mp4Edit" name="mp4{{$modalidade->id}}" @if(old('mp4'.$modalidade->id) == "1") checked @elseif (old('mp4'.$modalidade->id) == null && $modalidade->mp4 == true) checked @endif>
                                                         <label class="form-check-label" for="mp4Edit">
                                                             .mp4
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="ogvEdit" name="ogv{{$modalidade->id}}" @if(old('ogv'.$modalidade->id) == "1") checked @elseif (old('ogv'.$modalidade->id) == null && $modalidade->ogv == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="ogvEdit" name="ogv{{$modalidade->id}}" @if(old('ogv'.$modalidade->id) == "1") checked @elseif (old('ogv'.$modalidade->id) == null && $modalidade->ogv == true) checked @endif>
                                                         <label class="form-check-label" for="ogvEdit">
                                                             .ogv
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="mpgEdit" name="mpg{{$modalidade->id}}" @if(old('mpg'.$modalidade->id) == "1") checked @elseif (old('mpg'.$modalidade->id) == null && $modalidade->mpg == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="mpgEdit" name="mpg{{$modalidade->id}}" @if(old('mpg'.$modalidade->id) == "1") checked @elseif (old('mpg'.$modalidade->id) == null && $modalidade->mpg == true) checked @endif>
                                                         <label class="form-check-label" for="mpgEdit">
                                                             .mpg
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="mpegEdit" name="mpeg{{$modalidade->id}}" @if(old('mpeg'.$modalidade->id) == "1") checked @elseif (old('mpeg'.$modalidade->id) == null && $modalidade->mpeg == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="mpegEdit" name="mpeg{{$modalidade->id}}" @if(old('mpeg'.$modalidade->id) == "1") checked @elseif (old('mpeg'.$modalidade->id) == null && $modalidade->mpeg == true) checked @endif>
                                                         <label class="form-check-label" for="mpegEdit">
                                                             .mpeg
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="mkvEdit" name="mkv{{$modalidade->id}}" @if(old('mkv'.$modalidade->id) == "1") checked @elseif (old('mkv'.$modalidade->id) == null && $modalidade->mkv == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="mkvEdit" name="mkv{{$modalidade->id}}" @if(old('mkv'.$modalidade->id) == "1") checked @elseif (old('mkv'.$modalidade->id) == null && $modalidade->mkv == true) checked @endif>
                                                         <label class="form-check-label" for="mkvEdit">
                                                             .mkv
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="aviEdit" name="avi{{$modalidade->id}}" @if(old('avi'.$modalidade->id) == "1") checked @elseif (old('avi'.$modalidade->id) == null && $modalidade->avi == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="aviEdit" name="avi{{$modalidade->id}}" @if(old('avi'.$modalidade->id) == "1") checked @elseif (old('avi'.$modalidade->id) == null && $modalidade->avi == true) checked @endif>
                                                         <label class="form-check-label" for="aviEdit">
                                                             .avi
                                                         </label>
@@ -550,25 +550,25 @@
                                                 </div>
                                                 <div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="jpgEdit" name="jpg{{$modalidade->id}}" @if(old('jpg'.$modalidade->id) == "1") checked @elseif (old('jpg'.$modalidade->id) == null && $modalidade->jpg == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="jpgEdit" name="jpg{{$modalidade->id}}" @if(old('jpg'.$modalidade->id) == "1") checked @elseif (old('jpg'.$modalidade->id) == null && $modalidade->jpg == true) checked @endif>
                                                         <label class="form-check-label" for="jpgEdit">
                                                             .jpg
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="jpegEdit" name="jpeg{{$modalidade->id}}" @if(old('jpeg'.$modalidade->id) == "1") checked @elseif (old('jpeg'.$modalidade->id) == null && $modalidade->jpeg == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="jpegEdit" name="jpeg{{$modalidade->id}}" @if(old('jpeg'.$modalidade->id) == "1") checked @elseif (old('jpeg'.$modalidade->id) == null && $modalidade->jpeg == true) checked @endif>
                                                         <label class="form-check-label" for="jpegEdit">
                                                             .jpeg
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="pngEdit" name="png{{$modalidade->id}}" @if(old('png'.$modalidade->id) == "1") checked @elseif (old('png'.$modalidade->id) == null && $modalidade->png == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="pngEdit" name="png{{$modalidade->id}}" @if(old('png'.$modalidade->id) == "1") checked @elseif (old('png'.$modalidade->id) == null && $modalidade->png == true) checked @endif>
                                                         <label class="form-check-label" for="pngEdit">
                                                             .png
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="svgEdit" name="svg{{$modalidade->id}}" @if(old('svg'.$modalidade->id) == "1") checked @elseif (old('svg'.$modalidade->id) == null && $modalidade->svg == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" id="svgEdit" name="svg{{$modalidade->id}}" @if(old('svg'.$modalidade->id) == "1") checked @elseif (old('svg'.$modalidade->id) == null && $modalidade->svg == true) checked @endif>
                                                         <label class="form-check-label" for="svgEdit">
                                                             .svg
                                                         </label>
@@ -579,7 +579,7 @@
                                         <div class="row mt-2">
                                             <div class="col-sm-12">
                                                 <div class="form-check">
-                                                    <input class="form-check-input apresentacao" type="checkbox" name="apresentacao" id="apresentacao" @if(old('apresentacao') == true || $modalidade->apresentacao) checked @endif>
+                                                    <input class="form-check-input apresentacao" type="checkbox" value="1" name="apresentacao" id="apresentacao" @if(old('apresentacao') == true || $modalidade->apresentacao) checked @endif>
                                                     <label class="form-check-label font-weight-bold" for="apresentacao">
                                                         {{ __('Habilitar escolha da forma de apresentação do trabalho:') }}
                                                     </label>
@@ -596,25 +596,25 @@
                                                 <label class="col-form-label font-weight-bold">{{ __('Selecione a(s) forma(s) de apresentação do trabalho que poderá(ão) ser escolhida(s) pelo(a) autor(a) ') }} <span style="color: red">{{ __('(não obrigatório)')}}</span>:</label>
 
                                                 <div class="form-check" style="margin-top: 10px">
-                                                    <input class="form-check-input" type="checkbox" name="remoto" @if(old('remoto') || ! is_null($modalidade->tiposApresentacao()->where('tipo', "Remoto")->first())) checked @endif>
+                                                    <input class="form-check-input" type="checkbox" value="1" name="remoto" @if(old('remoto') || ! is_null($modalidade->tiposApresentacao()->where('tipo', "Remoto")->first())) checked @endif>
                                                     <label class="form-check-label" for="remoto">
                                                         Remoto
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="presencial" @if(old('presencial') || ! is_null($modalidade->tiposApresentacao()->where('tipo', "Presencial")->first())) checked @endif>
+                                                    <input class="form-check-input" type="checkbox" value="1" name="presencial" @if(old('presencial') || ! is_null($modalidade->tiposApresentacao()->where('tipo', "Presencial")->first())) checked @endif>
                                                     <label class="form-check-label" for="presencial">
                                                         Presencial
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="a_distancia" @if(old('a_distancia') || ! is_null($modalidade->tiposApresentacao()->where('tipo', "À distância")->first())) checked @endif>
+                                                    <input class="form-check-input" type="checkbox" value="1" name="a_distancia" @if(old('a_distancia') || ! is_null($modalidade->tiposApresentacao()->where('tipo', "À distância")->first())) checked @endif>
                                                     <label class="form-check-label" for="a_distancia">
                                                         À distância
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="semipresencial" @if(old('semipresencial') || ! is_null($modalidade->tiposApresentacao()->where('tipo', "Semipresencial")->first())) checked @endif>
+                                                    <input class="form-check-input" type="checkbox" value="1" name="semipresencial" @if(old('semipresencial') || ! is_null($modalidade->tiposApresentacao()->where('tipo', "Semipresencial")->first())) checked @endif>
                                                     <label class="form-check-label" for="semipresencial">
                                                         Semipresencial
                                                     </label>
@@ -627,7 +627,7 @@
                                                 <label for="arquivoModelos" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarapresentacao}}:</label> @if ($modalidade->modelo_apresentacao != null) <a href="{{route('modalidade.modelos.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
                                                 @if ($modalidade->modelo_apresentacao)
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="deleteapresentacao" id="deleteapresentacao{{$modalidade->id}}" @if(old('deleteapresentacao') == "1") checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" name="deleteapresentacao" id="deleteapresentacao{{$modalidade->id}}" @if(old('deleteapresentacao') == "1") checked @endif>
                                                         <label class="form-check-label" for="deleteapresentacao{{$modalidade->id}}">
                                                             Excluir arquivo enviado
                                                         </label>
@@ -654,7 +654,7 @@
                                                 <label for="arquivoRegras" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarregra}}:</label> @if ($modalidade->regra != null) <a href="{{route('modalidade.regras.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
                                                 @if ($modalidade->regra)
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="deleteregra" id="deleteregra{{$modalidade->id}}" @if(old('deleteregra') == "1") checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" name="deleteregra" id="deleteregra{{$modalidade->id}}" @if(old('deleteregra') == "1") checked @endif>
                                                         <label class="form-check-label" for="deleteregra{{$modalidade->id}}">
                                                             Excluir arquivo enviado
                                                         </label>
@@ -681,7 +681,7 @@
                                                 <label for="nomeTrabalho" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixartemplate}}:</label> @if ($modalidade->template != null) <a href="{{route('modalidade.template.download', ['id' => $modalidade->id])}}">Arquivo atual</a> @endif
                                                 @if ($modalidade->template)
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="deletetemplate" id="deletetemplate{{$modalidade->id}}" @if(old('deletetemplate') == "1") checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" name="deletetemplate" id="deletetemplate{{$modalidade->id}}" @if(old('deletetemplate') == "1") checked @endif>
                                                         <label class="form-check-label" for="deletetemplate{{$modalidade->id}}">
                                                             Excluir arquivo enviado
                                                         </label>
@@ -707,7 +707,7 @@
                                                 <label for="arquivoInstrucoes" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarinstrucoes}}:</label> @if ($modalidade->instrucoes != null) <a href="{{route('modalidade.instrucoes.download', ['modalidade' => $modalidade->id])}}">Arquivo atual</a> @endif
                                                 @if ($modalidade->instrucoes)
                                                     <div class="form-check mb-2">
-                                                        <input class="form-check-input" type="checkbox" name="deleteinstrucoes" id="deleteinstrucoes{{$modalidade->id}}" @if(old('deleteinstrucoes') == "1") checked @endif>
+                                                        <input class="form-check-input" type="checkbox" value="1" name="deleteinstrucoes" id="deleteinstrucoes{{$modalidade->id}}" @if(old('deleteinstrucoes') == "1") checked @endif>
                                                         <label class="form-check-label" for="deleteinstrucoes{{$modalidade->id}}">
                                                             Excluir arquivo enviado
                                                         </label>
