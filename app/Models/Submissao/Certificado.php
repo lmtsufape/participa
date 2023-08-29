@@ -15,6 +15,7 @@ class Certificado extends Model
 
     protected $casts = [
         'mostrar_assinaturas' => 'boolean',
+        'data' => 'date',
     ];
 
     public const TIPO_ENUM = [
