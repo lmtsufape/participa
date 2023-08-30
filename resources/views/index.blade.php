@@ -9,7 +9,7 @@
 
         <div class="container-fluid">
             <h1 class="text-white mt-5 mb-5 text-center">
-                Proximos Eventos
+                Proximos Eventos 
             </h1>
             <div id="carousel-primary"
                 class="carousel slide box-carrousel-primary d-flex align-items-center justify-content-center "
@@ -193,7 +193,7 @@
                     </div>
 
                     <div class="modal-body">
-                        {{ $ProximoEvento->descricao }}
+                        {!! $ProximoEvento->descricao !!}
 
                     </div>
                 </div>
@@ -217,7 +217,7 @@
                     </div>
 
                     <div class="modal-body">
-                        {{ $eventoPassado->descricao }}
+                        {!! $eventoPassado->descricao !!}
 
                     </div>
                 </div>
