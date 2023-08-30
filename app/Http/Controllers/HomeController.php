@@ -28,6 +28,7 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $eventos = collect();
+
         if ($user->administradors()->exists()) {
             $eventos = $eventos->concat(Evento::all());
 
@@ -44,6 +45,7 @@ class HomeController extends Controller
 
         $eventos = $eventos->unique('id');
 
+        
         return view('coordenador.index', ['eventos' => $eventos]);
     }
 
@@ -65,7 +67,9 @@ class HomeController extends Controller
         $eventosPassados = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '<', today()]])->whereNull('evento_pai_id')->get();
 
         $tiposEvento = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->selectRaw('DISTINCT tipo')->get();
+        
 
-        return view('index', ['eventos' => $eventos, 'tipos' => $tiposEvento, 'proximosEventos' => $proximosEventos, 'eventosPassados' => $eventosPassados]);
+        
+        return view('index',compact('eventos','tiposEvento','proximosEventos','eventosPassados'));
     }
 }
