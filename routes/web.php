@@ -50,6 +50,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/index', [HomeController::class, 'index'])->name('index');
+
 Route::view('/termos-de-uso', 'termosdeuso')->name('termos.de.uso');
 Route::get('/evento/busca', [EventoController::class, 'buscaLivre'])->name('busca.eventos');
 Route::get('/evento/buscar-livre', [EventoController::class, 'buscaLivreAjax'])->name('busca.livre.ajax');
