@@ -226,7 +226,7 @@
                             </a>
                             <a href="{{ route('inscricao.inscritos', $evento) }}">
                                 <li>
-                                    <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listas inscritos</h5>
+                                    <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Inscritos</h5>
                                 </li>
                             </a>
                         </div>

@@ -359,7 +359,9 @@ class ModalidadeController extends Controller
         // dd($request->file('arquivoRegras'.$request->modalidadeEditId));
         if ($request->file('arquivoRegras'.$request->modalidadeEditId) != null) {
             $path = $modalidadeEdit->regra;
-            Storage::delete($path);
+            if ($path  && Storage::exists($path)) {
+                Storage::delete($path);
+            }
 
             $fileRegras = $request->file('arquivoRegras'.$request->modalidadeEditId);
 
@@ -375,7 +377,7 @@ class ModalidadeController extends Controller
 
         if ($request->input('deleteregra') != null) {
             $path = $modalidadeEdit->regra;
-            if (Storage::disk()->exists($modalidadeEdit->regra)) {
+            if ($path  && Storage::exists($path)) {
                 Storage::delete($path);
             }
             $modalidadeEdit->regra = null;
@@ -383,7 +385,7 @@ class ModalidadeController extends Controller
 
         if ($request->file('arquivoInstrucoes'.$request->modalidadeEditId) != null) {
             $path = $modalidadeEdit->instrucoes;
-            if (Storage::disk()->exists($path)) {
+            if ($path  && Storage::exists($path)) {
                 Storage::delete($path);
             }
 
@@ -393,7 +395,7 @@ class ModalidadeController extends Controller
 
         if ($request->input('deleteinstrucoes') != null) {
             $path = $modalidadeEdit->instrucoes;
-            if (Storage::disk()->exists($path)) {
+            if ($path  && Storage::exists($path)) {
                 Storage::delete($path);
             }
             $modalidadeEdit->instrucoes = null;
@@ -402,7 +404,9 @@ class ModalidadeController extends Controller
 
         if ($request->file('arquivoTemplates'.$request->modalidadeEditId)) {
             $path = $modalidadeEdit->template;
-            Storage::delete($path);
+            if ($path  && Storage::exists($path)) {
+                Storage::delete($path);
+            }
 
             $fileTemplates = $request->file('arquivoTemplates'.$request->modalidadeEditId);
             $pathTemplates = 'templates/'.$modalidadeEdit->nome.'/';
@@ -417,7 +421,7 @@ class ModalidadeController extends Controller
 
         if ($request->input('deletetemplate') != null) {
             $path = $modalidadeEdit->template;
-            if (Storage::disk()->exists($modalidadeEdit->template)) {
+            if ($path  && Storage::exists($path)) {
                 Storage::delete($path);
             }
             $modalidadeEdit->template = null;
@@ -425,7 +429,9 @@ class ModalidadeController extends Controller
 
         if ($request->file('arquivoModelos'.$request->modalidadeEditId)) {
             $path = $modalidadeEdit->modelo_apresentacao;
-            Storage::delete($path);
+            if ($path  && Storage::exists($path)) {
+                Storage::delete($path);
+            }
 
             $fileModelos = $request->file('arquivoModelos'.$request->modalidadeEditId);
             $pathModelos = 'modelos/'.$modalidadeEdit->nome.'/';
@@ -440,7 +446,7 @@ class ModalidadeController extends Controller
 
         if ($request->input('deleteapresentacao') != null) {
             $path = $modalidadeEdit->modelo_apresentacao;
-            if (Storage::disk()->exists($modalidadeEdit->modelo_apresentacao)) {
+            if ($path  && Storage::exists($path)) {
                 Storage::delete($path);
             }
             $modalidadeEdit->modelo_apresentacao = null;

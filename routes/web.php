@@ -198,6 +198,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('palestrantes/listarPalestrantes', [PalestranteController::class, 'index'])->name('palestrantes.index');
             Route::get('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'create'])->name('palestrantes.create');
             Route::post('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'store'])->name('palestrantes.store');
+            Route::post('palestrantes/exportar/{evento}', [PalestranteController::class, 'exportar'])->name('palestrantes.exportar');
             Route::put('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'update'])->name('palestrantes.update');
             Route::delete('palestrantes/{palestra}/deletePalestra', [PalestranteController::class, 'destroy'])->name('palestrantes.destroy');
             //Assinaturas

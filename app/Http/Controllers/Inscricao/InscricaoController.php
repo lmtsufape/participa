@@ -382,7 +382,7 @@ class InscricaoController extends Controller
                     $regras['text-'.$campo->id] = $campo->obrigatorio ? 'required|string' : 'nullable|string';
                     break;
                 case 'file':
-                    $regras['file-'.$campo->id] = $campo->obrigatorio ? 'required|file|mimes:pdf|max:2000' : 'nullable|file|mimes:pdf|max:2000';
+                    $regras['file-'.$campo->id] = $campo->obrigatorio ? 'required|file|max:2000' : 'nullable|file|max:2000';
                     break;
                 case 'date':
                     $regras['date-'.$campo->id] = $campo->obrigatorio ? 'required|date' : 'nullable|date';
