@@ -137,11 +137,10 @@
                                     <div class="carrousel-item-box-descricao">
                                         <div class="box-descricao">
                                             @if (strlen($eventoPassado->descricao) > 621)
-
                                                 <div class="text-limit">
                                                     {!! $eventoPassado->descricao !!}
                                                 </div>
-                                              
+
                                                 <br>
 
                                                 <a class="link-modal" data-toggle="modal"
@@ -158,27 +157,31 @@
 
                         @endforeach
                     @endif
+
+
+                    <!--botoes do slide eventos passados -->
+                    @if (count($eventosPassados) > 1)
+                        <a class="carousel-control-prev" href="#carouselEventosPassados" role="button" data-slide="prev">
+
+                            <span class="button-carrousel d-flex align-items-center justify-content-center">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </span>
+
+                        </a>
+
+                        <a class="carousel-control-next" href="#carouselEventosPassados" role="button" data-slide="next">
+                            <span class="button-carrousel d-flex align-items-center justify-content-center">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </span>
+                        </a>
+                    @endif
+
                 </div>
             </div>
 
-            <!--botoes do slide eventos passados -->
-            @if (count($eventosPassados) > 1)
-                <a class="carousel-control-prev" href="#carouselEventosPassados" role="button" data-slide="prev">
 
-                    <span class="button-carrousel d-flex align-items-center justify-content-center">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </span>
-
-                </a>
-
-                <a class="carousel-control-next" href="#carouselEventosPassados" role="button" data-slide="next">
-                    <span class="button-carrousel d-flex align-items-center justify-content-center">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </span>
-                </a>
-            @endif
         </div>
 
     </section>
