@@ -9,7 +9,7 @@
 
         <div class="container-fluid">
             <h1 class="text-white mt-5 mb-5 text-center">
-                Proximos Eventos 
+                Proximos Eventos
             </h1>
             <div id="carousel-primary"
                 class="carousel slide box-carrousel-primary d-flex align-items-center justify-content-center "
@@ -23,7 +23,7 @@
 
                             <div class="carousel-item  @if ($i == 0) active @endif shadow-lg w-100">
 
-                                <div class="carrousel-item-box">
+                                <div class="carrousel-item-box-image">
 
                                     @if ($ProximoEvento->fotoEvento != null)
                                         <img src="{{ asset('storage/' . $ProximoEvento->fotoEvento) }}" alt="imagem evento"
@@ -36,29 +36,31 @@
                                 </div>
 
                                 <div
-                                    class="carrousel-item-box d-flex align-items-center justify-content-center flex-column">
+                                    class="carrousel-item-box-content d-flex align-items-center justify-content-center flex-column">
 
                                     <div
                                         class="titulo-evento carrousel-item-box-titulo d-flex align-items-center justify-content-center">
 
                                         <a href="{{ route('evento.visualizar', ['id' => $ProximoEvento->id]) }}">
-                                            {{ mb_strimwidth($ProximoEvento->nome, 0, 54, '...') }}
+                                            {{ $ProximoEvento->nome }}
                                         </a>
                                     </div>
 
                                     <div class="carrousel-item-box-descricao">
                                         <div class="box-descricao">
                                             @if (strlen($ProximoEvento->descricao) > 621)
-                                                {{ mb_strimwidth(strip_tags(html_entity_decode($ProximoEvento->descricao, ENT_QUOTES)), 0, 621, '...') }}
-                                                <br>
+                                                <div class="text-limit">
+                                                    {!! $ProximoEvento->descricao !!}
+                                                </div>
 
+                                                <br>
 
                                                 <a class="link-modal" data-toggle="modal"
                                                     data-target="#modal{{ $ProximoEvento->id }}">
                                                     Saiba mais
                                                 </a>
                                             @else
-                                                {{ $ProximoEvento->descricao }}
+                                                {!! $ProximoEvento->descricao !!}
                                             @endif
                                         </div>
                                     </div>
@@ -89,69 +91,74 @@
             </div>
         </div>
 
-
-        <!--carrousel eventos passados -->
-        <h1 class="text-white mt-5 mb-5">
-            Eventos Passados
-        </h1>
-
-        <div id="carouselEventosPassados"
-            class="carousel mb-3 slide box-carrousel-primary d-flex align-items-center justify-content-center "
-            data-ride="carousel">
-
-            <div class="carousel-inner  carrousel-container-cards d-flex align-items-center justify-content-start">
+        <div class="container-fluid">
 
 
+            <!--carrousel eventos passados -->
+            <h1 class="text-white mt-5 mb-5 text-center">
+                Eventos Passados
+            </h1>
+
+            <div id="carouselEventosPassados"
+                class="carousel mb-3 slide box-carrousel-primary d-flex align-items-center justify-content-center "
+                data-ride="carousel">
+
+                <div class="carousel-inner  carrousel-container-cards d-flex align-items-center justify-content-start">
 
 
-                @if (count($eventosPassados) > 0)
-                    @forelse ($eventosPassados as $i => $eventoPassado)
+                    @if (count($eventosPassados) > 0)
+                        @forelse ($eventosPassados as $i => $eventoPassado)
 
-                        <div class="carousel-item  @if ($i == 0) active @endif shadow-lg w-100">
+                            <div class="carousel-item  @if ($i == 0) active @endif shadow-lg w-100">
 
-                            <div class="carrousel-item-box">
+                                <div class="carrousel-item-box-image">
 
-                                @if ($ProximoEvento->fotoEvento != null)
-                                    <img src="{{ asset('storage/' . $eventoPassado->fotoEvento) }}" alt="imagem evento"
-                                        width="100%" height="100%">
-                                @else
-                                    <img src="{{ asset('img/colorscheme.png') }}" alt="" width="100%"
-                                        height="100%">
-                                @endif
+                                    @if ($ProximoEvento->fotoEvento != null)
+                                        <img src="{{ asset('storage/' . $eventoPassado->fotoEvento) }}" alt="imagem evento"
+                                            width="100%" height="100%">
+                                    @else
+                                        <img src="{{ asset('img/colorscheme.png') }}" alt="" width="100%"
+                                            height="100%">
+                                    @endif
 
-                            </div>
-
-                            <div class="carrousel-item-box d-flex align-items-center justify-content-center flex-column">
-
-                                <div
-                                    class="titulo-evento carrousel-item-box-titulo d-flex align-items-center justify-content-center">
-
-                                    <a href="{{ route('evento.visualizar', ['id' => $eventoPassado->id]) }}">
-                                        {{ mb_strimwidth($eventoPassado->nome, 0, 54, '...') }}
-                                    </a>
                                 </div>
 
-                                <div class="carrousel-item-box-descricao">
-                                    <div class="box-descricao">
-                                        @if (strlen($eventoPassado->descricao) > 621)
-                                            {{ mb_strimwidth(strip_tags(html_entity_decode($eventoPassado->descricao, ENT_QUOTES)), 0, 621, '...') }}
-                                            <br>
+                                <div
+                                    class="carrousel-item-box-content d-flex align-items-center justify-content-center flex-column">
 
+                                    <div
+                                        class="titulo-evento carrousel-item-box-titulo d-flex align-items-center justify-content-center">
 
-                                            <a class="link-modal" data-toggle="modal"
-                                                data-target="#modal{{ $eventoPassado->id }}">
-                                                Saiba mais
-                                            </a>
-                                        @else
-                                            {{ $eventoPassado->descricao }}
-                                        @endif
+                                        <a href="{{ route('evento.visualizar', ['id' => $eventoPassado->id]) }}">
+                                            {{ $eventoPassado->nome }}
+                                        </a>
+                                    </div>
+
+                                    <div class="carrousel-item-box-descricao">
+                                        <div class="box-descricao">
+                                            @if (strlen($eventoPassado->descricao) > 621)
+
+                                                <div class="text-limit">
+                                                    {!! $eventoPassado->descricao !!}
+                                                </div>
+                                              
+                                                <br>
+
+                                                <a class="link-modal" data-toggle="modal"
+                                                    data-target="#modal{{ $eventoPassado->id }}">
+                                                    Saiba mais
+                                                </a>
+                                            @else
+                                                {!! $eventoPassado->descricao !!}
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                    @endforeach
-                @endif
+                        @endforeach
+                    @endif
+                </div>
             </div>
 
             <!--botoes do slide eventos passados -->

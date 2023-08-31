@@ -1,17 +1,14 @@
-*{
+* {
     margin: 0;
     padding: 0;
 }
 
-a,a:hover{
+a,
+a:hover {
     color: inherit;
     cursor: pointer;
 }
 
-.teste{
-    background-color: red;
-    color: red;
-}
 .home-section {
     width: 102vw;
     height: max-content;
@@ -22,13 +19,13 @@ a,a:hover{
     margin: -7px 0 30px 0;
 }
 
-.box-carrousel-primary{
+.box-carrousel-primary {
     height: 65vh;
     margin: 10px 0 0 0;
-    
+
 }
 
-.carrousel-container-cards{
+.carrousel-container-cards {
     background-color: transparent;
     width: 1300px;
     height: 100%;
@@ -36,69 +33,161 @@ a,a:hover{
     padding: 0 110px;
 }
 
-.button-carrousel{
+.button-carrousel {
     border: 1px solid black;
     border-radius: 50%;
     width: 50px;
     height: 50px;
     background-color: white;
 }
-.carousel-item{
+
+.carousel-item {
     background-color: white;
     padding: 5px;
     border-radius: 15px;
     max-height: 440px;
     height: 98%;
 }
-.carrousel-item-box{
+
+.carrousel-item-box-content,
+.carrousel-item-box-image {
     height: 100%;
     width: 50%;
-    
     float: left;
 }
 
-.carrousel-item-box-titulo{
+.carrousel-item-box-titulo {
     flex: 1;
-    height: max-content;
     width: 80%;
     max-width: 80%;
     text-align: center;
-    padding: 0 15px;
+    padding: 0 0px;
+
 }
-.carrousel-item-box-descricao{
+
+.carrousel-item-box-titulo a {
+    width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+
+}
+
+.carrousel-item-box-descricao {
     padding: 10px;
     max-width: 80%;
-    flex: 4;
+    flex: 5;
 
 }
-.box-descricao{
+
+.box-descricao {
     text-align: justify;
     line-height: 1.3;
-    color:#12583C;
+    color: #12583C;
     height: 100%;
+
 }
 
-.titulo-evento{
+.text-limit {
+    height: max-content;
+    display: -webkit-box;
+    -webkit-line-clamp: 13;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+}
+
+.titulo-evento {
     font-size: 25px;
     line-height: 1.2;
-    color:#12583C; 
-    font-weight:600;
+    color: #12583C;
+    font-weight: 600;
     padding: 20px 0;
+
 }
 
 
 /*Modal padrao*/
 
-.modal-header{
+.modal-header {
     color: white;
     background-color: #114048ff;
     padding-left: 30px;
     padding-right: 30px;
 }
-.modal-body{
+
+.modal-body {
     padding: 20px 30px;
     text-align: justify;
 }
-.close,.close:hover{
+
+.close,
+.close:hover {
     color: white;
+}
+
+/*Responsividade view home*/
+
+@media (width < 768px) {
+
+    .home-section{
+    
+        padding-bottom: 7vh;
+    }
+
+    .carrousel-container-cards {
+        height: max-content;
+        max-height: max-content;
+    }
+
+    .carousel-item {
+        background-color: white;
+        padding: 5px;
+        border-radius: 15px;
+        max-height: 470px;
+    }
+
+
+    .carrousel-item-box-image,
+    .carrousel-item-box-content {
+        float: inline-start;
+        width: 100%;
+    }
+
+    .carrousel-item-box-image {
+        height: 200px;
+    }
+
+    .carrousel-item-box-content {
+        height: 300px;
+    }
+
+    .text-limit {
+        -webkit-line-clamp: 6;
+    }
+
+    .carrousel-item-box-titulo {
+        max-width: 100%;
+        width: 100%;
+        flex: 1;
+        height: max-content;
+    }
+
+    .carrousel-item-box-titulo a {
+        -webkit-line-clamp: 1;
+    }
+    .carrousel-item-box-descricao {
+        flex: 10;
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+@media (width < 576px){
+
+
+    .carrousel-container-cards{
+        padding: 0 50px;
+    }
 }
