@@ -49,6 +49,7 @@ class CategoriaController extends Controller
         $categoria->nome = $validateData['nome'];
         $categoria->valor_total = $validateData['valor_total'];
         $categoria->permite_submissao = $request->boolean('permite_submissao');
+        $categoria->permite_inscricao = $request->boolean('permite_inscricao');
         $categoria->save();
         $categoria->camposNecessarios()->attach(CampoFormulario::all());
 
@@ -102,6 +103,7 @@ class CategoriaController extends Controller
         $categoria->nome = $request->input("nome_{$categoria->id}");
         $categoria->valor_total = $request->input("valor_total_{$categoria->id}");
         $categoria->permite_submissao = $request->boolean('permite_submissao_'.$categoria->id);
+        $categoria->permite_inscricao = $request->boolean('permite_inscricao_'.$categoria->id);
         $categoria->update();
 
         if ($request->input('tipo_valor_'.$categoria->id) != null) {

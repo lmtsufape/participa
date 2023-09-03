@@ -108,6 +108,20 @@
                                                                     @enderror
                                                                 </div>
                                                             </div>
+                                                            <div class="form-group">
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input class="form-check-input @error('permite_inscricao') is-invalid @enderror" type="checkbox" name="permite_inscricao" checked value="1">
+                                                                        Permitir inscrição
+                                                                    </label>
+                                                                    @error('permite_inscricao')
+                                                                        <span class="invalid-feedback"
+                                                                            role="alert">
+                                                                            <strong>{{ $message }}</strong>
+                                                                        </span>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
                                                             </p>
                                                         </form>
                                                     </div>
@@ -135,6 +149,7 @@
                                         <th scope="col">Nome</th>
                                         <th scope="col">Valor</th>
                                         <th scope="col">Permite submissão</th>
+                                        <th scope="col">Permite inscrição</th>
                                         <th scope="col"
                                             style="text-align:center">Editar</th>
                                         <th scope="col"
@@ -147,6 +162,7 @@
                                             <td>{{ $categoria->nome }}</td>
                                             <td>{{ $categoria->valor_total }}</td>
                                             <td>{{ $categoria->permite_submissao ? "Sim" : "Não" }}</td>
+                                            <td>{{ $categoria->permite_inscricao ? "Sim" : "Não" }}</td>
                                             <td style="text-align:center">
                                                 <a href="#"
                                                     data-toggle="modal"
@@ -251,6 +267,20 @@
                                         Permitir submissao de trabalhos
                                     </label>
                                     @error('permite_submissao')
+                                        <span class="invalid-feedback"
+                                            role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input @error('permite_inscricao') is-invalid @enderror" type="checkbox" name="permite_inscricao_{{ $categoria->id }}" @checked(old('permite_inscricao_'.$categoria->id, $categoria->permite_inscricao)) value="1">
+                                        Permitir inscrição
+                                    </label>
+                                    @error('permite_inscricao')
                                         <span class="invalid-feedback"
                                             role="alert">
                                             <strong>{{ $message }}</strong>
