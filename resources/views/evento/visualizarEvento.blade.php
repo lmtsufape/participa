@@ -181,7 +181,7 @@
                 <form action="{{ route('inscricao.inscrever', ['evento_id' => $evento->id]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
-                        @if ($evento->categoriasParticipantes()->exists())
+                        @if ($evento->categoriasParticipantes()->where('permite_inscricao', true)->exists())
                             <div id="formulario" x-data="{ categoria: 0 }">
                                 @include('componentes.mensagens')
                                 <div class="row form-group">
@@ -189,7 +189,7 @@
                                         <label for="categoria">Escolha sua categoria como participante</label>
                                         <select x-model="categoria" name="categoria" id="categoria" class="form-control">
                                             <option value="0" disabled>-- Escolha sua categoria --</option>
-                                            @foreach ($evento->categoriasParticipantes as $categoria)
+                                            @foreach ($evento->categoriasParticipantes()->where('permite_inscricao', true)->get() as $categoria)
                                                 <option value="{{$categoria->id}}" @if (old('categoria') == $categoria->id) selected @endif>{{$categoria->nome}}</option>
                                             @endforeach
                                         </select>

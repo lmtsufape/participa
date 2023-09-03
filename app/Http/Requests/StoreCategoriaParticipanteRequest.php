@@ -31,6 +31,7 @@ class StoreCategoriaParticipanteRequest extends FormRequest
             'inícioDesconto.*' => 'required_with:tipo_valor.*|date',
             'fimDesconto.*' => 'required_with:tipo_valor.*|date|after:inícioDesconto.*',
             'permite_submissao' => 'boolean',
+            'permite_inscricao' => 'boolean',
         ];
     }
 
@@ -55,7 +56,8 @@ class StoreCategoriaParticipanteRequest extends FormRequest
     {
         return [
             'valorDesconto.*' => 'O valor',
-            'permite_submissao' => 'permite submissão'
+            'permite_submissao' => 'permite submissão',
+            'permite_inscricao' => 'permite inscrição',
         ];
     }
 
@@ -68,6 +70,7 @@ class StoreCategoriaParticipanteRequest extends FormRequest
     {
         $this->merge([
             'permite_submissao' => $this->has('permite_submissao'),
+            'permite_inscricao' => $this->has('permite_inscricao'),
         ]);
     }
 }
