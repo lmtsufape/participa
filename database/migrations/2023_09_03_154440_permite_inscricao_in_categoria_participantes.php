@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('categoria_participantes', function (Blueprint $table) {
-            $table->boolean('permite_inscricao')->default(false);
+            $table->boolean('permite_inscricao')->default(true);
         });
     }
 
