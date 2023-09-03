@@ -23,6 +23,10 @@
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+
+        <!--CSS DINAMICO-->
+        @yield('css')
+
     </head>
     <body>
         @include('navbar')
@@ -36,6 +40,7 @@
         </main>
 
         @hasSection('sidebar')
+        
         @else
             @include('componentes.footer')
         @endif
