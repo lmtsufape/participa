@@ -156,7 +156,7 @@ class Evento extends Model
 
     public function camposFormulario()
     {
-        return $this->hasMany('App\Models\Inscricao\CampoFormulario', 'evento_id')->orderBy('created_at')->distinct();
+        return $this->hasMany('App\Models\Inscricao\CampoFormulario', 'evento_id')->orderBy('created_at');
     }
 
     public function possuiFormularioDeInscricao()

@@ -200,7 +200,7 @@
                                         <template x-if="categoria == id">
                                             <div class="campos-extras" id="campos-extras-{{$categoria->id}}">
                                                 <div class="row form-group">
-                                                    @foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo)
+                                                    @foreach ($categoria->camposNecessarios()->distinct()->orderBy('tipo')->get() as $campo)
                                                         @if($campo->tipo == "endereco")
                                                             <div class="col-sm-12" style="margin-top: 10px; margin-bottom: 10px;">
                                                                 <div class="row">
