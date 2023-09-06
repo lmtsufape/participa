@@ -77,13 +77,6 @@ class InscricaoController extends Controller
     public function create($id)
     {
         $evento = Evento::find($id);
-        $inscricoes = auth()->user()->inscricao()->where([['evento_id', '=', $evento->id], ['finalizada', '=', false]])->get();
-
-        foreach ($inscricoes as $inscricao) {
-            if ($inscricao != null) {
-                $this->destroy($inscricao->id);
-            }
-        }
 
         return view('evento.nova_inscricao', ['evento' => $evento,
             'eventoVoltar' => null,
@@ -328,18 +321,25 @@ class InscricaoController extends Controller
             }
         }
         $inscricao = new Inscricao();
+        $inscricao->categoria_participante_id = $request->categoria;
         $inscricao->user_id = auth()->user()->id;
         $inscricao->evento_id = $request->evento_id;
-        $inscricao->finalizada = !$evento->formEvento->modvalidarinscricao;
-        $inscricao->save();
 
-        auth()->user()->notify(new InscricaoEvento($evento));
+        if ($categoria != null && $categoria->valor_total != 0) {
+            $inscricao->finalizada = false;
+            $inscricao->save();
 
-        if ($possuiFormulario) {
-            $this->salvarCamposExtras($inscricao, $request, $categoria);
+            return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $request->evento_id]);
+        } else {
+            $inscricao->finalizada = !$evento->formEvento->modvalidarinscricao;
+            $inscricao->save();
+            auth()->user()->notify(new InscricaoEvento($evento));
+            if ($possuiFormulario) {
+                $this->salvarCamposExtras($inscricao, $request, $categoria);
+            }
+
+            return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição realizada com sucesso');
         }
-
-        return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição realizada com sucesso');
     }
 
     public function voltarTela(Request $request, $id)
@@ -434,7 +434,7 @@ class InscricaoController extends Controller
                         Storage::delete($campoSalvo->pivot->valor);
                     }
 
-                    $path = Storage::putFileAs('public/eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.pdf');
+                    $path = Storage::putFileAs('eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.pdf');
 
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $path]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {
@@ -464,7 +464,7 @@ class InscricaoController extends Controller
                 } elseif ($campo->tipo == 'text' && $request->input('text-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('text-'.$campo->id)]);
                 } elseif ($campo->tipo == 'file' && $request->file('file-'.$campo->id) != null) {
-                    $path = Storage::putFileAs('public/eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.pdf');
+                    $path = Storage::putFileAs('eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.pdf');
 
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $path]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {
@@ -491,12 +491,15 @@ class InscricaoController extends Controller
 
     public function downloadFileCampoExtra($idInscricao, $idCampo)
     {
-        $inscricao = Inscricao::find($idInscricao);
-        $caminho = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $idCampo)->first()->pivot->valor;
-        if (Storage::disk()->exists($caminho)) {
-            return Storage::download($caminho);
-        }
+        $inscricao = Inscricao::findOrFail($idInscricao);
+        if (auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $inscricao->evento) || auth()->user()->administradors()->exists()) {
+            $caminho = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $idCampo)->first()->pivot->valor;
+            if (Storage::disk()->exists($caminho)) {
+                return Storage::download($caminho);
+            }
 
-        return abort(404);
+            return abort(404);
+        }
+        return abort(403);
     }
 }

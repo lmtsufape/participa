@@ -40,7 +40,6 @@ class ConviteRevisorNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->from('lmtsteste@gmail.com', 'Participa')
             ->line('The introduction to the notification.')
             ->action('Notification Action', url('/'))
             ->line('Thank you for using our application!');

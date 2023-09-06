@@ -6,6 +6,7 @@ use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
 use App\Notifications\recuperacaoSenha;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,6 +15,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.

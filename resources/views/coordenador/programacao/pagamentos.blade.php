@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Pagamentos</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Pagamentos realizados.</h6>
-					
+
 					<div class="container">
 						<div class="row">
 							<table class="table">
@@ -29,10 +29,10 @@
 									@foreach ($inscricaos as $inscricao)
 										<tr>
 										<th scope="row">{{ $inscricao->user->name }}</th>
-										<td>{{ $inscricao->pagamento->pagseguro_status }}</td>
-										<td>{{ $inscricao->pagamento->created_at }}</td>
-										<td>{{ $inscricao->pagamento->tipo_pagamento_id }}</td>
-										</tr>			  		
+										<td>{{ $inscricao->pagamento?->status }}</td>
+										<td>{{ $inscricao->pagamento?->created_at }}</td>
+										<td>{{ $inscricao->pagamento?->tipo_pagamento->descricao }}</td>
+										</tr>
 									@endforeach
 								</tbody>
 							</table>

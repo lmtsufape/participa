@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCategoriaParticipanteRequest;
+use App\Models\Inscricao\CampoFormulario;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Inscricao\ValorCategoria;
@@ -37,33 +39,19 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCategoriaParticipanteRequest $request)
     {
+        $validateData = $request->validated();
+
         $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-
-        $validateData = $request->validate(
-            [
-                'nome' => 'required',
-                'valor_total' => 'required|numeric|min:0',
-                'tipo_valor.*' => 'nullable',
-                'valorDesconto.*' => 'required_with:tipo_valor.*|numeric|min:0',
-                'inícioDesconto.*' => 'required_with:tipo_valor.*|date',
-                'fimDesconto.*' => 'required_with:tipo_valor.*|date|after:inícioDesconto.*',
-            ],
-            [
-                'valor_total.min' => 'Digite um valor positivo ou 0 para gratuito.',
-            ],
-            [
-                'valorDesconto.*' => 'O valor',
-            ]
-        );
-
         $categoria = new CategoriaParticipante();
         $categoria->evento_id = $evento->id;
         $categoria->nome = $validateData['nome'];
         $categoria->valor_total = $validateData['valor_total'];
+        $categoria->permite_submissao = $request->boolean('permite_submissao');
+        $categoria->permite_inscricao = $request->boolean('permite_inscricao');
         $categoria->save();
+        $categoria->camposNecessarios()->attach(CampoFormulario::all());
 
         if ($request->has('tipo_valor')) {
             foreach ($request->tipo_valor as $key => $tipo_valor) {
@@ -111,29 +99,11 @@ class CategoriaController extends Controller
     public function update(Request $request, $id)
     {
         $categoria = CategoriaParticipante::find($id);
-        $evento = $categoria->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-
-        $request->validate(
-            [
-                'editarCategoria' => 'required',
-                "nome_{$categoria->id}" => 'required',
-                "valor_total_{$categoria->id}" => 'required|numeric|min:0',
-                "tipo_valor_{$categoria->id}.*" => 'nullable',
-                "valorDesconto_{$categoria->id}.*" => "required_with:tipo_valor_{$categoria->id}.*|numeric|min:0",
-                "inícioDesconto_{$categoria->id}.*" => "required_with:tipo_valor_{$categoria->id}.*|date",
-                "fimDesconto_{$categoria->id}.*" => "required_with:tipo_valor_{$categoria->id}.*|date|after:inícioDesconto_{$categoria->id}.*",
-            ],
-            [
-                "valorDesconto_[{$categoria->id}].*" => 'Digite um valor positivo ou 0 para gratuito.',
-            ],
-            [
-                "valorDesconto_{$categoria->id}.*" => 'O valor',
-            ]
-        );
 
         $categoria->nome = $request->input("nome_{$categoria->id}");
         $categoria->valor_total = $request->input("valor_total_{$categoria->id}");
+        $categoria->permite_submissao = $request->boolean('permite_submissao_'.$categoria->id);
+        $categoria->permite_inscricao = $request->boolean('permite_inscricao_'.$categoria->id);
         $categoria->update();
 
         if ($request->input('tipo_valor_'.$categoria->id) != null) {

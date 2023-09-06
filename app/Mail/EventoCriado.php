@@ -16,6 +16,8 @@ class EventoCriado extends Mailable
 
     public $informacoes;
 
+    public $evento;
+
     /**
      * Create a new message instance.
      *
@@ -36,7 +38,7 @@ class EventoCriado extends Mailable
      */
     public function build()
     {
-        return $this->from('lmtsteste@gmail.com', 'Participa ')
+        return $this
             ->subject($this->subject)
             ->markdown('emails.emailEventoCriado')
             ->with([

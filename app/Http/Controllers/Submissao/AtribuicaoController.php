@@ -212,7 +212,7 @@ class AtribuicaoController extends Controller
         $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
         $revisor->save();
 
-        $subject = 'Sistema Participa - Atribuição como avaliador(a) e/ou parecerista';
+        $subject = config('app.name').' - Atribuição como avaliador(a) e/ou parecerista';
         $informacoes = $trabalho->titulo;
         //   Mail::to($revisor->user->email)
         //         ->send(new EmailLembrete($revisor->user, $subject, $informacoes));

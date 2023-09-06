@@ -1372,7 +1372,9 @@ class EventoController extends Controller
             $atividades = Atividade::where('eventoId', $id)->get();
             $dataInicial = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
 
-            $isInscrito = Inscricao::where('user_id', Auth()->user()->id)->where('evento_id', $evento->id)->count();
+            $qry = Inscricao::where('user_id', Auth()->user()->id)->where('evento_id', $evento->id);
+            $inscricao = $qry->first();
+            $isInscrito = $qry->count();
 
             // if($trabalhosCount != 0){
             //   $hasTrabalho = true;
@@ -1392,7 +1394,7 @@ class EventoController extends Controller
                 $dataInicial = '';
             }
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'dataInicial', 'isInscrito', 'subeventos', 'encerrada'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'dataInicial', 'isInscrito', 'inscricao', 'subeventos', 'encerrada'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;

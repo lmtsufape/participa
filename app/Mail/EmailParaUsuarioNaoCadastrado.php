@@ -48,15 +48,17 @@ class EmailParaUsuarioNaoCadastrado extends Mailable
      */
     public function build()
     {
-        return $this->from('lmtsteste@gmail.com', 'Participa ')
+        return $this
             ->subject('Ative sua conta')
-            ->markdown('emails.usuarioNaoCadastrado')->with([
-                        'user' => $this->nomeUsuarioPai,
-                        'evento' => $this->nomeEvento,
-                        'funcao' => $this->nomeFuncao,
-                        'senha' => $this->senhaTemporaria,
-                        'coord' => $this->coord,
-                    ]);
+            ->markdown('emails.usuarioNaoCadastrado')
+            ->with([
+                'user' => $this->nomeUsuarioPai,
+                'evento' => $this->nomeEvento,
+                'funcao' => $this->nomeFuncao,
+                'senha' => $this->senhaTemporaria,
+                'coord' => $this->coord,
+                'email' => $this->email,
+            ]);
 
         // return $this->view('emails.usuarioNaoCadastrado');
     }
