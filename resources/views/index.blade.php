@@ -113,7 +113,7 @@
 
                                 <div class="carrousel-item-box-image">
 
-                                    @if ($ProximoEvento->fotoEvento != null)
+                                    @if ($eventoPassado->fotoEvento != null)
                                         <img src="{{ asset('storage/' . $eventoPassado->fotoEvento) }}" alt="imagem evento"
                                             width="100%" height="100%">
                                     @else
