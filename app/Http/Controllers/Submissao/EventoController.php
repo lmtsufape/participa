@@ -1328,16 +1328,12 @@ class EventoController extends Controller
         if ($request->hasFile('icone')) {
             $file = $request->icone;
             $path = 'eventos/'.$evento->id;
-            $nome = 'icone.'.$request->file('icone')->getClientOriginalExtension();
-            Storage::disk('public')->putFileAs($path, $file, $nome);
-            $evento->save();
+            $extensao= $request->file('icone')->getClientOriginalExtension();
+            $nome = 'icone.'.$extensao;
+            $image = Image::make($file)->resize(600, 600)->encode();
+            Storage::disk('public')->put($path.'/'.$nome, $image);
 
-            $file = Image::make(Storage::disk('public')->get('eventos/'.$evento->id.'/'.$nome));
-            $file->resize(600, 600);
-            Storage::disk('public')->delete('eventos/'.$evento->id.'/'.$nome);
-            Storage::disk('public')->putFileAs($path, $file, $nome);
-
-            return 'eventos/'.$evento->id.'/'.$nome;
+            return $path.'/'.$nome;
         }
 
         return null;
@@ -1484,16 +1480,14 @@ class EventoController extends Controller
             }
             $file = $request->icone;
             $path = 'eventos/'.$evento->id;
-            $nome = 'icone.'.$request->file('icone')->getClientOriginalExtension();
-            Storage::disk('public')->putFileAs($path, $file, $nome);
-            $evento->icone = 'eventos/'.$evento->id.'/'.$nome;
+            $extensao = $request->file('icone')->getClientOriginalExtension();
+            $nome = 'icone.'.$extensao;
+            $evento->icone = $path.'/'.$nome;
 
             $evento->update();
 
-            $file = Image::make(Storage::disk('public')->get($evento->icone));
-            $file->resize(600, 600);
-            Storage::disk('public')->delete($evento->icone);
-            Storage::disk('public')->putFileAs($path, $file, $nome);
+            $image = Image::make($file)->resize(600, 600)->encode();
+            Storage::disk('public')->put($path.'/'.$nome, $image);
         }
 
         if ($request->dataLimiteInscricao != null) {
