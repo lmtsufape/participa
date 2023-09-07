@@ -113,15 +113,15 @@ class AssinaturaController extends Controller
             $validatedData = $request->validate([
                 'fotoAssinatura' => 'required|file|mimes:png,jpeg,jpg|max:2048',
             ]);
-            if (Storage::disk()->exists('public/'.$assinatura->caminho)) {
-                Storage::delete('storage/'.$assinatura->caminho);
+            if (Storage::disk('public')->exists($assinatura->caminho)) {
+                Storage::disk('public')->delete($assinatura->caminho);
             }
             $imagem = $request->fotoAssinatura;
 
             $path = 'assinaturas/'.$evento->id.'/';
             $nome = $imagem->getClientOriginalName();
             $nomeSemEspaco = str_replace(' ', '', $nome);
-            Storage::putFileAs('public/'.$path, $imagem, $nomeSemEspaco);
+            Storage::disk('public')->putFileAs($path, $imagem, $nomeSemEspaco);
             $assinatura->caminho = $path.$nomeSemEspaco;
         }
         $assinatura->update();
