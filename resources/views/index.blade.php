@@ -134,19 +134,14 @@
                                         </a>
                                     </div>
                                     <div class="card-content-desc">
-                                        @if (strlen($eventoPassado->descricao) > 621)
-                                            <div class="text-limit-card-slide">
-                                                {!! $eventoPassado->descricao !!}
-                                            </div>
-
-                                            <a class="link-modal" data-toggle="modal"
-                                                data-target="#modal{{ $eventoPassado->id }}">
-                                                Saiba mais
-                                            </a>
-                                        @else
+                                        <div class="text-limit-card-slide">
                                             {!! $eventoPassado->descricao !!}
-                                        @endif
+                                        </div>
 
+                                        <a class="link-modal" data-toggle="modal"
+                                            data-target="#modal{{ $eventoPassado->id }}">
+                                            Saiba mais
+                                        </a>
                                     </div>
                                 </div>
                             </div>
