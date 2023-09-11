@@ -148,16 +148,25 @@
                 @empty
                 @endforelse
             </div>
-            <div class="modal-footer">
-                @if ($evento->formEvento->modvalidarinscricao)
-                    <form action="{{route('coord.inscricoes.aprovar', ['inscricao' => $inscricao])}}" method="post">
+            <div class="modal-footer justify-content-between">
+                <div>
+                    <form action="{{route('inscricao.cancelar', ['inscricao' => $inscricao])}}" method="POST">
                         @csrf
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Aprovar inscrição</button>
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Cancelar inscrição</button>
                     </form>
-                @else
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                @endif
+                </div>
+                <div>
+                    @if ($evento->formEvento->modvalidarinscricao)
+                        <form action="{{route('coord.inscricoes.aprovar', ['inscricao' => $inscricao])}}" method="post">
+                            @csrf
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            <button type="submit" class="btn btn-primary">Aprovar inscrição</button>
+                        </form>
+                    @else
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
