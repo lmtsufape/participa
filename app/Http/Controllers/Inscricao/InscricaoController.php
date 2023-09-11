@@ -166,7 +166,19 @@ class InscricaoController extends Controller
             $campo->inscricoesFeitas()->detach($inscricao->id);
         }
 
+        if ($inscricao->pagamento()->exists()) {
+            $inscricao->pagamento->delete();
+        }
+
         $inscricao->delete();
+    }
+
+    public function cancelar(Inscricao $inscricao)
+    {
+        $evento = $inscricao->evento;
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        $this->destroy($inscricao->id);
+        return redirect()->back()->with('message', 'Inscrição cancelada com sucesso!');
     }
 
     public function checarDados(Request $request, $id)
