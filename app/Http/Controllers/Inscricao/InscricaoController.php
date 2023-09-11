@@ -348,7 +348,7 @@ class InscricaoController extends Controller
             $inscricao->finalizada = $modvalidarinscricao;
             $inscricao->save();
             $message = 'Inscricao realizada, você receberá uma notificação no e-mail quando o coordenador aprovar sua inscrição.';
-            if (!$modvalidarinscricao) {
+            if ($modvalidarinscricao) {
                 $message = 'Inscrição realizada com sucesso';
                 auth()->user()->notify(new InscricaoEvento($evento));
             }
