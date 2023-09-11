@@ -127,6 +127,73 @@ a:hover {
     color: white;
 }
 
+/*slider cards */
+.button-slidecards{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.button-slidecards:hover{
+    opacity: 1;
+}
+.container-geral-slider-cards{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 1000px;
+    margin: 0 auto;
+}
+.container-slider-cards{
+    border: 1px solid transparent;
+    width: 900px;
+    height: 350px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.list-card-slides{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: max-content;
+    transition: .4s all ease-in-out;
+}
+
+.card-slide{
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.418);
+    border-radius: 7px;
+    height: 100%;
+    width: 250px;
+    display: block;
+    float: left;
+    margin:0 0 0 35px;
+}
+.card-slide .icone-box{
+    height: 40%;
+}
+.card-slide .card-content{
+    height: 60%;
+}
+.icone-box{
+    padding: 1px;
+}
+
+.card-content .tittle-card{
+    height: 15%;
+}
+.card-content .card-content-desc{
+    height: 85%;
+    text-align: justify;
+    padding: 0 5px;
+}
+
+.text-limit-card-slide {
+    height: max-content;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+}
+
 /*Responsividade view home*/
 
 @media (width < 768px) {

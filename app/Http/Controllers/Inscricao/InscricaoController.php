@@ -417,7 +417,7 @@ class InscricaoController extends Controller
                     $regras['cpf-'.$campo->id] = $campo->obrigatorio ? 'required|cpf' : 'nullable|cpf';
                     break;
                 case 'contato':
-                    $regras['contato-'.$campo->id] = $campo->obrigatorio ? 'required|telefone' : 'nullable|telefone';
+                    $regras['contato-'.$campo->id] = $campo->obrigatorio ? 'required' : 'nullable';
                     break;
             }
         }

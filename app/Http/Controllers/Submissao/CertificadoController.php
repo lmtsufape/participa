@@ -180,8 +180,8 @@ class CertificadoController extends Controller
             $request->validate([
                 'fotoCertificado' => 'required|file|mimes:png,jpeg,jpg|max:2048',
             ]);
-            if (Storage::disk()->exists('public/'.$certificado->caminho)) {
-                Storage::delete('public/'.$certificado->caminho);
+            if (Storage::disk('public')->exists($certificado->caminho)) {
+                Storage::disk('public')->delete($certificado->caminho);
             }
 
             $imagem = $request->fotoCertificado;
@@ -191,8 +191,8 @@ class CertificadoController extends Controller
         }
 
         if ($request->imagem_verso != null || ! $validatedData['verso'] || ! $validatedData['has_imagem_verso']) {
-            if (Storage::disk()->exists('public/'.$certificado->imagem_verso)) {
-                Storage::delete('public/'.$certificado->imagem_verso);
+            if (Storage::disk('public')->exists($certificado->imagem_verso)) {
+                Storage::disk('public')->delete($certificado->imagem_verso);
             }
             $certificado->imagem_verso = null;
         }
@@ -318,8 +318,8 @@ class CertificadoController extends Controller
         $certificado = Certificado::find($id);
         $evento = $certificado->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        if (Storage::disk()->exists('public/'.$certificado->caminho)) {
-            Storage::delete('public/'.$certificado->caminho);
+        if (Storage::disk('public')->exists($certificado->caminho)) {
+            Storage::disk('public')->delete($certificado->caminho);
         }
         $certificado->delete();
 

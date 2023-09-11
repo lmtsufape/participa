@@ -24,7 +24,7 @@ class ArquivoInfoController extends Controller
         $arquivo->nome = $data['nome'];
         $name = $data['arquivo']->getClientOriginalName();
         $path = 'eventos/'.$evento->id.'/arquivos/';
-        Storage::putFileAs('public/'.$path, $data['arquivo'], $name);
+        Storage::disk('public')->putFileAs($path, $data['arquivo'], $name);
         $arquivo->path = $path.$name;
         $arquivo->save();
 
@@ -33,7 +33,7 @@ class ArquivoInfoController extends Controller
 
     public function delete(ArquivoInfo $arquivoInfo)
     {
-        Storage::delete('public/'.$arquivoInfo->path);
+        Storage::disk('public')->delete($arquivoInfo->path);
         $arquivoInfo->delete();
 
         return redirect()->back()->with(['success' => 'Arquivo deletado com sucesso!']);
@@ -43,11 +43,11 @@ class ArquivoInfoController extends Controller
     {
         $data = $request->validated();
         $arquivoInfo->nome = $data['nome'];
-        if (isset($data['arquivo'])) {
-            Storage::delete('public/'.$arquivoInfo->path);
+        if (isset($data['arquivo']) && Storage::disk('public')->exists($arquivoInfo->path)) {
+            Storage::disk('public')->delete($arquivoInfo->path);
             $name = $data['arquivo']->getClientOriginalName();
             $path = 'eventos/'.$arquivoInfo->evento->id.'/arquivos/';
-            Storage::putFileAs('public/'.$path, $data['arquivo'], $name);
+            Storage::disk('public')->putFileAs($path, $data['arquivo'], $name);
             $arquivoInfo->path = $path.$name;
         }
         $arquivoInfo->save();

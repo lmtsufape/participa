@@ -99,22 +99,27 @@
                 Eventos Passados
             </h1>
 
-            <div id="carouselEventosPassados"
-                class="carousel mb-3 slide box-carrousel-primary d-flex align-items-center justify-content-center "
-                data-ride="carousel">
-
-                <div class="carousel-inner  carrousel-container-cards d-flex align-items-center justify-content-start">
+            <div class="container-geral-slider-cards">
+                <input id="quantEventos" type="text" hidden value="{{ count($eventosPassados) }}">
+                <!--input hidden informando quantidade de slides -->
 
 
-                    @if (count($eventosPassados) > 0)
-                        @forelse ($eventosPassados as $i => $eventoPassado)
 
-                            <div class="carousel-item  @if ($i == 0) active @endif shadow-lg w-100">
+                @if (count($eventosPassados) > 3)
+                    <div class="button-slidecards">
+                        <span id="prevSlideCards" class="button-carrousel d-flex align-items-center justify-content-center">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                @endif
 
-                                <div class="carrousel-item-box-image">
-
-                                    @if ($ProximoEvento->fotoEvento != null)
-                                        <img src="{{ asset('storage/' . $eventoPassado->fotoEvento) }}" alt="imagem evento"
+                <div class="container-slider-cards">
+                    <div id="listCardSlides" class="list-card-slides">
+                        @foreach ($eventosPassados as $eventoPassado)
+                            <div class="card-slide shadow-lg">
+                                <div class="icone-box">
+                                    @if ($eventoPassado->icone != null)
+                                        <img src="{{ asset('storage/' . $eventoPassado->icone) }}" alt="imagem evento"
                                             width="100%" height="100%">
                                     @else
                                         <img src="{{ asset('img/colorscheme.png') }}" alt="" width="100%"
@@ -122,68 +127,43 @@
                                     @endif
 
                                 </div>
-
-                                <div
-                                    class="carrousel-item-box-content d-flex align-items-center justify-content-center flex-column">
-
-                                    <div
-                                        class="titulo-evento carrousel-item-box-titulo d-flex align-items-center justify-content-center">
-
+                                <div class="card-content">
+                                    <div class="tittle-card titulo-evento d-flex align-items-center justify-content-center">
                                         <a href="{{ route('evento.visualizar', ['id' => $eventoPassado->id]) }}">
                                             {{ $eventoPassado->nome }}
                                         </a>
                                     </div>
-
-                                    <div class="carrousel-item-box-descricao">
-                                        <div class="box-descricao">
-                                            @if (strlen($eventoPassado->descricao) > 621)
-                                                <div class="text-limit">
-                                                    {!! $eventoPassado->descricao !!}
-                                                </div>
-
-                                                <br>
-
-                                                <a class="link-modal" data-toggle="modal"
-                                                    data-target="#modal{{ $eventoPassado->id }}">
-                                                    Saiba mais
-                                                </a>
-                                            @else
+                                    <div class="card-content-desc">
+                                        @if (strlen($eventoPassado->descricao) > 621)
+                                            <div class="text-limit-card-slide">
                                                 {!! $eventoPassado->descricao !!}
-                                            @endif
-                                        </div>
+                                            </div>
+
+                                            <a class="link-modal" data-toggle="modal"
+                                                data-target="#modal{{ $eventoPassado->id }}">
+                                                Saiba mais
+                                            </a>
+                                        @else
+                                            {!! $eventoPassado->descricao !!}
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
-
                         @endforeach
-                    @endif
-
-
-                    <!--botoes do slide eventos passados -->
-                    @if (count($eventosPassados) > 1)
-                        <a class="carousel-control-prev" href="#carouselEventosPassados" role="button" data-slide="prev">
-
-                            <span class="button-carrousel d-flex align-items-center justify-content-center">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </span>
-
-                        </a>
-
-                        <a class="carousel-control-next" href="#carouselEventosPassados" role="button" data-slide="next">
-                            <span class="button-carrousel d-flex align-items-center justify-content-center">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </span>
-                        </a>
-                    @endif
-
+                    </div>
                 </div>
+
+                @if (count($eventosPassados) > 3)
+                    <div class="button-slidecards">
+                        <span id="nextSlideCards" class="button-carrousel d-flex align-items-center justify-content-center">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                @endif
             </div>
 
-
         </div>
-
     </section>
 
 
@@ -204,7 +184,6 @@
 
                     <div class="modal-body">
                         {!! $ProximoEvento->descricao !!}
-
                     </div>
                 </div>
             </div>
@@ -235,6 +214,6 @@
         </div>
     @endforeach
 
-
+    <script src="/js/home.js"></script>
 
 @endsection

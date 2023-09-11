@@ -17,8 +17,7 @@ trait FormatFileNames
     public function uploadArquivo(string $diretorio, bool $public, $arquivo)
     {
         if ($public) {
-            $path = Storage::putFile('public/'.$diretorio, $arquivo);
-            $path = substr($path, 7);
+            $path = Storage::disk('public')->putFile($diretorio, $arquivo);
         } else {
             $path = Storage::putFile($diretorio, $arquivo);
         }
