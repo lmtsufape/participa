@@ -198,9 +198,10 @@ a:hover {
 .text-limit-card-slide {
     height: max-content;
     display: -webkit-box;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 6;
     overflow: hidden;
     -webkit-box-orient: vertical;
+    line-height: 1.3;
 }
 
 /*Responsividade view home*/
