@@ -116,10 +116,14 @@
                 <div class="container-slider-cards">
                     <div id="listCardSlides" class="list-card-slides">
                         @foreach ($eventosPassados as $eventoPassado)
+
                             <div class="card-slide shadow-lg">
                                 <div class="icone-box">
                                     @if ($eventoPassado->icone != null)
                                         <img src="{{ asset('storage/' . $eventoPassado->icone) }}" alt="imagem evento"
+                                            width="100%" height="100%">
+                                    @elseif($eventoPassado->fotoEvento != null)
+                                        <img src="{{ asset('storage/' . $eventoPassado->fotoEvento) }}" alt="imagem evento"
                                             width="100%" height="100%">
                                     @else
                                         <img src="{{ asset('img/colorscheme.png') }}" alt="" width="100%"
