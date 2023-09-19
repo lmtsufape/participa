@@ -8,8 +8,8 @@
     <section class="home-section d-flex align-items-center justify-content-start flex-column">
 
         <div class="container-fluid">
-            <h1 class="text-white mt-5 mb-5 text-center">
-                Proximos Eventos
+            <h1 class="text-white mt-5 mb-4 text-center">
+                Próximos Eventos
             </h1>
             <div id="carousel-primary"
                 class="carousel slide box-carrousel-primary d-flex align-items-center justify-content-center "
@@ -95,12 +95,15 @@
 
 
             <!--carrousel eventos passados -->
-            <h1 class="text-white mt-5 mb-5 text-center">
-                Eventos Passados
-            </h1>
+            <a href="{{ Route('eventos.passados') }}">
+                <h1 class="text-white mt-5 mb-5 text-center">
+                    Últimos eventos realizados
+                </h1>
+            </a>
+
 
             <div class="container-geral-slider-cards">
-                <input id="quantEventos" type="text" hidden value="{{ count($eventosPassados) }}">
+                <input id="quantEventos" type="text" hidden value="{{ count($eventosPassados) + 1 }}">
                 <!--input hidden informando quantidade de slides -->
 
 
@@ -116,7 +119,6 @@
                 <div class="container-slider-cards">
                     <div id="listCardSlides" class="list-card-slides">
                         @foreach ($eventosPassados as $eventoPassado)
-
                             <div class="card-slide shadow-lg">
                                 <div class="icone-box">
                                     @if ($eventoPassado->icone != null)
@@ -150,6 +152,22 @@
                                 </div>
                             </div>
                         @endforeach
+                        <!--Card link para a view de eventos passados -->
+
+                        <div class="card-slide shadow-lg card-link">
+                            <div class="header-card-link w-100 border ">
+                                <img class="img-card-link" src="/img/more_icon.svg" alt="">
+                            </div>
+                            <div class="content-card-link w-100">
+                                <a href="{{ Route('eventos.passados') }}">
+                                    <button class="button-card-link">
+                                        Visualizar eventos passados
+                                    </button>
+                                </a>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
 

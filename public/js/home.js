@@ -6,8 +6,6 @@ var prevCard = document.getElementById("prevSlideCards");
 
 var quantEventos = document.getElementById("quantEventos").value;
 
-console.log(quantEventos)
-
 var contClicks = 0;
 
 //logica baseada na quantidade de slides e margens 

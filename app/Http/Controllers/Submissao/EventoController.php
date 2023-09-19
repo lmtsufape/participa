@@ -1791,4 +1791,9 @@ class EventoController extends Controller
 
         return $coordenador;
     }
+
+    public function eventosPassados(){
+
+        return "eventos passados View";
+    }
 }
