@@ -9,7 +9,7 @@
 
         <div class="container-fluid">
             <h1 class="text-white mt-5 mb-5 text-center">
-                Proximos Eventos
+                Próximos Eventos
             </h1>
             <div id="carousel-primary"
                 class="carousel slide box-carrousel-primary d-flex align-items-center justify-content-center "
