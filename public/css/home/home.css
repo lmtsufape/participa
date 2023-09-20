@@ -7,6 +7,7 @@ a,
 a:hover {
     color: inherit;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .home-section {
@@ -159,7 +160,7 @@ a:hover {
 
 .card-slide{
     background-color: white;
-    border: 1px solid rgba(0, 0, 0, 0.418);
+    border: 1px solid transparent;
     border-radius: 7px;
     height: 100%;
     width: 250px;
@@ -204,6 +205,35 @@ a:hover {
     line-height: 1.3;
 }
 
+/*card link*/
+
+.card-link {
+    padding: 5px;
+}
+.header-card-link{
+    height: 65%;
+    border-bottom-right-radius: 65%;
+    background-color: #154d59;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+}
+.content-card-link{
+    height: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.img-card-link{
+    width: 100%;
+    height: 100%;
+}
+.button-card-link{
+    color: white;
+    background-color: #154d59;
+    border: 1px solid transparent;
+    padding: 3px 7px;
+    border-radius: 7px;
+}
 /*Responsividade view home*/
 
 @media (width < 768px) {
