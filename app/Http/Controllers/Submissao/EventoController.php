@@ -1794,6 +1794,8 @@ class EventoController extends Controller
 
     public function eventosPassados(){
 
-        return "eventos passados View";
+        $eventosPassados = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '<', today()]])->whereNull('evento_pai_id')->get()->sortDesc();
+
+        return view('coordenador.evento.eventosPassados',compact('eventosPassados'));
     }
 }

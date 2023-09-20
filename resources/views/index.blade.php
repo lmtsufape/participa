@@ -8,9 +8,11 @@
     <section class="home-section d-flex align-items-center justify-content-start flex-column">
 
         <div class="container-fluid">
+
             <h1 class="text-white mt-5 mb-4 text-center">
                 Próximos Eventos
             </h1>
+
             <div id="carousel-primary"
                 class="carousel slide box-carrousel-primary d-flex align-items-center justify-content-center "
                 data-ride="carousel">
@@ -224,7 +226,6 @@
 
                     <div class="modal-body">
                         {!! $eventoPassado->descricao !!}
-
                     </div>
                 </div>
             </div>
