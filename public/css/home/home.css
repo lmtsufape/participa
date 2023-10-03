@@ -236,6 +236,15 @@ a:hover {
 }
 /*Responsividade view home*/
 
+@media(width < 1000px){
+    .container-geral-slider-cards{
+        width: 700px;
+    }
+    .container-slider-cards{
+        width: 600px;
+    }
+}
+
 @media (width < 768px) {
 
     .home-section{
@@ -289,12 +298,21 @@ a:hover {
         max-width: 100%;
         width: 100%;
     }
+
+    .container-geral-slider-cards{
+        width: 420px;
+    }
+
+    .container-slider-cards{
+        width: 320px;
+    }
+    
 }
 
 @media (width < 576px){
 
-
     .carrousel-container-cards{
         padding: 0 50px;
     }
+ 
 }
