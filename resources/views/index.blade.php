@@ -108,8 +108,6 @@
                 <input id="quantEventos" type="text" hidden value="{{ count($eventosPassados) + 1 }}">
                 <!--input hidden informando quantidade de slides -->
 
-
-
                 @if (count($eventosPassados) > 3)
                     <div class="button-slidecards">
                         <span id="prevSlideCards" class="button-carrousel d-flex align-items-center justify-content-center">
