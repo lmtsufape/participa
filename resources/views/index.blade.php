@@ -9,9 +9,13 @@
 
         <div class="container-fluid">
 
-            <h1 class="text-white mt-5 mb-4 text-center">
+            <h1 class="text-white mt-5 mb text-center">
                 Próximos Eventos
             </h1>
+            <h2 class="text-white mb-4 text-center">
+                Clique na imagem ou no nome do colóquio para visualizar
+
+            </h2>
 
             <div id="carousel-primary"
                 class="carousel slide box-carrousel-primary d-flex align-items-center justify-content-center "
@@ -28,11 +32,15 @@
                                 <div class="carrousel-item-box-image">
 
                                     @if ($ProximoEvento->fotoEvento != null)
-                                        <img src="{{ asset('storage/' . $ProximoEvento->fotoEvento) }}" alt="imagem evento"
-                                            width="100%" height="100%">
+                                        <a href="{{ route('evento.visualizar', ['id' => $ProximoEvento->id]) }}">
+                                            <img src="{{ asset('storage/' . $ProximoEvento->fotoEvento) }}" alt="imagem evento"
+                                                width="100%" height="100%">
+                                        </a>
                                     @else
-                                        <img src="{{ asset('img/colorscheme.png') }}" alt="" width="100%"
-                                            height="100%">
+                                        <a href="{{ route('evento.visualizar', ['id' => $ProximoEvento->id]) }}">
+                                            <img src="{{ asset('img/colorscheme.png') }}" alt="" width="100%"
+                                                height="100%">
+                                        </a>
                                     @endif
 
                                 </div>
