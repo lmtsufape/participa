@@ -51,7 +51,7 @@ class CategoriaController extends Controller
         $categoria->permite_submissao = $request->boolean('permite_submissao');
         $categoria->permite_inscricao = $request->boolean('permite_inscricao');
         $categoria->save();
-        $categoria->camposNecessarios()->attach(CampoFormulario::all());
+        $categoria->camposNecessarios()->attach($evento->camposFormulario);
 
         if ($request->has('tipo_valor')) {
             foreach ($request->tipo_valor as $key => $tipo_valor) {

@@ -7,6 +7,7 @@ a,
 a:hover {
     color: inherit;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .home-section {
@@ -159,7 +160,7 @@ a:hover {
 
 .card-slide{
     background-color: white;
-    border: 1px solid rgba(0, 0, 0, 0.418);
+    border: 1px solid transparent;
     border-radius: 7px;
     height: 100%;
     width: 250px;
@@ -179,7 +180,16 @@ a:hover {
 
 .card-content .tittle-card{
     height: 15%;
+    text-align: center;
 }
+.card-content .tittle-card a {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+}
+
+
 .card-content .card-content-desc{
     height: 85%;
     text-align: justify;
@@ -192,9 +202,48 @@ a:hover {
     -webkit-line-clamp: 6;
     overflow: hidden;
     -webkit-box-orient: vertical;
+    line-height: 1.3;
 }
 
+/*card link*/
+
+.card-link {
+    padding: 5px;
+}
+.header-card-link{
+    height: 65%;
+    border-bottom-right-radius: 65%;
+    background-color: #154d59;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+}
+.content-card-link{
+    height: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.img-card-link{
+    width: 100%;
+    height: 100%;
+}
+.button-card-link{
+    color: white;
+    background-color: #154d59;
+    border: 1px solid transparent;
+    padding: 3px 7px;
+    border-radius: 7px;
+}
 /*Responsividade view home*/
+
+@media(width < 1000px){
+    .container-geral-slider-cards{
+        width: 700px;
+    }
+    .container-slider-cards{
+        width: 600px;
+    }
+}
 
 @media (width < 768px) {
 
@@ -249,12 +298,21 @@ a:hover {
         max-width: 100%;
         width: 100%;
     }
+
+    .container-geral-slider-cards{
+        width: 420px;
+    }
+
+    .container-slider-cards{
+        width: 320px;
+    }
+    
 }
 
 @media (width < 576px){
 
-
     .carrousel-container-cards{
         padding: 0 50px;
     }
+ 
 }
