@@ -463,6 +463,18 @@
                                                 </div>
                                             </div>
                                             <div class="row mx-1">
+                                                <div class="form-row justify-content-center">
+                                                    <div class="col-sm-3 form-group " style="position: relative; text-align: center;">
+                                                        <div class="div-icon-programacao">
+                                                            <img class="icon-programacao" src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}" alt="PDF com a programação">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-8 form-inline">
+                                                        <span class="titulo">
+                                                            <a href="{{ asset('pdfs/inscricao-passo-a-passo.pdf') }}" target="_black">Como realizar a inscrição</a>
+                                                        </span>
+                                                    </div>
+                                                </div>
                                                 <button id="btn-inscrevase" class="btn btn-primary" data-toggle="modal" data-target="#modalInscrever" @if ($isInscrito || $encerrada) disabled @endif>@if ($isInscrito) Já inscrito @elseif($encerrada) Encerradas @else Inscreva-se @endif</button>
                                                 @isset($inscricao)
                                                     @isset($inscricao->pagamento)
