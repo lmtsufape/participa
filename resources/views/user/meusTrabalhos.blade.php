@@ -186,9 +186,6 @@
                         @endif
                       @endforeach
                     @else
-                      <a href="#" onclick="return false;" data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível assim que revisado.">
-                          <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
-                      </a>
                     @endif
 
                     @if ($trabalho->pareceres->where('parecer_final', true)->count() > 0)

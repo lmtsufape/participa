@@ -318,10 +318,10 @@
                             </div>
                             <div class="form-row mt-4">
                                 <div class="col-md-6 form-group">
-                                    <button type="button" class="btn btn-danger" style="width:100%;" onclick="atualizarInputAprovar(false)">Reprovar</button>
+                                    <button type="button" class="btn btn-danger" style="width:100%;" onclick="atualizarInputAprovar(0)">Reprovar</button>
                                 </div>
                                 <div class="col-md-6 form-group" style="padding-right: 20px">
-                                    <button type="button" class="btn btn-success" style="width:100%" onclick="atualizarInputAprovar(true)">Aprovar</button>
+                                    <button type="button" class="btn btn-success" style="width:100%" onclick="atualizarInputAprovar(1)">Aprovar</button>
                                 </div>
                             </div>
                         </form>
