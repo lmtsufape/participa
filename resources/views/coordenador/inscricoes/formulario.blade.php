@@ -96,6 +96,9 @@
                                     <div class="col-sm-6">
                                         <button id="btn-tipo-email" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('email')">E-mail</button>
                                     </div>
+                                    <div class="col-sm-6">
+                                        <button id="btn-tipo-email" type="button" class="btn btn-primary btn-block" onclick="mostrarCampos('select')">Select</button>
+                                    </div>
                                 </div>
                             </p>
                             <p>
@@ -142,85 +145,98 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="row form-group">
-                                <div class="col-sm-12">
-                                    <input type="checkbox" value="1" id="campo_obrigatorio" name="campo_obrigatorio" @if (old('campo_obrigatorio') != null) checked @endif>
-                                    <label for="campo_obrigatorio">Campo obrigatório</label>
-                                </div>
-
+                            <div class="form-group">
+                                <input type="checkbox" value="1" id="campo_obrigatorio" name="campo_obrigatorio" @if (old('campo_obrigatorio') != null) checked @endif>
+                                <label for="campo_obrigatorio">Campo obrigatório</label>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <hr>
-                                    <h4>Exemplo</h4>
-                                    <div id="tituloExemplo" class="">
-                                        <label id="labelCampoExemplo" for="campoExemplo"></label>
-                                        <p><input type="" class="" id="campoExemplo" style="display: block"></p>
-                                        <p><input type="text" class="form-control" id="campoExemploCpf" style="display: none;"></p>
-                                        <p><input type="text" class="form-control" id="campoExemploNumero" style="display: none;"></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="divEnderecoExemplo" class="" style="display: none;">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label for="cep">CEP</label>
-                                        <input onblur="pesquisacep(this.value);" type="text" class="form-control" id="cep" placeholder="00000-000">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label for="bairro">Bairro</label>
-                                        <input type="text" class="form-control" id="bairro" placeholder="Centro">
-                                    </div>
-                                </div>
+                            <div id="input-text-form">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label for="rua">Rua</label>
-                                        <input type="text" class="form-control" id="rua" placeholder="Av. 15 de Novembro">
+                                        <hr>
+                                        <h4>Exemplo</h4>
+                                        <div id="tituloExemplo" class="">
+                                            <label id="labelCampoExemplo" for="campoExemplo"></label>
+                                            <p><input type="" class="" id="campoExemplo" style="display: block"></p>
+                                            <p><input type="text" class="form-control" id="campoExemploCpf" style="display: none;"></p>
+                                            <p><input type="text" class="form-control" id="campoExemploNumero" style="display: none;"></p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label for="cidade">Cidade</label>
-                                        <input type="text" class="form-control" id="cidade" placeholder="Recife">
+                                <div id="divEnderecoExemplo" class="" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label for="cep">CEP</label>
+                                            <input onblur="pesquisacep(this.value);" type="text" class="form-control" id="cep" placeholder="00000-000">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label for="bairro">Bairro</label>
+                                            <input type="text" class="form-control" id="bairro" placeholder="Centro">
+                                        </div>
                                     </div>
-                                    <div class="col-sm-3">
-                                        <label for="uf">UF</label>
-                                        <select class="form-control" id="uf">
-                                            <option value="" disabled selected hidden>-- UF --</option>
-                                            <option value="AC">AC</option>
-                                            <option value="AL">AL</option>
-                                            <option value="AP">AP</option>
-                                            <option value="AM">AM</option>
-                                            <option value="BA">BA</option>
-                                            <option value="CE">CE</option>
-                                            <option value="DF">DF</option>
-                                            <option value="ES">ES</option>
-                                            <option value="GO">GO</option>
-                                            <option value="MA">MA</option>
-                                            <option value="MT">MT</option>
-                                            <option value="MS">MS</option>
-                                            <option value="MG">MG</option>
-                                            <option value="PA">PA</option>
-                                            <option value="PB">PB</option>
-                                            <option value="PR">PR</option>
-                                            <option value="PE">PE</option>
-                                            <option value="PI">PI</option>
-                                            <option value="RJ">RJ</option>
-                                            <option value="RN">RN</option>
-                                            <option value="RS">RS</option>
-                                            <option value="RO">RO</option>
-                                            <option value="RR">RR</option>
-                                            <option value="SC">SC</option>
-                                            <option value="SP">SP</option>
-                                            <option value="SE">SE</option>
-                                            <option value="TO">TO</option>
-                                        </select>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label for="rua">Rua</label>
+                                            <input type="text" class="form-control" id="rua" placeholder="Av. 15 de Novembro">
+                                        </div>
                                     </div>
-                                    <div class="col-sm-3">
-                                        <label for="numero">Número</label>
-                                        <input type="number" class="form-control" id="numero" placeholder="10">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label for="cidade">Cidade</label>
+                                            <input type="text" class="form-control" id="cidade" placeholder="Recife">
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label for="uf">UF</label>
+                                            <select class="form-control" id="uf">
+                                                <option value="" disabled selected hidden>-- UF --</option>
+                                                <option value="AC">AC</option>
+                                                <option value="AL">AL</option>
+                                                <option value="AP">AP</option>
+                                                <option value="AM">AM</option>
+                                                <option value="BA">BA</option>
+                                                <option value="CE">CE</option>
+                                                <option value="DF">DF</option>
+                                                <option value="ES">ES</option>
+                                                <option value="GO">GO</option>
+                                                <option value="MA">MA</option>
+                                                <option value="MT">MT</option>
+                                                <option value="MS">MS</option>
+                                                <option value="MG">MG</option>
+                                                <option value="PA">PA</option>
+                                                <option value="PB">PB</option>
+                                                <option value="PR">PR</option>
+                                                <option value="PE">PE</option>
+                                                <option value="PI">PI</option>
+                                                <option value="RJ">RJ</option>
+                                                <option value="RN">RN</option>
+                                                <option value="RS">RS</option>
+                                                <option value="RO">RO</option>
+                                                <option value="RR">RR</option>
+                                                <option value="SC">SC</option>
+                                                <option value="SP">SP</option>
+                                                <option value="SE">SE</option>
+                                                <option value="TO">TO</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label for="numero">Número</label>
+                                            <input type="number" class="form-control" id="numero" placeholder="10">
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div id="selects" style="display: none;" x-data="selectsFormulario()">
+                                <template x-for="(opcao, index) in opcoes" :key="index">
+                                    <div class="form-group" x-id="['text-input']">
+                                        <div class="d-flex justify-content-between">
+                                            <label :for="$id('text-input')" x-text="'Opção ' + (index + 1)"></label>
+                                            <div>
+                                                <button type="button" @click="adicionaOpcao(index)" style="color: #117711;" class="btn py-0"><i class="fas fa-plus"></i></button>
+                                                <button type="button" @click="removeOpcao(index)" style="color: #d30909;" class="btn py-0"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" :id="$id('text-input')" name="select-text[]">
+                                    </div>
+                                </template>
                             </div>
                         </div>
                     </div>

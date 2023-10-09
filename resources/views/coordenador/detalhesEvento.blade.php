@@ -2097,9 +2097,25 @@
         }
     }
 
+    function selectsFormulario() {
+        return {
+            opcoes: [''],
+            adicionaOpcao() {
+                this.opcoes.push('');
+            },
+            removeOpcao(index) {
+                if (this.opcoes.length > 1) {
+                    this.opcoes.splice(index, 1);
+                }
+            },
+        }
+    }
+
     function mostrarCampos(tipoCampo) {
         var botoes = document.getElementById('escolherInput');
         var inputs = document.getElementById('preencherDados');
+        var selects = document.getElementById('selects');
+        var inputtextform = document.getElementById('input-text-form');
         var botoesSubmissao = document.getElementById('botoesDeSubmissao');
         var inputTipoCampo = document.getElementById('tipo_campo');
         var campoExemplo = document.getElementById('campoExemplo');
@@ -2110,7 +2126,9 @@
         var divTituloExemplo = document.getElementById('tituloExemplo');
 
         botoes.style.display = "none";
+        selects.style.display = "none";
         inputs.style.display = "block";
+        inputtextform.style.display = "block";
         botoesSubmissao.style.display = "block";
 
         switch (tipoCampo) {
@@ -2159,6 +2177,15 @@
                         $('#labelCampoExemplo').append("Data de nascimento");
                     }
                 });
+                break;
+            case 'select':
+                tituloDoCampo.placeholder = "Nome do select"
+                inputTipoCampo.value = tipoCampo;
+                botoes.style.display = "none";
+                inputs.style.display = "block";
+                inputtextform.style.display = "none";
+                selects.style.display = "block";
+                botoesSubmissao.style.display = "block";
                 break;
             case 'email':
                 inputTipoCampo.value = tipoCampo;
