@@ -407,6 +407,9 @@ class InscricaoController extends Controller
                 case 'email':
                     $regras['email-'.$campo->id] = $campo->obrigatorio ? 'required|string|email' : 'nullable|string|email';
                     break;
+                case 'select':
+                    $regras['select-'.$campo->id] = $campo->obrigatorio ? 'required|string' : 'nullable|string';
+                    break;
                 case 'text':
                     $regras['text-'.$campo->id] = $campo->obrigatorio ? 'required|string' : 'nullable|string';
                     break;
@@ -458,6 +461,8 @@ class InscricaoController extends Controller
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $path]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('date-'.$campo->id)]);
+                } elseif ($campo->tipo == 'select' && $request->input('select-'.$campo->id) != null) {
+                    $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('select-'.$campo->id)]);
                 } elseif ($campo->tipo == 'endereco' && $request->input('endereco-cep-'.$campo->id) != null) {
                     $campoSalvo = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $campo->id)->first();
                     $endereco = Endereco::find($campoSalvo->pivot->valor);
@@ -488,6 +493,8 @@ class InscricaoController extends Controller
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $path]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('date-'.$campo->id)]);
+                } elseif ($campo->tipo == 'select' && $request->input('select-'.$campo->id) != null) {
+                    $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('select-'.$campo->id)]);
                 } elseif ($campo->tipo == 'endereco' && $request->input('endereco-cep-'.$campo->id) != null) {
                     $endereco = new Endereco();
                     $endereco->cep = $request->input('endereco-cep-'.$campo->id);
