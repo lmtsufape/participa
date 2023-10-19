@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Submissao\Evento;
 use App\Rules\NaoESubEvento;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -14,7 +15,7 @@ class StoreEventoRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user() != null;
+        return auth()->user()->can('create', Evento::class);
     }
 
     /**

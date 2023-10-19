@@ -11,9 +11,11 @@
                 <div class="col-sm-10">
                     <h1>Eventos Atuais</h1>
                 </div>
+                @can('create', App\Models\Submissao\Evento::class)
                 <div class="col-sm-2">
                     <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
                 </div>
+                @endcan
             </div>
         </div>
 

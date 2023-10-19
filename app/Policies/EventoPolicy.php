@@ -20,6 +20,11 @@ class EventoPolicy
         //
     }
 
+    public function create(User $user)
+    {
+        return str_ends_with($user->email, '@ufrpe.br') && $user->email_verified_at != null;
+    }
+
     public function isCoordenador(User $user, Evento $evento)
     {
         return $user->id === $evento->coordenadorId || $evento->coordenadoresEvento()->where('email', $user->email)->exists() || $user->administradors()->exists();
