@@ -1,7 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{route('index')}}">
-            <img src="{{ asset('/img/logo.png') }}" alt="" style="height: 45px; width: 135px;">
+            <img src="{{ asset('/img/MarcasUFRPE-02.png') }}" alt="" style="width: 40px;">
+            <img src="{{ asset('/img/logo.png') }}" alt="" style="width: 135px;">
         </a>
          {{-- <a id="change-mode" class="navbar-brand">
             <img id="img-change-mode" src="/img/icons/mom.png" alt="" style="height: 40px; width: 45px;">
