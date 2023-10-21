@@ -82,7 +82,7 @@ Route::namespace('Submissao')->group(function () {
     });
     Route::view('validarCertificado', 'validar')->name('validarCertificado');
     Route::post('validarCertificado', [CertificadoController::class, 'validar'])->name('validarCertificadoPost');
-    Route::get('/home', [CertificadoController::class, 'validar'])->name('home')->middleware('verified', 'isTemp');
+    Route::get('/home', [CertificadoController::class, 'validar'])->name('home')->middleware('isTemp');
 
 });
 
@@ -91,7 +91,7 @@ Route::get('/{id}/atividades', [AtividadeController::class, 'atividadesJson'])->
 Route::get('/perfil/{pais?}', [UserController::class, 'perfil'])->name('perfil')->middleware('auth');
 Route::post('/perfil/editar', [UserController::class, 'editarPerfil'])->name('perfil.update')->middleware('auth');
 
-Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
+Route::group(['middleware' => ['auth', 'isTemp']], function () {
     Route::get('meusCertificados', [CertificadoController::class, 'listarCertificados'])->name('meusCertificados');
     Route::get('/home-user', [HomeController::class, 'index'])->name('home.user');
 
@@ -434,7 +434,7 @@ Route::get('/demo', function () {
     return new App\Mail\UserWelcome();
 });
 
-Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware('verified', 'isTemp');
+Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware('isTemp');
 
 Route::namespace('Submissao')->group(function () {
     Route::get('{id}/regras', [ModalidadeController::class, 'downloadRegras'])->name('modalidade.regras.download');
