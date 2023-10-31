@@ -84,7 +84,7 @@
                     <div class="modal-footer">
                         @if ($isInscrito)
                             @if(!$atv->atividadeInscricoesEncerradas())
-                                @if($atv->vagas > 0 && Auth::user()->atividades()->find($atv->id) == null)
+                                @if(($atv->vagas > 0 || $atv->vagas == null) && Auth::user()->atividades()->find($atv->id) == null)
                                     <form method="POST" action="{{route('atividades.inscricao', ['id'=>$atv->id])}}">
                                         @csrf
                                         <button type="submit" class="button-prevent-multiple-submits btn btn-primary">Inscrever-se</button>
