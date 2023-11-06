@@ -53,8 +53,9 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'cpf' => ($data['passaporte'] == null ? ['required', 'cpf'] : 'nullable'),
-            'passaporte' => ($data['cpf'] == null ? 'required|max:10' : 'nullable'),
+            'cpf' => ($data['passaporte'] == null && $data['cnpj'] == null ? ['required', 'cpf'] : 'nullable'),
+            'cnpj' => ($data['passaporte'] == null && $data['cpf'] == null ? ['required'] : 'nullable'),
+            'passaporte' => ($data['cpf'] == null && $data['cnpj'] == null ? ['required', 'max:10'] : 'nullable'),
             'celular' => ['required', 'string', 'max:20'],
             'instituicao' => ['required', 'string', 'max:255'],
             'pais' => ['required', 'string', 'max:255'],
@@ -84,6 +85,7 @@ class RegisterController extends Controller
         $user->email = $data['email'];
         $user->password = bcrypt($data['password']);
         $user->cpf = $data['cpf'];
+        $user->cnpj = $data['cnpj'];
         $user->passaporte = $data['passaporte'];
         $user->celular = $data['full_number'];
         $user->instituicao = $data['instituicao'];
