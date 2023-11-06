@@ -9,7 +9,7 @@
         @enderror
         <div class="row">
             <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Listar Revisores</h1>
+                <h1 class="titulo-detalhes">Listar Avaliadores</h1>
             </div>
         </div>
 
@@ -19,8 +19,8 @@
                     <div class="card-body">
                       <div class="row">
                         <div class="col-sm-9">
-                          <h5 class="card-title">Revisores</h5>
-                          <h6 class="card-subtitle mb-2 text-muted">Revisores cadastrados no seu evento</h6>
+                          <h5 class="card-title">Avaliadores</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">Avaliadores cadastrados no seu evento</h6>
                         </div>
                         <div class="col-sm-3" style="text-align: right;">
                           <button class="btn btn-primary" data-toggle="modal" data-target="#modalCadastrarRevisor">+ Cadastrar revisor</button>
@@ -101,13 +101,13 @@
                                 @csrf
                                   <input type="hidden" name="revisores" value='@json($revisores)'>
                                   <button class="btn btn-primary btn-sm" type="submit">
-                                      Lembrar todos os revisores com revisão pendente
+                                      Lembrar todos os avaliadores com revisão pendente
                                   </button>
                               </form>
                               <form action="{{route('revisor.emailCadastroTodos', $evento->id)}}" method="POST" >
                                 @csrf
                                   <button class="btn btn-primary btn-sm" type="submit">
-                                      Lembrar todos os revisores com cadastro incompleto
+                                      Lembrar todos os avaliadores com cadastro incompleto
                                   </button>
                               </form>
                           @endif
@@ -131,7 +131,7 @@
               </button>
               </div>
                   <div class="modal-body">
-                      Tem certeza que deseja remover esse revisor do evento?
+                      Tem certeza que deseja remover esse avaliador do evento?
                   </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
@@ -152,7 +152,7 @@
               </button>
               </div>
                   <div class="modal-body">
-                      Tem certeza que deseja reenviar um e-mail de cadastro para esse revisor?
+                      Tem certeza que deseja reenviar um e-mail de cadastro para esse avaliador?
                   </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
@@ -369,7 +369,7 @@
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header" style="background-color: #114048ff; color: white;">
-            <h5 class="modal-title" id="modalCadastrarRevisorLabel">Cadastrar um novo revisor</h5>
+            <h5 class="modal-title" id="modalCadastrarRevisorLabel">Cadastrar um novo avaliador</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -383,7 +383,7 @@
                         <input type="hidden" name="cadastrarRevisor" value="0">
                         <div class="row">
                             <div class="col-sm-6">
-                                <label for="emailRevisor" class="col-form-label">{{ __('Email do Revisor') }}</label>
+                                <label for="emailRevisor" class="col-form-label">{{ __('Email do Avaliador') }}</label>
                                 <input id="emailRevisor" type="email" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{old('emailRevisor')}}" required autocomplete="emailRevisor" autofocus>
 
                                 @error('emailRevisor')

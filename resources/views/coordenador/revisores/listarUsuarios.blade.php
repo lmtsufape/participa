@@ -10,7 +10,7 @@
             <h1 class="titulo-detalhes">Lista de Usuários</h1>
         </div>
 {{--         <div class="col-sm-2">
-          
+
           <!-- Button trigger modal -->
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
             Adicionar Usuário
@@ -27,18 +27,18 @@
                   </button>
                 </div>
                 <form action="{{ route('cientifica.novoUsuario') }}" method="POST">
-                <div class="modal-body">                 
-                    @csrf 
-                    <input type="hidden" name="evento_id" value="{{ $evento->id }}">                 
+                <div class="modal-body">
+                    @csrf
+                    <input type="hidden" name="evento_id" value="{{ $evento->id }}">
                     <div class="form-group">
                       <label for="exampleInputEmail1">Nome Completo</label>
-                      <input type="text" class="form-control" name="nomeUsuario" id="exampleInputNome1">            
+                      <input type="text" class="form-control" name="nomeUsuario" id="exampleInputNome1">
                     </div>
                     <div class="form-group">
                       <label for="exampleInputEmail1">Email</label>
-                      <input type="email" class="form-control" name="emailUsuario" id="exampleInputEmail1">            
+                      <input type="email" class="form-control" name="emailUsuario" id="exampleInputEmail1">
                     </div>
-                    
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -54,7 +54,7 @@
       <div class="row" >
         <div class="col-sm-10">
         </div>
-        
+
       </div>
     </div>
     <hr>
@@ -66,7 +66,7 @@
     @endif
     <table class="table table-bordered">
       <thead>
-        <tr>   
+        <tr>
           <th scope="col">Nome do Usuário</th>
           <th scope="col">E-mail</th>
           <th scope="col">Função</th>
@@ -86,7 +86,7 @@
                 {{ "Cood. Comissão Organizadora " }}
               @endif
               @if($usuario->revisor)
-                {{ "Revisor " }}
+                {{ "Avaliador " }}
               @endif
               @if($usuario->coautor)
                 {{ "Coutor " }}
@@ -104,7 +104,7 @@
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{ $usuario->id }}">
                 Permissões
               </button>
-              <!--inicio modal --> 
+              <!--inicio modal -->
               <div class="modal fade" id="modal{{ $usuario->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
@@ -118,13 +118,13 @@
 
                       <form action="{{ route('cientifica.permissoes') }}" method="POST" id="form{{ $usuario->id }}">
                         @csrf
-                        
+
                         <input type="hidden" name="user_id" value="{{ $usuario->id }}">
 
                         <div class="custom-control custom-switch">
                           <input type="checkbox" name="revisor" value="revisor" class="custom-control-input" id="customSwitch{{ $usuario->id }}" @if($usuario->revisor)
                           checked="" @endif  >
-                          <label class="custom-control-label" for="customSwitch{{ $usuario->id }}">Revisor</label>
+                          <label class="custom-control-label" for="customSwitch{{ $usuario->id }}">Avaliador</label>
                         </div><br>
 
                         <div class="modal-footer">
@@ -135,18 +135,18 @@
                     </div>
                   </div>
                 </div>
-              </div>    
-               
-              <!--fim modal -->     
-                
+              </div>
+
+              <!--fim modal -->
+
             </td>
           </tr>
-            
+
         @endforeach
         <!-- Modal -->
-                
+
       </tbody>
-    </table>    
+    </table>
   </div>
   <div class="container">
     {{-- <div class="row" >

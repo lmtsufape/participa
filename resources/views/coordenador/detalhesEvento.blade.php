@@ -182,7 +182,7 @@
                 @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
                     <a id="revisores">
                         <li>
-                            <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Revisores</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
+                            <img src="{{asset('img/icons/glasses-solid.svg')}}" alt=""><h5>Avaliadores</h5><img class="arrow" src="{{asset('img/icons/arrow.svg')}}">
                         </li>
                         <div id="dropdownRevisores" @if(request()->is('coord/evento/revisores*')) style='background-color: gray;display: block;' @else  style='background-color: gray' @endif>
                             {{-- <a id="cadastrarRevisores" href="{{ route('coord.cadastrarRevisores', ['eventoId' => $evento->id]) }}">
@@ -197,7 +197,7 @@
                             </a> --}}
                             <a id="listarRevisores" href="{{ route('coord.listarRevisores', ['eventoId' => $evento->id]) }}">
                                 <li>
-                                    <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Revisores</h5>
+                                    <img src="{{asset('img/icons/list.svg')}}" alt=""><h5> Listar Avaliadores</h5>
                                 </li>
                             </a>
                             {{-- <a id="listarUsuarios" href="{{ route('coord.listarUsuarios', ['evento_id' => $evento->id]) }}">
@@ -583,7 +583,7 @@
                     "<div class='container'>" +
                         "<div class='row'>" +
                             "<div class='col-sm-12'>" +
-                                "<h6>Opções para avaliar<img src='{{asset('/img/icons/interrogacao.png')}}' width='15px' style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Essas opções serão exibidas ao revisor na hora da avaliação do trabalho'></h6>" +
+                                "<h6>Opções para avaliar<img src='{{asset('/img/icons/interrogacao.png')}}' width='15px' style='position:relative; left:5px; border: solid 1px; border-radius:50px; padding: 2px;' title='Essas opções serão exibidas ao avaliador na hora da avaliação do trabalho'></h6>" +
                             "</div>" +
                             "<div class='col-sm-7'>" +
                                 "<input"+" type="+'text'+" style="+"margin-bottom:10px"+" class="+'form-control'+" name="+'opcaoCriterio_'+contadorOpcoes+'[]'+" placeholder="+"Opção"+" required>"+

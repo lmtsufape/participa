@@ -58,7 +58,7 @@
                             {{-- Rota - Area de Revisores --}}
                             <a class="dropdown-item" href="{{ route('revisor.index') }}">
                                 <img src="{{asset('img/icons/revisor.png')}}" alt="">
-                                {{ __('Área do Revisor') }}
+                                {{ __('Área do Avaliador') }}
                             </a>
                         @endif
 

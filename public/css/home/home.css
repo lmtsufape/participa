@@ -3,11 +3,11 @@
     padding: 0;
 }
 
-a,
+
 a:hover {
     color: inherit;
     cursor: pointer;
-    text-decoration: none;
+
 }
 
 .home-section {
@@ -248,7 +248,7 @@ a:hover {
 @media (width < 768px) {
 
     .home-section{
-    
+
         padding-bottom: 7vh;
     }
 
@@ -306,7 +306,7 @@ a:hover {
     .container-slider-cards{
         width: 320px;
     }
-    
+
 }
 
 @media (width < 576px){
@@ -314,5 +314,5 @@ a:hover {
     .carrousel-container-cards{
         padding: 0 50px;
     }
- 
+
 }

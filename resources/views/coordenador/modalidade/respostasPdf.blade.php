@@ -737,7 +737,7 @@
                                     <table class="table table-striped table-dark">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Revisor</th>
+                                                <th scope="col">Avaliador</th>
                                                 <th scope="col">Trabalho</th>
                                                 <th scope="col">Resposta</th>
                                             </tr>
@@ -762,7 +762,7 @@
                                     <table class="table table-striped table-dark">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Revisor</th>
+                                                <th scope="col">Avaliador</th>
                                                 <th scope="col">Trabalho</th>
                                                 <th scope="col">Resposta</th>
                                             </tr>

@@ -7,7 +7,7 @@
             <div class="col-sm-12">
                 <h3 class="titulo-detalhes"> <strong> {{$trabalho->titulo}}</strong> <br>
                     Modalidade: <strong> {{$modalidade->nome}}</strong><br>
-                    Revisor: <strong> {{$revisorUser->name}}</strong><br>
+                    Avaliador: <strong> {{$revisorUser->name}}</strong><br>
                 </h3>
             </div>
         </div>
@@ -101,7 +101,7 @@
             </div>
         @endforeach
         <div class="col-sm-12" style="margin-top: 20px;">
-            <small>Para trocar o arquivo de avaliação do revisor, envie um novo.</small><br>
+            <small>Para trocar o arquivo de avaliação do avaliador, envie um novo.</small><br>
             <div class="custom-file">
                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoAvaliacao">
             </div>
