@@ -71,9 +71,13 @@
                     <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
                     <label class="custom-control-label" for="customRadioInline1">CPF</label>
                   </div>
-                  <div class="custom-control custom-radio custom-control-inline">
+                <div class="custom-control custom-radio custom-control-inline">
                     <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
-                    <label class="custom-control-label " for="customRadioInline2">{{__('Passaporte')}}</label>
+                    <label class="custom-control-label " for="customRadioInline2">{{__('CNPJ')}}</label>
+                </div>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input">
+                    <label class="custom-control-label " for="customRadioInline3">{{__('Passaporte')}}</label>
                   </div>
 
                   <div id="fieldCPF" @error('passaporte') style="display: none" @enderror>
@@ -85,6 +89,15 @@
                         </span>
                     @enderror
                   </div>
+                <div id="fieldCNPJ" @error('passaporte') style="display: block" @enderror style="display: none" >
+                    <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" value="{{ old('cnpj') }}"  autocomplete="cnpj" autofocus>
+
+                    @error('cnpj')
+                    <span class="invalid-feedback" role="alert">
+                            <strong>{{ __($message) }}</strong>
+                        </span>
+                    @enderror
+                </div>
                   <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: none" >
                     <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="{{__('Passaporte')}}" value="{{ old('passaporte') }}"  autocomplete="passaporte" autofocus>
 
@@ -312,6 +325,7 @@
     $(document).ready(function($){
 
       $('#cpf').mask('000.000.000-00');
+      $('#cnpj').mask('00.000.000/0000-00');
       if($('html').attr('lang') == 'en') {
         //$('#celular').mask('(000) 000-0000');
         $('#groupformuf').addClass('d-none');
@@ -418,11 +432,19 @@
         // $("#fieldPassaporte").hide();
         $("#customRadioInline1").click(function(){
             $("#fieldPassaporte").hide();
+            $("#fieldCNPJ").hide();
             $("#fieldCPF").show();
         });
 
         $("#customRadioInline2").click(function(){
+            $("#fieldPassaporte").hide();
+            $("#fieldCNPJ").show();
+            $("#fieldCPF").hide();
+        });
+
+        $("#customRadioInline3").click(function(){
             $("#fieldPassaporte").show();
+            $("#fieldCNPJ").hide();
             $("#fieldCPF").hide();
         });
 

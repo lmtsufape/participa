@@ -67,9 +67,14 @@
                                       <label class="custom-control-label" for="customRadioInline1">CPF</label>
                                     </div>
                                     <div class="custom-control custom-radio custom-control-inline">
-                                      <input type="radio" id="customRadioInline2" name="check_passaporte" class="custom-control-input" @if($user->passaporte == null) disabled @else  @endif  >
-                                      <label class="custom-control-label " for="customRadioInline2">Passaporte</label>
+                                        <input type="radio" id="customRadioInline2" name="check_cnpj" class="custom-control-input" @if($user->cnpj == null) disabled @else  @endif @error('cnpj') checked @enderror >
+                                        <label class="custom-control-label " for="customRadioInline2">CNPJ</label>
                                     </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                      <input type="radio" id="customRadioInline3" name="check_passaporte" class="custom-control-input" @if($user->passaporte == null) disabled @else  @endif  >
+                                      <label class="custom-control-label " for="customRadioInline3">Passaporte</label>
+                                    </div>
+
 
                                     <div id="fieldCPF" @error('passaporte') style="display: none" @enderror>
                                       <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" @if(old('cpf') != null) value="{{ old('cpf') }}" @else value="{{$user->cpf}}" @endif autocomplete="cpf" placeholder="CPF" autofocus>
@@ -80,6 +85,17 @@
                                           </span>
                                       @enderror
                                     </div>
+
+                                    <div id="fieldCNPJ" @error('passaporte') style="display: block" @enderror style="display: none" >
+                                        <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" @if(old('cnpj') != null) value="{{ old('cnpj') }}" @else value="{{$user->cnpj}}" @endif autocomplete="cnpj" autofocus>
+
+                                        @error('cnpj')
+                                        <span class="invalid-feedback" role="alert">
+                                              <strong>{{ $message }}</strong>
+                                          </span>
+                                        @enderror
+                                    </div>
+
                                     <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: none" >
                                       <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="{{__('Passaporte')}}" @if(old('passaporte') != null) value="{{ old('passaporte') }}" @else value="{{$user->passaporte}}" @endif autocomplete="passaporte" autofocus>
 
@@ -554,12 +570,16 @@
 
                                 <div class="col-md-6">
                                     <div class="custom-control custom-radio custom-control-inline col-form-label">
-                                      <input type="radio" id="customRadioInline3" name="check_cpf" class="custom-control-input"  >
-                                      <label class="custom-control-label" for="customRadioInline3">{{__('CPF')}}</label>
+                                      <input type="radio" id="customRadioInline4" name="check_cpf" class="custom-control-input"  >
+                                      <label class="custom-control-label" for="customRadioInline4">{{__('CPF')}}</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline col-form-label">
+                                        <input type="radio" id="customRadioInline5" name="check_cnpj" class="custom-control-input"  >
+                                        <label class="custom-control-label" for="customRadioInline5">{{__('CNPJ')}}</label>
                                     </div>
                                     <div class="custom-control custom-radio custom-control-inline">
-                                      <input type="radio" id="customRadioInline4" name="check_cpf" class="custom-control-input"  >
-                                      <label class="custom-control-label " for="customRadioInline4">{{__('Passaporte')}}</label>
+                                      <input type="radio" id="customRadioInline6" name="check_cpf" class="custom-control-input"  >
+                                      <label class="custom-control-label " for="customRadioInline6">{{__('Passaporte')}}</label>
                                     </div>
 
                                     <div id="fieldCPF" @error('passaporte') style="display: none" @enderror>
@@ -570,6 +590,15 @@
                                               <strong>{{ $message }}</strong>
                                           </span>
                                       @enderror
+                                    </div>
+                                    <div id="fieldCNPJ" @error('passaporte') style="display: block" @enderror style="display: none" >
+                                        <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" @if(old('cnpj') != null) value="{{ old('cnpj') }}" @else value="{{$user->cnpj}}" @endif autocomplete="cnpj" autofocus>
+
+                                        @error('cnpj')
+                                        <span class="invalid-feedback" role="alert">
+                                              <strong>{{ $message }}</strong>
+                                          </span>
+                                        @enderror
                                     </div>
                                     <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: none" >
                                       <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="{{__('Passaporte')}}" @if(old('passaporte') != null) value="{{ old('passaporte') }}" @else value="{{$user->passaporte}}" @endif autocomplete="passaporte" autofocus>
@@ -843,6 +872,7 @@
   <script type="text/javascript" >
         $(document).ready(function($){
             $('#cpf').mask('000.000.000-00');
+            $('#cnpj').mask('00.000.000/0000-00');
             if($('html').attr('lang') == 'en') {
                 //$('#celular').mask('(000) 000-0000');
                 $('#groupformuf').addClass('d-none');
@@ -936,20 +966,37 @@
           // $("#fieldPassaporte").hide();
           $("#customRadioInline1").click(function(){
               $("#fieldPassaporte").hide();
+              $("#fieldCNPJ").hide();
               $("#fieldCPF").show();
           });
 
           $("#customRadioInline2").click(function(){
-              $("#fieldPassaporte").show();
+              $("#fieldPassaporte").hide();
+              $("#fieldCNPJ").show();
               $("#fieldCPF").hide();
           });
           $("#customRadioInline3").click(function(){
+              $("#fieldPassaporte").show();
+              $("#fieldCNPJ").hide();
+              $("#fieldCPF").hide();
+          });
+
+
+          $("#customRadioInline4").click(function(){
               $("#fieldPassaporte").hide();
+              $("#fieldCNPJ").hide();
               $("#fieldCPF").show();
           });
 
-          $("#customRadioInline4").click(function(){
+          $("#customRadioInline5").click(function(){
+              $("#fieldPassaporte").hide();
+              $("#fieldCNPJ").show();
+              $("#fieldCPF").hide();
+          });
+
+          $("#customRadioInline6").click(function(){
               $("#fieldPassaporte").show();
+              $("#fieldCNPJ").hide();
               $("#fieldCPF").hide();
           });
 

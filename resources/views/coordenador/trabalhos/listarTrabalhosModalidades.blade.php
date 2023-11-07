@@ -114,7 +114,7 @@
                     @if ($modalidade->apresentacao)
                     <th scope="col">Apresentação</th>
                     @endif
-                    <th scope="col">Revisores</th>
+                    <th scope="col">Avaliadores</th>
                     <th scope="col">Avaliações</th>
                     {{--<th scope="col">Data</th>--}}
                     <th scope="col" style="text-align:center">Atribuir</th>
@@ -245,7 +245,7 @@
           </div>
           <div class="row">
               <div class="col-sm-12">
-                  <label for="numeroDeRevisoresPorTrabalho" class="col-form-label">{{ __('Número de revisores por trabalho') }}</label>
+                  <label for="numeroDeRevisoresPorTrabalho" class="col-form-label">{{ __('Número de avaliadores por trabalho') }}</label>
               </div>
           </div>
           <div class="row justify-content-center">
@@ -343,7 +343,7 @@
           @if (count($trabalho->atribuicoes) > 0)
             <div class="row justify-content-center">
               <div class="col-sm-12">
-                <h5>Revisores atribuidos ao trabalho</h5>
+                <h5>Avaliadores atribuidos ao trabalho</h5>
               </div>
           @else
             <div class="row justify-content-center">
@@ -354,7 +354,7 @@
             @if ($i % 3 == 0) </div><div class="row"> @endif
               <div class="col-sm-4">
                 <div class="card" style="width: 13.5rem; text-align: center;">
-                  <img class="" src="{{asset('img/icons/user.png')}}" width="100px" alt="Revisor" style="position: relative; left: 30%; top: 10px;">
+                  <img class="" src="{{asset('img/icons/user.png')}}" width="100px" alt="Avaliador" style="position: relative; left: 30%; top: 10px;">
                   <div class="card-body">
                     <h6 class="card-title">{{$revisor->user->name}}</h6>
                     <strong>E-mail</strong>
@@ -363,7 +363,7 @@
                       @csrf
                       <input type="hidden" name="eventoId" value="{{$evento->id}}">
                       <input type="hidden" name="trabalhoId" value="{{$trabalho->id}}">
-                      <button type="submit" class="btn btn-primary button-prevent-multiple-submits" id="removerRevisorTrabalho">Remover Revisor</button>
+                      <button type="submit" class="btn btn-primary button-prevent-multiple-submits" id="removerRevisorTrabalho">Remover Avaliador</button>
                     </form>
                   </div>
                 </div>
@@ -373,7 +373,7 @@
           <br>
           <div class="row">
             <div class="col-sm-12">
-              <h5>Adicionar Revisor</h5>
+              <h5>Adicionar Avaliador</h5>
             </div>
           </div>
           <form action="{{ route('distribuicaoManual') }}" method="post">
@@ -395,7 +395,7 @@
               </div>
               <div class="col-sm-3">
                 <button type="submit" class="btn btn-primary button-prevent-multiple-submits" id="addRevisorTrabalho">
-                  <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i>Adicionar Revisor
+                  <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i>Adicionar Avaliador
                 </button>
               </div>
           </form>
