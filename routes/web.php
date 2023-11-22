@@ -82,7 +82,7 @@ Route::namespace('Submissao')->group(function () {
     });
     Route::view('validarCertificado', 'validar')->name('validarCertificado');
     Route::post('validarCertificado', [CertificadoController::class, 'validar'])->name('validarCertificadoPost');
-    Route::get('/home', [CertificadoController::class, 'validar'])->name('home')->middleware('isTemp');
+    Route::get('/home', [CertificadoController::class, 'validar'])->name('home')->middleware('auth', 'isTemp');
 
 });
 
@@ -434,7 +434,7 @@ Route::get('/demo', function () {
     return new App\Mail\UserWelcome();
 });
 
-Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware('isTemp');
+Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware('auth', 'isTemp');
 
 Route::namespace('Submissao')->group(function () {
     Route::get('{id}/regras', [ModalidadeController::class, 'downloadRegras'])->name('modalidade.regras.download');
