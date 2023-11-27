@@ -22,48 +22,44 @@
             <p class="card-text">
 
                 @foreach ($form->perguntas as $index => $pergunta)
-                    @if($pergunta->visibilidade == true)
-                        @if($pergunta->respostas->first()->opcoes->count())
-                            @if ($respostas[$loop->index]->visibilidade == true)
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p><strong>{{$pergunta->pergunta}}</strong></p>
-                                        @foreach ($pergunta->respostas->first()->opcoes as $opcao)
-                                            <div class="form-check">
-                                                @if ($respostas[$loop->index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo))
-                                                    <input class="form-check-input" type="radio" name="{{$pergunta->id}}" checked name="{{$pergunta->id}}[]" value="{{$opcao->titulo}}" id="{{$opcao->id}}" disabled>
-                                                @else
-                                                    <input class="form-check-input" type="radio" name="{{$pergunta->id}}" name="{{$pergunta->id}}[]" value="{{$opcao->titulo}}" id="{{$opcao->id}}" disabled>
-                                                @endif
-                                                <label class="form-check-label" for="{{$opcao->id}}">
-                                                    {{$opcao->titulo}}
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endif
-                        @elseif($pergunta->respostas->first()->paragrafo->count())
-                            @forelse ($pergunta->respostas as $resposta)
-                                @if(($resposta->revisor != null || $resposta->trabalho != null) && $resposta->revisor_id == $revisor->id)
-                                    @if(($resposta->trabalho->id == $trabalho->id) && $resposta->paragrafo->visibilidade == true)
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <p><strong>{{$pergunta->pergunta}}</strong></p>
-                                                <p class="card-text">
-                                                    <p>{{$resposta->paragrafo->resposta}}</p>
-                                                </p>
-                                            </div>
+                    @if($pergunta->respostas->first()->opcoes->count())
+                        @if ($respostas[$loop->index]->visibilidade == true)
+                            <div class="card">
+                                <div class="card-body">
+                                    <p><strong>{{$pergunta->pergunta}}</strong></p>
+                                    @foreach ($pergunta->respostas->first()->opcoes as $opcao)
+                                        <div class="form-check">
+                                            @if ($respostas[$loop->index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo))
+                                                <input class="form-check-input" type="radio" name="{{$pergunta->id}}" checked name="{{$pergunta->id}}[]" value="{{$opcao->titulo}}" id="{{$opcao->id}}" disabled>
+                                            @else
+                                                <input class="form-check-input" type="radio" name="{{$pergunta->id}}" name="{{$pergunta->id}}[]" value="{{$opcao->titulo}}" id="{{$opcao->id}}" disabled>
+                                            @endif
+                                            <label class="form-check-label" for="{{$opcao->id}}">
+                                                {{$opcao->titulo}}
+                                            </label>
                                         </div>
-                                    @endif
-                                @endif
-                                @empty
-                                <p>Sem respostas</p>
-                            @endforelse
+                                    @endforeach
+                                </div>
+                            </div>
                         @endif
-
+                    @elseif($pergunta->respostas->first()->paragrafo->count())
+                        @forelse ($pergunta->respostas as $resposta)
+                            @if(($resposta->revisor != null || $resposta->trabalho != null) && $resposta->revisor_id == $revisor->id)
+                                @if(($resposta->trabalho->id == $trabalho->id) && $resposta->paragrafo->visibilidade == true)
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p><strong>{{$pergunta->pergunta}}</strong></p>
+                                            <p class="card-text">
+                                                <p>{{$resposta->paragrafo->resposta}}</p>
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endif
+                        @empty
+                            <p>Sem respostas</p>
+                        @endforelse
                     @endif
-
                 @endforeach
             </p>
 

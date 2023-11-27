@@ -7,7 +7,7 @@
             <div class="col-sm-12">
                 <h3 class="titulo-detalhes"> <strong> {{$trabalho->titulo}}</strong> <br>
                     Modalidade: <strong> {{$modalidade->nome}}</strong><br>
-                    Revisor: <strong> {{$revisorUser->name}}</strong><br>
+                    Avaliador: <strong> {{$revisorUser->name}}</strong><br>
                 </h3>
             </div>
         </div>
@@ -67,7 +67,7 @@
                                     @endforeach
                                    @if ($respostas[$index] != null)
                                         <div class="col-form-label text-md-left">
-                                            <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="visivilidade_opcoes[]" value="{{$respostas[$index]->opcoes->first()->id}}" {{  ($respostas[$index]->opcoes->first()->visibilidade == true ? ' checked' : '') }} {{$pergunta->visibilidade == true ? '' : 'disabled' }}>
+                                            <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="visivilidade_opcoes[]" value="{{$respostas[$index]->opcoes->first()->id}}" {{  ($respostas[$index]->opcoes->first()->visibilidade == true ? ' checked' : '') }} >
                                         </div>
                                    @endif
                                 @elseif($pergunta->respostas->first()->paragrafo != null)
@@ -80,7 +80,7 @@
                                                     <textarea id="resposta{{$resposta->paragrafo->id}}" type="text" class="form-control @error('resposta'.$resposta->paragrafo->id) is-invalid @enderror" name="resposta{{$resposta->paragrafo->id}}" required>@if(old('resposta'.$resposta->paragrafo->id)!=null){{old('resposta'.$resposta->paragrafo->id)}}@else{{($resposta->paragrafo->resposta)}}@endif</textarea>
                                                 </p>
                                                 <div class="col-form-label text-md-left">
-                                                    <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="paragrafo_checkBox[]" value="{{$resposta->paragrafo->id}}" {{  ($resposta->paragrafo->visibilidade == true ? ' checked' : '') }} {{$pergunta->visibilidade == true ? '' : 'disabled' }}>
+                                                    <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="paragrafo_checkBox[]" value="{{$resposta->paragrafo->id}}" {{  ($resposta->paragrafo->visibilidade == true ? ' checked' : '') }} >
                                                 </div>
                                             @endif
                                         @endif
@@ -101,7 +101,7 @@
             </div>
         @endforeach
         <div class="col-sm-12" style="margin-top: 20px;">
-            <small>Para trocar o arquivo de avaliação do revisor, envie um novo.</small><br>
+            <small>Para trocar o arquivo de avaliação do avaliador, envie um novo.</small><br>
             <div class="custom-file">
                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoAvaliacao">
             </div>

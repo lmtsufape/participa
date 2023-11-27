@@ -2,10 +2,10 @@
 
 @section('menu')
 <div id="divListarRevisores" style="display: block">
-    
+
     <div class="row">
         <div class="col-sm-12">
-            <h1 class="titulo-detalhes">Adicionar revisores ao evento</h1>
+            <h1 class="titulo-detalhes">Adicionar avaliadores ao evento</h1>
         </div>
     </div>
     @if(session('error'))
@@ -24,8 +24,8 @@
                   <div class="container">
                     <div class="row">
                       <div class="col-sm-6" style="right: 1.6%;">
-                        <h5 class="card-title">Revisores</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Revisores atualmente cadastrados</h6>
+                        <h5 class="card-title">Avaliadores</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Avaliadores atualmente cadastrados</h6>
                       </div>
                       <div class="col-sm-6" style="left: 2.2%;">
                         <form class="form-inline">
@@ -42,7 +42,7 @@
                     </div>
                   </div>
                   {{-- onclick="revisoresPorArea()" --}}
-                  
+
                   <p class="card-text">
                     <table id="revisores_cadastrados" class="table table-hover table-responsive-lg table-sm">
                         <thead>
@@ -101,8 +101,8 @@
       <div class="col-sm-12">
           <div class="card">
               <div class="card-body">
-                <h5 class="card-title">Revisores convidados</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Revisores que foram convidados</h6>
+                <h5 class="card-title">Avaliadores convidados</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Avaliadores que foram convidados</h6>
                 <p class="card-text">
                   <table class="table table-hover table-responsive-lg table-sm">
                       <thead>
@@ -133,7 +133,7 @@
                                   <h6 style="color: rgb(5, 77, 5)">Aceito</h6>
                                 @elseif ($revisor->eventosComoRevisor()->where([['evento_id', $evento->id], ['convite_aceito', null]])->first() != null)
                                   <h6 style="color: rgb(0, 0, 0)">Pendente</h6>
-                                @else 
+                                @else
                                   <h6 style="color: rgb(107, 25, 11)">Rejeitado</h6>
                                 @endif
                               </td>
@@ -142,7 +142,7 @@
                         @endforeach
                       </tbody>
                     </table>
-                    
+
                     {{-- @if(count($revisores) > 0 && isset($revisores))
                       <form action="{{route('revisor.emailTodos')}}" method="POST" >
                           @csrf

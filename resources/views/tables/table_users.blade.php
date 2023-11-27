@@ -26,7 +26,7 @@
                             <option value="">{{ "Cood. Comissão Organizadora" }}</option>
                         @endif
                         @if($user->revisor)
-                            <option value="">{{ "Revisor" }}</option>
+                            <option value="">{{ "Avaliador" }}</option>
                         @endif
                         @if($user->coautor)
                             <option value="">{{ "Coutor" }}</option>

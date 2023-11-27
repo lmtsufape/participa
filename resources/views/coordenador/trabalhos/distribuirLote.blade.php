@@ -8,7 +8,7 @@
         <div class="col-sm-12">
             <h1 class="">Atribuir Trabalhos</h1>
             <hr>
-        </div>            
+        </div>
         <div class="col-sm-6">
           @forelse ($areasTrabalhos as $area)
             <div class="card" style="width: 30rem;">
@@ -22,16 +22,16 @@
                 @foreach ($trabalhos as $trabalho)
                   @if($trabalho->areaId == $area->id)
                     <li class="list-group-item">{{$trabalho->titulo}}</li>
-                    <input type="hidden" name="trabalho[]" value="{{$trabalho->id}}">                      
+                    <input type="hidden" name="trabalho[]" value="{{$trabalho->id}}">
                   @endif
                 @endforeach
               </ul>
               <div class="card-footer">
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <button @if($revisores->contains($area->id)) disabled="true"  @endif type="submit" id="{{$area->id}}" class="btn btn-primary" 
+                    <button @if($revisores->contains($area->id)) disabled="true"  @endif type="submit" id="{{$area->id}}" class="btn btn-primary"
                       >Atribuir</a>
-                      
+
                   </div>
                   <select name="revisor_id" class="custom-select" >
                     @if (!$revisores->contains($area->id))
@@ -39,7 +39,7 @@
                             <option value="{{$revisor->id}}" >{{$revisor->user->email}}</option>
                         @endforeach
                     @else
-                        <option>Não há revisores</option>
+                        <option>Não há Avaliadores</option>
                     @endif
                   </select>
                 </div>
@@ -47,9 +47,9 @@
               </div>
             </div>
           @empty
-              
+
           @endforelse
-        </div>                
+        </div>
       </div>
 
 @endsection
@@ -79,8 +79,8 @@
             console.log(e.target.offsetParent.childNodes[2][0].firstChild.data);
             e.target.offsetParent.childNodes[2][0].firstChild.data =  res.data.revisor;
             e.currentTarget.offsetParent.childNodes[2].disabled = 'true';
-            
-              
+
+
           },
           error: function(err){
               console.log('err')
@@ -95,12 +95,12 @@
     // }
 
     // let atribuir = button => {
-    
-      
+
+
 
     //   let data = {
     //     email: email.value,
-        
+
     //     _token: '{{csrf_token()}}'
     //   };
 
@@ -114,7 +114,7 @@
     //         if(res.user[0] != null){
     //           event.path[2].childNodes[3].childNodes[3].attributes[2].value = res.user[0]['name'];
     //         }
-              
+
     //       },
     //       error: function(err){
     //           console.log('err')
@@ -124,6 +124,6 @@
 
     // });
 
-    
+
   </script>
 @endsection
