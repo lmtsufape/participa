@@ -9,10 +9,11 @@
 
         <div class="container-fluid">
 
+            <a href="{{ Route('eventos.proximos') }}">
             <h1 class="text-white mt-5 mb-4 text-center">
                 Próximos Eventos
             </h1>
-
+            </a>
             <div id="carousel-primary"
                 class="carousel slide box-carrousel-primary d-flex align-items-center justify-content-center "
                 data-ride="carousel">

@@ -46,7 +46,7 @@
                                                             @if ($trabalho->pareceres[$i]->revisor)
                                                                 <div class="row">
                                                                     <div class="col-sm-12">
-                                                                        <h4>Dados do revisor</h4>
+                                                                        <h4>Dados do avaliador</h4>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">

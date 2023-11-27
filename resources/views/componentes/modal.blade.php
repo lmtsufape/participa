@@ -28,7 +28,7 @@
                         <div class="row ">
                           <div class="col-sm-12">
                             <label for="assunto" class="col-form-label">{{ __('Assunto') }}</label>
-                            <input id="assunto" type="text" class="form-control  @error('assunto') is-invalid @enderror" name="assunto" value="{{old('assunto', "Revisor do evento")}}" required autocomplete="nome" autofocus>
+                            <input id="assunto" type="text" class="form-control  @error('assunto') is-invalid @enderror" name="assunto" value="{{old('assunto', "Avaliador do evento")}}" required autocomplete="nome" autofocus>
                             @error('assunto')
                               <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -36,7 +36,7 @@
                             @enderror
 
                             <label for="texto_do_email" class="col-form-label">{{ __('Texto') }}</label>
-                            <textarea class="form-control" id="texto_do_email" name="texto_do_email" rows="3">{{old('texto_do_email', "Convidamos vossa senhoria, para ser revisor do evento " . $evento->nome . ".")}}</textarea>
+                            <textarea class="form-control" id="texto_do_email" name="texto_do_email" rows="3">{{old('texto_do_email', "Convidamos vossa senhoria, para ser avaliador do evento " . $evento->nome . ".")}}</textarea>
 
                             @error('texto_do_email')
                               <span class="invalid-feedback" role="alert">
