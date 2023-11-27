@@ -67,7 +67,7 @@
                                     @endforeach
                                    @if ($respostas[$index] != null)
                                         <div class="col-form-label text-md-left">
-                                            <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="visivilidade_opcoes[]" value="{{$respostas[$index]->opcoes->first()->id}}" {{  ($respostas[$index]->opcoes->first()->visibilidade == true ? ' checked' : '') }} {{$pergunta->visibilidade == true ? '' : 'disabled' }}>
+                                            <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="visivilidade_opcoes[]" value="{{$respostas[$index]->opcoes->first()->id}}" {{  ($respostas[$index]->opcoes->first()->visibilidade == true ? ' checked' : '') }} >
                                         </div>
                                    @endif
                                 @elseif($pergunta->respostas->first()->paragrafo != null)
@@ -80,7 +80,7 @@
                                                     <textarea id="resposta{{$resposta->paragrafo->id}}" type="text" class="form-control @error('resposta'.$resposta->paragrafo->id) is-invalid @enderror" name="resposta{{$resposta->paragrafo->id}}" required>@if(old('resposta'.$resposta->paragrafo->id)!=null){{old('resposta'.$resposta->paragrafo->id)}}@else{{($resposta->paragrafo->resposta)}}@endif</textarea>
                                                 </p>
                                                 <div class="col-form-label text-md-left">
-                                                    <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="paragrafo_checkBox[]" value="{{$resposta->paragrafo->id}}" {{  ($resposta->paragrafo->visibilidade == true ? ' checked' : '') }} {{$pergunta->visibilidade == true ? '' : 'disabled' }}>
+                                                    <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="paragrafo_checkBox[]" value="{{$resposta->paragrafo->id}}" {{  ($resposta->paragrafo->visibilidade == true ? ' checked' : '') }} >
                                                 </div>
                                             @endif
                                         @endif
