@@ -465,7 +465,7 @@
                                         </div>
                                     </template>
                                 <div class="form-group" >
-                                    <label for="nomeTrabalho" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarapresentacao}}:</label>
+                                    <label for="nomeTrabalho" class="col-form-label font-weight-bold">Modelo de apresentação de slides:</label>
                                     <input type="file" class="filestyle custom-file" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoModelos">
                                     <small>O arquivo selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF, PDF, PPT, PPTX ou ODP de até 2 MB.</small>
                                     @error('arquivoModelos')
@@ -484,6 +484,7 @@
                                         </span>
                                     @enderror
                                 </div>
+
                                 <div class="form-group">
                                     <label for="arquivoInstrucoes" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixarinstrucoes}}:</label>
                                     <input id="arquivoInstrucoes" type="file" class="filestyle custom-file" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoInstrucoes">
@@ -494,8 +495,9 @@
                                         </span>
                                     @enderror
                                 </div>
+                                
                                 <div class="form-group">
-                                    <label for="nomeTrabalho" class="col-form-label font-weight-bold">{{ __('Enviar') }} {{$evento->formEvento->etiquetabaixartemplate}}:</label>
+                                    <label for="nomeTrabalho" class="col-form-label font-weight-bold">Modelo visual do texto :</label>
                                     <input type="file" class="filestyle custom-file" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates">
                                     <small>O arquivo selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF, TXT ou PDF de até 2 MB.</small>
                                     @error('arquivoTemplates')
@@ -504,6 +506,7 @@
                                         </span>
                                     @enderror
                                 </div>
+
                                 <div x-data="construct()">
                                     <div class="d-flex justify-content-end">
                                         <button type="button" id="btn-adicionar-escolhar" @click="adicionaDocumento()"
