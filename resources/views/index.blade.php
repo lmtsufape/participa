@@ -8,7 +8,7 @@
     <section class="home-section d-flex align-items-center justify-content-start flex-column">
 
         <div class="container-fluid">
-
+        @if (count($proximosEventos) > 0)
             <h1 class="text-white mt-5 mb-4 text-center">
                 <a href="{{ Route('eventos.proximos') }}">
                     Próximos Eventos
@@ -19,7 +19,7 @@
                 data-ride="carousel">
 
                 <div class="carousel-inner carrousel-container-cards d-flex align-items-center justify-content-start">
-
+                @endif
 
                     @if (count($proximosEventos) > 0)
                         @forelse ($proximosEventos as $i => $ProximoEvento)
