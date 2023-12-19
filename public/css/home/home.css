@@ -3,11 +3,13 @@
     padding: 0;
 }
 
-
+a{
+    text-decoration: underline;
+    color: inherit;
+}
 a:hover {
     color: inherit;
     cursor: pointer;
-
 }
 
 .home-section {

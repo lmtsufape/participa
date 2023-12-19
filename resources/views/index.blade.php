@@ -8,18 +8,18 @@
     <section class="home-section d-flex align-items-center justify-content-start flex-column">
 
         <div class="container-fluid">
-
-            <a href="{{ Route('eventos.proximos') }}">
+        @if (count($proximosEventos) > 0)
             <h1 class="text-white mt-5 mb-4 text-center">
-                Próximos Eventos
+                <a href="{{ Route('eventos.proximos') }}">
+                    Próximos Eventos
+                </a>
             </h1>
-            </a>
             <div id="carousel-primary"
                 class="carousel slide box-carrousel-primary d-flex align-items-center justify-content-center "
                 data-ride="carousel">
 
                 <div class="carousel-inner carrousel-container-cards d-flex align-items-center justify-content-start">
-
+                @endif
 
                     @if (count($proximosEventos) > 0)
                         @forelse ($proximosEventos as $i => $ProximoEvento)
@@ -98,11 +98,11 @@
 
 
             <!--carrousel eventos passados -->
-            <a href="{{ Route('eventos.passados') }}">
-                <h1 class="text-white mt-5 mb-5 text-center">
+            <h1 class="text-white mt-5 mb-5 text-center">
+                <a href="{{ Route('eventos.passados') }}">
                     Últimos eventos realizados
-                </h1>
-            </a>
+                </a>
+            </h1>
 
 
             <div class="container-geral-slider-cards">
