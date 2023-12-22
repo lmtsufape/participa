@@ -48,7 +48,7 @@ class TrabalhoPostRequest extends FormRequest
             'eventoId' => ['required', 'integer'],
             'resumo' => ['nullable', 'string'],
             'nomeCoautor.*' => ['string'],
-            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores)],
+            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores), 'email', 'exists:users,email'],
             'arquivo' => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
@@ -78,6 +78,7 @@ class TrabalhoPostRequest extends FormRequest
     {
         return [
             'arquivo.max' => 'O tamanho máximo permitido é de 2mb',
+            'emailCoautor.*.exists' => 'O usuário com o e-mail :input precisa estar cadastrado no sistema.',
         ];
     }
 

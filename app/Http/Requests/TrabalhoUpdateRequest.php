@@ -50,7 +50,7 @@ class TrabalhoUpdateRequest extends FormRequest
             'emailCoautor_'.$id => ['required', 'array', 'min:1'],
             'nomeCoautor_'.$id.'.*' => ['string'],
             'emailCoautor_'.$id.'.0' => ['string', new MaxTrabalhosAutorUpdate($evento->numMaxTrabalhos)],
-            'emailCoautor_'.$id.'.*' => ['string', new MaxTrabalhosCoautorUpdate($evento->numMaxCoautores)],
+            'emailCoautor_'.$id.'.*' => ['string', new MaxTrabalhosCoautorUpdate($evento->numMaxCoautores), 'exists:users,email'],
             'arquivo'.$id => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, $request['arquivo'.$id], true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
@@ -82,7 +82,8 @@ class TrabalhoUpdateRequest extends FormRequest
 
         return [
             'arquivo*.max' => 'O tamanho máximo permitido é de 2mb',
-            'emailCoautor_'.$id.'*.required' => 'O trabalho deve conter pelo seu autor.',
+            'emailCoautor_'.$id.'.*.required' => 'O trabalho deve conter pelo seu autor.',
+            'emailCoautor_'.$id.'.*.exists' => 'O usuário com o e-mail :input precisa estar cadastrado no sistema.',
         ];
     }
 }
