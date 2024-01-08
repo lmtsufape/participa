@@ -58,7 +58,7 @@
                                                             <p class="card-text">
                                                             <div class="form-group">
                                                                 <label for="nome"
-                                                                    class="col-form-label">{{ __('Nome da Categoria') }}</label>
+                                                                    class="col-form-label">{{ __('Nome da Categoria') }}*</label>
                                                                 <input id="nome"
                                                                     type="text"
                                                                     class="form-control @error('nome') is-invalid @enderror"
@@ -76,7 +76,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="valor_total"
-                                                                    class="col-form-label">{{ __('Valor da inscrição') }}</label>
+                                                                    class="col-form-label">{{ __('Valor da inscrição') }}*</label>
                                                                 <small>(0 para inscrição gratuita)</small>
                                                                 <input id="valor_total"
                                                                     type="number"
@@ -88,6 +88,23 @@
                                                                     autocomplete="valor_total"
                                                                     autofocus>
                                                                 @error('valor_total')
+                                                                    <span class="invalid-feedback"
+                                                                        role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="limite_inscricao"
+                                                                    class="col-form-label">{{ __('Data limite para inscrição') }}</label>
+                                                                <input id="limite_inscricao"
+                                                                    type="datetime-local"
+                                                                    class="form-control @error('limite_inscricao') is-invalid @enderror"
+                                                                    name="limite_inscricao"
+                                                                    value="{{ old('limite_inscricao') }}"
+                                                                    autocomplete="limite_inscricao"
+                                                                    autofocus>
+                                                                @error('limite_inscricao')
                                                                     <span class="invalid-feedback"
                                                                         role="alert">
                                                                         <strong>{{ $message }}</strong>
@@ -150,6 +167,7 @@
                                         <th scope="col">Valor</th>
                                         <th scope="col">Permite submissão</th>
                                         <th scope="col">Permite inscrição</th>
+                                        <th scope="col">Data limite de inscrição</th>
                                         <th scope="col"
                                             style="text-align:center">Editar</th>
                                         <th scope="col"
@@ -163,6 +181,7 @@
                                             <td>{{ $categoria->valor_total }}</td>
                                             <td>{{ $categoria->permite_submissao ? "Sim" : "Não" }}</td>
                                             <td>{{ $categoria->permite_inscricao ? "Sim" : "Não" }}</td>
+                                            <td>{{ $categoria->limite_inscricao->format('d/m/Y H:i')}}</td>
                                             <td style="text-align:center">
                                                 <a href="#"
                                                     data-toggle="modal"
@@ -254,6 +273,21 @@
                                     name="valor_total_{{ $categoria->id }}"
                                     value="{{ old('valor_total_'.$categoria->id, $categoria->valor_total) }}">
                                 @error('valor_total_'.$categoria->id)
+                                    <span class="invalid-feedback"
+                                        role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group"
+                                style="margin-top: 20px; margin-bottom: 20px;">
+                                <label for="limite_inscricao_">Valor*</label>
+                                <input id="limite_inscricao_"
+                                    type="datetime-local"
+                                    class="form-control @error('limite_inscricao_') is-invalid @enderror"
+                                    name="limite_inscricao_{{ $categoria->id }}"
+                                    value="{{ old('limite_inscricao_'.$categoria->id, $categoria->limite_inscricao) }}">
+                                @error('limite_inscricao_'.$categoria->id)
                                     <span class="invalid-feedback"
                                         role="alert">
                                         <strong>{{ $message }}</strong>
