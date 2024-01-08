@@ -181,7 +181,7 @@
                                             <td>{{ $categoria->valor_total }}</td>
                                             <td>{{ $categoria->permite_submissao ? "Sim" : "Não" }}</td>
                                             <td>{{ $categoria->permite_inscricao ? "Sim" : "Não" }}</td>
-                                            <td>{{ $categoria->limite_inscricao->format('d/m/Y H:i')}}</td>
+                                            <td>{{ $categoria->limite_inscricao?->format('d/m/Y H:i')}}</td>
                                             <td style="text-align:center">
                                                 <a href="#"
                                                     data-toggle="modal"
