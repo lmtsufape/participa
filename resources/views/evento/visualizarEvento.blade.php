@@ -190,7 +190,7 @@
                                         <label for="categoria">Escolha sua categoria como participante</label>
                                         <select x-model="categoria" name="categoria" id="categoria" class="form-control">
                                             <option value="0" disabled>-- Escolha sua categoria --</option>
-                                            @foreach ($evento->categoriasParticipantes()->where('permite_inscricao', true)->get() as $categoria)
+                                            @foreach ($evento->categoriasParticipantes()->where('permite_inscricao', true)->where('limite_inscricao', '>', now())->get() as $categoria)
                                                 <option value="{{$categoria->id}}" @if (old('categoria') == $categoria->id) selected @endif>{{$categoria->nome}}</option>
                                             @endforeach
                                         </select>

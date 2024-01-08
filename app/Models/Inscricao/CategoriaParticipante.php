@@ -10,6 +10,10 @@ class CategoriaParticipante extends Model
         'nome', 'valor_total', 'evento_id',
     ];
 
+    protected $casts = [
+        'limite_inscricao' => 'datetime',
+    ];
+
     public function evento()
     {
         return $this->belongsTo('App\Models\Submissao\Evento', 'evento_id');
