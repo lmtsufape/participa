@@ -66,6 +66,13 @@
                                                 <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
                                             </a>
                                         </div>
+                                        @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
+                                            <div class="row col-md-12">
+                                                <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
+                                                    <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
+                                                </a>
+                                            </div>
+                                        @endcan
                                     </div>
                                 </div>
                             </div>
