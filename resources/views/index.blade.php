@@ -111,6 +111,7 @@
                 </h1>
             </a>
 
+            <br><br><br>
 
             <div class="container-geral-slider-cards">
                 <input id="quantEventos" type="text" hidden value="{{ count($eventosPassados) + 1 }}">
