@@ -255,9 +255,9 @@ class AdministradorController extends Controller
     {
         // dd($request->all());
         $this->authorize('isAdmin', Administrador::class);
-        $users = User::where('email', 'ilike', '%'.$request->search.'%')->paginate(100);
+        $users = User::where('email', $request->search)->paginate(100);
         if ($users->count() == 0) {
-            $users = User::where('name', 'ilike', '%'.$request->search.'%')->paginate(100);
+            $users = User::where('name', $request->search)->paginate(100);
         }
         if ($users->count() == 0) {
             return view('administrador.users', compact('users'))->with(['message' => 'Nenhum Resultado encontrado!']);
