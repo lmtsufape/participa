@@ -174,7 +174,11 @@
         <div class="modal-dialog @if($evento->possuiFormularioDeInscricao()) modal-lg @endif" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #114048ff; color: white;">
-                    <h5 class="modal-title" id="#label">Confirmação</h5>
+                    @if(auth()->check())
+                        <h5 class="modal-title" id="#label">Confirmação</h5>
+                    @else
+                        <h5 class="modal-title" id="#label">Atenção!</h5>
+                    @endif
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -182,7 +186,19 @@
                 <form action="{{ route('inscricao.inscrever', ['evento_id' => $evento->id]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
-                        @if ($evento->categoriasParticipantes()->where('permite_inscricao', true)->exists())
+                        @if(!auth()->check())
+                            @include('componentes.mensagens')
+                            <p>Para continuar com sua inscrição, é necessário que possua cadastro na plataforma e realize o seu acesso (login), caso já possua uma conta. Se você ainda não tem, será necessário efetuar o cadastro e retornar a página do evento para realizar sua inscrição.</p>
+                            <div class="modal-footer text-center">
+                                <a href="{{ route('register', app()->getLocale()) }}" > 
+                                    <button type="button" class="btn btn-secondary">{{ __('Cadastrar-se') }}</button> 
+                                </a>
+
+                                <a href="{{ route('login') }}"> 
+                                    <button type="button" class="btn btn-primary button-prevent-multiple-submits">{{ __('Entrar') }}</button>
+                                </a>
+                            </div>
+                        @elseif ($evento->categoriasParticipantes()->where('permite_inscricao', true)->exists())
                             <div id="formulario" x-data="{ categoria: 0 }">
                                 @include('componentes.mensagens')
                                 <div class="row form-group">
@@ -389,10 +405,13 @@
                             <p>Tem certeza que deseja se inscrever nesse evento?</p>
                         @endif
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
-                    </div>
+
+                    @if(auth()->check())
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
+                        </div>
+                    @endif
                 </form>
             </div>
         </div>
