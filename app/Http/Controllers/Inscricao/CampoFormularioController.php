@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inscricao\CampoFormulario;
+use App\Models\Inscricao\CampoFormularioSelect;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Submissao\Evento;
 use Illuminate\Http\Request;
@@ -61,6 +62,12 @@ class CampoFormularioController extends Controller
         $campo->evento_id = $evento->id;
         $campo->obrigatorio = $request->input('campo_obrigatorio') == 'on';
         $campo->save();
+
+        if ($request->input('tipo_campo') == 'select') {
+            foreach ($request->input('select-text') as $opcao) {
+                $campo->opcoes()->save(new CampoFormularioSelect(['nome' => $opcao]));
+            }
+        }
 
         if ($request->para_todas == 'on') {
             $categorias = $evento->categoriasParticipantes->pluck('id');
