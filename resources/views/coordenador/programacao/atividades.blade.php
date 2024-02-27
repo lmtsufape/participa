@@ -21,7 +21,7 @@
                                 <input type="hidden" name="idAtividade" value="{{ $atv->id }}">
                                 <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                                 <div class="col-sm-6">
-                                    <label for="titulo">Titulo*:</label>
+                                    <label for="titulo">Título*:</label>
                                     <input class="form-control @error('titulo') is-invalid @enderror" type="text" name="titulo" id="titulo{{$atv->id}}" value="@if ( old('titulo') != null ) {{ old('titulo') }} @else {{$atv->titulo}} @endif" placeholder="Nova atividade">
 
                                     @error('titulo')
@@ -70,7 +70,7 @@
 
                             <div class="row form-group">
                                 <div class="col-sm-12">
-                                    <label for="descricao">Descricao*:</label>
+                                    <label for="descricao">Descrição*:</label>
                                     <textarea class="form-control @error('descricao') is-invalid @enderror" rows="5" name="descricao" id="descricao{{$atv->id}}" placeholder="Descreva em detalhes sua atividade">@if (old('descricao') != null) {{ old('descricao') }} @else {{$atv->descricao}} @endif</textarea>
 
                                     @error('descricao')
@@ -497,7 +497,7 @@
                             <input type="hidden" name="idNovaAtividade" value="2">
                             <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                             <div class="col-sm-6">
-                                <label for="titulo">Titulo*:</label>
+                                <label for="titulo">Título*:</label>
                                 <input class="form-control @error('título') is-invalid @enderror" type="text" name="título" id="titulo" value="{{ old('título')}}" placeholder="Nova atividade" required>
 
                                 @error('título')
@@ -540,7 +540,7 @@
 
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                <label for="descricao">Descricao*:</label>
+                                <label for="descricao">Descrição*:</label>
                                 <textarea class="form-control @error('descrição') is-invalid @enderror" rows="5" name="descrição" id="descricao" placeholder="Descreva em detalhes sua atividade">{{ old('descrição') }}</textarea required>
 
                                 @error('descrição')
@@ -556,13 +556,13 @@
                                 <label for="duracaoAtividade">Duração*:</label>
                                 <select class="form-control  @error('duraçãoDaAtividade') is-invalid @enderror" name="duraçãoDaAtividade" id="duracaoAtividade" onchange="exibirDias(0)" required>
                                     <option value="" selected disabled>-- Duração --</option>
-                                    <option value="1" @if(old('duraçãoDaAtividade') == "1") selected @endif>Um dia</option>
-                                    <option value="2" @if(old('duraçãoDaAtividade') == "2") selected @endif>Dois dia</option>
-                                    <option value="3" @if(old('duraçãoDaAtividade') == "3") selected @endif>Três dia</option>
-                                    <option value="4" @if(old('duraçãoDaAtividade') == "4") selected @endif>Quatro dia</option>
-                                    <option value="5" @if(old('duraçãoDaAtividade') == "5") selected @endif>Cinco dia</option>
-                                    <option value="6" @if(old('duraçãoDaAtividade') == "6") selected @endif>Seis dia</option>
-                                    <option value="7" @if(old('duraçãoDaAtividade') == "7") selected @endif>Sete dia</option>
+                                    <option value="1" @if(old('duraçãoDaAtividade') == "1") selected @endif>Um dias</option>
+                                    <option value="2" @if(old('duraçãoDaAtividade') == "2") selected @endif>Dois dias</option>
+                                    <option value="3" @if(old('duraçãoDaAtividade') == "3") selected @endif>Três dias</option>
+                                    <option value="4" @if(old('duraçãoDaAtividade') == "4") selected @endif>Quatro dias</option>
+                                    <option value="5" @if(old('duraçãoDaAtividade') == "5") selected @endif>Cinco dias</option>
+                                    <option value="6" @if(old('duraçãoDaAtividade') == "6") selected @endif>Seis dias</option>
+                                    <option value="7" @if(old('duraçãoDaAtividade') == "7") selected @endif>Sete dias</option>
                                 <select>
                                 @error('duraçãoDaAtividade')
                                 <span class="invalid-feedback" role="alert">
@@ -1031,7 +1031,7 @@
                     <table class="table table-hover table-responsive-lg table-sm" style="position: relative; top: -22px;">
                         <thead>
                             <th>
-                                <th>Titulo</th>
+                                <th>Título</th>
                                 <th>Tipo</th>
                                 <th>Vagas</th>
                                 <th>Valor</th>

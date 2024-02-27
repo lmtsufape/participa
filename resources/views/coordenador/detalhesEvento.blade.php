@@ -306,11 +306,11 @@
                                     <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Correções</h5>
                                 </li>
                             </a>
-                            <a id="avaliarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
+                            <!-- <a id="avaliarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
                                 <li>
                                     <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Avaliação</h5>
                                 </li>
-                            </a>
+                            </a> -->
                         </div>
                     </a>
                 @endcan

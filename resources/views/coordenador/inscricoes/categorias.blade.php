@@ -115,7 +115,7 @@
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
                                                                         <input class="form-check-input @error('permite_submissao') is-invalid @enderror" type="checkbox" name="permite_submissao" checked value="1">
-                                                                        Permitir submissao de trabalhos
+                                                                        Permitir submissão de trabalhos
                                                                     </label>
                                                                     @error('permite_submissao')
                                                                         <span class="invalid-feedback"
@@ -298,7 +298,7 @@
                                 <div class="form-check">
                                     <label class="form-check-label">
                                         <input class="form-check-input @error('permite_submissao') is-invalid @enderror" type="checkbox" name="permite_submissao_{{ $categoria->id }}" @checked(old('permite_submissao_'.$categoria->id, $categoria->permite_submissao)) value="1">
-                                        Permitir submissao de trabalhos
+                                        Permitir submissão de trabalhos
                                     </label>
                                     @error('permite_submissao')
                                         <span class="invalid-feedback"
