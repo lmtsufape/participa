@@ -565,11 +565,6 @@ class InscricaoController extends Controller
             return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['error_message' => 'Participante informado já está inscrito neste evento!']);
         }
 
-        if ($evento->eventoInscricoesEncerradas()) 
-        {
-            return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['error_message' => 'Inscrições encerradas!']);
-        }
-
         $categoria = CategoriaParticipante::find($request->categoria);
 
         $possuiFormulario = $evento->possuiFormularioDeInscricao();
