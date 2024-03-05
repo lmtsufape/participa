@@ -19,14 +19,14 @@
             <div class="navbar-nav text-right">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('index') }}" style="margin-right: 5px; margin-left: 5px">
-                        Início
+                    @lang('public.inicio')
                     </a>
                 </li>
                 <li class="nav-item">
                     @guest
                     @else
                         <a class="nav-link" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
-                            Meus Eventos
+                        @lang('public.meusEventos')
                         </a>
                     @endguest
                 </li>
@@ -34,19 +34,19 @@
                     @guest
                     @else
                         <a class="nav-link" href="{{ route('meusCertificados') }}" style="margin-right: 5px; margin-left: 5px">
-                            Meus Certificados
+                        @lang('public.meusCertificados')
                         </a>
                     @endguest
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('validarCertificado') }}" style="margin-right: 5px; margin-left: 5px">
-                        Validar Certificado
+                    @lang('public.validarCertificado')
                     </a>
                 </li>
                 @auth
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Perfis
+                    @lang('public.perfis')
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         {{-- Link Perfil --}}
@@ -73,7 +73,7 @@
                         @if (isset(Auth::user()->coordComissaoCientifica))
                             {{-- Rota - Area da Comissao --}}
 
-                            <a class="dropdown-item" href="{{ route('home.user') }}">
+                            <a class="dropdown-item" href="{{ route('cientifica.home') }}">
 
                                 <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                 {{ __('Área da Comissão Cientifica') }}
@@ -149,6 +149,18 @@
                             @csrf
                         </form>
                     </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        Idioma
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a href="locale/pt-BR" class="dropdown-item">Portugues</a>
+                        <a href="locale/en" class="dropdown-item">Ingles</a>
+                        <a href="locale/es" class="dropdown-item">Espanhol</a>
+                    </div>
+
                 </li>
                 @else
                     <li class="nav-item dropdown">

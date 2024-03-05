@@ -144,15 +144,28 @@ footer {
     transition: 0.2s;
     overflow-y:scroll;
 }
+.wrapper .sidebar .title{
+    border-bottom: 2px solid #114048ff;
+}
 .wrapper .sidebar h2{
     font-size: 20px;
     color: #fff;
     padding: 44px 15px 10px 15px;
-    border-bottom: 2px solid #114048ff;
+    
     /* text-align: center; */
     /* margin-bottom: 10px; */
     transition: 0.2s;
 }
+
+.wrapper .sidebar .title .col{
+    padding: 0 30px;
+   
+}
+
+.wrapper .sidebar .title .col a{
+    color: #fff;
+}
+
 .wrapper .sidebar ul{
     padding: 0;
     margin-bottom: 6rem;
