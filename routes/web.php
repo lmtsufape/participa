@@ -97,7 +97,6 @@ Route::post('/perfil/editar', [UserController::class, 'editarPerfil'])->name('pe
 Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::get('meusCertificados', [CertificadoController::class, 'listarCertificados'])->name('meusCertificados');
     Route::get('/home-user', [HomeController::class, 'index'])->name('home.user');
-    Route::get('locale/{lange}', [LocalizationController::class,'setLang']);
 
     Route::namespace('Users')->group(function () {
 
