@@ -18,7 +18,14 @@
                 </form>
             </div>
         </div>
+
         <br>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-auto mr-auto"></div>
+
+            <a href="{{ route('register', app()->getLocale()) }}" class="btn btn-outline-success my-2 my-sm-0 ml-1" type="button">Cadastrar usuário</a>
+        </div>
 
         @if (session('message'))
             <div class="alert alert-success">
