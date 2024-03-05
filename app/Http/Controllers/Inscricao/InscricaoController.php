@@ -12,6 +12,7 @@ use App\Models\Inscricao\Promocao;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
+use App\Notifications\InscricaoAprovada;
 use App\Notifications\InscricaoEvento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -343,14 +344,19 @@ class InscricaoController extends Controller
 
             return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $request->evento_id]);
         } else {
-            $inscricao->finalizada = !$evento->formEvento->modvalidarinscricao;
+            $modvalidarinscricao = !$evento->formEvento->modvalidarinscricao;
+            $inscricao->finalizada = $modvalidarinscricao;
             $inscricao->save();
-            auth()->user()->notify(new InscricaoEvento($evento));
+            $message = 'Inscricao realizada, você receberá uma notificação no e-mail quando o coordenador aprovar sua inscrição.';
+            if ($modvalidarinscricao) {
+                $message = 'Inscrição realizada com sucesso';
+                auth()->user()->notify(new InscricaoEvento($evento));
+            }
             if ($possuiFormulario) {
                 $this->salvarCamposExtras($inscricao, $request, $categoria);
             }
 
-            return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição realizada com sucesso');
+            return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', $message);
         }
     }
 
@@ -389,6 +395,7 @@ class InscricaoController extends Controller
 
         $inscricao->finalizada = true;
         $inscricao->save();
+        $inscricao->user->notify(new InscricaoAprovada($evento));
         return redirect()->back()->with('message', 'Inscrição aprovada com sucesso!');
     }
 
@@ -399,6 +406,9 @@ class InscricaoController extends Controller
             switch ($campo->tipo) {
                 case 'email':
                     $regras['email-'.$campo->id] = $campo->obrigatorio ? 'required|string|email' : 'nullable|string|email';
+                    break;
+                case 'select':
+                    $regras['select-'.$campo->id] = $campo->obrigatorio ? 'required|string' : 'nullable|string';
                     break;
                 case 'text':
                     $regras['text-'.$campo->id] = $campo->obrigatorio ? 'required|string' : 'nullable|string';
@@ -451,6 +461,8 @@ class InscricaoController extends Controller
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $path]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('date-'.$campo->id)]);
+                } elseif ($campo->tipo == 'select' && $request->input('select-'.$campo->id) != null) {
+                    $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('select-'.$campo->id)]);
                 } elseif ($campo->tipo == 'endereco' && $request->input('endereco-cep-'.$campo->id) != null) {
                     $campoSalvo = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $campo->id)->first();
                     $endereco = Endereco::find($campoSalvo->pivot->valor);
@@ -481,6 +493,8 @@ class InscricaoController extends Controller
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $path]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('date-'.$campo->id)]);
+                } elseif ($campo->tipo == 'select' && $request->input('select-'.$campo->id) != null) {
+                    $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('select-'.$campo->id)]);
                 } elseif ($campo->tipo == 'endereco' && $request->input('endereco-cep-'.$campo->id) != null) {
                     $endereco = new Endereco();
                     $endereco->cep = $request->input('endereco-cep-'.$campo->id);

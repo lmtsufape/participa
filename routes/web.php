@@ -65,6 +65,7 @@ Route::group(['prefix' => '{locale}', 'middleware' => 'setLocale'], function () 
         return view('auth.register', compact('pais'));
     });
     Route::post('/register', [RegisterController::class, 'register'])->name('register');
+    Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
 });
 
 Route::get('/', function () {
