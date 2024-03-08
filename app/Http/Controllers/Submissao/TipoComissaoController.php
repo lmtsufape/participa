@@ -64,6 +64,10 @@ class TipoComissaoController extends Controller
 
     public function adicionarMembro(Request $request, Evento $evento, TipoComissao $comissao)
     {
+        $request->merge([
+            'email' => strtolower($request->email),
+        ]);
+
         $this->podeComissao($evento, $comissao);
         $data = $request->validate(['email' => 'required|email']);
         $isCoordenador = $request->has('isCoordenador');

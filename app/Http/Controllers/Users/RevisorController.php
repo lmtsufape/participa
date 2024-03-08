@@ -90,6 +90,9 @@ class RevisorController extends Controller
     public function store(Request $request)
     {
         // dd($request);
+        $request->merge([
+            'emailRevisor' => strtolower($request->emailRevisor),
+        ]);
         $validatedData = $request->validate([
             'emailRevisor' => ['required', 'string', 'email', 'max:255'],
             'areas' => ['required'],

@@ -112,7 +112,7 @@
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group">
-                                                                <div class="form-check">
+                                                                <div class="form-check" >
                                                                     <label class="form-check-label">
                                                                         <input class="form-check-input @error('permite_submissao') is-invalid @enderror" type="checkbox" name="permite_submissao" checked value="1">
                                                                         Permitir submissao de trabalhos
@@ -125,7 +125,7 @@
                                                                     @enderror
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group">
+                                                            <div class="form-group" style="display: none">
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
                                                                         <input class="form-check-input @error('permite_inscricao') is-invalid @enderror" type="checkbox" name="permite_inscricao" checked value="1">

@@ -49,6 +49,10 @@ class ComissaoOrganizadoraController extends Controller
      */
     public function store(Request $request)
     {
+        $request->merge([
+            'emailMembroComissao' => strtolower($request->emailMembroComissao),
+        ]);
+
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
