@@ -76,6 +76,10 @@ class ComissaoController extends Controller
      */
     public function store(Request $request)
     {
+        $request->merge([
+            'emailMembroComissao' => strtolower($request->emailMembroComissao),
+        ]);
+
         $validationData = $request->validate([
             'emailMembroComissao' => 'required|string|email',
             // 'especProfissional'=>'required|string',
