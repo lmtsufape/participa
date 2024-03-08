@@ -270,6 +270,11 @@ class AdministradorController extends Controller
 
     public function criarUsuario(Request $request)
     {
+
+        $request->merge([
+            'email' => strtolower($request->email),
+        ]);
+
         $this->authorize('isAdmin', Administrador::class);
 
         $users = User::orderBy('updated_at', 'ASC')->paginate(100);
