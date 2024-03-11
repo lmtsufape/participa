@@ -75,15 +75,15 @@
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="valor_total"
+                                                                {{-- <label for="valor_total"
                                                                     class="col-form-label">{{ __('Valor da inscrição') }}*</label>
-                                                                <small>(0 para inscrição gratuita)</small>
+                                                                <small>(0 para inscrição gratuita)</small> --}}
                                                                 <input id="valor_total"
-                                                                    type="number"
+                                                                    type="hidden"
                                                                     step="0.1"
                                                                     class="form-control @error('valor_total') is-invalid @enderror"
                                                                     name="valor_total"
-                                                                    value="{{ old('valor_total') }}"
+                                                                    value="0"
                                                                     required
                                                                     autocomplete="valor_total"
                                                                     autofocus>
