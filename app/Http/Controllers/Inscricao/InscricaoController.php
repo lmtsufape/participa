@@ -339,11 +339,14 @@ class InscricaoController extends Controller
         $inscricao->categoria_participante_id = $request->categoria;
         $inscricao->user_id = auth()->user()->id;
         $inscricao->evento_id = $request->evento_id;
+        $inscricao->finalizada = false;
+        $inscricao->save();
+
+        if ($possuiFormulario) {
+            $this->salvarCamposExtras($inscricao, $request, $categoria);
+        }
 
         if ($categoria != null && $categoria->valor_total != 0) {
-            $inscricao->finalizada = false;
-            $inscricao->save();
-
             return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $request->evento_id]);
         } else {
             $modvalidarinscricao = !$evento->formEvento->modvalidarinscricao;
@@ -353,9 +356,6 @@ class InscricaoController extends Controller
             if ($modvalidarinscricao) {
                 $message = 'Inscrição realizada com sucesso';
                 auth()->user()->notify(new InscricaoEvento($evento));
-            }
-            if ($possuiFormulario) {
-                $this->salvarCamposExtras($inscricao, $request, $categoria);
             }
 
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', $message);
