@@ -75,15 +75,15 @@
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="valor_total"
+                                                                {{-- <label for="valor_total"
                                                                     class="col-form-label">{{ __('Valor da inscrição') }}*</label>
-                                                                <small>(0 para inscrição gratuita)</small>
+                                                                <small>(0 para inscrição gratuita)</small> --}}
                                                                 <input id="valor_total"
-                                                                    type="number"
+                                                                    type="hidden"
                                                                     step="0.1"
                                                                     class="form-control @error('valor_total') is-invalid @enderror"
                                                                     name="valor_total"
-                                                                    value="{{ old('valor_total') }}"
+                                                                    value="0"
                                                                     required
                                                                     autocomplete="valor_total"
                                                                     autofocus>
@@ -112,7 +112,7 @@
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group">
-                                                                <div class="form-check">
+                                                                <div class="form-check" >
                                                                     <label class="form-check-label">
                                                                         <input class="form-check-input @error('permite_submissao') is-invalid @enderror" type="checkbox" name="permite_submissao" checked value="1">
                                                                         Permitir submissão de trabalhos
@@ -125,7 +125,7 @@
                                                                     @enderror
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group">
+                                                            <div class="form-group" style="display: none">
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
                                                                         <input class="form-check-input @error('permite_inscricao') is-invalid @enderror" type="checkbox" name="permite_inscricao" checked value="1">
