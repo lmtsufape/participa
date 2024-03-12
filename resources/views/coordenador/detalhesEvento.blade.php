@@ -3,14 +3,17 @@
 
 <div class="wrapper">
     <div class="sidebar">
-        <h2>{{{$evento->nome}}}
-            @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
-                <a href="{{route('evento.editar',$evento->id)}}" class="edit-evento" onmouseover="this.children[0].src='{{asset('img/icons/edit-regular.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/edit-regular-white.svg')}}'"><img src="{{asset('img/icons/edit-regular-white.svg')}}"  alt="" width="20px;"></a>
-                @if($evento->eventoPai == null)
-                    <a href="{{route('subevento.criar',$evento->id)}}" onmouseover="this.children[0].src='{{asset('img/icons/plus-square-solid_black.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/plus-square-solid.svg')}}'"><img src="{{asset('img/icons/plus-square-solid.svg')}}"  alt="" width="20px;"></a>
-                @endif
-            @endcan
-        </h2>
+        <div class="title">
+        <h2>{{{$evento->nome}}}</h2>
+           <div class="col">
+           @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
+                   <a href="{{route('evento.editar',$evento->id)}}" class="edit-evento row" onmouseover="this.children[0].src='{{asset('img/icons/edit-regular.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/edit-regular-white.svg')}}'"><img src="{{asset('img/icons/edit-regular-white.svg')}}"  alt="" width="20px;">Atualizar Evento</a>
+                   @if($evento->eventoPai == null)
+                       <a href="{{route('subevento.criar',$evento->id)}}" class="row" onmouseover="this.children[0].src='{{asset('img/icons/plus-square-solid_black.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/plus-square-solid.svg')}}'"><img src="{{asset('img/icons/plus-square-solid.svg')}}"  alt="" width="20px;">Criar Subevento</a>
+                   @endif
+               @endcan
+           </div>
+        </div>
 
         <ul>
             @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
@@ -306,11 +309,11 @@
                                     <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Listar Correções</h5>
                                 </li>
                             </a>
-                            <a id="avaliarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
+                            <!-- <a id="avaliarTrabalhos" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id]) }}">
                                 <li>
                                     <img src="{{asset('img/icons/list.svg')}}" alt=""><h5>Avaliação</h5>
                                 </li>
-                            </a>
+                            </a> -->
                         </div>
                     </a>
                 @endcan

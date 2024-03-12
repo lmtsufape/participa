@@ -575,9 +575,11 @@ class EventoController extends Controller
                     $trabalho->modalidade->nome,
                     $trabalho->titulo,
                     $trabalho->autor->name,
+                    $trabalho->autor->cpf,
                     $trabalho->autor->email,
                     $trabalho->autor->celular,
                     $this->coautoresToString($trabalho, 'nome'),
+                    $this->coautoresToString($trabalho, 'cpf'),
                     $this->coautoresToString($trabalho, 'email'),
                     $this->coautoresToString($trabalho, 'celular'),
                 ];

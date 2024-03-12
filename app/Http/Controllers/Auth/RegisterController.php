@@ -79,6 +79,7 @@ class RegisterController extends Controller
         // dd("teste");
         // endereço
         // dd($end)
+
         $user = new User();
         $user->name = $data['name'];
         $user->email = strtolower($data['email']);
@@ -100,9 +101,10 @@ class RegisterController extends Controller
 
         $user->enderecoId = null;
         $user->save();
+       
 
         app()->setLocale('pt-BR');
-
+        
         return $user;
     }
 }

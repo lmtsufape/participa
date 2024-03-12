@@ -24,7 +24,7 @@
                                 name="eventoId"
                                 value="{{ $evento->id }}">
                             <div class="col-sm-6">
-                                <label for="titulo">Titulo*:</label>
+                                <label for="titulo">Título*:</label>
                                 <input class="form-control @error('título') is-invalid @enderror"
                                     type="text"
                                     name="titulo"

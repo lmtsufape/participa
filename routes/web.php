@@ -18,6 +18,7 @@ use App\Http\Controllers\Inscricao\CategoriaController;
 use App\Http\Controllers\Inscricao\CheckoutController;
 use App\Http\Controllers\Inscricao\InscricaoController;
 use App\Http\Controllers\Inscricao\PromocaoController;
+use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\Submissao\AreaController;
 use App\Http\Controllers\Submissao\ArquivoInfoController;
 use App\Http\Controllers\Submissao\AssinaturaController;
@@ -429,6 +430,9 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::get('confirmar-inscricao', [InscricaoController::class, 'store'])->name('inscricao.confirmar');
 
 });
+
+//Localization Route
+
 
 // Auth::routes();
 
