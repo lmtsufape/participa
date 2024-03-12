@@ -25,6 +25,7 @@ class CheckoutController extends Controller
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $categoria = $inscricao?->categoria;
+       
         if ($inscricao->pagamento != null) {
             return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
         }

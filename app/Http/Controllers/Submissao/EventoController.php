@@ -1231,6 +1231,7 @@ class EventoController extends Controller
             }
         }
 
+
         return view('coordenador.evento.etiquetasTrabalhos', [
             'evento' => $evento,
             'etiquetas' => $etiquetas,
