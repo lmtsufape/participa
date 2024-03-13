@@ -52,11 +52,13 @@
                                 </p>
 
                                 @if($pergunta->respostas()->exists() && $pergunta->respostas->first()->opcoes->count())
-                                    <input type="hidden" name="opcao_id[]" value="{{$respostas[$index]->opcoes[0]->id}}">
+                                    @if ($respostas[$pergunta->id] != null)
+                                        <input type="hidden" name="opcao_id[]" value="{{$respostas[$pergunta->id]->opcoes[0]->id}}">
+                                    @endif
                                 @foreach ($pergunta->respostas->first()->opcoes->sortBy('id') as $opcao)
                                     <div class="form-check">
-                                        @if ($respostas[$index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo))
-                                            <input class="form-check-input" type="radio" name="{{$pergunta->id}}" checked value="{{$respostas[$index]->opcoes[0]->titulo}}" id="{{$opcao->id}}">
+                                        @if ($respostas[$pergunta->id] != null && $respostas[$pergunta->id]->opcoes != null && $respostas[$pergunta->id]->opcoes->pluck('titulo')->contains($opcao->titulo))
+                                            <input class="form-check-input" type="radio" name="{{$pergunta->id}}" checked value="{{$respostas[$pergunta->id]->opcoes[0]->titulo}}" id="{{$opcao->id}}">
                                         @else
                                             <input class="form-check-input" type="radio" name="{{$pergunta->id}}" value="{{$opcao->titulo}}" id="{{$opcao->id}}">
                                         @endif
@@ -65,9 +67,15 @@
                                         </label>
                                     </div>
                                     @endforeach
-                                   @if ($respostas[$index] != null)
+                                   @if ($respostas[$pergunta->id] != null)
                                         <div class="col-form-label text-md-left">
-                                            <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="visivilidade_opcoes[]" value="{{$respostas[$index]->opcoes->first()->id}}" {{  ($respostas[$index]->opcoes->first()->visibilidade == true ? ' checked' : '') }} {{$pergunta->visibilidade == true ? '' : 'disabled' }}>
+                                            <small>Resposta visível para o autor? (selecione se sim) </small>
+                                            <input type="checkbox"
+                                                name="visivilidade_opcoes[]"
+                                                value="{{$respostas[$pergunta->id]->opcoes->first()->id}}"
+                                                {{ ($respostas[$pergunta->id]->opcoes->first()->visibilidade == true ? ' checked' : '') }}
+                                                {{ $pergunta->visibilidade == true ? '' : 'disabled' }}
+                                            >
                                         </div>
                                    @endif
                                 @elseif($pergunta->respostas->first()->paragrafo != null)
