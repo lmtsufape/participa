@@ -152,7 +152,7 @@ footer {
     font-size: 20px;
     color: #fff;
     padding: 44px 15px 10px 15px;
-    
+
     /* text-align: center; */
     /* margin-bottom: 10px; */
     transition: 0.2s;
@@ -160,7 +160,7 @@ footer {
 
 .wrapper .sidebar .title .col{
     padding: 0 30px;
-   
+
 }
 
 .wrapper .sidebar .title .col a{
@@ -1025,4 +1025,45 @@ body { top: 0px !important; }
 .div-informacoes-evento .div-icon-programacao .icon-programacao {
     /* margin-top: 3px; */
     height: 35px;
+}
+
+/* CAROUSEL CATEGORIAS */
+.carousel-categorias {
+    @media (max-width: 768px) {
+        .carousel-inner .carousel-item > div {
+            display: none;
+        }
+        .carousel-inner .carousel-item > div:first-child {
+            display: block;
+        }
+    }
+
+    .carousel-inner .carousel-item.active,
+    .carousel-inner .carousel-item-next,
+    .carousel-inner .carousel-item-prev {
+        display: flex;
+    }
+
+    /* display 3 */
+    @media (min-width: 768px) {
+
+        .carousel-inner .carousel-item-right.active,
+        .carousel-inner .carousel-item-next {
+            transform: translateX(33.333%);
+        }
+
+        .carousel-inner .carousel-item-left.active,
+        .carousel-inner .carousel-item-prev {
+            transform: translateX(-33.333%);
+        }
+    }
+
+    .carousel-inner .carousel-item-right,
+    .carousel-inner .carousel-item-left{
+        transform: translateX(0);
+    }
+}
+
+.campos-extras label {
+    font-weight: bold;
 }
