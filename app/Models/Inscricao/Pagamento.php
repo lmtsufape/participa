@@ -17,6 +17,6 @@ class Pagamento extends Model
 
     public function tipo_pagamento()
     {
-        return $this->hasOne('App\Models\Inscricao\TipoPagamento');
+        return $this->belongsTo('App\Models\Inscricao\TipoPagamento');
     }
 }
