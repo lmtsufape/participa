@@ -1163,7 +1163,7 @@ class EventoController extends Controller
         $trabalho = Trabalho::find($request->trabalhoId);
         $revisor = Revisor::find($request->revisorId);
         $revisorUser = User::find($revisor->user_id);
-        $respostas = collect();
+        $respostas = [];
 
         $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first();
         if ($arquivoAvaliacao == null) {
@@ -1173,13 +1173,8 @@ class EventoController extends Controller
 
         foreach ($modalidade->forms as $form) {
             foreach ($form->perguntas as $pergunta) {
-                $respostas->push($pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first());
+                $respostas[$pergunta->id] = $pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first();
             }
-        }
-
-        // Verificando se o revisor já realizou a revisão do trabalho
-        if ($respostas->contains(null)) {
-            return redirect()->back()->withErrors('Trabalho ainda não revisado');
         }
 
         return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'respostas', 'arquivoAvaliacao'));
