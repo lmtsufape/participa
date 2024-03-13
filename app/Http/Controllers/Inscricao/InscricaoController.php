@@ -167,12 +167,13 @@ class InscricaoController extends Controller
             }
             $campo->inscricoesFeitas()->detach($inscricao->id);
         }
-
-        if ($inscricao->pagamento()->exists()) {
-            $inscricao->pagamento->delete();
-        }
+        $pagamento = null;
+        if ($inscricao->pagamento()->exists())
+            $pagamento = $inscricao->pagamento;
 
         $inscricao->delete();
+        if ($pagamento)
+            $pagamento->delete();
     }
 
     public function cancelar(Inscricao $inscricao)
@@ -545,7 +546,7 @@ class InscricaoController extends Controller
 
         $evento = Evento::find($request->evento_id);
 
-        if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->exists()) 
+        if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->exists())
         {
             return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['error_message' => 'Participante informado já está inscrito neste evento!']);
         }
@@ -554,11 +555,11 @@ class InscricaoController extends Controller
 
         $possuiFormulario = $evento->possuiFormularioDeInscricao();
 
-        if ($possuiFormulario) 
+        if ($possuiFormulario)
         {
             $validator = Validator::make($request->all(), ['categoria' => 'required']);
 
-            if ($validator->fails()) 
+            if ($validator->fails())
             {
                 return redirect()
                     ->back()
@@ -569,7 +570,7 @@ class InscricaoController extends Controller
 
             $validator = $this->validarCamposExtras($request, $categoria);
 
-            if ($validator->fails()) 
+            if ($validator->fails())
             {
                 return redirect()
                     ->back()
@@ -588,8 +589,8 @@ class InscricaoController extends Controller
 
         $inscricao->save();
 
-        
-        if ($possuiFormulario) 
+
+        if ($possuiFormulario)
         {
             $this->salvarCamposExtras($inscricao, $request, $categoria);
         }
