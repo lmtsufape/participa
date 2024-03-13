@@ -67,6 +67,19 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             $inscricao->user->endereco ? $inscricao->user->endereco->pais : '',
         ];
 
-        return array_merge($valores, $inscricao->camposPreenchidos->pluck('pivot.valor')->all());
+        $valoresCampos = [];
+        foreach ($inscricao->camposPreenchidos as $campo) {
+            $valoresCampos[$campo->titulo] = $campo->pivot->valor;
+        }
+
+        $camposFormulario = $this->evento->camposFormulario()->pluck('titulo')->all();
+        $valoresFinais = [];
+
+        foreach ($camposFormulario as $campo) {
+            $valor = isset($valoresCampos[$campo]) ? $valoresCampos[$campo] : '';
+            $valoresFinais[] = $valor;
+        }
+
+        return array_merge($valores, $valoresFinais);
     }
 }
