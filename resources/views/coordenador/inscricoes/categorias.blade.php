@@ -32,7 +32,7 @@
                                     tabindex="-1"
                                     aria-labelledby="exampleModalLabel"
                                     aria-hidden="true">
-                                    <div class="modal-dialog">
+                                    <div class="modal-dialog modal-xl ">
                                         <div class="modal-content">
                                             <div class="modal-header" style="background-color: #114048ff; color: white;">
                                                 <h5 class="modal-title"
@@ -68,6 +68,17 @@
                                                                     autocomplete="nome"
                                                                     autofocus>
                                                                 @error('nome')
+                                                                    <span class="invalid-feedback"
+                                                                        role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="descricao"
+                                                                    class="col-form-label">{{ __('Descrição') }}</label>
+                                                                <textarea name="descricao" class="ckeditor-texto">{{ old('descricao') }}</textarea>
+                                                                @error('descricao')
                                                                     <span class="invalid-feedback"
                                                                         role="alert">
                                                                         <strong>{{ $message }}</strong>
@@ -222,7 +233,7 @@
             role="dialog"
             aria-labelledby="#label"
             aria-hidden="true">
-            <div class="modal-dialog"
+            <div class="modal-dialog  modal-xl"
                 role="document">
                 <div class="modal-content">
                     <div class="modal-header"
@@ -258,6 +269,17 @@
                                     name="nome_{{ $categoria->id }}"
                                     value="{{ old('nome_'.$categoria->id, $categoria->nome) }}">
                                 @error('nome_'.$categoria->id)
+                                    <span class="invalid-feedback"
+                                        role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="descricao"
+                                    class="col-form-label">{{ __('Descrição') }}</label>
+                                <textarea name="descricao" class="ckeditor-texto">{{ $categoria->descricao }}</textarea>
+                                @error('descricao')
                                     <span class="invalid-feedback"
                                         role="alert">
                                         <strong>{{ $message }}</strong>
@@ -372,4 +394,10 @@
             </div>
         </div>
     @endforeach
+@endsection
+@section('javascript')
+    <script type="text/javascript">
+        CKEDITOR.replaceAll( 'ckeditor-texto' );
+        $.fn.modal.Constructor.prototype._enforceFocus = function(){};
+    </script>
 @endsection

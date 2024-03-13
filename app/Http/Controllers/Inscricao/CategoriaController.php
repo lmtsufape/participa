@@ -47,6 +47,7 @@ class CategoriaController extends Controller
         $categoria = new CategoriaParticipante();
         $categoria->evento_id = $evento->id;
         $categoria->nome = $validateData['nome'];
+        $categoria->descricao = $validateData['descricao'];
         $categoria->valor_total = $validateData['valor_total'];
         $categoria->permite_submissao = $request->boolean('permite_submissao');
         $categoria->permite_inscricao = $request->boolean('permite_inscricao');
@@ -103,6 +104,7 @@ class CategoriaController extends Controller
 
         $categoria->nome = $request->input("nome_{$categoria->id}");
         $categoria->valor_total = $request->input("valor_total_{$categoria->id}");
+        $categoria->descricao = $request->input("descricao");
         $categoria->limite_inscricao = $request->input("limite_inscricao_{$categoria->id}");
         $categoria->permite_submissao = $request->boolean('permite_submissao_'.$categoria->id);
         $categoria->permite_inscricao = $request->boolean('permite_inscricao_'.$categoria->id);
