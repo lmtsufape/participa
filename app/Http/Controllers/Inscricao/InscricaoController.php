@@ -482,7 +482,7 @@ class InscricaoController extends Controller
                 }
             }
         } else {
-            foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo) {
+            foreach ($categoria->camposNecessarios()->distinct()->orderBy('tipo')->get() as $campo) {
                 if ($campo->tipo == 'email' && $request->input('email-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('email-'.$campo->id)]);
                 } elseif ($campo->tipo == 'text' && $request->input('text-'.$campo->id) != null) {
