@@ -5,6 +5,7 @@
     <div class="card">
         <div class="card-body">
             <p>Comprovante enviado</p>
+            <p>Aguarde confirmação</p>
             <p>{{$key}}</p>
         </div>
     </div>

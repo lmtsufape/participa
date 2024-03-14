@@ -147,7 +147,7 @@
             {{-- Descricao Evento --}}
             <div class="form-group">
                 <label for="descricao">Descrição*</label>
-                <textarea class="form-control @error('descricao') is-invalid @enderror" id="summernote" name="descricao" rows="8">@if(old('descricao') != null) {{ old('descricao') }} @else {{$evento->descricao}} @endif</textarea>
+                <textarea class="ckeditor-texto form-control @error('descricao') is-invalid @enderror" id="descricao" name="descricao" rows="8">@if(old('descricao') != null) {{ old('descricao') }} @else {{$evento->descricao}} @endif</textarea>
                 @error('descricao')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -370,25 +370,28 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-
+<script type="text/javascript">
+        CKEDITOR.replaceAll( 'ckeditor-texto' );
+        $.fn.modal.Constructor.prototype._enforceFocus = function(){};
+    </script>
 <script type="text/javascript">
     $(document).ready(function($) {
 
         // CKEDITOR.replace('descricao');
-        $('#summernote').summernote(
+        // $('#summernote').summernote(
         //     {
         //     toolbar: [
         //         // [groupName, [list of button]]
         //         ['style', ['bold', 'italic', 'underline', 'clear']],
-        //         ['font', ['strikethrough', 'superscript', 'subscript']],
-        //         ['fontsize', ['fontsize']],
+        //         ['font', ['superscript', 'subscript']],//'strikethrough', 
+        //         // ['fontsize', ['fontsize']],
         //         ['color', ['color']],
-        //         ['para', ['ul', 'ol', 'paragraph']],
-        //         ['height', ['height']]
+        //         // ['para', ['ul', 'ol', 'paragraph']],
+        //         // ['height', ['height']]
         //     ]
 
         // }
-        );
+        // );
 
         $('#cep').mask('00000-000');
         $(".apenasLetras").mask("#", {

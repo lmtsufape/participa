@@ -152,7 +152,7 @@
             <div class="form-group">
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">Descrição*</label>
-                    <textarea class="form-control @error('descricao') is-invalid @enderror" required autocomplete="descricao" autofocus id="summernote" name="descricao" rows="8">{{ old('descricao') }}</textarea>
+                    <textarea class="ckeditor-texto form-control @error('descricao') is-invalid @enderror" required autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">{{ old('descricao') }}</textarea>
                     @error('descricao')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -405,9 +405,9 @@
 </div>
 </div>
 
-
-
 @endsection
+
+
 @section('javascript')
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -415,9 +415,28 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 <script type="text/javascript">
+        CKEDITOR.replaceAll( 'ckeditor-texto' );
+        $.fn.modal.Constructor.prototype._enforceFocus = function(){};
+    </script>
+
+<script type="text/javascript">
+
     $(document).ready(function($) {
 
-        $('#summernote').summernote();
+        // $('#summernote').summernote(
+        //     {
+        //     toolbar: [
+        //         // [groupName, [list of button]]
+        //         ['style', ['bold', 'italic', 'underline', 'clear']],
+        //         ['font', ['superscript', 'subscript']],//'strikethrough', 
+        //         // ['fontsize', ['fontsize']],
+        //         ['color', ['color']],
+        //         // ['para', ['ul', 'ol', 'paragraph']],
+        //         // ['height', ['height']]
+        //     ]
+
+        // }
+        // );
         //CKEDITOR.replace( 'descricao' );
         $('#cep').mask('00000-000');
         $(".apenasLetras").mask("#", {
