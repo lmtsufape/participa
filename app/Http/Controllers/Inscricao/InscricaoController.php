@@ -488,7 +488,8 @@ class InscricaoController extends Controller
                 } elseif ($campo->tipo == 'text' && $request->input('text-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('text-'.$campo->id)]);
                 } elseif ($campo->tipo == 'file' && $request->file('file-'.$campo->id) != null) {
-                    $path = Storage::putFileAs('eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.pdf');
+                    $extensao = $request->file('file-'.$campo->id)->getClientOriginalExtension();
+                    $path = Storage::putFileAs('eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.'.$extensao);
 
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $path]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {
