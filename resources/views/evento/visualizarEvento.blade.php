@@ -206,17 +206,27 @@
                                         <div class="carousel slide" id="carouselCategorias" data-ride="carousel">
                                             <div class="carousel-inner">
                                                 <input type="hidden" name="categoria" x-model="categoria" required>
-                                                <div class="card-deck">
+                                                <div class="row justify-content-center mb-2 mt-2">
+                                                    <a class="btn btn-outline-primary mx-1" id="categoriaAnterior" href="#carouselCategorias" title="Previous" role="button" data-slide="prev">
+                                                        <i class="fa fa-lg fa-chevron-left"></i>
+                                                    </a>
+                                                    <a class="btn btn-outline-primary mx-1" id="proximaCategoria" href="#carouselCategorias" title="Next" role="button" data-slide="next">
+                                                        <i class="fa fa-lg fa-chevron-right"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="card-group mb-4">
                                                     @foreach ($evento->categoriasParticipantes()->where('permite_inscricao', true)->get() as $categoria)
                                                         @if ($categoria->limite_inscricao == null || $categoria->limite_inscricao > now())
                                                             <div class="carousel-item {{$loop->first ? 'active' : ''}}">
                                                                 <div class="col-md-4">
-                                                                    <div class="card mb-4 box-shadow">
+                                                                    <div class="card h-100">
                                                                         <div class="card-header">
                                                                             <h4 class="my-0 font-weight-normal">{{ $categoria->nome }}</h4>
                                                                         </div>
                                                                         <div class="card-body">
                                                                             {!! $categoria->descricao !!}
+                                                                        </div>
+                                                                        <div class="card-footer">
                                                                             <button type="button" class="btn btn-md btn-block btn-outline-primary" x-on:click="categoria = {{ $categoria->id }}">
                                                                                 {{ __('Selecionar') }}</button>
                                                                         </div>
@@ -225,18 +235,6 @@
                                                             </div>
                                                         @endif
                                                     @endforeach
-                                                </div>
-                                            </div>
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-12 text-center mt-4">
-                                                        <a class="btn btn-outline-primary mx-1" id="categoriaAnterior" href="#carouselCategorias" title="Previous" role="button" data-slide="prev">
-                                                            <i class="fa fa-lg fa-chevron-left"></i>
-                                                        </a>
-                                                        <a class="btn btn-outline-primary mx-1" id="proximaCategoria" href="#carouselCategorias" title="Next" role="button" data-slide="next">
-                                                            <i class="fa fa-lg fa-chevron-right"></i>
-                                                        </a>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
