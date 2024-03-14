@@ -214,12 +214,12 @@
                                                         <i class="fa fa-lg fa-chevron-right"></i>
                                                     </a>
                                                 </div>
-                                                <div class="card-group mb-4">
+                                                <div class="card-group">
                                                     @foreach ($evento->categoriasParticipantes()->where('permite_inscricao', true)->get() as $categoria)
                                                         @if ($categoria->limite_inscricao == null || $categoria->limite_inscricao > now())
                                                             <div class="carousel-item {{$loop->first ? 'active' : ''}}">
                                                                 <div class="col-md-4">
-                                                                    <div class="card h-100">
+                                                                    <div class="card">
                                                                         <div class="card-header">
                                                                             <h4 class="my-0 font-weight-normal">{{ $categoria->nome }}</h4>
                                                                         </div>
