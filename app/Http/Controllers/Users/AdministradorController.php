@@ -117,7 +117,6 @@ class AdministradorController extends Controller
     {
         $this->authorize('isAdmin', Administrador::class);
         $users = User::orderBy('updated_at', 'ASC')->paginate(100);
-
         return view('administrador.users', compact('users'));
     }
 
