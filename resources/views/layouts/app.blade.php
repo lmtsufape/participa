@@ -39,6 +39,7 @@
     @yield('sidebar')
     @endif
 
+
     <main @hasSection('sidebar') @else class="mt-2" @endif>
         @yield('content')
     </main>

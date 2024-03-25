@@ -8,6 +8,8 @@ use App\Models\Inscricao\CampoFormulario;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\CupomDeDesconto;
 use App\Models\Inscricao\Inscricao;
+use Illuminate\Support\Facades\DB;
+use App\Models\Inscricao\LinkPagamento;
 use App\Models\Inscricao\Promocao;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Endereco;
@@ -64,10 +66,21 @@ class InscricaoController extends Controller
 
     public function categorias(Evento $evento)
     {
+        $date = date('Y-m-d');
+       
+       
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $categorias = $evento->categoriasParticipantes;
+        
+        $links = DB::table('links_pagamento')
+        ->join('categoria_participantes', 'links_pagamento.categoria_id', '=', 'categoria_participantes.id')
+        ->select('categoria_participantes.nome', 'links_pagamento.*')
+        ->where('links_pagamento.dataInicio','<=', $date)
+        ->where('links_pagamento.dataFim','>', $date)
+        ->get();
 
-        return view('coordenador.inscricoes.categorias', compact('evento', 'categorias'));
+        
+        return view('coordenador.inscricoes.categorias', compact('evento', 'categorias', 'links'));
     }
 
     /**
