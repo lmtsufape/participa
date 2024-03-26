@@ -224,24 +224,22 @@
                                                         <div class="card-header">
                                                             <h4 class="my-0 font-weight-normal">{{ $categoria->nome }}</h4>
                                                         </div>
-                                                        @if(empty($links))
                                                         <div class="card-body">
                                                             <label for="">Descrição: </label>
                                                             <p> {!! $categoria->descricao !!}</p>
-                                                        </div>
-                                                        @else
-                                                        @foreach($links->where('categoria_id', $categoria->id) as $link)
-                                                            <div class="card-body">
-                                                                <label for="">Descrição: </label>
-                                                                <p>{!! $categoria->descricao !!}</p>
+                                                       
+                                                            @if($links)
+                                                            @foreach($links->where('categoria_id', $categoria->id) as $link)
+                                                      
                                                                 <label for="">Valor: </label>
                                                                 <p>R${{$link->valor}}</p>
                                                                 <label for="">Link para pagamento: </label>
                                                                 <a href="{{$link->link}}">{{$link->link}}</a>
 
-                                                            </div>
-                                                        @endforeach
-                                                        @endif
+                                                            
+                                                            @endforeach
+                                                            @endif
+                                                        </div>
                                                         <div class="card-footer">
                                                             <button type="button" class="btn btn-md btn-block btn-outline-primary" x-on:click="categoria = {{ $categoria->id }}">
                                                                 {{ __('Selecionar') }}</button>
@@ -272,6 +270,11 @@
                                                 <input type="text" readonly class="form-control" value="{{ $categoria->nome }}">
                                                 <button type="button" x-on:click="categoria = ''" class="btn btn-md btn-block btn-primary mt-2 col-sm-12 col-md-6 col-lg-4">Alterar categoria</button>
                                             </div>
+
+                                            <!-- <div class="form-group">
+                                                <label for="">Link</label>
+                                                <input type="text" readonly class="form-control" value="teste">
+                                            </div> -->
 
                                             @foreach ($categoria->camposNecessarios()->distinct()->orderBy('tipo')->get() as $campo)
                                             @if($campo->tipo == "endereco")
