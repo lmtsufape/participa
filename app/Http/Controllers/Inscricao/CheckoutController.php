@@ -48,6 +48,7 @@ class CheckoutController extends Controller
 
     public function index(Request $request, $id)
     {
+   
         if (! auth()->check()) {
             return redirect()->route('login');
         }

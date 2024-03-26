@@ -165,6 +165,12 @@ footer {
 
 .wrapper .sidebar .title .col a{
     color: #fff;
+    margin-bottom: 14px;
+    font-weight: bold;
+}
+
+.wrapper .sidebar .title .col a img{
+    margin-right: 15px;
 }
 
 .wrapper .sidebar ul{

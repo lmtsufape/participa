@@ -49,7 +49,7 @@
                                     <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->endereco ? $inscricao->user->endereco->cidade : 'Endereço não cadastrado'}}</td>
                                     <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->endereco ? $inscricao->user->endereco->uf : 'Endereço não cadastrado'}}</td>
                                     <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->finalizada ? 'Sim' : 'Não'}}</td>
-                                    <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}"><img src="{{asset('img/icons/resumo.png')}}" alt="" style="width: 14px; fill: #000 !important;"></td>
+                                    <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}"><img src="{{asset('img/icons/eye-regular.svg')}}" alt="" style="width: 14px; fill: #000 !important;"></td>
                                 </th>
                             </tbody>
                         @endforeach
