@@ -252,9 +252,6 @@
                                             @endforeach
                                         </div>
 
-
-
-
                                     </div>
                                 </div>
                             </div>
@@ -463,15 +460,16 @@
                 @include('componentes.mensagens')
                 <p>Tem certeza que deseja se inscrever nesse evento?</p>
                 @endif
-        </div>
+            
 
-        @if(auth()->check())
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
+            @if(auth()->check())
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
+            </div>
+            @endif
+            </form>
         </div>
-        @endif
-        </form>
     </div>
 </div>
 </div>
