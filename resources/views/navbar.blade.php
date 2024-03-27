@@ -20,14 +20,14 @@
             <div class="navbar-nav text-right">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('index') }}" style="margin-right: 5px; margin-left: 5px">
-                        Início
+                    @lang('public.inicio')
                     </a>
                 </li>
                 <li class="nav-item">
                     @guest
                     @else
                         <a class="nav-link" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
-                            Meus Eventos
+                        @lang('public.meusEventos')
                         </a>
                     @endguest
                 </li>
@@ -35,19 +35,19 @@
                     @guest
                     @else
                         <a class="nav-link" href="{{ route('meusCertificados') }}" style="margin-right: 5px; margin-left: 5px">
-                            Meus Certificados
+                        @lang('public.meusCertificados')
                         </a>
                     @endguest
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('validarCertificado') }}" style="margin-right: 5px; margin-left: 5px">
-                        Validar Certificado
+                    @lang('public.validarCertificado')
                     </a>
                 </li>
                 @auth
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Perfis
+                    @lang('public.perfis')
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         {{-- Link Perfil --}}
@@ -55,7 +55,9 @@
                             <img src="{{asset('img/icons/perfil.svg')}}" alt="">
                             {{ __('Área do Participante') }}
                         </a>
+                        
                         @if (Auth::user()->revisor->count())
+                        
                             {{-- Rota - Area de Revisores --}}
                             <a class="dropdown-item" href="{{ route('revisor.index') }}">
                                 <img src="{{asset('img/icons/revisor.png')}}" alt="">
@@ -74,7 +76,7 @@
                         @if (isset(Auth::user()->coordComissaoCientifica))
                             {{-- Rota - Area da Comissao --}}
 
-                            <a class="dropdown-item" href="{{ route('home.user') }}">
+                            <a class="dropdown-item" href="{{ route('cientifica.home') }}">
 
                                 <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                 {{ __('Área da Comissão Cientifica') }}
@@ -151,6 +153,18 @@
                         </form>
                     </div>
                 </li>
+
+                <!-- <li class="nav-item dropdown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        Idioma
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a href="locale/pt-BR" class="dropdown-item">Portugues</a>
+                        <a href="locale/en" class="dropdown-item">Ingles</a>
+                        <a href="locale/es" class="dropdown-item">Espanhol</a>
+                    </div>
+
+                </li> -->
                 @else
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
@@ -159,7 +173,102 @@
                         <a class="nav-link" href="{{ route('register', app()->getLocale()) }}">{{ __('Cadastre-se') }}</a>
                     </li>
                 @endauth
+
+                <li class="nav-item dropdown">
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <span id="idiomaAtual"><img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;"> Português </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#" onclick="trocarIdioma('en', 'https://flagicons.lipis.dev/flags/4x3/us.svg', 'English')">
+                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;"> English
+                        </a>
+                        <a class="dropdown-item" href="#" onclick="trocarIdioma('es', 'https://flagicons.lipis.dev/flags/4x3/es.svg', 'Español')">
+                            <img src="https://flagicons.lipis.dev/flags/4x3/es.svg" alt="Español" style="width: 20px;"> Español
+                        </a>
+                        <a class="dropdown-item" href="#" onclick="trocarIdioma('fr', 'https://flagicons.lipis.dev/flags/4x3/fr.svg', 'Français')">
+                            <img src="https://flagicons.lipis.dev/flags/4x3/fr.svg" alt="Français" style="width: 20px;">Français
+                        </a>
+                        <a class="dropdown-item" href="#" onclick="trocarIdioma('pt', 'https://flagicons.lipis.dev/flags/4x3/br.svg', 'Português')">
+                            <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">Português
+                        </a>
+                    </div>
+                </li>
+
+
+
             </div>
         </div>
     </div>
 </nav>
+
+<div id="google_translate_element" style="display: none"></div>
+
+<script type="text/javascript">
+    var comboGoogleTradutor = null; //Varialvel global
+
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'pt',
+            includedLanguages: 'en,es,fr,pt',
+            layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+        }, 'google_translate_element');
+
+        comboGoogleTradutor = document.getElementById("google_translate_element").querySelector(".goog-te-combo");
+    }
+
+    function changeEvent(el) {
+        if (el.fireEvent) {
+            el.fireEvent('onchange');
+        } else {
+            var evObj = document.createEvent("HTMLEvents");
+
+            evObj.initEvent("change", false, true);
+            el.dispatchEvent(evObj);
+        }
+    }
+
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Pode remover o setTimeout se não estiver dependendo de algo que precise esperar para carregar
+        setTimeout(function() {
+            var idiomaAtual = document.documentElement.lang;
+            switch (idiomaAtual) {
+                case 'en':
+                    trocarIdioma('en', 'https://flagicons.lipis.dev/flags/4x3/us.svg', 'English');
+                    break;
+                case 'es':
+                    trocarIdioma('es', 'https://flagicons.lipis.dev/flags/4x3/es.svg', 'Español');
+                    break;
+                case 'pt':
+                    trocarIdioma('pt', 'https://flagicons.lipis.dev/flags/4x3/br.svg', 'Português');
+                    break;
+                case 'fr':
+                    trocarIdioma('fr', 'https://flagicons.lipis.dev/flags/4x3/fr.svg', 'Français')
+                    break;
+                // Outros casos conforme necessário
+            }
+        },1000);
+    });
+
+
+
+    function trocarIdioma(sigla, urlBandeira, nomeIdioma) {
+        if (comboGoogleTradutor) {
+            comboGoogleTradutor.value = sigla;
+            changeEvent(comboGoogleTradutor); // Dispara a troca
+        }
+
+        // Atualiza o ícone e o texto da bandeira escolhida
+        document.getElementById('idiomaAtual').innerHTML = `<img src="${urlBandeira}" alt="${nomeIdioma}" style="width: 20px;"> ${nomeIdioma}`;
+    }
+
+
+
+
+
+
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+

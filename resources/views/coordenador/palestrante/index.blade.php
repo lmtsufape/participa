@@ -316,7 +316,7 @@
                             <table class="table table-hover table-sm mt-3">
                                 <thead>
                                     <th>
-                                    <th>Titulo</th>
+                                    <th>Título</th>
                                     <th>Excluir</th>
                                     </th>
                                 </thead>

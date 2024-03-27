@@ -8,7 +8,9 @@ use App\Models\Submissao\Evento;
 use App\Models\Users\Administrador;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class AdministradorController extends Controller
 {
@@ -115,7 +117,6 @@ class AdministradorController extends Controller
     {
         $this->authorize('isAdmin', Administrador::class);
         $users = User::orderBy('updated_at', 'ASC')->paginate(100);
-
         return view('administrador.users', compact('users'));
     }
 
@@ -264,5 +265,74 @@ class AdministradorController extends Controller
         }
 
         return view('administrador.users', compact('users'));
+    }
+
+    public function criarUsuario(Request $request)
+    {
+
+        $request->merge([
+            'email' => strtolower($request->email),
+        ]);
+
+        $this->authorize('isAdmin', Administrador::class);
+
+        $users = User::orderBy('updated_at', 'ASC')->paginate(100);
+
+        $validator = $this->validator($request);
+
+        if ($validator->fails())
+        {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $user = new User();
+
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = bcrypt($request->input('password'));
+        $user->cpf = $request->input('cpf');
+        $user->passaporte = $request->input('passaporte');
+        $user->celular = $request->input('full_number');
+        $user->instituicao = $request->input('instituicao');
+        $user->email_verified_at = now();
+
+        if ($request->input('rua') && $request->input('cep'))
+        {
+            $endereco = new Endereco($request->all());
+            $endereco->save();
+
+            $user->enderecoId = $endereco->id;
+        }
+        else
+        {
+            $user->enderecoId = null;
+        }
+
+        $user->save();
+
+        app()->setLocale('pt-BR');
+
+        return redirect(route('admin.users', compact('users')))->with(['message' => 'Usuário cadastrado com sucesso!']);
+    }
+
+    protected function validator(Request $request)
+    {
+        return Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'cpf' => ($request->input('passaporte') == null ? ['required', 'cpf'] : 'nullable'),
+            'passaporte' => ($request->input('cpf') == null ? 'required|max:10' : 'nullable'),
+            'celular' => ['required', 'string', 'max:20'],
+            'instituicao' => ['required', 'string', 'max:255'],
+            'pais' => ['required', 'string', 'max:255'],
+            'rua' => ['required', 'string', 'max:255'],
+            'numero' => ['required', 'string'],
+            'bairro' => ['required', 'string', 'max:255'],
+            'cidade' => ['required', 'string', 'max:255'],
+            'uf' => ['required', 'string'],
+            'cep' => ['required', 'string'],
+            'complemento' => ['nullable', 'string'],
+        ]);
     }
 }

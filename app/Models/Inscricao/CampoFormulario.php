@@ -3,6 +3,7 @@
 namespace App\Models\Inscricao;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CampoFormulario extends Model
 {
@@ -23,5 +24,15 @@ class CampoFormulario extends Model
     public function inscricoesFeitas()
     {
         return $this->belongsToMany('App\Models\Inscricao\Inscricao', 'valor_campo_extras', 'campo_formulario_id', 'inscricao_id')->withPivot('valor');
+    }
+
+    /**
+     * Get all of the opcoes for the CampoFormulario
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function opcoes(): HasMany
+    {
+        return $this->hasMany(CampoFormularioSelect::class);
     }
 }

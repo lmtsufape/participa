@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class CategoriaParticipante extends Model
 {
     protected $fillable = [
-        'nome', 'valor_total', 'evento_id',
+        'nome', 'valor_total', 'evento_id', 'descricao',
+    ];
+
+    protected $casts = [
+        'limite_inscricao' => 'datetime',
     ];
 
     public function evento()

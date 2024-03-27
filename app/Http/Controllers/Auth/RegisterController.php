@@ -82,7 +82,7 @@ class RegisterController extends Controller
 
         $user = new User();
         $user->name = $data['name'];
-        $user->email = $data['email'];
+        $user->email = strtolower($data['email']);
         $user->password = bcrypt($data['password']);
         $user->cpf = $data['cpf'];
         $user->cnpj = $data['cnpj'];
@@ -101,9 +101,10 @@ class RegisterController extends Controller
 
         $user->enderecoId = null;
         $user->save();
+       
 
         app()->setLocale('pt-BR');
-
+        
         return $user;
     }
 }
