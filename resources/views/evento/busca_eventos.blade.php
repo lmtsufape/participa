@@ -50,7 +50,7 @@
                 <div class="card card-busca-livre-evento">
                     <div class="row no-gutters">
                         <div class="col-md-5">
-                            <img x-bind:src="'/storage/eventos/' + evento.id + '/logo.png'" alt=""/>
+                            <img x-bind:src="rotaImagem(evento.fotoEvento)" alt=""/>
                         </div>
                         <div class="col-md-7">
                             <div class="card-body">
@@ -92,6 +92,9 @@
 
 @section('javascript')
     <script>
+        function rotaImagem(path) {
+            return `{{ asset(':path') }}`.replace(':path', 'storage/' + path);
+        }
         function rotaVisualizar(id) {
             return `{{ route('evento.visualizar', ':id') }}`.replace(':id', id);
         }
