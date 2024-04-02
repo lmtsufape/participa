@@ -17,7 +17,7 @@ return new class extends Migration
             $table->double('valor');
             $table->date('dataInicio');
             $table->date('dataFim');
-            $table->bigInteger('categoria_id');
+            $table->unsignedBigInteger('categoria_id');
             $table->foreign('categoria_id')->references('id')->on('categoria_participantes');
             $table->timestamps();
         });
