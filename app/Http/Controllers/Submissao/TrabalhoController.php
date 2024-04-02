@@ -1154,7 +1154,7 @@ class TrabalhoController extends Controller
             $texto = '';
         }
 
-        $trabalhos = Trabalho::where([['areaId', $area_id], ['titulo', 'ilike', '%'.$texto.'%']])->orderBy('titulo')->get();
+        $trabalhos = Trabalho::where('areaId', $area_id)->whereRaw('LOWER(titulo) like ?', ['%' . $texto . '%'])->orderBy('titulo')->get();
 
         $trabalhoJson = collect();
 
