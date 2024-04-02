@@ -5,7 +5,7 @@ namespace App\Models\Inscricao;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LinkPagamento extends Model
+class LinksPagamento extends Model
 {
     use HasFactory;
 

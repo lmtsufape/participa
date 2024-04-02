@@ -1378,7 +1378,7 @@ class EventoController extends Controller
      */
     public function show($id)
     {
-        $date = date('Y-m-d');
+        // $date = date('Y-m-d');
 
         $evento = Evento::find($id);
         if (!$evento) {
@@ -1416,18 +1416,17 @@ class EventoController extends Controller
 
             $mytime = Carbon::now('America/Recife');
             $etiquetas = FormEvento::where('eventoId', $evento->id)->first();
-
             $formSubTraba = FormSubmTraba::all();
 
             if ($dataInicial == null) {
                 $dataInicial = '';
             }
 
-            $links = DB::table('links_pagamento')
-                ->join('categoria_participantes', 'links_pagamento.categoria_id', '=', 'categoria_participantes.id')
-                ->select('categoria_participantes.nome', 'links_pagamento.*', 'categoria_participantes.id as c_id')
-                ->where('links_pagamento.dataInicio', '<=', $date)
-                ->where('links_pagamento.dataFim', '>', $date)
+            $links = DB::table('links_pagamentos')
+                ->join('categoria_participantes', 'links_pagamentos.categoria_id', '=', 'categoria_participantes.id')
+                ->select('categoria_participantes.nome', 'links_pagamentos.*', 'categoria_participantes.id as c_id')
+                ->where('links_pagamentos.dataInicio', '<=', $mytime)
+                ->where('links_pagamentos.dataFim', '>', $mytime)
                 ->get();
             // dd($links);
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());

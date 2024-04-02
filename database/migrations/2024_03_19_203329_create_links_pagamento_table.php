@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('links_pagamento', function (Blueprint $table) {
+        Schema::create('links_pagamentos', function (Blueprint $table) {
             $table->id();
             $table->string('link');
             $table->double('valor');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('links_pagamento');
+        Schema::dropIfExists('links_pagamentos');
     }
 };

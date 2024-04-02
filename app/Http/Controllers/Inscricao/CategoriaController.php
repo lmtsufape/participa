@@ -7,9 +7,11 @@ use App\Http\Requests\StoreCategoriaParticipanteRequest;
 use App\Models\Inscricao\CampoFormulario;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\Inscricao;
+use App\Models\Inscricao\LinksPagamento;
 use App\Models\Inscricao\ValorCategoria;
 use App\Models\Submissao\Evento;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
@@ -41,6 +43,7 @@ class CategoriaController extends Controller
      */
     public function store(StoreCategoriaParticipanteRequest $request)
     {
+       
         $validateData = $request->validated();
 
         $evento = Evento::find($request->evento_id);
@@ -54,6 +57,18 @@ class CategoriaController extends Controller
         $categoria->limite_inscricao = $request->input('limite_inscricao');
         $categoria->save();
         $categoria->camposNecessarios()->attach($evento->camposFormulario);
+
+        $qtdeLinks = count($request->linkPagamento);
+        for ($i=0; $i < $qtdeLinks; $i++) { 
+            $link = new LinksPagamento();
+            $link->valor = $request->valorLink[$i];
+            $link->link = $request->linkPagamento[$i];
+            $link->dataInicio = $request->dataInicioLink[$i];
+            $link->dataFim = $request->dataFinalLink[$i];
+            $link->categoria_id = $categoria->id;
+            $link->save();
+        }
+        
 
         if ($request->has('tipo_valor')) {
             foreach ($request->tipo_valor as $key => $tipo_valor) {
@@ -136,7 +151,18 @@ class CategoriaController extends Controller
      */
     public function destroy($id)
     {
+        
         $categoria = CategoriaParticipante::find($id);
+        $linkPagamento = LinksPagamento::where('categoria_id', $id)->get();
+        if($linkPagamento){
+            for ($i=0; $i < $linkPagamento->count(); $i++) { 
+                $linkParaApagar = LinksPagamento::find($linkPagamento[$i]->id);
+                $linkParaApagar->delete();
+            }
+        }
+
+   
+
         $evento = $categoria->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $qt_inscricoes = Inscricao::where('categoria_participante_id', $id)->count();
@@ -147,6 +173,7 @@ class CategoriaController extends Controller
         if ($qt_inscricoes > 0) {
             return redirect()->back()->with(['error' => 'Categoria não pode ser excluida, existem campos criados para essa categoria.']);
         }
+    
         $categoria->valores()->delete();
         $categoria->delete();
 
