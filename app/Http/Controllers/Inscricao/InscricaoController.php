@@ -76,12 +76,14 @@ class InscricaoController extends Controller
         ->join('categoria_participantes', 'links_pagamentos.categoria_id', '=', 'categoria_participantes.id')
         ->select('categoria_participantes.nome', 'links_pagamentos.*')
         ->get();
+  
 
-        $linkAtual = $links->where('dataInicio','<=', $date)
+        $linksAtuais = $links->where('dataInicio','<=', $date)
         ->where('dataFim','>', $date);
+        
        
         
-        return view('coordenador.inscricoes.categorias', compact('evento', 'categorias', 'links','linkAtual'));
+        return view('coordenador.inscricoes.categorias', compact('evento', 'categorias', 'links','linksAtuais'));
     }
 
     /**

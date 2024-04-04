@@ -425,6 +425,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
     Route::post('inscricoes/criar-categoria-participante', [CategoriaController::class, 'store'])->name('categoria.participante.store');
     Route::delete('{id}/inscricoes/excluir-categoria', [CategoriaController::class, 'destroy'])->name('categoria.participante.destroy');
+    Route::delete('{id}/inscricoes/excluir-link-pagamento', [CategoriaController::class, 'destroyLink'])->name('link.pagamento.destroy');
     Route::put('{id}/inscricoes/atualizar-categoria', [CategoriaController::class, 'update'])->name('categoria.participante.update');
     Route::get('valor/categoria', [CategoriaController::class, 'valorAjax'])->name('ajax.valor.categoria');
     Route::get('confirmar-inscricao', [InscricaoController::class, 'store'])->name('inscricao.confirmar');

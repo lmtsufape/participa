@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('link');
             $table->double('valor');
-            $table->date('dataInicio');
-            $table->date('dataFim');
+            $table->dateTime('dataInicio');
+            $table->dateTime('dataFim');
             $table->unsignedBigInteger('categoria_id');
             $table->foreign('categoria_id')->references('id')->on('categoria_participantes');
             $table->timestamps();
