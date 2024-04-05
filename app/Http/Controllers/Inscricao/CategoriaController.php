@@ -58,16 +58,20 @@ class CategoriaController extends Controller
         $categoria->save();
         $categoria->camposNecessarios()->attach($evento->camposFormulario);
 
-        $qtdeLinks = count($request->linkPagamento);
-        for ($i = 0; $i < $qtdeLinks; $i++) {
-            $link = new LinksPagamento();
-            $link->valor = $request->valorLink[$i];
-            $link->link = $request->linkPagamento[$i];
-            $link->dataInicio = $request->dataInicioLink[$i];
-            $link->dataFim = $request->dataFinalLink[$i];
-            $link->categoria_id = $categoria->id;
-            $link->save();
+
+        if (isset($request->linkPagamento)) {
+            $qtdeLinks = count($request->linkPagamento);
+            for ($i = 0; $i < $qtdeLinks; $i++) {
+                $link = new LinksPagamento();
+                $link->valor = $request->valorLink[$i];
+                $link->link = $request->linkPagamento[$i];
+                $link->dataInicio = $request->dataInicioLink[$i];
+                $link->dataFim = $request->dataFinalLink[$i];
+                $link->categoria_id = $categoria->id;
+                $link->save();
+            }
         }
+
 
 
         if ($request->has('tipo_valor')) {
@@ -117,24 +121,25 @@ class CategoriaController extends Controller
     {
         $categoria = CategoriaParticipante::find($id);
 
-        // dd($request->linkPagamento);
-        for ($i = 0; $i < count($request->linkPagamento); $i++) {
-     
-            $link = LinksPagamento::where('link',$request->linkPagamento[$i])->first();
-        
-            if(!$link){
-                
-                $novoLink = new LinksPagamento();
-                $novoLink->valor = $request->valorLink[$i];
-                $novoLink->link = $request->linkPagamento[$i];
-                $novoLink->dataInicio = $request->dataInicioLink[$i];
-                $novoLink->dataFim = $request->dataFinalLink[$i];
-                $novoLink->categoria_id = $categoria->id;
-               
-                $novoLink->save();
+        if(isset($request->linkPagamento)){
+            for ($i = 0; $i < count($request->linkPagamento); $i++) {
+
+                $link = LinksPagamento::where('link', $request->linkPagamento[$i])->first();
+    
+                if (!$link) {
+    
+                    $novoLink = new LinksPagamento();
+                    $novoLink->valor = $request->valorLink[$i];
+                    $novoLink->link = $request->linkPagamento[$i];
+                    $novoLink->dataInicio = $request->dataInicioLink[$i];
+                    $novoLink->dataFim = $request->dataFinalLink[$i];
+                    $novoLink->categoria_id = $categoria->id;
+    
+                    $novoLink->save();
+                }
             }
-           
         }
+        
 
         $categoria->nome = $request->input("nome_{$categoria->id}");
         $categoria->valor_total = $request->input("valor_total_{$categoria->id}");

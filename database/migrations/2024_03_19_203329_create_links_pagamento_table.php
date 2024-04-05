@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('links_pagamentos', function (Blueprint $table) {
             $table->id();
-            $table->string('link');
-            $table->double('valor');
-            $table->dateTime('dataInicio');
-            $table->dateTime('dataFim');
+            $table->string('link')->nullable();
+            $table->double('valor')->nullable();
+            $table->dateTime('dataInicio')->nullable();
+            $table->dateTime('dataFim')->nullable();
             $table->unsignedBigInteger('categoria_id');
             $table->foreign('categoria_id')->references('id')->on('categoria_participantes');
             $table->timestamps();
