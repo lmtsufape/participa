@@ -5,11 +5,16 @@ namespace App\Models\Inscricao;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LinkPagamento extends Model
+class LinksPagamento extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'link', 'valor', 'data_inicio', 'data_fim', 'categoria'
+        'link', 'valor', 'categoria'
+    ];
+
+    protected $casts = [
+        'data_fim' => 'datetime',
+        'data_inicio' => 'datetime',
     ];
 }

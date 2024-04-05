@@ -87,6 +87,72 @@
                                                             </span>
                                                             @enderror
                                                         </div>
+
+
+                                                        <div id="linkPrimeiro">
+                                                            <div class="form-row" id="links">
+                                                                <div class="form-group col-md-3">
+                                                                    <label :for="id" class="col-form-label">
+                                                                        {{ __('Link para pagamento') }}
+                                                                    </label>
+                                                                    <input id="link_pagamento" type="text" class="form-control @error('link_pagamento') is-invalid @enderror" name="linkPagamento[]" value="{{ old('link_pagamento') }}" autocomplete="link_pagamento" autofocus>
+                                                                    @error('linkPagamento[]')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                    @enderror
+                                                                </div>
+                                                                <div class="form-group col-md-2">
+                                                                    <label :for="id" class="col-form-label">
+                                                                        {{ __('Valor') }}
+                                                                    </label>
+                                                                    <input id="valor" type="text" class="form-control @error('valor') is-invalid @enderror" name="valorLink[]" value="{{ old('valor') }}" placeholder="R$" autocomplete="valor" autofocus>
+                                                                    @error('valorLink[]')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                    @enderror
+                                                                </div>
+                                                                <div class="form-group col-md-3">
+                                                                    <label :for="id" class="col-form-label">
+                                                                        {{ __('Data de Início') }}
+                                                                    </label>
+                                                                    <input :id="id" type="datetime-local" class="form-control" x-model="data.inicio" name="dataInicioLink[]">
+                                                                    @error('dataInicioLink[]')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                    @enderror
+                                                                </div>
+                                                                <div class="form-group col-md-3">
+                                                                    <label :for="id" class="col-form-label">
+                                                                        {{ __('Data de Fim') }}
+                                                                    </label>
+                                                                    <input :id="id" type="datetime-local" class="form-control" x-model="data.fim" name="dataFinalLink[]">
+                                                                    @error('dataFinalLink[]')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                    @enderror
+
+
+                                                                </div>
+                                                                <!-- <div class="col-md-1">
+                                                                    <a href="#" id="delete" onclick="removerLink('delete')">
+                                                                        <img src="{{asset('img/icons/lixo.png')}}" style="width:25px;margin-top:35px">
+                                                                    </a>
+                                                                </div> -->
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="linksExtras">
+
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <button class="btn btn-primary" type="button" onclick="adicionarLink()">+ Adicionar link</button>
+                                                        </div>
+
                                                         <div class="form-group">
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
@@ -207,25 +273,114 @@
                         </span>
                         @enderror
                     </div>
-                  
-                    @foreach($links as $link)
-                    @if($link->nome == $categoria->nome)
+
+                    @foreach($linksAtuais as $linkAtual)
+                    @if($linkAtual->categoria_id == $categoria->id)
                     <div class="form-group">
-                        <label for="link" class="col-form-label">{{ __('Link') }}*:</label>
-                        <a href="">{{$link->link }}</a>
-                    </div>
-                   
-                    <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
-                        <label for="valor_total_">Valor*</label>
-                        <input id="valor_total_" type="text" class="form-control @error('valor_total_') is-invalid @enderror" name="valor_total_{{ $categoria->id }}" value="{{ $link->valor}}">
-                        @error('valor_total_'.$categoria->id)
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <label for="link" class="col-form-label">{{ __('Link atual') }}*:</label>
+                        <a href="">{{$linkAtual->link }}</a>
                     </div>
                     @endif
                     @endforeach
+
+                    @foreach($links as $link)
+                    @if($link->categoria_id == $categoria->id)
+                    <div class="form-row" id="links">
+                        <div class="form-group col-md-3">
+                            <label :for="id" class="col-form-label">
+                                {{ __('Link para pagamento') }}
+                            </label>
+                            <input id="link_pagamento" type="text" class="form-control @error('link_pagamento') is-invalid @enderror" name="linkPagamento[]" value="{{ $link->link}}" autocomplete="link_pagamento" autofocus>
+                            @error('linkPagamento[]')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label :for="id" class="col-form-label">
+                                {{ __('Valor') }}
+                            </label>
+                            <input id="valor" type="text" class="form-control @error('valor') is-invalid @enderror" name="valorLink[]" value="{{ $link->valor }}" placeholder="R$" autocomplete="valor" autofocus>
+                            @error('valorLink[]')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label :for="id" class="col-form-label">
+                                {{ __('Data de Início') }}
+                            </label>
+                            <input :id="id" type="datetime-local" class="form-control" x-model="data.inicio" name="dataInicioLink[]" value="{{$link->dataInicio}}">
+                            @error('dataInicioLink[]')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label :for="id" class="col-form-label">
+                                {{ __('Data de Fim') }}
+                            </label>
+                            <input :id="id" type="datetime-local" class="form-control" x-model="data.fim" name="dataFinalLink[]" value="{{$link->dataFim}}">
+                            @error('dataFinalLink[]')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+
+
+                        </div>
+                        <div class="col-md-1">
+                            <!-- <form id="formExcluirLink{{ $link->id }}" action="{{ route('link.pagamento.destroy', $link->id) }}" method="DELETE"> -->
+                                <!-- @csrf
+                                @method('DELETE') -->
+                                <!-- <a href="#" data-toggle="modal" data-target="#modalExcluirCategoria{{ $categoria->id }}">
+                                                <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" class="icon-card" alt="">
+                                            </a> -->
+                                <a href="#" class="deleteEdit" data-toggle="modal" data-target="#modalExcluirLink{{ $link->id }}">
+                                    <img src="{{asset('img/icons/lixo.png')}}" style="width:25px;margin-top:35px">
+                                </a>
+                            <!-- </form> -->
+
+                        </div>
+                    </div>
+
+                    @endif
+                    <!-- Modal de exclusão do link -->
+                    <div class="modal fade" id="modalExcluirLink{{ $link->id }}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #114048ff; color: white;">
+                                    <h5 class="modal-title" id="#label">Confirmação</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Tem certeza que deseja excluir esse link?
+                                </div>
+                                <div class="modal-footer">
+                                    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                                    <button type="submit" class="btn btn-primary" form="formExcluirLink{{ $link->id }}">Sim</button> -->
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Sim</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+
+                    <div class="linksExtrasEdit">
+
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="button" onclick="adicionarLinkEdit()">+ Adicionar link</button>
+                    </div>
+
+
                     <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
                         <label for="limite_inscricao_">Valor*</label>
                         <input id="limite_inscricao_" type="datetime-local" class="form-control @error('limite_inscricao_') is-invalid @enderror" name="limite_inscricao_{{ $categoria->id }}" value="{{ old('limite_inscricao_'.$categoria->id, $categoria->limite_inscricao) }}">
@@ -248,6 +403,7 @@
                             @enderror
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="form-check">
                             <label class="form-check-label">
@@ -270,6 +426,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal de exclusão da categoria -->
 <div class="modal fade" id="modalExcluirCategoria{{ $categoria->id }}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -296,5 +453,80 @@
 <script type="text/javascript">
     CKEDITOR.replaceAll('ckeditor-texto');
     $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+
+    function adicionarLink() {
+        var caminhoImagem = "{{ asset('img/icons/lixo.png') }}";
+
+        $('.linksExtras').append(
+            '<div class="form-row" id="linkExtra">' +
+            '<div class="form-group col-md-3">' +
+            '<label for="link_pagamento" class="col-form-label">Link para pagamento</label>' +
+            '<input id="link_pagamento" type="text" class="form-control" name="linkPagamento[]" value="" autocomplete="link_pagamento" autofocus>' +
+            '</div>' +
+            '<div class="form-group col-md-2">' +
+            '<label for="valor" class="col-form-label">Valor</label>' +
+            '<input id="valor" type="text" class="form-control" name="valorLink[]" value="" placeholder="R$" autocomplete="valor" autofocus>' +
+            '</div>' +
+            '<div class="form-group col-md-3">' +
+            '<label for="dataInicio" class="col-form-label">Data de Início</label>' +
+            '<input id="dataInicio" type="datetime-local" class="form-control" name="dataInicioLink[]">' +
+            '</div>' +
+            '<div class="form-group col-md-3">' +
+            '<label for="dataFim" class="col-form-label">Data de Fim</label>' +
+            '<input id="dataFim" type="datetime-local" class="form-control" name="dataFinalLink[]">' +
+            '</div>' +
+            '<div class="col-md-1">' +
+            '<a href="#" id="delete" onclick="removerLink(\'delete\')">' +
+            '<img src="' + caminhoImagem + '" style="width:25px;margin-top:35px">' +
+            '</a>' +
+            '</div>' +
+            '</div>'
+        );
+    }
+
+
+
+
+    function adicionarLinkEdit() {
+        var caminhoImagem = "{{ asset('img/icons/lixo.png') }}";
+
+        $('.linksExtrasEdit').append(
+            '<div class="form-row" id="linkExtraEdit">' +
+            '<div class="form-group col-md-3">' +
+            '<label for="link_pagamento" class="col-form-label">Link para pagamento</label>' +
+            '<input id="link_pagamento" type="text" class="form-control" name="linkPagamento[]" value="" autocomplete="link_pagamento" autofocus>' +
+            '</div>' +
+            '<div class="form-group col-md-2">' +
+            '<label for="valor" class="col-form-label">Valor</label>' +
+            '<input id="valor" type="text" class="form-control" name="valorLink[]" value="" placeholder="R$" autocomplete="valor" autofocus>' +
+            '</div>' +
+            '<div class="form-group col-md-3">' +
+            '<label for="dataInicio" class="col-form-label">Data de Início</label>' +
+            '<input id="dataInicio" type="datetime-local" class="form-control" name="dataInicioLink[]">' +
+            '</div>' +
+            '<div class="form-group col-md-3">' +
+            '<label for="dataFim" class="col-form-label">Data de Fim</label>' +
+            '<input id="dataFim" type="datetime-local" class="form-control" name="dataFinalLink[]">' +
+            '</div>' +
+            '<div class="col-md-1">' +
+            '<a href="#" id="delete" onclick="removerLinkExtraEdit(\'delete\')">' +
+            '<img src="' + caminhoImagem + '" style="width:25px;margin-top:35px">' +
+            '</a>' +
+            '</div>' +
+            '</div>'
+        );
+    }
+
+    function removerLink(id) {
+
+        $('#' + id).closest('#linkExtra').remove();
+
+    }
+
+    function removerLinkExtraEdit(id) {
+
+        $('#' + id).closest('#linkExtraEdit').remove();
+
+    }
 </script>
 @endsection
