@@ -46,7 +46,12 @@
         <div class="row">
             <div class="col-sm-6">
                 <label>Evento</label>
-                <input type="text" class="form-control" disabled value="{{$evento->nome}}">
+                @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                    <input type="text" class="form-control" disabled value="{{$evento->nome_en}}">
+                @else
+                    <input type="text" class="form-control" disabled value="{{$evento->nome}}">
+                @endif
+
             </div>
             @if ($promocao != null)
                 <input type="hidden" name="promocao_id" value="{{$promocao->id}}">
@@ -58,7 +63,7 @@
                     <label>Taxa com o pacote</label>
                     <input type="text" class="form-control" disabled value="@if($promocao->valor != null && $promocao->valor > 0)R$ {{number_format($promocao->valor, 2,',','.')}}@else Gratuita @endif">
                 </div>
-            @else 
+            @else
                 <div class="col-sm-6">
                     <label>Taxa do evento</label>
                     <input type="text" class="form-control" disabled value="{{$inscricao->categoria->valor_total}}">
@@ -74,7 +79,7 @@
             </div>
             <div class="row">
                 @foreach ($inscricao->camposPreenchidos as $campo)
-                    
+
                     @switch($campo->tipo)
                         @case("endereco")
                             @php
@@ -142,7 +147,7 @@
                                     <div class="col-sm-3">
                                         <label for="endereco-numero-{{$campo->id}}">Número</label>
                                         <input type="number" class="form-control numero" id="endereco-numero-{{$campo->id}}" name="endereco-numero-{{$campo->id}}" placeholder="10" value="{{$enderecoExtra->numero}}" disabled>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +189,7 @@
                             @break
                     @endswitch
                 @endforeach
-            </div>         
+            </div>
         @endif
         @if ($promocao != null && count($promocao->atividades) > 0)
             <br>
@@ -218,7 +223,7 @@
                 </div>
             </div>
         @endif
-        
+
         @if ($atividades != null)
             <br>
             <div class="row">
@@ -273,7 +278,7 @@
                     <input type="hidden" name="cupom" value="{{$inscricao->cupomDesconto->id}}">
                     @if ($inscricao->cupomDesconto->porcentagem)
                         <small>O cupom vale {{$inscricao->cupomDesconto->valor}}% de desconto.</small>
-                    @else 
+                    @else
                         <small>O cupom vale R$ {{number_format($inscricao->cupomDesconto->valor, 2,',','.')}} de desconto.</small>
                     @endif
                 </div>
@@ -282,12 +287,12 @@
                     <input type="hidden" name="valorFinal" value="{{$valorComDesconto}}">
                     @if ($valorComDesconto <= 0)
                         <input type="text" id="valorTotal" @if($inscricao->cupomDesconto != null) name="valorTotal" @endif disabled class="form-control" value="R$ {{number_format(0, 2,',','.')}}">
-                    @else 
+                    @else
                         <input type="text" id="valorTotal" @if($inscricao->cupomDesconto != null) name="valorTotal" @endif disabled class="form-control" value="R$ {{number_format($valorComDesconto, 2,',','.')}}">
                     @endif
                 </div>
             @endif
-            
+
             {{--  --}}
         </div>
         <div class="row" style="margin-top: 50px; margin-bottom: 50px;">
@@ -326,7 +331,7 @@
                     }
                 }
             });
-            
+
         }
 
         function pagamento() {

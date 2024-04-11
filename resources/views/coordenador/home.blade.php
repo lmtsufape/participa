@@ -33,10 +33,12 @@
             @if ($evento->deletado == false)
                 @can('isPublishOrIsCoordenadorOrCoordenadorDasComissoes', $evento)
                     <div class="card" style="width: 18rem;">
-                        @if(isset($evento->fotoEvento))
-                        <img src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
+                        @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en' && isset($evento->fotoEvento_en))
+                            <img src="{{asset('storage/'.$evento->fotoEvento_en)}}" class="card-img-top" alt="...">
+                        @elseif(isset($evento->fotoEvento))
+                            <img src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
                         @else
-                        <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
+                            <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
                         @endif
                         <div class="card-body">
                             <div class="row">
@@ -45,7 +47,11 @@
                                         <div class="row justify-content-center">
                                             <div class="col-sm-12">
                                                 <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="text-decoration: inherit;">
-                                                    {{$evento->nome}}
+                                                    @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                        {{$evento->nome_en}}
+                                                    @else
+                                                        {{$evento->nome}}
+                                                    @endif
                                                 </a>
                                             </div>
 
