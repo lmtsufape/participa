@@ -18,7 +18,7 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h4 for="tipo">Tipo</h4>
+                                    <h4 for="tipo">{{__("Tipo")}}</h4>
                                     <p>
                                         {{ $atv->tipoAtividade->descricao }}
                                     </p>
@@ -27,7 +27,7 @@
                             <hr>
                             <div class="row form-group">
                                 <div class="col-sm-12">
-                                    <label for="descricao">Descrição</label>
+                                    <label for="descricao">{{__("Descrição")}}</label>
                                     <p>
                                         {{ $atv->descricao }}
                                     </p>
@@ -35,7 +35,7 @@
                             </div>
                             @if (count($atv->convidados) > 0)
                                 <hr>
-                                <h4>Convidados</h4>
+                                <h4>{{__("Convidados")}}</h4>
                                 <div class="convidadosDeUmaAtividade">
                                     <div class="row">
                                         @foreach ($atv->convidados as $convidado)
@@ -51,7 +51,7 @@
                             <hr>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h4 for="local">Local</h4>
+                                    <h4 for="local">{{__("Local")}}</h4>
                                     <p class="local">
                                         {{ $atv->local }}
                                     </p>
@@ -62,13 +62,13 @@
                                 <div class="row">
                                     @if ($atv->vagas != null)
                                         <div class="col-sm-6">
-                                            <label for="vagas">Vagas:</label>
+                                            <label for="vagas">{{__("Vagas")}}:</label>
                                             <h4 class="vagas">{{ $atv->vagas }}</h4>
                                         </div>
                                     @endif
                                     @if ($atv->valor != null)
                                         <div class="col-sm-6">
-                                            <label for="valor">Valor:</label>
+                                            <label for="valor">{{__("Valor")}}:</label>
                                             <h4 class="valor">R$ {{ $atv->valor }}</h4>
                                         </div>
                                     @endif
@@ -78,7 +78,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label for="carga_horaria">Carga horária para estudantes:</label>
+                                        <label for="carga_horaria">{{__("Carga horária para estudantes")}}:</label>
                                         <h4 class="carga_horaria">{{ $atv->carga_horaria }}</h4>
                                     </div>
                                 </div>
@@ -91,29 +91,31 @@
                                 @if(($atv->vagas > 0 || $atv->vagas == null) && Auth::user()->atividades()->find($atv->id) == null)
                                     <form method="POST" action="{{route('atividades.inscricao', ['id'=>$atv->id])}}">
                                         @csrf
-                                        <button type="submit" class="button-prevent-multiple-submits btn btn-primary">Inscrever-se</button>
+                                        <button type="submit" class="button-prevent-multiple-submits btn btn-primary">
+                                            {{__("Inscrever-se")}}</button>
                                     </form>
                                 @elseif(Auth::user()->atividades()->find($atv->id) != null)
                                     @if (!$atv->terminou())
                                     <form method="POST" action="{{route('atividades.cancelarInscricao', ['id'=>$atv->id, 'user'=> Auth::id()])}}">
                                         @csrf
-                                        <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Cancelar inscrição</button>
+                                        <button type="submit" class="btn btn-primary button-prevent-multiple-submits">
+                                            {{__("Cancelar inscrição")}}</button>
                                     </form>
                                     @else
-                                        <button type="button" class="btn btn-primary" disabled>Inscrito</button>
+                                        <button type="button" class="btn btn-primary" disabled>{{__("Inscrito")}}</button>
                                     @endif
                                 @else
-                                    <button type="button" class="btn btn-danger"  style="pointer-events: none">Sem Vagas</button>
+                                    <button type="button" class="btn btn-danger"  style="pointer-events: none">{{__("Sem Vagas")}}</button>
                                 @endif
                             @else
                                 @if(Auth::user()->atividades()->find($atv->id) != null)
-                                    <button type="button" class="btn btn-primary" disabled>Inscrito</button>
+                                    <button type="button" class="btn btn-primary" disabled>{{__("Inscrito")}}</button>
                                 @else
-                                    <button type="button" class="btn btn-danger" disabled>Inscrições encerradas</button>
+                                    <button type="button" class="btn btn-danger" disabled>{{__("Inscrições encerradas")}}</button>
                                 @endif
                             @endif
                         @endif
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Fechar")}}</button>
                     </div>
                 </div>
             </div>
@@ -123,7 +125,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Submeter nova versão</h5>
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{{__("Submeter nova versão")}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -142,7 +144,7 @@
                                 <div class="custom-file">
                                     <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
                                 </div>
-                                <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small>
+                                <small>{{__("O arquivo Selecionado deve ser no formato PDF de até 2mb")}}.</small>
                                 @error('arquivo')
                                     <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                         <strong>{{ $message }}</strong>
@@ -153,8 +155,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Fechar")}}</button>
+                    <button type="submit" class="btn btn-primary">{{__("Salvar")}}</button>
                 </div>
             </form>
         </div>
@@ -182,9 +184,9 @@
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
                 @if(auth()->check())
-                <h5 class="modal-title" id="#label">Confirmação</h5>
+                <h5 class="modal-title" id="#label">{{__("Confirmação")}}</h5>
                 @else
-                <h5 class="modal-title" id="#label">Atenção!</h5>
+                <h5 class="modal-title" id="#label">{{__("Atenção")}}!</h5>
                 @endif
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                     <span aria-hidden="true">&times;</span>
@@ -195,7 +197,7 @@
                 <div class="modal-body">
                     @if(!auth()->check())
                     @include('componentes.mensagens')
-                    <p>Para continuar com sua inscrição, é necessário que possua cadastro na plataforma e realize o seu acesso (login), caso já possua uma conta. Se você ainda não tem, será necessário efetuar o cadastro e retornar a página do evento para realizar sua inscrição.</p>
+                    <p>{{__("Para continuar com sua inscrição, é necessário que possua cadastro na plataforma e realize o seu acesso (login), caso já possua uma conta. Se você ainda não tem, será necessário efetuar o cadastro e retornar a página do evento para realizar sua inscrição")}}.</p>
                     <div class="modal-footer text-center">
                         <a href="{{ route('register', app()->getLocale()) }}">
                             <button type="button" class="btn btn-secondary">{{ __('Cadastrar-se') }}</button>
@@ -231,7 +233,7 @@
                                                             <h4 class="my-0 font-weight-normal">{{ $categoria->nome }}</h4>
                                                         </div>
                                                         <div class="card-body">
-                                                            <label for="">Descrição: </label>
+                                                            <label for="">{{__("Descrição")}}: </label>
                                                             <p> {!! $categoria->descricao !!}</p>
 
                                                             @if($links)
@@ -239,7 +241,7 @@
 
                                                                 <label for="">Valor: </label>
                                                                 <p>R${{$link->valor}}</p>
-                                                                <label for="">Link para pagamento: </label>
+                                                                <label for="">{{__("Link para pagamento")}}: </label>
                                                                 <a href="{{$link->link}}">{{$link->link}}</a>
 
 
@@ -269,9 +271,10 @@
                                     <div class="campos-extras" id="campos-extras-{{$categoria->id}}">
                                         <div>
                                             <div class="form-group">
-                                                <label>Categoria selecionada</label>
+                                                <label>{{__("Categoria selecionada")}}</label>
                                                 <input type="text" readonly class="form-control" value="{{ $categoria->nome }}">
-                                                <button type="button" x-on:click="categoria = ''" class="btn btn-md btn-block btn-primary mt-2 col-sm-12 col-md-6 col-lg-4">Alterar categoria</button>
+                                                <button type="button" x-on:click="categoria = ''" class="btn btn-md btn-block btn-primary mt-2 col-sm-12 col-md-6 col-lg-4">
+                                                    {{__("Alterar categoria")}}</button>
                                             </div>
 
                                             <!-- <div class="form-group">
@@ -284,7 +287,7 @@
                                             <div>
                                                 <div class="form-row">
                                                     <div class="form-group col-sm-6">
-                                                        <label for="endereco-cep-{{$campo->id}}">CEP</label>
+                                                        <label for="endereco-cep-{{$campo->id}}">{{__("CEP")}}</label>
                                                         <input id="endereco-cep-{{$campo->id}}" name="endereco-cep-{{$campo->id}}" onblur="pesquisacep(this.value, '{{$campo->id}}');" type="text" class="form-control cep @error('endereco-cep-'.$campo->id) is-invalid @enderror" placeholder="00000-000" @if($campo->obrigatorio) required @endif value="@if(old('endereco-cep-'.$campo->id) != null){{old('endereco-cep-'.$campo->id)}}@endif">
                                                         @error('endereco-cep-'.$campo->id)
                                                         <span class="invalid-feedback" role="alert">
@@ -293,7 +296,7 @@
                                                         @enderror
                                                     </div>
                                                     <div class="form-group col-sm-6">
-                                                        <label for="endereco-bairro-{{$campo->id}}">Bairro</label>
+                                                        <label for="endereco-bairro-{{$campo->id}}">{{_("Bairro")}}</label>
                                                         <input type="text" class="form-control @error('endereco-bairro-'.$campo->id) is-invalid @enderror" id="endereco-bairro-{{$campo->id}}" name="endereco-bairro-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-bairro-'.$campo->id) != null){{old('endereco-bairro-'.$campo->id)}}@endif">
                                                         @error('endereco-bairro-'.$campo->id)
                                                         <span class="invalid-feedback" role="alert">
@@ -304,7 +307,7 @@
                                                 </div>
                                                 <div class="form-row">
                                                     <div class="form-group col-sm-9">
-                                                        <label for="endereco-rua-{{$campo->id}}">Rua</label>
+                                                        <label for="endereco-rua-{{$campo->id}}">{{__("Rua")}}</label>
                                                         <input type="text" class="form-control @error('endereco-rua-'.$campo->id) is-invalid @enderror" id="endereco-rua-{{$campo->id}}" name="endereco-rua-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-rua-'.$campo->id) != null){{old('endereco-rua-'.$campo->id)}}@endif">
                                                         @error('endereco-rua-'.$campo->id)
                                                         <span class="invalid-feedback" role="alert">
@@ -313,7 +316,7 @@
                                                         @enderror
                                                     </div>
                                                     <div class="form-group col-sm-3">
-                                                        <label for="endereco-complemento-{{$campo->id}}">Complemento</label>
+                                                        <label for="endereco-complemento-{{$campo->id}}">{{__("Complemento")}}</label>
                                                         <input type="text" class="form-control @error('endereco-complemento-'.$campo->id) is-invalid @enderror" id="endereco-complemento-{{$campo->id}}" name="endereco-complemento-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-complemento-'.$campo->id) != null){{old('endereco-complemento-'.$campo->id)}}@endif">
                                                         @error('endereco-complemento-'.$campo->id)
                                                         <span class="invalid-feedback" role="alert">
@@ -324,7 +327,7 @@
                                                 </div>
                                                 <div class="form-row">
                                                     <div class="form-group col-sm-6">
-                                                        <label for="endereco-cidade-{{$campo->id}}">Cidade</label>
+                                                        <label for="endereco-cidade-{{$campo->id}}">{{__("Cidade")}}</label>
                                                         <input type="text" class="form-control @error('endereco-cidade-'.$campo->id) is-invalid @enderror" id="endereco-cidade-{{$campo->id}}" name="endereco-cidade-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-cidade-'.$campo->id) != null){{old('endereco-cidade-'.$campo->id)}}@endif">
                                                         @error('endereco-cidade-'.$campo->id)
                                                         <span class="invalid-feedback" role="alert">
@@ -371,7 +374,7 @@
                                                         @enderror
                                                     </div>
                                                     <div class="form-group col-sm-3">
-                                                        <label for="endereco-numero-{{$campo->id}}">Número</label>
+                                                        <label for="endereco-numero-{{$campo->id}}">{{__("Número")}}</label>
                                                         <input type="number" class="form-control numero @error('endereco-numero-'.$campo->id) is-invalid @enderror" id="endereco-numero-{{$campo->id}}" name="endereco-numero-{{$campo->id}}" placeholder="10" @if($campo->obrigatorio) required @endif value="@if(old('endereco-numero-'.$campo->id) != null){{old('endereco-numero-'.$campo->id)}}@endif" maxlength="10">
                                                         @error('endereco-numero-'.$campo->id)
                                                         <span class="invalid-feedback" role="alert">
@@ -395,7 +398,8 @@
                                             <div class="form-group">
                                                 <label for="select{{ $campo->id }}">{{ $campo->titulo }}</label>
                                                 <select class="form-control" id="select{{ $campo->id }}" @if ($campo->obrigatorio) required @endif name="select-{{$campo->id}}">
-                                                    <option @if ($campo->obrigatorio) disabled @endif selected>Selecione uma opção</option>
+                                                    <option @if ($campo->obrigatorio) disabled @endif selected>
+                                                        {{__("Selecione uma opção")}}</option>
                                                     @foreach ($campo->opcoes as $opcao)
                                                     <option value="{{ $opcao->nome }}">{{ $opcao->nome }}</option>
                                                     @endforeach
@@ -464,14 +468,14 @@
                 </div>
                 @else
                 @include('componentes.mensagens')
-                <p>Tem certeza que deseja se inscrever nesse evento?</p>
+                <p>{{__("Tem certeza que deseja se inscrever nesse evento?")}}</p>
                 @endif
 
 
             @if(auth()->check())
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Cancelar")}}</button>
+                <button type="submit" class="btn btn-primary button-prevent-multiple-submits">{{__("Confirmar")}}</button>
             </div>
             @endif
             </form>
@@ -541,7 +545,7 @@
                     @if ($etiquetas->modprogramacao == true && $evento->exibir_calendario_programacao)
 
                     <div id="mensagem-aviso" class="alert alert-info alert-dismissible fade show" role="alert">
-                        Para participar das atividades do evento, é preciso primeiro se inscrever no evento e, em seguida, realizar a inscrição na atividade desejada, disponível na seção de Programação.
+                        {{__("Para participar das atividades do evento, é preciso primeiro se inscrever no evento e, em seguida, realizar a inscrição na atividade desejada, disponível na seção de Programação.")}}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -554,7 +558,8 @@
                                 <div class="card-body">
                                     <div class="form-row">
                                         <div class="col-sm-12 form-group">
-                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">Programação</h4>
+                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
+                                                {{__("Programação")}}</h4>
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -585,10 +590,12 @@
                                         </div>
                                     </div>
                                     <div class="row mx-1">
-                                        <button id="btn-inscrevase" class="btn btn-primary" data-toggle="modal" data-target="#modalInscrever" @if ($isInscrito || $encerrada) disabled @endif>@if ($isInscrito) Já inscrito @elseif($encerrada) Encerradas @else Inscreva-se @endif</button>
+                                        <button id="btn-inscrevase" class="btn btn-primary" data-toggle="modal" data-target="#modalInscrever" @if ($isInscrito || $encerrada) disabled @endif>@if ($isInscrito)
+                                            {{__("Já inscrito")}} @elseif($encerrada) {{__("Encerradas")}} @else
+                                            {{__("Inscreva-se")}} @endif</button>
                                         @isset($inscricao)
                                         @isset($inscricao->pagamento)
-                                        <a href="{{route('checkout.statusPagamento', $evento->id)}}" class="text-center mt-2 w-100">Visualizar status do pagamento</a>
+                                        <a href="{{route('checkout.statusPagamento', $evento->id)}}" class="text-center mt-2 w-100">{{__("Visualizar status do pagamento")}}</a>
                                         @endisset
                                         @endisset
                                     </div>
@@ -603,7 +610,8 @@
                                 <div class="card-body">
                                     <div class="form-row">
                                         <div class="col-sm-12 form-group">
-                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">Informações</h4>
+                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
+                                                {{__("Informações")}}</h4>
                                         </div>
                                     </div>
 
@@ -667,8 +675,8 @@
                                                                             <img class="enviar-trabalho" src="{{ asset('img/icons/Icon awesome-arrow-up.svg') }}" alt="Enviar trabalho">
                                                                         </div>
                                                                         <div class="col-sm-9" style="position: relative; left: 8px; margin-top: 8px; ">
-                                                                            <span style="font-size: 14px;">Envio de trabalhos</span><br>
-                                                                            <span style="font-size: 12px;">(modalidade <strong>{{ $modalidade->nome }}</strong>)</span>
+                                                                            <span style="font-size: 14px;">{{__("Envio de trabalhos")}}</span><br>
+                                                                            <span style="font-size: 12px;">({{__("modalidade")}} <strong>{{ $modalidade->nome }}</strong>)</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -770,10 +778,10 @@
                                                                 @endif
                                                                 @auth
                                                                 @if ($modalidade->estaEmPeriodoDeSubmissao() && $inscricao?->podeSubmeterTrabalho())
-                                                                <a class="btn btn-primary" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
+                                                                <a class="btn btn-primary" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">{{__("SUBMETER TRABALHO")}}</a>
                                                                 @else
                                                                 @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
-                                                                <a class="btn btn-primary" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">SUBMETER TRABALHO</a>
+                                                                <a class="btn btn-primary" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">{{__("SUBMETER TRABALHO")}}</a>
                                                                 @endcan
                                                                 @endif
                                                                 @endauth
@@ -799,7 +807,7 @@
                                             <a href="mailto:@if($evento->email != null){{$evento->email}}@else{{$evento->coordenador->email}}@endif">
                                                 <div style="margin-top: 18px;">
                                                     <h6 style="margin-bottom: 0px; font-size: 16px; font-weight: bold;">
-                                                            {{__('messages.contato')}}</h6>
+                                                            {{__("Contato")}}</h6>
                                                     {{-- {{$evento->coordenador->email}} --}}
                                                 </div>
                                             </a>
@@ -817,7 +825,7 @@
                                 <div class="card-body">
                                     <div class="form-row">
                                         <div class="col-sm-12 form-group">
-                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">Memória</h4>
+                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{__("Memória")}}</h4>
                                         </div>
                                     </div>
 
@@ -858,7 +866,8 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">Subeventos</h4>
+                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
+                                                {{__("Subeventos")}}</h4>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -904,13 +913,13 @@
                                                 <div>
                                                     <div>
                                                         <a href="{{ route('evento.visualizar', ['id' => $subevento->id]) }}">
-                                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;{{__("Visualizar evento")}}
                                                         </a>
                                                     </div>
                                                     @can('isCoordenadorOrCoordenadorDasComissoes', $subevento)
                                                     <div>
                                                         <a href="{{ route('coord.detalhesEvento', ['eventoId' => $subevento->id]) }}">
-                                                            <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
+                                                            <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;{{__("Configurar evento")}}
                                                         </a>
                                                     </div>
                                                     @can('isCoordenador', $subevento)
@@ -919,7 +928,7 @@
                                                             {{ csrf_field() }}
                                                             {{ method_field('DELETE') }}
                                                             <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{ $subevento->id }}">
-                                                                <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar
+                                                                <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;{{__("Deletar")}}
                                                             </a>
                                                         </form>
                                                     </div>
@@ -935,17 +944,19 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header" style="background-color: #114048ff; color: white;">
-                                                <h5 class="modal-title" id="#label">Confirmação</h5>
+                                                <h5 class="modal-title" id="#label">{{__("Confirmação")}}</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Tem certeza de deseja excluir esse evento?
+                                                {{__("Tem certeza de deseja excluir esse evento")}}?
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                                                <button type="submit" class="btn btn-primary" form="formExcluirEvento{{ $subevento->id }}">Sim</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    {{__("Não")}}</button>
+                                                <button type="submit" class="btn btn-primary" form="formExcluirEvento{{ $subevento->id }}">
+                                                    {{__("Sim")}}</button>
                                             </div>
                                         </div>
                                     </div>
