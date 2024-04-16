@@ -34,9 +34,9 @@
                 <label for="pais" class="col-form-label">{{ __('País') }}*</label>
                 <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" class="form-control @error('pais') is-invalid @enderror" id="pais">
                     <option value="" disabled selected hidden>-- {{__('País')}} --</option>
-                    <option @if($pais == 'brasil') selected @endif value="/pt-BR/register/brasil">{{__('Brasil')}}</option>
-                    <option @if($pais == 'usa') selected @endif value="/en/register/usa">{{__('Estados Unidos da América')}}</option>
-                    <option @if($pais == 'outro') selected @endif value="/en/register/outro">{{__('Outro')}}</option>
+                    <option @if($pais == 'brasil') selected @endif value="/register/brasil">{{__('Brasil')}}</option>
+                    <option @if($pais == 'usa') selected @endif value="/register/usa">{{__('Estados Unidos da América')}}</option>
+                    <option @if($pais == 'outro') selected @endif value="/register/outro">{{__('Outro')}}</option>
                 </select>
                 <input type="hidden" name="pais" value="{{$pais}}">
                 <small>{{__('O formulário seguirá os padrões desse país')}}.</small>

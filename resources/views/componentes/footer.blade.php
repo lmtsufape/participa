@@ -17,7 +17,7 @@
       <div class="row" style="margin-top:5rem;text-align:center">
           <div class="col-md-4">
               <div class="row justify-content-center" style="text-align:center; margin-bottom:1rem;">
-                  <div class="col-12">Desenvolvido por:</div>
+                  <div class="col-12">{{__('Desenvolvido por')}}:</div>
                   <a href="http://www.lmts.uag.ufrpe.br/br" name="lmts">
                     <img src="{{asset('img/lmts.png')}}" style="margin:20px 0 20px 0" width="200px;" >
                   </a>
@@ -25,7 +25,7 @@
           </div>
           <div class="col-md-4">
               <div class="row justify-content-center" style="text-align:center; margin-bottom:1rem;">
-                  <div class="col-12">Apoio:</div>
+                  <div class="col-12">{{__('Apoio')}}:</div>
                   <a href="http://ww3.uag.ufrpe.br/">
                     <img src="{{asset('img/logo_ufape.png')}}">
                   </a>
@@ -33,7 +33,7 @@
           </div>
           <div class="col-md-4">
               <div class="row justify-content-center" style="text-align:center">
-                  <div class="col-12" style="margin-bottom: 1rem;">Redes sociais</div>
+                  <div class="col-12" style="margin-bottom: 1rem;">{{__('Redes sociais')}}</div>
                   <a href="https://www.facebook.com/LMTSUFAPE/" style="padding-left: 10px; padding-right: 10px">
                     <img src="{{asset('img/icons/facebook-square-brands.svg')}}" alt="" width="45px">
                   </a>
