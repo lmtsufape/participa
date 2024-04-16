@@ -1321,9 +1321,17 @@ class EventoController extends Controller
             $evento->fotoEvento = $this->uploadFile($request, $evento);
             $evento->save();
         }
+        if ($request->fotoEvento_en != null) {
+            $evento->fotoEvento_en = $this->uploadFile($request, $evento);
+            $evento->save();
+        }
 
         if ($request->icone != null) {
             $evento->icone = $this->uploadIconeFile($request, $evento);
+            $evento->save();
+        }
+        if ($request->icone_en != null) {
+            $evento->icone_en = $this->uploadIconeFile($request, $evento);
             $evento->save();
         }
 
@@ -1348,6 +1356,16 @@ class EventoController extends Controller
             $nome = $request->file('fotoEvento')->getClientOriginalName();
             Storage::disk('public')->putFileAs($path, $file, $nome);
 
+            return 'eventos/'.$evento->id.'/'.$nome;
+        }
+
+        if ($request->hasFile('fotoEvento_en')) {
+            $file = $request->fotoEvento_en;
+            $path = 'eventos/'.$evento->id;
+            $extensao = $request->file('fotoEvento_en')->getClientOriginalExtension();
+            $nome = 'banner-en.'.$extensao;
+            Storage::disk('public')->putFileAs($path, $file, $nome);
+
             return 'eventos/' . $evento->id . '/' . $nome;
         }
 
@@ -1363,6 +1381,17 @@ class EventoController extends Controller
             $nome = 'icone.' . $extensao;
             $image = Image::make($file)->resize(600, 600)->encode();
             Storage::disk('public')->put($path . '/' . $nome, $image);
+
+            return $path.'/'.$nome;
+        }
+
+        if ($request->hasFile('icone_en')) {
+            $file = $request->icone_en;
+            $path = 'eventos/'.$evento->id;
+            $extensao= $request->file('icone_en')->getClientOriginalExtension();
+            $nome = 'icone-en.'.$extensao;
+            $image = Image::make($file)->resize(600, 600)->encode();
+            Storage::disk('public')->put($path.'/'.$nome, $image);
 
             return $path . '/' . $nome;
         }

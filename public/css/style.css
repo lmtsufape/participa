@@ -676,8 +676,8 @@ a.baixar-campo-form li {
 }
 
 #google_translate_element{width:300px;float:right;text-align:right;display:block}
-.goog-te-banner-frame { display: none !important;}
-.skiptranslate {
+.ggoog-te-banner-frame { display: none !important;}
+.gskiptranslate {
     padding-bottom: 40px;
     display: none !important;}
 body { top: 0px !important; }

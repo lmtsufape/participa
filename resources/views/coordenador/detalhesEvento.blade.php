@@ -4,7 +4,13 @@
 <div class="wrapper">
     <div class="sidebar">
         <div class="title">
-        <h2>{{{$evento->nome}}}</h2>
+        <h2>
+            @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                {{$evento->nome_en}}
+            @else
+                {{$evento->nome}}
+            @endif
+        </h2>
            <div class="col">
            @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
                    <a href="{{route('evento.editar',$evento->id)}}" class="edit-evento row" onmouseover="this.children[0].src='{{asset('img/icons/edit-regular.svg')}}'" onmouseout="this.children[0].src='{{asset('img/icons/edit-regular-white.svg')}}'"><img src="{{asset('img/icons/edit-regular-white.svg')}}"  alt="" width="20px;">Atualizar Evento</a>

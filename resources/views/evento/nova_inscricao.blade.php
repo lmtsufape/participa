@@ -3,7 +3,11 @@
 @section('content')
 <div class="container-fluid content">
     <div class="row">
-        @if(isset($evento->fotoEvento))
+        @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en' && isset($evento->fotoEvento_en))
+            <div class="banner-evento">
+                <img src="{{asset('storage/'.$evento->fotoEvento_en)}}" alt="">
+            </div>
+        @elseif(isset($evento->fotoEvento))
           <div class="banner-evento">
               <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" alt="">
           </div>
@@ -22,7 +26,11 @@
             <div class="container">
                 <div class="row justify-content-center titulo-detalhes">
                     <div class="col-sm-12">
-                        <h1>Nova inscrição para {{$evento->nome}}</h1>
+                        @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                            <h1>New registration for {{$evento->nome_en}}</h1>
+                        @else
+                            <h1>Nova inscrição para {{$evento->nome}}</h1>
+                        @endif
                     </div>
                 </div>
                 @error('atvIguais')
@@ -1065,7 +1073,7 @@
         // ativa o botão de envio do formulário novamente após a submissão
         document.getElementById("confirmar-inscricao").disabled = false;
         });
-    }   
+    }
     //caso eu queira colocar uma funcao anonima que ativará o botao dps de um certo tempo:
     /**
      * function submitOnClick() {
@@ -1074,7 +1082,7 @@
             document.getElementById("confirmar-inscricao").disabled = false;
         }, 1000)
     }
-     * 
+     *
      */
     //outra forma que pode funcionar seria:
     /**
@@ -1095,7 +1103,7 @@
     QUando ele for acionado, a funcao anonima passada como argumento eh executada.
     Isso significa que quando o user apertar o botao para confirmar inscricao, ele desabitará o botao
     e fcara assim até que o form seja enviado e a página recarregada ou redirecionada
-     */     
+     */
 
     function adicionarAtividadeAhInscricao(id) {
         var divAtividadesInscricao = document.getElementById('atividadesAdicionadas');
