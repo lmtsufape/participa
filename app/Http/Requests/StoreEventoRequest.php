@@ -26,12 +26,16 @@ class StoreEventoRequest extends FormRequest
     {
         return [
             'nome' => ['required', 'string'],
+            'nome_en' => [ 'nullable','string'],
             'descricao' => ['required', 'string'],
+            'descricao_en' => ['nullable', 'string'],
             'tipo' => ['required', 'string'],
             'dataInicio' => ['required', 'date', 'after:yesterday'],
             'dataFim' => ['required', 'date'],
             'fotoEvento' => ['file', 'mimes:png, jpg,jpeg'],
+            'fotoEvento_en' => ['file', 'mimes:png, jpg,jpeg'],
             'icone' => ['file', 'mimes:png, jpg,jpeg'],
+            'icone_en' => ['file', 'mimes:png, jpg,jpeg'],
             'rua' => ['required', 'string'],
             'numero' => ['required', 'string'],
             'bairro' => ['required', 'string'],
@@ -68,5 +72,12 @@ class StoreEventoRequest extends FormRequest
         return [
             // 'email' => 'email address',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->sometimes(['nome_en', 'descricao_en'], 'required|string', function ($input) {
+            return filter_var($input->is_multilingual, FILTER_VALIDATE_BOOLEAN);
+        });
     }
 }

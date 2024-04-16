@@ -249,6 +249,44 @@ class TrabalhoController extends Controller
             if (isset($request->campoextra5grande)) {
                 $trabalho->campoextra5grande = $request->campoextra5grande;
             }
+
+            if (isset($request->campoextra1simples_en)) {
+                $trabalho->campoextra1simples_en = $request->campoextra1simples_en;
+            }
+            if (isset($request->campoextra1grande_en)) {
+                $trabalho->campoextra1grande_en = $request->campoextra1grande_en;
+            }
+            if (isset($request->campoextra2simples_en)) {
+                $trabalho->campoextra2simples_en = $request->campoextra2simples_en;
+            }
+            if (isset($request->campoextra2grande_en)) {
+                $trabalho->campoextra2grande_en = $request->campoextra2grande_en;
+            }
+            if (isset($request->campoextra3simples_en)) {
+                $trabalho->campoextra3simples_en = $request->campoextra3simples_en;
+            }
+            if (isset($request->campoextra3grande_en)) {
+                $trabalho->campoextra3grande_en = $request->campoextra3grande_en;
+            }
+            if (isset($request->campoextra4simples_en)) {
+                $trabalho->campoextra4simples_en = $request->campoextra4simples_en;
+            }
+            if (isset($request->campoextra4grande_en)) {
+                $trabalho->campoextra4grande_en = $request->campoextra4grande_en;
+            }
+            if (isset($request->campoextra5simples_en)) {
+                $trabalho->campoextra5simples_en = $request->campoextra5simples_en;
+            }
+            if (isset($request->campoextra5grande_en)) {
+                $trabalho->campoextra5grande_en = $request->campoextra5grande_en;
+            }
+
+            if (isset($request->nomeTrabalho_en)) {
+                $trabalho->titulo_en = $request->nomeTrabalho_en;
+            }
+            if (isset($request->resumo_en)) {
+                $trabalho->resumo_en = $request->resumo_en;
+            }
             if ($trabalho->modalidade->apresentacao) {
                 $trabalho->tipo_apresentacao = $request->tipo_apresentacao;
             }

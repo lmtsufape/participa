@@ -18,7 +18,6 @@ use App\Http\Controllers\Inscricao\CategoriaController;
 use App\Http\Controllers\Inscricao\CheckoutController;
 use App\Http\Controllers\Inscricao\InscricaoController;
 use App\Http\Controllers\Inscricao\PromocaoController;
-use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\Submissao\AreaController;
 use App\Http\Controllers\Submissao\ArquivoInfoController;
 use App\Http\Controllers\Submissao\AssinaturaController;
@@ -46,9 +45,38 @@ use App\Http\Controllers\Users\CoordEventoController;
 use App\Http\Controllers\Users\MembroComissaoController;
 use App\Http\Controllers\Users\RevisorController;
 use App\Http\Controllers\Users\UserController;
+use App\Http\Middleware\SetLocale;
 use App\Models\Submissao\Evento;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
+
+
+
+
+Route::middleware(Setlocale::class)->group(function () {
+    Route::get('/idioma/{lang}/{url?}', function (string $lang, $url = null) {
+        if (! in_array($lang, ['en', 'pt-BR'])) {
+            abort(400);
+        }
+        App::setLocale($lang);
+        Session::put("locale",$lang);
+        Session::put("idiomaAtual",$lang);
+
+        return $url ? redirect($url) : redirect()->back();
+    })->name('alterar-idioma');
+
+    Route::get('/', function () {
+        if (Auth::check()) {
+            return redirect()->route('index');
+        }
+
+        $eventos = Evento::all();
+
+        return redirect()->route('index');
+    })->name('cancelarCadastro');
+
 
 Route::get('/index', [HomeController::class, 'index'])->name('index');
 Route::get('/eventospassados',[EventoController::class, 'eventosPassados'])->name('eventos.passados');
@@ -60,23 +88,16 @@ Route::get('/evento/buscar-livre', [EventoController::class, 'buscaLivreAjax'])-
 
 Auth::routes(['verify' => true, 'register' => false]);
 
-Route::group(['prefix' => '{locale}', 'middleware' => 'setLocale'], function () {
-    Route::get('/register/{pais?}', function ($locale, $pais = null) {
-        return view('auth.register', compact('pais'));
-    });
-    Route::post('/register', [RegisterController::class, 'register'])->name('register');
-    Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
-});
 
-Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('index');
-    }
 
-    $eventos = Evento::all();
+        Route::get('/register/{pais?}', function ($locale, $pais = null) {
+            return view('auth.register', compact('pais'));
+        });
+        Route::post('/register', [RegisterController::class, 'register'])->name('register');
+        Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
 
-    return redirect()->route('index');
-})->name('cancelarCadastro');
+
+
 
 Route::namespace('Submissao')->group(function () {
     Route::get('/evento/{id}', [EventoController::class, 'show'])->name('evento.visualizar');
@@ -448,5 +469,7 @@ Route::namespace('Submissao')->group(function () {
     Route::get('{modalidade}/instrucoes', [ModalidadeController::class, 'downloadInstrucoes'])->name('modalidade.instrucoes.download');
     Route::get('{id}/modalidade-arquivo-modelos', [ModalidadeController::class, 'downloadModelos'])->name('modalidade.modelos.download');
     Route::get('{id}/modalidade-template', [ModalidadeController::class, 'downloadTemplate'])->name('modalidade.template.download');
+
+});
 
 });
