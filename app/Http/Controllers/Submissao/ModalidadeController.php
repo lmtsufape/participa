@@ -49,6 +49,7 @@ class ModalidadeController extends Controller
      */
     public function store(ModalidadeStoreRequest $request)
     {
+        // dd($request->all());
         $modalidade = new Modalidade();
         $modalidade->fill($request->validated());
         $modalidade->caracteres = $request->limit == 'limit-option1';

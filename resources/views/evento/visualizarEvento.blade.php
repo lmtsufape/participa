@@ -227,16 +227,16 @@
                                                         <div class="card-body">
                                                             <label for="">Descrição: </label>
                                                             <p> {!! $categoria->descricao !!}</p>
-                                                       
+
                                                             @if($links)
                                                             @foreach($links->where('categoria_id', $categoria->id) as $link)
-                                                      
-                                                                <label for="">Valor: </label>
-                                                                <p>R${{$link->valor}}</p>
-                                                                <label for="">Link para pagamento: </label>
-                                                                <a href="{{$link->link}}">{{$link->link}}</a>
 
-                                                            
+                                                            <label for="">Valor: </label>
+                                                            <p>R${{$link->valor}}</p>
+                                                            <label for="">Link para pagamento: </label>
+                                                            <a href="{{$link->link}}">{{$link->link}}</a>
+
+
                                                             @endforeach
                                                             @endif
                                                         </div>
@@ -460,14 +460,14 @@
                 @include('componentes.mensagens')
                 <p>Tem certeza que deseja se inscrever nesse evento?</p>
                 @endif
-            
 
-            @if(auth()->check())
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
-            </div>
-            @endif
+
+                @if(auth()->check())
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
+                </div>
+                @endif
             </form>
         </div>
     </div>

@@ -464,6 +464,24 @@
                                             </div>
                                         </div>
                                     </template>
+
+                                    <div x-data="{arquivo: '{{old('arquivo')}}' == 'on'}">
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input class="form-check-input" id="submissocheck" x-model="submissao" type="checkbox" name="submissao" value="on">
+                                            <label class="form-check-label font-weight-bold" for="submissaocheck">
+                                                
+                                                {{ __('Habilitar submissão única para avaliação') }}
+                                            </label>
+                                        </div>
+                                        @error('submissao')
+                                            <div class="invalid-feedback d-flex mt-0" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                    
                                 <div class="form-group" >
                                     <label for="nomeTrabalho" class="col-form-label font-weight-bold">Modelo de apresentação de slides:</label>
                                     <input type="file" class="filestyle custom-file" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoModelos">
