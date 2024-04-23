@@ -420,7 +420,7 @@
                                             </div>
 
                                             <div class="form-check">
-                                                <input class="form-check-input" id="submissaoUnicacheck" x-model="submissaoUnica" type="checkbox" name="submissaoUnica" @if(old('submissaoUnica'.$modalidade->id) == "on") checked @elseif (old('submissaoUnica'.$modalidade->id) == null && $modalidade->arquivo == true) checked @endif>
+                                                <input class="form-check-input" id="submissaoUnicacheck" onclick="mensagemSubmissao()" x-model="submissaoUnica" type="checkbox" name="submissaoUnica" @if(old('submissaoUnica'.$modalidade->id) == "on") checked @elseif (old('submissaoUnica'.$modalidade->id) == null && $modalidade->arquivo == true) checked @endif>
                                                 <label class="form-check-label font-weight-bold" for="submissaoUnicacheck">
 
                                                     {{ __('Habilitar submissão única para avaliação') }}
@@ -1240,6 +1240,10 @@
                 delete this.datas[index];
             },
         }
+    }
+
+    function mensagemSubmissao(){
+        alert('Agora é possível ');
     }
 </script>
 @endsection

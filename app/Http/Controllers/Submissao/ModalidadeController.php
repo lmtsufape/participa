@@ -628,6 +628,14 @@ class ModalidadeController extends Controller
             return redirect()->back()->withErrors(['excluirModalidade' => 'Não é possível excluir, existem trabalhos submetidos ligados a essa modalidade.']);
         }
 
+        $tipoApresentacao = TipoApresentacao::where('modalidade_id',$modalidade->id)->get();
+        if($tipoApresentacao != NULL){
+            for ($i=0; $i < count($tipoApresentacao); $i++) { 
+                $tipoApagar = TipoApresentacao::where('id',$tipoApresentacao[$i]->id)->first();
+                $tipoApagar->delete();
+            }
+        }
+
         $modalidade->delete();
 
         return redirect()->back()->with(['mensagem' => 'Modalidade excluida com sucesso!']);
