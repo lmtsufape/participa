@@ -32,7 +32,7 @@ class ModalidadeStoreRequest extends FormRequest
             'nome' => ['required', 'string'],
             'inicioSubmissao' => ['required', 'date'],
             'fimSubmissao' => ['required', 'date', 'after:inicioSubmissao'],
-            'inicioRevisao' => ['nullable', 'date', 'after:inicioSubmissao'],
+            'inicioRevisao' => ['nullable', 'date', 'after:fimSubmissao'],
             'fimRevisao' => ['nullable', 'date', 'after:inicioRevisao'],
             'inicioCorrecao' => ['nullable', 'date', 'after:fimRevisao', 'required_with:fimCorrecao'],
             'fimCorrecao' => ['nullable', 'date', 'after:inicioCorrecao', 'required_with:inicioCorrecao'],

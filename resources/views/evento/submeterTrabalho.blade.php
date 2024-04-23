@@ -317,7 +317,7 @@
                                                     
                                                     @if($modalidade->submissaoUnica == true)
                                                     <div>
-                                                    <strong style="color: red">ATENÇÃO: Nesta modalidade só é possível submeter o trabalho apenas uma vez.</strong>
+                                                    <strong style="color: red;">ATENÇÃO: Nesta modalidade só é possível submeter o trabalho apenas uma vez.</strong>
                                                     </div>
                                                     @endif
                                                     <div class="custom-file">

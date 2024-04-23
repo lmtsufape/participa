@@ -152,7 +152,7 @@ class TrabalhoController extends Controller
     public function store(TrabalhoPostRequest $request, $modalidadeId)
     {
         //Obtendo apenas os tipos de extensões selecionadas
-
+       
         try {
             $validatedData = $request->validated();
             $evento = Evento::find($request->eventoId);

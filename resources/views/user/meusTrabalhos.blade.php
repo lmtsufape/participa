@@ -634,9 +634,6 @@
               <div class="custom-file">
                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo{{$trabalho->id}}">
               </div>
-              @endif
-
-
               <small>Arquivos aceitos nos formatos
                 @if($trabalho->modalidade->pdf == true)<span> - pdf</span>@endif
                 @if($trabalho->modalidade->jpg == true)<span> - jpg</span>@endif
@@ -649,6 +646,10 @@
                 @if($trabalho->modalidade->mp4 == true)<span> - mp4</span>@endif
                 @if($trabalho->modalidade->mp3 == true)<span> - mp3</span>@endif.
               </small>
+              @endif
+
+
+
               @error('arquivo'.$trabalho->id)
               <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                 <strong>{{ $message }}</strong>

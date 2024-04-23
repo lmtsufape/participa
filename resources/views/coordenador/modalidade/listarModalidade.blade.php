@@ -342,6 +342,13 @@
                                     <div class="row">
 
                                         <div class="col-sm-6">
+                                        <div class="form-check">
+                                                <input class="form-check-input" id="avaliacaoDuranteSubmissaocheck" onclick="mensagemSubmissao()" x-model="avaliacaoDuranteSubmissao" type="checkbox" name="avaliacaoDuranteSubmissao">
+                                                <label class="form-check-label font-weight-bold" for="avaliacaoDuranteSubmissaocheck">
+
+                                                    {{ __('Permitir avaliação durante o período de submissão') }}
+                                                </label>
+                                            </div>
                                             <div class="form-check" style="margin-top: 10px">
                                                 <input class="form-check-input incluir-resumo-edit" type="checkbox" name="texto{{$modalidade->id}}" id="id-custom_field-account-1-2" @if(old('texto'.$modalidade->id)) checked @elseif(old('texto'.$modalidade->id) == null && $modalidade->texto) checked @endif>
                                                 <label class="form-check-label font-weight-bold" for="resumo">
@@ -420,7 +427,7 @@
                                             </div>
 
                                             <div class="form-check">
-                                                <input class="form-check-input" id="submissaoUnicacheck" onclick="mensagemSubmissao()" x-model="submissaoUnica" type="checkbox" name="submissaoUnica" @if(old('submissaoUnica'.$modalidade->id) == "on") checked @elseif (old('submissaoUnica'.$modalidade->id) == null && $modalidade->arquivo == true) checked @endif>
+                                                <input class="form-check-input" id="submissaoUnicacheck" x-model="submissaoUnica" type="checkbox" name="submissaoUnica" @if(old('submissaoUnica'.$modalidade->id) == "on") checked @elseif (old('submissaoUnica'.$modalidade->id) == null && $modalidade->arquivo == true) checked @endif>
                                                 <label class="form-check-label font-weight-bold" for="submissaoUnicacheck">
 
                                                     {{ __('Habilitar submissão única para avaliação') }}
@@ -1242,8 +1249,8 @@
         }
     }
 
-    function mensagemSubmissao(){
-        alert('Agora é possível ');
+    function mensagemSubmissao() {
+        alert('Agora é possível selecionar uma data de início da avaliação antes do fim da submissão');
     }
 </script>
 @endsection
