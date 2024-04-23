@@ -43,11 +43,12 @@ class RevisorController extends Controller
         //return view('revisor.index')->with(['eventos' => $eventosComoRevisor]);
         //areas em que sou revirsor
         $revisores = collect();
+        
         foreach ($eventosComoRevisor as $evento) {
             $revisores->push(Revisor::where([['user_id', auth()->user()->id], ['evento_id', $evento->id]])->get());
         }
 
-        //dd($revisores);
+      
         $trabalhosPorEvento = collect();
         foreach ($revisores as $revisorEvento) {
             $trabalhos = collect();
@@ -59,7 +60,7 @@ class RevisorController extends Controller
             }
             $trabalhosPorEvento->push($trabalhos);
         }
-        //dd($trabalhosPorEvento);
+        dd($trabalhosPorEvento);
         return view('revisor.index')->with(['eventos' => $eventosComoRevisor, 'trabalhosPorEvento' => $trabalhosPorEvento]);
     }
 
@@ -431,7 +432,7 @@ class RevisorController extends Controller
         foreach ($revisores as $revisor) {
             $trabalhos->push($revisor->trabalhosAtribuidos()->orderBy('titulo')->get());
         }
-        // dd($trabalhos);
+        dd($trabalhos);
         return view('revisor.listarTrabalhos')->with(['evento' => $evento, 'trabalhosPorRevisor' => $trabalhos]);
         // $trabalhos = Atribuicao::where('eventoId', $id);
     }

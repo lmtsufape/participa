@@ -17,12 +17,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         User::factory()
-        ->forEndereco()
-        ->create([
-            'name' => 'coord',
-            'email' => 'teste@teste.com',
-            'password' => bcrypt('12345678'),
-        ]);
+            ->forEndereco()
+            ->create([
+                'name' => 'coord',
+                'email' => 'teste@teste.com',
+                'password' => bcrypt('12345678'),
+            ]);
 
         $end = Endereco::factory()->create();
 
@@ -127,12 +127,12 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
             User::factory()
                 ->forEndereco()
                 ->create([
-                    'email' => 'teste@teste'.$i.'.com',
+                    'email' => 'teste@teste' . $i . '.com',
                 ]);
 
             if ($i < 20) {
                 DB::table('trabalhos')->insert([
-                    'titulo' => 'trabalho'.$i,
+                    'titulo' => 'trabalho' . $i,
                     'autores' => '-',
                     'data' => '2020-02-15',
                     'modalidadeId' => 1,
@@ -144,7 +144,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
             }
             if ($i >= 20 && $i < 30) {
                 DB::table('trabalhos')->insert([
-                    'titulo' => 'trabalho'.$i,
+                    'titulo' => 'trabalho' . $i,
                     'autores' => '-',
                     'data' => '2020-02-15',
                     'modalidadeId' => 1,
@@ -156,7 +156,7 @@ Os trabalhos deverão ser submetidos na forma de resumo simples com no máximo u
             }
             if ($i >= 30) {
                 DB::table('trabalhos')->insert([
-                    'titulo' => 'trabalho'.$i,
+                    'titulo' => 'trabalho' . $i,
                     'autores' => '-',
                     'data' => '2020-02-15',
                     'modalidadeId' => 1,

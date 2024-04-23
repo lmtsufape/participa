@@ -49,7 +49,6 @@ class ModalidadeController extends Controller
      */
     public function store(ModalidadeStoreRequest $request)
     {
-        // dd($request->all());
         $modalidade = new Modalidade();
         $modalidade->fill($request->validated());
         $modalidade->caracteres = $request->limit == 'limit-option1';
@@ -529,7 +528,16 @@ class ModalidadeController extends Controller
             $modalidadeEdit->datasExtras()->delete();
         }
 
+        if($request->submissaoUnica == 'on'){
+            $modalidadeEdit->submissaoUnica = true;
+            $modalidadeEdit->save();
+        }
+
         return redirect()->back()->with(['mensagem' => 'Modalidade salva com sucesso!']);
+    }
+
+    private function submissaoUnica(Modalidade $modalidade){
+        $modalidade->submissaoUnica = true;
     }
 
     private function editMidiaExtras(Request $request, Modalidade $modalidade)
