@@ -119,6 +119,15 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        dd($request->all());
+
+        if(isset($request->linkIdExcluir)){
+            for ($i = 0; $i < count($request->linkIdExcluir); $i++) {
+                $link = LinksPagamento::where('link', $request->linkIdExcluir[$i])->first();
+                $link->delete();
+            }
+        }
+
         $categoria = CategoriaParticipante::find($id);
 
         if(isset($request->linkPagamento)){

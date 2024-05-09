@@ -238,10 +238,10 @@
 
                                                             @if($links)
                                                             @foreach($links->where('categoria_id', $categoria->id) as $link)
-
+                                                      
                                                                 <label for="">Valor: </label>
                                                                 <p>R${{$link->valor}}</p>
-                                                                <label for="">{{__("Link para pagamento")}}: </label>
+                                                                <label for="">Link para pagamento: </label>
                                                                 <a href="{{$link->link}}">{{$link->link}}</a>
 
 
@@ -474,8 +474,8 @@
 
             @if(auth()->check())
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Cancelar")}}</button>
-                <button type="submit" class="btn btn-primary button-prevent-multiple-submits">{{__("Confirmar")}}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
             </div>
             @endif
             </form>

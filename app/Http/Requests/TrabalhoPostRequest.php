@@ -43,7 +43,7 @@ class TrabalhoPostRequest extends FormRequest
         $modalidade = Modalidade::find(request()->modalidadeId);
         $validate_array = [
             'nomeTrabalho' => ['required', 'string'],
-            'nomeTrabalho_en' => ['required', 'string'],
+            'nomeTrabalho_en' => ['nullable', 'string'],
             'areaId' => ['required', 'integer'],
             'modalidadeId' => ['required', 'integer'],
             'eventoId' => ['required', 'integer'],

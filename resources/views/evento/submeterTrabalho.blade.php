@@ -314,6 +314,12 @@
                                                     <label for="nomeTrabalho"
                                                         class="col-form-label"><strong>{{$formSubTraba->etiquetauploadtrabalho}}</strong>
                                                     </label>
+                                                    
+                                                    @if($modalidade->submissaoUnica == true)
+                                                    <div>
+                                                    <strong style="color: red;">ATENÇÃO: Nesta modalidade só é possível submeter o trabalho apenas uma vez.</strong>
+                                                    </div>
+                                                    @endif
                                                     <div class="custom-file">
                                                         <input type="file" class="filestyle"
                                                             data-placeholder="Nenhum arquivo" data-text="Selecionar"

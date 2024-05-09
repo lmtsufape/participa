@@ -88,9 +88,6 @@
                                                             @enderror
                                                         </div>
 
-
-                                                        
-
                                                         <div class="linksExtras">
 
                                                         </div>
@@ -186,7 +183,7 @@
 </div>
 @foreach ($categorias as $categoria)
 <!-- Modal de editar categoria -->
-<div class="modal fade" id="modalEditarCategoria{{ $categoria->id }}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+<div class="modal fade" id="modalEditarCategoria{{ $categoria->id }}"  tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
     <div class="modal-dialog  modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
@@ -201,6 +198,7 @@
                     @method('PUT')
                     <input type="hidden" name="valor_total_{{ $categoria->id }}" value="0">
                     <input type="hidden" name="editarCategoria" value="{{ $categoria->id }}">
+                    <input type="hidden" id="linkIdExcluir" name="linkIdExcluir[]" value="">
                     <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
                         <label for="nome_">Nome*</label>
                         <input id="nome_" type="text" class="form-control @error('nome_') is-invalid @enderror" name="nome_{{ $categoria->id }}" value="{{ old('nome_'.$categoria->id, $categoria->nome) }}">
@@ -285,37 +283,19 @@
                                 <!-- <a href="#" data-toggle="modal" data-target="#modalExcluirCategoria{{ $categoria->id }}">
                                                 <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" class="icon-card" alt="">
                                             </a> -->
-                                <a href="#" class="deleteEdit" data-toggle="modal" data-target="#modalExcluirLink{{ $link->id }}">
+                                <!--  -->
+
+                                <a href="#" class="deleteEdit" onclick="enviarLinkParaExclusao('{{$link->id}}')">
                                     <img src="{{asset('img/icons/lixo.png')}}" style="width:25px;margin-top:35px">
                                 </a>
-                            <!-- </form> -->
+                           
 
                         </div>
                     </div>
 
                     @endif
                     <!-- Modal de exclusão do link -->
-                    <div class="modal fade" id="modalExcluirLink{{ $link->id }}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header" style="background-color: #114048ff; color: white;">
-                                    <h5 class="modal-title" id="#label">Confirmação</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Tem certeza que deseja excluir esse link?
-                                </div>
-                                <div class="modal-footer">
-                                    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                                    <button type="submit" class="btn btn-primary" form="formExcluirLink{{ $link->id }}">Sim</button> -->
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Sim</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                     @endforeach
 
                     <div class="linksExtrasEdit">
@@ -393,6 +373,28 @@
         </div>
     </div>
 </div>
+
+<!-- 
+<div class="modal fade" id="modalExcluirLink{{ $link->id }}"  tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true" style="z-index: 1050;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+                <h5 class="modal-title" id="#label">Confirmação</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja excluir esse link?
+            </div>
+            <div class="modal-footer">
+              
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                <button type="submit" class="btn btn-primary" form="formExcluirLink{{ $link->id }}">Sim</button>
+            </div>
+        </div>
+    </div>
+</div> -->
 @endforeach
 @endsection
 @section('javascript')
@@ -474,5 +476,17 @@
         $('#' + id).closest('#linkExtraEdit').remove();
 
     }
+
+    function enviarLinkParaExclusao(linkId){
+        document.getElementById('linkIdExcluir').value = linkId;
+        alert(document.getElementById('linkIdExcluir').value);
+       
+    }
+
+    document.getElementById('formEditarCategoria7').addEventListener('submit', function(event){
+        alert(document.getElementById('linkIdExcluir').value);
+    });
+
+   
 </script>
 @endsection

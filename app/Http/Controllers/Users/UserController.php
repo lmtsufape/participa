@@ -228,6 +228,7 @@ class UserController extends Controller
             }
         }
 
+
         return view('user.meusTrabalhos', [
             'trabalhos' => $trabalhos,
             'trabalhosCoautor' => $trabalhosCoautor,
@@ -257,6 +258,7 @@ class UserController extends Controller
             $permissoes_revisao = Revisor::where([['user_id', $revisor->user_id], ['evento_id', $evento->id]])->get()->map->only(['id']);
             $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->whereIn('revisorId', $permissoes_revisao)->first();
         }
+
 
         return view('user.visualizarParecer', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'respostas', 'revisor', 'arquivoAvaliacao'));
     }

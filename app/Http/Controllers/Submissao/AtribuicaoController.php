@@ -213,9 +213,11 @@ class AtribuicaoController extends Controller
         $revisor->save();
 
         $subject = config('app.name').' - Atribuição como avaliador(a) e/ou parecerista';
+        
         $informacoes = $trabalho->titulo;
         //   Mail::to($revisor->user->email)
         //         ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
+        
         Mail::to($revisor->user->email)
             ->send(new EmailConviteRevisor($revisor->user, $evento, $subject, Auth::user()));
 
