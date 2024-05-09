@@ -379,6 +379,7 @@ class RevisorController extends Controller
     public function conviteParaEvento(Request $request, $id)
     {
         $subject = config('app.name').' - Atribuição como avaliador(a) e/ou parecerista';
+        
         $evento = Evento::find($id);
 
         $user = User::find($request->id);

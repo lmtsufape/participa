@@ -178,6 +178,15 @@
                             <div x-data="{texto: '{{old('texto', false)}}' == 'on', limit: '{{old('limit')}}'}">
                                 <div class="form-group">
                                     <div class="form-check">
+                                        <input class="form-check-input" id="avaliacaoDuranteSubmissaocheck" onclick="mensagemSubmissao()" x-model="avaliacaoDuranteSubmissao" type="checkbox" name="avaliacaoDuranteSubmissao">
+                                        <label class="form-check-label font-weight-bold" for="avaliacaoDuranteSubmissaocheck">
+
+                                            {{ __('Permitir avaliação durante o período de submissão') }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-check">
                                         <input class="form-check-input" id="textocheck" x-model="texto" value="on" type="checkbox" name="texto">
                                         <label class="form-check-label font-weight-bold" for="textocheck">
                                             Adicionar campo resumo por texto
@@ -765,6 +774,15 @@
                 this.documentos.splice(index, 1);
             },
         }
+    }
+
+    function mensagemSubmissao() {
+        
+        var input = document.getElementById("avaliacaoDuranteSubmissaocheck");
+
+        // Remove o parâmetro "required"
+        input.removeAttribute("required");
+        alert('oi');
     }
 </script>
 @endsection

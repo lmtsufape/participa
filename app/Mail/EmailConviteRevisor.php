@@ -54,6 +54,7 @@ class EmailConviteRevisor extends Mailable
         //     'info'      => $this->informacoes,
         //     'evento'    => $this->evento,
         // ]);
+        
         return $this
             ->subject($this->subject)
             ->markdown('emails.emailConviteRevisor', [

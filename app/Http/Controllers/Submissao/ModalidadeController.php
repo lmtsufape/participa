@@ -51,6 +51,10 @@ class ModalidadeController extends Controller
     {
         $modalidade = new Modalidade();
         $modalidade->fill($request->validated());
+        if ($request->avaliacaoDuranteSubmissao == 'on') {
+            $modalidade->avaliacaoDuranteSubmissao = true;
+            $modalidade->save();
+        }
         $modalidade->caracteres = $request->limit == 'limit-option1';
         $modalidade->palavras = $request->limit == 'limit-option2';
         $modalidade->evento_id = $request->eventoId;
@@ -120,6 +124,10 @@ class ModalidadeController extends Controller
             }
         }
 
+        if ($request->submissaoUnica == 'on') {
+            $modalidade->submissaoUnica = true;
+            $modalidade->save();
+        }
         $modalidade->save();
 
         return redirect()->back()->with(['mensagem' => 'Modalidade cadastrada com sucesso!']);
@@ -179,6 +187,7 @@ class ModalidadeController extends Controller
             $modalidadeEdit->save();
         }
 
+
         // dd($request);
         $validatedData = $request->validate([
             'nome' . $request->modalidadeEditId => ['required', 'string'],
@@ -235,13 +244,11 @@ class ModalidadeController extends Controller
             'arquivoModelos' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048'],
             'arquivoTemplates' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048'],
         ]);
-        
+
         if ($modalidadeEdit->avaliacaoDuranteSubmissao == true) {
             $validatedData += $request->validate(['inícioRevisão' . $request->modalidadeEditId => ['nullable', 'date']]);
-            
         } else {
             $validatedData += $request->validate(['inícioRevisão' . $request->modalidadeEditId => ['nullable', 'date', 'after:fimSubmissão' . $request->modalidadeEditId]]);
-            
         }
 
         $caracteres = $modalidadeEdit->caracteres;
@@ -546,8 +553,6 @@ class ModalidadeController extends Controller
             $modalidadeEdit->submissaoUnica = true;
             $modalidadeEdit->save();
         }
-
-       
 
         return redirect()->back()->with(['mensagem' => 'Modalidade salva com sucesso!']);
     }
