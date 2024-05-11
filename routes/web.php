@@ -90,12 +90,20 @@ Auth::routes(['verify' => true, 'register' => false]);
 
 
 
-        Route::get('/register/{pais?}', function ($locale, $pais = null) {
-            return view('auth.register', compact('pais'));
-        });
-        Route::post('/register', [RegisterController::class, 'register'])->name('register');
-        Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
+        // Route::get('/register/{pais?}', function ($locale, $pais = null) {
+        //     return view('auth.register', compact('pais'));
+        // });
+        // Route::post('/register', [RegisterController::class, 'register'])->name('register');
+        // Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
 
+
+        Route::group(['prefix' => '{locale}', 'middleware' => 'setLocale'], function () {
+            Route::get('/register/{pais?}', function ($locale, $pais = null) {
+                return view('auth.register', compact('pais'));
+            });
+            Route::post('/register', [RegisterController::class, 'register'])->name('register');
+            Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
+        });
 
 
 
