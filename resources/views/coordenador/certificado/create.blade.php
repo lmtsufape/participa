@@ -72,7 +72,7 @@
                                 <option value="{{$tipos['comissao_organizadora']}}">Membro da comissão Organizadora</option>
                                 <option value="{{$tipos['expositor']}}">Palestrante</option>
                                 <option value="{{$tipos['participante']}}">Participante</option>
-                                <option value="{{$tipos['revisor']}}">Revisor</option>
+                                <option value="{{$tipos['revisor']}}">Avaliador</option>
                                 <option value="{{$tipos['outras_comissoes']}}">Membro de outra comissão</option>
                                 <option value="{{$tipos['inscrito_atividade']}}">Inscrito em uma atividade</option>
                             </select>

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{route('index')}}">
             <img src="{{ asset('/img/logo.png') }}" alt="" style="height: 45px; width: 135px;">
@@ -19,14 +19,14 @@
             <div class="navbar-nav text-right">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('index') }}" style="margin-right: 5px; margin-left: 5px">
-                        Início
+                    @lang('public.inicio')
                     </a>
                 </li>
                 <li class="nav-item">
                     @guest
                     @else
                         <a class="nav-link" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
-                            Meus Eventos
+                        @lang('public.meusEventos')
                         </a>
                     @endguest
                 </li>
@@ -34,19 +34,19 @@
                     @guest
                     @else
                         <a class="nav-link" href="{{ route('meusCertificados') }}" style="margin-right: 5px; margin-left: 5px">
-                            Meus Certificados
+                        @lang('public.meusCertificados')
                         </a>
                     @endguest
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('validarCertificado') }}" style="margin-right: 5px; margin-left: 5px">
-                        Validar Certificado
+                    @lang('public.validarCertificado')
                     </a>
                 </li>
                 @auth
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Perfis
+                    @lang('public.perfis')
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         {{-- Link Perfil --}}
@@ -54,11 +54,13 @@
                             <img src="{{asset('img/icons/perfil.svg')}}" alt="">
                             {{ __('Área do Participante') }}
                         </a>
+
                         @if (Auth::user()->revisor->count())
+
                             {{-- Rota - Area de Revisores --}}
                             <a class="dropdown-item" href="{{ route('revisor.index') }}">
                                 <img src="{{asset('img/icons/revisor.png')}}" alt="">
-                                {{ __('Área do Revisor') }}
+                                {{ __('Área do Avaliador') }}
                             </a>
                         @endif
 
@@ -73,7 +75,7 @@
                         @if (isset(Auth::user()->coordComissaoCientifica))
                             {{-- Rota - Area da Comissao --}}
 
-                            <a class="dropdown-item" href="{{ route('home.user') }}">
+                            <a class="dropdown-item" href="{{ route('cientifica.home') }}">
 
                                 <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                 {{ __('Área da Comissão Cientifica') }}
@@ -150,6 +152,18 @@
                         </form>
                     </div>
                 </li>
+
+                <!-- <li class="nav-item dropdown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        Idioma
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a href="locale/pt-BR" class="dropdown-item">Portugues</a>
+                        <a href="locale/en" class="dropdown-item">Ingles</a>
+                        <a href="locale/es" class="dropdown-item">Espanhol</a>
+                    </div>
+
+                </li> -->
                 @else
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
@@ -158,7 +172,55 @@
                         <a class="nav-link" href="{{ route('register', app()->getLocale()) }}">{{ __('Cadastre-se') }}</a>
                     </li>
                 @endauth
+
+
+
+                <li class="nav-item dropdown">
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                    <span id="idiomaAtual">
+                        @if(Session::get('locale') === 'pt-BR')
+                            <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">Português
+                        @elseif(Session::get('locale') === 'en')
+                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">English
+                        @endif
+                    </span>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'en']) }}?url={{ urlencode(request()->fullUrl()) }}" >
+                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">English</a>
+
+                        <a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'pt-BR']) }}?url={{ urlencode(request()->fullUrl()) }}" >
+                            <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">Português</a>
+                    </div>
+                </li>
+
+
+
+
             </div>
         </div>
     </div>
 </nav>
+
+
+
+
+<script>
+    function mudarIdioma(lang) {
+
+        fetch(`/idioma/${lang}`, { method: 'GET' }) // Certifique-se de que esta rota está definida no seu Laravel
+            .then(response => {
+                if (response.ok) {
+                    console.log(lang);
+                    location.reload(); // Recarrega a página para aplicar o idioma
+                } else {
+                    alert('Falha ao mudar o idioma.');
+                }
+            })
+            .catch(error => console.error('Erro ao mudar idioma:', error));
+    }
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+

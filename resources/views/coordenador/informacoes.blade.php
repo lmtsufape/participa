@@ -71,7 +71,7 @@
                           <table class="table table-responsive-lg table-hover">
                             <thead>
                               <tr>
-                                <th style="text-align:center">Número de Revisores</th>
+                                <th style="text-align:center">Número de Avaliadores</th>
                                 <th style="text-align:center">Número de Integrantes na Comissão</th>
 
                               </tr>

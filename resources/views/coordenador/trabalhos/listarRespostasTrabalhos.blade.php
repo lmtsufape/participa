@@ -237,7 +237,7 @@
           @if (count($trabalho->atribuicoes) > 0)
             <div class="row justify-content-center">
               <div class="col-sm-12">
-                <h5>Revisores atribuídos ao trabalho</h5>
+                <h5>Avaliadores atribuídos ao trabalho</h5>
               </div>
           @else
             <div class="row justify-content-center">
@@ -254,7 +254,7 @@
                     <h6 class="card-title">{{$revisor->user->name}}</h6>
                     <strong>E-mail</strong>
                     <p class="card-text">{{$revisor->user->email}}</p>
-                    <button type="button" class="btn btn-primary" onclick="window.location='{{ route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id]) }}'">Exibir Revisão</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location='{{ route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id]) }}'">Exibir Avaliação</button>
                   </div>
                 </div>
               </div>

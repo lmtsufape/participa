@@ -1,54 +1,54 @@
 @extends('coordenador.detalhesEvento')
 
 @section('menu')
-    @error('excluirModalidade')
-        @include('componentes.mensagens')
-    @enderror
-    <div id="divListarModalidades" class="modalidades" style="display: block">
-        <div class="row">
-            <div class="col-sm-12">
-                <h1 class="titulo-detalhes">Listar Modalidades</h1>
-            </div>
+@error('excluirModalidade')
+@include('componentes.mensagens')
+@enderror
+<div id="divListarModalidades" class="modalidades" style="display: block">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="titulo-detalhes">Listar Modalidades</h1>
         </div>
+    </div>
 
-        <div class="row justify-content-center">
-            {{-- table modalidades --}}
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Modalidades</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">Modalidades cadastradas no seu evento</h6>
-                      <p class="card-text">
-                        <table class="table table-hover table-responsive-lg table-sm">
-                            <thead>
+    <div class="row justify-content-center">
+        {{-- table modalidades --}}
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Modalidades</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Modalidades cadastradas no seu evento</h6>
+                    <p class="card-text">
+                    <table class="table table-hover table-responsive-lg table-sm">
+                        <thead>
                             <tr>
                                 <th scope="col">Nome</th>
                                 <th scope="col" style="text-align:center">Editar</th>
                                 <th scope="col" style="text-align:center">Excluir</th>
                             </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($modalidades as $modalidade)
-                                <tr>
-                                    <td>{{$modalidade->nome}}</td>
-                                    <td style="text-align:center">
-                                        <a href="#" data-toggle="modal" data-target="#modalEditarModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
-                                    </td>
-                                    <td style="text-align:center">
-                                        <a href="" data-toggle="modal" data-target="#modalExcluirModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                      </p>
-                    </div>
-                  </div>
+                        </thead>
+                        <tbody>
+                            @foreach($modalidades as $modalidade)
+                            <tr>
+                                <td>{{$modalidade->nome}}</td>
+                                <td style="text-align:center">
+                                    <a href="#" data-toggle="modal" data-target="#modalEditarModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                </td>
+                                <td style="text-align:center">
+                                    <a href="" data-toggle="modal" data-target="#modalExcluirModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    </p>
+                </div>
+            </div>
 
-            </div>{{-- end table--}}
+        </div>{{-- end table--}}
 
-            {{-- table modalidades Área--}}
-            {{-- <div class="col-sm-6">
+        {{-- table modalidades Área--}}
+        {{-- <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
                       <h5 class="card-title">Áreas por Modalidade</h5>
@@ -65,219 +65,219 @@
                                 @foreach($areaModalidades as $areaModalidade)
                                   <tr>
                                     <td>{{$areaModalidade->modalidade->nome}}</td>
-                                    <td>{{$areaModalidade->area->nome}}</td>
-                                  </tr>
-                                @endforeach
+        <td>{{$areaModalidade->area->nome}}</td>
+        </tr>
+        @endforeach
 
 
-                            </tbody>
-                          </table>
-                      </p>
-                    </div>
-                  </div>
-
-            </div> --}}
-            {{-- end table área --}}
-        </div>
+        </tbody>
+        </table>
+        </p>
     </div>
-        <div id="divClassificacao" class="classificacao">
-            <h1>Classificação</h1>
-        </div>
-        <div id="divAtividades" class="atividades">
-            <h1>Atividades</h1>
-        </div>
+</div>
+
+</div> --}}
+{{-- end table área --}}
+</div>
+</div>
+<div id="divClassificacao" class="classificacao">
+    <h1>Classificação</h1>
+</div>
+<div id="divAtividades" class="atividades">
+    <h1>Atividades</h1>
+</div>
 
 
-        @foreach ($modalidades as $index => $modalidade)
-        <!-- Modal excluir modalida -->
+@foreach ($modalidades as $index => $modalidade)
+<!-- Modal excluir modalida -->
 
-        <!-- Modal de exclusão da área -->
-        <div class="modal fade" id="modalExcluirModalidade{{$modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: #114048ff; color: white;">
+<!-- Modal de exclusão da área -->
+<div class="modal fade" id="modalExcluirModalidade{{$modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title" id="#label">Confirmação</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                     <span aria-hidden="true">&times;</span>
                 </button>
+            </div>
+            <form action="{{route('modalidade.destroy', ['id' => $modalidade->id])}}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    Tem certeza que deseja excluir essa modalidade?
                 </div>
-                <form action="{{route('modalidade.destroy', ['id' => $modalidade->id])}}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        Tem certeza que deseja excluir essa modalidade?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                        <button type="submit" class="btn btn-primary">Sim</button>
-                    </div>
-                </form>
-            </div>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                    <button type="submit" class="btn btn-primary">Sim</button>
+                </div>
+            </form>
         </div>
+    </div>
+</div>
 
-        <!-- Modal editar modalidade -->
-            <div class="modal fade" id="modalEditarModalidade{{$modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="modalEditarModalidade" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="background-color: #114048ff; color: white;">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Editar {{$modalidade->nome}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div>
-                                            @include('componentes.mensagens')
+<!-- Modal editar modalidade -->
+<div class="modal fade" id="modalEditarModalidade{{$modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="modalEditarModalidade" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+                <h5 class="modal-title" id="exampleModalLongTitle">Editar {{$modalidade->nome}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div>
+                                    @include('componentes.mensagens')
+                                </div>
+                                <form method="POST" action="{{route('modalidade.update')}}" enctype="multipart/form-data" x-data="handler({{$modalidade->datasExtras}})">
+                                    @csrf
+                                    <p class="card-text">
+                                        <input type="hidden" name="modalidadeEditId" value="{{$modalidade->id}}">
+                                        <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label for="nomeModalidadeEdit" class="col-form-label font-weight-bold">*{{ __('Nome') }}</label>
                                         </div>
-                                        <form method="POST" action="{{route('modalidade.update')}}" enctype="multipart/form-data" x-data="handler({{$modalidade->datasExtras}})">
-                                        @csrf
-                                        <p class="card-text">
-                                            <input type="hidden" name="modalidadeEditId" value="{{$modalidade->id}}">
-                                            <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <label for="nomeModalidadeEdit" class="col-form-label font-weight-bold">*{{ __('Nome') }}</label>
-                                                </div>
-                                            </div>
-                                            <div class="row justify-content-center">
-                                                <div class="col-sm-12">
-                                                <input id="nomeModalidadeEdit" type="text" class="form-control @error('nome'.$modalidade->id) is-invalid @enderror" name="nome{{$modalidade->id}}" value="@if(old('nome'.$modalidade->id)!=null){{old('nome'.$modalidade->id)}}@else{{$modalidade->nome}}@endif" required autocomplete="nomes" autofocus>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-12">
+                                            <input id="nomeModalidadeEdit" type="text" class="form-control @error('nome'.$modalidade->id) is-invalid @enderror" name="nome{{$modalidade->id}}" value="@if(old('nome'.$modalidade->id)!=null){{old('nome'.$modalidade->id)}}@else{{$modalidade->nome}}@endif" required autocomplete="nomes" autofocus>
 
-                                                    @error('nome'.$modalidade->id)
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-
-                                            </div>{{-- end row--}}
-
-                                        </p>
-
-                                        {{-- Data: inicioSubmissao | fimSubmissao --}}
-                                        <div class="row justify-content-center">
-
-                                            <div class="col-sm-6">
-                                                <label for="inicioSubmissaoEdit" class="col-form-label font-weight-bold">{{ __('Início da Submissão') }}</label>
-                                                <input id="inicioSubmissaoEdit" type="datetime-local" class="form-control @error('inícioSubmissão'.$modalidade->id) is-invalid @enderror" name="inícioSubmissão{{$modalidade->id}}" value="@if(old('inícioSubmissão'.$modalidade->id)!=null){{old('inícioSubmissão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioSubmissao))}}@endif" autocomplete="inícioSubmissão" autofocus>
-
-                                                @error('inícioSubmissão'.$modalidade->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label for="fimSubmissaoEdit" class="col-form-label font-weight-bold">{{ __('Fim da Submissão') }}</label>
-                                                <input id="fimSubmissaoEdit" type="datetime-local" class="form-control @error('fimSubmissão'.$modalidade->id) is-invalid @enderror" name="fimSubmissão{{$modalidade->id}}" value="@if(old('fimSubmissão'.$modalidade->id)!=null){{old('fimSubmissão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimSubmissao))}}@endif" autocomplete="fimSubmissão" autofocus>
-
-                                                @error('fimSubmissão'.$modalidade->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
+                                            @error('nome'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
                                         </div>
-                                        {{-- end Data: inicioSubmissao | fimSubmissao --}}
 
-                                        {{-- Data: inicioRevisao | fimRevisao --}}
-                                        <div class="row justify-content-center">
+                                    </div>{{-- end row--}}
 
-                                            <div class="col-sm-6">
-                                                <label for="inicioRevisaoEdit" class="col-form-label font-weight-bold">{{ __('Início da Avaliação') }}</label>
-                                                <input id="inicioRevisaoEdit" type="datetime-local" class="form-control @error('inícioRevisão'.$modalidade->id) is-invalid @enderror" name="inícioRevisão{{$modalidade->id}}" value="{{old('inicioRevisão'.$modalidade->id, $modalidade->inicioRevisao ? date('Y-m-d\TH:i', strtotime($modalidade->inicioRevisao)) : '')}}" autocomplete="inícioRevisão" autofocus>
+                                    </p>
 
-                                                @error('inícioRevisão'.$modalidade->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label for="fimRevisaoEdit" class="col-form-label font-weight-bold">{{ __('Fim da Avaliação') }}</label>
-                                                <input id="fimRevisaoEdit" type="datetime-local" class="form-control @error('fimRevisão'.$modalidade->id) is-invalid @enderror" name="fimRevisão{{$modalidade->id}}" value="{{old('fimRevisão'.$modalidade->id, $modalidade->fimRevisao ? date('Y-m-d\TH:i', strtotime($modalidade->fimRevisao)) : '')}}" autocomplete="fimRevisão" autofocus>
+                                    {{-- Data: inicioSubmissao | fimSubmissao --}}
+                                    <div class="row justify-content-center">
 
-                                                @error('fimRevisão'.$modalidade->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
+                                        <div class="col-sm-6">
+                                            <label for="inicioSubmissaoEdit" class="col-form-label font-weight-bold">{{ __('Início da Submissão') }}</label>
+                                            <input id="inicioSubmissaoEdit" type="datetime-local" class="form-control @error('inícioSubmissão'.$modalidade->id) is-invalid @enderror" name="inícioSubmissão{{$modalidade->id}}" value="@if(old('inícioSubmissão'.$modalidade->id)!=null){{old('inícioSubmissão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->inicioSubmissao))}}@endif" autocomplete="inícioSubmissão" autofocus>
+
+                                            @error('inícioSubmissão'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
                                         </div>
-                                        {{-- end Data: inicioRevisão | fimRevisao --}}
+                                        <div class="col-sm-6">
+                                            <label for="fimSubmissaoEdit" class="col-form-label font-weight-bold">{{ __('Fim da Submissão') }}</label>
+                                            <input id="fimSubmissaoEdit" type="datetime-local" class="form-control @error('fimSubmissão'.$modalidade->id) is-invalid @enderror" name="fimSubmissão{{$modalidade->id}}" value="@if(old('fimSubmissão'.$modalidade->id)!=null){{old('fimSubmissão'.$modalidade->id)}}@else{{date('Y-m-d\TH:i',strtotime($modalidade->fimSubmissao))}}@endif" autocomplete="fimSubmissão" autofocus>
 
-                                        {{-- Data: inicioCorrecao | fimCorrecao --}}
-                                        <div class="row justify-content-center">
-
-                                            <div class="col-sm-6">
-                                                <label for="inicioCorrecao" class="col-form-label font-weight-bold">{{ __('Início da Correção') }}</label>
-                                                <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inícioCorreção'.$modalidade->id) is-invalid @enderror" name="inícioCorreção{{$modalidade->id}}" @if(old('inicioCorreção'.$modalidade->id) != null) value="{{old('inicioCorreção'.$modalidade->id)}}" @else @if($modalidade->inicioCorrecao != null) value="{{date('Y-m-d\TH:i', strtotime($modalidade->inicioCorrecao))}}" @endif @endif autocomplete="inicioCorrecao" autofocus>
-
-                                                @error('inícioCorreção'.$modalidade->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label for="fimCorrecao" class="col-form-label font-weight-bold">{{ __('Fim da Correção') }}</label>
-                                                <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorreção'.$modalidade->id) is-invalid @enderror" name="fimCorreção{{$modalidade->id}}" @if(old('fimCorreção'.$modalidade->id)!=null) value="{{old('fimCorreção'.$modalidade->id)}}" @else @if($modalidade->fimCorrecao) value="{{date('Y-m-d\TH:i',strtotime($modalidade->fimCorrecao))}}" @endif @endif autocomplete="fimCorrecao" autofocus>
-
-                                                @error('fimCorreção'.$modalidade->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
+                                            @error('fimSubmissão'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
                                         </div>
-                                        {{-- end Data: inicioCorrecao | fimCorrecao --}}
+                                    </div>
+                                    {{-- end Data: inicioSubmissao | fimSubmissao --}}
 
+                                    {{-- Data: inicioRevisao | fimRevisao --}}
+                                    <div class="row justify-content-center">
 
-                                        {{-- Data: inicioValidacao | fimValidacao --}}
-                                        <div class="row justify-content-center">
+                                        <div class="col-sm-6">
+                                            <label for="inicioRevisaoEdit" class="col-form-label font-weight-bold">{{ __('Início da Avaliação') }}</label>
+                                            <input id="inicioRevisaoEdit" type="datetime-local" class="form-control @error('inícioRevisão'.$modalidade->id) is-invalid @enderror" name="inícioRevisão{{$modalidade->id}}" value="{{old('inicioRevisão'.$modalidade->id, $modalidade->inicioRevisao ? date('Y-m-d\TH:i', strtotime($modalidade->inicioRevisao)) : '')}}" autocomplete="inícioRevisão" autofocus>
 
-                                            <div class="col-sm-6">
-                                                <label for="inicioValidacao" class="col-form-label font-weight-bold">{{ __('Início da Validação') }}</label>
-                                                <input id="inicioValidacao" type="datetime-local" class="form-control @error('inícioValidação'.$modalidade->id) is-invalid @enderror" name="inícioValidação{{$modalidade->id}}" @if(old('inícioValidação'.$modalidade->id)!=null) value="{{old('inícioValidação'.$modalidade->id)}}" @else @if($modalidade->inicioValidacao) value="{{date('Y-m-d\TH:i',strtotime($modalidade->inicioValidacao))}}" @endif @endif autocomplete="inicioValidacao" autofocus>
-
-                                                @error('inícioValidação'.$modalidade->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label for="fimValidacao" class="col-form-label font-weight-bold">{{ __('Fim da Validação') }}</label>
-                                                <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidação'.$modalidade->id) is-invalid @enderror" name="fimValidação{{$modalidade->id}}" @if(old('fimValidação'.$modalidade->id)!=null) value="{{old('fimValidação'.$modalidade->id)}}" @else @if($modalidade->fimValidacao) value="{{date('Y-m-d\TH:i',strtotime($modalidade->fimValidacao))}}" @endif @endif autocomplete="fimValidacao" autofocus>
-
-                                                @error('fimValidação'.$modalidade->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
+                                            @error('inícioRevisão'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
                                         </div>
-                                        {{-- end Data: inicioValidacao | fimValidacao --}}
+                                        <div class="col-sm-6">
+                                            <label for="fimRevisaoEdit" class="col-form-label font-weight-bold">{{ __('Fim da Avaliação') }}</label>
+                                            <input id="fimRevisaoEdit" type="datetime-local" class="form-control @error('fimRevisão'.$modalidade->id) is-invalid @enderror" name="fimRevisão{{$modalidade->id}}" value="{{old('fimRevisão'.$modalidade->id, $modalidade->fimRevisao ? date('Y-m-d\TH:i', strtotime($modalidade->fimRevisao)) : '')}}" autocomplete="fimRevisão" autofocus>
 
-                                        {{-- Data: resultado --}}
-                                        <div class="row">
-
-                                            <div class="col-sm-6">
-                                                <label for="inicioResultado" class="col-form-label font-weight-bold">{{ __('Resultado') }}</label>
-                                                <input id="inicioResultado" type="datetime-local" class="form-control @error('resultado'.$modalidade->id) is-invalid @enderror" name="resultado{{$modalidade->id}}" value="@if(old('resultado'.$modalidade->id)){{old('resultado'.$modalidade->id)}}@else{{ date('Y-m-d\TH:i',strtotime($modalidade->inicioResultado))}}@endif" autocomplete="inicioResultado" autofocus>
-
-                                                @error('resultado'.$modalidade->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
+                                            @error('fimRevisão'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
                                         </div>
-                                        {{-- end Data: resultado --}}
+                                    </div>
+                                    {{-- end Data: inicioRevisão | fimRevisao --}}
+
+                                    {{-- Data: inicioCorrecao | fimCorrecao --}}
+                                    <div class="row justify-content-center">
+
+                                        <div class="col-sm-6">
+                                            <label for="inicioCorrecao" class="col-form-label font-weight-bold">{{ __('Início da Correção') }}</label>
+                                            <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inícioCorreção'.$modalidade->id) is-invalid @enderror" name="inícioCorreção{{$modalidade->id}}" @if(old('inicioCorreção'.$modalidade->id) != null) value="{{old('inicioCorreção'.$modalidade->id)}}" @else @if($modalidade->inicioCorrecao != null) value="{{date('Y-m-d\TH:i', strtotime($modalidade->inicioCorrecao))}}" @endif @endif autocomplete="inicioCorrecao" autofocus>
+
+                                            @error('inícioCorreção'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label for="fimCorrecao" class="col-form-label font-weight-bold">{{ __('Fim da Correção') }}</label>
+                                            <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorreção'.$modalidade->id) is-invalid @enderror" name="fimCorreção{{$modalidade->id}}" @if(old('fimCorreção'.$modalidade->id)!=null) value="{{old('fimCorreção'.$modalidade->id)}}" @else @if($modalidade->fimCorrecao) value="{{date('Y-m-d\TH:i',strtotime($modalidade->fimCorrecao))}}" @endif @endif autocomplete="fimCorrecao" autofocus>
+
+                                            @error('fimCorreção'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    {{-- end Data: inicioCorrecao | fimCorrecao --}}
+
+
+                                    {{-- Data: inicioValidacao | fimValidacao --}}
+                                    <div class="row justify-content-center">
+
+                                        <div class="col-sm-6">
+                                            <label for="inicioValidacao" class="col-form-label font-weight-bold">{{ __('Início da Validação') }}</label>
+                                            <input id="inicioValidacao" type="datetime-local" class="form-control @error('inícioValidação'.$modalidade->id) is-invalid @enderror" name="inícioValidação{{$modalidade->id}}" @if(old('inícioValidação'.$modalidade->id)!=null) value="{{old('inícioValidação'.$modalidade->id)}}" @else @if($modalidade->inicioValidacao) value="{{date('Y-m-d\TH:i',strtotime($modalidade->inicioValidacao))}}" @endif @endif autocomplete="inicioValidacao" autofocus>
+
+                                            @error('inícioValidação'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label for="fimValidacao" class="col-form-label font-weight-bold">{{ __('Fim da Validação') }}</label>
+                                            <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidação'.$modalidade->id) is-invalid @enderror" name="fimValidação{{$modalidade->id}}" @if(old('fimValidação'.$modalidade->id)!=null) value="{{old('fimValidação'.$modalidade->id)}}" @else @if($modalidade->fimValidacao) value="{{date('Y-m-d\TH:i',strtotime($modalidade->fimValidacao))}}" @endif @endif autocomplete="fimValidacao" autofocus>
+
+                                            @error('fimValidação'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    {{-- end Data: inicioValidacao | fimValidacao --}}
+
+                                    {{-- Data: resultado --}}
+                                    <div class="row">
+
+                                        <div class="col-sm-6">
+                                            <label for="inicioResultado" class="col-form-label font-weight-bold">{{ __('Resultado') }}</label>
+                                            <input id="inicioResultado" type="datetime-local" class="form-control @error('resultado'.$modalidade->id) is-invalid @enderror" name="resultado{{$modalidade->id}}" value="@if(old('resultado'.$modalidade->id)){{old('resultado'.$modalidade->id)}}@else{{ date('Y-m-d\TH:i',strtotime($modalidade->inicioResultado))}}@endif" autocomplete="inicioResultado" autofocus>
+
+                                            @error('resultado'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    {{-- end Data: resultado --}}
 
                                         <div id="datas">
                                             <template x-for="(data, index) in datas" :key="index">
@@ -342,74 +342,80 @@
                                             </div>
                                         </div>
 
-                                        {{-- Inicio - Tipo de submissão --}}
-                                        <div class="row">
+                                    {{-- Inicio - Tipo de submissão --}}
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input" id="avaliacaoDuranteSubmissaocheck" onclick="mensagemSubmissao()" x-model="avaliacaoDuranteSubmissao" type="checkbox" name="avaliacaoDuranteSubmissao" @if(old('avaliacaoDuranteSubmissao'.$modalidade->id)) checked @elseif(old('avaliacaoDuranteSubmissao'.$modalidade->id) == true && $modalidade->avaliacaoDuranteSubmissao == true) checked @endif>
+                                                <label class="form-check-label font-weight-bold" for="avaliacaoDuranteSubmissaocheck">
 
-                                            <div class="col-sm-6">
-                                                <div class="form-check" style="margin-top: 10px">
-                                                    <input class="form-check-input incluir-resumo-edit" type="checkbox" value="1" name="texto{{$modalidade->id}}" id="id-custom_field-account-1-2" @if(old('texto'.$modalidade->id)) checked @elseif(old('texto'.$modalidade->id) == null && $modalidade->texto) checked @endif>
-                                                    <label class="form-check-label font-weight-bold" for="resumo">
-                                                        Adicionar campo resumo por texto
+                                                    {{ __('Permitir avaliação durante o período de submissão') }}
+                                                </label>
+                                            </div>
+                                            <div class="form-check" style="margin-top: 10px">
+                                                <input class="form-check-input incluir-resumo-edit" type="checkbox" name="texto{{$modalidade->id}}" id="id-custom_field-account-1-2" @if(old('texto'.$modalidade->id)) checked @elseif(old('texto'.$modalidade->id) == null && $modalidade->texto) checked @endif>
+                                                <label class="form-check-label font-weight-bold" for="resumo">
+                                                    Adicionar campo resumo por texto
+                                                </label>
+                                                @error('resumo'.$modalidade->id)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+
+                                            <div id="restricoes-resumo-texto-edit{{$modalidade->id}}" @if(old('texto'.$modalidade->id)) style="display: block;" @elseif(old('texto'.$modalidade->id) == null && $modalidade->texto) style="display: block;"@else style="display: none;" @endif>
+                                                <label class="col-form-label">*{{ __('Restrições de resumo:') }}</label>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input limit" type="radio" name="limit{{$modalidade->id}}" value="limit-option1" id="id-limit-custom_field-accountEdit-1-1" @if (old('limit'.$modalidade->id) == 'limit-option1') checked @elseif(old('limit'.$modalidade->id) == null && $modalidade->caracteres) checked @endif>
+                                                    <label class="form-check-label" for="texto">
+                                                        Quantidade de caracteres
                                                     </label>
-                                                    @error('resumo'.$modalidade->id)
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input limit" type="radio" name="limit{{$modalidade->id}}" value="limit-option2" id="id-limit-custom_field-accountEdit-1-2" @if (old('limit'.$modalidade->id) == 'limit-option2') checked @elseif(old('limit'.$modalidade->id) == null && $modalidade->palavras) checked @endif>
+                                                    <label class="form-check-label" for="arquivo">
+                                                        Quantidade de palavras
+                                                    </label>
                                                 </div>
 
-                                                <div id="restricoes-resumo-texto-edit{{$modalidade->id}}" @if(old('texto'.$modalidade->id)) style="display: block;" @elseif(old('texto'.$modalidade->id) == null && $modalidade->texto) style="display: block;"@else style="display: none;" @endif>
-                                                    <label class="col-form-label">*{{ __('Restrições de resumo:') }}</label>
-
-                                                    <div class="form-check">
-                                                        <input class="form-check-input limit" type="radio" name="limit{{$modalidade->id}}" value="limit-option1" id="id-limit-custom_field-accountEdit-1-1" @if (old('limit'.$modalidade->id) == 'limit-option1') checked @elseif(old('limit'.$modalidade->id) == null && $modalidade->caracteres) checked @endif>
-                                                        <label class="form-check-label" for="texto">
-                                                            Quantidade de caracteres
-                                                        </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                        <input class="form-check-input limit" type="radio" name="limit{{$modalidade->id}}" value="limit-option2" id="id-limit-custom_field-accountEdit-1-2" @if (old('limit'.$modalidade->id) == 'limit-option2') checked @elseif(old('limit'.$modalidade->id) == null && $modalidade->palavras) checked @endif>
-                                                        <label class="form-check-label" for="arquivo">
-                                                            Quantidade de palavras
-                                                        </label>
-                                                    </div>
-
-                                                    <div class="row">
-                                                        <div class="col-sm-6" id="min-max-caracteres" style="@if (old('limit'.$modalidade->id) == 'limit-option1')display:block;@elseif($modalidade->caracteres && old('limit'.$modalidade->id) == null)display:block;@else display:none; @endif">
-                                                            <div class="form-group">
-                                                                <label class="col-form-label">{{ __('Mínimo') }}</label>
-                                                                <div>
+                                                <div class="row">
+                                                    <div class="col-sm-6" id="min-max-caracteres" style="@if (old('limit'.$modalidade->id) == 'limit-option1')display:block;@elseif($modalidade->caracteres && old('limit'.$modalidade->id) == null)display:block;@else display:none; @endif">
+                                                        <div class="form-group">
+                                                            <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                                            <div>
                                                                 <input class="form-control" type="number" id="min_caracteres" name="mincaracteres{{$modalidade->id}}" value="@if(old('mincaracteres'.$modalidade->id)!=null){{old('mincaracteres'.$modalidade->id)}}@else{{$modalidade->mincaracteres}}@endif">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="form-group">
-                                                                <label class="col-form-label">{{ __('Máximo') }}</label>
-                                                                <div>
-                                                                <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres{{$modalidade->id}}" value="@if(old('maxcaracteres'.$modalidade->id)!=null){{old('maxcaracteres'.$modalidade->id)}}@else{{$modalidade->maxcaracteres}}@endif">
-                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div class="row">
-                                                        <div class="col-sm-6" id="min-max-palavras" style="@if (old('limit'.$modalidade->id) == 'limit-option2')display:block;@elseif($modalidade->palavras && old('limit'.$modalidade->id) == null)display:block;@else display:none; @endif">
-                                                            <div class="form-group">
-                                                                <label class="col-form-label">{{ __('Mínimo') }}</label>
-                                                                <div>
-                                                                <input class="form-control" type="number" id="min_palavras" name="minpalavras{{$modalidade->id}}" value="@if(old('minpalavras'.$modalidade->id)!=null){{old('minpalavras'.$modalidade->id)}}@else{{$modalidade->minpalavras}}@endif">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="form-group">
-                                                                <label class="col-form-label">{{ __('Máximo') }}</label>
-                                                                <div>
-                                                                <input class="form-control" type="number" id="max_palavras" name="maxpalavras{{$modalidade->id}}" value="@if(old('maxpalavras'.$modalidade->id)!=null){{old('maxpalavras'.$modalidade->id)}}@else{{$modalidade->maxpalavras}}@endif">
-                                                                </div>
+                                                        <div class="form-group">
+                                                            <label class="col-form-label">{{ __('Máximo') }}</label>
+                                                            <div>
+                                                                <input class="form-control" type="number" id="max_caracteres" name="maxcaracteres{{$modalidade->id}}" value="@if(old('maxcaracteres'.$modalidade->id)!=null){{old('maxcaracteres'.$modalidade->id)}}@else{{$modalidade->maxcaracteres}}@endif">
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-6" id="min-max-palavras" style="@if (old('limit'.$modalidade->id) == 'limit-option2')display:block;@elseif($modalidade->palavras && old('limit'.$modalidade->id) == null)display:block;@else display:none; @endif">
+                                                        <div class="form-group">
+                                                            <label class="col-form-label">{{ __('Mínimo') }}</label>
+                                                            <div>
+                                                                <input class="form-control" type="number" id="min_palavras" name="minpalavras{{$modalidade->id}}" value="@if(old('minpalavras'.$modalidade->id)!=null){{old('minpalavras'.$modalidade->id)}}@else{{$modalidade->minpalavras}}@endif">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-form-label">{{ __('Máximo') }}</label>
+                                                            <div>
+                                                                <input class="form-control" type="number" id="max_palavras" name="maxpalavras{{$modalidade->id}}" value="@if(old('maxpalavras'.$modalidade->id)!=null){{old('maxpalavras'.$modalidade->id)}}@else{{$modalidade->maxpalavras}}@endif">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                                 <div class="form-check" style="margin-top: 10px">
                                                     <input class="form-check-input incluirarquivoEdit" type="checkbox" value="1" onchange="exibirTiposArquivo({{$modalidade->id}},this)" name="arquivoEdit{{$modalidade->id}}" id="id-custom_field-accountEdit-1-2" @if(old('arquivoEdit'.$modalidade->id) == "1") checked @elseif (old('arquivoEdit'.$modalidade->id) == null && $modalidade->arquivo == true) checked @endif>
@@ -423,8 +429,10 @@
                                                     @enderror
                                                 </div>
 
-                                            </div>
+
+
                                         </div>
+                                    </div>
 
                                         <div class="row tiposDeArquivos{{$modalidade->id}}" style="@if(old('arquivoEdit'.$modalidade->id)=="1") display: block @elseif(old('arquivoEdit'.$modalidade->id) == null && $modalidade->arquivo == true) display: block @else display: none @endif">
                                             <div class="col-sm-12" id="tipo-arquivoEdit">
@@ -592,8 +600,8 @@
                                             </div>
                                             <div class="col-sm-12" id="tipo-apresentacao" @if(old('apresentacao') || $modalidade->apresentacao) style="display: block" @else style="display: none" @endif>
 
-                                                <div class="titulo-detalhes" style="margin-top: 10px"></div>
-                                                <label class="col-form-label font-weight-bold">{{ __('Selecione a(s) forma(s) de apresentação do trabalho que poderá(ão) ser escolhida(s) pelo(a) autor(a) ') }} <span style="color: red">{{ __('(não obrigatório)')}}</span>:</label>
+                                            <div class="titulo-detalhes" style="margin-top: 10px"></div>
+                                            <label class="col-form-label font-weight-bold">{{ __('Selecione a(s) forma(s) de apresentação do trabalho que poderá(ão) ser escolhida(s) pelo(a) autor(a) ') }} <span style="color: red">{{ __('(não obrigatório)')}}</span>:</label>
 
                                                 <div class="form-check" style="margin-top: 10px">
                                                     <input class="form-check-input" type="checkbox" value="1" name="remoto" @if(old('remoto') || ! is_null($modalidade->tiposApresentacao()->where('tipo', "Remoto")->first())) checked @endif>
@@ -694,11 +702,11 @@
                                                 @endif
                                                 <div class="custom-file">
                                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoTemplates{{$modalidade->id}}">
-                                                </div>
-                                                <small>O arquivo Selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF, TXT ou PDF de até 2mb.</small><br>
-                                                <small>Se deseja alterar o arquivo, envie a nova versão.</small>
-                                                @error('arquivoTemplates'.$modalidade->id)
-                                                <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                            </div>
+                                            <small>O arquivo Selecionado deve ser no formato ODT, OTT, DOCX, DOC, RTF, TXT ou PDF de até 2mb.</small><br>
+                                            <small>Se deseja alterar o arquivo, envie a nova versão.</small>
+                                            @error('arquivoTemplates'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                                                 <strong>{{ $message }}</strong>
                                                 </span>
                                                 @enderror
@@ -926,112 +934,112 @@
                                                                 <div class="titulo-detalhes" style="margin-top: 10px"></div>
                                                                 <label class="col-form-label font-weight-bold">{{ __('Tipos de extensão aceitas') }}</label>
 
-                                                                <div class="form-check" style="margin-top: 10px">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="pdf" @if (in_array('pdf', old('documentosExtra.'.$i))) checked @endif>
-                                                                    <label class="form-check-label">
-                                                                        .pdf
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="jpg" @if (in_array('jpg', old('documentosExtra.'.$i))) checked @endif>
-                                                                    <label class="form-check-label">
-                                                                        .jpg
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="jpeg" @if (in_array('jpeg', old('documentosExtra.'.$i))) checked @endif>
-                                                                    <label class="form-check-label">
-                                                                        .jpeg
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="png" @if (in_array('png', old('documentosExtra.'.$i))) checked @endif>
-                                                                    <label class="form-check-label">
-                                                                        .png
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="docx" @if (in_array('docx', old('documentosExtra.'.$i))) checked @endif>
-                                                                    <label class="form-check-label">
-                                                                        .docx
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="odt" @if (in_array('odt', old('documentosExtra.'.$i))) checked @endif>
-                                                                    <label class="form-check-label">
-                                                                        .odt
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="zip" @if (in_array('zip', old('documentosExtra.'.$i))) checked @endif>
-                                                                    <label class="form-check-label">
-                                                                        .zip
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="svg" @if (in_array('svg', old('documentosExtra.'.$i))) checked @endif>
-                                                                    <label class="form-check-label">
-                                                                        .svg
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="mp4" @if (in_array('mp4', old('documentosExtra.'.$i))) checked @endif>
-                                                                    <label class="form-check-label">
-                                                                        .mp4
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="mp3" @if (in_array('mp3', old('documentosExtra.'.$i))) checked @endif>
-                                                                    <label class="form-check-label">
-                                                                        .mp3
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            @error('documentosExtra.'. $i)
-                                                                <div id="validationServer03Feedback" class="invalid-feedback">
-                                                                    {{ $message }}
-                                                                </div>
-                                                            @enderror
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            @endif
-
-                                        </div>
-                                        <div class="row justify-content-center">
-                                            <div class="col-md-12">
-                                                <button type="submit" class="btn btn-primary" style="width:100%">
-                                                    {{ __('Finalizar') }}
-                                                </button>
+                                                <div class="form-check" style="margin-top: 10px">
+                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="pdf" @if (in_array('pdf', old('documentosExtra.'.$i))) checked @endif>
+                                                    <label class="form-check-label">
+                                                        .pdf
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="jpg" @if (in_array('jpg', old('documentosExtra.'.$i))) checked @endif>
+                                                    <label class="form-check-label">
+                                                        .jpg
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="jpeg" @if (in_array('jpeg', old('documentosExtra.'.$i))) checked @endif>
+                                                    <label class="form-check-label">
+                                                        .jpeg
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="png" @if (in_array('png', old('documentosExtra.'.$i))) checked @endif>
+                                                    <label class="form-check-label">
+                                                        .png
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="docx" @if (in_array('docx', old('documentosExtra.'.$i))) checked @endif>
+                                                    <label class="form-check-label">
+                                                        .docx
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="odt" @if (in_array('odt', old('documentosExtra.'.$i))) checked @endif>
+                                                    <label class="form-check-label">
+                                                        .odt
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="zip" @if (in_array('zip', old('documentosExtra.'.$i))) checked @endif>
+                                                    <label class="form-check-label">
+                                                        .zip
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="svg" @if (in_array('svg', old('documentosExtra.'.$i))) checked @endif>
+                                                    <label class="form-check-label">
+                                                        .svg
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="mp4" @if (in_array('mp4', old('documentosExtra.'.$i))) checked @endif>
+                                                    <label class="form-check-label">
+                                                        .mp4
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="documentosExtra[{{$i}}][]" value="mp3" @if (in_array('mp3', old('documentosExtra.'.$i))) checked @endif>
+                                                    <label class="form-check-label">
+                                                        .mp3
+                                                    </label>
+                                                </div>
                                             </div>
+                                            @error('documentosExtra.'. $i)
+                                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
                                         </div>
-                                        </form>
+                                        @endif
+                                        @endforeach
+                                        @endif
+
                                     </div>
-                                </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-primary" style="width:100%">
+                                                {{ __('Finalizar') }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </div>{{-- end row card --}}
-
-
                         </div>
                     </div>
-                    {{-- <div class="modal-footer">
+                </div>{{-- end row card --}}
+
+
+            </div>
+        </div>
+        {{-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Save changes</button>
                     </div> --}}
-                </div>
-                </div>
-            </div>
-        @endforeach
-        {{-- Fim Modal --}}
-        <script>
-            function addDoc(id) {
-                var indice = document.getElementById("docs_indice"+id);
-                var doc_indice = parseInt(document.getElementById("docs_indice"+id).value) + 1;
-                indice.value = doc_indice;
-                var doc = `<div class="col-md-12" style="margin-top: 10px;">
+    </div>
+</div>
+</div>
+@endforeach
+{{-- Fim Modal --}}
+<script>
+    function addDoc(id) {
+        var indice = document.getElementById("docs_indice" + id);
+        var doc_indice = parseInt(document.getElementById("docs_indice" + id).value) + 1;
+        indice.value = doc_indice;
+        var doc = `<div class="col-md-12" style="margin-top: 10px;">
                                 <label for="documentosExtra" class="form-label font-weight-bold">Nome do documento<span style="color: red;">*</span></label>
                                 <div class="d-flex">
-                                    <input name="documentosExtra[`+doc_indice+`][]" type="text" class="form-control" placeholder="Digite o nome do documento aqui..." required">
+                                    <input name="documentosExtra[` + doc_indice + `][]" type="text" class="form-control" placeholder="Digite o nome do documento aqui..." required">
                                     <a onclick="this.parentElement.parentElement.remove()" style="margin-top: 10px; margin-left: 5px; cursor: pointer">
                                         <img width="20px;" src="{{asset('img/trashVermelho.svg')}}" alt="Apagar" title="Apagar">
                                     </a>
@@ -1043,31 +1051,31 @@
                                 <div class="row ml-3 row-cols-3 row-cols-sm-4 row-cols-md-5">
                                     <div>
                                         <div class="form-check" style="margin-top: 10px">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="pdf">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="pdf">
                                             <label class="form-check-label">
                                                 .pdf
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="docx">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="docx">
                                             <label class="form-check-label">
                                                 .docx
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="odt">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="odt">
                                             <label class="form-check-label">
                                                 .odt
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="odp">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="odp">
                                             <label class="form-check-label">
                                                 .odp
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="pptx">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="pptx">
                                             <label class="form-check-label">
                                                 .pptx
                                             </label>
@@ -1075,25 +1083,25 @@
                                     </div>
                                     <div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="ods">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="ods">
                                             <label class="form-check-label">
                                                 .ods
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="xlsx">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="xlsx">
                                             <label class="form-check-label">
                                                 .xlsx
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="csv">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="csv">
                                             <label class="form-check-label">
                                                 .csv
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="zip">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="zip">
                                             <label class="form-check-label">
                                                 .zip
                                             </label>
@@ -1101,19 +1109,19 @@
                                     </div>
                                     <div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="mp3">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="mp3">
                                             <label class="form-check-label">
                                                 .mp3
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="ogg">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="ogg">
                                             <label class="form-check-label">
                                                 .ogg
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="wav">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="wav">
                                             <label class="form-check-label">
                                                 .wav
                                             </label>
@@ -1121,37 +1129,37 @@
                                     </div>
                                     <div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="mp4">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="mp4">
                                             <label class="form-check-label">
                                                 .mp4
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="ogv">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="ogv">
                                             <label class="form-check-label">
                                                 .ogv
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="mpg">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="mpg">
                                             <label class="form-check-label">
                                                 .mpg
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="mpeg">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="mpeg">
                                             <label class="form-check-label">
                                                 .mpeg
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="mkv">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="mkv">
                                             <label class="form-check-label">
                                                 .mkv
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="avi">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="avi">
                                             <label class="form-check-label">
                                                 .avi
                                             </label>
@@ -1159,25 +1167,25 @@
                                     </div>
                                     <div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="jpg">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="jpg">
                                             <label class="form-check-label">
                                                 .jpg
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="jpeg">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="jpeg">
                                             <label class="form-check-label">
                                                 .jpeg
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="png">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="png">
                                             <label class="form-check-label">
                                                 .png
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="documentosExtra[`+doc_indice+`][]" value="svg">
+                                            <input class="form-check-input" type="checkbox" name="documentosExtra[` + doc_indice + `][]" value="svg">
                                             <label class="form-check-label">
                                                 .svg
                                             </label>
@@ -1185,9 +1193,9 @@
                                     </div>
                                 </div>
                             </div>`;
-                $('#docs'+id).append(doc);
-            }
-        </script>
+        $('#docs' + id).append(doc);
+    }
+</script>
 @endsection
 @section('javascript')
 @parent
@@ -1232,6 +1240,10 @@
                 delete this.datas[index];
             },
         }
+    }
+
+    function mensagemSubmissao() {
+        alert('Agora é possível selecionar uma data de início da avaliação antes do fim da submissão');
     }
 </script>
 @endsection

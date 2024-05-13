@@ -35,12 +35,22 @@ class FormSubmTrabaController extends Controller
             'select_campo3' => ['nullable', 'string'],
             'select_campo4' => ['nullable', 'string'],
             'select_campo5' => ['nullable', 'string'],
+            'etiquetatitulotrabalho_en' => ['nullable', 'string'],
+            'etiquetaresumotrabalho_en' => ['nullable', 'string'],
+            'etiquetacampoextra1_en' => ['nullable', 'string'],
+            'etiquetacampoextra2_en' => ['nullable', 'string'],
+            'etiquetacampoextra3_en' => ['nullable', 'string'],
+            'etiquetacampoextra4_en' => ['nullable', 'string'],
+            'etiquetacampoextra5_en' => ['nullable', 'string'],
         ]);
 
         $formevento = FormSubmTraba::where('eventoId', $id)->first();
 
         if (isset($request->etiquetatitulotrabalho)) {
             $formevento->etiquetatitulotrabalho = $request->etiquetatitulotrabalho;
+        }
+        if (isset($request->etiquetatitulotrabalho_en)) {
+            $formevento->etiquetatitulotrabalho_en = $request->etiquetatitulotrabalho_en;
         }
         if (isset($request->etiquetaautortrabalho)) {
             $formevento->etiquetaautortrabalho = $request->etiquetaautortrabalho;
@@ -50,6 +60,9 @@ class FormSubmTrabaController extends Controller
         }
         if (isset($request->etiquetaresumotrabalho)) {
             $formevento->etiquetaresumotrabalho = $request->etiquetaresumotrabalho;
+        }
+        if (isset($request->etiquetaresumotrabalho_en)) {
+            $formevento->etiquetaresumotrabalho_en = $request->etiquetaresumotrabalho_en;
         }
         if (isset($request->etiquetaareatrabalho)) {
             $formevento->etiquetaareatrabalho = $request->etiquetaareatrabalho;
@@ -72,6 +85,22 @@ class FormSubmTrabaController extends Controller
         }
         if (isset($request->etiquetacampoextra5)) {
             $formevento->etiquetacampoextra5 = $request->etiquetacampoextra5;
+        }
+
+        if (isset($request->etiquetacampoextra1_en)) {
+            $formevento->etiquetacampoextra1_en = $request->etiquetacampoextra1_en;
+        }
+        if (isset($request->etiquetacampoextra2_en)) {
+            $formevento->etiquetacampoextra2_en = $request->etiquetacampoextra2_en;
+        }
+        if (isset($request->etiquetacampoextra3_en)) {
+            $formevento->etiquetacampoextra3_en = $request->etiquetacampoextra3_en;
+        }
+        if (isset($request->etiquetacampoextra4_en)) {
+            $formevento->etiquetacampoextra4_en = $request->etiquetacampoextra4_en;
+        }
+        if (isset($request->etiquetacampoextra5_en)) {
+            $formevento->etiquetacampoextra5_en = $request->etiquetacampoextra5_en;
         }
 
         // Opções para tipo de campos extras

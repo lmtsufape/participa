@@ -51,6 +51,10 @@ class ModalidadeController extends Controller
     {
         $modalidade = new Modalidade();
         $modalidade->fill($request->validated());
+        if ($request->avaliacaoDuranteSubmissao == 'on') {
+            $modalidade->avaliacaoDuranteSubmissao = true;
+            $modalidade->save();
+        }
         $modalidade->caracteres = $request->limit == 'limit-option1';
         $modalidade->palavras = $request->limit == 'limit-option2';
         $modalidade->evento_id = $request->eventoId;
@@ -72,19 +76,19 @@ class ModalidadeController extends Controller
         }
 
         if (isset($request->arquivoRegras)) {
-            $modalidade->regra = $request->arquivoRegras->store('regras/'.$modalidade->nome);
+            $modalidade->regra = $request->arquivoRegras->store('regras/' . $modalidade->nome);
         }
 
         if (isset($request->arquivoInstrucoes)) {
-            $modalidade->instrucoes = $request->arquivoInstrucoes->store('instrucoes/'.$modalidade->nome);
+            $modalidade->instrucoes = $request->arquivoInstrucoes->store('instrucoes/' . $modalidade->nome);
         }
 
         if (isset($request->arquivoTemplates)) {
-            $modalidade->template = $request->arquivoTemplates->store('templates/'.$modalidade->nome);
+            $modalidade->template = $request->arquivoTemplates->store('templates/' . $modalidade->nome);
         }
 
         if (isset($request->arquivoModelos)) {
-            $modalidade->modelo_apresentacao = $request->arquivoModelos->store('modelos/'.$modalidade->nome);
+            $modalidade->modelo_apresentacao = $request->arquivoModelos->store('modelos/' . $modalidade->nome);
         }
 
         if ($request->apresentacao) {
@@ -120,6 +124,10 @@ class ModalidadeController extends Controller
             }
         }
 
+        if ($request->submissaoUnica == 'on') {
+            $modalidade->submissaoUnica = true;
+            $modalidade->save();
+        }
         $modalidade->save();
 
         return redirect()->back()->with(['mensagem' => 'Modalidade cadastrada com sucesso!']);
@@ -174,97 +182,110 @@ class ModalidadeController extends Controller
         $evento = $modalidadeEdit->evento;
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
+        if ($request->avaliacaoDuranteSubmissao == 'on') {
+            $modalidadeEdit->avaliacaoDuranteSubmissao = true;
+            $modalidadeEdit->save();
+        }
+
+
         // dd($request);
         $validatedData = $request->validate([
-            'nome'.$request->modalidadeEditId => ['required', 'string'],
-            'inícioSubmissão'.$request->modalidadeEditId => ['required', 'date'],
-            'fimSubmissão'.$request->modalidadeEditId => ['required', 'date', 'after:inícioSubmissão'.$request->modalidadeEditId],
-            'inícioRevisão'.$request->modalidadeEditId => ['nullable', 'date', 'after:inícioSubmissão'.$request->modalidadeEditId],
-            'fimRevisão'.$request->modalidadeEditId => ['nullable', 'date', 'after:inícioRevisão'.$request->modalidadeEditId],
+            'nome' . $request->modalidadeEditId => ['required', 'string'],
+            'inícioSubmissão' . $request->modalidadeEditId => ['required', 'date'],
+            'fimSubmissão' . $request->modalidadeEditId => ['required', 'date', 'after:inícioSubmissão' . $request->modalidadeEditId],
 
-            'inícioCorreção'.$request->modalidadeEditId => ['nullable', 'date', 'after:fimDaRevisão'.$request->modalidadeEditId, 'required_with:fimCorreção'.$request->modalidadeEditId],
-            'fimCorreção'.$request->modalidadeEditId => ['nullable', 'date', 'after:inícioCorreção'.$request->modalidadeEditId, 'required_with:inícioCorreção'.$request->modalidadeEditId],
-            'inícioValidação'.$request->modalidadeEditId => ['nullable', 'date', 'after:fimCorreção'.$request->modalidadeEditId, 'required_with:fimValidação'.$request->modalidadeEditId],
-            'fimValidação'.$request->modalidadeEditId => ['nullable', 'date', 'after:inícioValidação'.$request->modalidadeEditId, 'required_with:inícioValidação'.$request->modalidadeEditId],
+            'fimRevisão' . $request->modalidadeEditId => ['nullable', 'date', 'after:inícioRevisão' . $request->modalidadeEditId],
 
-            'resultado'.$request->modalidadeEditId => ['required', 'date', 'after:fimRevisão'.$request->modalidadeEditId],
-            'texto'.$request->modalidadeEditId => ['nullable'],
-            'limit'.$request->modalidadeEditId => ['nullable'],
-            'arquivoEdit'.$request->modalidadeEditId => ['nullable'],
+            'inícioCorreção' . $request->modalidadeEditId => ['nullable', 'date', 'after:fimDaRevisão' . $request->modalidadeEditId, 'required_with:fimCorreção' . $request->modalidadeEditId],
+            'fimCorreção' . $request->modalidadeEditId => ['nullable', 'date', 'after:inícioCorreção' . $request->modalidadeEditId, 'required_with:inícioCorreção' . $request->modalidadeEditId],
+            'inícioValidação' . $request->modalidadeEditId => ['nullable', 'date', 'after:fimCorreção' . $request->modalidadeEditId, 'required_with:fimValidação' . $request->modalidadeEditId],
+            'fimValidação' . $request->modalidadeEditId => ['nullable', 'date', 'after:inícioValidação' . $request->modalidadeEditId, 'required_with:inícioValidação' . $request->modalidadeEditId],
+
+            'resultado' . $request->modalidadeEditId => ['required', 'date', 'after:fimRevisão' . $request->modalidadeEditId],
+            'texto' . $request->modalidadeEditId => ['nullable'],
+            'limit' . $request->modalidadeEditId => ['nullable'],
+            'arquivoEdit' . $request->modalidadeEditId => ['nullable'],
             'apresentacao' => ['nullable'],
 
-            'pdf'.$request->modalidadeEditId => ['nullable'],
-            'docx'.$request->modalidadeEditId => ['nullable'],
-            'odt'.$request->modalidadeEditId => ['nullable'],
-            'odp'.$request->modalidadeEditId => ['nullable'],
-            'pptx'.$request->modalidadeEditId => ['nullable'],
-            'ods'.$request->modalidadeEditId => ['nullable'],
-            'xlsx'.$request->modalidadeEditId => ['nullable'],
-            'csv'.$request->modalidadeEditId => ['nullable'],
-            'zip'.$request->modalidadeEditId => ['nullable'],
-            'mp3'.$request->modalidadeEditId => ['nullable'],
-            'ogg'.$request->modalidadeEditId => ['nullable'],
-            'wav'.$request->modalidadeEditId => ['nullable'],
-            'mp4'.$request->modalidadeEditId => ['nullable'],
-            'ogv'.$request->modalidadeEditId => ['nullable'],
-            'mpg'.$request->modalidadeEditId => ['nullable'],
-            'mpeg'.$request->modalidadeEditId => ['nullable'],
-            'mkv'.$request->modalidadeEditId => ['nullable'],
-            'avi'.$request->modalidadeEditId => ['nullable'],
-            'jpg'.$request->modalidadeEditId => ['nullable'],
-            'jpeg'.$request->modalidadeEditId => ['nullable'],
-            'png'.$request->modalidadeEditId => ['nullable'],
-            'svg'.$request->modalidadeEditId => ['nullable'],
+            'pdf' . $request->modalidadeEditId => ['nullable'],
+            'docx' . $request->modalidadeEditId => ['nullable'],
+            'odt' . $request->modalidadeEditId => ['nullable'],
+            'odp' . $request->modalidadeEditId => ['nullable'],
+            'pptx' . $request->modalidadeEditId => ['nullable'],
+            'ods' . $request->modalidadeEditId => ['nullable'],
+            'xlsx' . $request->modalidadeEditId => ['nullable'],
+            'csv' . $request->modalidadeEditId => ['nullable'],
+            'zip' . $request->modalidadeEditId => ['nullable'],
+            'mp3' . $request->modalidadeEditId => ['nullable'],
+            'ogg' . $request->modalidadeEditId => ['nullable'],
+            'wav' . $request->modalidadeEditId => ['nullable'],
+            'mp4' . $request->modalidadeEditId => ['nullable'],
+            'ogv' . $request->modalidadeEditId => ['nullable'],
+            'mpg' . $request->modalidadeEditId => ['nullable'],
+            'mpeg' . $request->modalidadeEditId => ['nullable'],
+            'mkv' . $request->modalidadeEditId => ['nullable'],
+            'avi' . $request->modalidadeEditId => ['nullable'],
+            'jpg' . $request->modalidadeEditId => ['nullable'],
+            'jpeg' . $request->modalidadeEditId => ['nullable'],
+            'png' . $request->modalidadeEditId => ['nullable'],
+            'svg' . $request->modalidadeEditId => ['nullable'],
 
             'deleteapresentacao' => ['nullable'],
             'deleteregra' => ['nullable'],
             'deletetemplate' => ['nullable'],
             'deleteinstrucoes' => ['nullable'],
 
-            'mincaracteres'.$request->modalidadeEditId => ['nullable', 'integer'],
-            'maxcaracteres'.$request->modalidadeEditId => ['nullable', 'integer'],
-            'minpalavras'.$request->modalidadeEditId => ['nullable', 'integer'],
-            'maxpalavras'.$request->modalidadeEditId => ['nullable', 'integer'],
-            'arquivoRegras'.$request->modalidadeEditId => ['nullable', 'file', 'max:2048'],
-            'arquivoInstrucoes'.$request->modalidadeEditId => ['nullable', 'file', 'max:2048'],
-            'arquivoModelos'.$request->modalidadeEditId => ['nullable', 'file', 'max:2048'],
-            'arquivoTemplates'.$request->modalidadeEditId => ['nullable', 'file', 'max:2048'],
+            'mincaracteres' . $request->modalidadeEditId => ['nullable', 'integer'],
+            'maxcaracteres' . $request->modalidadeEditId => ['nullable', 'integer'],
+            'minpalavras' . $request->modalidadeEditId => ['nullable', 'integer'],
+            'maxpalavras' . $request->modalidadeEditId => ['nullable', 'integer'],
+            'arquivoRegras' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048'],
+            'arquivoInstrucoes' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048'],
+            'arquivoModelos' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048'],
+            'arquivoTemplates' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048'],
         ]);
+
+        if ($modalidadeEdit->avaliacaoDuranteSubmissao == true) {
+            $validatedData += $request->validate(['inícioRevisão' . $request->modalidadeEditId => ['nullable', 'date']]);
+        } else {
+            $validatedData += $request->validate(['inícioRevisão' . $request->modalidadeEditId => ['nullable', 'date', 'after:fimSubmissão' . $request->modalidadeEditId]]);
+        }
+
         $caracteres = $modalidadeEdit->caracteres;
         $palavras = $modalidadeEdit->palavras;
 
-        if ($request->input('maxcaracteres'.$request->modalidadeEditId) != null && $request->input('mincaracteres'.$request->modalidadeEditId) != null && $request->input('maxcaracteres'.$request->modalidadeEditId) <= $request->input('mincaracteres'.$request->modalidadeEditId)) {
+        if ($request->input('maxcaracteres' . $request->modalidadeEditId) != null && $request->input('mincaracteres' . $request->modalidadeEditId) != null && $request->input('maxcaracteres' . $request->modalidadeEditId) <= $request->input('mincaracteres' . $request->modalidadeEditId)) {
             return redirect()->back()->withErrors(['comparacaocaracteres' => 'Limite máximo de caracteres é menor que limite minimo. Corrija!'])->withInput($request->all());
         }
-        if ($request->input('maxpalavras'.$request->modalidadeEditId) != null && $request->input('minpalavras'.$request->modalidadeEditId) != null && $request->input('maxpalavras'.$request->modalidadeEditId) <= $request->input('minpalavras'.$request->modalidadeEditId)) {
+        if ($request->input('maxpalavras' . $request->modalidadeEditId) != null && $request->input('minpalavras' . $request->modalidadeEditId) != null && $request->input('maxpalavras' . $request->modalidadeEditId) <= $request->input('minpalavras' . $request->modalidadeEditId)) {
             return redirect()->back()->withErrors(['comparacaopalavras' => 'Limite máximo de palavras é menor que limite minimo. Corrija!'])->withInput($request->all());
         }
 
         // Condição para opção de caracteres escolhida
-        if ($request->input('limit'.$request->modalidadeEditId) == 'limit-option1') {
+        if ($request->input('limit' . $request->modalidadeEditId) == 'limit-option1') {
             // Verifica se um campo foi deixado em branco
-            if ($request->input('mincaracteres'.$request->modalidadeEditId) == null || $request->input('maxcaracteres'.$request->modalidadeEditId) == null) {
+            if ($request->input('mincaracteres' . $request->modalidadeEditId) == null || $request->input('maxcaracteres' . $request->modalidadeEditId) == null) {
                 return redirect()->back()->withErrors(['semcaractere' => 'A opção caractere foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($request->all());
             }
             $caracteres = true;
             $palavras = false;
-            $modalidadeEdit->maxcaracteres = $request->input('maxcaracteres'.$request->modalidadeEditId);
-            $modalidadeEdit->mincaracteres = $request->input('mincaracteres'.$request->modalidadeEditId);
+            $modalidadeEdit->maxcaracteres = $request->input('maxcaracteres' . $request->modalidadeEditId);
+            $modalidadeEdit->mincaracteres = $request->input('mincaracteres' . $request->modalidadeEditId);
             $modalidadeEdit->minpalavras = null;
             $modalidadeEdit->maxpalavras = null;
         }
         // Condição para opção de palavras escolhida
-        if ($request->input('limit'.$request->modalidadeEditId) == 'limit-option2') {
+        if ($request->input('limit' . $request->modalidadeEditId) == 'limit-option2') {
             // Verifica se um campo foi deixado em branco
-            if ($request->input('minpalavras'.$request->modalidadeEditId) == null || $request->input('maxpalavras'.$request->modalidadeEditId) == null) {
+            if ($request->input('minpalavras' . $request->modalidadeEditId) == null || $request->input('maxpalavras' . $request->modalidadeEditId) == null) {
                 return redirect()->back()->withErrors(['sempalavra' => 'A opção palavra foi escolhida, porém nenhum ou um dos valores não foi passado'])->withInput($request->all());
             }
             $caracteres = false;
             $palavras = true;
             $modalidadeEdit->maxcaracteres = null;
             $modalidadeEdit->mincaracteres = null;
-            $modalidadeEdit->minpalavras = $request->input('minpalavras'.$request->modalidadeEditId);
-            $modalidadeEdit->maxpalavras = $request->input('maxpalavras'.$request->modalidadeEditId);
+            $modalidadeEdit->minpalavras = $request->input('minpalavras' . $request->modalidadeEditId);
+            $modalidadeEdit->maxpalavras = $request->input('maxpalavras' . $request->modalidadeEditId);
         }
 
         // // Condição para opção de texto escolhida
@@ -283,32 +304,32 @@ class ModalidadeController extends Controller
         // }
 
         // Condição para opção de arquivo escolhida
-        if ($request->input('arquivoEdit'.$request->modalidadeEditId) == true) {
-            if ($request->input('pdf'.$request->modalidadeEditId) == null && $request->input('jpg'.$request->modalidadeEditId) == null && $request->input('jpeg'.$request->modalidadeEditId) == null && $request->input('png'.$request->modalidadeEditId) == null && $request->input('docx'.$request->modalidadeEditId) == null && $request->input('odt'.$request->modalidadeEditId) == null && $request->input('odt'.$request->modalidadeEditId) == null && $request->input('svg'.$request->modalidadeEditId) == null && $request->input('mp4'.$request->modalidadeEditId) == null && $request->input('mp3'.$request->modalidadeEditId) == null) {
+        if ($request->input('arquivoEdit' . $request->modalidadeEditId) == true) {
+            if ($request->input('pdf' . $request->modalidadeEditId) == null && $request->input('jpg' . $request->modalidadeEditId) == null && $request->input('jpeg' . $request->modalidadeEditId) == null && $request->input('png' . $request->modalidadeEditId) == null && $request->input('docx' . $request->modalidadeEditId) == null && $request->input('odt' . $request->modalidadeEditId) == null && $request->input('odt' . $request->modalidadeEditId) == null && $request->input('svg' . $request->modalidadeEditId) == null && $request->input('mp4' . $request->modalidadeEditId) == null && $request->input('mp3' . $request->modalidadeEditId) == null) {
                 return redirect()->back()->withErrors(['marcarextensao' => 'O campo arquivo foi selecionado, mas nenhuma extensão foi selecionada.'])->withInput($request->all());
             }
-            $modalidadeEdit->pdf = $request->input('pdf'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->docx = $request->input('docx'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->odt = $request->input('odt'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->odp = $request->input('odp'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->pptx = $request->input('pptx'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->ods = $request->input('ods'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->xlsx = $request->input('xlsx'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->csv = $request->input('csv'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->zip = $request->input('zip'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->mp3 = $request->input('mp3'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->ogg = $request->input('ogg'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->wav = $request->input('wav'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->mp4 = $request->input('mp4'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->ogv = $request->input('ogv'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->mpg = $request->input('mpg'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->mpeg = $request->input('mpeg'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->mkv = $request->input('mkv'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->avi = $request->input('avi'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->jpg = $request->input('jpg'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->jpeg = $request->input('jpeg'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->png = $request->input('png'.$request->modalidadeEditId) ? true : false;
-            $modalidadeEdit->svg = $request->input('svg'.$request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->pdf = $request->input('pdf' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->docx = $request->input('docx' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->odt = $request->input('odt' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->odp = $request->input('odp' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->pptx = $request->input('pptx' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->ods = $request->input('ods' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->xlsx = $request->input('xlsx' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->csv = $request->input('csv' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->zip = $request->input('zip' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->mp3 = $request->input('mp3' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->ogg = $request->input('ogg' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->wav = $request->input('wav' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->mp4 = $request->input('mp4' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->ogv = $request->input('ogv' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->mpg = $request->input('mpg' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->mpeg = $request->input('mpeg' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->mkv = $request->input('mkv' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->avi = $request->input('avi' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->jpg = $request->input('jpg' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->jpeg = $request->input('jpeg' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->png = $request->input('png' . $request->modalidadeEditId) ? true : false;
+            $modalidadeEdit->svg = $request->input('svg' . $request->modalidadeEditId) ? true : false;
         } else {
             $modalidadeEdit->pdf = false;
             $modalidadeEdit->docx = false;
@@ -335,42 +356,42 @@ class ModalidadeController extends Controller
         }
 
         if ($request->apresentacao) {
-            if (! $request->presencial && ! $request->remoto && ! $request->a_distancia && ! $request->semipresencial) {
+            if (!$request->presencial && !$request->remoto && !$request->a_distancia && !$request->semipresencial) {
                 return redirect()->back()->withErrors(['apresentacao' => 'Selecione pelos menos um tipo de apresentação.'])->withInput($request->all());
             }
         }
 
-        $modalidadeEdit->nome = $request->input('nome'.$request->modalidadeEditId);
-        $modalidadeEdit->inicioSubmissao = $request->input('inícioSubmissão'.$request->modalidadeEditId);
-        $modalidadeEdit->fimSubmissao = $request->input('fimSubmissão'.$request->modalidadeEditId);
-        $modalidadeEdit->inicioRevisao = $request->input('inícioRevisão'.$request->modalidadeEditId);
-        $modalidadeEdit->fimRevisao = $request->input('fimRevisão'.$request->modalidadeEditId);
-        $modalidadeEdit->inicioCorrecao = $request->input('inícioCorreção'.$request->modalidadeEditId);
-        $modalidadeEdit->fimCorrecao = $request->input('fimCorreção'.$request->modalidadeEditId);
-        $modalidadeEdit->inicioValidacao = $request->input('inícioValidação'.$request->modalidadeEditId);
-        $modalidadeEdit->fimValidacao = $request->input('fimValidação'.$request->modalidadeEditId);
-        $modalidadeEdit->inicioResultado = $request->input('resultado'.$request->modalidadeEditId);
-        $modalidadeEdit->texto = $request->input('texto'.$request->modalidadeEditId);
-        $modalidadeEdit->arquivo = $request->input('arquivoEdit'.$request->modalidadeEditId);
+        $modalidadeEdit->nome = $request->input('nome' . $request->modalidadeEditId);
+        $modalidadeEdit->inicioSubmissao = $request->input('inícioSubmissão' . $request->modalidadeEditId);
+        $modalidadeEdit->fimSubmissao = $request->input('fimSubmissão' . $request->modalidadeEditId);
+        $modalidadeEdit->inicioRevisao = $request->input('inícioRevisão' . $request->modalidadeEditId);
+        $modalidadeEdit->fimRevisao = $request->input('fimRevisão' . $request->modalidadeEditId);
+        $modalidadeEdit->inicioCorrecao = $request->input('inícioCorreção' . $request->modalidadeEditId);
+        $modalidadeEdit->fimCorrecao = $request->input('fimCorreção' . $request->modalidadeEditId);
+        $modalidadeEdit->inicioValidacao = $request->input('inícioValidação' . $request->modalidadeEditId);
+        $modalidadeEdit->fimValidacao = $request->input('fimValidação' . $request->modalidadeEditId);
+        $modalidadeEdit->inicioResultado = $request->input('resultado' . $request->modalidadeEditId);
+        $modalidadeEdit->texto = $request->input('texto' . $request->modalidadeEditId);
+        $modalidadeEdit->arquivo = $request->input('arquivoEdit' . $request->modalidadeEditId);
         $modalidadeEdit->caracteres = $caracteres;
         $modalidadeEdit->palavras = $palavras;
         $modalidadeEdit->apresentacao = $request->apresentacao ? true : false;
 
         // dd($request->file('arquivoRegras'.$request->modalidadeEditId));
-        if ($request->file('arquivoRegras'.$request->modalidadeEditId) != null) {
+        if ($request->file('arquivoRegras' . $request->modalidadeEditId) != null) {
             $path = $modalidadeEdit->regra;
             if ($path  && Storage::exists($path)) {
                 Storage::delete($path);
             }
 
-            $fileRegras = $request->file('arquivoRegras'.$request->modalidadeEditId);
+            $fileRegras = $request->file('arquivoRegras' . $request->modalidadeEditId);
 
-            $pathRegras = 'regras/'.$modalidadeEdit->nome.'/';
-            $nomeRegras = $request->file('arquivoRegras'.$request->modalidadeEditId)->getClientOriginalName();
+            $pathRegras = 'regras/' . $modalidadeEdit->nome . '/';
+            $nomeRegras = $request->file('arquivoRegras' . $request->modalidadeEditId)->getClientOriginalName();
 
             Storage::putFileAs($pathRegras, $fileRegras, $nomeRegras);
 
-            $modalidadeEdit->regra = $pathRegras.$nomeRegras;
+            $modalidadeEdit->regra = $pathRegras . $nomeRegras;
 
             $modalidadeEdit->save();
         }
@@ -383,13 +404,13 @@ class ModalidadeController extends Controller
             $modalidadeEdit->regra = null;
         }
 
-        if ($request->file('arquivoInstrucoes'.$request->modalidadeEditId) != null) {
+        if ($request->file('arquivoInstrucoes' . $request->modalidadeEditId) != null) {
             $path = $modalidadeEdit->instrucoes;
             if ($path  && Storage::exists($path)) {
                 Storage::delete($path);
             }
 
-            $modalidadeEdit->instrucoes = $request->file('arquivoInstrucoes'.$request->modalidadeEditId)->store('instrucoes/'.$modalidadeEdit->nome);
+            $modalidadeEdit->instrucoes = $request->file('arquivoInstrucoes' . $request->modalidadeEditId)->store('instrucoes/' . $modalidadeEdit->nome);
             $modalidadeEdit->save();
         }
 
@@ -402,19 +423,19 @@ class ModalidadeController extends Controller
             $modalidadeEdit->save();
         }
 
-        if ($request->file('arquivoTemplates'.$request->modalidadeEditId)) {
+        if ($request->file('arquivoTemplates' . $request->modalidadeEditId)) {
             $path = $modalidadeEdit->template;
             if ($path  && Storage::exists($path)) {
                 Storage::delete($path);
             }
 
-            $fileTemplates = $request->file('arquivoTemplates'.$request->modalidadeEditId);
-            $pathTemplates = 'templates/'.$modalidadeEdit->nome.'/';
-            $nomeTemplates = $request->file('arquivoTemplates'.$request->modalidadeEditId)->getClientOriginalName();
+            $fileTemplates = $request->file('arquivoTemplates' . $request->modalidadeEditId);
+            $pathTemplates = 'templates/' . $modalidadeEdit->nome . '/';
+            $nomeTemplates = $request->file('arquivoTemplates' . $request->modalidadeEditId)->getClientOriginalName();
 
             Storage::putFileAs($pathTemplates, $fileTemplates, $nomeTemplates);
 
-            $modalidadeEdit->template = $pathTemplates.$nomeTemplates;
+            $modalidadeEdit->template = $pathTemplates . $nomeTemplates;
 
             $modalidadeEdit->save();
         }
@@ -427,19 +448,19 @@ class ModalidadeController extends Controller
             $modalidadeEdit->template = null;
         }
 
-        if ($request->file('arquivoModelos'.$request->modalidadeEditId)) {
+        if ($request->file('arquivoModelos' . $request->modalidadeEditId)) {
             $path = $modalidadeEdit->modelo_apresentacao;
             if ($path  && Storage::exists($path)) {
                 Storage::delete($path);
             }
 
-            $fileModelos = $request->file('arquivoModelos'.$request->modalidadeEditId);
-            $pathModelos = 'modelos/'.$modalidadeEdit->nome.'/';
-            $nomeModelos = $request->file('arquivoModelos'.$request->modalidadeEditId)->getClientOriginalName();
+            $fileModelos = $request->file('arquivoModelos' . $request->modalidadeEditId);
+            $pathModelos = 'modelos/' . $modalidadeEdit->nome . '/';
+            $nomeModelos = $request->file('arquivoModelos' . $request->modalidadeEditId)->getClientOriginalName();
 
             Storage::putFileAs($pathModelos, $fileModelos, $nomeModelos);
 
-            $modalidadeEdit->modelo_apresentacao = $pathModelos.$nomeModelos;
+            $modalidadeEdit->modelo_apresentacao = $pathModelos . $nomeModelos;
 
             $modalidadeEdit->save();
         }
@@ -463,7 +484,7 @@ class ModalidadeController extends Controller
                 $tipo->tipo = 'Presencial';
                 $tipo->modalidade_id = $modalidadeEdit->id;
                 $tipo->save();
-            } elseif (! $request->presencial && ! is_null($presencial)) {
+            } elseif (!$request->presencial && !is_null($presencial)) {
                 $presencial->delete();
             }
 
@@ -472,7 +493,7 @@ class ModalidadeController extends Controller
                 $tipo->tipo = 'Remoto';
                 $tipo->modalidade_id = $modalidadeEdit->id;
                 $tipo->save();
-            } elseif (! $request->remoto && ! is_null($remoto)) {
+            } elseif (!$request->remoto && !is_null($remoto)) {
                 $remoto->delete();
             }
 
@@ -481,7 +502,7 @@ class ModalidadeController extends Controller
                 $tipo->tipo = 'À distância';
                 $tipo->modalidade_id = $modalidadeEdit->id;
                 $tipo->save();
-            } elseif (! $request->a_distancia && ! is_null($a_distancia)) {
+            } elseif (!$request->a_distancia && !is_null($a_distancia)) {
                 $a_distancia->delete();
             }
 
@@ -490,7 +511,7 @@ class ModalidadeController extends Controller
                 $tipo->tipo = 'Semipresencial';
                 $tipo->modalidade_id = $modalidadeEdit->id;
                 $tipo->save();
-            } elseif (! $request->semipresencial && ! is_null($semipresencial)) {
+            } elseif (!$request->semipresencial && !is_null($semipresencial)) {
                 $semipresencial->delete();
             }
         }
@@ -528,7 +549,17 @@ class ModalidadeController extends Controller
             $modalidadeEdit->datasExtras()->delete();
         }
 
+        if ($request->submissaoUnica == 'on') {
+            $modalidadeEdit->submissaoUnica = true;
+            $modalidadeEdit->save();
+        }
+
         return redirect()->back()->with(['mensagem' => 'Modalidade salva com sucesso!']);
+    }
+
+    private function submissaoUnica(Modalidade $modalidade)
+    {
+        $modalidade->submissaoUnica = true;
     }
 
     private function editMidiaExtras(Request $request, Modalidade $modalidade)
@@ -543,7 +574,7 @@ class ModalidadeController extends Controller
         $docsExcluidos = $modalidade->midiasExtra->diff($docsEditados);
         if ($request->documentosExtra != null) {
             if (count($request->documentosExtra) - $docsEditados->count() != 0) {
-                $docsNovos = array_slice($request->documentosExtra, -(count($request->documentosExtra) - $docsEditados->count()));
+                $docsNovos = array_slice($request->documentosExtra, - (count($request->documentosExtra) - $docsEditados->count()));
             } else {
                 $docsNovos = collect();
             }
@@ -558,7 +589,7 @@ class ModalidadeController extends Controller
             $documento = new MidiaExtra();
             $documento->modalidade_id = $modalidade->id;
             if (count($doc) <= 1) {
-                return redirect()->back()->withErrors(['documentosExtra'.$indice => 'Selecione pelos menos um tipo de extensão.'])->withInput($request->all());
+                return redirect()->back()->withErrors(['documentosExtra' . $indice => 'Selecione pelos menos um tipo de extensão.'])->withInput($request->all());
             }
             foreach ($doc as $indice => $parametro) {
                 if ($indice != 0) {
@@ -583,7 +614,7 @@ class ModalidadeController extends Controller
                 $doc = MidiaExtra::find($id);
                 if ($doc) {
                     if (count($request->documentosExtra[$i]) <= 1) {
-                        return redirect()->back()->withErrors(['documentosExtra'.$i => 'Selecione pelos menos um tipo de extensão.'])->withInput($request->all());
+                        return redirect()->back()->withErrors(['documentosExtra' . $i => 'Selecione pelos menos um tipo de extensão.'])->withInput($request->all());
                     }
                     foreach ($request->documentosExtra[$i] as $indice => $parametro) {
                         if ($indice != 0) {
@@ -594,7 +625,6 @@ class ModalidadeController extends Controller
                     }
                     $doc->update();
                 }
-
             }
         }
     }
@@ -619,6 +649,14 @@ class ModalidadeController extends Controller
             return redirect()->back()->withErrors(['excluirModalidade' => 'Não é possível excluir, existem trabalhos submetidos ligados a essa modalidade.']);
         }
 
+        $tipoApresentacao = TipoApresentacao::where('modalidade_id', $modalidade->id)->get();
+        if ($tipoApresentacao != NULL) {
+            for ($i = 0; $i < count($tipoApresentacao); $i++) {
+                $tipoApagar = TipoApresentacao::where('id', $tipoApresentacao[$i]->id)->first();
+                $tipoApagar->delete();
+            }
+        }
+
         $modalidade->delete();
 
         return redirect()->back()->with(['mensagem' => 'Modalidade excluida com sucesso!']);
@@ -634,7 +672,7 @@ class ModalidadeController extends Controller
 
             $response = Response::make($file, 200, [
                 'Content-Type' => $tipo,
-                'Content-Disposition' => 'inline; filename='.$modalidade->nome.' regras.pdf',
+                'Content-Disposition' => 'inline; filename=' . $modalidade->nome . ' regras.pdf',
             ]);
 
             return $response;
@@ -657,7 +695,7 @@ class ModalidadeController extends Controller
         $modalidade = Modalidade::find($id);
 
         if (Storage::disk()->exists($modalidade->modelo_apresentacao)) {
-            return Storage::download($modalidade->modelo_apresentacao, 'Modelos.'.explode('.', $modalidade->modelo_apresentacao)[1]);
+            return Storage::download($modalidade->modelo_apresentacao, 'Modelos.' . explode('.', $modalidade->modelo_apresentacao)[1]);
         }
 
         return abort(404);
@@ -668,7 +706,7 @@ class ModalidadeController extends Controller
         $modalidade = Modalidade::find($id);
 
         if (Storage::disk()->exists($modalidade->template)) {
-            return Storage::download($modalidade->template, 'Template.'.explode('.', $modalidade->template)[1]);
+            return Storage::download($modalidade->template, 'Template.' . explode('.', $modalidade->template)[1]);
         }
 
         return abort(404);

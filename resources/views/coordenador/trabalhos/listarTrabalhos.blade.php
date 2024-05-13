@@ -1,4 +1,4 @@
-@extends('coordenador.detalhesEvento')
+ @extends('coordenador.detalhesEvento')
 
 @section('menu')
     <!-- Trabalhos -->
@@ -45,10 +45,10 @@
                 Arquivados
             </a>
             <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'no_revisor'])}}">
-                Sem revisor
+                Sem avaliador
             </a>
             <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'with_revisor'])}}">
-                Com revisor
+                Com avaliador
             </a>
             <a class="dropdown-item disabled" href="#" >
                 Submetidos
@@ -148,7 +148,7 @@
                                                 @if ($trabalhos->first() && $trabalhos->first()->modalidade->apresentacao)
                                                 <th scope="col">Apresentação</th>
                                                 @endif
-                                                <th scope="col">Revisores</th>
+                                                <th scope="col">Avaliadores</th>
                                                 <th scope="col">Avaliações</th>
                                                 <th scope="col">
                                                     Data
@@ -291,7 +291,7 @@
           </div>
           <div class="row">
               <div class="col-sm-12">
-                  <label for="numeroDeRevisoresPorTrabalho" class="col-form-label">{{ __('Número de revisores por trabalho') }}</label>
+                  <label for="numeroDeRevisoresPorTrabalho" class="col-form-label">{{ __('Número de avaliadores por trabalho') }}</label>
               </div>
           </div>
           <div class="row justify-content-center">
@@ -390,7 +390,7 @@
             @if (count($trabalho->atribuicoes) > 0)
                 <div class="row justify-content-center">
                 <div class="col-sm-12">
-                    <h5>Revisores atribuidos ao trabalho</h5>
+                    <h5>Avaliadores atribuidos ao trabalho</h5>
                 </div>
             @else
                 <div class="row justify-content-center">
@@ -411,7 +411,7 @@
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
                         <input type="hidden" name="trabalhoId" value="{{$trabalho->id}}">
                         <button type="submit" class="btn btn-primary button-prevent-multiple-submits" id="removerRevisorTrabalho">
-                            Remover Revisor
+                            Remover Avaliador
                         </button>
                         </form>
                     </div>
@@ -422,7 +422,7 @@
             <br>
             <div class="row">
                 <div class="col-sm-12">
-                <h5>Adicionar Revisor</h5>
+                <h5>Adicionar Avaliador</h5>
                 </div>
             </div>
             <form action="{{ route('distribuicaoManual') }}" method="post">
@@ -433,7 +433,7 @@
                 <div class="col-sm-9">
                     <div class="form-group">
                     <select name="revisorId" class="form-control" id="selectRevisorTrabalho">
-                        <option value="" disabled selected>-- E-mail do revisor --</option>
+                        <option value="" disabled selected>-- E-mail do avaliador --</option>
                         @foreach ($evento->revisors()->where([['modalidadeId', $trabalho->modalidade->id], ['areaId', $trabalho->area->id]])->get() as $revisor)
                         @if (!$trabalho->atribuicoes->contains($revisor) && is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first()) && $trabalho->autorId != $revisor->user_id)
                             <option value="{{$revisor->id}}">{{$revisor->user->name}} ({{$revisor->user->email}}) ({{trans_choice('messages.qtd_revisores', $revisor->user->revisor()->where('evento_id', $evento->id)->withCount('trabalhosAtribuidosPendentes')->get()->sum('trabalhos_atribuidos_pendentes_count'), ['value' => $revisor->user->revisor()->where('evento_id', $evento->id)->withCount('trabalhosAtribuidosPendentes')->get()->sum('trabalhos_atribuidos_pendentes_count')])}})</option>
@@ -444,7 +444,7 @@
                 </div>
                 <div class="col-sm-3">
                     <button type="submit" class="btn btn-primary button-prevent-multiple-submits" id="addRevisorTrabalho">
-                        <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i>Adicionar Revisor
+                        <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i>Adicionar Avaliador
                     </button>
                 </div>
             </form>

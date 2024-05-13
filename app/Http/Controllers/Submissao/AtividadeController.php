@@ -618,24 +618,27 @@ class AtividadeController extends Controller
         if ($atividade->users()->where('user_id', $user->id)->exists()) {
             return redirect()->back()->with(['error' => 'Usuário já inscrito na atividade '.$atividade->titulo]);
         }
-        if ($atividade->vagas > 0) {
-            $atividade->vagas -= 1;
-            $atividade->users()->attach($user->id);
-            $atividade->update();
-
-            $user->notify(new InscricaoAtividade($atividade));
-
-            return redirect()->back()->with(['message' => 'Inscrito em '.$atividade->titulo.' com sucesso!']);
+        if ($atividade->vagas != null && $atividade->vagas <= 0) {
+            return redirect()->back()->with(['error' => ''.$atividade->titulo.' não possui mais vagas!']);
         }
+        if ($atividade->vagas != null && $atividade->vagas > 0) {
+            $atividade->vagas -= 1;
+        }
+        $atividade->users()->attach($user->id);
+        $atividade->update();
 
-        return redirect()->back()->with(['error' => ''.$atividade->titulo.' não possui mais vagas!']);
+        $user->notify(new InscricaoAtividade($atividade));
+
+        return redirect()->back()->with(['message' => 'Inscrito em '.$atividade->titulo.' com sucesso!']);
     }
 
     public function cancelarInscricao($id, $user)
     {
         $atividade = Atividade::find($id);
         $user = User::find($user);
-        $atividade->vagas += 1;
+        if ($atividade->vagas != null) {
+            $atividade->vagas += 1;
+        }
         $atividade->users()->detach($user->id);
         $atividade->update();
 
@@ -645,7 +648,9 @@ class AtividadeController extends Controller
     public function cancelarUmaInscricao($id, $user)
     {
         $atividade = Atividade::find($id);
-        $atividade->vagas += 1;
+        if ($atividade->vagas != null) {
+            $atividade->vagas += 1;
+        }
         DB::table('atividades_user')->where('user_id', $user)->where('atividade_id', $id)->limit(1)->delete();
         $atividade->update();
 

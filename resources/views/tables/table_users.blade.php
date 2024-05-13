@@ -3,8 +3,8 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Nome</th>
-        <th scope="col">Email</th>
         <th scope="col">Função</th>
+        <th scope="col">Email</th>
         <th scope="col">Opções</th>
 
       </tr>
@@ -26,7 +26,7 @@
                             <option value="">{{ "Cood. Comissão Organizadora" }}</option>
                         @endif
                         @if($user->revisor)
-                            <option value="">{{ "Revisor" }}</option>
+                            <option value="">{{ "Avaliador" }}</option>
                         @endif
                         @if($user->coautor)
                             <option value="">{{ "Coutor" }}</option>

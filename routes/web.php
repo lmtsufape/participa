@@ -45,18 +45,57 @@ use App\Http\Controllers\Users\CoordEventoController;
 use App\Http\Controllers\Users\MembroComissaoController;
 use App\Http\Controllers\Users\RevisorController;
 use App\Http\Controllers\Users\UserController;
+use App\Http\Middleware\SetLocale;
 use App\Models\Submissao\Evento;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
+
+
+
+
+Route::middleware(Setlocale::class)->group(function () {
+    Route::get('/idioma/{lang}/{url?}', function (string $lang, $url = null) {
+        if (! in_array($lang, ['en', 'pt-BR'])) {
+            abort(400);
+        }
+        App::setLocale($lang);
+        Session::put("locale",$lang);
+        Session::put("idiomaAtual",$lang);
+
+        return $url ? redirect($url) : redirect()->back();
+    })->name('alterar-idioma');
+
+    Route::get('/', function () {
+        if (Auth::check()) {
+            return redirect()->route('index');
+        }
+
+        $eventos = Evento::all();
+
+        return redirect()->route('index');
+    })->name('cancelarCadastro');
+
 
 Route::get('/index', [HomeController::class, 'index'])->name('index');
 Route::get('/eventospassados',[EventoController::class, 'eventosPassados'])->name('eventos.passados');
+Route::get('/eventosproximos',[EventoController::class, 'eventosProximos'])->name('eventos.proximos');
 
 Route::view('/termos-de-uso', 'termosdeuso')->name('termos.de.uso');
 Route::get('/evento/busca', [EventoController::class, 'buscaLivre'])->name('busca.eventos');
 Route::get('/evento/buscar-livre', [EventoController::class, 'buscaLivreAjax'])->name('busca.livre.ajax');
 
 Auth::routes(['verify' => true, 'register' => false]);
+
+
+
+        // Route::get('/register/{pais?}', function ($locale, $pais = null) {
+        //     return view('auth.register', compact('pais'));
+        // });
+        // Route::post('/register', [RegisterController::class, 'register'])->name('register');
+        // Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
+
 
 Route::group(['prefix' => '{locale}', 'middleware' => 'setLocale'], function () {
     Route::get('/register/{pais?}', function ($locale, $pais = null) {
@@ -424,11 +463,15 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
     Route::post('inscricoes/criar-categoria-participante', [CategoriaController::class, 'store'])->name('categoria.participante.store');
     Route::delete('{id}/inscricoes/excluir-categoria', [CategoriaController::class, 'destroy'])->name('categoria.participante.destroy');
+    Route::delete('{id}/inscricoes/excluir-link-pagamento', [CategoriaController::class, 'destroyLink'])->name('link.pagamento.destroy');
     Route::put('{id}/inscricoes/atualizar-categoria', [CategoriaController::class, 'update'])->name('categoria.participante.update');
     Route::get('valor/categoria', [CategoriaController::class, 'valorAjax'])->name('ajax.valor.categoria');
     Route::get('confirmar-inscricao', [InscricaoController::class, 'store'])->name('inscricao.confirmar');
 
 });
+
+//Localization Route
+
 
 // Auth::routes();
 
@@ -443,5 +486,7 @@ Route::namespace('Submissao')->group(function () {
     Route::get('{modalidade}/instrucoes', [ModalidadeController::class, 'downloadInstrucoes'])->name('modalidade.instrucoes.download');
     Route::get('{id}/modalidade-arquivo-modelos', [ModalidadeController::class, 'downloadModelos'])->name('modalidade.modelos.download');
     Route::get('{id}/modalidade-template', [ModalidadeController::class, 'downloadTemplate'])->name('modalidade.template.download');
+
+});
 
 });

@@ -8,9 +8,11 @@
     <section class="home-section d-flex align-items-center justify-content-start flex-column">
 
         <div class="container-fluid">
-
+            @if (count($proximosEventos) > 0)
             <h1 class="text-white mt-5 mb text-center">
-                Próximos Eventos
+                <a href="{{ Route('eventos.proximos') }}">
+                    Próximos Eventos
+                </a>
             </h1>
             <h2 class="text-white mb-4 text-center">
                 Clique na imagem ou no nome do colóquio para visualizar
@@ -22,7 +24,7 @@
                 data-ride="carousel">
 
                 <div class="carousel-inner carrousel-container-cards d-flex align-items-center justify-content-start">
-
+                @endif
 
                     @if (count($proximosEventos) > 0)
                         @forelse ($proximosEventos as $i => $ProximoEvento)
@@ -52,7 +54,11 @@
                                         class="titulo-evento carrousel-item-box-titulo d-flex align-items-center justify-content-center">
 
                                         <a href="{{ route('evento.visualizar', ['id' => $ProximoEvento->id]) }}">
-                                            {{ $ProximoEvento->nome }}
+                                            @if($ProximoEvento->is_multilingual && Session::get('locale') === 'en')
+                                            {{ $ProximoEvento->nome_en }}
+                                            @else
+                                                {{ $ProximoEvento->nome }}
+                                                @endif
                                         </a>
                                     </div>
 
@@ -60,7 +66,12 @@
                                         <div class="box-descricao">
                                             @if (strlen($ProximoEvento->descricao) > 621)
                                                 <div class="text-limit">
-                                                    {!! $ProximoEvento->descricao !!}
+                                                    @if($ProximoEvento->is_multilingual && Session::get('locale') === 'en')
+                                                        {!! $ProximoEvento->descricao_en !!}
+                                                    @else
+                                                        {!! $ProximoEvento->descricao !!}
+                                                    @endif
+
                                                 </div>
 
                                                 <br>
@@ -70,7 +81,11 @@
                                                     Saiba mais
                                                 </a>
                                             @else
-                                                {!! $ProximoEvento->descricao !!}
+                                                @if($ProximoEvento->is_multilingual && Session::get('locale') === 'en')
+                                                    {!! $ProximoEvento->descricao_en !!}
+                                                @else
+                                                    {!! $ProximoEvento->descricao !!}
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
@@ -105,11 +120,11 @@
 
 
             <!--carrousel eventos passados -->
-            <a href="{{ Route('eventos.passados') }}">
-                <h1 class="text-white mt-5 mb-5 text-center">
-                    Últimos eventos realizados
-                </h1>
-            </a>
+            <h1 class="text-white mt-5 mb-5 text-center">
+                <a href="{{ Route('eventos.passados') }}">
+                    {{__('Últimos eventos realizados')}}
+                </a>
+            </h1>
 
             <br><br><br>
 
@@ -130,7 +145,13 @@
                         @foreach ($eventosPassados as $eventoPassado)
                             <div class="card-slide shadow-lg">
                                 <div class="icone-box">
-                                    @if ($eventoPassado->icone != null)
+                                    @if ($eventoPassado->is_multilingual && Session::get('locale') === 'en' && $eventoPassado->icone_en != null)
+                                        <img src="{{ asset('storage/' . $eventoPassado->icone_en) }}" alt="imagem evento"
+                                             width="100%" height="100%">
+                                    @elseif($eventoPassado->is_multilingual && Session::get('locale') === 'en' && $eventoPassado->fotoEvento_en != null)
+                                        <img src="{{ asset('storage/' . $eventoPassado->fotoEvento_en) }}" alt="imagem evento"
+                                             width="100%" height="100%">
+                                    @elseif ($eventoPassado->icone != null)
                                         <img src="{{ asset('storage/' . $eventoPassado->icone) }}" alt="imagem evento"
                                             width="100%" height="100%">
                                     @elseif($eventoPassado->fotoEvento != null)
@@ -145,12 +166,12 @@
                                 <div class="card-content">
                                     <div class="tittle-card titulo-evento d-flex align-items-center justify-content-center">
                                         <a href="{{ route('evento.visualizar', ['id' => $eventoPassado->id]) }}">
-                                            {{ $eventoPassado->nome }}
+                                            {{$eventoPassado->is_multilingual && Session::get('locale') === 'en'?$eventoPassado->nome_en : $eventoPassado->nome }}
                                         </a>
                                     </div>
                                     <div class="card-content-desc">
                                         <div class="text-limit-card-slide">
-                                            {!! $eventoPassado->descricao !!}
+                                            {!! $eventoPassado->is_multilingual && Session::get('locale') === 'en'? $eventoPassado->descricao_en : $eventoPassado->descricao !!}
                                         </div>
 
                                         <a class="link-modal" data-toggle="modal"
@@ -170,7 +191,7 @@
                             <div class="content-card-link w-100">
                                 <a href="{{ Route('eventos.passados') }}">
                                     <button class="button-card-link">
-                                        Visualizar eventos passados
+                                        {{__('Visualizar eventos passados')}}
                                     </button>
                                 </a>
                             </div>

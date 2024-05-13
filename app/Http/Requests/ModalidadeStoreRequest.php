@@ -21,6 +21,8 @@ class ModalidadeStoreRequest extends FormRequest
         return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
     }
 
+   
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,11 +30,11 @@ class ModalidadeStoreRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'nome' => ['required', 'string'],
             'inicioSubmissao' => ['required', 'date'],
             'fimSubmissao' => ['required', 'date', 'after:inicioSubmissao'],
-            'inicioRevisao' => ['nullable', 'date', 'after:inicioSubmissao'],
+            'inicioRevisao' => ['nullable'],
             'fimRevisao' => ['nullable', 'date', 'after:inicioRevisao'],
             'inicioCorrecao' => ['nullable', 'date', 'after:fimRevisao', 'required_with:fimCorrecao'],
             'fimCorrecao' => ['nullable', 'date', 'after:inicioCorrecao', 'required_with:inicioCorrecao'],
@@ -42,6 +44,7 @@ class ModalidadeStoreRequest extends FormRequest
             'texto' => ['nullable'],
             'limit' => ['required_with:texto', 'nullable'],
             'arquivo' => ['nullable'],
+            'submissaoUnica' => ['nullable'],
             'apresentacao' => ['nullable'],
             'presencial' => ['exclude_unless:apresentacao,on', 'required_without_all:remoto,a_distancia,semipresencial'],
             'remoto' => ['exclude_unless:apresentacao,on', 'required_without_all:presencial,a_distancia,semipresencial'],
@@ -79,6 +82,14 @@ class ModalidadeStoreRequest extends FormRequest
             'arquivosTemplates' => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2048'],
             'documentosExtra.*' => ['nullable', 'array', 'min:2'],
         ];
+
+        if(request()->avaliacaoDuranteSubmissao == 'on'){
+            $rules['inicioRevisao'] = ['required', 'date', 'after:inicioSubmissao'];
+        }else{
+            $rules['inicioRevisao'] = ['required', 'date', 'after:fimSubmissao'];
+        }
+
+        return $rules;
     }
 
     /**
@@ -140,6 +151,7 @@ class ModalidadeStoreRequest extends FormRequest
             'csv' => $this->boolean('csv'),
             'ods' => $this->boolean('ods'),
             'xlsx' => $this->boolean('xlsx'),
+            'avaliacaoDuranteSubmissao' => $this->boolean('avaliacaoDuranteSubmissao'),
         ]);
 
         return $validated;

@@ -29,10 +29,19 @@
                                             <div class="col-sm-auto">
                                                 <label for="nomeTrabalho" class="col-form-label" id="classeh15">{{$etiquetasSubTrab->etiquetatitulotrabalho}}:</label>
                                             </div>
+                                            @if($evento->is_multilingual)
+                                            <div class="col-sm-auto">
+                                                <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">
+                                                <label for="nomeTrabalho" class="col-form-label" id="classeh15">{{$etiquetasSubTrab->etiquetatitulotrabalho_en}}:</label>
+                                            </div>
+                                            @endif
                                             <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-titulo" style="width:20px"></a>
                                             {{-- <button type="button" id="botao-editar-titulo" class="btn btn-outline-dark">Editar</button> --}}
                                             <div class="col-sm-3" id="etiqueta-titulo-trabalho" style="display: none">
                                                 <input type="text" class="form-control" id="etiquetatitulotrabalho" name="etiquetatitulotrabalho" placeholder="Editar Etiqueta">
+                                                @if($evento->is_multilingual)
+                                                <input type="text" class="form-control" id="etiquetatitulotrabalho_en" name="etiquetatitulotrabalho_en" placeholder="Editar Etiqueta em inglês">
+                                                @endif
                                             </div>
                                             <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesTitulo" style="width:20px; margin-left:10px"></a>
                                             <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisTitulo" style="width:20px"></a>
@@ -85,10 +94,19 @@
                                             <div class="col-sm-auto">
                                                 <label for="resumo" class="col-form-label" id="classeh18">{{$etiquetasSubTrab->etiquetaresumotrabalho}}:</label>
                                             </div>
+                                            @if($evento->is_multilingual)
+                                                <div class="col-sm-auto">
+                                                    <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">
+                                                    <label for="resumo_en" class="col-form-label" id="classeh18">{{$etiquetasSubTrab->etiquetaresumotrabalho_en}}:</label>
+                                                </div>
+                                            @endif
                                             <a><img src="{{asset('img/icons/edit-regular.svg')}}" class="botaoAjax" id="botao-editar-resumo" style="width:20px"></a>
                                             {{-- <button type="button" id="botao-editar-resumo" class="btn btn-outline-dark">Editar</button> --}}
                                             <div class="col-sm-auto" id="etiqueta-resumo-trabalho" style="display: none">
                                                 <input type="text" class="form-control" id="etiquetaresumotrabalho" name="etiquetaresumotrabalho" placeholder="Editar Etiqueta">
+                                                @if($evento->is_multilingual)
+                                                <input type="text" class="form-control" id="etiquetaresumotrabalho_en" name="etiquetaresumotrabalho_en" placeholder="Editar Etiqueta em Inglês">
+                                                @endif
                                             </div>
                                             <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}" id="antesAutor" style="width:20px; margin-left:10px"></a>
                                             <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" id="depoisAutor" style="width:20px"></a>
@@ -147,8 +165,15 @@
                                         <div class="form-group row">
                                             <input type="hidden" name="checkcampoextra1" value="0" id="checkcampoextra1">
                                             <label for="etiquetacampoextra1" class="col-sm-auto col-form-label" id="classeh21">{{$etiquetasSubTrab->etiquetacampoextra1}}:</label>
+                                            @if($evento->is_multilingual)
+                                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">
+                                            <label for="etiquetacampoextra1_en" class="col-form-label" id="classeh21">{{$etiquetasSubTrab->etiquetacampoextra1_en}}:</label>
+                                            @endif
                                             <div class="col-sm-auto">
                                             <input type="text" class="form-control" id="etiquetacampoextra1" name="etiquetacampoextra1" placeholder="Editar Etiqueta">
+                                            @if($evento->is_multilingual)
+                                            <input type="text" class="form-control" id="etiquetacampoextra1_en" name="etiquetacampoextra1_en" placeholder="Editar Etiqueta em Inglês">
+                                            @endif
                                             </div>
                                             <div class="form-group col-sm-3">
                                                 <select class="form-control" id="exampleFormControlSelect1" name="select_campo1">
@@ -191,8 +216,15 @@
                                         <div class="form-group row">
                                             <input type="hidden" name="checkcampoextra2" value="0" id="checkcampoextra2">
                                             <label for="etiquetacampoextra2" class="col-sm-auto col-form-label" id="classeh22">{{$etiquetasSubTrab->etiquetacampoextra2}}:</label>
+                                            @if($evento->is_multilingual)
+                                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">
+                                            <label for="etiquetacampoextra2_en" class="col-form-label" id="classeh22">{{$etiquetasSubTrab->etiquetacampoextra2_en}}:</label>
+                                            @endif
                                             <div class="col-sm-auto">
                                             <input type="text" class="form-control" id="etiquetacampoextra2" name="etiquetacampoextra2" placeholder="Editar Etiqueta">
+                                            @if($evento->is_multilingual)
+                                            <input type="text" class="form-control" id="etiquetacampoextra2_en" name="etiquetacampoextra2_en" placeholder="Editar Etiqueta em Inglês">
+                                            @endif
                                             </div>
                                             <div class="form-group col-sm-3">
                                                 <select class="form-control" id="exampleFormControlSelect1" name="select_campo2">
@@ -235,8 +267,15 @@
                                         <div class="form-group row">
                                             <input type="hidden" name="checkcampoextra3" value="0" id="checkcampoextra3">
                                             <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh23">{{$etiquetasSubTrab->etiquetacampoextra3}}:</label>
+                                            @if($evento->is_multilingual)
+                                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">
+                                            <label for="etiquetacampoextra3_en" class="col-form-label" id="classeh23">{{$etiquetasSubTrab->etiquetacampoextra3_en}}:</label>
+                                            @endif
                                             <div class="col-sm-auto">
                                             <input type="text" class="form-control" id="etiquetacampoextra3" name="etiquetacampoextra3" placeholder="Editar Etiqueta">
+                                            @if($evento->is_multilingual)
+                                            <input type="text" class="form-control" id="etiquetacampoextra3_en" name="etiquetacampoextra3_en" placeholder="Editar Etiqueta em Inglês">
+                                            @endif
                                             </div>
                                             <div class="form-group col-sm-3">
                                                 <select class="form-control" id="exampleFormControlSelect1" name="select_campo3">
@@ -279,8 +318,15 @@
                                         <div class="form-group row">
                                             <input type="hidden" name="checkcampoextra4" value="0" id="checkcampoextra4">
                                             <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh24">{{$etiquetasSubTrab->etiquetacampoextra4}}:</label>
+                                            @if($evento->is_multilingual)
+                                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">
+                                            <label for="etiquetacampoextra4_en" class="col-form-label" id="classeh24">{{$etiquetasSubTrab->etiquetacampoextra4_en}}:</label>
+                                            @endif
                                             <div class="col-sm-auto">
                                             <input type="text" class="form-control" id="etiquetacampoextra4" name="etiquetacampoextra4" placeholder="Editar Etiqueta">
+                                            @if($evento->is_multilingual)
+                                            <input type="text" class="form-control" id="etiquetacampoextra4_en" name="etiquetacampoextra4_en" placeholder="Editar Etiqueta em Inglês">
+                                            @endif
                                             </div>
                                             <div class="form-group col-sm-3">
                                                 <select class="form-control" id="exampleFormControlSelect1" name="select_campo4">
@@ -323,8 +369,15 @@
                                         <div class="form-group row">
                                             <input type="hidden" name="checkcampoextra5" value="0" id="checkcampoextra5">
                                             <label for="inputEmail3" class="col-sm-auto col-form-label" id="classeh25">{{$etiquetasSubTrab->etiquetacampoextra5}}:</label>
+                                            @if($evento->is_multilingual)
+                                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">
+                                            <label for="etiquetacampoextra5_en" class="col-form-label" id="classeh25">{{$etiquetasSubTrab->etiquetacampoextra4_en}}:</label>
+                                            @endif
                                             <div class="col-sm-auto">
                                             <input type="text" class="form-control" id="etiquetacampoextra5" name="etiquetacampoextra5" placeholder="Editar Etiqueta">
+                                            @if($evento->is_multilingual)
+                                            <input type="text" class="form-control" id="etiquetacampoextra5_en" name="etiquetacampoextra5_en" placeholder="Editar Etiqueta em Inglês">
+                                            @endif
                                             </div>
                                             <div class="form-group col-sm-3">
                                                 <select class="form-control" id="exampleFormControlSelect1" name="select_campo5">
@@ -369,9 +422,11 @@
                                 <form id="formSubmTrabaEtiquetasPadrao" method="POST" action="{{route('etiquetas_sub_trabalho.update', $evento->id)}}">
                                     @csrf
                                     <input type="hidden" name="etiquetatitulotrabalho"  value="Título">
+                                    <input type="hidden" name="etiquetatitulotrabalho_en"  value="Title">
                                     <input type="hidden" name="etiquetaautortrabalho"   value="Autor(a)">
                                     <input type="hidden" name="etiquetacoautortrabalho" value="Coautor(es)">
                                     <input type="hidden" name="etiquetaresumotrabalho"  value="Resumo">
+                                    <input type="hidden" name="etiquetaresumotrabalho_en"  value="Summary">
                                     <input type="hidden" name="etiquetaareatrabalho"    value="Área">
                                     <input type="hidden" name="etiquetauploadtrabalho"  value="Upload de Trabalho">
                                     <input type="hidden" name="etiquetacampoextra1"     value="Campo Extra">
@@ -379,6 +434,11 @@
                                     <input type="hidden" name="etiquetacampoextra3"     value="Campo Extra">
                                     <input type="hidden" name="etiquetacampoextra4"     value="Campo Extra">
                                     <input type="hidden" name="etiquetacampoextra5"     value="Campo Extra">
+                                    <input type="hidden" name="etiquetacampoextra1_en"     value="Extra Field">
+                                    <input type="hidden" name="etiquetacampoextra2_en"     value="Extra Field">
+                                    <input type="hidden" name="etiquetacampoextra3_en"     value="Extra Field">
+                                    <input type="hidden" name="etiquetacampoextra4_en"     value="Extra Field">
+                                    <input type="hidden" name="etiquetacampoextra5_en"     value="Extra Field">
                                     <input type="hidden" name="select_campo1"           value="textosimples">
                                     <input type="hidden" name="select_campo2"           value="textosimples">
                                     <input type="hidden" name="select_campo3"           value="textosimples">

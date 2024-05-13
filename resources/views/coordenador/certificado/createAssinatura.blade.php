@@ -2,7 +2,7 @@
 
 @section('menu')
 
-//dd();
+<!-- //dd(); -->
 
     <div id="divCadastrarAssinatura" class="comissao">
         <div class="row">
@@ -49,7 +49,7 @@
                             <div style="display: none;">
                                 <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoAssinatura') is-invalid @enderror" name="fotoAssinatura" value="{{ old('fotoAssinatura') }}">
                             </div>
-                            <small style="position: relative; top: 5px;">Tamanho minimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
+                            <small style="position: relative; top: 5px;">Tamanho mínimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
 
                             @error('fotoAssinatura')
                                 <span class="invalid-feedback" role="alert">

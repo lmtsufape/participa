@@ -8,6 +8,8 @@ use App\Models\Inscricao\CampoFormulario;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\CupomDeDesconto;
 use App\Models\Inscricao\Inscricao;
+use Illuminate\Support\Facades\DB;
+use App\Models\Inscricao\LinksPagamento;
 use App\Models\Inscricao\Promocao;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Endereco;
@@ -66,10 +68,24 @@ class InscricaoController extends Controller
 
     public function categorias(Evento $evento)
     {
+        $date = date('Y-m-d');
+       
+       
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $categorias = $evento->categoriasParticipantes;
+        
+        $links = DB::table('links_pagamentos')
+        ->join('categoria_participantes', 'links_pagamentos.categoria_id', '=', 'categoria_participantes.id')
+        ->select('categoria_participantes.nome', 'links_pagamentos.*')
+        ->get();
+  
 
-        return view('coordenador.inscricoes.categorias', compact('evento', 'categorias'));
+        $linksAtuais = $links->where('dataInicio','<=', $date)
+        ->where('dataFim','>', $date);
+        
+       
+        
+        return view('coordenador.inscricoes.categorias', compact('evento', 'categorias', 'links','linksAtuais'));
     }
 
     /**
@@ -485,13 +501,14 @@ class InscricaoController extends Controller
                 }
             }
         } else {
-            foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo) {
+            foreach ($categoria->camposNecessarios()->distinct()->orderBy('tipo')->get() as $campo) {
                 if ($campo->tipo == 'email' && $request->input('email-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('email-'.$campo->id)]);
                 } elseif ($campo->tipo == 'text' && $request->input('text-'.$campo->id) != null) {
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $request->input('text-'.$campo->id)]);
                 } elseif ($campo->tipo == 'file' && $request->file('file-'.$campo->id) != null) {
-                    $path = Storage::putFileAs('eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.pdf');
+                    $extensao = $request->file('file-'.$campo->id)->getClientOriginalExtension();
+                    $path = Storage::putFileAs('eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.'.$extensao);
 
                     $inscricao->camposPreenchidos()->attach($campo->id, ['valor' => $path]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {

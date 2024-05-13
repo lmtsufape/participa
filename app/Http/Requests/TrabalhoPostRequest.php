@@ -43,12 +43,14 @@ class TrabalhoPostRequest extends FormRequest
         $modalidade = Modalidade::find(request()->modalidadeId);
         $validate_array = [
             'nomeTrabalho' => ['required', 'string'],
+            'nomeTrabalho_en' => ['nullable', 'string'],
             'areaId' => ['required', 'integer'],
             'modalidadeId' => ['required', 'integer'],
             'eventoId' => ['required', 'integer'],
             'resumo' => ['nullable', 'string'],
+            'resumo_en' => ['nullable', 'string'],
             'nomeCoautor.*' => ['string'],
-            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores)],
+            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores), 'email', 'exists:users,email'],
             'arquivo' => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
@@ -65,6 +67,16 @@ class TrabalhoPostRequest extends FormRequest
             'campoextra3grande' => ['nullable', 'string'],
             'campoextra4grande' => ['nullable', 'string'],
             'campoextra5grande' => ['nullable', 'string'],
+            'campoextra1simples_en' => ['nullable', 'string'],
+            'campoextra2simples_en' => ['nullable', 'string'],
+            'campoextra3simples_en' => ['nullable', 'string'],
+            'campoextra4simples_en' => ['nullable', 'string'],
+            'campoextra5simples_en' => ['nullable', 'string'],
+            'campoextra1grande_en' => ['nullable', 'string'],
+            'campoextra2grande_en' => ['nullable', 'string'],
+            'campoextra3grande_en' => ['nullable', 'string'],
+            'campoextra4grande_en' => ['nullable', 'string'],
+            'campoextra5grande_en' => ['nullable', 'string'],
         ];
 
         foreach ($modalidade->midiasExtra as $midia) {
@@ -78,6 +90,7 @@ class TrabalhoPostRequest extends FormRequest
     {
         return [
             'arquivo.max' => 'O tamanho máximo permitido é de 2mb',
+            'emailCoautor.*.exists' => 'O usuário com o e-mail :input precisa estar cadastrado no sistema.',
         ];
     }
 

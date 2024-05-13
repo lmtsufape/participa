@@ -218,7 +218,7 @@ return [
         'inicioRevisao*' => [
             'required' => 'O campo é obrigatório.',
             'date' => 'O campo deve ter uma data válida.',
-            'after' => 'Início da Avaliação deve ser uma data depois do fim da submissão.',
+            'after' => 'Início da Avaliação deve ser uma data depois do fim da submissão. Para alterar, selecione "Permitir avaliação durante o período de submissão"',
         ],
         'inícioRevisão*' => [
             'required' => 'O campo é obrigatório.',

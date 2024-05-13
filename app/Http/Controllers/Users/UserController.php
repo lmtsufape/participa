@@ -44,8 +44,15 @@ class UserController extends Controller
 
     public function editarPerfil(Request $request)
     {
-        if ($request->passaporte != null && $request->cpf != null) {
+        if ($request->passaporte != null && $request->cpf != null ||
+            $request->passaporte != null && $request->cnpj != null ) {
+
             $request->merge(['passaporte' => null]);
+        }
+
+        if ($request->cpf != null && $request->cnpj != null ) {
+
+            $request->merge(['cpf' => null]);
         }
         // dd($request->all());
 
@@ -54,8 +61,9 @@ class UserController extends Controller
 
             $validator = $request->validate([
                 'name' => 'bail|required|string|max:255',
-                'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
-                'passaporte' => ($request->cpf == null ? 'bail|required|max:10' : 'nullable'),
+                'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf'] : 'nullable'),
+                'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['bail', 'required'] : 'nullable'),
+                'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10'] : ['nullable']),
                 'celular' => 'required|string|max:20',
                 'instituicao' => 'required|string| max:255',
                 'especialidade' => 'nullable|string',
@@ -79,6 +87,7 @@ class UserController extends Controller
 
             $user->name = $request->input('name');
             $user->cpf = $request->input('cpf');
+            $user->cnpj = $request->input('cnpj');
             $user->passaporte = $request->input('passaporte');
             $user->celular = $request->input('full_number');
             $user->instituicao = $request->input('instituicao');
@@ -101,15 +110,14 @@ class UserController extends Controller
 
             return back()->with(['message' => 'Atualizado com sucesso!']);
         } else {
-            if ($request->passaporte != null && $request->cpf != null) {
-                $request->merge(['passaporte' => null]);
-            }
+
             // dd($request);
             $user = User::find($request->id);
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
-                'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
-                'passaporte' => ($request->cpf == null && $request->cpf == null ? ['bail', 'required', 'max:10'] : ['nullable']),
+                'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf'] : 'nullable'),
+                'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['bail', 'required'] : 'nullable'),
+                'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10'] : ['nullable']),
                 'celular' => 'required|string|max:20',
                 'instituicao' => 'required|string| max:255',
                 // 'especProfissional' => 'nullable|string',
@@ -163,6 +171,7 @@ class UserController extends Controller
 
             $user->name = $request->input('name');
             $user->cpf = $request->input('cpf');
+            $user->cnpj = $request->input('cnpj');
             $user->passaporte = $request->input('passaporte');
             $user->celular = $request->input('full_number');
             $user->instituicao = $request->input('instituicao');
@@ -219,6 +228,7 @@ class UserController extends Controller
             }
         }
 
+
         return view('user.meusTrabalhos', [
             'trabalhos' => $trabalhos,
             'trabalhosCoautor' => $trabalhosCoautor,
@@ -248,6 +258,7 @@ class UserController extends Controller
             $permissoes_revisao = Revisor::where([['user_id', $revisor->user_id], ['evento_id', $evento->id]])->get()->map->only(['id']);
             $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->whereIn('revisorId', $permissoes_revisao)->first();
         }
+
 
         return view('user.visualizarParecer', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'respostas', 'revisor', 'arquivoAvaliacao'));
     }

@@ -117,7 +117,6 @@ class AdministradorController extends Controller
     {
         $this->authorize('isAdmin', Administrador::class);
         $users = User::orderBy('updated_at', 'ASC')->paginate(100);
-
         return view('administrador.users', compact('users'));
     }
 
@@ -255,12 +254,9 @@ class AdministradorController extends Controller
 
     public function search(Request $request)
     {
-        // dd($request->all());
         $this->authorize('isAdmin', Administrador::class);
-        $users = User::where('email', $request->search)->paginate(100);
-        if ($users->count() == 0) {
-            $users = User::where('name', $request->search)->paginate(100);
-        }
+        $busca = strtolower($request->search);
+        $users = User::whereRaw('LOWER(email) like ?', ['%' . $busca . '%'])->orWhereRaw('LOWER(name) like ?', ['%' . $busca . '%'])->paginate(100);
         if ($users->count() == 0) {
             return view('administrador.users', compact('users'))->with(['message' => 'Nenhum Resultado encontrado!']);
         }
@@ -270,6 +266,11 @@ class AdministradorController extends Controller
 
     public function criarUsuario(Request $request)
     {
+
+        $request->merge([
+            'email' => strtolower($request->email),
+        ]);
+
         $this->authorize('isAdmin', Administrador::class);
 
         $users = User::orderBy('updated_at', 'ASC')->paginate(100);

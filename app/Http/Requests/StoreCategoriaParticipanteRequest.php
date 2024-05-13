@@ -32,7 +32,8 @@ class StoreCategoriaParticipanteRequest extends FormRequest
             'fimDesconto.*' => 'required_with:tipo_valor.*|date|after:inícioDesconto.*',
             'permite_submissao' => 'boolean',
             'permite_inscricao' => 'boolean',
-            'limite_inscricao' => 'nullable|date'
+            'limite_inscricao' => 'nullable|date',
+            'descricao' => 'nullable',
         ];
     }
 
