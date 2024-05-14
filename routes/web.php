@@ -159,6 +159,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/home/coord/eventos', [CoordEventoController::class, 'listaEventos'])->name('coord.eventos');
         //Coautor
         Route::get('coautor/index', [CoautorController::class, 'index'])->name('coautor.index');
+        Route::get('coautor/listarTrabalhos', [CoautorController::class, 'listarTrabalhos'])->name('coautor.listarTrabalhos');
     });
 
     Route::get('search/user', [UserController::class, 'searchUser'])->name('search.user');

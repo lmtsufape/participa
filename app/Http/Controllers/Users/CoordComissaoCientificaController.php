@@ -14,6 +14,8 @@ class CoordComissaoCientificaController extends Controller
 {
     public function index()
     {
+        $eventos = auth()->user()->coordComissaoCientifica;
+        dd($eventos);
         return view('coordComissaoCientifica.index');
     }
 
