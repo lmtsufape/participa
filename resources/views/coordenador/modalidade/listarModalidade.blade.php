@@ -317,7 +317,7 @@
                                                 </div>
                                                 <div class="col-sm-3" x-data="{ id: $id('data-extra-submissao') }">
                                                     <div class="form-check mt-2">
-                                                        <input class="form-check-input" value="on" type="checkbox" x-model="data.permitirSubmissao" :id="id" :name="'submissaoDataExtra[' + index + ']'" >
+                                                        <input class="form-check-input" value="on" type="checkbox" x-model="data.permitirSubmissao" :id="id" :name="'submissaoDataExtra[' + index + ']'">
                                                         <label class="form-check-label" :for="id">
                                                             <strong>Permitir submissão</strong>
                                                         </label>
@@ -342,7 +342,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-check">
-                                                <input class="form-check-input" id="avaliacaoDuranteSubmissaocheck" onclick="mensagemSubmissao()" x-model="avaliacaoDuranteSubmissao" type="checkbox" name="avaliacaoDuranteSubmissao" @if(old('avaliacaoDuranteSubmissao'.$modalidade->id)) checked @elseif(old('avaliacaoDuranteSubmissao'.$modalidade->id) == true && $modalidade->avaliacaoDuranteSubmissao == true) checked @endif>
+                                                <input class="form-check-input" id="avaliacaoDuranteSubmissaocheck" onchange="mensagemSubmissao()" x-model="avaliacaoDuranteSubmissao" type="checkbox" name="avaliacaoDuranteSubmissao" @if(old('avaliacaoDuranteSubmissao'.$modalidade->id)) checked @elseif(old('avaliacaoDuranteSubmissao'.$modalidade->id) == true && $modalidade->avaliacaoDuranteSubmissao == true) checked @endif>
                                                 <label class="form-check-label font-weight-bold" for="avaliacaoDuranteSubmissaocheck">
 
                                                     {{ __('Permitir avaliação durante o período de submissão') }}
@@ -581,15 +581,14 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-check">
-                                        <!-- <input class="form-check-input" id="submissaoUnicacheck" x-model="submissaoUnica" type="checkbox" name="submissaoUnica" @if($modalidade->submissaoUnica == 'true') checked @endif> -->
-                                        <input class="form-check-input" type="checkbox" name="submissaoUnica" id="submissaoUnicacheck"  @if(old('submissaoUnica')==true || $modalidade->submissaoUnica) checked @endif>
+                                    <!-- <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="submissaoUnica" id="submissaoUnicacheck" @if(old('submissaoUnica')==true || $modalidade->submissaoUnica) checked @endif>
 
                                         <label class="form-check-label font-weight-bold" for="submissaoUnicacheck">
 
                                             {{ __('Habilitar submissão única para avaliação') }}
                                         </label>
-                                    </div>
+                                    </div> -->
                                     @error('submissao')
                                     <div class="invalid-feedback d-flex mt-0" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -1253,7 +1252,9 @@
     }
 
     function mensagemSubmissao() {
-        alert('Agora é possível selecionar uma data de início da avaliação antes do fim da submissão');
+        var checkbox = document.getElementById('avaliacaoDuranteSubmissaocheck');
+        alert('ATENÇÃO: Permitindo que a avaliação inicie durante o período de submissão evita que um participante envie o mesmo trabalho várias vezes.');
+
     }
 </script>
 @endsection
