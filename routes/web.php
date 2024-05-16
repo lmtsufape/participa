@@ -126,7 +126,7 @@ Route::post('/perfil/editar', [UserController::class, 'editarPerfil'])->name('pe
 Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::get('meusCertificados', [CertificadoController::class, 'listarCertificados'])->name('meusCertificados');
     Route::get('/home-user', [HomeController::class, 'index'])->name('home.user');
-
+    Route::get('/participante',[UserController::class, 'areaParticipante'])->name('participante');
     Route::namespace('Users')->group(function () {
 
         Route::get('meusCertificados', [UserController::class, 'meusCertificados'])->name('meusCertificados');

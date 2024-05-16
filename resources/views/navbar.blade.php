@@ -50,7 +50,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         {{-- Link Perfil --}}
-                        <a class="dropdown-item" href="{{ route('home') }}">
+                        <a class="dropdown-item" href="{{ route('participante') }}">
                             <img src="{{asset('img/icons/perfil.svg')}}" alt="">
                             {{ __('Área do Participante') }}
                         </a>
