@@ -71,7 +71,7 @@
                                 {{ __('Área do Administrador') }}
                             </a>
                         @endif
-
+        
                         @if (isset(Auth::user()->coordComissaoCientifica))
                             {{-- Rota - Area da Comissao --}}
 

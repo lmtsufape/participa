@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+    use Illuminate\Support\Facades\Auth;
 
 class CoordComissaoOrganizadoraController extends Controller
 {
@@ -14,6 +16,14 @@ class CoordComissaoOrganizadoraController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+        $eventos = DB::table('comissao_organizadora_eventos')
+        ->join('eventos','comissao_organizadora_eventos.evento_id','=','eventos.id')
+        ->select('eventos.*')
+        ->where('comissao_organizadora_eventos.user_id',$user->id)
+        ->get();
+
+
         return view('coordComissaoOrganizadora.index');
     }
 
