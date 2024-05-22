@@ -35,7 +35,6 @@ class CheckoutController extends Controller
 
     public function statusPagamento(Evento $evento)
     {
-        dd($evento);
         $key = env('MERCADOPAGO_PUBLIC_KEY');
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
