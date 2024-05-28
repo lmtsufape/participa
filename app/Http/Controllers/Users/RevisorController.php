@@ -60,7 +60,6 @@ class RevisorController extends Controller
             }
             $trabalhosPorEvento->push($trabalhos);
         }
-        dd($trabalhosPorEvento);
         return view('revisor.index')->with(['eventos' => $eventosComoRevisor, 'trabalhosPorEvento' => $trabalhosPorEvento]);
     }
 

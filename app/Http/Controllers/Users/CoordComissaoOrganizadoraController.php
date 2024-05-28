@@ -17,14 +17,13 @@ class CoordComissaoOrganizadoraController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $eventos = DB::table('comissao_organizadora_eventos')
-        ->join('eventos','comissao_organizadora_eventos.evento_id','=','eventos.id')
+        $eventos = DB::table('coord_comissao_organizadoras')
+        ->join('eventos','coord_comissao_organizadoras.eventos_id','=','eventos.id')
         ->select('eventos.*')
-        ->where('comissao_organizadora_eventos.user_id',$user->id)
+        ->where('coord_comissao_organizadoras.user_id',$user->id)
         ->get();
 
-
-        return view('coordComissaoOrganizadora.index');
+        return view('coordComissaoOrganizadora.index', ['eventos' => $eventos]);
     }
 
     /**

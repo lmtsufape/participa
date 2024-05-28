@@ -283,6 +283,7 @@ class UserController extends Controller
         ->where('inscricaos.user_id',$user->id)
         ->get();
 
+
         return view('user.areaParticipante', ['eventos' => $eventos]);
         
     }
