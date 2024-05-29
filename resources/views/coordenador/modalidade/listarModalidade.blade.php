@@ -346,7 +346,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-check">
-                                                <input class="form-check-input" id="avaliacaoDuranteSubmissaocheck" onclick="mensagemSubmissao()" x-model="avaliacaoDuranteSubmissao" type="checkbox" name="avaliacaoDuranteSubmissao" @if(old('avaliacaoDuranteSubmissao'.$modalidade->id)) checked @elseif(old('avaliacaoDuranteSubmissao'.$modalidade->id) == true && $modalidade->avaliacaoDuranteSubmissao == true) checked @endif>
+                                                <input class="form-check-input" id="avaliacaoDuranteSubmissaocheck" onchange="mensagemSubmissao()" x-model="avaliacaoDuranteSubmissao" type="checkbox" name="avaliacaoDuranteSubmissao" @if(old('avaliacaoDuranteSubmissao'.$modalidade->id)) checked @elseif(old('avaliacaoDuranteSubmissao'.$modalidade->id) == true && $modalidade->avaliacaoDuranteSubmissao == true) checked @endif>
                                                 <label class="form-check-label font-weight-bold" for="avaliacaoDuranteSubmissaocheck">
 
                                                     {{ __('Permitir avaliação durante o período de submissão') }}
@@ -1243,7 +1243,9 @@
     }
 
     function mensagemSubmissao() {
-        alert('Agora é possível selecionar uma data de início da avaliação antes do fim da submissão');
+        var checkbox = document.getElementById('avaliacaoDuranteSubmissaocheck');
+        alert('ATENÇÃO: Permitindo que a avaliação inicie durante o período de submissão evita que um participante envie o mesmo trabalho várias vezes.');
+
     }
 </script>
 @endsection

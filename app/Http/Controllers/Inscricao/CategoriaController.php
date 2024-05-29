@@ -119,9 +119,8 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request->all());
 
-        if(isset($request->linkIdExcluir)){
+        if($request->linkIdExcluir[0] != null){
             for ($i = 0; $i < count($request->linkIdExcluir); $i++) {
                 $link = LinksPagamento::where('link', $request->linkIdExcluir[$i])->first();
                 $link->delete();
@@ -213,7 +212,7 @@ class CategoriaController extends Controller
 
     public function destroyLink($id)
     {
-        // dd('chegou: ',$id);
+        
         $linkParaApagar = LinksPagamento::find($id);
         $linkParaApagar->delete();
         return redirect()->back()->with(['mensagem' => 'Link de pagamento excluido com sucesso!']);

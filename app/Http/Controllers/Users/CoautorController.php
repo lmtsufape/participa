@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
-use App\Users\Coautor;
+use App\Models\Users\Coautor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CoautorController extends Controller
@@ -27,6 +28,26 @@ class CoautorController extends Controller
         //                 ->select('users.*', 'contacts.phone', 'orders.price')
         //                 ->get();
         return view('coautor.index');
+    }
+
+    public function listarTrabalhos(){
+        $user = Auth::user();
+        $comoCoautor = Coautor::where('autorId', $user->id)->first();
+
+        $trabalhos = collect();
+
+        if ($comoCoautor != null) {
+            $trabalhosC = $comoCoautor->trabalhos;
+            foreach ($trabalhosC as $trab) {
+                if ($trab->autorId != auth()->user()->id) {
+                    $trabalhos->push($trab);
+                }
+            }
+        }
+
+        return view('coautor.listarTrabalhos', [
+            'trabalhos' => $trabalhos,
+        ]);
     }
 
     /**

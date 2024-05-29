@@ -18,7 +18,7 @@
           <div class="col-md-4">
               <div class="row justify-content-center" style="text-align:center; margin-bottom:1rem;">
                   <div class="col-12">{{__('Desenvolvido por')}}:</div>
-                  <a href="http://www.lmts.uag.ufrpe.br/br" name="lmts">
+                  <a href="http://www.lmts.ufape.edu.br/" name="lmts">
                     <img src="{{asset('img/lmts.png')}}" style="margin:20px 0 20px 0" width="200px;" >
                   </a>
               </div>
@@ -26,8 +26,8 @@
           <div class="col-md-4">
               <div class="row justify-content-center" style="text-align:center; margin-bottom:1rem;">
                   <div class="col-12">{{__('Apoio')}}:</div>
-                  <a href="http://ww3.uag.ufrpe.br/">
-                    <img src="{{asset('img/logo_ufape.png')}}">
+                  <a href="http://ufape.edu.br/">
+                    <img src="{{asset('img/logo_ufape.png')}}" style="width: 100px;">
                   </a>
               </div>
           </div>
