@@ -780,9 +780,8 @@
 
         var input = document.getElementById("avaliacaoDuranteSubmissaocheck");
 
-        // Remove o parâmetro "required"
         input.removeAttribute("required");
-        alert('oi');
+        alert('ATENÇÃO: Permitindo que a avaliação inicie durante o período de submissão evita que um participante envie o mesmo trabalho várias vezes.');
     }
 </script>
 @endsection

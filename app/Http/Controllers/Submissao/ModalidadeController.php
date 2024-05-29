@@ -184,6 +184,7 @@ class ModalidadeController extends Controller
 
         if ($request->avaliacaoDuranteSubmissao == 'on') {
             $modalidadeEdit->avaliacaoDuranteSubmissao = true;
+            $modalidadeEdit->submissaoUnica = true;
             $modalidadeEdit->save();
         }
 
@@ -549,10 +550,7 @@ class ModalidadeController extends Controller
             $modalidadeEdit->datasExtras()->delete();
         }
 
-        if ($request->submissaoUnica == 'on') {
-            $modalidadeEdit->submissaoUnica = true;
-            $modalidadeEdit->save();
-        }
+        
 
         return redirect()->back()->with(['mensagem' => 'Modalidade salva com sucesso!']);
     }

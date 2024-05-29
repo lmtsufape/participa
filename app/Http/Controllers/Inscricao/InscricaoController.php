@@ -81,8 +81,7 @@ class InscricaoController extends Controller
   
 
         $linksAtuais = $links->where('dataInicio','<=', $date)
-        ->where('dataFim','>', $date);
-        
+        ->where('dataFim','>', $date);        
        
         
         return view('coordenador.inscricoes.categorias', compact('evento', 'categorias', 'links','linksAtuais'));
