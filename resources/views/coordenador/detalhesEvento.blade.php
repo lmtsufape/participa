@@ -41,7 +41,7 @@
                             </a>
                             {{-- <a id="cadastrarModalidade" href="{{ route('inscricoes', ['id' => $evento->id]) }}">
                                 <li>
-                                    <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições</h5>
+                                    <img src="{{asset('img/icons/edit-regular-white.svg')}}" alt=""><h5>Inscrições {{__('Últimos eventos realizados')}}</h5>
                                 </li>
                             </a> --}}
                             <a id="cadastrarModalidade" href="{{ route('checkout.pagamentos', ['id' => $evento->id]) }}">

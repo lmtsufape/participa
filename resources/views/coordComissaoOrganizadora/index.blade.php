@@ -5,7 +5,7 @@
 <div class="container position-relative">
 
 
-	<div class="row justify-content-center titulo-detalhes">
+    <div class="row justify-content-center titulo-detalhes">
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-10">
@@ -15,7 +15,7 @@
         </div>
     </div>
 
-	<div class="row">
+    <div class="row">
 
         @if($eventos->count() != 0)
         @foreach ($eventos as $evento)
@@ -47,6 +47,11 @@
                 <p>
                     <a href="{{  route('evento.visualizar',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
                 </p>
+                <div class="row col-md-12">
+                    <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
+                        <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;{{__('Configurar evento')}}
+                    </a>
+                </div>
             </div>
 
         </div>
@@ -54,12 +59,12 @@
         @else
         <div class="card">
             <div class="card-body">
-                <p class="card-text" >Você ainda não participou de nenhum evento.</p>
+                <p class="card-text">Você ainda não participou de nenhum evento.</p>
             </div>
         </div>
         @endif
     </div>
-	
+
 
 </div>
 
