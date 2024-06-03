@@ -158,7 +158,6 @@
                                     @endif
                                     </td>
                                     <td style="text-align:center">
-                                    <p>take a loss</p>
                                     @if ($trabalho->arquivo != null && $trabalho->arquivo->count() > 0)
                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                                     @endif

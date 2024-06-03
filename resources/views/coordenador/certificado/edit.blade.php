@@ -240,6 +240,7 @@
 @section('javascript')
     @parent
     <script type="text/javascript" >
+        CKEDITOR.replace('texto');
         function logoPreview(input, id) {
             $('#' + id).attr('src', window.URL.createObjectURL(input.files[0]))
         }
