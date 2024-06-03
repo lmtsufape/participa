@@ -116,7 +116,7 @@
 
                         @if ( isset(Auth::user()->coautor) && Auth::user()->coautor->count())
                             {{-- Rota - Area do coautor--}}
-                            <a class="dropdown-item" href="{{ route('coautor.index') }}">
+                            <a class="dropdown-item" href="{{ route('coautor.listarTrabalhos') }}">
                                 <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                 {{ __('Área de Coautor de Trabalho') }}
                             </a>
