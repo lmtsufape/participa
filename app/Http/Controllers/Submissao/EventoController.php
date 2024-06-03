@@ -556,12 +556,11 @@ class EventoController extends Controller
 
     public function definirCoordComissao(Request $request)
     {
+    
         $evento = Evento::find($request->eventoId);
-
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        
         $users = $evento->usuariosDaComissao;
         $coordenadores = $evento->coordComissaoCientifica->pluck('id')->all();
-
         return view('coordenador.comissao.definirCoordComissao', compact('evento', 'users', 'coordenadores'));
     }
 
