@@ -1067,4 +1067,12 @@
 
 
 </div>{{-- End Listar atividades --}}
+
+
+@endsection
+
+@section('javascript')
+<script type="text/javascript">
+    CKEDITOR.replace('descricao');
+</script>
 @endsection
