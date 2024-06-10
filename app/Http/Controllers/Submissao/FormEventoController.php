@@ -11,6 +11,7 @@ class FormEventoController extends Controller
 {
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $evento = Evento::find($id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $request->validate([

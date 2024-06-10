@@ -470,12 +470,14 @@
                                 <button id="buttonNovoConvidado{{$atv->id}}" class="btn btn-primary" type="button" onclick="adicionarConvidado({{$atv->id}})">+Adicionar convidado</button>
                             </div>
                         </div>
-                    </form>
+                  
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-primary" onclick="editarAtividade({{$atv->id}})">Salvar</button>
+                    <!-- <button type="submit" class="btn btn-primary" onclick="editarAtividade({{$atv->id}})">Salvar</button> -->
+                    <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
@@ -1046,12 +1048,12 @@
 
                             <tbody>
                                 <th>
-                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->titulo}}</td>
-                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->tipoAtividade->descricao}}</td>
-                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">@if(empty($atv->vagas)) Ilimitado @else {{$atv->vagas}} @endif</td>
-                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">@if(empty($atv->valor)) Grátis @else R$ {{$atv->valor}},00 @endif</td>
-                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">{{$atv->local}}</td>
-                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}">@if(empty($atv->carga_horaria)) Nenhuma @else {{$atv->carga_horaria}} @endif</td>
+                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->titulo}}</td>
+                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->tipoAtividade->descricao}}</td>
+                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->vagas)) Ilimitado @else {{$atv->vagas}} @endif</td>
+                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->valor)) Grátis @else R$ {{$atv->valor}},00 @endif</td>
+                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->local}}</td>
+                                    <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->carga_horaria)) Nenhuma @else {{$atv->carga_horaria}} @endif</td>
                                     <td><input id="checkbox_{{$atv->id}}" type="checkbox" @if($atv->visibilidade_participante) checked @endif onclick="setVisibilidadeAtv({{$atv->id}})"></td>
                                     <td><a type="button" class="btn btn-primary" href="{{route('atividades.inscritos',['id'=> $atv->id])}}">Lista</a></td>
                                     <td data-toggle="modal" data-target="#modalExcluirAtividade{{$atv->id}}"><button style="border: none; background-color: rgba(255, 255, 255, 0);"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></button></td>
@@ -1073,6 +1075,10 @@
 
 @section('javascript')
 <script type="text/javascript">
-    CKEDITOR.replace('descricao');
+    function abrirEditor(id){
+        var textareaId = 'descricao'+id;
+        CKEDITOR.replace(textareaId );
+    }
+    
 </script>
 @endsection

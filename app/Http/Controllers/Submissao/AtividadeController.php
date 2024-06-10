@@ -265,6 +265,7 @@ class AtividadeController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
