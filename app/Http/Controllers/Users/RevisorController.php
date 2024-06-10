@@ -432,7 +432,7 @@ class RevisorController extends Controller
         foreach ($revisores as $revisor) {
             $trabalhos->push($revisor->trabalhosAtribuidos()->orderBy('titulo')->get());
         }
-        dd($trabalhos);
+        // dd($trabalhos);
         return view('revisor.listarTrabalhos')->with(['evento' => $evento, 'trabalhosPorRevisor' => $trabalhos]);
         // $trabalhos = Atribuicao::where('eventoId', $id);
     }
