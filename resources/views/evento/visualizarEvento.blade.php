@@ -559,7 +559,7 @@
                                     <div class="form-row">
                                         <div class="col-sm-12 form-group">
                                             <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
-                                                {{__("Programação")}}</h4>
+                                                {{$etiquetas->etiquetamoduloprogramacao}}</h4>
                                         </div>
                                     </div>
                                     <div class="form-row">

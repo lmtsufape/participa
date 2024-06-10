@@ -276,32 +276,34 @@
                         <hr>
                         <div class="row justify-content-center">
                             <div class="col-md-6">
-                                <form method="POST" id="formCardEventosPadrao" action="{{route('etiquetas.update', $evento->id)}}">
-                                    @csrf
-                                    <input type="hidden" name="etiquetanomeevento" value="Nome">
-                                    <input type="hidden" name="etiquetatipoevento" value="Tipo">
-                                    <input type="hidden" name="etiquetadescricaoevento" value="Descrição">
-                                    <input type="hidden" name="etiquetadatas" value="Realização">
-                                    <input type="hidden" name="etiquetasubmissoes" value="Submissões">
-                                    <input type="hidden" name="etiquetaenderecoevento" value="Endereço">
-                                    <input type="hidden" name="etiquetamoduloinscricao" value="Inscrições">
-                                    <input type="hidden" name="etiquetamoduloprogramacao" value="Programação">
-                                    <input type="hidden" name="etiquetamoduloorganizacao" value="Organização">
-                                    <input type="hidden" name="etiquetabaixarregra" value="Regras">
-                                    <input type="hidden" name="etiquetabaixartemplate" value="Template">
-                                    <input type="hidden" name="etiquetabaixarapresentacao" value="Modelo de apresentação">
-
-                                    <button type="submit" class="btn btn-primary" form="formCardEventosPadrao" onclick="return default_edicaoCardEvento()" style="width:100%">
-                                        {{ __('Retornar ao Padrão') }}
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="col-md-6">
                                 <button type="submit" class="btn btn-primary" form="formCardEventos" style="width:100%">
                                     {{ __('Finalizar') }}
                                 </button>
                             </div>
                     </form>
+                    <div class="col-md-6">
+                        <form method="POST" id="formCardEventosPadrao" action="{{route('etiquetas.update', $evento->id)}}">
+                            @csrf
+                            <input type="hidden" name="etiquetanomeevento" value="Nome">
+                            <input type="hidden" name="etiquetatipoevento" value="Tipo">
+                            <input type="hidden" name="etiquetadescricaoevento" value="Descrição">
+                            <input type="hidden" name="etiquetadatas" value="Realização">
+                            <input type="hidden" name="etiquetasubmissoes" value="Submissões">
+                            <input type="hidden" name="etiquetaenderecoevento" value="Endereço">
+                            <input type="hidden" name="etiquetamoduloinscricao" value="Inscrições">
+                            <input type="hidden" name="etiquetamoduloprogramacao" value="Programação">
+                            <input type="hidden" name="etiquetamoduloorganizacao" value="Organização">
+                            <input type="hidden" name="etiquetabaixarregra" value="Regras">
+                            <input type="hidden" name="etiquetabaixartemplate" value="Template">
+                            <input type="hidden" name="etiquetabaixarapresentacao" value="Modelo de apresentação">
+
+                            <button type="submit" class="btn btn-primary" form="formCardEventosPadrao" onclick="return default_edicaoCardEvento()" style="width:100%">
+                                {{ __('Retornar ao Padrão') }}
+                            </button>
+                        </form>
+                    </div>
+
+
                 </div>
             </div>
         </div>

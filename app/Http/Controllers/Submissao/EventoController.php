@@ -1479,7 +1479,7 @@ class EventoController extends Controller
             if ($dataInicial == null) {
                 $dataInicial = '';
             }
-
+           
             return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'mytime', 'etiquetas', 'formSubTraba', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada'));
         }
     }
