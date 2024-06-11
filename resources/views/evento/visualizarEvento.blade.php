@@ -1,155 +1,165 @@
 @extends('layouts.app')
 @section('content')
-    @include('componentes.mensagens')
+@include('componentes.mensagens')
 
 
 
-    @foreach ($atividades as $atv)
-        <div class="modal fade bd-example modal-show-atividade" id="modalAtividadeShow{{ $atv->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabelAtividadeShow{{ $atv->id }}" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="background-color: #114048ff; color: white;">
-                        <h5 class="modal-title" id="modalLabelAtividadeShow{{ $atv->id }}">{{ $atv->titulo }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <h4 for="tipo">{{__("Tipo")}}</h4>
-                                    <p>
-                                        {{ $atv->tipoAtividade->descricao }}
-                                    </p>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row form-group">
-                                <div class="col-sm-12">
-                                    <label for="descricao">{{__("Descrição")}}</label>
-                                    <p>
-                                        {{ $atv->descricao }}
-                                    </p>
-                                </div>
-                            </div>
-                            @if (count($atv->convidados) > 0)
-                                <hr>
-                                <h4>{{__("Convidados")}}</h4>
-                                <div class="convidadosDeUmaAtividade">
-                                    <div class="row">
-                                        @foreach ($atv->convidados as $convidado)
-                                            <div class="col-sm-3 imagemConvidado">
-                                                <img src="{{ asset('img/icons/user.png') }}" alt="Foto de {{ $convidado->nome }}" width="50px" height="auto">
-                                                <h5 class="convidadoNome">{{ $convidado->nome }}</h5>
-                                                <small class="convidadoFuncao">{{ $convidado->funcao }}</small>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endif
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <h4 for="local">{{__("Local")}}</h4>
-                                    <p class="local">
-                                        {{ $atv->local }}
-                                    </p>
-                                </div>
-                            </div>
-                            @if ($atv->vagas != null || $atv->valor != null)
-                                <hr>
-                                <div class="row">
-                                    @if ($atv->vagas != null)
-                                        <div class="col-sm-6">
-                                            <label for="vagas">{{__("Vagas")}}:</label>
-                                            <h4 class="vagas">{{ $atv->vagas }}</h4>
-                                        </div>
-                                    @endif
-                                    @if ($atv->valor != null)
-                                        <div class="col-sm-6">
-                                            <label for="valor">{{__("Valor")}}:</label>
-                                            <h4 class="valor">R$ {{ $atv->valor }}</h4>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endif
-                            @if ($atv->carga_horaria != null)
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label for="carga_horaria">{{__("Carga horária para estudantes")}}:</label>
-                                        <h4 class="carga_horaria">{{ $atv->carga_horaria }}</h4>
-                                    </div>
-                                </div>
-                            @endif
+@foreach ($atividades as $atv)
+<div class="modal fade bd-example modal-show-atividade" id="modalAtividadeShow{{ $atv->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabelAtividadeShow{{ $atv->id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+                <h5 class="modal-title" id="modalLabelAtividadeShow{{ $atv->id }}">{{ $atv->titulo }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4 for="tipo">{{__("Tipo")}}</h4>
+                            <p>
+                                {{ $atv->tipoAtividade->descricao }}
+                            </p>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        @if ($isInscrito)
-                            @if(!$atv->atividadeInscricoesEncerradas())
-                                @if(($atv->vagas > 0 || $atv->vagas == null) && Auth::user()->atividades()->find($atv->id) == null)
-                                    <form method="POST" action="{{route('atividades.inscricao', ['id'=>$atv->id])}}">
-                                        @csrf
-                                        <button type="submit" class="button-prevent-multiple-submits btn btn-primary">
-                                            {{__("Inscrever-se")}}</button>
-                                    </form>
-                                @elseif(Auth::user()->atividades()->find($atv->id) != null)
-                                    @if (!$atv->terminou())
-                                    <form method="POST" action="{{route('atividades.cancelarInscricao', ['id'=>$atv->id, 'user'=> Auth::id()])}}">
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary button-prevent-multiple-submits">
-                                            {{__("Cancelar inscrição")}}</button>
-                                    </form>
-                                    @else
-                                        <button type="button" class="btn btn-primary" disabled>{{__("Inscrito")}}</button>
-                                    @endif
-                                @else
-                                    <button type="button" class="btn btn-danger"  style="pointer-events: none">{{__("Sem Vagas")}}</button>
-                                @endif
-                            @else
-                                @if(Auth::user()->atividades()->find($atv->id) != null)
-                                    <button type="button" class="btn btn-primary" disabled>{{__("Inscrito")}}</button>
-                                @else
-                                    <button type="button" class="btn btn-danger" disabled>{{__("Inscrições encerradas")}}</button>
-                                @endif
-                            @endif
-                        @endif
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Fechar")}}</button>
+                    <hr>
+                    <div class="row form-group">
+                        <div class="col-sm-12">
+                            <label for="descricao">{{__("Descrição")}}</label>
+                            <p>
+                                {{ $atv->descricao }}
+                            </p>
+                        </div>
                     </div>
+                    @if (count($atv->convidados) > 0)
+                    <hr>
+                    <h4>{{__("Convidados")}}</h4>
+                    <div class="convidadosDeUmaAtividade">
+                        <div class="row">
+                            @foreach ($atv->convidados as $convidado)
+                            <div class="col-sm-3 imagemConvidado">
+                                <img src="{{ asset('img/icons/user.png') }}" alt="Foto de {{ $convidado->nome }}" width="50px" height="auto">
+                                <h5 class="convidadoNome">{{ $convidado->nome }}</h5>
+                                <small class="convidadoFuncao">{{ $convidado->funcao }}</small>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4 for="local">{{__("Local")}}</h4>
+                            <p class="local">
+                                {{ $atv->local }}
+                            </p>
+                        </div>
+                    </div>
+                    @if ($atv->vagas != null || $atv->valor != null)
+                    <hr>
+                    <div class="row">
+                        @if ($atv->vagas != null)
+                        <div class="col-sm-6">
+                            <label for="vagas">{{__("Vagas")}}:</label>
+                            <h4 class="vagas">{{ $atv->vagas }}</h4>
+                        </div>
+                        @endif
+                        @if ($atv->valor != null)
+                        <div class="col-sm-6">
+                            <label for="valor">{{__("Valor")}}:</label>
+                            <h4 class="valor">R$ {{ $atv->valor }}</h4>
+                        </div>
+                        @endif
+                    </div>
+                    @endif
+                    @if ($atv->carga_horaria != null)
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="carga_horaria">{{__("Carga horária para estudantes")}}:</label>
+                            <h4 class="carga_horaria">{{ $atv->carga_horaria }}</h4>
+                        </div>
+                    </div>
+                    @endif
+                    @if($atv->valor != null)
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="comprovante" class="">Comprovante de pagamento da taxa de inscrição</label><br>
+                            <input type="file" id="comprovante" class="form-control-file" name="comprovante">
+                            <br>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
-        </div>
-    @endforeach
-    <div class="modal fade" id="modalTrabalho" tabindex="-1" role="dialog" aria-labelledby="modalTrabalho" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">{{__("Submeter nova versão")}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="POST" action="{{ route('trabalho.novaVersao') }}" enctype="multipart/form-data">
+            <div class="modal-footer">
+                @if ($isInscrito)
+                @if(!$atv->atividadeInscricoesEncerradas())
+                @if(($atv->vagas > 0 || $atv->vagas == null) && Auth::user()->atividades()->find($atv->id) == null)
+                <form method="POST" action="{{route('atividades.inscricao', ['id'=>$atv->id])}}">
                     @csrf
-                    <div class="modal-body">
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                @if ($hasFile)
-                                    <input type="hidden" name="trabalhoId" value="" id="trabalhoNovaVersaoId">
-                                @endif
-                                <input type="hidden" name="eventoId" value="{{ $evento->id }}">
-                                {{-- Arquivo --}}
-                                <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo') }}</label>
-                                <div class="custom-file">
-                                    <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
-                                </div>
-                                <small>{{__("O arquivo Selecionado deve ser no formato PDF de até 2mb")}}.</small>
-                                @error('arquivo')
-                                    <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                    <button type="submit" class="button-prevent-multiple-submits btn btn-primary">
+                        {{__("Inscrever-se")}}</button>
+                </form>
+                @elseif(Auth::user()->atividades()->find($atv->id) != null)
+                @if (!$atv->terminou())
+                <form method="POST" action="{{route('atividades.cancelarInscricao', ['id'=>$atv->id, 'user'=> Auth::id()])}}">
+                    @csrf
+                    <button type="submit" class="btn btn-primary button-prevent-multiple-submits">
+                        {{__("Cancelar inscrição")}}</button>
+                </form>
+                @else
+                <button type="button" class="btn btn-primary" disabled>{{__("Inscrito")}}</button>
+                @endif
+                @else
+                <button type="button" class="btn btn-danger" style="pointer-events: none">{{__("Sem Vagas")}}</button>
+                @endif
+                @else
+                @if(Auth::user()->atividades()->find($atv->id) != null)
+                <button type="button" class="btn btn-primary" disabled>{{__("Inscrito")}}</button>
+                @else
+                <button type="button" class="btn btn-danger" disabled>{{__("Inscrições encerradas")}}</button>
+                @endif
+                @endif
+                @endif
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Fechar")}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+<div class="modal fade" id="modalTrabalho" tabindex="-1" role="dialog" aria-labelledby="modalTrabalho" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">{{__("Submeter nova versão")}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ route('trabalho.novaVersao') }}" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-12">
+                            @if ($hasFile)
+                            <input type="hidden" name="trabalhoId" value="" id="trabalhoNovaVersaoId">
+                            @endif
+                            <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                            {{-- Arquivo --}}
+                            <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo') }}</label>
+                            <div class="custom-file">
+                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
+                            </div>
+                            <small>{{__("O arquivo Selecionado deve ser no formato PDF de até 2mb")}}.</small>
+                            @error('arquivo')
+                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
 
                         </div>
                     </div>
@@ -163,13 +173,13 @@
     </div>
 </div>
 @php
-        $bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en ? $evento->fotoEvento_en : $evento->fotoEvento;
-    @endphp
-    <div class="container-fluid content mt-n2">
-        <div class="row">
-            @if (isset($evento->fotoEvento))
-                 <div class="banner-evento">
-                    <img style="background-size: cover" src="{{ asset('storage/' . $bannerPath) }}" alt="">
+$bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en ? $evento->fotoEvento_en : $evento->fotoEvento;
+@endphp
+<div class="container-fluid content mt-n2">
+    <div class="row">
+        @if (isset($evento->fotoEvento))
+        <div class="banner-evento">
+            <img style="background-size: cover" src="{{ asset('storage/' . $bannerPath) }}" alt="">
         </div>
         @else
         <div class="banner-evento">
@@ -238,11 +248,11 @@
 
                                                             @if($links)
                                                             @foreach($links->where('categoria_id', $categoria->id) as $link)
-                                                      
-                                                                <label for="">Valor: </label>
-                                                                <p>R${{$link->valor}}</p>
-                                                                <label for="">Link para pagamento: </label>
-                                                                <a href="{{$link->link}}">{{$link->link}}</a>
+
+                                                            <label for="">Valor: </label>
+                                                            <p>R${{$link->valor}}</p>
+                                                            <label for="">Link para pagamento: </label>
+                                                            <a href="{{$link->link}}">{{$link->link}}</a>
 
 
                                                             @endforeach
@@ -399,7 +409,8 @@
                                                 <label for="select{{ $campo->id }}">{{ $campo->titulo }}</label>
                                                 <select class="form-control" id="select{{ $campo->id }}" @if ($campo->obrigatorio) required @endif name="select-{{$campo->id}}">
                                                     <option @if ($campo->obrigatorio) disabled @endif selected>
-                                                        {{__("Selecione uma opção")}}</option>
+                                                        {{__("Selecione uma opção")}}
+                                                    </option>
                                                     @foreach ($campo->opcoes as $opcao)
                                                     <option value="{{ $opcao->nome }}">{{ $opcao->nome }}</option>
                                                     @endforeach
@@ -472,12 +483,12 @@
                 @endif
 
 
-            @if(auth()->check())
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
-            </div>
-            @endif
+                @if(auth()->check())
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
+                </div>
+                @endif
             </form>
         </div>
     </div>
@@ -501,41 +512,41 @@
                                         </button>
                                     </div>
                                     @endif --}}
-                                            @if (session('message'))
-                                                <div class="alert alert-success">
-                                                    {{ session('message') }}
-                                                </div>
-                                            @endif
-                                            @if (session('error'))
-                                                <div class="alert alert-danger">
-                                                    {{ session('error') }}
-                                                </div>
-                                            @endif
-                                            <div class="row">
+                                        @if (session('message'))
+                                        <div class="alert alert-success">
+                                            {{ session('message') }}
+                                        </div>
+                                        @endif
+                                        @if (session('error'))
+                                        <div class="alert alert-danger">
+                                            {{ session('error') }}
+                                        </div>
+                                        @endif
+                                        <div class="row">
 
-                                                @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                                    <div class="col-sm-12">
-                                                        <h2 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{ $evento->nome_en }}</h2>
-                                                    </div>
-                                                @else
-                                                    <div class="col-sm-12">
-                                                        <h2 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{ $evento->nome }}</h2>
-                                                    </div>
-                                                @endif
-
-
+                                            @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                            <div class="col-sm-12">
+                                                <h2 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{ $evento->nome_en }}</h2>
                                             </div>
-                                            <br>
-                                            <div class="row">
-                                                @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                                    <div class="col-sm-12" style="text-align: justify;">
-                                                        {!! $evento->descricao_en !!}
-                                                    </div>
-                                                @else
-                                                <div class="col-sm-12" style="text-align: justify;">
-                                                    {!! $evento->descricao !!}
-                                                </div>
-                                                @endif
+                                            @else
+                                            <div class="col-sm-12">
+                                                <h2 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{ $evento->nome }}</h2>
+                                            </div>
+                                            @endif
+
+
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                            <div class="col-sm-12" style="text-align: justify;">
+                                                {!! $evento->descricao_en !!}
+                                            </div>
+                                            @else
+                                            <div class="col-sm-12" style="text-align: justify;">
+                                                {!! $evento->descricao !!}
+                                            </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -559,7 +570,8 @@
                                     <div class="form-row">
                                         <div class="col-sm-12 form-group">
                                             <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
-                                                {{$etiquetas->etiquetamoduloprogramacao}}</h4>
+                                                {{$etiquetas->etiquetamoduloprogramacao}}
+                                            </h4>
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -611,7 +623,8 @@
                                     <div class="form-row">
                                         <div class="col-sm-12 form-group">
                                             <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
-                                                {{__("Informações")}}</h4>
+                                                {{__("Informações")}}
+                                            </h4>
                                         </div>
                                     </div>
 
@@ -807,7 +820,8 @@
                                             <a href="mailto:@if($evento->email != null){{$evento->email}}@else{{$evento->coordenador->email}}@endif">
                                                 <div style="margin-top: 18px;">
                                                     <h6 style="margin-bottom: 0px; font-size: 16px; font-weight: bold;">
-                                                            {{__("Contato")}}</h6>
+                                                        {{__("Contato")}}
+                                                    </h6>
                                                     {{-- {{$evento->coordenador->email}} --}}
                                                 </div>
                                             </a>
@@ -857,41 +871,42 @@
                     </div>
                     @endif
 
-                    </div>
                 </div>
-                @if ($subeventos->count() > 0)
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="card sombra-card" style="width: 100%;">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
-                                                {{__("Subeventos")}}</h4>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        @foreach ($subeventos as $subevento)
-                                            <div class="col-sm-12 col-md-6 col-xl-4 d-flex align-items-stretch justify-content-center">
-                                                <div class="card" style="width: 15rem;">
-                                                    @if (isset($subevento->fotoEvento))
+            </div>
+            @if ($subeventos->count() > 0)
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card sombra-card" style="width: 100%;">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
+                                        {{__("Subeventos")}}
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                @foreach ($subeventos as $subevento)
+                                <div class="col-sm-12 col-md-6 col-xl-4 d-flex align-items-stretch justify-content-center">
+                                    <div class="card" style="width: 15rem;">
+                                        @if (isset($subevento->fotoEvento))
 
-                                                        <img class="img-card" src="{{ asset('storage/' . $subevento->fotoEvento) }}" class="card-img-top" alt="...">
-                                                    @else
-                                                        <img class="img-card" src="{{ asset('img/colorscheme.png') }}" class="card-img-top" alt="...">
-                                                    @endif
-                                                    <div class="card-body">
+                                        <img class="img-card" src="{{ asset('storage/' . $subevento->fotoEvento) }}" class="card-img-top" alt="...">
+                                        @else
+                                        <img class="img-card" src="{{ asset('img/colorscheme.png') }}" class="card-img-top" alt="...">
+                                        @endif
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <h5 class="card-title">
                                                         <div class="row">
                                                             <div class="col-sm-12">
-                                                                <h5 class="card-title">
-                                                                    <div class="row">
-                                                                        <div class="col-sm-12">
-                                                                                <a href="{{ route('evento.visualizar', ['id' => $subevento->id]) }}" style="text-decoration: inherit;">
-                                                                                    @if($subevento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                                                                        {{ $subevento->nome_en }}
-                                                                                    @else
-                                                                                        {{ $subevento->nome }}
-                                                                                    @endif
+                                                                <a href="{{ route('evento.visualizar', ['id' => $subevento->id]) }}" style="text-decoration: inherit;">
+                                                                    @if($subevento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                                    {{ $subevento->nome_en }}
+                                                                    @else
+                                                                    {{ $subevento->nome }}
+                                                                    @endif
                                                                 </a>
                                                             </div>
                                                         </div>
