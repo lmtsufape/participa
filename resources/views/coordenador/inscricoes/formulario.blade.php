@@ -97,7 +97,7 @@
                                         <button id="btn-tipo-email" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('email')">E-mail</button>
                                     </div>
                                     <div class="col-sm-6">
-                                        <button id="btn-tipo-email" type="button" class="btn btn-primary btn-block" onclick="mostrarCampos('select')">Select</button>
+                                        <button id="btn-tipo-email" type="button" class="btn btn-primary btn-block" onclick="mostrarCampos('select')">Seleção</button>
                                     </div>
                                 </div>
                             </p>

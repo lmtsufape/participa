@@ -380,8 +380,9 @@ class TrabalhoController extends Controller
                     if ($value == $autor->email) {
                     } else {
                         $userCoautor = User::where('email', $value)->first();
-                        Mail::to($userCoautor->email)
-                            ->send(new SubmissaoTrabalho($userCoautor, $subject, $trabalho));
+                        // Mail::to($userCoautor->email)
+                        //     ->send(new SubmissaoTrabalho($userCoautor, $subject, $trabalho));
+                        Notification::send($userCoautor, new SubmissaoTrabalhoNotification($userCoautor, $subject, $trabalho));
                     }
                 }
             }

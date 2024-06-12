@@ -27,18 +27,26 @@ class HomeController extends Controller
     public function home()
     {
         $user = Auth::user();
+        
         $eventos = collect();
-
+        
         if ($user->administradors()->exists()) {
             $eventos = $eventos->concat(Evento::all());
 
             return view('administrador.index', ['eventos' => $eventos]);
         }
-        if ($user->coordComissaoCientifica()->exists()) {
+        else if ($user->coordComissaoCientifica()->exists()) {
+      
             $eventos = $eventos->concat($user->coordComissaoCientifica);
         }
-        if ($user->coordComissaoOrganizadora()->exists()) {
+        else if ($user->coordComissaoOrganizadora()->exists()) {
             $eventos = $eventos->concat($user->coordComissaoOrganizadora);
+        }else{
+            $eventos = DB::table('eventos')->join('inscricaos','inscricaos.evento_id','eventos.id')
+            ->where('inscricaos.user_id',$user->id)
+            ->get();
+
+             return view('user.areaParticipante', ['eventos' => $eventos]);
         }
         $eventos = $eventos->concat($user->eventos);
         $eventos = $eventos->concat($user->eventosCoordenador);
@@ -51,6 +59,7 @@ class HomeController extends Controller
 
     public function index()
     {
+        $user = Auth::user();
         $eventosDestaque = Inscricao::join('eventos', 'inscricaos.evento_id', '=', 'eventos.id')->select('eventos.id', DB::raw('count(inscricaos.evento_id) as total'))->groupBy('eventos.id')->orderBy('total', 'desc')->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->limit(6)->get();
 
         $eventos = collect();

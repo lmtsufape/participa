@@ -72,7 +72,7 @@
                             </a>
                         @endif
         
-                        @if (isset(Auth::user()->coordComissaoCientifica))
+                        @if (Auth::user()->coordComissaoCientifica->count() != 0 || isset(Auth::user()->administradors))
                             {{-- Rota - Area da Comissao --}}
 
                             <a class="dropdown-item" href="{{ route('cientifica.home') }}">
@@ -82,7 +82,7 @@
                             </a>
                         @endif
 
-                        @if (isset(Auth::user()->coordComissaoOrganizadora))
+                        @if (Auth::user()->coordComissaoOrganizadora->count() != 0 || isset(Auth::user()->administradors))
                             {{-- Rota - Area da Comissao --}}
                             <a class="dropdown-item" href="{{ route('home.organizadora') }}">
                                 <img src="{{asset('img/icons/comissao.png')}}" alt="">
@@ -116,7 +116,7 @@
 
                         @if ( isset(Auth::user()->coautor) && Auth::user()->coautor->count())
                             {{-- Rota - Area do coautor--}}
-                            <a class="dropdown-item" href="{{ route('coautor.index') }}">
+                            <a class="dropdown-item" href="{{ route('coautor.listarTrabalhos') }}">
                                 <img src="{{asset('img/icons/comissao.png')}}" alt="">
                                 {{ __('Área de Coautor de Trabalho') }}
                             </a>

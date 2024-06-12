@@ -559,7 +559,7 @@
                                     <div class="form-row">
                                         <div class="col-sm-12 form-group">
                                             <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
-                                                {{__("Programação")}}</h4>
+                                                {{$etiquetas->etiquetamoduloprogramacao}}</h4>
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -586,7 +586,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{ $etiquetas->etiquetamoduloinscricao }}</h4>
+                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{__("Inscrições")}}</h4>
                                         </div>
                                     </div>
                                     <div class="row mx-1">

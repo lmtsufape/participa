@@ -194,7 +194,7 @@ class CheckoutController extends Controller
             ], 200);
         } catch (PagSeguroException $e) {
             //codigo do erro
-            dd($e->getMessage(), $e->getCode());
+            // dd($e->getMessage(), $e->getCode());
             //mensagem do erro
         }
     }
