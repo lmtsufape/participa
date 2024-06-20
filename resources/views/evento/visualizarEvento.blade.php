@@ -200,13 +200,16 @@
                 <div class="modal-body">
                     @if(!auth()->check())
                     @include('componentes.mensagens')
-                    <p>{{__("Para continuar com sua inscrição, é necessário que possua cadastro na plataforma e realize o seu acesso (login), caso já possua uma conta. Se você ainda não tem, será necessário efetuar o cadastro e retornar a página do evento para realizar sua inscrição")}}.</p>
+                    <p class="text-justify">{!! __("Para continuar com sua inscrição, é necessário que possua cadastro na plataforma e realize o seu acesso (login). <strong>Caso já possua uma conta</strong>, basta acessar com o seu login (e-mail) e senha.") !!} <br><br>
+                                            {!! __("<strong>Se você ainda não tem</strong>, será necessário efetuar o cadastro, validar sua conta pelo link enviado para o e-mail e retornar a página do evento para realizar sua inscrição.") !!} <br><br>
+                                            {!! __("Após realizar seu login ou cadastro, retorne a esta página, atualize-a (pressionando a tecla F5) e prossiga com sua inscrição no evento.") !!}
+                    </p>
                     <div class="modal-footer text-center">
-                        <a href="{{ route('register', app()->getLocale()) }}">
+                        <a href="{{ route('register', app()->getLocale()) }}" target="_blank">
                             <button type="button" class="btn btn-secondary">{{ __('Cadastrar-se') }}</button>
                         </a>
 
-                        <a href="{{ route('login') }}">
+                        <a href="{{ route('login') }}" target="_blank">
                             <button type="button" class="btn btn-primary button-prevent-multiple-submits">{{ __('Entrar') }}</button>
                         </a>
                     </div>
