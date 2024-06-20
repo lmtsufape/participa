@@ -1,6 +1,15 @@
 @extends('coordenador.detalhesEvento')
-@section('menu')
+@section('menu') 
     <div id="" style="display: block">
+    @if(session('excluirCampoExtra'))
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 5px;">
+                <div class="alert alert-danger">
+                    <p>{{session('excluirCampoExtra')}}</p>
+                </div>
+            </div>
+        </div>
+    @endif
         <div class="row">
             <div class="col-md-12">
                 <h1 class="titulo-detalhes">Formulário de inscrição</h1>
@@ -263,10 +272,19 @@
             </button>
             </div>
             <div class="modal-body">
+                @if(count($campo->inscricoesFeitas) > 0)
+                <p></p>
+                <form id="formDeletarCampo{{$campo->id}}" action="{{route('campo.destroy', ['id' => $campo->id])}}" method="POST">
+                    @csrf
+                    <strong>Este campo já foi utilizado em inscrições anteriores. Se for deletado, os valores correspondentes nas inscrições passadas também serão removidos. </strong>Tem certeza que deseja excluir esse campo?
+                </form>
+                @else
                 <form id="formDeletarCampo{{$campo->id}}" action="{{route('campo.destroy', ['id' => $campo->id])}}" method="POST">
                     @csrf
                     Tem certeza que deseja excluir esse campo?
                 </form>
+                @endif
+               
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
