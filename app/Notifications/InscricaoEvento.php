@@ -44,7 +44,7 @@ class InscricaoEvento extends Notification
         return (new MailMessage)
             ->greeting("Olá, {$notifiable->name}!")
             ->line("Sua inscrição no evento {$this->evento->nome} foi realizada com sucesso!")
-            ->subject('Confirmação de inscrição');
+            ->subject('(UFAPE/LMTS/Sistema Participa) Inscrição realizada com sucesso!');
     }
 
     /**
