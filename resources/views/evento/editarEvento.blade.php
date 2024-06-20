@@ -451,7 +451,7 @@
 <script type="text/javascript">
     $(document).ready(function($) {
 
-        // CKEDITOR.replace('descricao');
+        CKEDITOR.replace('descricao');
         // $('#summernote').summernote(
         //     {
         //     toolbar: [

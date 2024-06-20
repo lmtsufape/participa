@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Inscricao\CampoFormulario;
 use App\Models\Inscricao\CampoFormularioSelect;
 use App\Models\Inscricao\CategoriaParticipante;
+use App\Models\Inscricao\ValorCampoExtra;
 use App\Models\Submissao\Evento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CampoFormularioController extends Controller
 {
@@ -149,11 +151,16 @@ class CampoFormularioController extends Controller
     {
         // Checar erros futuros após a criação da inscrição
         $campo = CampoFormulario::find($id);
+       
         $evento = $campo->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-
-        if (count($campo->inscricoesFeitas) > 0) {
-            return redirect()->back()->with(['excluirCampoExtra' => 'Não foi possivel excluir, há inscrições realizadas que utilizam o campo.']);
+        
+        if(count($campo->inscricoesFeitas) > 0){
+            $valores = DB::table('valor_campo_extras')->where('campo_formulario_id', $campo->id)->get();
+            for ($i=0; $i < count($valores); $i++) { 
+                
+               DB::table('valor_campo_extras')->where('id', $valores[$i]->id)->delete();
+            }
         }
 
         $campo->categorias()->detach($campo->categorias);
