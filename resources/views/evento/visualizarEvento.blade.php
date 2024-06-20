@@ -164,21 +164,24 @@
 </div>
 @php
         $bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en ? $evento->fotoEvento_en : $evento->fotoEvento;
-    @endphp
-    <div class="container-fluid content mt-n2">
-        <div class="row">
-            @if (isset($evento->fotoEvento))
-                 <div class="banner-evento">
-                    <img style="background-size: cover" src="{{ asset('storage/' . $bannerPath) }}" alt="">
-        </div>
+@endphp
+<div class="banner-evento">
+    <div class="row">
+        @if (isset($evento->fotoEvento))
+            <div class="banner-evento">
+                <img style="background-size: cover" src="{{ asset('storage/' . $bannerPath) }}" alt="">
+            </div>
         @else
-        <div class="banner-evento">
-            <img style="background-size: cover" src="{{ asset('img/colorscheme.png') }}" alt="">
-        </div>
-        {{-- <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt=""> --}}
+            <div class="banner-evento">
+                <img style="background-size: cover" src="{{ asset('img/colorscheme.png') }}" alt="">
+            </div>
+            {{-- <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt=""> --}}
         @endif
     </div>
 </div>
+
+<br>
+
 <div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
     <div class="modal-dialog @if($evento->possuiFormularioDeInscricao()) modal-lg @endif" role="document">
         <div class="modal-content">
@@ -197,13 +200,13 @@
                 <div class="modal-body">
                     @if(!auth()->check())
                     @include('componentes.mensagens')
-                    <p>{{__("Para continuar com sua inscrição, é necessário que possua cadastro na plataforma e realize o seu acesso (login), caso já possua uma conta. Se você ainda não tem, será necessário efetuar o cadastro e retornar a página do evento para realizar sua inscrição")}}.</p>
+                    <p>{{__("Para continuar com sua inscrição, é necessário que possua cadastro na plataforma e realize o seu acesso (login), caso já possua uma conta. Se você ainda não tem, será necessário efetuar o cadastro. Após o cadastro ou login, por favor, retorne a esta página e a atualize pressionando a tecla F5 para prosseguir com sua inscrição.")}}</p>
                     <div class="modal-footer text-center">
-                        <a href="{{ route('register', app()->getLocale()) }}">
+                        <a href="{{ route('register', app()->getLocale()) }}" target="_blank">
                             <button type="button" class="btn btn-secondary">{{ __('Cadastrar-se') }}</button>
                         </a>
 
-                        <a href="{{ route('login') }}">
+                        <a href="{{ route('login') }}" target="_blank">
                             <button type="button" class="btn btn-primary button-prevent-multiple-submits">{{ __('Entrar') }}</button>
                         </a>
                     </div>
