@@ -6,6 +6,34 @@
 
 @section('content')
 <section class="home-section d-flex align-items-center justify-content-start flex-column">
+    @if(session('verified'))
+        <div class="modal fade" id="verificationModal" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #114048ff; color: white;">
+                        <h5 class="modal-title" id="#label">{{ __("Parabéns, ") }} {{ Auth::user()->name }}!</h5>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="text-justify">{!! __("Sua conta foi validada com sucesso!<br><br>Agora você pode voltar a página do evento do seu interesse e clicar no botão \"Inscrever-se\" para realizar sua inscrição.") !!}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if(session('verified'))
+        <script>
+            $(document).ready(function() {
+                $('#verificationModal').modal('show');
+            });
+        </script>
+    @endif
 
     <div class="container-fluid">
         @if (count($proximosEventos) > 0)

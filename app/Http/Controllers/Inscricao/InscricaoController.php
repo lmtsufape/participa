@@ -62,7 +62,6 @@ class InscricaoController extends Controller
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $campos = $evento->camposFormulario;
-
         return view('coordenador.inscricoes.formulario', compact('evento', 'campos'));
     }
 
