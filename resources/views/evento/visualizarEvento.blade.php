@@ -173,22 +173,25 @@
     </div>
 </div>
 @php
-$bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en ? $evento->fotoEvento_en : $evento->fotoEvento;
+    $bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en ? $evento->fotoEvento_en : $evento->fotoEvento;
 @endphp
-<div class="container-fluid content mt-n2">
+<div class="banner-evento">
     <div class="row">
         @if (isset($evento->fotoEvento))
-        <div class="banner-evento">
-            <img style="background-size: cover" src="{{ asset('storage/' . $bannerPath) }}" alt="">
-        </div>
+            <div class="banner-evento">
+                <img style="background-size: cover" src="{{ asset('storage/' . $bannerPath) }}" alt="">
+            </div>
         @else
-        <div class="banner-evento">
-            <img style="background-size: cover" src="{{ asset('img/colorscheme.png') }}" alt="">
-        </div>
-        {{-- <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt=""> --}}
+            <div class="banner-evento">
+                <img style="background-size: cover" src="{{ asset('img/colorscheme.png') }}" alt="">
+            </div>
+            {{-- <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt=""> --}}
         @endif
     </div>
 </div>
+
+<br>
+
 <div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
     <div class="modal-dialog @if($evento->possuiFormularioDeInscricao()) modal-lg @endif" role="document">
         <div class="modal-content">
@@ -207,13 +210,16 @@ $bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' &
                 <div class="modal-body">
                     @if(!auth()->check())
                     @include('componentes.mensagens')
-                    <p>{{__("Para continuar com sua inscrição, é necessário que possua cadastro na plataforma e realize o seu acesso (login), caso já possua uma conta. Se você ainda não tem, será necessário efetuar o cadastro e retornar a página do evento para realizar sua inscrição")}}.</p>
+                    <p class="text-justify">{!! __("Para continuar com sua inscrição, é necessário que possua cadastro na plataforma e realize o seu acesso (login). <strong>Caso já possua uma conta</strong>, basta acessar com o seu login (e-mail) e senha.") !!} <br><br>
+                                            {!! __("<strong>Se você ainda não tem</strong>, será necessário efetuar o cadastro, validar sua conta pelo link enviado para o e-mail e retornar a página do evento para realizar sua inscrição.") !!} <br><br>
+                                            {!! __("Após realizar seu login ou cadastro, retorne a esta página, atualize-a (pressionando a tecla F5) e prossiga com sua inscrição no evento.") !!}
+                    </p>
                     <div class="modal-footer text-center">
-                        <a href="{{ route('register', app()->getLocale()) }}">
+                        <a href="{{ route('register', app()->getLocale()) }}" target="_blank">
                             <button type="button" class="btn btn-secondary">{{ __('Cadastrar-se') }}</button>
                         </a>
 
-                        <a href="{{ route('login') }}">
+                        <a href="{{ route('login') }}" target="_blank">
                             <button type="button" class="btn btn-primary button-prevent-multiple-submits">{{ __('Entrar') }}</button>
                         </a>
                     </div>
@@ -248,13 +254,10 @@ $bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' &
 
                                                             @if($links)
                                                             @foreach($links->where('categoria_id', $categoria->id) as $link)
-
-                                                            <label for="">Valor: </label>
-                                                            <p>R${{$link->valor}}</p>
-                                                            <label for="">Link para pagamento: </label>
-                                                            <a href="{{$link->link}}">{{$link->link}}</a>
-
-
+                                                                <label for="">Valor: </label>
+                                                                <p>R${{$link->valor}}</p>
+                                                                <label for="">Link para pagamento: </label>
+                                                                <a href="{{$link->link}}">{{$link->link}}</a>
                                                             @endforeach
                                                             @endif
                                                         </div>
