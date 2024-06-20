@@ -163,22 +163,25 @@
     </div>
 </div>
 @php
-        $bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en ? $evento->fotoEvento_en : $evento->fotoEvento;
-    @endphp
-    <div class="container-fluid content mt-n2">
-        <div class="row">
-            @if (isset($evento->fotoEvento))
-                 <div class="banner-evento">
-                    <img style="background-size: cover" src="{{ asset('storage/' . $bannerPath) }}" alt="">
-        </div>
+    $bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en ? $evento->fotoEvento_en : $evento->fotoEvento;
+@endphp
+<div class="banner-evento">
+    <div class="row">
+        @if (isset($evento->fotoEvento))
+            <div class="banner-evento">
+                <img style="background-size: cover" src="{{ asset('storage/' . $bannerPath) }}" alt="">
+            </div>
         @else
-        <div class="banner-evento">
-            <img style="background-size: cover" src="{{ asset('img/colorscheme.png') }}" alt="">
-        </div>
-        {{-- <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt=""> --}}
+            <div class="banner-evento">
+                <img style="background-size: cover" src="{{ asset('img/colorscheme.png') }}" alt="">
+            </div>
+            {{-- <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt=""> --}}
         @endif
     </div>
 </div>
+
+<br>
+
 <div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
     <div class="modal-dialog @if($evento->possuiFormularioDeInscricao()) modal-lg @endif" role="document">
         <div class="modal-content">
@@ -238,7 +241,7 @@
 
                                                             @if($links)
                                                             @foreach($links->where('categoria_id', $categoria->id) as $link)
-                                                      
+
                                                                 <label for="">Valor: </label>
                                                                 <p>R${{$link->valor}}</p>
                                                                 <label for="">Link para pagamento: </label>

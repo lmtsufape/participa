@@ -322,15 +322,18 @@ a.baixar-campo-form li {
 }
 
 /* EVENTO */
-.banner-evento{
-    min-width: 100%;
-    min-height: 425px;
-    background-color:rgb(255, 255, 255);
+.banner-evento {
+    display: flex;
+    justify-content: center;
 }
-.banner-evento img{
-    width: 100%;
-    min-height: 425px;
-    max-height: 425px;
+
+.banner-evento img {
+    width: 60vw;
+    max-width: calc(100vw - 40%);
+    display: block;
+    margin-left: 20%;
+    margin-right: 20%;
+    height: auto;
 }
 .front-image-evento{
     margin-top: 25px;
