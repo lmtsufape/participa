@@ -56,7 +56,7 @@
                     <div class="carrousel-item-box-image">
 
                         @if ($ProximoEvento->fotoEvento != null)
-                        <img src="{{ asset('storage/' . $ProximoEvento->fotoEvento) }}" alt="imagem evento" width="100%" height="100%">
+                        <img src="{{ asset('storage/' . $ProximoEvento->icone) }}" alt="imagem evento" width="100%" height="100%">
                         @else
                         <img src="{{ asset('img/colorscheme.png') }}" alt="" width="100%" height="100%">
                         @endif
