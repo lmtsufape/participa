@@ -4,7 +4,7 @@
 
 <!-- Modal para editar a atividade-->
 @foreach ($atividades as $atv)
-<div class="modal fade bd-example-modal-lg" id="modalAtividadeEdit{{$atv->id}}" tabindex="-1" role="dialog" aria-labelledby="modalLabelAtividadeEdit{{$atv->id}}" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="modalAtividadeEdit{{$atv->id}}"  role="dialog" aria-labelledby="modalLabelAtividadeEdit{{$atv->id}}" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
@@ -74,7 +74,7 @@
                         <div class="row form-group">
                             <div class="col-sm-12">
                                 <label for="descricao">Descrição*:</label>
-                                <textarea class="form-control @error('descricao') is-invalid @enderror" rows="5" name="descricao" id="descricao{{$atv->id}}" placeholder="Descreva em detalhes sua atividade">@if (old('descricao') != null) {{ old('descricao') }} @else {{$atv->descricao}} @endif</textarea>
+                                <textarea class=" @error('descricao') is-invalid @enderror" rows="5" name="descricao" id="descricao{{$atv->id}}" placeholder="Descreva em detalhes sua atividade">@if (old('descricao') != null) {{ old('descricao') }} @else {{$atv->descricao}} @endif</textarea>
 
                                 @error('descricao')
                                 <span class="invalid-feedback" role="alert">
@@ -483,7 +483,7 @@
 </div>
 </div>
 @endforeach
-<div class="modal fade bd-example-modal-lg" id="modalCriarAtividade" tabindex="-1" role="dialog" aria-labelledby="modalLabelCriarAtividade" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="modalCriarAtividade" role="dialog" aria-labelledby="modalLabelCriarAtividade" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
@@ -547,7 +547,7 @@
                         <div class="row form-group">
                             <div class="col-sm-12">
                                 <label for="descricao">Descrição*:</label>
-                                <textarea class="form-control @error('descrição') is-invalid @enderror" rows="5" name="descrição" id="descricao" placeholder="Descreva em detalhes sua atividade">{{ old('descrição') }}</textarea required>
+                                <textarea class=" @error('descrição') is-invalid @enderror"  rows="5" name="descrição" id="descricao" placeholder="Descreva em detalhes sua atividade">{{ old('descrição') }}</textarea required>
 
                                 @error('descrição')
                                 <span class="invalid-feedback" role="alert">
