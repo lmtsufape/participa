@@ -27,11 +27,12 @@
                     <hr>
                     <div class="row form-group">
                         <div class="col-sm-12">
-                            <label for="descricao">{{__("Descrição")}}</label>
+                            <label for="descricao">{{ __("Descrição") }}</label>
                             <p>
-                                {{ $atv->descricao }}
+                                {!! $atv->descricao !!}
                             </p>
                         </div>
+
                     </div>
                     @if (count($atv->convidados) > 0)
                     <hr>
