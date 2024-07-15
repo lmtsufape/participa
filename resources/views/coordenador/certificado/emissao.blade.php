@@ -95,7 +95,7 @@
                                             <div class="form-check">
                                                 <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" :value="destinatarios[index].id" :id="'destinatarios_'+index"  x-on:change="syncHidden('trabalhos_', index)">
                                                 <input class="d-none" type="checkbox" name="trabalhos[]" :value="trabalhos[index].id" :id="'trabalhos_'+index">
-                                                <label :for="'destinatarios_'+index"><strong x-text="destinatario.name + ' - ' + trabalhos[index].titulo"></strong><span x-text="' ('+destinatario.email+')'"></span></label>
+                                                <label :for="'destinatarios_'+index"><strong x-text="destinatario.name + ' - ' + trabalhos[index].titulo"></strong><span x-text="' ('+destinatario.email+')'"></span> <span class="font-weight-bold" x-text="trabalhos[index].parecer_final == null ? '' : trabalhos[index].parecer_final == true ? 'Aprovado' : 'Reprovado'"></span> </label>
                                             </div>
                                         </template>
                                         <template x-if="tipo == 6">
