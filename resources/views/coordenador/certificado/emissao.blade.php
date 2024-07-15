@@ -89,6 +89,10 @@
                     <div style="width:100%; height:250px; display: inline-block; border: 2px solid #f2f2f2; border-radius: 2px; overflow:auto; padding-top: 8px;">
                         <table id="tabelaDestinatarios">
                             <tbody id="dentroTabelaDestinatarios">
+                                <div class="form-check">
+                                    <input type="checkbox" id="selecionartodos" onclick="selecionarTodosDestinatarios(this)">
+                                    <label for="selecionartodos">Selecionar todos</label>
+                                </div>
                                 <template x-for="(destinatario, index) in destinatarios" :key="index">
                                     <div class="d-flex justify-content-left">
                                         <template x-if="tipo == 1">
@@ -167,6 +171,13 @@
 @endsection
 <script src="{{ asset('js/checkbox_marcar_todos.js') }}" defer></script>
 <script>
+    function selecionarTodosDestinatarios(source) {
+        const container = document.getElementById('dentroTabelaDestinatarios');
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = source.checked;
+            });
+    }
     function handler(){
         return {
             certificados: [],
