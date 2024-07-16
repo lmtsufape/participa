@@ -190,7 +190,7 @@ class CertificadoController extends Controller
             $certificado->caminho = $novo_caminho;
         }
 
-        if ($request->imagem_verso != null || ! $validatedData['verso'] || ! $validatedData['has_imagem_verso']) {
+        if ($request->imagem_verso != null && (! $validatedData['verso'] || ! $validatedData['has_imagem_verso'])) {
             if (Storage::disk('public')->exists($certificado->imagem_verso)) {
                 Storage::disk('public')->delete($certificado->imagem_verso);
             }
