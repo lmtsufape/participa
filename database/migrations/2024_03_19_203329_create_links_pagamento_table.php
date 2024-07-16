@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('links_pagamento', function (Blueprint $table) {
+        Schema::create('links_pagamentos', function (Blueprint $table) {
             $table->id();
-            $table->string('link');
-            $table->double('valor');
-            $table->date('dataInicio');
-            $table->date('dataFim');
-            $table->bigInteger('categoria_id');
+            $table->string('link')->nullable();
+            $table->double('valor')->nullable();
+            $table->dateTime('dataInicio')->nullable();
+            $table->dateTime('dataFim')->nullable();
+            $table->unsignedBigInteger('categoria_id');
             $table->foreign('categoria_id')->references('id')->on('categoria_participantes');
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('links_pagamento');
+        Schema::dropIfExists('links_pagamentos');
     }
 };

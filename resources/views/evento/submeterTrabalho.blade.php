@@ -19,11 +19,15 @@
                                 @endif
                             </div>
                         </div>
-                        <h2 class="card-title">{{$evento->nome}}</h2>
-                        <h4 class="card-title">Modalidade: {{$modalidade->nome}}</h4>
+                        @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                            <h2 class="card-title">{{$evento->nome_en}}</h2>
+                        @else
+                            <h2 class="card-title">{{$evento->nome}}</h2>
+                        @endif
+                        <h4 class="card-title">{{__('Modalidade')}}: {{$modalidade->nome}}</h4>
                         <div class="titulo-detalhes"></div>
                         <br>
-                        <h4 class="card-title">Enviar Trabalho</h4>
+                        <h4 class="card-title">{{__('Enviar Trabalho')}}</h4>
                         <p class="card-text">
                             <form method="POST" action="{{route('trabalho.store', $modalidade->id)}}"
                                 enctype="multipart/form-data" class="form-prevent-multiple-submits">
@@ -47,6 +51,28 @@
                                 </div>
                                 @foreach ($ordemCampos as $indice)
                                     @if ($indice == "etiquetatitulotrabalho")
+                                        @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+
+
+                                        <div class="row justify-content-center">
+                                            {{-- Nome Trabalho Ingles  --}}
+                                            <div class="col-sm-12">
+                                                <label for="nomeTrabalho_en"
+                                                       class="col-form-label"><strong>{{ $formSubTraba->etiquetatitulotrabalho_en }}</strong>
+                                                </label>
+                                                <input id="nomeTrabalho_en" type="text"
+                                                       class="form-control @error('nomeTrabalho_en') is-invalid @enderror"
+                                                       name="nomeTrabalho_en" value="{{ old('nomeTrabalho_en') }}"
+                                                       autocomplete="nomeTrabalho_en" autofocus>
+                                                @error('nomeTrabalho_en')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        @else
+
                                         <div class="row justify-content-center">
                                             {{-- Nome Trabalho  --}}
                                             <div class="col-sm-12">
@@ -64,8 +90,9 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                         @endif
                                     @endif
-                                    @if ($indice == "etiquetaautortrabalho")
+{{--                                    @if ($indice == "etiquetaautortrabalho")--}}
                                         {{-- <div class="row justify-content-center">
                                         Autor
                                         <div class="col-sm-12">
@@ -73,7 +100,7 @@
                                             <input class="form-control" type="text" disabled value="{{Auth::user()->name}}">
                                         </div>
                                         </div> --}}
-                                    @endif
+{{--                                    @endif--}}
                                     @if ($indice == "etiquetacoautortrabalho")
                                         <div style="margin-top:20px">
                                             <div class="row align-items-center justify-content-between"
@@ -128,50 +155,104 @@
                                         </div>
                                     @endif
                                     @if ($modalidade->texto && $indice == "etiquetaresumotrabalho")
+
                                         @if ($modalidade->caracteres == true)
-                                            <div class="row justify-content-center">
-                                                <div class="col-sm-12">
-                                                    <label for="resumo"
-                                                        class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                                                    <textarea id="resumo"
-                                                            class="char-count form-control @error('resumo') is-invalid @enderror"
-                                                            data-ls-module="charCounter"
-                                                            minlength="{{$modalidade->mincaracteres}}"
-                                                            maxlength="{{$modalidade->maxcaracteres}}" name="resumo"
-                                                            autocomplete="resumo"
-                                                            autofocusrows="5">{{old('resumo')}}</textarea>
-                                                    <p class="text-muted"><small><span name="resumo">0</span></small> - Min
-                                                        Caracteres: {{$modalidade->mincaracteres}} - Max
-                                                        Caracteres: {{$modalidade->maxcaracteres}}</p>
-                                                    @error('resumo')
-                                                    <span class="invalid-feedback" role="alert">
+                                                @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-sm-12">
+                                                            <label for="resumo_en"
+                                                                   class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho_en}}</label>
+                                                            <textarea id="resumo_en"
+                                                                      class="char-count form-control @error('resumo_en') is-invalid @enderror"
+                                                                      data-ls-module="charCounter"
+                                                                      minlength="{{$modalidade->mincaracteres}}"
+                                                                      maxlength="{{$modalidade->maxcaracteres}}" name="resumo_en"
+                                                                      autocomplete="resumo"
+                                                                      autofocusrows="5">{{old('resumo_en')}}</textarea>
+                                                            <p class="text-muted"><small><span name="resumo">0</span></small> - Min
+                                                                Caracteres: {{$modalidade->mincaracteres}} - Max
+                                                                Caracteres: {{$modalidade->maxcaracteres}}</p>
+                                                            @error('resumo_en')
+                                                            <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
-                                                    @enderror
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+
+                                                @else
+                                                    <div class="row justify-content-center">
+                                                    <div class="col-sm-12">
+                                                        <label for="resumo"
+                                                               class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
+                                                        <textarea id="resumo"
+                                                                  class="char-count form-control @error('resumo') is-invalid @enderror"
+                                                                  data-ls-module="charCounter"
+                                                                  minlength="{{$modalidade->mincaracteres}}"
+                                                                  maxlength="{{$modalidade->maxcaracteres}}" name="resumo"
+                                                                  autocomplete="resumo"
+                                                                  autofocusrows="5">{{old('resumo')}}</textarea>
+                                                        <p class="text-muted"><small><span name="resumo">0</span></small> - Min
+                                                            Caracteres: {{$modalidade->mincaracteres}} - Max
+                                                            Caracteres: {{$modalidade->maxcaracteres}}</p>
+                                                        @error('resumo')
+                                                        <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                        @enderror
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                @endif
+
+
                                         @elseif ($modalidade->palavras == true)
-                                            <div class="row justify-content-center">
-                                                <div class="col-sm-12">
-                                                    <label for="resumo"
-                                                        class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
-                                                    <textarea id="palavra"
-                                                            class="form-control palavra @error('resumo') is-invalid @enderror"
-                                                            name="resumo" value="{{ old('resumo') }}"
-                                                            autocomplete="resumo" autofocusrows="5"
-                                                            required>{{old('resumo')}}</textarea>
-                                                    <p class="text-muted"><small><span id="numpalavra">0</span></small> -
-                                                        Min Palavras: <span
-                                                            id="minpalavras">{{$modalidade->minpalavras}}</span> - Max
-                                                        Palavras: <span id="maxpalavras">{{$modalidade->maxpalavras}}</span>
-                                                    </p>
-                                                    @error('resumo')
-                                                    <span class="invalid-feedback" role="alert">
+                                                @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-sm-12">
+                                                            <label for="resumo_en"
+                                                                   class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho_en}}</label>
+                                                            <textarea id="palavra"
+                                                                      class="form-control palavra @error('resumo_en') is-invalid @enderror"
+                                                                      name="resumo_en" value="{{ old('resumo_en') }}"
+                                                                      autocomplete="resumo_en" autofocusrows="5"
+                                                                      required>{{old('resumo_en')}}</textarea>
+                                                            <p class="text-muted"><small><span id="numpalavra">0</span></small> -
+                                                                Min Palavras: <span
+                                                                    id="minpalavras">{{$modalidade->minpalavras}}</span> - Max
+                                                                Palavras: <span id="maxpalavras">{{$modalidade->maxpalavras}}</span>
+                                                            </p>
+                                                            @error('resumo_en')
+                                                            <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                @else
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-sm-12">
+                                                            <label for="resumo"
+                                                                   class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
+                                                            <textarea id="palavra"
+                                                                      class="form-control palavra @error('resumo') is-invalid @enderror"
+                                                                      name="resumo" value="{{ old('resumo') }}"
+                                                                      autocomplete="resumo" autofocusrows="5"
+                                                                      required>{{old('resumo')}}</textarea>
+                                                            <p class="text-muted"><small><span id="numpalavra">0</span></small> -
+                                                                Min Palavras: <span
+                                                                    id="minpalavras">{{$modalidade->minpalavras}}</span> - Max
+                                                                Palavras: <span id="maxpalavras">{{$modalidade->maxpalavras}}</span>
+                                                            </p>
+                                                            @error('resumo')
+                                                            <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+
                                         @endif
                                     @endif
                                     @if ($indice == "etiquetaareatrabalho")
@@ -233,6 +314,12 @@
                                                     <label for="nomeTrabalho"
                                                         class="col-form-label"><strong>{{$formSubTraba->etiquetauploadtrabalho}}</strong>
                                                     </label>
+                                                    
+                                                    @if($modalidade->submissaoUnica == true)
+                                                    <div>
+                                                    <strong style="color: red;">ATENÇÃO: Nesta modalidade só é possível submeter o trabalho apenas uma vez.</strong>
+                                                    </div>
+                                                    @endif
                                                     <div class="custom-file">
                                                         <input type="file" class="filestyle"
                                                             data-placeholder="Nenhum arquivo" data-text="Selecionar"
@@ -292,43 +379,84 @@
                                         @if ($formSubTraba->checkcampoextra1 == true)
                                             @if ($formSubTraba->tipocampoextra1 == "textosimples")
                                                 {{-- Texto Simples --}}
-                                                <div class="row justify-content-center">
-                                                    {{-- Nome Trabalho  --}}
-                                                    <div class="col-sm-12">
-                                                        <label for="campoextra1simples"
-                                                            class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}
-                                                            :</label>
-                                                        <input id="campoextra1simples" type="text"
-                                                            class="form-control @error('campoextra1simples') is-invalid @enderror"
-                                                            name="campoextra1simples"
-                                                            value="{{ old('campoextra1simples') }}" required
-                                                            autocomplete="campoextra1simples" autofocus>
-                                                        @error('campoextra1simples')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
+                                                    @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                        <div class="row justify-content-center">
+                                                            {{-- Nome Trabalho  --}}
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra1simples_en"
+                                                                       class="col-form-label">{{ $formSubTraba->etiquetacampoextra1_en}}
+                                                                    :</label>
+                                                                <input id="campoextra1simples_en" type="text"
+                                                                       class="form-control @error('campoextra1simples_en') is-invalid @enderror"
+                                                                       name="campoextra1simples_en"
+                                                                       value="{{ old('campoextra1simples_en') }}" required
+                                                                       autocomplete="campoextra1simples_en" autofocus>
+                                                                @error('campoextra1simples_en')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                    <div class="row justify-content-center">
+                                                        {{-- Nome Trabalho  --}}
+                                                        <div class="col-sm-12">
+                                                            <label for="campoextra1simples"
+                                                                class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}
+                                                                :</label>
+                                                            <input id="campoextra1simples" type="text"
+                                                                class="form-control @error('campoextra1simples') is-invalid @enderror"
+                                                                name="campoextra1simples"
+                                                                value="{{ old('campoextra1simples') }}" required
+                                                                autocomplete="campoextra1simples" autofocus>
+                                                            @error('campoextra1simples')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                            @enderror
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                    @endif
                                             @elseif ($formSubTraba->tipocampoextra1 == "textogrande")
                                                 {{-- Texto Grande --}}
-                                                <div class="row justify-content-center">
-                                                    <div class="col-sm-12">
-                                                        <label for="campoextra1grande"
-                                                            class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}
-                                                            :</label>
-                                                        <textarea id="campoextra1grande" type="text"
-                                                                class="form-control @error('campoextra1grande') is-invalid @enderror"
-                                                                name="campoextra1grande"
-                                                                value="{{ old('campoextra1grande') }}" required
-                                                                autocomplete="campoextra1grande" autofocus></textarea>
-                                                        @error('campoextra1grande')
-                                                        <span class="invalid-feedback" role="alert">
+                                                @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-sm-12">
+                                                            <label for="campoextra1grande_en"
+                                                                   class="col-form-label">{{ $formSubTraba->etiquetacampoextra1_en}}
+                                                                :</label>
+                                                            <textarea id="campoextra1grande_en" type="text"
+                                                                      class="form-control @error('campoextra1grande_en') is-invalid @enderror"
+                                                                      name="campoextra1grande_en"
+                                                                      value="{{ old('campoextra1grande_en') }}" required
+                                                                      autocomplete="campoextra1grande_en" autofocus></textarea>
+                                                            @error('campoextra1grande_en')
+                                                            <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                         </span>
-                                                        @enderror
+                                                            @enderror
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                @else
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-sm-12">
+                                                            <label for="campoextra1grande"
+                                                                class="col-form-label">{{ $formSubTraba->etiquetacampoextra1}}
+                                                                :</label>
+                                                            <textarea id="campoextra1grande" type="text"
+                                                                    class="form-control @error('campoextra1grande') is-invalid @enderror"
+                                                                    name="campoextra1grande"
+                                                                    value="{{ old('campoextra1grande') }}" required
+                                                                    autocomplete="campoextra1grande" autofocus></textarea>
+                                                            @error('campoextra1grande')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                @endif
                                             @elseif ($formSubTraba->tipocampoextra1 == "upload")
                                                 <div class="col-sm-12" style="margin-top: 20px;">
                                                     <label for="campoextra1arquivo"
@@ -354,27 +482,71 @@
                                     @if ($indice == "etiquetacampoextra2")
                                         @if ($formSubTraba->checkcampoextra2 == true)
                                             @if ($formSubTraba->tipocampoextra2 == "textosimples")
-                                                <div class="row justify-content-center">
-                                                    {{-- Nome Trabalho  --}}
-                                                    <div class="col-sm-12">
-                                                        <label for="campoextra2simples"
-                                                            class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}
-                                                            :</label>
-                                                        <input id="campoextra2simples" type="text"
-                                                            class="form-control @error('campoextra2simples') is-invalid @enderror"
-                                                            name="campoextra2simples"
-                                                            value="{{ old('campoextra2simples') }}" required
-                                                            autocomplete="campoextra2simples" autofocus>
-                                                        @error('campoextra2simples')
-                                                        <span class="invalid-feedback" role="alert">
+                                                    @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                        <div class="row justify-content-center">
+                                                            {{-- Nome Trabalho  --}}
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra2simples_en"
+                                                                       class="col-form-label">{{ $formSubTraba->etiquetacampoextra2_en}}
+                                                                    :</label>
+                                                                <input id="campoextra2simples_en" type="text"
+                                                                       class="form-control @error('campoextra2simples_en') is-invalid @enderror"
+                                                                       name="campoextra2simples_en"
+                                                                       value="{{ old('campoextra2simples_en') }}" required
+                                                                       autocomplete="campoextra2simples_en" autofocus>
+                                                                @error('campoextra2simples_en')
+                                                                <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                         </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <div class="row justify-content-center">
+                                                            {{-- Nome Trabalho  --}}
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra2simples"
+                                                                       class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}
+                                                                    :</label>
+                                                                <input id="campoextra2simples" type="text"
+                                                                       class="form-control @error('campoextra2simples') is-invalid @enderror"
+                                                                       name="campoextra2simples"
+                                                                       value="{{ old('campoextra2simples') }}" required
+                                                                       autocomplete="campoextra2simples" autofocus>
+                                                                @error('campoextra2simples')
+                                                                <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @endif
+
                                             @elseif ($formSubTraba->tipocampoextra2 == "textogrande")
+                                                    @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                        <div class="row justify-content-center">
+                                                            {{-- Nome Trabalho  --}}
+
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra2grande_en"
+                                                                       class="col-form-label">{{ $formSubTraba->etiquetacampoextra2_en}}
+                                                                    :</label>
+                                                                <textarea id="campoextra2grande_en" type="text"
+                                                                          class="form-control @error('campoextra2grande_en') is-invalid @enderror"
+                                                                          name="campoextra2grande_en"
+                                                                          value="{{ old('campoextra2grande_en') }}" required
+                                                                          autocomplete="campoextra2grande_en" autofocus></textarea>
+                                                                @error('campoextra2grande_en')
+                                                                <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @else
                                                 <div class="row justify-content-center">
                                                     {{-- Nome Trabalho  --}}
+
                                                     <div class="col-sm-12">
                                                         <label for="campoextra2grande"
                                                             class="col-form-label">{{ $formSubTraba->etiquetacampoextra2}}
@@ -391,6 +563,7 @@
                                                         @enderror
                                                     </div>
                                                 </div>
+                                                    @endif
                                             @elseif ($formSubTraba->tipocampoextra2 == "upload")
                                                 <div class="col-sm-12" style="margin-top: 20px;">
                                                     <label for="campoextra2arquivo"
@@ -416,43 +589,58 @@
                                     @if ($indice == "etiquetacampoextra3")
                                         @if ($formSubTraba->checkcampoextra3 == true)
                                             @if ($formSubTraba->tipocampoextra3 == "textosimples")
-                                                <div class="row justify-content-center">
-                                                    {{-- Nome Trabalho  --}}
-                                                    <div class="col-sm-12">
-                                                        <label for="campoextra3simples"
-                                                            class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}
-                                                            :</label>
-                                                        <input id="campoextra3simples" type="text"
-                                                            class="form-control @error('campoextra3simples') is-invalid @enderror"
-                                                            name="campoextra3simples"
-                                                            value="{{ old('campoextra3simples') }}" required
-                                                            autocomplete="campoextra3simples" autofocus>
-                                                        @error('campoextra3simples')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            @elseif ($formSubTraba->tipocampoextra3 == "textogrande")
-                                                <div class="row justify-content-center">
-                                                    {{-- Nome Trabalho  --}}
-                                                    <div class="col-sm-12">
-                                                        <label for="campoextra3grande"
-                                                            class="col-form-label">{{ $formSubTraba->etiquetacampoextra3}}
-                                                            :</label>
-                                                        <textarea id="campoextra3grande" type="text"
-                                                                class="form-control @error('campoextra3grande') is-invalid @enderror"
-                                                                name="campoextra3grande"
-                                                                value="{{ old('campoextra3grande') }}" required
-                                                                autocomplete="campoextra3grande" autofocus></textarea>
-                                                        @error('campoextra3grande')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
+                                                    @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra3simples_en" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3_en }}:</label>
+                                                                <input id="campoextra3simples_en" type="text" class="form-control @error('campoextra3simples_en') is-invalid @enderror" name="campoextra3simples_en" value="{{ old('campoextra3simples_en') }}" required autocomplete="campoextra3simples_en" autofocus>
+                                                                @error('campoextra3simples_en')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra3simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3 }}:</label>
+                                                                <input id="campoextra3simples" type="text" class="form-control @error('campoextra3simples') is-invalid @enderror" name="campoextra3simples" value="{{ old('campoextra3simples') }}" required autocomplete="campoextra3simples" autofocus>
+                                                                @error('campoextra3simples')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                @elseif ($formSubTraba->tipocampoextra3 == "textogrande")
+                                                    {{-- Texto Grande --}}
+                                                    @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra3grande_en" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3_en }}:</label>
+                                                                <textarea id="campoextra3grande_en" class="form-control @error('campoextra3grande_en') is-invalid @enderror" name="campoextra3grande_en" required autocomplete="campoextra3grande_en" autofocus>{{ old('campoextra3grande_en') }}</textarea>
+                                                                @error('campoextra3grande_en')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra3grande" class="col-form-label">{{ $formSubTraba->etiquetacampoextra3 }}:</label>
+                                                                <textarea id="campoextra3grande" class="form-control @error('campoextra3grande') is-invalid @enderror" name="campoextra3grande" required autocomplete="campoextra3grande" autofocus>{{ old('campoextra3grande') }}</textarea>
+                                                                @error('campoextra3grande')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                              </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                             @elseif ($formSubTraba->tipocampoextra3 == "upload")
                                                 {{-- Arquivo de Regras  --}}
                                                 <div class="col-sm-12" style="margin-top: 20px;">
@@ -479,43 +667,58 @@
                                     @if ($indice == "etiquetacampoextra4")
                                         @if ($formSubTraba->checkcampoextra4 == true)
                                             @if ($formSubTraba->tipocampoextra4 == "textosimples")
-                                                <div class="row justify-content-center">
-                                                    {{-- Nome Trabalho  --}}
-                                                    <div class="col-sm-12">
-                                                        <label for="campoextra4simples"
-                                                            class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}
-                                                            :</label>
-                                                        <input id="campoextra4simples" type="text"
-                                                            class="form-control @error('campoextra4simples') is-invalid @enderror"
-                                                            name="campoextra4simples"
-                                                            value="{{ old('campoextra4simples') }}" required
-                                                            autocomplete="campoextra4simples" autofocus>
-                                                        @error('campoextra4simples')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            @elseif ($formSubTraba->tipocampoextra4 == "textogrande")
-                                                <div class="row justify-content-center">
-                                                    {{-- Nome Trabalho  --}}
-                                                    <div class="col-sm-12">
-                                                        <label for="campoextra4grande"
-                                                            class="col-form-label">{{ $formSubTraba->etiquetacampoextra4}}
-                                                            :</label>
-                                                        <textarea id="campoextra4grande" type="text"
-                                                                class="form-control @error('campoextra4grande') is-invalid @enderror"
-                                                                name="campoextra4grande"
-                                                                value="{{ old('campoextra4grande') }}" required
-                                                                autocomplete="campoextra4grande" autofocus></textarea>
-                                                        @error('campoextra4grande')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
+                                                    @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra4simples_en" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4_en }}:</label>
+                                                                <input id="campoextra4simples_en" type="text" class="form-control @error('campoextra4simples_en') is-invalid @enderror" name="campoextra4simples_en" value="{{ old('campoextra4simples_en') }}" required autocomplete="campoextra4simples_en" autofocus>
+                                                                @error('campoextra4simples_en')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm">
+                                                                <label for="campoextra4simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4 }}:</label>
+                                                                <input id="campoextra4simples" type="text" class="form-control @error('campoextra4simples') is-invalid @enderror" name="campoextra4simples" value="{{ old('campoextra4simples') }}" required autocomplete="campoextra4simples" autofocus>
+                                                                @error('campoextra4simples')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                @elseif ($formSubTraba->tipocampoextra4 == "textogrande")
+                                                    {{-- Texto Grande --}}
+                                                    @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra4grande_en" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4_en }}:</label>
+                                                                <textarea id="campoextra4grande_en" class="form-control @error('campoextra4grande_en') is-invalid @enderror" name="campoextra4grande_en" required autocomplete="campoextra4grande_en" autofocus>{{ old('campoextra4grande_en') }}</textarea>
+                                                                @error('campoextra4grande_en')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra4grande" class="col-form-label">{{ $formSubTraba->etiquetacampoextra4 }}:</label>
+                                                                <textarea id="campoextra4grande" class="form-control @error('campoextra4grande') is-invalid @enderror" name="campoextra4grande" required autocomplete="campoextra4grande" autofocus>{{ old('campoextra4grande') }}</textarea>
+                                                                @error('campoextra4grande')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                             @elseif ($formSubTraba->tipocampoextra4 == "upload")
                                                 {{-- Arquivo de Regras  --}}
                                                 <div class="col-sm-12" style="margin-top: 20px;">
@@ -542,43 +745,59 @@
                                     @if ($indice == "etiquetacampoextra5")
                                         @if ($formSubTraba->checkcampoextra5 == true)
                                             @if ($formSubTraba->tipocampoextra5 == "textosimples")
-                                                <div class="row justify-content-center">
-                                                    {{-- Nome Trabalho  --}}
-                                                    <div class="col-sm-12">
-                                                        <label for="campoextra5simples"
-                                                            class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}
-                                                            :</label>
-                                                        <input id="campoextra5simples" type="text"
-                                                            class="form-control @error('campoextra5simples') is-invalid @enderror"
-                                                            name="campoextra5simples"
-                                                            value="{{ old('campoextra5simples') }}" required
-                                                            autocomplete="campoextra5simples" autofocus>
-                                                        @error('campoextra5simples')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            @elseif ($formSubTraba->tipocampoextra5 == "textogrande")
-                                                <div class="row justify-content-center">
-                                                    {{-- Nome Trabalho  --}}
-                                                    <div class="col-sm-12">
-                                                        <label for="campoextra5"
-                                                            class="col-form-label">{{ $formSubTraba->etiquetacampoextra5}}
-                                                            :</label>
-                                                        <textarea id="campoextra5grande" type="text"
-                                                                class="form-control @error('campoextra5grande') is-invalid @enderror"
-                                                                name="campoextra5grande"
-                                                                value="{{ old('campoextra5grande') }}" required
-                                                                autocomplete="campoextra5grande" autofocus></textarea>
-                                                        @error('campoextra5grande')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
+                                                    {{-- Texto Simples --}}
+                                                    @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra5simples_en" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5_en }}:</label>
+                                                                <input id="campoextra5simples_en" type="text" class="form-control @error('campoextra5simples_en') is-invalid @enderror" name="campoextra5simples_en" value="{{ old('campoextra5simples_en') }}" required autocomplete="campoextra5simples_en" autofocus>
+                                                                @error('campoextra5simples_en')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra5simples" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5 }}:</label>
+                                                                <input id="campoextra5simples" type="text" class="form-control @error('campoextra5simples') is-invalid @enderror" name="campoextra5simples" value="{{ old('campoextra5simples') }}" required autocomplete="campoextra5simples" autofocus>
+                                                                @error('campoextra5simples')
+                                                                <span class="invalid-feedback" role="alert">
+<strong>{{ $message }}</strong>
+</span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                @elseif ($formSubTraba->tipocampoextra5 == "textogrande")
+                                                    {{-- Texto Grande --}}
+                                                    @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra5grande_en" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5_en }}:</label>
+                                                                <textarea id="campoextra5grande_en" class="form-control @error('campoextra5grande_en') is-invalid @enderror" name="campoextra5grande_en" required autocomplete="campoextra5grande_en" autofocus>{{ old('campoextra5grande_en') }}</textarea>
+                                                                @error('campoextra5grande_en')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <label for="campoextra5grande" class="col-form-label">{{ $formSubTraba->etiquetacampoextra5 }}:</label>
+                                                                <textarea id="campoextra5grande" class="form-control @error('campoextra5grande') is-invalid @enderror" name="campoextra5grande" required autocomplete="campoextra5grande" autofocus>{{ old('campoextra5grande') }}</textarea>
+                                                                @error('campoextra5grande')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                             @elseif ($formSubTraba->tipocampoextra5 == "upload")
                                                 {{-- Arquivo de Regras  --}}
                                                 <div class="col-sm-12" style="margin-top: 20px;">
@@ -606,7 +825,7 @@
                                 <div class="row justify-content-center mt-2">
                                     <div class="col-md-6">
                                         <a href="{{route('evento.visualizar',['id'=>$evento->id])}}"
-                                            class="btn btn-secondary" style="width:100%">Cancelar
+                                            class="btn btn-secondary" style="width:100%">{{__('Cancelar')}}
                                         </a>
                                     </div>
                                     <div class="col-md-6">

@@ -43,11 +43,12 @@ class RevisorController extends Controller
         //return view('revisor.index')->with(['eventos' => $eventosComoRevisor]);
         //areas em que sou revirsor
         $revisores = collect();
+        
         foreach ($eventosComoRevisor as $evento) {
             $revisores->push(Revisor::where([['user_id', auth()->user()->id], ['evento_id', $evento->id]])->get());
         }
 
-        //dd($revisores);
+      
         $trabalhosPorEvento = collect();
         foreach ($revisores as $revisorEvento) {
             $trabalhos = collect();
@@ -59,7 +60,6 @@ class RevisorController extends Controller
             }
             $trabalhosPorEvento->push($trabalhos);
         }
-        //dd($trabalhosPorEvento);
         return view('revisor.index')->with(['eventos' => $eventosComoRevisor, 'trabalhosPorEvento' => $trabalhosPorEvento]);
     }
 
@@ -378,6 +378,7 @@ class RevisorController extends Controller
     public function conviteParaEvento(Request $request, $id)
     {
         $subject = config('app.name').' - Atribuição como avaliador(a) e/ou parecerista';
+        
         $evento = Evento::find($id);
 
         $user = User::find($request->id);

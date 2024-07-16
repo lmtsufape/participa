@@ -139,7 +139,7 @@ class ComissaoController extends Controller
             return $coord->id;
         })->all();
         $removidos = array_diff($idsCoordenadores, $validationData['coordComissaoId']);
-        CoordComissaoCientifica::whereIn('user_id', $removidos)->where('eventos_id', $evento->id)->delete();
+        // CoordComissaoCientifica::whereIn('user_id', $removidos)->where('eventos_id', $evento->id)->delete();
 
         return redirect()->back()->with(['mensagem' => 'Coordenador da comissão científica salvo com sucesso!']);
     }

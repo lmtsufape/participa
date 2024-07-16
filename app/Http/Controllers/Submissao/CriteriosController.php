@@ -13,6 +13,7 @@ class CriteriosController extends Controller
 {
     public function store(Request $request)
     {
+        // dd($request->all());
         $modalidade = Modalidade::find($request->modalidade);
         $evento = $modalidade->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);

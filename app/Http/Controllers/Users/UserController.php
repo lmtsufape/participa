@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Certificado;
@@ -228,6 +229,7 @@ class UserController extends Controller
             }
         }
 
+
         return view('user.meusTrabalhos', [
             'trabalhos' => $trabalhos,
             'trabalhosCoautor' => $trabalhosCoautor,
@@ -258,6 +260,7 @@ class UserController extends Controller
             $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->whereIn('revisorId', $permissoes_revisao)->first();
         }
 
+
         return view('user.visualizarParecer', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'respostas', 'revisor', 'arquivoAvaliacao'));
     }
 
@@ -270,5 +273,18 @@ class UserController extends Controller
                 $user,
             ],
         ]);
+    }
+
+    public function areaParticipante(){
+        $user = Auth::user();
+        $eventos = DB::table('inscricaos')
+        ->join('eventos','inscricaos.evento_id','=','eventos.id')
+        ->select('eventos.*','inscricaos.*')
+        ->where('inscricaos.user_id',$user->id)
+        ->get();
+
+
+        return view('user.areaParticipante', ['eventos' => $eventos]);
+        
     }
 }

@@ -9,7 +9,7 @@
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-10">
-                    <h1>Meus Eventos</h1>
+                    <h1>Meus Eventos - Coordenação Comissão Científica</h1>
                 </div>
                 @can('create', App\Models\Submissao\Evento::class)
                 <div class="col-sm-2">

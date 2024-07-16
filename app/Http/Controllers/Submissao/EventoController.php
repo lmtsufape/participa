@@ -556,12 +556,11 @@ class EventoController extends Controller
 
     public function definirCoordComissao(Request $request)
     {
+    
         $evento = Evento::find($request->eventoId);
-
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        
         $users = $evento->usuariosDaComissao;
         $coordenadores = $evento->coordComissaoCientifica->pluck('id')->all();
-
         return view('coordenador.comissao.definirCoordComissao', compact('evento', 'users', 'coordenadores'));
     }
 
@@ -1321,9 +1320,17 @@ class EventoController extends Controller
             $evento->fotoEvento = $this->uploadFile($request, $evento);
             $evento->save();
         }
+        if ($request->fotoEvento_en != null) {
+            $evento->fotoEvento_en = $this->uploadFile($request, $evento);
+            $evento->save();
+        }
 
         if ($request->icone != null) {
             $evento->icone = $this->uploadIconeFile($request, $evento);
+            $evento->save();
+        }
+        if ($request->icone_en != null) {
+            $evento->icone_en = $this->uploadIconeFile($request, $evento);
             $evento->save();
         }
 
@@ -1348,6 +1355,16 @@ class EventoController extends Controller
             $nome = $request->file('fotoEvento')->getClientOriginalName();
             Storage::disk('public')->putFileAs($path, $file, $nome);
 
+            return 'eventos/'.$evento->id.'/'.$nome;
+        }
+
+        if ($request->hasFile('fotoEvento_en')) {
+            $file = $request->fotoEvento_en;
+            $path = 'eventos/'.$evento->id;
+            $extensao = $request->file('fotoEvento_en')->getClientOriginalExtension();
+            $nome = 'banner-en.'.$extensao;
+            Storage::disk('public')->putFileAs($path, $file, $nome);
+
             return 'eventos/' . $evento->id . '/' . $nome;
         }
 
@@ -1364,6 +1381,17 @@ class EventoController extends Controller
             $image = Image::make($file)->resize(600, 600)->encode();
             Storage::disk('public')->put($path . '/' . $nome, $image);
 
+            return $path.'/'.$nome;
+        }
+
+        if ($request->hasFile('icone_en')) {
+            $file = $request->icone_en;
+            $path = 'eventos/'.$evento->id;
+            $extensao= $request->file('icone_en')->getClientOriginalExtension();
+            $nome = 'icone-en.'.$extensao;
+            $image = Image::make($file)->resize(600, 600)->encode();
+            Storage::disk('public')->put($path.'/'.$nome, $image);
+
             return $path . '/' . $nome;
         }
 
@@ -1378,7 +1406,7 @@ class EventoController extends Controller
      */
     public function show($id)
     {
-        $date = date('Y-m-d');
+        // $date = date('Y-m-d');
 
         $evento = Evento::find($id);
         if (!$evento) {
@@ -1416,21 +1444,21 @@ class EventoController extends Controller
 
             $mytime = Carbon::now('America/Recife');
             $etiquetas = FormEvento::where('eventoId', $evento->id)->first();
-
             $formSubTraba = FormSubmTraba::all();
 
             if ($dataInicial == null) {
                 $dataInicial = '';
             }
 
-            $links = DB::table('links_pagamento')
-                ->join('categoria_participantes', 'links_pagamento.categoria_id', '=', 'categoria_participantes.id')
-                ->select('categoria_participantes.nome', 'links_pagamento.*', 'categoria_participantes.id as c_id')
-                ->where('links_pagamento.dataInicio', '<=', $date)
-                ->where('links_pagamento.dataFim', '>', $date)
+            $links = DB::table('links_pagamentos')
+                ->join('categoria_participantes', 'links_pagamentos.categoria_id', '=', 'categoria_participantes.id')
+                ->select('categoria_participantes.nome', 'links_pagamentos.*', 'categoria_participantes.id as c_id')
+                ->where('links_pagamentos.dataInicio', '<=', $mytime)
+                ->where('links_pagamentos.dataFim', '>', $mytime)
                 ->get();
             // dd($links);
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
+            // dd($etiquetas);
 
             return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'dataInicial', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links'));
         } else {
@@ -1452,7 +1480,8 @@ class EventoController extends Controller
             if ($dataInicial == null) {
                 $dataInicial = '';
             }
-
+            
+           
             return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'mytime', 'etiquetas', 'formSubTraba', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada'));
         }
     }
@@ -1764,53 +1793,17 @@ class EventoController extends Controller
 
     public function buscaLivreAjax(Request $request)
     {
-        $eventos = null;
-        switch ($request->tipo_busca) {
-            case 'nome':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%' . $request->nome . '%'], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'tipo':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.tipo', '=', $request->tipo], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'data_inicio':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.dataInicio', '=', $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'data_fim':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'nome_tipo':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%' . $request->nome . '%'], ['eventos.tipo', '=', $request->tipo], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'nome_data_inicio':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%' . $request->nome . '%'], ['eventos.dataInicio', '=', $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'nome_data_fim':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%' . $request->nome . '%'], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'tipo_data_inicio':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.tipo', '=', $request->tipo], ['eventos.dataInicio', '=', $request->data_inicio], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'tipo_data_fim':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.tipo', '=', $request->tipo], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'nome_datas':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%' . $request->nome . '%'], ['eventos.dataInicio', '=', $request->data_inicio], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'tipo_datas':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.tipo', '=', $request->tipo], ['eventos.dataInicio', '=', $request->data_inicio], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'datas':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.dataInicio', '=', $request->data_inicio], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            case 'todos':
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where([['eventos.nome', 'ilike', '%' . $request->nome . '%'], ['eventos.tipo', '=', $request->tipo], ['eventos.dataInicio', '=', $request->data_inicio], ['eventos.dataFim', '=', $request->data_fim], ['eventos.publicado', '=', true], ['eventos.deletado', '=', false]])->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-            default:
-                $eventos = Evento::join('enderecos', 'enderecos.id', '=', 'eventos.enderecoId')->where('eventos.nome', 'ilike', '%' . $request->nome . '%')->select('eventos.id as id_evento', 'eventos.*', 'enderecos.*')->get();
-                break;
-        }
+        $query = Evento::where('publicado', true)->where('deletado', false)->with('endereco');
+        $nome = strtolower($request->nome);
+        $tipo = $request->tipo;
+        $data_inicio = $request->data_inicio;
+        $data_fim = $request->data_fim;
+        if ($nome != null) $query = $query->whereRaw('LOWER(nome) like ?', ['%'.$nome.'%']);
+        if ($tipo != null) $query = $query->where('tipo', $tipo);
+        if ($data_inicio != null) $query = $query->where('dataInicio', $data_inicio);
+        if ($data_fim != null) $query = $query->where('dataFim', $data_fim);
 
-        return response()->json($eventos);
+        return response()->json($query->get());
     }
 
     /**

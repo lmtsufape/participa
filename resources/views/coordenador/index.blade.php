@@ -9,11 +9,11 @@
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-10">
-                    <h1>Meus Eventos</h1>
+                    <h1>{{__('Meus Eventos')}}</h1>
                 </div>
                 @can('create', App\Models\Submissao\Evento::class)
                 <div class="col-sm-2">
-                    <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
+                    <a href="{{route('evento.criar')}}" class="btn btn-primary">{{__('Novo Evento')}}</a>
                 </div>
                 @endcan
             </div>
@@ -35,8 +35,10 @@
                 @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                     <div class="col-md-4 mt-2 d-flex align-items-stretch">
                         <div class="card">
-                            @if(isset($evento->fotoEvento))
-                                <img src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="..." style="height: 150px;">
+                            @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en' && isset($evento->fotoEvento_en))
+                                <img src="{{asset('storage/'.$evento->fotoEvento_en)}}" class="card-img-top" alt="...">
+                            @elseif(isset($evento->fotoEvento))
+                                <img src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
                             @else
                                 <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="..." style="height: 150px;">
                             @endif
@@ -47,7 +49,11 @@
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="text-decoration: inherit;">
-                                                        {{$evento->nome}}
+                                                        @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                            {{$evento->nome_en}}
+                                                        @else
+                                                            {{$evento->nome}}
+                                                        @endif
                                                     </a>
                                                 </div>
                                             </div>
@@ -72,12 +78,12 @@
                                     <div class="row col-md-12">
                                         <div class="row col-md-12">
                                             <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
-                                                <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                                <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;{{__('Visualizar evento')}}
                                             </a>
                                         </div>
                                         <div class="row col-md-12">
                                             <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
-                                                <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
+                                                <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;{{__('Configurar evento')}}
                                             </a>
                                         </div>
                                         @can('isCriador', $evento)
@@ -86,7 +92,7 @@
                                                 {{ csrf_field() }}
                                                 {{ method_field('DELETE') }}
                                                 <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
-                                                    <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar
+                                                    <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;{{__('Deletar')}}
                                                 </a>
                                             </form>
                                         </div>

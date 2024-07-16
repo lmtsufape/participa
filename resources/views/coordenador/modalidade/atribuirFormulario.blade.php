@@ -11,7 +11,8 @@
         </div>
     </div>
 </div>
-<form action="{{route('coord.salvar.form')}}" method="get">
+<form action="{{route('coord.salvar.form')}}" method="post">
+    @csrf
     <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
     <input type="hidden" name="evento_id" value="{{$evento->id}}">
     <div class="row">
@@ -96,31 +97,11 @@
 </form>
 @endsection
 @section('javascript')
-
-<script>
-    alert();
-    
-</script>
-
-@parent
-<script>
-
-
-
-    function handler() {
-        return {
-            perguntas: [{
-                titulo: '',
-                tipo: 'radio',
-                opcoes: [{
-                    titulo: ''
-                }, {
-                    titulo: ''
-                }],
-                visibilidade: true
-            }],
-            adicionaPergunta() {
-                this.perguntas.push({
+    @parent
+    <script>
+        function handler() {
+            return {
+                perguntas: [{
                     titulo: '',
                     tipo: 'radio',
                     opcoes: [{
@@ -129,40 +110,48 @@
                         titulo: ''
                     }],
                     visibilidade: true
-                });
-            },
-            removePergunta(index) {
-                this.perguntas.splice(index, 1);
-            },
-            sobePergunta(index) {
-                if (index > 0) {
-                    temp = this.perguntas[index - 1];
-                    this.perguntas[index - 1] = this.perguntas[index];
-                    this.perguntas[index] = temp;
+                }],
+                adicionaPergunta() {
+                    this.perguntas.push({
+                        titulo: '',
+                        tipo: 'radio',
+                        opcoes: [{
+                            titulo: ''
+                        }, {
+                            titulo: ''
+                        }],
+                        visibilidade: true
+                    });
+                },
+                removePergunta(index) {
+                    this.perguntas.splice(index, 1);
+                },
+                sobePergunta(index) {
+                    if (index > 0) {
+                        temp = this.perguntas[index - 1];
+                        this.perguntas[index - 1] = this.perguntas[index];
+                        this.perguntas[index] = temp;
+                    }
+                },
+                descePergunta(index) {
+                    if (index >= 0 && (index + 1) < this.perguntas.length) {
+                        temp = this.perguntas[index + 1];
+                        this.perguntas[index + 1] = this.perguntas[index];
+                        this.perguntas[index] = temp;
+                    }
+                },
+                adicionaOpcao(i, j) {
+                    this.perguntas[i].opcoes.splice(j + 1, 0, {
+                        titulo: ''
+                    });
+                },
+                removeOpcao(i, j) {
+                    this.perguntas[i].opcoes.splice(j, 1);
                 }
-            },
-            descePergunta(index) {
-                if (index >= 0 && (index + 1) < this.perguntas.length) {
-                    temp = this.perguntas[index + 1];
-                    this.perguntas[index + 1] = this.perguntas[index];
-                    this.perguntas[index] = temp;
-                }
-            },
-            adicionaOpcao(i, j) {
-                this.perguntas[i].opcoes.splice(j + 1, 0, {
-                    titulo: ''
-                });
-            },
-            removeOpcao(i, j) {
-                this.perguntas[i].opcoes.splice(j, 1);
             }
         }
-    }
-
-    $(document).ready(function() {
-    CKEDITOR.replace('ckeditor-texto');
-});
-</script>
-
-
+        $(document).ready(function() {
+        CKEDITOR.replace('ckeditor-texto');
+    });
+    </script>
 @endsection

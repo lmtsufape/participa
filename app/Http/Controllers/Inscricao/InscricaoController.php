@@ -9,7 +9,7 @@ use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\CupomDeDesconto;
 use App\Models\Inscricao\Inscricao;
 use Illuminate\Support\Facades\DB;
-use App\Models\Inscricao\LinkPagamento;
+use App\Models\Inscricao\LinksPagamento;
 use App\Models\Inscricao\Promocao;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Endereco;
@@ -60,7 +60,6 @@ class InscricaoController extends Controller
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $campos = $evento->camposFormulario;
-
         return view('coordenador.inscricoes.formulario', compact('evento', 'campos'));
     }
 
@@ -72,15 +71,17 @@ class InscricaoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $categorias = $evento->categoriasParticipantes;
         
-        $links = DB::table('links_pagamento')
-        ->join('categoria_participantes', 'links_pagamento.categoria_id', '=', 'categoria_participantes.id')
-        ->select('categoria_participantes.nome', 'links_pagamento.*')
-        ->where('links_pagamento.dataInicio','<=', $date)
-        ->where('links_pagamento.dataFim','>', $date)
+        $links = DB::table('links_pagamentos')
+        ->join('categoria_participantes', 'links_pagamentos.categoria_id', '=', 'categoria_participantes.id')
+        ->select('categoria_participantes.nome', 'links_pagamentos.*')
         ->get();
+  
 
+        $linksAtuais = $links->where('dataInicio','<=', $date)
+        ->where('dataFim','>', $date);        
+       
         
-        return view('coordenador.inscricoes.categorias', compact('evento', 'categorias', 'links'));
+        return view('coordenador.inscricoes.categorias', compact('evento', 'categorias', 'links','linksAtuais'));
     }
 
     /**

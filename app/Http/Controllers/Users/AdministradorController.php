@@ -254,12 +254,9 @@ class AdministradorController extends Controller
 
     public function search(Request $request)
     {
-        // dd($request->all());
         $this->authorize('isAdmin', Administrador::class);
-        $users = User::where('email', 'ilike', '%'.$request->search.'%')->paginate(100);
-        if ($users->count() == 0) {
-            $users = User::where('name', 'ilike', '%'.$request->search.'%')->paginate(100);
-        }
+        $busca = strtolower($request->search);
+        $users = User::whereRaw('LOWER(email) like ?', ['%' . $busca . '%'])->orWhereRaw('LOWER(name) like ?', ['%' . $busca . '%'])->paginate(100);
         if ($users->count() == 0) {
             return view('administrador.users', compact('users'))->with(['message' => 'Nenhum Resultado encontrado!']);
         }

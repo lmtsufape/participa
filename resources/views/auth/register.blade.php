@@ -21,7 +21,7 @@
     @if(Auth::check())
         <form method="POST" action="{{ route('administrador.criarUsuario', app()->getLocale()) }}">
     @else
-        <form method="POST" action="{{ route('register', app()->getLocale()) }}">
+        <form method="POST" action="{{ route('register', app()->getLocale())}}">
     @endif
         <div class="row subtitulo">
             <div class="col-sm-12">

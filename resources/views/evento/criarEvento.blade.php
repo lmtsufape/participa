@@ -25,9 +25,9 @@
 
                 <div class="row justify-content-center titulo">
                     @if ($eventoPai ?? '')
-                    <h1>Novo Subevento</h1>
+                    <h1>{{__('Novo Subevento')}}</h1>
                     @else
-                    <h1>Novo Evento</h1>
+                    <h1>{{__('Novo Evento')}}</h1>
                     @endif
 
                 </div>
@@ -44,19 +44,27 @@
                         <input type="hidden" name="" value=""> --}}
                     <div class="row subtitulo">
                         <div class="col-sm-12">
-                            Informações Gerais
+                            {{__('Informações Gerais')}}
                             @error('eventoPai')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
-                            @enderror
+                                @enderror
+                            </div>
                         </div>
-                    </div>
-                    {{-- nome | Participantes | Tipo--}}
-                    <div class="form-row">
-                        <div class="col-sm-6 form-group">
-                            <label for="nome" class="col-form-label">{{ __('Nome*') }}</label>
-                            <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
+                        {{-- nome | Participantes | Tipo--}}
+                        <div class="form-row">
+
+                            <div class="form-check col-sm-12 form-group">
+                                <div class="form-check col-sm-12 form-group">
+                                    <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual">
+                                    <label class="form-check-label" for="is_multilingual">{{__('Evento Multilingue')}}</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 form-group">
+                                <label for="nome" class="col-form-label">{{ __('Nome') }}*</label>
+                                <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
 
                             @error('nome')
                             <span class="invalid-feedback" role="alert">
@@ -65,8 +73,19 @@
                             @enderror
                         </div>
 
+                            <div class="col-sm-6 form-group multilingual_fields"  style="display: none;">
+                                <label for="nome_en" class="col-form-label">{{ __('Nome em inglês') }}*</label>
+                                <input id="nome_en" type="text" class="form-control @error('nome_en') is-invalid @enderror" name="nome_en" value="{{ old('nome_en') }}"  autocomplete="nome_en" autofocus>
+
+                                @error('nome_en')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                                @enderror
+                            </div>
+
                         <div class="col-sm-6 form-group">
-                            <label for="email" class="col-form-label">{{ __('E-mail de contato*') }}</label>
+                            <label for="email" class="col-form-label">{{ __('E-mail de contato') }}*</label>
                             <input class="form-control @error('email') is-invalid @enderror" type="email" value="{{old('email')}}" name="email" id="email" required autofocus autocomplete="email">
 
                             @error('email')
@@ -76,7 +95,9 @@
                             @enderror
                         </div>
 
-                        {{-- <div class="col-sm-3">
+
+
+                            {{-- <div class="col-sm-3">
                                 <label for="numeroParticipantes" class="col-form-label">{{ __('N° de Participantes') }}</label>
                         <input id="numeroParticipantes" type="number" class="form-control @error('numeroParticipantes') is-invalid @enderror" name="numeroParticipantes" value="{{ old('numeroParticipantes') }}" required autocomplete="numeroParticipantes" autofocus>
 
@@ -99,9 +120,9 @@
                     </div>
                     @endif
                     <div class="@if ($eventoPai ?? '') col-sm-3 @else col-sm-6 @endif form-group">
-                        <label for="tipo" class="col-form-label">{{ __('Tipo*') }}</label>
+                        <label for="tipo" class="col-form-label">{{ __('Tipo') }}*</label>
                         <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" required>
-                            <option disabled selected hidden value="">-- Tipo --</option>
+                            <option disabled selected hidden value="">-- {{ __('Tipo') }} --</option>
                             <option @if(old('tipo')=="Congresso" ) selected @endif value="Congresso">Congresso</option>
                             <option @if(old('tipo')=="Encontro" ) selected @endif value="Encontro">Encontro</option>
                             <option @if(old('tipo')=="Seminário" ) selected @endif value="Seminário">Seminário</option>
@@ -151,42 +172,86 @@
             {{-- Descricao Evento --}}
             <div class="form-group">
                 <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Descrição*</label>
-                    <textarea class="ckeditor-texto form-control @error('descricao') is-invalid @enderror" required autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">{{ old('descricao') }}</textarea>
-                    @error('descricao')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="col-sm-7 form-group">
-                    <label for="fotoEvento">Banner</label>
-                    <div id="imagem-loader" class="imagem-loader">
-                        <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
-                    </div>
-                    <div style="display: none;">
-                        <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror" name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
-                    </div>
-                    <small style="position: relative; top: 5px;">Tamanho minimo: 1024 x 425;<br>Formato: JPEG, JPG, PNG</small>
-                    @error('fotoEvento')
-                    <br>
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{$message}}</strong>
-                    </span>
-                    @enderror
-                </div>
-                <div class="col-sm-5 form-group">
-                    <label for="icone">Ícone</label>
-                    <div id="imagem-loader-icone" class="imagem-loader">
-                        <img id="icone-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
-                    </div>
-                    <div style="display: none;">
-                        <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror" name="icone" value="{{ old('icone') }}" id="icone">
-                    </div>
-                    <small style="position: relative; top: 5px;">O arquivo será redimensionado para 600 x 600;<br>Formato: JPEG, JPG, PNG</small>
-                    @error('icone')
+                    <label for="exampleFormControlTextarea1">{{__('Descrição')}}*</label>
+                    <textarea class="ckeditor-textoform-control @error('descricao') is-invalid @enderror" required autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">{{ old('descricao') }}</textarea>
+                                @error('descricao')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group multilingual_fields"  style="display: none;">
+                                <label for="exampleFormControlTextarea1">{{__('Descrição em inglês')}}*</label>
+                                <textarea class="form-control @error('descricao_en') is-invalid @enderror"  autocomplete="descricao_en" autofocus id="descricao_en" name="descricao_en" rows="8">{{ old('descricao_en') }}</textarea>
+                                @error('descricao_en')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                                @enderror
+                            </div>
+
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-7 form-group">
+                                <label for="fotoEvento">Banner</label>
+                                <div id="imagem-loader" class="imagem-loader">
+                                    <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                </div>
+                                <div style="display: none;">
+                                    <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror" name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
+                                </div>
+                                <small style="position: relative; top: 5px;">{{__('Tamanho minimo')}}: 1024 x 425;<br>{{__('Formato')}}: JPEG, JPG, PNG</small>
+                                @error('fotoEvento')
+                                <br>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-5 form-group">
+                                <label for="icone">{{__('Ícone')}}</label>
+                                <div id="imagem-loader-icone" class="imagem-loader">
+                                    <img id="icone-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                </div>
+                                <div style="display: none;">
+                                    <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror" name="icone" value="{{ old('icone') }}" id="icone">
+                                </div>
+                                <small style="position: relative; top: 5px;">{{__('O arquivo será redimensionado para')}} 600 x 600;<br>{{__('Formato')}}: JPEG, JPG, PNG</small>
+                                @error('icone')
+                                <br>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-sm-7 form-group multilingual_fields"  style="display: none;">
+                                <label for="fotoEvento_en">Banner Ingles</label>
+                                <div id="imagem-loader-en" class="imagem-loader">
+                                    <img id="logo-preview-en" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                </div>
+                                <div style="display: none;">
+                                    <input type="file" id="logo-input-en" class="form-control @error('fotoEvento_en') is-invalid @enderror" name="fotoEvento_en" value="{{ old('fotoEvento_en') }}" id="fotoEvento_en">
+                                </div>
+                                <small style="position: relative; top: 5px;">{{__('Tamanho minimo')}}: 1024 x 425;<br>{{__('Formato')}}: JPEG, JPG, PNG</small>
+                                @error('fotoEvento_en')
+                                <br>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-5 form-group multilingual_fields"  style="display: none;">
+                                <label for="icone_en">{{__('Ícone inglês')}}</label>
+                                <div id="imagem-loader-icone-en" class="imagem-loader">
+                                    <img id="icone-preview-en" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                </div>
+                                <div style="display: none;">
+                                    <input type="file" id="icone-input-en" class="form-control @error('icone_en') is-invalid @enderror" name="icone_en" value="{{ old('icone_en') }}" id="icone_en">
+                                </div>
+                                <small style="position: relative; top: 5px;">{{__('O arquivo será redimensionado para')}} 600 x 600;<br>{{__('Formato')}}: JPEG, JPG, PNG</small>
+                                @error('icone_en')
                     <br>
                     <span class="invalid-feedback" role="alert">
                         <strong>{{$message}}</strong>
@@ -197,7 +262,7 @@
             <!-- Inicio e fim do evento -->
             <div class="form-row">
                 <div class="col-sm-3 form-group">
-                    <label for="dataInicio" class="col-form-label">{{ __('Início*') }}</label>
+                    <label for="dataInicio" class="col-form-label">{{ __('Início') }}*</label>
                     <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror" name="dataInicio" value="{{ old('dataInicio') }}" required autocomplete="dataInicio" autofocus>
 
                     @error('dataInicio')
@@ -207,7 +272,7 @@
                     @enderror
                 </div>
                 <div class="col-sm-3 form-group">
-                    <label for="dataFim" class="col-form-label">{{ __('Fim*') }}</label>
+                    <label for="dataFim" class="col-form-label">{{ __('Fim') }}*</label>
                     <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror" name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim" autofocus>
 
                     @error('dataFim')
@@ -238,8 +303,8 @@
                 <label for="dataLimiteInscricao" class="col-form-label">
                     {{ __('Data de encerramento de inscrições') }}
                     <small>
-                        (<span style="color: red">Disponível ao habilitar o módulo de inscrição!</span>)<br>
-                        Informe uma data para encerramento das inscrições no evento. Caso não informada, a data limite para inscrição no evento será um dia prévio a data de início do evento.
+                        (<span style="color: red">{{__('Disponível ao habilitar o módulo de inscrição')}}!</span>)<br>
+                        {{__('Informe uma data para encerramento das inscrições no evento. Caso não informada, a data limite para inscrição no evento será um dia prévio a data de início do evento')}}.
                     </small>
                 </label>
             </div>
@@ -260,13 +325,13 @@
 
         <div class="row subtitulo">
             <div class="col-sm-12">
-                Endereço
+                {{__('Endereço')}}
             </div>
         </div>
         {{-- Rua | Número | Bairro --}}
         <div class="form-row">
             <div class="col-sm-4 form-group">
-                <label for="cep" class="col-form-label">{{ __('CEP*') }}</label>
+                <label for="cep" class="col-form-label">{{ __('CEP') }}*</label>
                 <input value="{{ old('cep') }}" onblur="pesquisacep(this.value);" id="cep" name="cep" type="text" class="form-control @error('cep') is-invalid @enderror" required autocomplete="cep">
 
                 @error('cep')
@@ -276,7 +341,7 @@
                 @enderror
             </div>
             <div class="col-sm-6 form-group">
-                <label for="rua" class="col-form-label">{{ __('Rua*') }}</label>
+                <label for="rua" class="col-form-label">{{ __('Rua') }}*</label>
                 <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" value="{{ old('rua') }}" required autocomplete="rua" autofocus>
 
                 @error('rua')
@@ -286,7 +351,7 @@
                 @enderror
             </div>
             <div class="col-sm-2 form-group">
-                <label for="numero" class="col-form-label">{{ __('Número*') }}</label>
+                <label for="numero" class="col-form-label">{{ __('Número') }}*</label>
                 <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" value="{{ old('numero') }}" required autocomplete="numero" autofocus maxlength="10">
 
                 @error('numero')
@@ -301,7 +366,7 @@
 
         <div class="form-row">
             <div class="col-sm-3 form-group">
-                <label for="bairro" class="col-form-label">{{ __('Bairro*') }}</label>
+                <label for="bairro" class="col-form-label">{{ __('Bairro') }}*</label>
                 <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" value="{{ old('bairro') }}" required autocomplete="bairro" autofocus>
 
                 @error('bairro')
@@ -311,7 +376,7 @@
                 @enderror
             </div>
             <div class="col-sm-3 form-group">
-                <label for="cidade" class="col-form-label">{{ __('Cidade*') }}</label>
+                <label for="cidade" class="col-form-label">{{ __('Cidade') }}*</label>
                 <input id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" value="{{ old('cidade') }}" required autocomplete="cidade" autofocus>
 
                 @error('cidade')
@@ -331,7 +396,7 @@
                 @enderror
             </div>
             <div class="col-sm-2 form-group">
-                <label for="uf" class="col-form-label">{{ __('UF*') }}</label>
+                <label for="uf" class="col-form-label">{{ __('UF') }}*</label>
                 {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
                 <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                     <option value="" disabled selected hidden>-- UF --</option>
@@ -377,7 +442,8 @@
             <div class="form-check">
                 <input name="termos" class="form-check-input @error('termos') is-invalid @enderror" type="checkbox" value="true" id="termos">
                 <label class="form-check-label" for="termos">
-                    Concordo e respeitarei os <a href=" {{route('termos.de.uso')}} ">termos de uso</a> da plataforma {{config('app.name')}}
+                    {{__('Concordo e respeitarei os')}} <a href=" {{route('termos.de.uso')}} ">{{__('termos de uso')}}</a>
+                    {{__('da plataforma')}} {{config('app.name')}}
                 </label>
                 @error('termos')
                 <span class="invalid-feedback" role="alert">
@@ -409,11 +475,6 @@
 
 
 @section('javascript')
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-
 <script type="text/javascript">
         CKEDITOR.replaceAll( 'ckeditor-texto' );
         $.fn.modal.Constructor.prototype._enforceFocus = function(){};
@@ -428,7 +489,7 @@
         //     toolbar: [
         //         // [groupName, [list of button]]
         //         ['style', ['bold', 'italic', 'underline', 'clear']],
-        //         ['font', ['superscript', 'subscript']],//'strikethrough', 
+        //         ['font', ['superscript', 'subscript']],//'strikethrough',
         //         // ['fontsize', ['fontsize']],
         //         ['color', ['color']],
         //         // ['para', ['ul', 'ol', 'paragraph']],
@@ -455,7 +516,15 @@
             }
         });*/
 
-        $('#imagem-loader').click(function() {
+        $('#is_multilingual').change(function() {
+                if ($(this).is(':checked')) {
+                    $('.multilingual_fields').show();
+                } else {
+                    $('.multilingual_fields').hide();
+                }
+            });
+
+            $('#imagem-loader').click(function() {
             $('#logo-input').click();
             $('#logo-input').change(function() {
                 if (this.files && this.files[0]) {
@@ -468,19 +537,45 @@
             })
         });
 
-        $('#imagem-loader-icone').click(function() {
-            $('#icone-input').click();
-            $('#icone-input').change(function() {
-                if (this.files && this.files[0]) {
-                    var file = new FileReader();
-                    file.onload = function(e) {
-                        document.getElementById("icone-preview").src = e.target.result;
-                    };
-                    file.readAsDataURL(this.files[0]);
-                }
-            })
+            $('#imagem-loader-icone').click(function() {
+                $('#icone-input').click();
+                $('#icone-input').change(function() {
+                    if (this.files && this.files[0]) {
+                        var file = new FileReader();
+                        file.onload = function(e) {
+                            document.getElementById("icone-preview").src = e.target.result;
+                        };
+                        file.readAsDataURL(this.files[0]);
+                    }
+                })
+            });
+
+            $('#imagem-loader-en').click(function() {
+                $('#logo-input-en').click();
+                $('#logo-input-en').change(function() {
+                    if (this.files && this.files[0]) {
+                        var file = new FileReader();
+                        file.onload = function(e) {
+                            document.getElementById("logo-preview-en").src = e.target.result;
+                        };
+                        file.readAsDataURL(this.files[0]);
+                    }
+                })
+            });
+
+            $('#imagem-loader-icone-en').click(function() {
+                $('#icone-input-en').click();
+                $('#icone-input-en').change(function() {
+                    if (this.files && this.files[0]) {
+                        var file = new FileReader();
+                        file.onload = function(e) {
+                            document.getElementById("icone-preview-en").src = e.target.result;
+                        };
+                        file.readAsDataURL(this.files[0]);
+                    }
+                })
+            });
         });
-    });
 
 
     function limpa_formulário_cep() {
