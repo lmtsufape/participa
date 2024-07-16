@@ -89,13 +89,17 @@
                     <div style="width:100%; height:250px; display: inline-block; border: 2px solid #f2f2f2; border-radius: 2px; overflow:auto; padding-top: 8px;">
                         <table id="tabelaDestinatarios">
                             <tbody id="dentroTabelaDestinatarios">
+                                <div class="form-check">
+                                    <input type="checkbox" id="selecionartodos" onclick="selecionarTodosDestinatarios(this)">
+                                    <label for="selecionartodos">Selecionar todos</label>
+                                </div>
                                 <template x-for="(destinatario, index) in destinatarios" :key="index">
                                     <div class="d-flex justify-content-left">
                                         <template x-if="tipo == 1">
                                             <div class="form-check">
                                                 <input class="checkbox_destinatario" type="checkbox" name="destinatarios[]" :value="destinatarios[index].id" :id="'destinatarios_'+index"  x-on:change="syncHidden('trabalhos_', index)">
                                                 <input class="d-none" type="checkbox" name="trabalhos[]" :value="trabalhos[index].id" :id="'trabalhos_'+index">
-                                                <label :for="'destinatarios_'+index"><strong x-text="destinatario.name + ' - ' + trabalhos[index].titulo"></strong><span x-text="' ('+destinatario.email+')'"></span></label>
+                                                <label :for="'destinatarios_'+index"><strong x-text="destinatario.name + ' - ' + trabalhos[index].titulo"></strong><span x-text="' ('+destinatario.email+')'"></span> <span class="font-weight-bold" x-text="trabalhos[index].parecer_final == null ? '' : trabalhos[index].parecer_final == true ? 'Aprovado' : 'Reprovado'"></span> </label>
                                             </div>
                                         </template>
                                         <template x-if="tipo == 6">
@@ -167,6 +171,13 @@
 @endsection
 <script src="{{ asset('js/checkbox_marcar_todos.js') }}" defer></script>
 <script>
+    function selecionarTodosDestinatarios(source) {
+        const container = document.getElementById('dentroTabelaDestinatarios');
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = source.checked;
+            });
+    }
     function handler(){
         return {
             certificados: [],

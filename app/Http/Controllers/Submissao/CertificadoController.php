@@ -191,7 +191,7 @@ class CertificadoController extends Controller
         }
 
         if ($request->imagem_verso != null || ! $validatedData['verso'] || ! $validatedData['has_imagem_verso']) {
-            if (Storage::disk('public')->exists($certificado->imagem_verso)) {
+            if ($certificado->imagem_verso != null && Storage::disk('public')->exists($certificado->imagem_verso)) {
                 Storage::disk('public')->delete($certificado->imagem_verso);
             }
             $certificado->imagem_verso = null;
