@@ -28,6 +28,7 @@ class Certificado extends Model
         'coordenador_comissao_cientifica' => 7,
         'outras_comissoes' => 8,
         'inscrito_atividade' => 9,
+        'inscrito' => 10,
     ];
 
     public function assinaturas()

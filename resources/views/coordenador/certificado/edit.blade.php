@@ -276,6 +276,7 @@
                 case '4':
                 case '5':
                 case '7':
+                case '10':
                     esconderTags();
                     $("#tagCPF").show();
                     break;
