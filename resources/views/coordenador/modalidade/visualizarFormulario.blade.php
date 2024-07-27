@@ -26,6 +26,7 @@
 <div class="card" style="width: 48rem;">
     <div class="card-body">
         <h5 class="card-title">{{$form->titulo}}</h5>
+        <h5 class="card-title">Orientações aos(as) avaliadores(as): {!! $form->instrucoes !!}</h5>
 
         <p class="card-text">
         <table class="table table-hover table-responsive-lg table-sm">
@@ -57,7 +58,7 @@
                     <div class="col">
                         <p>{{$pergunta->pergunta}}</p>
                     </div>
-                    
+
                 </div>
 
 
@@ -133,7 +134,7 @@
         <i class="fas fa-trash-alt fa-2x"></i>
     </a>
     <a href="#" onclick="myFunction(event)">
-    
+
         <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
     </a>
     <a href="#" onclick="myFunction(event)">
@@ -189,6 +190,12 @@
                                             </span>
                                             @enderror
                                         </div>
+                                        <div class="col-md-12 mt-3">
+                                            <label for="instrucoes">Orientações aos(as) avaliadores(as):</label>
+                                            <textarea type="text" class="form-control mb-2 ckeditorinput" name="instrucoes{{$form->id}}" id="instrucoes{{$form->id}}">
+                                                {{old('instrucoes'.$form->id, $form->instrucoes)}}
+                                            </textarea>
+                                        </div>
 
                                         @foreach ($form->perguntas()->orderBy("id")->get() as $index => $pergunta)
                                         <div class="col-md-12">
@@ -216,7 +223,7 @@
                                                                                 </div>
                                                                                 <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control" required>
                                                                             </div>
-                                                                            
+
                                                                             <!--
                                                                                     Botões de Adicionar e Remover Opção
                                                                                     <div class="col-sm-1 mt-2">
@@ -341,6 +348,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script type="text/javascript">
+    CKEDITOR.replaceAll('ckeditorinput');
     let rep = 0;
     let order = 1;
     let pergunta = 1;

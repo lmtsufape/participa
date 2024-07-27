@@ -39,6 +39,10 @@
                 <div class="card" style="width: 48rem;">
                     <div class="card-body">
                     <h5 class="card-title">{{$form->titulo}}</h5>
+                    @if ($form->instrucoes)
+                        <h5 class="card-title mt-4 mb-0">Orientações aos(as) avaliadores(as):</h5>
+                        {!! $form->instrucoes !!}
+                    @endif
 
                     <p class="card-text">
 
