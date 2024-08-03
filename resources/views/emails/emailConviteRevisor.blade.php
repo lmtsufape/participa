@@ -3,7 +3,7 @@
 
 
 
-Você foi indicado(a) pela coordenação do evento "{{ $evento->nome }}" ({{ $coord->email }}) para atuar como avaliador(a) ou parecerista de atividades e/ou trabalhos acadêmicos.
+Você foi indicado(a) pela coordenação do evento "{{ $evento->nome }}" ({{ $email }}) para atuar como avaliador(a) ou parecerista de atividades e/ou trabalhos acadêmicos.
 
 Pedimos que acesse o site para completar o seu cadastro, caso não o possua, e ter acesso aos trabalhos para avaliação.
 
