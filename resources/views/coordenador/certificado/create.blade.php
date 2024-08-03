@@ -66,6 +66,7 @@
                             <label for="tipo"><b>{{__('Tipo')}}</b></label>
                             <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required onchange="mostrarTags()">
                                 <option value="">-- Selecione o tipo do certificado --</option>
+                                <option value="{{$tipos['inscrito']}}">Inscrito no evento</option>
                                 <option value="{{$tipos['apresentador']}}">Apresentador</option>
                                 <option value="{{$tipos['comissao_cientifica']}}">Membro da comissão Científica</option>
                                 <option value="{{$tipos['coordenador_comissao_cientifica']}}">Coordenador da Comissão Científica</option>
@@ -273,6 +274,7 @@
                 case '4':
                 case '5':
                 case '7':
+                case '10':
                     esconderTags();
                     $("#tagCPF").show();
                     break;

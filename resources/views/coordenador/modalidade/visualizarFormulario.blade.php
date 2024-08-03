@@ -26,6 +26,7 @@
 <div class="card" style="width: 48rem;">
     <div class="card-body">
         <h5 class="card-title">{{$form->titulo}}</h5>
+        <h5 class="card-title">Orientações aos(as) avaliadores(as): {!! $form->instrucoes !!}</h5>
 
         <p class="card-text">
         <table class="table table-hover table-responsive-lg table-sm">
@@ -50,6 +51,44 @@
 
         <p class="card-text">
 
+            @foreach ($form->perguntas->sortBy("id") as $pergunta)
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <p>{{$pergunta->pergunta}}</p>
+                    </div>
+
+                </div>
+
+
+                @if($pergunta->respostas->first()->opcoes->count())
+                <p>Resposta com Multipla escolha:</p>
+                @foreach ($pergunta->respostas->first()->opcoes->sortBy("id") as $opcao)
+                <div class="col-md-10 itemRadio">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="checkbox" disabled @if($opcao->check) checked @endif>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" value=" {{$opcao->titulo}}" disabled>
+                    </div>
+                </div>
+                @endforeach
+                @elseif($pergunta->respostas->first()->paragrafo)
+                <p>Resposta com parágrafo: </p>
+                <div class="col-md-10">
+                    <input type="text" style="margin-bottom:10px" disabled='true' class="form-control">
+                </div>
+                @endif
+                <div class="col-md-5">
+                    <div class="col-form-label text-md-left">
+                        <small>Visível para o autor? </small><input disabled type="checkbox" @if ($pergunta->visibilidade) checked @endif>
+                    </div>
+                </div>
+            </div>
+        </div>
                 @foreach ($form->perguntas->sortBy("id") as $pergunta)
                     <div class="card">
                         <div class="card-body">
@@ -182,35 +221,41 @@
                                             </span>
                                             @enderror
                                         </div>
+                                        <div class="col-md-12 mt-3">
+                                            <label for="instrucoes">Orientações aos(as) avaliadores(as):</label>
+                                            <textarea type="text" class="form-control mb-2 ckeditorinput" name="instrucoes{{$form->id}}" id="instrucoes{{$form->id}}">
+                                                {{old('instrucoes'.$form->id, $form->instrucoes)}}
+                                            </textarea>
+                                        </div>
 
-                                                @foreach ($form->perguntas()->orderBy("id")->get() as $index => $pergunta)
-                                                <div class="col-md-12">
-                                                    <div id="coautores" class="flexContainer">
-                                                        <div class="item card" style="order:{{$index}}">
-                                                            <div class="row card-body">
-                                                                <div class="col-sm-12">
-                                                                    <label>Pergunta</label>
-                                                                    <input type="text" syle="margin-bottom:10px" value="{{old('pergunta['.$index.']', $pergunta->pergunta)}}"  class="form-control " name="pergunta[]" required>
-                                                                    <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
-                                                                </div>
-                                                                <div class="col-sm-12" >
-                                                                    <label>Resposta</label>
-                                                                    <div class="row" id="row{{$index}}">
-                                                                        @if ($pergunta->respostas->first()->opcoes->count())
-                                                                        <div class="col-sm-12 opcoes itemRadio">
-                                                                            @foreach ($pergunta->respostas->first()->opcoes->sortBy("id") as $indice => $opcao)
-                                                                            <div class="opcao col-sm-12">
-                                                                                <div class="row">
-                                                                                    <div class="input-group pl-0 col-sm-10 mb-3">
-                                                                                        <div class="input-group-prepend">
-                                                                                            <div class="input-group-text">
-                                                                                                <input name="checkbox[{{ $opcao->id }}]" type="checkbox" aria-label="Checkbox for following text input"
-                                                                                                 @if($opcao->check) checked @endif>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control" required>
+                                        @foreach ($form->perguntas()->orderBy("id")->get() as $index => $pergunta)
+                                        <div class="col-md-12">
+                                            <div id="coautores" class="flexContainer">
+                                                <div class="item card" style="order:{{$index}}">
+                                                    <div class="row card-body">
+                                                        <div class="col-sm-12">
+                                                            <label>Pergunta</label>
+                                                            <input type="text" syle="margin-bottom:10px" value="{{old('pergunta['.$index.']', $pergunta->pergunta)}}" class="form-control " name="pergunta[]" required>
+                                                            <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <label>Resposta</label>
+                                                            <div class="row" id="row{{$index}}">
+                                                                @if ($pergunta->respostas->first()->opcoes->count())
+                                                                <div class="col-sm-12 opcoes itemRadio">
+                                                                    @foreach ($pergunta->respostas->first()->opcoes->sortBy("id") as $indice => $opcao)
+                                                                    <div class="opcao col-sm-12">
+                                                                        <div class="row">
+                                                                            <div class="input-group pl-0 col-sm-10 mb-3">
+                                                                                <div class="input-group-prepend">
+                                                                                    <div class="input-group-text">
+                                                                                        <input name="checkbox[{{ $opcao->id }}]" type="checkbox" aria-label="Checkbox for following text input" @if($opcao->check) checked @endif>
                                                                                     </div>
-                                                                                    <!--
+                                                                                </div>
+                                                                                <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control" required>
+                                                                            </div>
+
+                                                                            <!--
                                                                                     Botões de Adicionar e Remover Opção
                                                                                     <div class="col-sm-1 mt-2">
                                                                                         <a href="#" onclick="addRadioToResposta(event)"><i class="fas fa-plus"></i></a>
@@ -326,6 +371,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script type="text/javascript">
+    CKEDITOR.replaceAll('ckeditorinput');
     let rep = 0;
     let order = 1;
     let pergunta = 1;

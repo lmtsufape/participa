@@ -556,9 +556,9 @@ class EventoController extends Controller
 
     public function definirCoordComissao(Request $request)
     {
-    
+
         $evento = Evento::find($request->eventoId);
-        
+
         $users = $evento->usuariosDaComissao;
         $coordenadores = $evento->coordComissaoCientifica->pluck('id')->all();
         return view('coordenador.comissao.definirCoordComissao', compact('evento', 'users', 'coordenadores'));
@@ -890,6 +890,7 @@ class EventoController extends Controller
         $data = $request->all();
         $form = $modalidade->forms()->create([
             'titulo' => $data['titulo'],
+            'instrucoes' => $data['instrucoes'],
         ]);
         foreach ($data['perguntas'] as $index => $value) {
             $pergunta = $form->perguntas()->create([
@@ -1008,6 +1009,7 @@ class EventoController extends Controller
         }
 
         $form->titulo = $data['titulo' . $form->id];
+        $form->instrucoes = $data['instrucoes' . $form->id];
         $form->update();
 
         return redirect()->back()->with(['mensagem' => 'Formulário editado com sucesso!']);
@@ -1478,8 +1480,8 @@ class EventoController extends Controller
             if ($dataInicial == null) {
                 $dataInicial = '';
             }
-            
-           
+
+
             return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'mytime', 'etiquetas', 'formSubTraba', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada'));
         }
     }
