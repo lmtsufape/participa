@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Submissao\Endereco;
 use App\Models\Users\User;
 use App\Providers\RouteServiceProvider;
+use App\Rules\UniqueCaseInsensitive;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,7 +51,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => [ 'required', 'string', 'email', 'max:255', new UniqueCaseInsensitive('users', 'email'),],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'cpf' => ($data['passaporte'] == null && $data['cnpj'] == null ? ['required', 'cpf'] : 'nullable'),
             'cnpj' => ($data['passaporte'] == null && $data['cpf'] == null ? ['required'] : 'nullable'),
