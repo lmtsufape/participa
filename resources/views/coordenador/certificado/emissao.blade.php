@@ -158,6 +158,13 @@
                         </div>
                     @enderror
                 </div>
+                <div class="form-group col-md-12">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="anexo-checkbox" name="sem_anexo" value="1">
+                        <label class="custom-control-label" for="anexo-checkbox">Não enviar arquivo em anexo.</label>
+                        <small>Selecione esta opção se você precisar enviar uma grande quantidade de certificados.</small>
+                      </div>
+                </div>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-12">
@@ -189,7 +196,7 @@
             comissao: '',
             atividade: '',
             outros() {
-                return ['2','3','4','5','7'].includes(this.tipo)
+                return ['2','3','4','5','7', '10'].includes(this.tipo)
             },
             selecionarDestinatario (eventoId) {
                 this.destinatarios = []

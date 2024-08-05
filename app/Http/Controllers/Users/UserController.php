@@ -201,7 +201,7 @@ class UserController extends Controller
     public function meusCertificados()
     {
         $usuario = auth()->user();
-        $tiposView = ['Apresentador', 'Comissão científica', 'Comissão organizadora', 'Revisor', 'Participante', 'Palestrante', 'Coordenador da comissao científica', 'Outras comissoes', 'Inscrito em uma atividade'];
+        $tiposView = ['Apresentador', 'Comissão científica', 'Comissão organizadora', 'Revisor', 'Participante', 'Palestrante', 'Coordenador da comissao científica', 'Outras comissoes', 'Inscrito em uma atividade', 'Inscrito em evento'];
         $certificadosPorTipo = $usuario->certificados->groupBy('tipo');
         $tipos = array_flip(Certificado::TIPO_ENUM);
         $comissoes = TipoComissao::find($usuario->certificados->pluck('pivot.comissao_id'));
@@ -285,6 +285,6 @@ class UserController extends Controller
 
 
         return view('user.areaParticipante', ['eventos' => $eventos]);
-        
+
     }
 }

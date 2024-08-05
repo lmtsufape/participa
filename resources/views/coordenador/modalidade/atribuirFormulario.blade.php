@@ -23,6 +23,14 @@
                     <input type="text" class="form-control mb-2" name="titulo" required>
                 </div>
             </div>
+            <div class="card">
+                <div class="card-body">
+                    <label for="instrucoes"> <strong> Orientações aos(as) avaliadores(as):</strong></label>
+                    <textarea type="text" class="form-control mb-2" name="instrucoes" id="instrucoes">
+                        {{old('instrucoes', '')}}
+                    </textarea>
+                </div>
+            </div>
         </div>
         <div class="col-sm-12" x-data="handler()">
             <div class="flexContainer">
@@ -152,6 +160,7 @@
         }
         $(document).ready(function() {
         CKEDITOR.replace('ckeditor-texto');
+        CKEDITOR.replace('instrucoes');
     });
     </script>
 @endsection
