@@ -125,9 +125,15 @@
                                         !$trabalho->atribuicoes->contains($revisor) &&
                                             is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first()) &&
                                             $trabalho->autorId != $revisor->user_id)
+                                            @php
+                                                $get = $revisor->user->revisorWithCounts()->where('evento_id', $evento->id)->get();
+                                                $processando = $get->sum('processando_count');
+                                                $avaliados = $get->sum('avaliados_count') + $processando;
+                                            @endphp
                                         <option value="{{ $revisor->id }}">{{ $revisor->user->name }}
                                             ({{ $revisor->user->email }})
-                                            ({{ trans_choice('messages.qtd_revisores',$revisor->user->revisor()->where('evento_id', $evento->id)->withCount('trabalhosAtribuidosPendentes')->get()->sum('trabalhos_atribuidos_pendentes_count'),['value' => $revisor->user->revisor()->where('evento_id', $evento->id)->withCount('trabalhosAtribuidosPendentes')->get()->sum('trabalhos_atribuidos_pendentes_count')]) }})
+                                            ({{ trans_choice('messages.qtd_revisores', $processando, ['value' => $processando]) }})
+                                            ({{ trans_choice('messages.qtd_trabalhos_atribuidos', $avaliados, ['value' => $avaliados]) }})
                                         </option>
                                     @endif
                                 @endforeach
