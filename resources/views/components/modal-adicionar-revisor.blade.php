@@ -71,7 +71,7 @@
                 @if (count($trabalho->atribuicoes) > 0)
                     <div class="row justify-content-center">
                         <div class="col-sm-12">
-                            <h5>Avaliadores atribuidos ao trabalho</h5>
+                            <h5>Avaliadores atribuídos ao trabalho</h5>
                         </div>
                     @else
                         <div class="row justify-content-center">
