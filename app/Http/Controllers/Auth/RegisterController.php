@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Submissao\Endereco;
 use App\Models\Users\User;
 use App\Providers\RouteServiceProvider;
+use App\Rules\UniqueCaseInsensitive;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 
@@ -48,10 +49,9 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        // dd($data);
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => [ 'required', 'string', 'email', 'max:255', new UniqueCaseInsensitive('users', 'email'),],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'cpf' => ($data['passaporte'] == null && $data['cnpj'] == null ? ['required', 'cpf'] : 'nullable'),
             'cnpj' => ($data['passaporte'] == null && $data['cpf'] == null ? ['required'] : 'nullable'),
@@ -76,10 +76,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        // dd("teste");
-        // endereço
-        // dd($end)
-
         $user = new User();
         $user->name = $data['name'];
         $user->email = strtolower($data['email']);
@@ -101,43 +97,10 @@ class RegisterController extends Controller
 
         $user->enderecoId = null;
         $user->save();
-       
+
 
         app()->setLocale('pt-BR');
-        
+
         return $user;
     }
 }
-
-// 'cpf'           => ['required_if: passaporte, null' ,
-//                                     function ($attribute, $value, $fail) use ($data){
-//                                         if ($data['passaporte'] == null && $value == null) {
-//                                             $fail($attribute.' ou cpf precisa ser preenchido.');
-//                                             return;
-//                                         }
-//                                         if ($data['passaporte'] == null && User::where('cpf',$data['cpf'])->count() != 0) {
-//                                             $fail($attribute.' já está me uso.');
-//                                             return;
-//                                         }
-//                                         if ($data['cpf'] != null) {
-//                                             if (User::where('cpf',$value)->count() != 0) {
-//                                                 $fail($attribute.' já está me uso.');
-//                                                 return;
-//                                             }
-//                                         }
-
-//                                     },],
-//             'passaporte'    => ['required_if: cpf, null','max:10',
-//                                 function ($attribute, $value, $fail) use ($data){
-//                                     if ($data['cpf'] == null && $value == null) {
-//                                         // dd( $data['cpf'] == null && $value == null);
-//                                         $fail($attribute.' ou cpf precisa ser preenchido.');
-//                                         return;
-//                                     }
-//                                     if ($data['passaporte'] != null && User::where('passaporte',$data['passaporte'])->count() != 0) {
-//                                         $fail($attribute.' já está me uso.');
-//                                         return;
-//                                     }
-
-//                                 },
-//                                 ],
