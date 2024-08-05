@@ -69,86 +69,77 @@
                     </div>
                 @endif
                 @if (count($trabalho->atribuicoes) > 0)
-                    <div class="row justify-content-center">
+                    <div class="row justify-content-start">
                         <div class="col-sm-12">
                             <h5>Avaliadores atribuídos ao trabalho</h5>
                         </div>
-                    @else
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
+                        @foreach ($trabalho->atribuicoes as $i => $revisor)
+                            <div class="col-sm-4">
+                                <div class="card" style="width: 13.5rem; text-align: center;">
+                                    <img class="" src="{{ asset('img/icons/user.png') }}" width="100px" alt="Revisor"
+                                        style="position: relative; left: 30%; top: 10px;">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ $revisor->user->name }}</h6>
+                                        <strong>E-mail</strong>
+                                        <p class="card-text">{{ $revisor->user->email }}</p>
+                                        <form action="{{ route('atribuicao.delete', ['id' => $revisor->id]) }}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                                            <input type="hidden" name="trabalhoId" value="{{ $trabalho->id }}">
+                                            <button type="submit" class="btn btn-primary button-prevent-multiple-submits"
+                                                id="removerRevisorTrabalho">
+                                                Remover Avaliador
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                @endif
-                @foreach ($trabalho->atribuicoes as $i => $revisor)
-                    @if ($i % 3 == 0)
-            </div>
-            <div class="row">
-                @endif
-                <div class="col-sm-4">
-                    <div class="card" style="width: 13.5rem; text-align: center;">
-                        <img class="" src="{{ asset('img/icons/user.png') }}" width="100px" alt="Revisor"
-                            style="position: relative; left: 30%; top: 10px;">
-                        <div class="card-body">
-                            <h6 class="card-title">{{ $revisor->user->name }}</h6>
-                            <strong>E-mail</strong>
-                            <p class="card-text">{{ $revisor->user->email }}</p>
-                            <form action="{{ route('atribuicao.delete', ['id' => $revisor->id]) }}" method="post">
-                                @csrf
-                                <input type="hidden" name="eventoId" value="{{ $evento->id }}">
-                                <input type="hidden" name="trabalhoId" value="{{ $trabalho->id }}">
-                                <button type="submit" class="btn btn-primary button-prevent-multiple-submits"
-                                    id="removerRevisorTrabalho">
-                                    Remover Avaliador
-                                </button>
-                            </form>
-                        </div>
+                        @endforeach
                     </div>
-                </div>
-                @endforeach
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-sm-12">
-                    <h5>Adicionar Avaliador</h5>
-                </div>
-            </div>
-            <form action="{{ route('distribuicaoManual') }}" method="post">
-                @csrf
-                <input type="hidden" name="trabalhoId" value="{{ $trabalho->id }}">
-                <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                @endif
                 <div class="row">
-                    <div class="col-sm-9">
-                        <div class="form-group">
-                            <select name="revisorId" class="form-control" id="selectRevisorTrabalho">
-                                <option value="" disabled selected>-- E-mail do avaliador --</option>
-                                @foreach ($evento->revisors()->where([['modalidadeId', $trabalho->modalidade->id], ['areaId', $trabalho->area->id]])->get() as $revisor)
-                                    @if (
-                                        !$trabalho->atribuicoes->contains($revisor) &&
-                                            is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first()) &&
-                                            $trabalho->autorId != $revisor->user_id)
-                                            @php
-                                                $get = $revisor->user->revisorWithCounts()->where('evento_id', $evento->id)->get();
-                                                $processando = $get->sum('processando_count');
-                                                $avaliados = $get->sum('avaliados_count') + $processando;
-                                            @endphp
-                                        <option value="{{ $revisor->id }}">{{ $revisor->user->name }}
-                                            ({{ $revisor->user->email }})
-                                            ({{ trans_choice('messages.qtd_revisores', $processando, ['value' => $processando]) }})
-                                            ({{ trans_choice('messages.qtd_trabalhos_atribuidos', $avaliados, ['value' => $avaliados]) }})
-                                        </option>
-                                    @endif
-                                @endforeach
-                            </select>
+                    <div class="col-sm-12">
+                        <h5>Adicionar Avaliador</h5>
+                    </div>
+                </div>
+                <form action="{{ route('distribuicaoManual') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="trabalhoId" value="{{ $trabalho->id }}">
+                    <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <div class="form-group">
+                                <select name="revisorId" class="form-control" id="selectRevisorTrabalho">
+                                    <option value="" disabled selected>-- E-mail do avaliador --</option>
+                                    @foreach ($evento->revisors()->where([['modalidadeId', $trabalho->modalidade->id], ['areaId', $trabalho->area->id]])->get() as $revisor)
+                                        @if (
+                                            !$trabalho->atribuicoes->contains($revisor) &&
+                                                is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first()) &&
+                                                $trabalho->autorId != $revisor->user_id)
+                                                @php
+                                                    $get = $revisor->user->revisorWithCounts()->where('evento_id', $evento->id)->get();
+                                                    $processando = $get->sum('processando_count');
+                                                    $avaliados = $get->sum('avaliados_count') + $processando;
+                                                @endphp
+                                            <option value="{{ $revisor->id }}">{{ $revisor->user->name }}
+                                                ({{ $revisor->user->email }})
+                                                ({{ trans_choice('messages.qtd_revisores', $processando, ['value' => $processando]) }})
+                                                ({{ trans_choice('messages.qtd_trabalhos_atribuidos', $avaliados, ['value' => $avaliados]) }})
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="submit" class="btn btn-primary button-prevent-multiple-submits"
+                                id="addRevisorTrabalho">
+                                <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i>Adicionar Avaliador
+                            </button>
                         </div>
                     </div>
-                    <div class="col-sm-3">
-                        <button type="submit" class="btn btn-primary button-prevent-multiple-submits"
-                            id="addRevisorTrabalho">
-                            <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i>Adicionar Avaliador
-                        </button>
-                    </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-</div>
 </div>
