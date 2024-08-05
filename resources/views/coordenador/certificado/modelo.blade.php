@@ -97,6 +97,12 @@
                                 scaleX: 1,
                                 scaleY: 1,
                             });
+                        } else if ( ['middle-right', 'middle-left'].includes(transformer.getActiveAnchor()) ) {
+                            event.target.setAttrs({
+                                width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
+                                scaleX: 1,
+                                scaleY: 1,
+                            });
                         }
                     }
                 })
@@ -500,23 +506,35 @@
 
             hash.on('transform', (event) => {
                 if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
-                hash.setAttrs({
-                    fontSize: Math.max(hash.fontSize() * hash.scaleX(), 2),
-                    width: Math.max(hash.width() * hash.scaleX(), MIN_WIDTH),
-                    scaleX: 1,
-                    scaleY: 1,
-                });
+                    hash.setAttrs({
+                        fontSize: Math.max(hash.fontSize() * hash.scaleX(), 2),
+                        width: Math.max(hash.width() * hash.scaleX(), MIN_WIDTH),
+                        scaleX: 1,
+                        scaleY: 1,
+                    });
+                } else if ( ['middle-right', 'middle-left'].includes(transformer.getActiveAnchor()) ) {
+                    event.target.setAttrs({
+                        width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
+                        scaleX: 1,
+                        scaleY: 1,
+                    });
                 }
             });
 
             emissao.on('transform', (event) => {
                 if( ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(versoTransformer.getActiveAnchor()) ) {
-                emissao.setAttrs({
-                    fontSize: Math.max(emissao.fontSize() * emissao.scaleX(), 2),
-                    width: Math.max(emissao.width() * emissao.scaleX(), MIN_WIDTH),
-                    scaleX: 1,
-                    scaleY: 1,
-                });
+                    emissao.setAttrs({
+                        fontSize: Math.max(emissao.fontSize() * emissao.scaleX(), 2),
+                        width: Math.max(emissao.width() * emissao.scaleX(), MIN_WIDTH),
+                        scaleX: 1,
+                        scaleY: 1,
+                    });
+                } else if ( ['middle-right', 'middle-left'].includes(transformer.getActiveAnchor()) ) {
+                    event.target.setAttrs({
+                        width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
+                        scaleX: 1,
+                        scaleY: 1,
+                    });
                 }
             });
             verso.on('click tap', function (e) {
