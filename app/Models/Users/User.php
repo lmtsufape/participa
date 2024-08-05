@@ -6,6 +6,7 @@ use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
 use App\Notifications\recuperacaoSenha;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -93,6 +94,18 @@ class User extends Authenticatable implements MustVerifyEmail
     public function revisor()
     {
         return $this->hasMany('App\Models\Users\Revisor');
+    }
+
+    public function revisorWithCounts()
+    {
+        return $this->hasMany('App\Models\Users\Revisor')->withCount([
+            'trabalhosAtribuidos as avaliados_count' => function (Builder $query) {
+                $query->where('parecer', 'avaliado')->orWhere('parecer', 'encaminhado');
+            },
+            'trabalhosAtribuidos as processando_count' => function (Builder $query) {
+                $query->where('parecer', 'processando');
+            },
+        ]);
     }
 
     public function participante()
