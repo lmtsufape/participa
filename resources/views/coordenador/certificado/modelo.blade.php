@@ -78,7 +78,14 @@
                                 scaleX: 1,
                                 scaleY: 1,
                             });
+                        } else if ( ['middle-right', 'middle-left'].includes(transformer.getActiveAnchor()) ) {
+                            event.target.setAttrs({
+                                width: Math.max(event.target.width() * event.target.scaleX(), MIN_WIDTH),
+                                scaleX: 1,
+                                scaleY: 1,
+                            });
                         }
+
                     } else {
                         //imagem
                         console.log("Imagem")
@@ -108,7 +115,7 @@
                 padding: 5,
                 rotateEnabled: false,
                 keepRatio: true,
-                enabledAnchors: ['top-left', 'top-right','bottom-left', 'bottom-right'],
+                enabledAnchors: ['top-left', 'top-right','bottom-left', 'bottom-right', 'middle-right', 'middle-left'],
                 draggable: true,
                 boundBoxFunc: (oldBox, newBox) => {
                 if (newBox.width < MIN_WIDTH) {
