@@ -27,33 +27,28 @@ class HomeController extends Controller
     public function home()
     {
         $user = Auth::user();
-        
         $eventos = collect();
-        
         if ($user->administradors()->exists()) {
             $eventos = $eventos->concat(Evento::all());
 
             return view('administrador.index', ['eventos' => $eventos]);
         }
         else if ($user->coordComissaoCientifica()->exists()) {
-      
             $eventos = $eventos->concat($user->coordComissaoCientifica);
         }
         else if ($user->coordComissaoOrganizadora()->exists()) {
             $eventos = $eventos->concat($user->coordComissaoOrganizadora);
         }else{
-            $eventos = DB::table('eventos')->join('inscricaos','inscricaos.evento_id','eventos.id')
-            ->where('inscricaos.user_id',$user->id)
-            ->get();
+            $eventos = Evento::whereHas('inscricaos', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->get();
 
              return view('user.areaParticipante', ['eventos' => $eventos]);
         }
         $eventos = $eventos->concat($user->eventos);
         $eventos = $eventos->concat($user->eventosCoordenador);
-
         $eventos = $eventos->unique('id');
 
-        
         return view('coordenador.index', ['eventos' => $eventos]);
     }
 
@@ -76,7 +71,7 @@ class HomeController extends Controller
         $eventosPassados = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '<', today()]])->whereNull('evento_pai_id')->get()->sortDesc()->take(4);
 
         $tiposEvento = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->selectRaw('DISTINCT tipo')->get();
-        
+
         return view('index',compact('eventos','tiposEvento','proximosEventos','eventosPassados'));
     }
 }
