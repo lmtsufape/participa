@@ -183,7 +183,6 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'QRCode' => LaravelQRCode\Facades\QRCode::class,
     ])->toArray(),
 
 ];
