@@ -21,7 +21,12 @@
         @foreach ($eventos as $evento)
         <div class="card" style="width: 18rem;">
             @if(isset($evento->fotoEvento))
-            <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+
+            @php
+                $bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en ? $evento->fotoEvento_en : $evento->fotoEvento;
+            @endphp
+
+            <img src="{{ asset('storage/' . $bannerPath) }}" class="card-img-top" alt="...">
             @else
             <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
             @endif
