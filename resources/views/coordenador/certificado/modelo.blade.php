@@ -166,7 +166,7 @@
             var tempdata = @json($dataHoje);
             var localdata =  templocal + ', ' + tempdata;
             var local = new Konva.Text({
-                x: parseInt(medidaData.x - 100),
+                x: parseInt(medidaData.x),
                 y: parseInt(medidaData.y),
                 width: parseInt(medidaData.largura / 1.3),
                 fontSize: parseInt(medidaData.fontSize),
