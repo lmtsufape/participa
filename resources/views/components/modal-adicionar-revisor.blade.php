@@ -1,4 +1,4 @@
-@@props(['trabalho', 'evento'])
+@props(['trabalho', 'evento'])
 <div class="modal fade" id="modalTrabalho{{ $trabalho->id }}" tabindex="-1" role="dialog"
     aria-labelledby="labelModalTrabalho{{ $trabalho->id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
