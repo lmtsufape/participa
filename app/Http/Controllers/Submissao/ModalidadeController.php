@@ -51,7 +51,7 @@ class ModalidadeController extends Controller
     {
         $modalidade = new Modalidade();
         $modalidade->fill($request->validated());
-        if ($request->avaliacaoDuranteSubmissao == 'on') {
+        if ($request->has('avaliacaoDuranteSubmissao')) {
             $modalidade->avaliacaoDuranteSubmissao = true;
             $modalidade->save();
         }
@@ -124,7 +124,7 @@ class ModalidadeController extends Controller
             }
         }
 
-        if ($request->submissaoUnica == 'on') {
+        if ($request->has('submissaoUnica')) {
             $modalidade->submissaoUnica = true;
             $modalidade->save();
         }
@@ -181,13 +181,6 @@ class ModalidadeController extends Controller
         $modalidadeEdit = Modalidade::find($request->modalidadeEditId);
         $evento = $modalidadeEdit->evento;
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-
-        if ($request->avaliacaoDuranteSubmissao == 'on') {
-            $modalidadeEdit->avaliacaoDuranteSubmissao = true;
-            $modalidadeEdit->submissaoUnica = true;
-            $modalidadeEdit->save();
-        }
-
 
         // dd($request);
         $validatedData = $request->validate([
@@ -246,7 +239,7 @@ class ModalidadeController extends Controller
             'arquivoTemplates' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048'],
         ]);
 
-        if ($modalidadeEdit->avaliacaoDuranteSubmissao == true) {
+        if ($request->has('avaliacaoDuranteSubmissao')) {
             $validatedData += $request->validate(['inícioRevisão' . $request->modalidadeEditId => ['nullable', 'date']]);
         } else {
             $validatedData += $request->validate(['inícioRevisão' . $request->modalidadeEditId => ['nullable', 'date', 'after:fimSubmissão' . $request->modalidadeEditId]]);
@@ -377,6 +370,9 @@ class ModalidadeController extends Controller
         $modalidadeEdit->caracteres = $caracteres;
         $modalidadeEdit->palavras = $palavras;
         $modalidadeEdit->apresentacao = $request->apresentacao ? true : false;
+
+        $modalidadeEdit->avaliacaoDuranteSubmissao = $request->has('avaliacaoDuranteSubmissao');
+        $modalidadeEdit->submissaoUnica = $request->has('submissaoUnica');
 
         // dd($request->file('arquivoRegras'.$request->modalidadeEditId));
         if ($request->file('arquivoRegras' . $request->modalidadeEditId) != null) {
@@ -549,8 +545,6 @@ class ModalidadeController extends Controller
         } else {
             $modalidadeEdit->datasExtras()->delete();
         }
-
-        
 
         return redirect()->back()->with(['mensagem' => 'Modalidade salva com sucesso!']);
     }
