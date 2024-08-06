@@ -342,7 +342,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-check">
-                                                <input class="form-check-input" id="avaliacaoDuranteSubmissaocheck" onchange="mensagemSubmissao()" x-model="avaliacaoDuranteSubmissao" type="checkbox" name="avaliacaoDuranteSubmissao" @if(old('avaliacaoDuranteSubmissao'.$modalidade->id)) checked @elseif(old('avaliacaoDuranteSubmissao'.$modalidade->id) == true && $modalidade->avaliacaoDuranteSubmissao == true) checked @endif>
+                                                <input class="form-check-input" id="avaliacaoDuranteSubmissaocheck" onchange="mensagemSubmissao()" value="1" type="checkbox" name="avaliacaoDuranteSubmissao" @if(old('avaliacaoDuranteSubmissao'.$modalidade->id, $modalidade->avaliacaoDuranteSubmissao) == true) checked @endif>
                                                 <label class="form-check-label font-weight-bold" for="avaliacaoDuranteSubmissaocheck">
 
                                                     {{ __('Permitir avaliação durante o período de submissão') }}
@@ -580,15 +580,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="submissaoUnica" id="submissaoUnicacheck" @if(old('submissaoUnica')==true || $modalidade->submissaoUnica) checked @endif>
-
-                                        <label class="form-check-label font-weight-bold" for="submissaoUnicacheck">
-
-                                            {{ __('Habilitar submissão única para avaliação') }}
-                                        </label>
-                                    </div> -->
                                     @error('submissao')
                                     <div class="invalid-feedback d-flex mt-0" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -638,6 +629,12 @@
                                                 </label>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="1" name="submissaoUnica" id="submissaoUnicacheck" @if(old('submissaoUnica', $modalidade->submissaoUnica) == true) checked @endif>
+                                        <label class="form-check-label font-weight-bold" for="submissaoUnicacheck">
+                                            {{ __('Habilitar submissão única para avaliação') }}
+                                        </label>
                                     </div>
                                     <div class="row justify-content-center">
                                         {{-- Arquivo de Modelos  --}}

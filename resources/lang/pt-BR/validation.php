@@ -89,6 +89,7 @@ return [
     'timezone' => ':Attribute deve ser uma timezone válida.',
     'unique' => ':Attribute já está em uso.',
     'url' => 'O formato de :attribute é inválido.',
+    'uploaded' => 'Ocorreu uma falha no upload do campo :attribute.',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
