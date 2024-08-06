@@ -152,7 +152,7 @@ class TrabalhoController extends Controller
     public function store(TrabalhoPostRequest $request, $modalidadeId)
     {
         //Obtendo apenas os tipos de extensões selecionadas
-       
+
         try {
             $validatedData = $request->validated();
             $evento = Evento::find($request->eventoId);
@@ -630,7 +630,7 @@ class TrabalhoController extends Controller
         }
 
         if ($request->file('arquivo' . $id) != null) {
-            if ($trabalho->modalidade->submissaoUnica == false) {
+            if ($trabalho->modalidade->submissaoUnica == false || $request->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)) {
                 $path = "trabalhos/{$evento->id}/{$trabalho->id}";
                 $file = $request->file('arquivo' . $id);
                 $path = $this->salvarArquivoComNomeOriginal($file, $path);
