@@ -89,37 +89,6 @@
                 </div>
             </div>
         </div>
-                @foreach ($form->perguntas->sortBy("id") as $pergunta)
-                    <div class="card">
-                        <div class="card-body">
-                            <p>{{$pergunta->pergunta}}</p>
-                            @if($pergunta->respostas->first()->opcoes->count())
-                                <p>Resposta com Multipla escolha:</p>
-                                @foreach ($pergunta->respostas->first()->opcoes->sortBy("id") as $opcao)
-                                    <div class="col-md-10 itemRadio">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">
-                                                    <input type="checkbox" value="1" disabled @if($opcao->check) checked @endif>
-                                                </div>
-                                            </div>
-                                            <input type="text" class="form-control" value=" {{$opcao->titulo}}" disabled>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @elseif($pergunta->respostas->first()->paragrafo)
-                                <p>Resposta com parágrafo: </p>
-                                <div class="col-md-10">
-                                    <input type="text" style="margin-bottom:10px" disabled='true' class="form-control">
-                                </div>
-                            @endif
-                            <div class="col-md-5">
-                                <div class="col-form-label text-md-left">
-                                    <small>Visível para o autor? </small><input disabled type="checkbox" value="1" @if ($pergunta->visibilidade) checked @endif>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
         @endforeach
         </p>
