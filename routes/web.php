@@ -276,7 +276,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('modalidade/forms', [EventoController::class, 'forms'])->name('forms');
             Route::get('modalidade/atribuir/form', [EventoController::class, 'atribuirForm'])->name('atribuir.form');
             Route::post('modalidade/form/salvar', [EventoController::class, 'salvarForm'])->name('salvar.form');
-            Route::get('modalidade/form/update', [EventoController::class, 'updateForm'])->name('update.form');
+            Route::put('modalidade/form/update', [EventoController::class, 'updateForm'])->name('update.form');
             Route::get('modalidade/form/visualizar', [EventoController::class, 'visualizarForm'])->name('visualizar.form');
             Route::get('modalidade/form/respostas', [EventoController::class, 'respostas'])->name('respostas');
             Route::get('modalidade/form/respostasToPdf/{modalidade}', [EventoController::class, 'respostasToPdf'])->name('respostasToPdf');
