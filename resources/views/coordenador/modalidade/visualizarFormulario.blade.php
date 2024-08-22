@@ -170,7 +170,8 @@
                                     @include('componentes.mensagens')
                                     @enderror
                                 </div>
-                                <form method="get" action="{{route('coord.update.form')}}" enctype="multipart/form-data">
+                                <form method="POST" action="{{route('coord.update.form')}}" enctype="multipart/form-data">
+                                    @method('PUT')
                                     @csrf
                                     <p class="card-text">
                                         <input type="hidden" name="formEditId" value="{{$form->id}}">
