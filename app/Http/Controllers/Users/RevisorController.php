@@ -541,7 +541,7 @@ class RevisorController extends Controller
         $opcaoCont = 0;
         $paraCont = 0;
         if ($request->pergunta_id != null) {
-            foreach ($data['pergunta_id'] as $key => $value) {
+            foreach ($data['pergunta_id'] as $value) {
                 $pergunta = Pergunta::find($value);
                 if ($pergunta->respostas->first()->paragrafo != null && $paraCont < count($data['resposta_paragrafo_id'])) {
                     $resposta = Paragrafo::find($data['resposta_paragrafo_id'][$paraCont++]);
@@ -561,6 +561,16 @@ class RevisorController extends Controller
                         $opcao->visibilidade = false;
                     }
                     $opcao->save();
+                } elseif ($pergunta->respostas->first()->opcoes->count() && ! $pergunta->respostas()->where('revisor_id', $data['revisor_id'])->where('trabalho_id', $data['trabalho_id'])->exists()) {
+                    $resposta = $pergunta->respostas()->create([
+                        'revisor_id' => $data['revisor_id'],
+                        'trabalho_id'=> $data['trabalho_id'],
+                    ]);
+                    $resposta->opcoes()->create([
+                        'titulo' => $data[$value],
+                        'tipo' => 'radio',
+                        'check' => true,
+                    ]);
                 }
             }
         }
