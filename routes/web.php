@@ -274,6 +274,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('modalidade/form/respostasToPdf/{modalidade}', [EventoController::class, 'respostasToPdf'])->name('respostasToPdf');
             Route::get('modalidade/form/{id}/excluir', [EventoController::class, 'destroyForm'])->name('deletar.form');
 
+            Route::post('/evento/{evento}/avisoCorrecao', [EventoController::class, 'avisoCorrecao'])->name('evento.avisoCorrecao');
+
             Route::get('atividades/{id}', [AtividadeController::class, 'index'])->name('atividades');
             // Atenção se mudar url da rota abaixo mudar função setVisibilidadeAtv na view detalhesEvento.blade.php
             Route::post('atividades/{id}/visibilidade', [AtividadeController::class, 'setVisibilidadeAjax'])->name('atividades.visibilidade');
@@ -303,6 +305,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::post('/evento/numTrabalhos', [EventoController::class, 'numTrabalhos'])->name('trabalho.numTrabalhos');
         Route::get('/evento/habilitar/{id}', [EventoController::class, 'habilitar'])->name('evento.habilitar');
         Route::get('/evento/desabilitar/{id}', [EventoController::class, 'desabilitar'])->name('evento.desabilitar');
+
 
         //Sub-Evento
         Route::get('/subevento/criar/{id}', [EventoController::class, 'createSubEvento'])->name('subevento.criar');
