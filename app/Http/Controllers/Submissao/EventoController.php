@@ -8,6 +8,7 @@ use App\Exports\TrabalhosExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
 use App\Http\Requests\UpdateEventoRequest;
+use App\Mail\AvisoPeriodoCorrecao;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EventoCriado;
 use App\Models\Inscricao\Inscricao;
@@ -1804,6 +1805,25 @@ class EventoController extends Controller
         if ($data_fim != null) $query = $query->where('dataFim', $data_fim);
 
         return response()->json($query->get());
+    }
+
+    public function avisoCorrecao(Evento $evento, Request $request)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+
+        $request->validate([
+            'trabalhosSelecionados' => 'array|min:1|required',
+        ]);
+
+        $trabalhos = Trabalho::whereIn('id', $request['trabalhosSelecionados'])->get();
+
+        foreach ($trabalhos as $trabalho) {
+            Mail::to($trabalho->autor)
+                ->cc($trabalho->coautors()->with('user')->get()->map(fn($coautor) => $coautor->user))
+                ->send(new AvisoPeriodoCorrecao($trabalho->autor, $trabalho));
+        }
+
+        return redirect()->back()->with('success', 'Avisos enviados');
     }
 
     /**

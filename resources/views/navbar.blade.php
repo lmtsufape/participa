@@ -71,7 +71,7 @@
                                 {{ __('Área do Administrador') }}
                             </a>
                         @endif
-        
+
                         @if (Auth::user()->coordComissaoCientifica->count() != 0 || isset(Auth::user()->administradors))
                             {{-- Rota - Area da Comissao --}}
 
@@ -106,13 +106,11 @@
                             </a>
                         @endif
 
-                        @if (isset(Auth::user()->coordEvento))
-                            {{-- Rota - Area da Comissao --}}
-                            <a class="dropdown-item" href="{{ route('coord.index') }}">
-                                <img src="{{asset('img/icons/comissao.png')}}" alt="">
-                                {{ __('Área do Coordenador de Evento') }}
-                            </a>
-                        @endif
+                        {{-- Rota - Area da Comissao --}}
+                        <a class="dropdown-item" href="{{ route('coord.index') }}">
+                            <img src="{{asset('img/icons/comissao.png')}}" alt="">
+                            {{ __('Área do Coordenador de Evento') }}
+                        </a>
 
                         @if ( isset(Auth::user()->coautor) && Auth::user()->coautor->count())
                             {{-- Rota - Area do coautor--}}
