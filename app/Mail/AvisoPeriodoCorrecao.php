@@ -35,7 +35,7 @@ class AvisoPeriodoCorrecao extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Aviso Periodo Correcao',
+            subject: 'Lembrete de envio de versão corrigida do texto',
         );
     }
 

@@ -47,7 +47,7 @@
                             <div class="justify-content-between d-flex">
                                 <h5 class="card-title">Modalidade: <span
                                         class="card-subtitle mb-2 text-muted">{{ $trabalhos[0]->modalidade->nome }}</span></h5>
-                                <button class="btn btn-primary" type="submit" form="avisoCorrecao">Avisão de correção</button>
+                                <button class="btn btn-primary" type="submit" form="avisoCorrecao">Lembrete de envio de versão corrigida do texto</button>
                             </div>
                             @endif
                             @if($errors->any())

@@ -21,6 +21,15 @@
             </div>
         </div>
     @endif
+    @if(session('success'))
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 5px;">
+                <div class="alert alert-success">
+                    <p>{{session('success')}}</p>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="row">
         <div class="col-sm-12">
         @if ($errors->any())
@@ -184,6 +193,13 @@
                             </a>
                         @endif
                     @endif
+                </div>
+                <div class="col-md-4">
+                    <form action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
+                        @csrf
+                        <input type="hidden" name="trabalhosSelecionados[]" value="{{$trabalho->id}}">
+                        <button class="btn btn-primary" type="submit">Lembrete de envio de versão corrigida do texto</button>
+                    </form>
                 </div>
             @endcan
         </div>
