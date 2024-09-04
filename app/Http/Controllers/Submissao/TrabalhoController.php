@@ -928,8 +928,15 @@ class TrabalhoController extends Controller
     public function downloadArquivo($id)
     {
         $trabalho = Trabalho::find($id);
-        $revisor = Revisor::where([['evento_id', '=', $trabalho->eventoId], ['user_id', '=', auth()->user()->id]])->first();
-        $user = User::find(auth()->user()->id);
+        $ehRevisor = Revisor::where([
+                ['evento_id', '=', $trabalho->eventoId],
+                ['user_id', '=', auth()->user()->id],
+                ['areaId', '=', $trabalho->area->id],
+                ['modalidadeId', '=', $trabalho->modalidade->id],
+            ])
+            ->whereHas('trabalhosAtribuidos', fn($query) => $query->where('trabalho_id', $trabalho->id))
+            ->exists();
+        $usuarioLogado = User::find(auth()->user()->id);
 
         /*
           O usuário só tera permissão para baixar o arquivo se for revisor do trabalho
@@ -938,21 +945,11 @@ class TrabalhoController extends Controller
         */
         $arquivo = $trabalho->arquivo()->where('versaoFinal', true)->first();
 
-        $comoCoautor = Coautor::where('autorId', auth()->user()->id)->first();
-        $trabalhosCoautor = collect();
-        if ($comoCoautor != null) {
-            $trabalhosC = $comoCoautor->trabalhos;
-            foreach ($trabalhosC as $trab) {
-                if ($trab->autorId != auth()->user()->id) {
-                    $trabalhosCoautor->push($trab->id);
-                }
-            }
-        }
+        $ehCoautor = $usuarioLogado->coautor?->trabalhos()->where('trabalhos.id', $trabalho->id)->exists();
 
         $evento = $trabalho->evento;
         $usuariosDaComissaoCientifica = $evento->usuariosDaComissao;
         $usuariosDaComissaoOrganizadora = $evento->usuariosDaComissaoOrganizadora;
-        $usuarioLogado = auth()->user();
 
         if (
             $evento->coordenadorId == $usuarioLogado->id
@@ -961,29 +958,15 @@ class TrabalhoController extends Controller
             || $evento->userIsCoordComissaoCientifica($usuarioLogado)
             || $evento->userIsCoordComissaoOrganizadora($usuarioLogado)
             || $trabalho->autorId == $usuarioLogado->id
-            || $trabalhosCoautor->contains($trabalho->id)
+            || $ehCoautor
             || $usuarioLogado->administradors()->exists()
+            || $ehRevisor
         ) {
-            // dd($arquivo);
             if ($arquivo != null && Storage::disk()->exists($arquivo->nome)) {
                 return Storage::download($arquivo->nome);
             }
 
             return abort(404);
-        } elseif ($revisor != null) {
-            if ($revisor->trabalhosAtribuidos->contains($trabalho)) {
-                if (Storage::disk()->exists($arquivo->nome)) {
-                    return Storage::download($arquivo->nome);
-                }
-
-                return abort(404);
-            } else {
-                if (Storage::disk()->exists($arquivo->nome)) {
-                    return Storage::download($arquivo->nome);
-                }
-
-                return abort(404);
-            }
         }
 
         return abort(403);

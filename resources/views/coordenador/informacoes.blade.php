@@ -21,13 +21,37 @@
         <!-- Row trabalhos -->
         <div class="row justify-content-center">
           <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Inscrições</h5>
+                    <h6 class="card-subtitle mb-2">Informações referente as inscrições no evento</h6>
+                    <div class="card-text">
+                        <div class="table-responsive text-center">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Inscrições</th>
+                                        <th>Validadas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{$evento->inscricaos_count}}</td>
+                                        <td>{{$evento->inscricoes_validadas_count}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
             <div class="row justify-content-center">
               <div class="col-sm-12">
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Trabalhos</h5>
+                    <h5 class="card-title">Trabalhos (geral)</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Informações referente aos trabalhos enviados</h6>
                     <p class="card-text">
                       <div class="row justify-content-center">
@@ -43,10 +67,10 @@
                             </thead>
                             <tbody>
                               <tr>
-                                <td style="text-align:center"> {{$trabalhosEnviados}} </td>
-                                <td style="text-align:center"> {{$trabalhosArquivados}} </td>
-                                <td style="text-align:center"> {{$trabalhosAvaliados}} </td>
-                                <td style="text-align:center"> {{$trabalhosPendentes}} </td>
+                                <td style="text-align:center"> {{$evento->enviados_count}} </td>
+                                <td style="text-align:center"> {{$evento->arquivados_count}} </td>
+                                <td style="text-align:center"> {{$evento->avaliados_count}} </td>
+                                <td style="text-align:center"> {{$evento->pendentes_count}} </td>
                               </tr>
                             </tbody>
                           </table>
@@ -59,6 +83,40 @@
                 </div>
               </div>
             </div>
+
+            @isset($evento->modalidades)
+                @foreach ($evento->modalidades as $modalidade)
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Trabalhos da modalidade {{$modalidade->nome}}</h5>
+                            <h6 class="card-subtitle mb-2">Informações referente aos trabalhos enviados na modalidade</h6>
+                            <p class="card-text">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Enviados</th>
+                                                <th>Arquivados</th>
+                                                <th>Avaliados</th>
+                                                <th>Pendentes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{$modalidade->enviados_count}}</td>
+                                                <td>{{$modalidade->arquivados_count}}</td>
+                                                <td>{{$modalidade->avaliados_count}}</td>
+                                                <td>{{$modalidade->pendentes_count}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+                @endforeach
+            @endisset
+
             <div class="row justify-content-center">
               <div class="col-sm-12">
                 <div class="card">
@@ -72,14 +130,16 @@
                             <thead>
                               <tr>
                                 <th style="text-align:center">Número de Avaliadores</th>
-                                <th style="text-align:center">Número de Integrantes na Comissão</th>
+                                <th style="text-align:center">Número de Integrantes na Comissão Científica</th>
+                                <th style="text-align:center">Número de Integrantes na Comissão Organizadora</th>
 
                               </tr>
                             </thead>
                             <tbody>
                               <tr>
-                                <td style="text-align:center"> {{$numeroRevisores}} </td>
-                                <td style="text-align:center"> {{$numeroComissao}} </td>
+                                <td style="text-align:center">{{$evento->revisores_count}}</td>
+                                <td style="text-align:center">{{$evento->comissao_cientifica_count}}</td>
+                                <td style="text-align:center">{{$evento->comissao_organizadora_count}}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -93,6 +153,33 @@
               </div>
 
             </div>
+
+            @isset($evento->atividade)
+                @foreach ($evento->atividade as $atividade)
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Atividade {{$atividade->titulo}}</h5>
+                            <h6 class="card-subtitle mb-2">Informações referente as inscrições na atividade</h6>
+                            <p class="card-text">
+                                <div class="table-responsive text-center">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Inscritos</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{$atividade->inscritos_count}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+                @endforeach
+            @endisset
 
           </div>
 
