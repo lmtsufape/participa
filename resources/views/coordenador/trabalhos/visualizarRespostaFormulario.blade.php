@@ -160,6 +160,13 @@
                         @endif
                     @endif
                 </div>
+                <div class="col-md-4">
+                    <form action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
+                        @csrf
+                        <input type="hidden" name="trabalhosSelecionados[]" value="{{$trabalho->id}}">
+                        <button class="btn btn-primary" type="submit">Lembrete de envio de versão corrigida do texto</button>
+                    </form>
+                </div>
             @endcan
         </div>
     @else
