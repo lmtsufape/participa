@@ -72,7 +72,7 @@ class EventoController extends Controller
                     'trabalho as enviados_count' => fn ($query) => $query->where('status', 'rascunho'),
                     'trabalho as arquivados_count' => fn ($query) => $query->where('status', 'arquivado'),
                     'trabalho as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
-                    'trabalho as pendentes' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
+                    'trabalho as pendentes_count' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
                 ]);
             },
             'atividade' => function ($query) {
@@ -91,7 +91,7 @@ class EventoController extends Controller
             'trabalhos as enviados_count' => fn ($query) => $query->where('status', 'rascunho'),
             'trabalhos as arquivados_count' => fn ($query) => $query->where('status', 'arquivado'),
             'trabalhos as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
-            'trabalhos as pendentes' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
+            'trabalhos as pendentes_count' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
             'revisors as revisores_count',
             'usuariosDaComissao as comissao_cientifica_count',
             'usuariosDaComissaoOrganizadora as comissao_organizadora_count',
