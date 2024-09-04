@@ -91,7 +91,7 @@
                             <h5 class="card-title">Trabalhos da modalidade {{$modalidade->nome}}</h5>
                             <h6 class="card-subtitle mb-2">Informações referente aos trabalhos enviados na modalidade</h6>
                             <p class="card-text">
-                                <div class="table-responsive">
+                                <div class="table-responsive text-center">
                                     <table class="table">
                                         <thead>
                                             <tr>
