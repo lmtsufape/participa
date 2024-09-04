@@ -69,6 +69,7 @@ class EventoController extends Controller
         $evento = Evento::with([
             'modalidades' => function ($query) {
                 $query->withCount([
+                    'trabalho as trabalhos_count',
                     'trabalho as enviados_count' => fn ($query) => $query->where('status', 'rascunho'),
                     'trabalho as arquivados_count' => fn ($query) => $query->where('status', 'arquivado'),
                     'trabalho as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
@@ -88,6 +89,7 @@ class EventoController extends Controller
         $evento->loadCount([
             'inscricaos',
             'inscricaos as inscricoes_validadas_count' => fn ($query) => $query->where('finalizada', true),
+            'trabalhos',
             'trabalhos as enviados_count' => fn ($query) => $query->where('status', 'rascunho'),
             'trabalhos as arquivados_count' => fn ($query) => $query->where('status', 'arquivado'),
             'trabalhos as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
