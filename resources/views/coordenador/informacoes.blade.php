@@ -59,6 +59,7 @@
                           <table class="table table-responsive-lg table-hover">
                             <thead>
                               <tr>
+                                <th style="text-align:center">Total</th>
                                 <th style="text-align:center">Enviados</th>
                                 <th style="text-align:center">Arquivados</th>
                                 <th style="text-align:center">Avaliados</th>
@@ -67,6 +68,7 @@
                             </thead>
                             <tbody>
                               <tr>
+                                <td style="text-align:center"> {{$evento->trabalhos_count}} </td>
                                 <td style="text-align:center"> {{$evento->enviados_count}} </td>
                                 <td style="text-align:center"> {{$evento->arquivados_count}} </td>
                                 <td style="text-align:center"> {{$evento->avaliados_count}} </td>
@@ -95,6 +97,7 @@
                                     <table class="table">
                                         <thead>
                                             <tr>
+                                                <th>Total</th>
                                                 <th>Enviados</th>
                                                 <th>Arquivados</th>
                                                 <th>Avaliados</th>
@@ -103,6 +106,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
+                                                <td>{{$modalidade->trabalhos_count}}</td>
                                                 <td>{{$modalidade->enviados_count}}</td>
                                                 <td>{{$modalidade->arquivados_count}}</td>
                                                 <td>{{$modalidade->avaliados_count}}</td>
