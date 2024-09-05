@@ -1830,6 +1830,8 @@ class EventoController extends Controller
             Mail::to($trabalho->autor)
                 ->cc($trabalho->coautors()->with('user')->get()->map(fn($coautor) => $coautor->user))
                 ->send(new AvisoPeriodoCorrecao($trabalho->autor, $trabalho));
+            $trabalho->lembrete_enviado = true;
+            $trabalho->save();
         }
 
         return redirect()->back()->with('success', 'Avisos enviados');
