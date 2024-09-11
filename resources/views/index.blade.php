@@ -56,9 +56,9 @@
                     <div class="carrousel-item-box-image">
 
                         @if ($ProximoEvento->fotoEvento != null)
-                        <img src="{{ asset('storage/' . $ProximoEvento->icone) }}" alt="imagem evento" width="100%" height="100%">
+                        <a href="{{ route('evento.visualizar', ['id' => $ProximoEvento->id]) }}"><img src="{{ asset('storage/' . $ProximoEvento->icone) }}" alt="imagem evento" width="100%" height="100%"></a>
                         @else
-                        <img src="{{ asset('img/colorscheme.png') }}" alt="" width="100%" height="100%">
+                        <a href="{{ route('evento.visualizar', ['id' => $ProximoEvento->id]) }}"><img src="{{ asset('img/colorscheme.png') }}" alt="" width="100%" height="100%"></a>
                         @endif
 
                     </div>
