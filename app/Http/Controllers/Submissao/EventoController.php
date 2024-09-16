@@ -8,6 +8,7 @@ use App\Exports\TrabalhosExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
 use App\Http\Requests\UpdateEventoRequest;
+use App\Mail\AvisoPeriodoCorrecao;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EventoCriado;
 use App\Models\Inscricao\Inscricao;
@@ -65,32 +66,41 @@ class EventoController extends Controller
 
     public function informacoes(Request $request)
     {
-        $evento = Evento::find($request->eventoId);
+        $evento = Evento::with([
+            'modalidades' => function ($query) {
+                $query->withCount([
+                    'trabalho as trabalhos_count',
+                    'trabalho as enviados_count' => fn ($query) => $query->where('status', 'rascunho'),
+                    'trabalho as arquivados_count' => fn ($query) => $query->where('status', 'arquivado'),
+                    'trabalho as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
+                    'trabalho as pendentes_count' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
+                ]);
+            },
+            'atividade' => function ($query) {
+                $query->withCount([
+                    'users as inscritos_count',
+                ]);
+            },
+            ])
+            ->find($request->eventoId);
 
         $this->authorize('isCoordenadorOrCoordenadorDasComissoesOrIsCoordenadorDeOutrasComissoes', $evento);
 
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
-        $trabalhosId = Trabalho::whereIn('areaId', $areasId)->select('id')->get();
-        $numeroRevisores = Revisor::where('evento_id', $evento->id)->select('user_id')->distinct()->get()->count();
-        $trabalhosEnviados = Trabalho::whereIn('areaId', $areasId)->count();
-        $trabalhosArquivados = Trabalho::whereIn('areaId', $areasId)->where('status', 'arquivado')->count();
-        $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->where('status', '!=', 'arquivado')->count();
-
-        $trabalhosAvaliados = 0;
-        foreach ($trabalhosId as $trabalho) {
-            $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
-        }
-
-        $numeroComissao = count($evento->usuariosDaComissao);
+        $evento->loadCount([
+            'inscricaos',
+            'inscricaos as inscricoes_validadas_count' => fn ($query) => $query->where('finalizada', true),
+            'trabalhos',
+            'trabalhos as enviados_count' => fn ($query) => $query->where('status', 'rascunho'),
+            'trabalhos as arquivados_count' => fn ($query) => $query->where('status', 'arquivado'),
+            'trabalhos as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
+            'trabalhos as pendentes_count' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
+            'revisors as revisores_count' => fn ($query) => $query->select(DB::raw('count(distinct user_id)')),
+            'usuariosDaComissao as comissao_cientifica_count',
+            'usuariosDaComissaoOrganizadora as comissao_organizadora_count',
+        ]);
 
         return view('coordenador.informacoes', [
             'evento' => $evento,
-            'trabalhosEnviados' => $trabalhosEnviados,
-            'trabalhosArquivados' => $trabalhosArquivados,
-            'trabalhosAvaliados' => $trabalhosAvaliados,
-            'trabalhosPendentes' => $trabalhosPendentes,
-            'numeroRevisores' => $numeroRevisores,
-            'numeroComissao' => $numeroComissao,
         ]);
     }
 
@@ -1806,6 +1816,27 @@ class EventoController extends Controller
         if ($data_fim != null) $query = $query->where('dataFim', $data_fim);
 
         return response()->json($query->get());
+    }
+
+    public function avisoCorrecao(Evento $evento, Request $request)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+
+        $request->validate([
+            'trabalhosSelecionados' => 'array|min:1|required',
+        ]);
+
+        $trabalhos = Trabalho::whereIn('id', $request['trabalhosSelecionados'])->get();
+
+        foreach ($trabalhos as $trabalho) {
+            Mail::to($trabalho->autor)
+                ->cc($trabalho->coautors()->with('user')->get()->map(fn($coautor) => $coautor->user))
+                ->send(new AvisoPeriodoCorrecao($trabalho->autor, $trabalho));
+            $trabalho->lembrete_enviado = true;
+            $trabalho->save();
+        }
+
+        return redirect()->back()->with('success', 'Avisos enviados');
     }
 
     /**

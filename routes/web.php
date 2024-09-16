@@ -268,11 +268,13 @@ Route::group(['middleware' => ['auth', 'isTemp']], function () {
             Route::get('modalidade/forms', [EventoController::class, 'forms'])->name('forms');
             Route::get('modalidade/atribuir/form', [EventoController::class, 'atribuirForm'])->name('atribuir.form');
             Route::post('modalidade/form/salvar', [EventoController::class, 'salvarForm'])->name('salvar.form');
-            Route::get('modalidade/form/update', [EventoController::class, 'updateForm'])->name('update.form');
+            Route::put('modalidade/form/update', [EventoController::class, 'updateForm'])->name('update.form');
             Route::get('modalidade/form/visualizar', [EventoController::class, 'visualizarForm'])->name('visualizar.form');
             Route::get('modalidade/form/respostas', [EventoController::class, 'respostas'])->name('respostas');
             Route::get('modalidade/form/respostasToPdf/{modalidade}', [EventoController::class, 'respostasToPdf'])->name('respostasToPdf');
             Route::get('modalidade/form/{id}/excluir', [EventoController::class, 'destroyForm'])->name('deletar.form');
+
+            Route::post('/evento/{evento}/avisoCorrecao', [EventoController::class, 'avisoCorrecao'])->name('evento.avisoCorrecao');
 
             Route::get('atividades/{id}', [AtividadeController::class, 'index'])->name('atividades');
             // Atenção se mudar url da rota abaixo mudar função setVisibilidadeAtv na view detalhesEvento.blade.php
@@ -303,6 +305,7 @@ Route::group(['middleware' => ['auth', 'isTemp']], function () {
         Route::post('/evento/numTrabalhos', [EventoController::class, 'numTrabalhos'])->name('trabalho.numTrabalhos');
         Route::get('/evento/habilitar/{id}', [EventoController::class, 'habilitar'])->name('evento.habilitar');
         Route::get('/evento/desabilitar/{id}', [EventoController::class, 'desabilitar'])->name('evento.desabilitar');
+
 
         //Sub-Evento
         Route::get('/subevento/criar/{id}', [EventoController::class, 'createSubEvento'])->name('subevento.criar');

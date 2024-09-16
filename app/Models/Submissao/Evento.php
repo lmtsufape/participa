@@ -155,6 +155,17 @@ class Evento extends Model
         return $this->hasMany('App\Models\Inscricao\CategoriaParticipante', 'evento_id')->orderBy('created_at');
     }
 
+    public function categoriasQuePermitemInscricao()
+    {
+        return $this->hasMany('App\Models\Inscricao\CategoriaParticipante', 'evento_id')
+            ->orderBy('created_at')
+            ->where('permite_inscricao', true)
+            ->where(function ($query) {
+                $query->whereNull('limite_inscricao')
+                    ->orWhere('limite_inscricao', '>', now());
+            });
+    }
+
     public function camposFormulario()
     {
         return $this->hasMany('App\Models\Inscricao\CampoFormulario', 'evento_id')->orderBy('created_at');

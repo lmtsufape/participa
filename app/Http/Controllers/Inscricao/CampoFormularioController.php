@@ -162,6 +162,9 @@ class CampoFormularioController extends Controller
                DB::table('valor_campo_extras')->where('id', $valores[$i]->id)->delete();
             }
         }
+        if ($campo->opcoes()->exists()) {
+            $campo->opcoes()->delete();
+        }
 
         $campo->categorias()->detach($campo->categorias);
         $campo->delete();
