@@ -25,7 +25,7 @@ class StoreArquivoInfoRequest extends FormRequest
     {
         return [
             'nome' => ['required', 'string'],
-            'arquivo' => ['required', 'file', 'max:10240'],
+            'arquivo' => ['required', 'file', 'max:10240', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,avi,pdf,doc,docx'],
         ];
     }
 }
