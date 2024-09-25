@@ -175,10 +175,10 @@
                                     <br> Adicionar data
                                 </button>
                             </div>
-                            <div x-data="{texto: '{{old('texto', false)}}' == 'on', limit: '{{old('limit')}}'}">
+                            <div>
                                 <div class="form-group">
                                     <div class="form-check">
-                                        <input class="form-check-input" id="avaliacaoDuranteSubmissaocheck" onclick="mensagemSubmissao()" x-model="avaliacaoDuranteSubmissao" type="checkbox" name="avaliacaoDuranteSubmissao">
+                                        <input class="form-check-input" id="avaliacaoDuranteSubmissaocheck" onclick="mensagemSubmissao()" value="1" type="checkbox" name="avaliacaoDuranteSubmissao">
                                         <label class="form-check-label font-weight-bold" for="avaliacaoDuranteSubmissaocheck">
 
                                             {{ __('Permitir avaliação durante o período de submissão') }}
@@ -777,7 +777,7 @@
     }
 
     function mensagemSubmissao() {
-        
+
         var input = document.getElementById("avaliacaoDuranteSubmissaocheck");
 
         input.removeAttribute("required");
