@@ -84,7 +84,7 @@ class ModalidadeStoreRequest extends FormRequest
         ];
 
         if(request()->has('avaliacaoDuranteSubmissao') && request()->boolean('avaliacaoDuranteSubmissao')){
-            $rules['inicioRevisao'] = ['required', 'date', 'after:inicioSubmissao'];
+            $rules['inicioRevisao'] = ['required', 'date', 'after_or_equal:inicioSubmissao'];
         }else{
             $rules['inicioRevisao'] = ['required', 'date', 'after:fimSubmissao'];
         }
