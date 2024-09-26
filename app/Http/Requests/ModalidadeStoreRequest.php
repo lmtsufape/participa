@@ -21,7 +21,7 @@ class ModalidadeStoreRequest extends FormRequest
         return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
     }
 
-   
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -83,8 +83,8 @@ class ModalidadeStoreRequest extends FormRequest
             'documentosExtra.*' => ['nullable', 'array', 'min:2'],
         ];
 
-        if(request()->avaliacaoDuranteSubmissao == 'on'){
-            $rules['inicioRevisao'] = ['required', 'date', 'after:inicioSubmissao'];
+        if(request()->has('avaliacaoDuranteSubmissao') && request()->boolean('avaliacaoDuranteSubmissao')){
+            $rules['inicioRevisao'] = ['required', 'date', 'after_or_equal:inicioSubmissao'];
         }else{
             $rules['inicioRevisao'] = ['required', 'date', 'after:fimSubmissao'];
         }
