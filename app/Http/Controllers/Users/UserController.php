@@ -55,147 +55,102 @@ class UserController extends Controller
 
             $request->merge(['cpf' => null]);
         }
-        // dd($request->all());
 
-        if (Auth()->user()->usuarioTemp == true) {
-            $user = User::find($request->id);
-
-            $validator = $request->validate([
-                'name' => 'bail|required|string|max:255',
-                'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf'] : 'nullable'),
-                'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['bail', 'required'] : 'nullable'),
-                'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10'] : ['nullable']),
-                'celular' => 'required|string|max:20',
-                'instituicao' => 'required|string| max:255',
-                'especialidade' => 'nullable|string',
-                'rua' => 'required|string|max:255',
-                'numero' => 'required|string',
-                'bairro' => 'required|string|max:255',
-                'cidade' => 'required|string|max:255',
-                'complemento' => 'nullable|string|max:255',
-                'uf' => 'required|string',
-                'cep' => 'required|string',
-                'password' => 'required|string|min:8|confirmed',
-                'pais' => 'required',
-                // 'primeiraArea' => 'required|string',
-            ]);
-
-            // criar endereço
-            $end = new Endereco($validator);
-            $end->save();
-
-            // Atualizar dados não preenchidos de User
-
-            $user->name = $request->input('name');
-            $user->cpf = $request->input('cpf');
-            $user->cnpj = $request->input('cnpj');
-            $user->passaporte = $request->input('passaporte');
-            $user->celular = $request->input('full_number');
-            $user->instituicao = $request->input('instituicao');
-            $user->password = bcrypt($request->password);
-            if ($request->input('especialidade') != null) {
-                $user->especProfissional = $request->input('especialidade');
-            }
-            $user->usuarioTemp = null;
-            $user->enderecoId = $end->id;
-            $user->save();
-
-            // if ($user->revisor != null) {
-            //     $revisor = $user->revisor;
-            //     $revisor->areaId = $request->primeiraArea;
-            //     if ($request->segundaArea != null) {
-            //         $revisor->area_alternativa_id = $request->segundaArea;
-            //     }
-            //     $revisor->save();
-            // }
-
-            return back()->with(['message' => 'Atualizado com sucesso!']);
-        } else {
-
-            // dd($request);
-            $user = User::find($request->id);
-            $validator = $request->validate([
-                'name' => 'required|string|max:255',
-                'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf'] : 'nullable'),
-                'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['bail', 'required'] : 'nullable'),
-                'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10'] : ['nullable']),
-                'celular' => 'required|string|max:20',
-                'instituicao' => 'required|string| max:255',
-                // 'especProfissional' => 'nullable|string',
-                'rua' => 'required|string|max:255',
-                'numero' => 'required|string',
-                'bairro' => 'required|string|max:255',
-                'complemento' => 'nullable|string|max:255',
-                'cidade' => 'required|string|max:255',
-                'uf' => 'required|string',
-                'cep' => 'required|string',
-                'pais' => 'required',
-                'email' => 'required|string|email|max:255',
-                'senha_atual' => 'nullable|string|min:8',
-                'password' => 'nullable|string|min:8',
-                'password-confirm' => 'nullable|string|min:8',
-            ]);
-
-            // User
-
-            if ($request->senha_atual != null) {
-                if (! (Hash::check($request->senha_atual, $user->password))) {
-                    return redirect()->back()->withErrors(['senha_atual' => 'A senha digitada não correspondente a senha cadastrada.'])->withInput($validator);
-                }
-
-                if (! ($request->password != null)) {
-                    return redirect()->back()->withErrors(['password' => 'Digite a nova senha.'])->withInput($validator);
-                }
-
-                if (! ($request->input('password-confirm') != null)) {
-                    return redirect()->back()->withErrors(['password-confirm' => 'Digite a confirmação da senha.'])->withInput($validator);
-                }
-
-                if (! ($request->password == $request->input('password-confirm'))) {
-                    return redirect()->back()->withErrors(['password' => 'A confirmação não confere com a nova senha.'])->withInput($validator);
-                }
-
-                $password = Hash::make($request->password);
-
-                $user->password = $password;
-            }
-
-            if ($user->email != $request->email) {
-                $check_user_email = User::where('email', $request->email)->first();
-                if ($check_user_email == null) {
-                    $user->email = $request->email;
-                    $user->email_verified_at = null;
-                } else {
-                    return redirect()->back()->withErrors(['email' => 'Já existe uma conta registrada com esse e-mail.'])->withInput($validator);
-                }
-            }
-
-            $user->name = $request->input('name');
-            $user->cpf = $request->input('cpf');
-            $user->cnpj = $request->input('cnpj');
-            $user->passaporte = $request->input('passaporte');
-            $user->celular = $request->input('full_number');
-            $user->instituicao = $request->input('instituicao');
-            // $user->especProfissional = $request->input('especProfissional');
-            $user->usuarioTemp = null;
-            $user->update();
-
-            // endereço
-            if ($user->enderecoId == null) {
-                $end = new Endereco($request->all());
-                $end->save();
-                $user->enderecoId = $end->id;
-                $user->update();
-            } else {
-                $end = Endereco::find($user->enderecoId);
-                $end->fill($validator);
-                $end->update();
-            }
-            // dd([$user,$end]);
-            app()->setLocale('pt-BR');
-
-            return back()->with(['message' => 'Atualizado com sucesso!']);
+        $user = User::find($request->id);
+        $validations = [
+            'name' => 'required|string|max:255',
+            'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf'] : 'nullable'),
+            'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['bail', 'required'] : 'nullable'),
+            'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10'] : ['nullable']),
+            'celular' => 'required|string|max:20',
+            'instituicao' => 'required|string| max:255',
+            'rua' => 'required|string|max:255',
+            'numero' => 'required|string',
+            'bairro' => 'required|string|max:255',
+            'complemento' => 'nullable|string|max:255',
+            'cidade' => 'required|string|max:255',
+            'uf' => 'required|string',
+            'cep' => 'required|string',
+            'pais' => 'required',
+            'email' => 'required|string|email|max:255',
+            'senha_atual' => 'nullable|string|min:8',
+            'password' => 'nullable|string|min:8',
+            'password-confirm' => 'nullable|string|min:8',
+        ];
+        $data = $request->all();
+        if ($data['pais'] == 'outro'){
+            $validations['uf'] = ['nullable', 'string'];
+            $validations['numero'] = ['nullable', 'string'];
+            $validations['bairro'] = ['nullable', 'string'];
+            $validations['cep'] = ['nullable', 'string'];
         }
+        if ($user->usuarioTemp) {
+            $validations['password'] = 'required|string|min:8|confirmed';
+            $validations['email'] = '';
+        }
+        $validator = $request->validate($validations);
+
+        if ($request->senha_atual != null) {
+            if (! (Hash::check($request->senha_atual, $user->password))) {
+                return redirect()->back()->withErrors(['senha_atual' => 'A senha digitada não correspondente a senha cadastrada.'])->withInput($validator);
+            }
+
+            if (! ($request->password != null)) {
+                return redirect()->back()->withErrors(['password' => 'Digite a nova senha.'])->withInput($validator);
+            }
+
+            if (! ($request->input('password-confirm') != null)) {
+                return redirect()->back()->withErrors(['password-confirm' => 'Digite a confirmação da senha.'])->withInput($validator);
+            }
+
+            if (! ($request->password == $request->input('password-confirm'))) {
+                return redirect()->back()->withErrors(['password' => 'A confirmação não confere com a nova senha.'])->withInput($validator);
+            }
+
+            $password = Hash::make($request->password);
+
+            $user->password = $password;
+        }
+
+        if ($user->usuarioTemp) {
+            $user->password = Hash::make($request->password);
+        }
+
+        if ($user->email != $request->email && !$user->usuarioTemp) {
+            $check_user_email = User::where('email', $request->email)->first();
+            if ($check_user_email == null) {
+                $user->email = $request->email;
+                $user->email_verified_at = null;
+            } else {
+                return redirect()->back()->withErrors(['email' => 'Já existe uma conta registrada com esse e-mail.'])->withInput($validator);
+            }
+        }
+
+        $user->name = $request->input('name');
+        $user->cpf = $request->input('cpf');
+        $user->cnpj = $request->input('cnpj');
+        $user->passaporte = $request->input('passaporte');
+        $user->celular = $request->input('full_number');
+        $user->instituicao = $request->input('instituicao');
+        if ($request->input('especialidade') != null) {
+            $user->especProfissional = $request->input('especialidade');
+        }
+        $user->usuarioTemp = null;
+        $user->update();
+
+        if ($user->enderecoId == null) {
+            $end = new Endereco($request->all());
+            $end->save();
+            $user->enderecoId = $end->id;
+            $user->update();
+        } else {
+            $end = Endereco::find($user->enderecoId);
+            $end->fill($validator);
+            $end->update();
+        }
+        app()->setLocale('pt-BR');
+
+        return back()->with(['message' => 'Atualizado com sucesso!']);
     }
 
     public function meusCertificados()
