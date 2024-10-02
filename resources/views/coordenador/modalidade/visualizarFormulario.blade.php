@@ -63,7 +63,7 @@
 
 
                 @if($pergunta->respostas->first()->opcoes->count())
-                <p>Resposta com Multipla escolha:</p>
+                <p>Resposta com Múltipla escolha:</p>
                 @foreach ($pergunta->respostas->first()->opcoes->sortBy("id") as $opcao)
                 <div class="col-md-10 itemRadio">
                     <div class="input-group mb-3">
@@ -123,7 +123,7 @@
         <label for="exampleFormControlSelect1">Tipo</label>
         <select onchange="escolha(this.value)" name="tipo[]" class="form-control" id="FormControlSelect">
             <option value="paragrafo">Parágrafo</option>
-            <option value="checkbox">Multipla escolha</option>
+            <option value="checkbox">Múltipla escolha</option>
 
         </select>
     </div>
@@ -253,7 +253,7 @@
                                                             <div class="form-group">
                                                                 <label for="exampleFormControlSelect1">Tipo</label>
                                                                 <select onchange="escolha(this.value, event)" name="tipo[]" class="form-control" id="FormControlSelect" readonly="readonly">
-                                                                    <option @if($pergunta->respostas->first()->opcoes->count()) selected @endif value="radio">Multipla escolha</option>
+                                                                    <option @if($pergunta->respostas->first()->opcoes->count()) selected @endif value="radio">Múltipla escolha</option>
                                                                     <option @if($pergunta->respostas->first()->paragrafo) selected @endif value="paragrafo">Parágrafo</option>
                                                                     {{-- <option value="radio">Seleção</option> --}}
                                                                 </select>
@@ -477,7 +477,7 @@
                                 <label for="exampleFormControlSelect1">Tipo</label>
                                 <select onchange="escolha(this.value)" name="tipo[]" class="form-control" id="FormControlSelect">
                                     <option value="paragrafo">Parágrafo</option>
-                                    <option value="checkbox">Multipla escolha</option>
+                                    <option value="checkbox">Múltipla escolha</option>
                                     {{-- <option value="radio">Seleção</option> --}}
                                 </select>
                               </div>
