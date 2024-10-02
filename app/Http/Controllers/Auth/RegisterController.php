@@ -49,7 +49,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        $validations = [
             'name' => ['required', 'string', 'max:255'],
             'email' => [ 'required', 'string', 'email', 'max:255', new UniqueCaseInsensitive('users', 'email'),],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -66,7 +66,14 @@ class RegisterController extends Controller
             'uf' => ['required', 'string'],
             'cep' => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
-        ]);
+        ];
+        if ($data['pais'] == 'outro'){
+            $validations['uf'] = ['nullable', 'string'];
+            $validations['numero'] = ['nullable', 'string'];
+            $validations['cep'] = ['nullable', 'string'];
+        }
+
+        return Validator::make($data, $validations);
     }
 
     /**

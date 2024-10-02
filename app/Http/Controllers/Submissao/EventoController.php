@@ -955,12 +955,12 @@ class EventoController extends Controller
                     $pergunta->visibilidade = false;
                 }
 
-                //Verificação de alteração em multipla escolha já existente
+                //Verificação de alteração em múltipla escolha já existente
                 if ($data['tipo'][$key] == 'radio') {
                     //dd($request->tituloRadio);
                     foreach ($request->tituloRadio['row' . $key] as $i => $titulo) {
                         $opcoes->first()->titulo = $titulo;
-                        //Verificação de marcação da resposta da multipla escolha
+                        //Verificação de marcação da resposta da múltipla escolha
                         if (isset($request->checkbox[$opcoes->first()->id])) {
                             $opcoes->first()->check = true;
                         } else {
@@ -1035,7 +1035,7 @@ class EventoController extends Controller
         foreach ($form->perguntas as $pergunta) {
             $primeira = $pergunta->respostas->first();
             if ($primeira && $primeira->opcoes && $primeira->opcoes->count()) {
-                //Resposta com Multipla escolha:
+                //Resposta com Múltipla escolha:
             } elseif ($primeira && $primeira->paragrafo && $primeira->paragrafo->count()) {
                 foreach ($pergunta->respostas as $resposta) {
                     if ($resposta->revisor != null || $resposta->trabalho != null) {

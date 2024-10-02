@@ -22,7 +22,7 @@
                         <div class="card-body">
                             <p>Pergunta: {{$pergunta->pergunta}}</p>
                             @if($pergunta->respostas->first()->opcoes->count())
-                                Resposta com Multipla escolha:
+                                Resposta com Múltipla escolha:
                             @elseif($pergunta->respostas->first()->paragrafo->count() )
                                 {{-- {{dd($pergunta->respostas->first())}} --}}
                                 <p>Resposta com parágrafo: </p>
@@ -85,7 +85,7 @@
                             <label for="exampleFormControlSelect1">Tipo</label>
                             <select onchange="escolha(this.value)" name="tipo[]" class="form-control" id="FormControlSelect">
                                 <option value="paragrafo">Parágrafo</option>
-                                <option value="checkbox">Multipla escolha</option>
+                                <option value="checkbox">Múltipla escolha</option>
 
                             </select>
                         </div>

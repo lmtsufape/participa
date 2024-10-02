@@ -78,7 +78,7 @@
                                 <label class="mr-2" for="exampleFormControlSelect1">Tipo</label>
                                 <select x-model="pergunta.tipo" class="form-control" name="tipos[]">
                                     <option value="paragrafo">Parágrafo</option>
-                                    <option value="radio">Multipla escolha</option>
+                                    <option value="radio">Múltipla escolha</option>
                                 </select>
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-4 d-flex justify-content-center">
