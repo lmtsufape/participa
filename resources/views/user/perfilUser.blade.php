@@ -2,6 +2,13 @@
 
 @section('content')
 
+@if ($pais == null && $end != null)
+    @php
+        $pais = $end->pais;
+    @endphp
+@endif
+
+
 <div class="banner-perfil position-absolute mt-n2 w-100">
     <div class="row justify-content-center curved" style="margin-bottom:-5px">
 
@@ -22,6 +29,16 @@
     <div class="justify-content-center position-relative">
         <div class="card card-change-mode">
             <div class="card-body">
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 @if(Auth()->user()->usuarioTemp == null)
                     <div class="container">
@@ -123,8 +140,8 @@
                                 </div>
 
                                 <div class="col-md-5">
-                                    <label for="celular" class="col-form-label">{{ __('Celular') }}<small style="color: rgb(245, 65, 10);">@if($user->celular && $user->celular[0] != '+'){{ __('       Atualize seu celular') }}@endif</small></label><br>
-                                    <input id="phone" type="tel" class="form-control @error('celular') is-invalid @enderror" name="celular" @if(old('celular') != null) value="{{ old('celular') }}" @else value="{{$user->celular}}" @endif required autocomplete="celular" autofocus onkeyup="process(event)">
+                                    <label for="celular" class="col-form-label">{{ __('Celular') }}<small style="color: rgb(245, 65, 10);">@if($user->celular && $user->celular[0] != '+'){{ __('Atualize seu celular') }}@endif</small></label><br>
+                                    <input id="phone" type="tel" class="form-control @error('celular') is-invalid @enderror" name="celular" value="{{ old('full_number', $user->celular) }}" required autocomplete="celular" autofocus onkeyup="process(event)">
                                     <div class="alert alert-info mt-1" style="display: none"></div>
                                     <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
 
@@ -198,17 +215,11 @@
                                         <label for="pais" class="col-form-label">{{ __('País') }}*</label>
                                         <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" class="form-control @error('pais') is-invalid @enderror" id="pais">
                                             <option value="" disabled selected hidden>-- {{__('País')}} --</option>
-                                            @if ($pais)
-                                                <option @if($pais == 'brasil') selected @endif value="/perfil/brasil">{{__('Brasil')}}</option>
-                                                <option @if($pais == 'usa') selected @endif value="/perfil/usa">{{__('Estados Unidos da América')}}</option>
-                                                <option @if($pais == 'outro') selected @endif value="/perfil/outro">{{__('Outro')}}</option>
-                                            @else
-                                                <option @if($end->pais == 'brasil') selected @endif value="/perfil/brasil">{{__('Brasil')}}</option>
-                                                <option @if($end->pais == 'usa') selected @endif value="/perfil/usa">{{__('Estados Unidos da América')}}</option>
-                                                <option @if($end->pais == 'outro') selected @endif value="/perfil/outro">{{__('Outro')}}</option>
-                                            @endif
+                                            <option @if($pais == 'brasil') selected @endif value="/perfil/brasil">{{__('Brasil')}}</option>
+                                            <option @if($pais == 'usa') selected @endif value="/perfil/usa">{{__('Estados Unidos da América')}}</option>
+                                            <option @if($pais == 'outro') selected @endif value="/perfil/outro">{{__('Outro')}}</option>
                                         </select>
-                                        <input type="hidden" name="pais" value="{{$end->pais}}">
+                                        <input type="hidden" name="pais" value="{{$pais}}">
                                         <small>{{__('O formulário seguirá os padrões desse país')}}.</small>
 
                                         @error('pais')
@@ -222,7 +233,7 @@
                                 <div class="form-group row justify-content-center">
                                     <div class="col-md-12">
                                         <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
-                                        <input id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" @if(old('cep') != null ) value="{{ old('cep') }}" @else value="{{$end->cep}}" @endif required autocomplete="cep">
+                                        <input id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" @if(old('cep') != null ) value="{{ old('cep') }}" @else value="{{$end->cep}}" @endif @if($pais == 'brasil') required @endif autocomplete="cep">
 
                                         @error('cep')
                                             <span class="invalid-feedback" role="alert">
@@ -245,7 +256,7 @@
 
                                     <div class="col-md-2">
                                         <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                                        <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$end->numero}}" @endif required autocomplete="numero" maxlength="10">
+                                        <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$end->numero}}" @endif @if($pais != 'outro') required @endif autocomplete="numero" maxlength="10">
 
                                         @error('numero')
                                             <span class="invalid-feedback" role="alert">
@@ -255,8 +266,8 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
-                                        <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" @if(old('bairro') != null) value="{{ old('bairro') }}" @else value="{{$end->bairro}}" @endif required autocomplete="bairro">
+                                        <label for="bairro" class="col-form-label">{{ __('Bairro') }} @if($pais != 'outro') * @endif </label>
+                                        <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" value="{{ old('bairro', $end?->bairro) }}" @if($pais != 'outro') required @endif autocomplete="bairro">
 
                                         @error('bairro')
                                             <span class="invalid-feedback" role="alert">
@@ -289,56 +300,20 @@
                                         @enderror
                                     </div>
 
-                                    <div class="col-sm-4" id="groupformufinput">
-                                        <label for="ufInput" class="col-form-label">{{ __('UF') }}</label>
-                                        <input type="text" value="{{old('uf', $end->uf)}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
+                                    @if($pais == 'brasil')
+                                        <x-select-uf :uf="old('uf', $end?->uf)" />
+                                    @else
+                                        <div class="col-md-4">
+                                            <label for="uf" class="col-form-label">{{ __('Estado').'/'.__('Província').'/'.__('Região') }}</label>
+                                            <input type="text" value="{{old('uf')}}" id="uf" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
 
-                                        @error('uf')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ __($message) }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-sm-4" id="groupformuf">
-                                        <label for="uf" class="col-form-label">{{ __('UF') }}</label>
-                                        {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
-                                        <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
-                                            <option value="" disabled selected hidden>-- UF --</option>
-                                            <option @if(old('uf', $end->uf) == 'AC') selected @endif value="AC">Acre</option>
-                                            <option @if(old('uf', $end->uf) == 'AL') selected @endif value="AL">Alagoas</option>
-                                            <option @if(old('uf', $end->uf) == 'AP') selected @endif value="AP">Amapá</option>
-                                            <option @if(old('uf', $end->uf) == 'AM') selected @endif value="AM">Amazonas</option>
-                                            <option @if(old('uf', $end->uf) == 'BA') selected @endif value="BA">Bahia</option>
-                                            <option @if(old('uf', $end->uf) == 'CE') selected @endif value="CE">Ceará</option>
-                                            <option @if(old('uf', $end->uf) == 'DF') selected @endif value="DF">Distrito Federal</option>
-                                            <option @if(old('uf', $end->uf) == 'ES') selected @endif value="ES">Espírito Santo</option>
-                                            <option @if(old('uf', $end->uf) == 'GO') selected @endif value="GO">Goiás</option>
-                                            <option @if(old('uf', $end->uf) == 'MA') selected @endif value="MA">Maranhão</option>
-                                            <option @if(old('uf', $end->uf) == 'MT') selected @endif value="MT">Mato Grosso</option>
-                                            <option @if(old('uf', $end->uf) == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
-                                            <option @if(old('uf', $end->uf) == 'MG') selected @endif value="MG">Minas Gerais</option>
-                                            <option @if(old('uf', $end->uf) == 'PA') selected @endif value="PA">Pará</option>
-                                            <option @if(old('uf', $end->uf) == 'PB') selected @endif value="PB">Paraíba</option>
-                                            <option @if(old('uf', $end->uf) == 'PR') selected @endif value="PR">Paraná</option>
-                                            <option @if(old('uf', $end->uf) == 'PE') selected @endif value="PE">Pernambuco</option>
-                                            <option @if(old('uf', $end->uf) == 'PI') selected @endif value="PI">Piauí</option>
-                                            <option @if(old('uf', $end->uf) == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
-                                            <option @if(old('uf', $end->uf) == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
-                                            <option @if(old('uf', $end->uf) == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
-                                            <option @if(old('uf', $end->uf) == 'RO') selected @endif value="RO">Rondônia</option>
-                                            <option @if(old('uf', $end->uf) == 'RR') selected @endif value="RR">Roraima</option>
-                                            <option @if(old('uf', $end->uf) == 'SC') selected @endif value="SC">Santa Catarina</option>
-                                            <option @if(old('uf', $end->uf) == 'SP') selected @endif value="SP">São Paulo</option>
-                                            <option @if(old('uf', $end->uf) == 'SE') selected @endif value="SE">Sergipe</option>
-                                            <option @if(old('uf', $end->uf) == 'TO') selected @endif value="TO">Tocantins</option>
-                                        </select>
-
-                                        @error('uf')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
+                                            @error('uf')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ __($message) }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    @endif
 
                                 </div>
                             @else
@@ -371,8 +346,8 @@
                                 {{-- Endereço --}}
                                 <div class="form-group row justify-content-center">
                                     <div class="col-md-12">
-                                        <label for="cep" class="col-form-label">{{ __('CEP') }}*</label>
-                                        <input value="{{old('cep')}}" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" required autocomplete="cep">
+                                        <label for="cep" class="col-form-label">{{ __('CEP') }} @if($pais != 'outro') * @endif </label>
+                                        <input value="{{old('cep')}}" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" @if($pais != 'outro') required @endif autocomplete="cep">
 
                                         @error('cep')
                                             <span class="invalid-feedback" role="alert">
@@ -394,8 +369,8 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-2">
-                                        <label for="numero" class="col-form-label">{{ __('Número') }}*</label>
-                                        <input value="{{old('numero')}}" id="numero" min="0" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero" maxlength="10">
+                                        <label for="numero" class="col-form-label">{{ __('Número') }} @if($pais != 'outro') * @endif </label>
+                                        <input value="{{old('numero')}}" id="numero" min="0" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" @if($pais != 'outro') required @endif autocomplete="numero" maxlength="10">
 
                                         @error('numero')
                                             <span class="invalid-feedback" role="alert">
@@ -404,8 +379,8 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="bairro" class="col-form-label">{{ __('Bairro') }}*</label>
-                                        <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" required autocomplete="bairro">
+                                        <label for="bairro" class="col-form-label">{{ __('Bairro') }} @if($pais != 'outro') * @endif </label>
+                                        <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" @if($pais != 'outro') required @endif autocomplete="bairro">
 
                                         @error('bairro')
                                             <span class="invalid-feedback" role="alert">
@@ -436,57 +411,20 @@
                                         @enderror
                                     </div>
 
-                                    <div class="col-sm-4" id="groupformufinput">
-                                        <label for="ufInput" class="col-form-label">{{ __('UF') }}*</label>
-                                        <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
+                                    @if($pais == 'brasil')
+                                        <x-select-uf :uf="old('uf')" />
+                                    @else
+                                        <div class="col-md-4">
+                                            <label for="uf" class="col-form-label">{{ __('Estado').'/'.__('Província').'/'.__('Região') }}</label>
+                                            <input type="text" value="{{old('uf')}}" id="uf" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
 
-                                        @error('uf')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ __($message) }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-sm-4" id="groupformuf">
-                                        <label for="uf" class="col-form-label">{{ __('UF') }}*</label>
-                                        {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
-                                        <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
-                                            <option value="" disabled selected hidden>-- {{__('UF')}} --</option>
-                                            <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
-                                            <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
-                                            <option @if(old('uf') == 'AP') selected @endif value="AP">Amapá</option>
-                                            <option @if(old('uf') == 'AM') selected @endif value="AM">Amazonas</option>
-                                            <option @if(old('uf') == 'BA') selected @endif value="BA">Bahia</option>
-                                            <option @if(old('uf') == 'CE') selected @endif value="CE">Ceará</option>
-                                            <option @if(old('uf') == 'DF') selected @endif value="DF">Distrito Federal</option>
-                                            <option @if(old('uf') == 'ES') selected @endif value="ES">Espírito Santo</option>
-                                            <option @if(old('uf') == 'GO') selected @endif value="GO">Goiás</option>
-                                            <option @if(old('uf') == 'MA') selected @endif value="MA">Maranhão</option>
-                                            <option @if(old('uf') == 'MT') selected @endif value="MT">Mato Grosso</option>
-                                            <option @if(old('uf') == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
-                                            <option @if(old('uf') == 'MG') selected @endif value="MG">Minas Gerais</option>
-                                            <option @if(old('uf') == 'PA') selected @endif value="PA">Pará</option>
-                                            <option @if(old('uf') == 'PB') selected @endif value="PB">Paraíba</option>
-                                            <option @if(old('uf') == 'PR') selected @endif value="PR">Paraná</option>
-                                            <option @if(old('uf') == 'PE') selected @endif value="PE">Pernambuco</option>
-                                            <option @if(old('uf') == 'PI') selected @endif value="PI">Piauí</option>
-                                            <option @if(old('uf') == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
-                                            <option @if(old('uf') == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
-                                            <option @if(old('uf') == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
-                                            <option @if(old('uf') == 'RO') selected @endif value="RO">Rondônia</option>
-                                            <option @if(old('uf') == 'RR') selected @endif value="RR">Roraima</option>
-                                            <option @if(old('uf') == 'SC') selected @endif value="SC">Santa Catarina</option>
-                                            <option @if(old('uf') == 'SP') selected @endif value="SP">São Paulo</option>
-                                            <option @if(old('uf') == 'SE') selected @endif value="SE">Sergipe</option>
-                                            <option @if(old('uf') == 'TO') selected @endif value="TO">Tocantins</option>
-                                        </select>
-
-                                        @error('uf')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
+                                            @error('uf')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ __($message) }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    @endif
                                 </div>
                             @endif
                             <div class="row justify-content-center" style="margin: 20px 0 20px 0">
@@ -535,9 +473,9 @@
                                     <label for="pais" class="col-form-label">{{ __('País') }}*</label>
                                     <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" class="form-control @error('pais') is-invalid @enderror" id="pais">
                                         <option value="" disabled selected hidden>-- {{__('País')}} --</option>
-                                        <option @if($pais == 'brasil') selected @endif value="/perfil/brasil">{{__('Brasil')}}</option>
-                                        <option @if($pais == 'usa') selected @endif value="/perfil/usa">{{__('Estados Unidos da América')}}</option>
-                                        <option @if($pais == 'outro') selected @endif value="/perfil/outro">{{__('Outro')}}</option>
+                                        <option @if($pais == 'brasil') selected="true" @endif value="/perfil/brasil">{{__('Brasil')}}</option>
+                                        <option @if($pais == 'usa') selected="true" @endif value="/perfil/usa">{{__('Estados Unidos da América')}}</option>
+                                        <option @if($pais == 'outro') selected="true" @endif value="/perfil/outro">{{__('Outro')}}</option>
                                     </select>
                                     <input type="hidden" name="pais" value="{{$pais}}">
                                     <small>{{__('O formulário seguirá os padrões desse país')}}.</small>
@@ -628,7 +566,7 @@
 
                                 <div class="col-md-4">
                                     <label for="celular" class="col-form-label">{{ __('Celular') }}*</label><br>
-                                    <input id="phone" type="tel" class="form-control @error('celular') is-invalid @enderror" name="celular" @if(old('celular') != null) value="{{ old('celular') }}" @else value="{{$user->celular}}" @endif required autocomplete="celular" autofocus onkeyup="process(event)">
+                                    <input id="phone" type="tel" class="form-control @error('celular') is-invalid @enderror" name="celular" value="{{ old('full_number', $user->celular) }}" required autocomplete="celular" autofocus onkeyup="process(event)">
                                     <div class="alert alert-info mt-1" style="display: none"></div>
                                     <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
 
@@ -728,8 +666,8 @@
                             {{-- Endereço --}}
                             <div class="form-group row justify-content-center">
                                 <div class="col-md-12">
-                                    <label for="cep" class="col-form-label">{{ __('CEP') }}*</label>
-                                    <input value="{{old('cep')}}" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" required autocomplete="cep">
+                                    <label for="cep" class="col-form-label">{{ __('CEP') }}@if($pais != 'outro') * @endif</label>
+                                    <input value="{{old('cep')}}" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" @if($pais != 'outro') required @endif autocomplete="cep">
 
                                     @error('cep')
                                         <span class="invalid-feedback" role="alert">
@@ -751,8 +689,8 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="numero" class="col-form-label">{{ __('Número') }}*</label>
-                                    <input value="{{old('numero')}}" id="numero" min="0" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero" maxlength="10">
+                                    <label for="numero" class="col-form-label">{{ __('Número') }} @if($pais != 'outro') * @endif </label>
+                                    <input value="{{old('numero')}}" id="numero" min="0" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" @if($pais != 'outro') required @endif autocomplete="numero" maxlength="10">
 
                                     @error('numero')
                                         <span class="invalid-feedback" role="alert">
@@ -761,8 +699,8 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="bairro" class="col-form-label">{{ __('Bairro') }}*</label>
-                                    <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" required autocomplete="bairro">
+                                    <label for="bairro" class="col-form-label">{{ __('Bairro') }} @if($pais != 'outro') * @endif </label>
+                                    <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" @if($pais != 'outro') required @endif autocomplete="bairro">
 
                                     @error('bairro')
                                         <span class="invalid-feedback" role="alert">
@@ -793,57 +731,20 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-sm-4" id="groupformufinput">
-                                    <label for="ufInput" class="col-form-label">{{ __('UF') }}*</label>
-                                    <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
+                                @if($pais == 'brasil')
+                                    <x-select-uf :uf="old('uf', $end?->uf)" />
+                                @else
+                                    <div class="col-md-4">
+                                        <label for="uf" class="col-form-label">{{ __('Estado').'/'.__('Província').'/'.__('Região') }}</label>
+                                        <input type="text" value="{{old('uf')}}" id="uf" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
 
-                                    @error('uf')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ __($message) }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
-                                <div class="col-sm-4" id="groupformuf">
-                                    <label for="uf" class="col-form-label">{{ __('UF') }}*</label>
-                                    {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
-                                    <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
-                                        <option value="" disabled selected hidden>-- {{__('UF')}} --</option>
-                                        <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
-                                        <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
-                                        <option @if(old('uf') == 'AP') selected @endif value="AP">Amapá</option>
-                                        <option @if(old('uf') == 'AM') selected @endif value="AM">Amazonas</option>
-                                        <option @if(old('uf') == 'BA') selected @endif value="BA">Bahia</option>
-                                        <option @if(old('uf') == 'CE') selected @endif value="CE">Ceará</option>
-                                        <option @if(old('uf') == 'DF') selected @endif value="DF">Distrito Federal</option>
-                                        <option @if(old('uf') == 'ES') selected @endif value="ES">Espírito Santo</option>
-                                        <option @if(old('uf') == 'GO') selected @endif value="GO">Goiás</option>
-                                        <option @if(old('uf') == 'MA') selected @endif value="MA">Maranhão</option>
-                                        <option @if(old('uf') == 'MT') selected @endif value="MT">Mato Grosso</option>
-                                        <option @if(old('uf') == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
-                                        <option @if(old('uf') == 'MG') selected @endif value="MG">Minas Gerais</option>
-                                        <option @if(old('uf') == 'PA') selected @endif value="PA">Pará</option>
-                                        <option @if(old('uf') == 'PB') selected @endif value="PB">Paraíba</option>
-                                        <option @if(old('uf') == 'PR') selected @endif value="PR">Paraná</option>
-                                        <option @if(old('uf') == 'PE') selected @endif value="PE">Pernambuco</option>
-                                        <option @if(old('uf') == 'PI') selected @endif value="PI">Piauí</option>
-                                        <option @if(old('uf') == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
-                                        <option @if(old('uf') == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
-                                        <option @if(old('uf') == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
-                                        <option @if(old('uf') == 'RO') selected @endif value="RO">Rondônia</option>
-                                        <option @if(old('uf') == 'RR') selected @endif value="RR">Roraima</option>
-                                        <option @if(old('uf') == 'SC') selected @endif value="SC">Santa Catarina</option>
-                                        <option @if(old('uf') == 'SP') selected @endif value="SP">São Paulo</option>
-                                        <option @if(old('uf') == 'SE') selected @endif value="SE">Sergipe</option>
-                                        <option @if(old('uf') == 'TO') selected @endif value="TO">Tocantins</option>
-                                    </select>
-
-                                    @error('uf')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
+                                        @error('uf')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ __($message) }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="row justify-content-center" style="margin: 20px 0 20px 0">
@@ -875,14 +776,10 @@
             $('#cnpj').mask('00.000.000/0000-00');
             if($('html').attr('lang') == 'en') {
                 //$('#celular').mask('(000) 000-0000');
-                $('#groupformuf').addClass('d-none');
-                $("#uf").prop('disabled', true);
             } else if ($('html').attr('lang') == 'pt-BR') {
                 $('#cep').blur(function () {
                     pesquisacep(this.value);
                 });
-                $('#groupformufinput').addClass('d-none');
-                $("#ufInput").prop('disabled', true);
                 var SPMaskBehavior = function (val) {
                 return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
                 },

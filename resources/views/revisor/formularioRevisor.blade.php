@@ -148,7 +148,7 @@
                             <label for="exampleFormControlSelect1">Tipo</label>
                             <select onchange="escolha(this.value)" name="tipo[]" class="form-control" id="FormControlSelect">
                                 <option value="paragrafo">Parágrafo</option>
-                                <option value="checkbox">Multipla escolha</option>
+                                <option value="checkbox">Múltipla escolha</option>
 
                             </select>
                         </div>
