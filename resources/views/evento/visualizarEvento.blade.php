@@ -1072,11 +1072,11 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialDate: "{{ $dataInicial->data }}",
             headerToolbar: {
-                left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+                left: 'dayGridMonth,timeGridWeek,timeGridDay,listYear',
                 center: 'title',
                 right: 'prev,next today'
             },
-            initialView: 'listWeek',
+            initialView: 'listYear',
             locale: 'pt-br',
             editable: false,
             eventClick: function(info) {
