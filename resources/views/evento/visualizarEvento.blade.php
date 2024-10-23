@@ -308,7 +308,7 @@
                                                         @enderror
                                                     </div>
                                                     <div class="form-group col-sm-6">
-                                                        <label for="endereco-bairro-{{$campo->id}}">{{_("Bairro")}}</label>
+                                                        <label for="endereco-bairro-{{$campo->id}}">{{__("Bairro")}}</label>
                                                         <input type="text" class="form-control @error('endereco-bairro-'.$campo->id) is-invalid @enderror" id="endereco-bairro-{{$campo->id}}" name="endereco-bairro-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-bairro-'.$campo->id) != null){{old('endereco-bairro-'.$campo->id)}}@endif">
                                                         @error('endereco-bairro-'.$campo->id)
                                                         <span class="invalid-feedback" role="alert">
