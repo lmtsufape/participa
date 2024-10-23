@@ -79,7 +79,7 @@ class ModalidadeStoreRequest extends FormRequest
             'arquivoRegras' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
             'arquivoInstrucoes' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
             'arquivoModelo' => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,pdf,ppt,pptx,odp', 'max:2048'],
-            'arquivosTemplates' => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf', 'max:2048'],
+            'arquivosTemplates' => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf,pptx', 'max:2048'],
             'documentosExtra.*' => ['nullable', 'array', 'min:2'],
         ];
 
