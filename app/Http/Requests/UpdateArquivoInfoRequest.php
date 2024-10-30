@@ -25,7 +25,7 @@ class UpdateArquivoInfoRequest extends FormRequest
     {
         return [
             'nome' => ['required', 'string'],
-            'arquivo' => ['nullable', 'file', 'max:10240', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,avi,pdf,doc,docx'],
+            'arquivo' => ['nullable', 'file', 'max:10240', 'mimes:jpeg,png,jpg,gif,svg,mp4,mov,avi,pdf,doc,docx,pptx'],
         ];
     }
 }

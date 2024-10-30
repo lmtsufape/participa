@@ -33,7 +33,18 @@
             </div>
         </div>
 
+        @if(session('success'))
+        <div class="alert alert-success" role="alert" align="center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            {{session('success')}}
+        </div>
+        @endif
+
     {{-- Tabela Trabalhos --}}
+    <form action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
+    @csrf
     @foreach ($trabalhosPorModalidade as $trabalhosPorArea)
         @foreach ($trabalhosPorArea as $trabalhos)
 
@@ -42,13 +53,20 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos->first()->modalidade->nome}}</span>
-                            @if ($trabalhos->first()->modalidade->inicioCorrecao && $trabalhos->first()->modalidade->fimCorrecao)
-                                <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >{{date("d/m/Y H:i", strtotime($trabalhos->first()->modalidade->inicioCorrecao))}} - {{date("d/m/Y H:i",strtotime($trabalhos->first()->modalidade->fimCorrecao))}}</span></h5>
-                            @else
-                                <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >não haverá</span></h5>
-                            @endif
-                            <h5 class="card-title">{{$trabalhos->first()->evento->formSubTrab->etiquetaareatrabalho}}: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos->first()->area->nome}}</span></h5>
+                            <div class="justify-content-between d-flex">
+                                <div>
+                                    <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos->first()->modalidade->nome}}</span>
+                                    @if ($trabalhos->first()->modalidade->inicioCorrecao && $trabalhos->first()->modalidade->fimCorrecao)
+                                        <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >{{date("d/m/Y H:i", strtotime($trabalhos->first()->modalidade->inicioCorrecao))}} - {{date("d/m/Y H:i",strtotime($trabalhos->first()->modalidade->fimCorrecao))}}</span></h5>
+                                    @else
+                                        <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >não haverá</span></h5>
+                                    @endif
+                                    <h5 class="card-title">{{$trabalhos->first()->evento->formSubTrab->etiquetaareatrabalho}}: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos->first()->area->nome}}</span></h5>
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary" type="submit" form="avisoCorrecao">Lembrete de envio de versão corrigida do texto</button>
+                                </div>
+                            </div>
                             <div class="row table-trabalhos">
                             <div class="col-sm-12">
                                 @csrf
@@ -58,6 +76,7 @@
                                 <table class="table table-hover table-responsive-lg table-sm table-striped">
                                     <thead>
                                         <tr>
+                                            <th><input type="checkbox" onchange="alterarSelecionados(this)"></th>
                                             <th scope="col" >Trabalho inicial</th>
                                             <th scope="col" >Trabalho revisado</th>
                                             <th scope="col" >Autor</th>
@@ -71,6 +90,7 @@
                                                 </a>
                                             </th>
                                             <th scope="col" >Parecer</th>
+                                            <th scope="col" class="text-center">Lembrete de correção enviado</th>
                                             <th scope="col" style="text-align:center;">Editar</th>
                                         </tr>
                                     </thead>
@@ -78,6 +98,7 @@
                                         @php $i = 0; @endphp
                                         @foreach($trabalhos as $trabalho)
                                             <tr>
+                                                <td><input type="checkbox" name="trabalhosSelecionados[]" value="{{$trabalho->id}}"></td>
                                                 <td>
                                                     @if ($trabalho->arquivo)
                                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
@@ -120,6 +141,7 @@
                                                         <br>
                                                     @endforeach
                                                 </td>
+                                                <td class="text-center">{{$trabalho->lembrete_enviado ? 'Sim' : 'Não'}}</td>
 
                                                 <td style="text-align:center">
                                                     <a href="#" data-toggle="modal" data-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
@@ -139,6 +161,7 @@
         @endif
         @endforeach
     @endforeach
+    </form>
 
 </div>
 <!-- End Trabalhos -->
@@ -288,5 +311,14 @@
     @endforeach
 @endforeach
 
+@endsection
+
+@section('script')
+<script>
+    function alterarSelecionados(source) {
+        let checkboxes = document.querySelectorAll('input[name="trabalhosSelecionados[]"]');
+        checkboxes.forEach(checkbox => checkbox.checked = source.checked);
+    }
+</script>
 @endsection
 
