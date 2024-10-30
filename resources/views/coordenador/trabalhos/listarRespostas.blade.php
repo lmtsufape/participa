@@ -36,44 +36,14 @@
                 </div>
             </div>
         </div>
-        <form action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
-        @csrf
         @foreach ($trabalhosPorModalidade as $trabalhos)
             <div class="row justify-content-center" style="width: 100%;">
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-body">
                             @if (!is_null($trabalhos->first()))
-                            <div class="justify-content-between d-flex">
                                 <h5 class="card-title">Modalidade: <span
                                         class="card-subtitle mb-2 text-muted">{{ $trabalhos[0]->modalidade->nome }}</span></h5>
-                                <button class="btn btn-primary" type="submit" form="avisoCorrecao">Lembrete de envio de versão corrigida do texto</button>
-                            </div>
-                            @endif
-                            @if($errors->any())
-                            <div class="alert alert-danger">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{$error}}</p>
-                                @endforeach
-                                </div>
-                            @endif
-
-                            @if(session('success'))
-                            <div class="alert alert-success" role="alert" align="center">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                                {{session('success')}}
-                            </div>
-                            @endif
-
-                            @if(session('error'))
-                            <div class="alert alert-danger"  role="alert" align="center">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                                {{session('error')}}
-                            </div>
                             @endif
                             <div class="row table-trabalhos">
                                 <div class="col-sm-12">
@@ -81,7 +51,6 @@
                                     <table class="table table-hover table-responsive-lg table-sm table-striped">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" onchange="alterarSelecionados(this)"></th>
                                                 <th scope="col">
                                                     Trabalho
                                                     <a
@@ -125,7 +94,6 @@
 
                                         <tbody>
                                             @foreach ($trabalhos as $trabalho)
-                                                <td><input type="checkbox" name="trabalhosSelecionados[]" value="{{$trabalho->id}}"></td>
                                                 <td>
                                                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                                                         <a
@@ -201,14 +169,5 @@
                     </div>
                 </div>
         @endforeach
-        </form>
     </div>
-@endsection
-@section('script')
-<script>
-    function alterarSelecionados(source) {
-        let checkboxes = document.querySelectorAll('input[name="trabalhosSelecionados[]"]');
-        checkboxes.forEach(checkbox => checkbox.checked = source.checked);
-    }
-</script>
 @endsection
