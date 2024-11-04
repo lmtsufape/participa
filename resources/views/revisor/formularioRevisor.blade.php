@@ -55,14 +55,15 @@
                             @foreach ($form->perguntas->sortBy("id") as $pergunta)
                                 <div class="card">
                                     <div class="card-body">
-                                        <p><b>{{$pergunta->pergunta}}</b></p>
+
+                                        <p><b>{!! $pergunta->pergunta !!}</b></p>
                                         <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
                                         @if($pergunta->respostas->first()->opcoes->count())
                                             @foreach ($pergunta->respostas->first()->opcoes as $opcao)
                                             <div class="form-check">
                                                 <input class="form-check-input" required type="radio" name="{{$pergunta->id}}" value="{{$opcao->titulo}}" id="{{$opcao->id}}">
                                                 <label class="form-check-label" for="{{$opcao->id}}">
-                                                  {{$opcao->titulo}}
+                                                  {!! $opcao->titulo !!}
                                                 </label>
                                               </div>
                                             @endforeach

@@ -67,5 +67,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'isTemp' => \App\Http\Middleware\IsTemp::class,
         'setLocale' => \App\Http\Middleware\SetLocale::class,
+
+        'block.get.params' => \App\Http\Middleware\BlockGetParams::class,
     ];
 }

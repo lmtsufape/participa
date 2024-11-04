@@ -27,7 +27,7 @@
                             @if ($respostas[$loop->index]->opcoes()->first()->visibilidade == true)
                                 <div class="card">
                                     <div class="card-body">
-                                        <p><strong>{{$pergunta->pergunta}}</strong></p>
+                                        <p><strong>{!! $pergunta->pergunta !!}</strong></p>
                                         @foreach ($pergunta->respostas->first()->opcoes as $opcao)
                                             <div class="form-check">
                                                 @if ($respostas[$index] != null && $respostas[$index]->opcoes != null && $respostas[$index]->opcoes->pluck('titulo')->contains($opcao->titulo))
@@ -49,7 +49,7 @@
                                     @if(($resposta->trabalho->id == $trabalho->id) && $resposta->paragrafo->visibilidade == true)
                                         <div class="card">
                                             <div class="card-body">
-                                                <p><strong>{{$pergunta->pergunta}}</strong></p>
+                                                <p><strong>{!! $pergunta->pergunta !!}</strong></p>
                                                 <p class="card-text">
                                                     <p>{{$resposta->paragrafo->resposta}}</p>
                                                 </p>
