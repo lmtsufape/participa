@@ -20,7 +20,7 @@
                 @foreach ($form->perguntas as $pergunta)
                     <div class="card">
                         <div class="card-body">
-                            <p>Pergunta: {{$pergunta->pergunta}}</p>
+                            <p>Pergunta: {!! $pergunta->pergunta !!}</p>
                             @if($pergunta->respostas->first()->opcoes->count())
                                 Resposta com Múltipla escolha:
                             @elseif($pergunta->respostas->first()->paragrafo->count() )

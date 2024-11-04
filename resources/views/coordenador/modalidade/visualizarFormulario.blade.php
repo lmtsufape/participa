@@ -56,7 +56,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <p>{{$pergunta->pergunta}}</p>
+                        <p>{!! $pergunta->pergunta !!}</p>
                     </div>
 
                 </div>
