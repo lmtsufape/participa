@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Submissao;
 
 use App\Exports\AvaliacoesExport;
 use App\Exports\InscritosExport;
+use App\Exports\ParticipantesExportXLSX;
 use App\Exports\TrabalhosExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
@@ -43,6 +44,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -594,6 +596,13 @@ class EventoController extends Controller
         return (new InscritosExport($evento))->download($nome . '.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
+    }
+
+    public function exportInscritosCertifica(Evento $evento, Request $request)
+    {
+        $nome = $this->somenteLetrasNumeros($evento->nome);
+
+        return Excel::download(new ParticipantesExportXLSX($evento), $nome . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 
     public function exportTrabalhos(Evento $evento)

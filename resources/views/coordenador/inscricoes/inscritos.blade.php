@@ -16,8 +16,9 @@
                       <h6 class="card-subtitle mb-2 text-muted">Inscritos no evento {{$evento->nome}}</h6>
                       <h6 class="card-subtitle mb-2 text-muted">Obs.: ao exportar o arquivo csv, usar o delimitador , (vírgula) para abrir o arquivo</h6>
                     </div>
-                    <div class="col-md-6 d-flex justify-content-sm-start justify-content-md-end align-items-center">
+                    <div class="col-md-6 d-flex gap-2 flex-column align-items-end">
                         <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary float-md-right">Exportar .csv</a>
+                        <a href="{{route('evento.downloadInscritosCertifica', $evento)}}" class="btn btn-primary float-md-right mt-2">Exportar XLSX para o Certifica</a>
                     </div>
 
                   </div>
