@@ -19,6 +19,8 @@ use App\Notifications\InscricaoEvento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Users\User;
+use App\Models\Users\Administrador;
 
 class InscricaoController extends Controller
 {
@@ -542,5 +544,79 @@ class InscricaoController extends Controller
             return abort(404);
         }
         return abort(403);
+    }
+
+    public function inscreverParticipante(Request $request)
+    {
+        $this->authorize('isAdmin', Administrador::class);
+
+        $participante = User::where('email', $request->email)->first();
+
+        if(!$participante)
+        {
+            return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['error_message' => 'Participante informado não possui cadastrado no sistema!']);
+        }
+
+
+        $evento = Evento::find($request->evento_id);
+
+        if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->exists()) 
+        {
+            return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['error_message' => 'Participante informado já está inscrito neste evento!']);
+        }
+
+        if ($evento->eventoInscricoesEncerradas()) 
+        {
+            return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['error_message' => 'Inscrições encerradas!']);
+        }
+
+        $categoria = CategoriaParticipante::find($request->categoria);
+
+        $possuiFormulario = $evento->possuiFormularioDeInscricao();
+
+        if ($possuiFormulario) 
+        {
+            $validator = Validator::make($request->all(), ['categoria' => 'required']);
+
+            if ($validator->fails()) 
+            {
+                return redirect()
+                    ->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('abrirmodalinscricao', true);
+            }
+
+            $validator = $this->validarCamposExtras($request, $categoria);
+
+            if ($validator->fails()) 
+            {
+                return redirect()
+                    ->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('abrirmodalinscricao', true);
+            }
+        }
+
+        $inscricao = new Inscricao();
+
+        $inscricao->categoria_participante_id = $request->categoria;
+        $inscricao->user_id = $participante->id;
+        $inscricao->evento_id = $request->evento_id;
+        $inscricao->finalizada = true;
+
+        $inscricao->save();
+
+        
+        if ($possuiFormulario) 
+        {
+            $this->salvarCamposExtras($inscricao, $request, $categoria);
+        }
+
+        $participante->notify(new InscricaoEvento($evento));
+
+        return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['message' => 'Participante inscrito com sucesso!']);
+
     }
 }

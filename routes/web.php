@@ -435,6 +435,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::post('/inscricoes/salvar-campo-formulario', [CampoFormularioController::class, 'store'])->name('campo.formulario.store');
     Route::post('/inscricoes/campo-excluir/{id}', [CampoFormularioController::class, 'destroy'])->name('campo.destroy');
     Route::post('inscricoes/editar-campo/{id}', [CampoFormularioController::class, 'update'])->name('campo.edit');
+    Route::post('/inscricoes/inscreverParticipante', [InscricaoController::class, 'inscreverParticipante'])->name('inscricao.inscreverParticipante');
     // Checkout
     Route::prefix('checkout')->name('checkout.')->group(function () {
         Route::get('/tela-pagamento/{evento}', [CheckoutController::class, 'telaPagamento'])->name('telaPagamento');
