@@ -548,7 +548,9 @@ class InscricaoController extends Controller
 
     public function inscreverParticipante(Request $request)
     {
-        $this->authorize('isAdmin', Administrador::class);
+        $evento = Evento::find($request->evento_id);
+
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         $participante = User::where('email', $request->email)->first();
 
@@ -557,10 +559,7 @@ class InscricaoController extends Controller
             return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['error_message' => 'Participante informado não possui cadastrado no sistema!']);
         }
 
-
-        $evento = Evento::find($request->evento_id);
-
-        if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->exists()) 
+        if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->exists())
         {
             return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['error_message' => 'Participante informado já está inscrito neste evento!']);
         }
