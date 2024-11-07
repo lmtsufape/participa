@@ -1,5 +1,16 @@
 @extends('coordenador.detalhesEvento')
 @section('menu')
+
+@if (session('message'))
+    <div class="alert alert-success">
+        {{ session('message') }}
+    </div>
+@elseif ( session('error_message'))
+<div class="alert alert-danger">
+        {{ session('error_message') }}
+    </div>
+@endif
+
 <div id="" style="display: block">
     <div class="row">
         <div class="col-md-12">
@@ -18,10 +29,14 @@
                     </div>
                     <div class="col-md-6 d-flex justify-content-sm-start justify-content-md-end align-items-center">
                         <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary float-md-right">Exportar .csv</a>
+                        <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-toggle="modal" data-target="#modal-inscrever-participante">
+                            Inscrever participante
+                        </button>
                     </div>
 
-                  </div>
-                  <p class="card-text">
+                    @include('coordenador.inscricoes.inscrever_participante')
+
+                    <p class="card-text">
                     <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
                         <thead>
                             <th>
@@ -54,9 +69,9 @@
                             </tbody>
                         @endforeach
                     </table>
-                  </p>
+                    </p>
                 </div>
-              </div>
+            </div>
         </div>
     </div>
 </div>
@@ -73,80 +88,80 @@
             </div>
             <div class="modal-body">
                 @if ($inscricao->categoria)
-                    <div class="form-group">
-                        <label class="text-center">Categoria</label>
-                        <input type="text" class="form-control" value="{{$inscricao->categoria->nome}}" disabled>
-                    </div>
+                <div class="form-group">
+                    <label class="text-center">Categoria</label>
+                    <input type="text" class="form-control" value="{{$inscricao->categoria->nome}}" disabled>
+                </div>
                 @endif
                 @forelse ($inscricao->camposPreenchidos as $campo)
-                    @if($campo->tipo == "endereco")
-                        @php
-                            $endereco = App\Models\Submissao\Endereco::find($campo->pivot->valor)
-                        @endphp
-                        <label>{{$campo->titulo}}</label>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label class="text-center">CEP</label>
-                                    <input type="text" class="form-control" value="{{$endereco->cep}}" disabled>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label class="text-center">Bairro</label>
-                                    <input type="text" class="form-control" value="{{$endereco->bairro}}" disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label class="text-center">Rua</label>
-                                    <input type="text" class="form-control" value="{{$endereco->rua}}" disabled>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label class="text-center">Complemento</label>
-                                    <input type="text" class="form-control" value="{{$endereco->complemento}}" disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label class="text-center">Cidade</label>
-                                    <input type="text" class="form-control" value="{{$endereco->cidade}}" disabled>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label class="text-center">UF</label>
-                                    <input type="text" class="form-control" value="{{$endereco->uf}}" disabled>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label class="text-center">Número</label>
-                                    <input type="text" class="form-control" value="{{$endereco->numero}}" disabled>
-                                </div>
-                            </div>
-                        </div>
-                    @elseif($campo->tipo == "file")
+                @if($campo->tipo == "endereco")
+                @php
+                $endereco = App\Models\Submissao\Endereco::find($campo->pivot->valor)
+                @endphp
+                <label>{{$campo->titulo}}</label>
+                <div class="row">
+                    <div class="col">
                         <div class="form-group">
-                            <a class="btn btn-primary baixar-campo-form" href="{{route('download.arquivo.inscricao', [$inscricao->id, $campo->id])}}" role="button">
-                                <li>
-                                    <img src="{{ asset('img/icons/file-download-solid.svg') }}" alt="Baixar arquivo">
-                                    {{$campo->titulo}}
-                                </li>
-                            </a>
+                            <label class="text-center">CEP</label>
+                            <input type="text" class="form-control" value="{{$endereco->cep}}" disabled>
                         </div>
-                    @else
+                    </div>
+                    <div class="col">
                         <div class="form-group">
-                            <label class="text-center">{{$campo->titulo}}</label>
-                            <input type="text" class="form-control" value="{{$campo->pivot->valor}}" disabled>
+                            <label class="text-center">Bairro</label>
+                            <input type="text" class="form-control" value="{{$endereco->bairro}}" disabled>
                         </div>
-                    @endif
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="text-center">Rua</label>
+                            <input type="text" class="form-control" value="{{$endereco->rua}}" disabled>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="text-center">Complemento</label>
+                            <input type="text" class="form-control" value="{{$endereco->complemento}}" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="text-center">Cidade</label>
+                            <input type="text" class="form-control" value="{{$endereco->cidade}}" disabled>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="text-center">UF</label>
+                            <input type="text" class="form-control" value="{{$endereco->uf}}" disabled>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="text-center">Número</label>
+                            <input type="text" class="form-control" value="{{$endereco->numero}}" disabled>
+                        </div>
+                    </div>
+                </div>
+                @elseif($campo->tipo == "file")
+                <div class="form-group">
+                    <a class="btn btn-primary baixar-campo-form" href="{{route('download.arquivo.inscricao', [$inscricao->id, $campo->id])}}" role="button">
+                        <li>
+                            <img src="{{ asset('img/icons/file-download-solid.svg') }}" alt="Baixar arquivo">
+                            {{$campo->titulo}}
+                        </li>
+                    </a>
+                </div>
+                @else
+                <div class="form-group">
+                    <label class="text-center">{{$campo->titulo}}</label>
+                    <input type="text" class="form-control" value="{{$campo->pivot->valor}}" disabled>
+                </div>
+                @endif
                 @empty
                 @endforelse
                 <div class="form-row">
@@ -252,13 +267,13 @@
                 </div>
                 <div>
                     @if ($evento->formEvento->modvalidarinscricao)
-                        <form action="{{route('coord.inscricoes.aprovar', ['inscricao' => $inscricao])}}" method="post">
-                            @csrf
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                            <button type="submit" class="btn btn-primary">Aprovar inscrição</button>
-                        </form>
-                    @else
+                    <form action="{{route('coord.inscricoes.aprovar', ['inscricao' => $inscricao])}}" method="post">
+                        @csrf
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-primary">Aprovar inscrição</button>
+                    </form>
+                    @else
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                     @endif
                 </div>
             </div>
