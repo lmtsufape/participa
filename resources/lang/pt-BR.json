@@ -43,5 +43,7 @@
   "You are receiving this email because we received a password reset request for your account.": "Você recebeu esse e-mail porque foi solicitado uma redefinição de senha na sua conta.",
   "Your email address is not verified.": "Seu endereço de e-mail não está verificado.",
   "Whoops!": "Ops!",
-    "Visualizar eventos passados":"Visualizar eventos passados"
+    "Visualizar eventos passados":"Visualizar eventos passados",
+  "usuarioInscritoNoEvento": "O usuário com e-mail :input precisa estar inscrito no evento"
+
 }
