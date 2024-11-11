@@ -295,7 +295,7 @@ class TrabalhoController extends Controller
             // dd($trabalho->id);
 
             if ($request->emailCoautor != null) {
-                foreach ($request->emailCoautor as $key => $value) {
+                foreach (array_unique($request->emailCoautor) as $key => $value) {
                     if ($value == $autor->email) {
                     } else {
                         $userCoautor = User::where('email', $value)->first();
@@ -505,7 +505,6 @@ class TrabalhoController extends Controller
             $usuarios_dos_coautores->push(User::find($coautor_id->autorId));
         }
 
-        $coautoresExcluidos = collect();
         // TODO Checando a mudança do autor do trabalho, a inclusão e exclusão de coautores
         foreach ($request->input('emailCoautor_' . $id) as $i => $email) {
             $usuario_do_coautor = User::where('email', $email)->first();
@@ -516,9 +515,7 @@ class TrabalhoController extends Controller
             // se não é criado um coautor com o id do user e o trabalho é adicionado
 
             if ($usuario_do_coautor != null) {
-                if ($usuarios_dos_coautores->contains($usuario_do_coautor)) {
-                    $coautoresExcluidos->contains($usuario_do_coautor);
-                } else {
+                if (! $usuarios_dos_coautores->contains($usuario_do_coautor)) {
                     $coautorExistente = $usuario_do_coautor->coautor;
                     if ($coautorExistente != null && $i != 0) {
                         $coautorExistente->trabalhos()->attach($trabalho);
@@ -574,8 +571,7 @@ class TrabalhoController extends Controller
         // TODO comparando os autores existentes com os excluidos
         // os que restarem são os excluidos do trabalho
 
-        $coautoresExcluidos = $usuarios_dos_coautores->diff($coautoresExcluidos);
-        foreach ($coautoresExcluidos as $usuario_do_coautor) {
+        foreach ($usuarios_dos_coautores as $usuario_do_coautor) {
             if (!(in_array($usuario_do_coautor->email, $request->input('emailCoautor_' . $id)))) {
                 $usuario_do_coautor->coautor->trabalhos()->detach($id);
             }

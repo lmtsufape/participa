@@ -164,7 +164,7 @@
     "Não": "No",
     "Sim": "Yes",
     "Subeventos": "Subevents",
-    "Memória": "Memory"
-
+    "Memória": "Memory",
+    "usuarioInscritoNoEvento": "The user with email :input must be registered for the event"
 
 }

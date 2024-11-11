@@ -11,7 +11,7 @@ class FormEventoController extends Controller
 {
     public function update(Request $request, $id)
     {
-        
+
         $evento = Evento::find($id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $request->validate([
@@ -96,6 +96,7 @@ class FormEventoController extends Controller
         if (isset($request->modsubmissao)) {
             $formevento->modsubmissao = $request->modsubmissao;
         }
+        $formevento->modinscritonoevento = $request->boolean('modinscritonoevento');
         if (isset($request->modarquivo)) {
             $evento->modarquivo = $request->modarquivo;
         }
