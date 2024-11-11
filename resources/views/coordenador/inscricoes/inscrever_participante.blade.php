@@ -10,10 +10,20 @@
 
             <form action="{{ route('inscricao.inscreverParticipante', ['evento_id' => $evento->id]) }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="email-participante">E-mail do participante</label>
+                <div class="modal-body" x-data="{ campo: 'email' }">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="emailradio" name="identificador" class="custom-control-input" x-model="campo" value="email">
+                        <label class="custom-control-label" for="emailradio">E-mail</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="cpfradio" name="identificador" class="custom-control-input" x-model="campo" value="cpf">
+                        <label class="custom-control-label" for="cpfradio">CPF</label>
+                    </div>
+                    <div x-show="campo == 'email'" class="mt-2">
                         <input type="text" class="form-control" id="email" name="email" placeholder="exemplo@exemplo.com">
+                    </div>
+                    <div x-show="campo == 'cpf'" class="mt-2">
+                        <input type="text" class="form-control" id="cpf" name="cpf" placeholder="999.999.999-99">
                     </div>
                     @if ($evento->categoriasParticipantes()->where('permite_inscricao', true)->exists())
                     <div id="formulario" x-data="{ categoria: 0 }">
@@ -320,3 +330,13 @@
         </div>
     </div>
 </div>
+
+@section('javascript')
+@parent
+    <script type="text/javascript" >
+        $(document).ready(function($){
+
+        $('#cpf').mask('000.000.000-00');
+        })
+    </script>
+@endsection
