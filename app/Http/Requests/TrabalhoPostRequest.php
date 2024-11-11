@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Modalidade;
+use App\Rules\CoautorInscritoNoEvento;
 use App\Rules\FileType;
 use App\Rules\MaxTrabalhosCoautor;
 use Carbon\Carbon;
@@ -50,7 +51,7 @@ class TrabalhoPostRequest extends FormRequest
             'resumo' => ['nullable', 'string'],
             'resumo_en' => ['nullable', 'string'],
             'nomeCoautor.*' => ['string'],
-            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores), 'email', 'exists:users,email'],
+            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores), 'email', 'exists:users,email', new CoautorInscritoNoEvento($evento)],
             'arquivo' => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
