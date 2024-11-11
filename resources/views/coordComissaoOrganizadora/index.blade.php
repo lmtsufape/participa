@@ -20,10 +20,12 @@
         @if($eventos->count() != 0)
         @foreach ($eventos as $evento)
         <div class="card" style="width: 18rem;">
-            @if(isset($evento->fotoEvento))
-            <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" class="card-img-top" alt="...">
+            @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en' && isset($evento->fotoEvento_en))
+                <img src="{{asset('storage/'.$evento->fotoEvento_en)}}" class="card-img-top" alt="...">
+            @elseif(isset($evento->fotoEvento))
+                <img src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
             @else
-            <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
+                <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="..." style="height: 150px;">
             @endif
             <div class="card-body">
                 <div class="row">
@@ -42,12 +44,11 @@
                 </div>
                 <p class="card-text">
                     <strong>Realização:</strong> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
-
-                </p>
-                <p>
-                    <a href="{{  route('evento.visualizar',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
                 </p>
                 <div class="row col-md-12">
+                    <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
+                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;{{__('Visualizar evento')}}
+                    </a>
                     <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
                         <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;{{__('Configurar evento')}}
                     </a>

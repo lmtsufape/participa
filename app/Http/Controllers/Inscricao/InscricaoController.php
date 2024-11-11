@@ -68,21 +68,21 @@ class InscricaoController extends Controller
     public function categorias(Evento $evento)
     {
         $date = date('Y-m-d');
-       
-       
+
+
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $categorias = $evento->categoriasParticipantes;
-        
+
         $links = DB::table('links_pagamentos')
         ->join('categoria_participantes', 'links_pagamentos.categoria_id', '=', 'categoria_participantes.id')
         ->select('categoria_participantes.nome', 'links_pagamentos.*')
         ->get();
-  
+
 
         $linksAtuais = $links->where('dataInicio','<=', $date)
-        ->where('dataFim','>', $date);        
-       
-        
+        ->where('dataFim','>', $date);
+
+
         return view('coordenador.inscricoes.categorias', compact('evento', 'categorias', 'links','linksAtuais'));
     }
 
@@ -552,7 +552,12 @@ class InscricaoController extends Controller
 
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
-        $participante = User::where('email', $request->email)->first();
+        if ($request->identificador == 'email') {
+            $participante = User::where('email', $request->email)->first();
+        } elseif ($request->identificador == 'cpf') {
+            $participante = User::where('cpf', $request->cpf)->first();
+        }
+
 
         if(!$participante)
         {
@@ -568,11 +573,11 @@ class InscricaoController extends Controller
 
         $possuiFormulario = $evento->possuiFormularioDeInscricao();
 
-        if ($possuiFormulario) 
+        if ($possuiFormulario)
         {
             $validator = Validator::make($request->all(), ['categoria' => 'required']);
 
-            if ($validator->fails()) 
+            if ($validator->fails())
             {
                 return redirect()
                     ->back()
@@ -583,7 +588,7 @@ class InscricaoController extends Controller
 
             $validator = $this->validarCamposExtras($request, $categoria);
 
-            if ($validator->fails()) 
+            if ($validator->fails())
             {
                 return redirect()
                     ->back()
@@ -602,8 +607,8 @@ class InscricaoController extends Controller
 
         $inscricao->save();
 
-        
-        if ($possuiFormulario) 
+
+        if ($possuiFormulario)
         {
             $this->salvarCamposExtras($inscricao, $request, $categoria);
         }
