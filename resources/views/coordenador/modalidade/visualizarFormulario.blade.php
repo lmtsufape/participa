@@ -26,7 +26,8 @@
 <div class="card" style="width: 48rem;">
     <div class="card-body">
         <h5 class="card-title">{{$form->titulo}}</h5>
-        <h5 class="card-title">Orientações aos(as) avaliadores(as): {!! $form->instrucoes !!}</h5>
+        <h5 class="card-title">Orientações aos(as) avaliadores(as):</h5>
+        {!! $form->instrucoes !!}
 
         <p class="card-text">
         <table class="table table-hover table-responsive-lg table-sm">
