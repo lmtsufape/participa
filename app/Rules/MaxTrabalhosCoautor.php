@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
 use App\Models\Users\User;
 use Illuminate\Contracts\Validation\Rule;
@@ -34,7 +35,7 @@ class MaxTrabalhosCoautor implements Rule
         $user = User::where('email', $value)->first();
         if ($user != null && $this->numCoautores != null && Coautor::where('autorId', $user->id)->first() != null) {
             $this->value = $value;
-            $qtd = Coautor::where('autorId', $user->id)->first()->trabalhos()->where('status', '!=', 'arquivado')->where('eventoId', 18)->count();
+            $qtd = Coautor::where('autorId', $user->id)->first()->trabalhos()->where('status', '!=', 'arquivado')->where('eventoId', Trabalho::find(request()->id)->evento->id)->count();
 
             return $qtd < $this->numCoautores;
         }
