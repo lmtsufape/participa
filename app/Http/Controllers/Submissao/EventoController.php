@@ -124,228 +124,47 @@ class EventoController extends Controller
         // $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-
-        $trabalhos = null;
-
-        if ($column == 'autor') {
-            //Pela logica da implementacao de status, rascunho eh o parametro para encontrar todos os trabalhos diferentes de arquivado
-            if ($status == 'rascunho') {
-                $trabalhos = collect();
-                foreach ($modalidades as $modalidade) {
-                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
-                        function ($trabalho) {
-                            return $trabalho->autor->name;
-                        },
-                        SORT_REGULAR,
-                        $direction == 'desc'
-                    ));
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+            ->withCount(['trabalho as trabalhos_count' => function($query) use ($status) {
+                if ($status == 'rascunho') {
+                    $query->where('status', '!=', 'arquivado');
+                } elseif ($status == 'with_revisor') {
+                    $query->has('atribuicoes')
+                        ->where('status', '!=', 'arquivado');
+                } elseif ($status == 'no_revisor') {
+                    $query->doesntHave('atribuicoes')
+                        ->where('status', '!=', 'arquivado');
+                } else {
+                    $query->where('status', $status);
                 }
-            } elseif ($status == 'with_revisor') {
-                $trabalhos_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
-                    ->where('trabalhos.eventoId', $evento->id)
-                    ->get('trabalhos.id');
-
-                $trabalhos = Trabalho::whereIn('id', $trabalhos_id->pluck('id'))
-                    ->where('status', '!=', 'arquivado')
-                    ->get();
-
-                $trabalhos = $trabalhos->groupBy('modalidadeId');
-                foreach ($trabalhos as $i => $modalidade) {
-                    $modalidade = $modalidade->sortBy(
-                        function ($trabalho) {
-                            return $trabalho->autor->name;
-                        },
-                        SORT_REGULAR,
-                        $direction == 'desc'
-                    );
-
-                    $trabalhos[$i] = $modalidade;
-                }
-                $trabalhos = $trabalhos->sortBy(function ($modalidade) {
-                    return $modalidade->first()->modalidade->nome;
-                });
-            } elseif ($status == 'no_revisor') {
-                $trabalhos_com_revisor_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
-                    ->where('trabalhos.eventoId', $evento->id)
-                    ->get('trabalhos.id');
-
-                $trabalhos_id = DB::table('trabalhos')
-                    ->where('trabalhos.eventoId', $evento->id)
-                    ->get('trabalhos.id');
-
-                $trabalhos_sem_revisores_collection = collect();
-
-                foreach ($trabalhos_id as $trabalho) {
-                    if (!$trabalhos_com_revisor_id->contains($trabalho)) {
-                        $trabalhos_sem_revisores_collection->push($trabalho);
-                    }
-                }
-
-                $trabalhos = Trabalho::whereIn('id', $trabalhos_sem_revisores_collection->pluck('id'))
-                    ->where('status', '!=', 'arquivado')
-                    ->get();
-
-                $trabalhos = $trabalhos->groupBy('modalidadeId');
-                foreach ($trabalhos as $i => $modalidade) {
-                    $modalidade = $modalidade->sortBy(
-                        function ($trabalho) {
-                            return $trabalho->autor->name;
-                        },
-                        SORT_REGULAR,
-                        $direction == 'desc'
-                    );
-
-                    $trabalhos[$i] = $modalidade;
-                }
-                $trabalhos = $trabalhos->sortBy(function ($modalidade) {
-                    return $modalidade->first()->modalidade->nome;
-                });
-            } else {
-                // Não tem como ordenar os trabalhos por nome do autor automaticamente
-                // Já que na tabale a de trabalhos não existe o nome do autor
-                $trabalhos = collect();
-                foreach ($modalidades as $modalidade) {
-                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
-                        function ($trabalho) {
-                            return $trabalho->autor->name;
-                        },
-                        SORT_REGULAR,
-                        $direction == 'desc'
-                    ));
-                }
-            }
-        } else {
-            if ($status == 'rascunho') {
-                $trabalhos = collect();
-                foreach ($modalidades as $modalidade) {
-                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get());
-                }
-            } elseif ($status == 'with_revisor') {
-                $trabalhos_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
-                    ->where('trabalhos.eventoId', $evento->id)
-                    ->get('trabalhos.id');
-
-                $trabalhos = Trabalho::whereIn('id', $trabalhos_id->pluck('id'))
-                    ->where('status', '!=', 'arquivado')
-                    ->get();
-
-                $trabalhos = $trabalhos->groupBy('modalidadeId');
-
-                if ($column == 'titulo') {
-                    foreach ($trabalhos as $i => $modalidade) {
-                        $modalidade = $modalidade->sortBy(
-                            function ($trabalho) {
-                                return $trabalho->titulo;
-                            },
-                            SORT_REGULAR,
-                            $direction == 'desc'
-                        );
-                        $trabalhos[$i] = $modalidade;
-                    }
+            }])
+            ->with(['trabalho' => function ($query) use ($column, $direction, $status) {
+                $coluna = $column;
+                if ($column == 'autor') {
+                    $coluna = 'autor.name';
                 } elseif ($column == 'areaId') {
-                    foreach ($trabalhos as $i => $modalidade) {
-                        $modalidade = $modalidade->sortBy(
-                            function ($trabalho) {
-                                return $trabalho->area->nome;
-                            },
-                            SORT_REGULAR,
-                            $direction == 'desc'
-                        );
-                        $trabalhos[$i] = $modalidade;
-                    }
-                } elseif ($column == 'created_at') {
-                    foreach ($trabalhos as $i => $modalidade) {
-                        $modalidade = $modalidade->sortBy(
-                            function ($trabalho) {
-                                return $trabalho->created_at;
-                            },
-                            SORT_REGULAR,
-                            $direction == 'desc'
-                        );
-                        $trabalhos[$i] = $modalidade;
-                    }
+                    $coluna = 'area.nome';
                 }
-
-                $trabalhos = $trabalhos->sortBy(function ($modalidade) {
-                    return $modalidade->first()->modalidade->nome;
-                });
-            } elseif ($status == 'no_revisor') {
-                $trabalhos_com_revisor_id = DB::table('trabalhos')->join('atribuicaos', 'atribuicaos.trabalho_id', '=', 'trabalhos.id')
-                    ->where('trabalhos.eventoId', $evento->id)
-                    ->get('trabalhos.id');
-
-                $trabalhos_id = DB::table('trabalhos')
-                    ->where('trabalhos.eventoId', $evento->id)
-                    ->get('trabalhos.id');
-
-                $trabalhos_sem_revisores_collection = collect();
-
-                foreach ($trabalhos_id as $trabalho) {
-                    if (!$trabalhos_com_revisor_id->contains($trabalho)) {
-                        $trabalhos_sem_revisores_collection->push($trabalho);
-                    }
+                $query->orderBy($coluna, $direction == 'asc' ? 'asc' : 'desc');
+                if ($status == 'rascunho') {
+                    $query->where('status', '!=', 'arquivado');
+                } elseif ($status == 'with_revisor') {
+                    $query->has('atribuicoes')
+                        ->where('status', '!=', 'arquivado');
+                } elseif ($status == 'no_revisor') {
+                    $query->doesntHave('atribuicoes')
+                        ->where('status', '!=', 'arquivado');
+                } else {
+                    $query->where('status', $status);
                 }
-
-                $trabalhos = Trabalho::whereIn('id', $trabalhos_sem_revisores_collection->pluck('id'))
-                    ->where('status', '!=', 'arquivado')
-                    ->get();
-
-                $trabalhos = $trabalhos->groupBy('modalidadeId');
-
-                if ($column == 'titulo') {
-                    foreach ($trabalhos as $i => $modalidade) {
-                        $modalidade = $modalidade->sortBy(
-                            function ($trabalho) {
-                                return $trabalho->titulo;
-                            },
-                            SORT_REGULAR,
-                            $direction == 'desc'
-                        );
-                        $trabalhos[$i] = $modalidade;
-                    }
-                } elseif ($column == 'areaId') {
-                    foreach ($trabalhos as $i => $modalidade) {
-                        $modalidade = $modalidade->sortBy(
-                            function ($trabalho) {
-                                return $trabalho->area->nome;
-                            },
-                            SORT_REGULAR,
-                            $direction == 'desc'
-                        );
-                        $trabalhos[$i] = $modalidade;
-                    }
-                } elseif ($column == 'created_at') {
-                    foreach ($trabalhos as $i => $modalidade) {
-                        $modalidade = $modalidade->sortBy(
-                            function ($trabalho) {
-                                return $trabalho->created_at;
-                            },
-                            SORT_REGULAR,
-                            $direction == 'desc'
-                        );
-                        $trabalhos[$i] = $modalidade;
-                    }
-                }
-
-                $trabalhos = $trabalhos->sortBy(function ($modalidade) {
-                    return $modalidade->first()->modalidade->nome;
-                });
-            } else {
-                // Como aqui é um else, então $trabalhos nunca vai ser null
-                // Busca os trabalhos da forma como era feita antes
-                $trabalhos = collect();
-                foreach ($modalidades as $modalidade) {
-                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->orderBy($column, $direction)->get());
-                }
-                //
-            }
-        }
+                $query->with(['area', 'modalidade']);
+            }])
+            ->orderBy('nome')->get();
 
         return view('coordenador.trabalhos.listarTrabalhos', [
             'evento' => $evento,
             'areas' => $areas,
-            'trabalhosPorModalidade' => $trabalhos,
+            'modalidades' => $modalidades,
             'agora' => now(),
             'status' => $status,
         ]);

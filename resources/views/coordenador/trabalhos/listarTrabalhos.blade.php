@@ -65,14 +65,12 @@
         </div>
         </div>
     </div>
-    @foreach ($trabalhosPorModalidade as $trabalhos)
+    @foreach ($modalidades as $modalidade)
         <div class="row justify-content-center">
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        @if(!is_null($trabalhos->first()))
-                            <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos[0]->modalidade->nome}}</span></h5>
-                        @endif
+                        <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$modalidade->nome}} ( {{ $modalidade->trabalhos_count }} )</span></h5>
                         <div class="row table-trabalhos">
                             <div class="col-sm-12">
                                 <form action="{{route('atribuicao.check')}}" method="post">
@@ -114,39 +112,37 @@
                                                     @endif
                                                 </th> --}}
                                                 <th scope="col">
-                                                Título
-                                                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', $status])}}">
-                                                    <i class="fas fa-arrow-alt-circle-up"></i>
-                                                </a>
-                                                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'desc', $status])}}">
-                                                    <i class="fas fa-arrow-alt-circle-down"></i>
-                                                </a>
+                                                    Título
+                                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', $status])}}">
+                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                    </a>
+                                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'desc', $status])}}">
+                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                    </a>
                                                 </th>
                                                 <th scope="col">
-                                                Área
-                                                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'asc', $status])}}">
-                                                    <i class="fas fa-arrow-alt-circle-up"></i>
-                                                </a>
-                                                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc', $status])}}">
-                                                    <i class="fas fa-arrow-alt-circle-down"></i>
-                                                </a>
+                                                    Área
+                                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'asc', $status])}}">
+                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                    </a>
+                                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc', $status])}}">
+                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                    </a>
                                                 </th>
                                                 <th scope="col">
-                                                Autor
-                                                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'asc', $status])}}">
-                                                    <i class="fas fa-arrow-alt-circle-up"></i>
-                                                </a>
-                                                <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'desc', $status])}}">
-                                                    <i class="fas fa-arrow-alt-circle-down"></i>
-                                                </a>
+                                                    Autor
+                                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'asc', $status])}}">
+                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                    </a>
+                                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'desc', $status])}}">
+                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                    </a>
                                                 </th>
-                                                @if ($trabalhos->first() && $trabalhos->first()->modalidade->midiasExtra)
-                                                    @foreach ($trabalhos->first()->modalidade->midiasExtra as $midia)
-                                                        <th scope="col">{{$midia->nome}}</th>
-                                                    @endforeach
-                                                @endif
-                                                @if ($trabalhos->first() && $trabalhos->first()->modalidade->apresentacao)
-                                                <th scope="col">Apresentação</th>
+                                                @foreach ($modalidade->midiasExtra as $midia)
+                                                    <th scope="col">{{$midia->nome}}</th>
+                                                @endforeach
+                                                @if ($modalidade->apresentacao)
+                                                    <th scope="col">Apresentação</th>
                                                 @endif
                                                 <th scope="col">Avaliadores</th>
                                                 <th scope="col">Avaliações</th>
@@ -166,86 +162,73 @@
                                             </thead>
 
                                             <tbody>
-                                            @php $i = 0; @endphp
-                                            @foreach($trabalhos as $trabalho)
-                                            <tr id="trab{{$trabalho->id}}">
-                                                {{-- <td style="text-align:center">
-                                                    <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" class="modalidade{{$trabalho->modalidade->id}}" value="{{$trabalho->id}}">
-                                                </td> --}}
-                                                <td>
-                                                    @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
-                                                        <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
-                                                            <span class="d-inline-block" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}">
-                                                                {{$trabalho->titulo}}
-                                                            </span>
-                                                        </a>
-                                                    @else
-                                                        <span class="d-inline-block" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}">
-                                                            {{$trabalho->titulo}}
-                                                        </span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <span class="d-inline-block" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
-                                                    {{$trabalho->area->nome}}
-                                                    </span>
-
-                                                </td>
-                                                <td>{{$trabalho->autor->name}}</td>
-                                                @if ($trabalho->modalidade->midiasExtra)
-                                                    @foreach ($trabalho->modalidade->midiasExtra as $midia)
+                                                @foreach ($modalidade->trabalho as $trabalho)
+                                                    <tr id="trab{{$trabalho->id}}">
+                                                        {{-- <td style="text-align:center">
+                                                            <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" class="modalidade{{$trabalho->modalidade->id}}" value="{{$trabalho->id}}">
+                                                        </td> --}}
                                                         <td>
-                                                            @if($trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first() != null)
-                                                                <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">
-                                                                    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
-                                                                        <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                                            @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
+                                                                <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
+                                                                    <span class="d-inline-block" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}">
+                                                                        {{$trabalho->titulo}}
                                                                     </span>
+                                                                </a>
+                                                            @else
+                                                                <span class="d-inline-block" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}">
+                                                                    {{$trabalho->titulo}}
+                                                                </span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <span class="d-inline-block" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
+                                                            {{$trabalho->area->nome}}
+                                                            </span>
+
+                                                        </td>
+                                                        <td>{{$trabalho->autor->name}}</td>
+                                                        @foreach ($modalidade->midiasExtra as $midia)
+                                                            <td>
+                                                                @if($trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first() != null)
+                                                                    <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">
+                                                                        <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
+                                                                            <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
+                                                                        </span>
+                                                                    </a>
+                                                                @endif
+                                                            </td>
+                                                        @endforeach
+                                                        @if ($modalidade->apresentacao)
+                                                            <td>{{$trabalho->tipo_apresentacao}}</td>
+                                                        @endif
+                                                        <td>
+                                                            {{ $trabalho->atribuicoes()->count() }}
+                                                        </td>
+                                                        <td>{{ $trabalho->getQuantidadeAvaliacoes() }}</td>
+                                                        <td>{{ date("d/m/Y H:i", strtotime($trabalho->created_at)) }}</td>
+                                                        <td style="text-align:center">
+                                                            <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}">
+                                                                <i class="fas fa-file-alt"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td style="text-align:center">
+                                                            @if ($trabalho->status == 'arquivado')
+                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" class="btn btn-info" >
+                                                                    <i class="fas fa-folder-open"></i>
+                                                                </a>
+                                                            @else
+                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}" class="btn btn-info" >
+                                                                    <i class="fas fa-archive"></i>
                                                                 </a>
                                                             @endif
                                                         </td>
-                                                    @endforeach
-                                                @endif
-                                                @if ($trabalho->modalidade->apresentacao)
-                                                <td>{{$trabalho->tipo_apresentacao}}</td>
-                                                @endif
-                                                <td>
-                                                    {{count($trabalho->atribuicoes)}}
-                                                    {{-- @if (count($trabalho->atribuicoes) == 0)
-                                                    Nenhum revisor atribuído
-                                                    @elseif (count($trabalho->atribuicoes) == 1)
-                                                    {{count($trabalho->atribuicoes)}}
-                                                    @endif --}}
-                                                </td>
-                                                <td>{{$trabalho->getQuantidadeAvaliacoes()}}</td>
-                                                <td>
-                                                    {{ date("d/m/Y H:i", strtotime($trabalho->created_at) ) }}
-
-                                                </td>
-                                                <td style="text-align:center">
-                                                    <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}">
-                                                    <i class="fas fa-file-alt"></i>
-                                                    </a>
-
-                                                </td>
-
-                                                <td style="text-align:center">
-                                                    @if ($trabalho->status == 'arquivado')
-                                                        <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" class="btn btn-info" >
-                                                            <i class="fas fa-folder-open"></i>
-                                                        </a>
-                                                    @else
-                                                        <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}" class="btn btn-info" >
-                                                            <i class="fas fa-archive"></i>
-                                                        </a>
-                                                    @endif
-                                                </td>
-                                                <td style="text-align:center">
-                                                    <a href="{{ route('coord.trabalho.edit', ['id' => $trabalho->id]) }}" >
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
+                                                        <td style="text-align:center">
+                                                            <a href="{{ route('coord.trabalho.edit', ['id' => $trabalho->id]) }}" >
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -316,8 +299,8 @@
   </div>
 </div>
 
-@foreach ($trabalhosPorModalidade as $trabalhos)
-    @foreach ($trabalhos as $trabalho)
+@foreach ($modalidades as $modalidade)
+    @foreach ($modalidade->trabalho as $trabalho)
         <!-- Modal Trabalho -->
         <x-modal-adicionar-revisor :trabalho="$trabalho" :evento="$evento" />
     @endforeach
