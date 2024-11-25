@@ -157,6 +157,7 @@
                                                 </th>
                                                 <th scope="col">Atribuir</th>
                                                 <th scope="col">Arquivar</th>
+                                                <th scope="col">Excluir</th>
                                                 <th scope="col">Editar</th>
                                             </tr>
                                             </thead>
@@ -219,6 +220,13 @@
                                                             @else
                                                                 <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}" class="btn btn-info" >
                                                                     <i class="fas fa-archive"></i>
+                                                                </a>
+                                                            @endif
+                                                        </td>
+                                                        <td style="text-align:center">
+                                                            @if ($trabalho->status == 'arquivado')
+                                                                <a href="#" data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}">
+                                                                    <i class="fas fa-trash"></i>
                                                                 </a>
                                                             @endif
                                                         </td>
@@ -303,6 +311,7 @@
     @foreach ($modalidade->trabalho as $trabalho)
         <!-- Modal Trabalho -->
         <x-modal-adicionar-revisor :trabalho="$trabalho" :evento="$evento" />
+        <x-modal-excluir-trabalho :trabalho="$trabalho" />
     @endforeach
 @endforeach
 @endsection
