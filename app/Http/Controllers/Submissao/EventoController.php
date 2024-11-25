@@ -1419,10 +1419,13 @@ class EventoController extends Controller
      * @param  \App\Evento  $evento
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Evento $evento, Request $request)
     {
-        $evento = Evento::find($id);
         $this->authorize('isCriador', $evento);
+
+        if (strcasecmp($request['email'.$evento->id], $evento->coordenador->email) != 0) {
+            return redirect()->back()->withErrors(['email'.$evento->id => 'O e-mail não está correto'])->withInput();
+        }
 
         $evento->deletado = true;
         $evento->update();
