@@ -88,13 +88,9 @@
                                         </div>
                                         @can('isCriador', $evento)
                                         <div class="row col-md-12">
-                                            <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
-                                                {{ csrf_field() }}
-                                                {{ method_field('DELETE') }}
-                                                <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
-                                                    <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;{{__('Deletar')}}
-                                                </a>
-                                            </form>
+                                            <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
+                                                <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;{{__('Deletar')}}
+                                            </a>
                                         </div>
                                         @endcan
                                     </div>
@@ -109,25 +105,7 @@
     @foreach ($eventos as $evento)
         @if ($evento->deletado == false)
             <!-- Modal de exclusão do evento -->
-            <div class="modal fade" id="modalExcluirEvento{{$evento->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="background-color: #114048ff; color: white;">
-                    <h5 class="modal-title" id="#label">Confirmação</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    </div>
-                        <div class="modal-body">
-                            Tem certeza de deseja excluir esse evento?
-                        </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                        <button type="submit" class="btn btn-primary" form="formExcluirEvento{{$evento->id}}">Sim</button>
-                    </div>
-                </div>
-                </div>
-            </div>
+            <x-modal-excluir-evento :evento="$evento"/>
             <!-- fim do modal -->
         @endif
     @endforeach
