@@ -39,7 +39,7 @@ class RevisorController extends Controller
     {
         //eventos em que sou revisor
         $idsEventos = Revisor::where('user_id', auth()->user()->id)->groupBy('evento_id')->select('evento_id')->get();
-        $eventosComoRevisor = Evento::whereIn('id', $idsEventos)->get()->sortBy('nome');
+        $eventosComoRevisor = Evento::whereIn('id', $idsEventos)->orderBy('created_at', 'asc')->get();
         //return view('revisor.index')->with(['eventos' => $eventosComoRevisor]);
         //areas em que sou revirsor
         $revisores = collect();
