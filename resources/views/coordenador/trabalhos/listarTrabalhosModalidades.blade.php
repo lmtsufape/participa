@@ -119,6 +119,7 @@
                     {{--<th scope="col">Data</th>--}}
                     <th scope="col" style="text-align:center">Atribuir</th>
                     <th scope="col" style="text-align:center">Arquivar</th>
+                    <th scope="col" style="text-align:center">Excluir</th>
                     <th scope="col" style="text-align:center">Editar</th>
                   </tr>
                 </thead>
@@ -191,6 +192,13 @@
                             <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}" class="btn btn-info" >
                                 <i class="fas fa-archive"></i>
                             </a>
+                        @endif
+                      </td>
+                      <td style="text-align:center">
+                        @if ($trabalho->status == 'arquivado')
+                          <a href="#" data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}">
+                              <i class="fas fa-trash"></i>
+                          </a>
                         @endif
                       </td>
                         <td style="text-align:center">
@@ -273,6 +281,7 @@
 @foreach ($trabalhos as $trabalho)
     <!-- Modal Trabalho -->
     <x-modal-adicionar-revisor :trabalho="$trabalho" :evento="$evento" />
+    <x-modal-excluir-trabalho :trabalho="$trabalho" />
 @endforeach
 @endsection
 
