@@ -3,13 +3,10 @@
 @section('content')
 
 <div class="container mb-4 position-relative">
-    <div id="divListarCriterio" class="comissao">
-        <div class="row">
-            <div class="col-sm-12">
-                <h3 class="titulo-detalhes">Formulário(s) da modalidade: <strong> {{$data['modalidade']->nome}}</strong> </h3>
-            </div>
-        </div>
-    </div>
+    <h3>Evento: {{$evento->nome}}</h3>
+    <h3>Modalidade: {{$data['modalidade']->nome}}</h3>
+    <h3>{{$evento->formSubTrab->etiquetaareatrabalho}}: {{$data['trabalho']->area->nome}}</h3>
+    <h3 class="titulo-detalhes">{{$evento->formSubTrab->etiquetatitulotrabalho}}: {{$data['trabalho']->titulo}}</h3>
     @if(session('message'))
     <div class="row">
         <div class="col-md-12" style="margin-top: 5px;">
