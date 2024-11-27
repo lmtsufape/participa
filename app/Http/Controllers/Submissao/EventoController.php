@@ -141,13 +141,19 @@ class EventoController extends Controller
                 }
             }])
             ->with(['trabalho' => function ($query) use ($column, $direction, $status) {
-                $coluna = $column;
                 if ($column == 'autor') {
-                    $coluna = 'autor.name';
+                    $query->orderBy(
+                        User::select('name')
+                            ->whereColumn('autorId', 'users.id')
+                    , $direction);
                 } elseif ($column == 'areaId') {
-                    $coluna = 'area.nome';
+                    $query->orderBy(
+                        Area::select('nome')
+                            ->whereColumn('areaId', 'areas.id')
+                    , $direction);
+                } else {
+                    $query->orderBy($column, $direction);
                 }
-                $query->orderBy($coluna, $direction == 'asc' ? 'asc' : 'desc');
                 if ($status == 'rascunho') {
                     $query->where('status', '!=', 'arquivado');
                 } elseif ($status == 'with_revisor') {
