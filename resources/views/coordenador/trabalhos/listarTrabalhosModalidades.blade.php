@@ -221,7 +221,7 @@
 </div>
 <!-- End Trabalhos -->
 <!-- Modal Trabalho -->
-<div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
+{{-- <div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #114048ff; color: white;">
@@ -267,7 +267,7 @@
                   @enderror
               </div>
 
-          </div>{{-- end row--}}
+          </div>
         </div>
       </form>
       <div class="modal-footer">
@@ -276,7 +276,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> --}}
 
 @foreach ($trabalhos as $trabalho)
     <!-- Modal Trabalho -->
