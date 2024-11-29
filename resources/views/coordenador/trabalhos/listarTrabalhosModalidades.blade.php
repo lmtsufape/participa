@@ -5,11 +5,11 @@
     <div id="divListarTrabalhos" style="display: block">
 
       <div class="row ">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <h2 class="">Trabalhos da modalidade {{$modalidade->nome}}</h2>
         </div>
 
-        <div class="col-sm-3"></div>
+        {{-- <div class="col-sm-3"></div>
         <div class="col-sm-3">
           <form method="GET" action="{{route('distribuicao')}}">
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
@@ -18,7 +18,7 @@
             </button>
           </form>
 
-        </div>
+        </div> --}}
       </div>
 
     {{-- Tabela Trabalhos --}}

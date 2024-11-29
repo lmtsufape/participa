@@ -11,7 +11,7 @@
 
         <div class="col-sm-3"></div>
         <div class="col-sm-3">
-          <form method="GET" action="{{route('distribuicao')}}">
+          {{-- <form method="GET" action="{{route('distribuicao')}}">
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
 
             <div class="row">
@@ -20,7 +20,7 @@
                   </button>
             </div>
 
-          </form>
+          </form> --}}
           <div class="row mt-1">
             <a class="btn btn-primary col-sm" href="{{route('evento.downloadResumos', $evento)}}">Baixar resumos</a>
           </div>
