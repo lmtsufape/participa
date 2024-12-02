@@ -15,6 +15,6 @@ class Pergunta extends Model
 
     public function respostas()
     {
-        return $this->hasMany('App\Models\Submissao\Resposta');
+        return $this->hasMany('App\Models\Submissao\Resposta')->orderBy('created_at');
     }
 }

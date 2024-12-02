@@ -888,7 +888,7 @@ class EventoController extends Controller
         $evento = Evento::find($request->evento_id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
-        $modalidade = Modalidade::find($request->modalidade_id);
+        $modalidade = Modalidade::find($request->modalidade_id)->load('forms.perguntas.respostas');
         // $form = $modalidade->forms;
         $data = $request->all();
 
