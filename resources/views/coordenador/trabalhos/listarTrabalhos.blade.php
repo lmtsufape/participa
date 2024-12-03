@@ -111,6 +111,7 @@
                                                     Selecionar
                                                     @endif
                                                 </th> --}}
+                                                <th scope="col">ID</th>
                                                 <th scope="col">
                                                     Título
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', $status])}}">
@@ -168,6 +169,7 @@
                                                         {{-- <td style="text-align:center">
                                                             <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" class="modalidade{{$trabalho->modalidade->id}}" value="{{$trabalho->id}}">
                                                         </td> --}}
+                                                        <td>{{ $trabalho->id }}</td>
                                                         <td>
                                                             @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                                                                 <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
