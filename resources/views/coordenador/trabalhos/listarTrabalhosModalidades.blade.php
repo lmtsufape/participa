@@ -79,6 +79,7 @@
                         <input type="checkbox" id="selectAllCheckboxes" onclick="marcarCheckboxes()">
                         <label for="selectAllCheckboxes" style="margin-bottom: 0px;">Selecionar</label>
                     </th>
+                    <th scope="col">ID</th>
                     <th scope="col">
                       Título
                       <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho'])}}">
@@ -129,9 +130,10 @@
                   @foreach($trabalhos as $trabalho)
 
                   <tr>
-                      <td style="text-align:center">
-                        <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" value="{{$trabalho->id}}" class="trabalhos">
-                      </td>
+                    <td style="text-align:center">
+                      <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" value="{{$trabalho->id}}" class="trabalhos">
+                    </td>
+                    <td>{{ $trabalho->id }}</td>
                       <td>
                         @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                             <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
