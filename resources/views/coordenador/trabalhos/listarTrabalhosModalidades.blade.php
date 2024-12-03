@@ -79,7 +79,14 @@
                         <input type="checkbox" id="selectAllCheckboxes" onclick="marcarCheckboxes()">
                         <label for="selectAllCheckboxes" style="margin-bottom: 0px;">Selecionar</label>
                     </th>
-                    <th scope="col">ID</th>
+                    <th scope="col">ID
+                      <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'id', 'asc', 'rascunho'])}}">
+                        <i class="fas fa-arrow-alt-circle-up"></i>
+                      </a>
+                      <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'id', 'desc', 'rascunho'])}}">
+                        <i class="fas fa-arrow-alt-circle-down"></i>
+                      </a>
+                    </th>
                     <th scope="col">
                       Título
                       <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho'])}}">
