@@ -111,7 +111,15 @@
                                                     Selecionar
                                                     @endif
                                                 </th> --}}
-                                                <th scope="col">ID</th>
+                                                <th class="col-md-1">
+                                                    ID
+                                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'id', 'asc', $status])}}">
+                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                    </a>
+                                                    <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'id', 'desc', $status])}}">
+                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                    </a>
+                                                </th>
                                                 <th scope="col">
                                                     Título
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', $status])}}">
