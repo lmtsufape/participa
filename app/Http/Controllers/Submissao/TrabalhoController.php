@@ -1280,17 +1280,21 @@ class TrabalhoController extends Controller
         DB::beginTransaction();
         try {
             $trabalho = Trabalho::findOrFail($trabalho_id);
-            $trabalho->avaliado = 'nao';
 
             $trabalho->atribuicoes()->detach($request->revisor_id);
 
             Resposta::where('trabalho_id', $trabalho->id)
                     ->where('revisor_id', $request->revisor_id)->delete();
 
+            if($trabalho->atribuicoes()->count() == 0){
+                $trabalho->avaliado = 'nao';
+            }
             $avaliacao = ArquivoAvaliacao::where('trabalhoId', $trabalho->id)
                                         ->where('revisorId', $request->revisor_id)->first();
             if($avaliacao){
-                Storage::delete($avaliacao->nome);
+                if(Storage::exists($avaliacao->nome)){
+                    Storage::delete($avaliacao->nome);
+                }
                 $avaliacao->delete();
             }
             $trabalho->save();
