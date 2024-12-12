@@ -11,6 +11,7 @@ use App\Mail\SubmissaoTrabalho;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\AreaModalidade;
 use App\Models\Submissao\Arquivo;
+use App\Models\Submissao\ArquivoAvaliacao;
 use App\Models\Submissao\ArquivoCorrecao;
 use App\Models\Submissao\Arquivoextra;
 use App\Models\Submissao\Avaliacao;
@@ -19,6 +20,7 @@ use App\Models\Submissao\FormSubmTraba;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\Parecer;
 use App\Models\Submissao\RegraSubmis;
+use App\Models\Submissao\Resposta;
 use App\Models\Submissao\TemplateSubmis;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
@@ -29,6 +31,7 @@ use App\Policies\EventoPolicy;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
@@ -1271,7 +1274,41 @@ class TrabalhoController extends Controller
 
         return redirect()->back()->with(['mensagem' => 'Avaliação salva']);
     }
+    //tirar lógica de avaliçao deste controller e inserir em um controller de avaliação
 
+    public function destroyAvaliacao(Request $request, $trabalho_id){
+        DB::beginTransaction();
+        try {
+            $trabalho = Trabalho::findOrFail($trabalho_id);
+
+            $trabalho->atribuicoes()->detach($request->revisor_id);
+
+            Resposta::where('trabalho_id', $trabalho->id)
+                    ->where('revisor_id', $request->revisor_id)->delete();
+
+            if($trabalho->atribuicoes()->count() == 0){
+                $trabalho->avaliado = 'nao';
+            }
+            $avaliacao = ArquivoAvaliacao::where('trabalhoId', $trabalho->id)
+                                        ->where('revisorId', $request->revisor_id)->first();
+            if($avaliacao){
+                if(Storage::exists($avaliacao->nome)){
+                    Storage::delete($avaliacao->nome);
+                }
+                $avaliacao->delete();
+            }
+            $trabalho->save();
+
+            DB::commit();
+
+            return redirect()->route('coord.listarAvaliacoes')->with('success', 'Avaliação deleta com sucesso!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->with('error', 'Erro: ' . $e->getMessage());//Definir um component global para exibição de mensagens
+        }
+    }
     public function validarTipoDoArquivo($arquivo, $tiposExtensao)
     {
         if ($tiposExtensao->arquivo == true) {

@@ -4,15 +4,6 @@
             <img src="{{ asset('/img/MarcasUFRPE-02.png') }}" alt="" style="width: 40px;">
             <img src="{{ asset('/img/logo.png') }}" alt="" style="width: 135px;">
         </a>
-         {{-- <a id="change-mode" class="navbar-brand">
-            <img id="img-change-mode" src="/img/icons/mom.png" alt="" style="height: 40px; width: 45px;">
-        </a>
-        <a id="font-size-plus" class="navbar-brand tam-letra">
-            +A
-        </a>
-        <a id="font-size-min" class="navbar-brand tam-letra">
-            -A
-        </a> --}}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Alterna navegação">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -152,17 +143,6 @@
                     </div>
                 </li>
 
-                <!-- <li class="nav-item dropdown">
-                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Idioma
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a href="locale/pt-BR" class="dropdown-item">Portugues</a>
-                        <a href="locale/en" class="dropdown-item">Ingles</a>
-                        <a href="locale/es" class="dropdown-item">Espanhol</a>
-                    </div>
-
-                </li> -->
                 @else
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
@@ -193,10 +173,6 @@
                             <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">Português</a>
                     </div>
                 </li>
-
-
-
-
             </div>
         </div>
     </div>

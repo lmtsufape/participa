@@ -15,6 +15,7 @@ use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\AreaModalidade;
 use App\Models\Submissao\Atividade;
+use App\Models\Submissao\Avaliacao;
 use App\Models\Submissao\Criterio;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
@@ -1029,6 +1030,7 @@ class EventoController extends Controller
         $trabalho = Trabalho::find($request->trabalhoId);
         $revisor = Revisor::find($request->revisorId);
         $revisorUser = User::find($revisor->user_id);
+        $avaliacao = Avaliacao::where('revisor_id', $revisor->id)->where('trabalho_id', $trabalho->id)->first();
         $respostas = [];
 
         $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first();
@@ -1043,7 +1045,7 @@ class EventoController extends Controller
             }
         }
 
-        return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'respostas', 'arquivoAvaliacao'));
+        return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'respostas', 'arquivoAvaliacao', 'avaliacao'));
     }
 
     public function editarEtiqueta(Request $request)
