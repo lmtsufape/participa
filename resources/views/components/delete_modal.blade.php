@@ -8,8 +8,13 @@
         </div>
         <div class="modal-body">
             <form action="{{route($route, [$param => $entity_id])}}" method="post">
-            @csrf
-            @method('delete')
+                @csrf
+                @method('delete')
+
+                @isset($element)
+                    <input type="hidden" name="{{$param_element}}" id="{{$param_element}}" value="{{$element}}">
+                @endisset
+
                 <p>Tem certeza que deseja excluir este item?</p>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>

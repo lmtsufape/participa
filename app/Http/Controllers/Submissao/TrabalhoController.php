@@ -1276,21 +1276,19 @@ class TrabalhoController extends Controller
     }
     //tirar lógica de avaliçao deste controller e inserir em um controller de avaliação
 
-    public function destroyAvaliacao($trabalho_id){
+    public function destroyAvaliacao(Request $request, $trabalho_id){
         DB::beginTransaction();
         try {
             $trabalho = Trabalho::findOrFail($trabalho_id);
             $trabalho->avaliado = 'nao';
 
-            $revisor_id = $trabalho->atribuicoes()->first()->id;
-
-            $trabalho->atribuicoes()->detach();
+            $trabalho->atribuicoes()->detach($request->revisor_id);
 
             Resposta::where('trabalho_id', $trabalho->id)
-                    ->where('revisor_id', $revisor_id)->delete();
+                    ->where('revisor_id', $request->revisor_id)->delete();
 
             $avaliacao = ArquivoAvaliacao::where('trabalhoId', $trabalho->id)
-                                        ->where('revisorId', $revisor_id)->first();
+                                        ->where('revisorId', $request->revisor_id)->first();
             if($avaliacao){
                 Storage::delete($avaliacao->nome);
                 $avaliacao->delete();
@@ -1303,7 +1301,7 @@ class TrabalhoController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
+
             return back()->with('error', 'Erro: ' . $e->getMessage());//Definir um component global para exibição de mensagens
         }
     }
