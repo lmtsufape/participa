@@ -209,7 +209,7 @@
 
     <div class="d-flex flex-row justify-content-center p-5">
         <div class="px-2">
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
                 Deletar Avaliação
             </button>
         </div>
