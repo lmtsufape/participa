@@ -1,4 +1,3 @@
-version: '3'
 networks:
   participa:
     name: participa
@@ -6,42 +5,8 @@ volumes:
   postgres:
   mysql:
 services:
-  php-fpm:
-    image: lmts/php-fpm:8.2
-    restart: unless-stopped
-    tty: true
-    working_dir: /var/www/html/
-    volumes:
-      - ./:/var/www/html/
-    networks:
-      - participa
-    depends_on:
-      - postgres
-  queue:
-    image: lmts/php-fpm:8.2
-    restart: unless-stopped
-    working_dir: /var/www/html/
-    volumes:
-      - ./:/var/www/html/
-    networks:
-      - participa
-    command: "php artisan queue:work --sleep=3 --tries=3 --max-time=3600 --timeout=1300"
-    depends_on:
-      - postgres
-  schedule:
-    image: lmts/php-fpm:8.2
-    restart: unless-stopped
-    working_dir: /var/www/html/
-    volumes:
-      - ./:/var/www/html/
-    networks:
-      - participa
-    command: "php artisan schedule:work"
-    depends_on:
-      - postgres
-  nginx:
-    image: lmts/nginx
-    restart: unless-stopped
+  apache:
+    image: php:8.2-apache-participa
     volumes:
       - ./:/var/www/html/
     networks:
@@ -49,11 +14,10 @@ services:
     ports:
       - "0.0.0.0:80:80"
     depends_on:
-      - php-fpm
-      - postgres
+      postgres:
+        condition: service_healthy
   postgres:
     image: 'postgres'
-    restart: unless-stopped
     environment:
       POSTGRES_DB: '${DB_DATABASE:-laravel}'
       POSTGRES_USER: '${DB_USERNAME:-postgres}'
@@ -66,18 +30,6 @@ services:
       test: ['CMD', 'pg_isready', '-q', '-d', '${DB_DATABASE}', '-U', '${DB_USERNAME}']
       retries: 3
       timeout: 5s
-  mysql:
-    image: 'mysql'
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: '${DB_DATABASE:-laravel}'
-      MYSQL_USER: '${DB_USERNAME:-postgres}'
-      MYSQL_PASSWORD: '${DB_PASSWORD:-secret}'
-      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD:-secret}'
-    volumes:
-      - 'mysql:/var/lib/mysql'
-    networks:
-      - participa
   mailpit:
     image: 'axllent/mailpit'
     networks:
