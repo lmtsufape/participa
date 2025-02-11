@@ -25,6 +25,98 @@
 
         .page_break { page-break-before: always; }
 
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-Normal.ttf') }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-Black.ttf') }}') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-Italic.ttf') }}') format('truetype');
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-BlackItalic.ttf') }}') format('truetype');
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-SemiBold.ttf') }}') format('truetype');
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-SemiBoldItalic.ttf') }}') format('truetype');
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-Thin.ttf') }}') format('truetype');
+            font-weight: 100;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-ThinItalic.ttf') }}') format('truetype');
+            font-weight: 100;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-UltraBold.ttf') }}') format('truetype');
+            font-weight: 800;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-UltraBoldItalic.ttf') }}') format('truetype');
+            font-weight: 800;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-UltraLight.ttf') }}') format('truetype');
+            font-weight: 200;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-UltraLightItalic.ttf') }}') format('truetype');
+            font-weight: 200;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Friends';
+            src: url('{{ public_path('fonts/friends/TTF/Friends-NormalItalic.ttf') }}') format('truetype');
+            font-weight: normal;
+            font-style: italic;
+        }
+
+
     </style>
 </head>
     <body>
