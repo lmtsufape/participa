@@ -119,7 +119,16 @@
 
     </style>
 </head>
-    <body>
+    @php
+        function extractFontFamily($html) {
+            if (preg_match('/font-family:\s*([^;"]+)/i', $html, $matches)) {
+                return trim($matches[1]);
+            }
+            return null;
+        }
+        $fontf = extractFontFamily($texto);
+    @endphp
+    <body style="font-family: '{{$fontf}}'">
         @php
             $tipos = App\Models\Submissao\Medida::TIPO_ENUM;
         @endphp
