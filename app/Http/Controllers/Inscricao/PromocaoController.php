@@ -106,7 +106,7 @@ class PromocaoController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Pacote salvo com sucesso!']);
+        return redirect()->back()->with(['success' => 'Pacote salvo com sucesso!']);
     }
 
     /**
@@ -221,7 +221,7 @@ class PromocaoController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Pacote atualizado com sucesso!']);
+        return redirect()->back()->with(['success' => 'Pacote atualizado com sucesso!']);
     }
 
     /**
@@ -260,7 +260,7 @@ class PromocaoController extends Controller
             abort(500);
         }
 
-        return redirect()->back()->with(['mensagem' => 'Promoção deletada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Promoção deletada com sucesso!']);
     }
 
     public function atividades(Request $request)

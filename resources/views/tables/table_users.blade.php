@@ -42,7 +42,10 @@
                 <th scope="row">{{ $user->email }}</th>
                 <td colspan="2">
                     <a href="{{ route('admin.editUser', ['id' => $user->id]) }}" class="btn btn-warning">Editar</a>
-                    {{-- <a href="{{ route('admin.deleteUser', ['id' => $user->id]) }}" onclick="this.confirm()" class="btn btn-danger">Excluir</a> --}}
+                    @include('components.delete_modal', ['route' => 'admin.user.destroy', 'param' => 'user_id', 'entity_id' => $user->id])
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{$user->id}}">
+                        Excluir
+                    </button>
                 </td>
 
             </tr>

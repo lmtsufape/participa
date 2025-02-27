@@ -79,7 +79,7 @@ class CampoFormularioController extends Controller
             $campo->categorias()->attach($categorias);
         }
 
-        return redirect()->back()->with(['mensagem' => 'Campo salvo com sucesso!']);
+        return redirect()->back()->with(['success' => 'Campo salvo com sucesso!']);
     }
 
     /**
@@ -138,7 +138,7 @@ class CampoFormularioController extends Controller
             $campo->categorias()->sync($request->categoria);
         }
 
-        return redirect()->back()->with(['mensagem' => 'Campo atualizado com sucesso!']);
+        return redirect()->back()->with(['success' => 'Campo atualizado com sucesso!']);
     }
 
     /**
@@ -151,14 +151,14 @@ class CampoFormularioController extends Controller
     {
         // Checar erros futuros após a criação da inscrição
         $campo = CampoFormulario::find($id);
-       
+
         $evento = $campo->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        
+
         if(count($campo->inscricoesFeitas) > 0){
             $valores = DB::table('valor_campo_extras')->where('campo_formulario_id', $campo->id)->get();
-            for ($i=0; $i < count($valores); $i++) { 
-                
+            for ($i=0; $i < count($valores); $i++) {
+
                DB::table('valor_campo_extras')->where('id', $valores[$i]->id)->delete();
             }
         }
@@ -169,6 +169,6 @@ class CampoFormularioController extends Controller
         $campo->categorias()->detach($campo->categorias);
         $campo->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Campo extra deletado com sucesso!']);
+        return redirect()->back()->with(['success' => 'Campo extra deletado com sucesso!']);
     }
 }
