@@ -130,7 +130,7 @@ class ModalidadeController extends Controller
         }
         $modalidade->save();
 
-        return redirect()->back()->with(['mensagem' => 'Modalidade cadastrada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Modalidade cadastrada com sucesso!']);
     }
 
     private function saveMidiaExtra($doc, Modalidade $modalidade)
@@ -546,7 +546,7 @@ class ModalidadeController extends Controller
             $modalidadeEdit->datasExtras()->delete();
         }
 
-        return redirect()->back()->with(['mensagem' => 'Modalidade salva com sucesso!']);
+        return redirect()->back()->with(['success' => 'Modalidade salva com sucesso!']);
     }
 
     private function submissaoUnica(Modalidade $modalidade)
@@ -651,7 +651,7 @@ class ModalidadeController extends Controller
 
         $modalidade->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Modalidade excluida com sucesso!']);
+        return redirect()->back()->with(['success' => 'Modalidade excluida com sucesso!']);
     }
 
     public function downloadRegras($id)

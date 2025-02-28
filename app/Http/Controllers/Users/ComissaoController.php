@@ -118,7 +118,7 @@ class ComissaoController extends Controller
         $revisores = $evento->revisores;
         $users = $evento->usuariosDaComissao;
 
-        return redirect()->back()->with(['mensagem' => 'Membro da comissão cadastrado com sucesso!']);
+        return redirect()->back()->with(['success' => 'Membro da comissão cadastrado com sucesso!']);
     }
 
     public function coordenadorComissao(Request $request)
@@ -141,7 +141,7 @@ class ComissaoController extends Controller
         $removidos = array_diff($idsCoordenadores, $validationData['coordComissaoId']);
         // CoordComissaoCientifica::whereIn('user_id', $removidos)->where('eventos_id', $evento->id)->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Coordenador da comissão científica salvo com sucesso!']);
+        return redirect()->back()->with(['success' => 'Coordenador da comissão científica salvo com sucesso!']);
     }
 
     public function show($id)
@@ -184,6 +184,6 @@ class ComissaoController extends Controller
         CoordComissaoCientifica::where([['user_id', '=', $id], ['eventos_id', '=', $evento->id]])->delete();
         $evento->usuariosDaComissao()->detach($id);
 
-        return redirect()->back()->with(['mensagem' => 'Membro da comissão removido com sucesso!']);
+        return redirect()->back()->with(['success' => 'Membro da comissão removido com sucesso!']);
     }
 }

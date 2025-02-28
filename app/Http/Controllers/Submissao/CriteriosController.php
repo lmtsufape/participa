@@ -64,7 +64,7 @@ class CriteriosController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Critério salvo para a modalidade '.$modalidade->nome.'.']);
+        return redirect()->back()->with(['success' => 'Critério salvo para a modalidade '.$modalidade->nome.'.']);
     }
 
     public function update(Request $request, $id)
