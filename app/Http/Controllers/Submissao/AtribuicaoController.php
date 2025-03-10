@@ -180,7 +180,7 @@ class AtribuicaoController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Trabalhos da área '.$area->nome.' distribuidos!']);
+        return redirect()->back()->with(['success' => 'Trabalhos da área '.$area->nome.' distribuidos!']);
     }
 
     public function distribuicaoManual(Request $request)

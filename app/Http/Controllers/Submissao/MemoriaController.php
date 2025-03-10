@@ -41,7 +41,7 @@ class MemoriaController extends Controller
         $memoria->evento()->associate($evento);
         $memoria->save();
 
-        return redirect()->back()->with(['mensagem' => 'Registro adicionado com sucesso!']);
+        return redirect()->back()->with(['success' => 'Registro adicionado com sucesso!']);
     }
 
     public function update(MemoriaRequest $request, Evento $evento, Memoria $memoria)
@@ -59,7 +59,7 @@ class MemoriaController extends Controller
         $memoria->fill($validatedData);
         $memoria->update();
 
-        return redirect()->back()->with(['mensagem' => 'Registro atualizada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Registro atualizada com sucesso!']);
     }
 
     public function destroy(Request $request)
@@ -71,6 +71,6 @@ class MemoriaController extends Controller
         Storage::disk('public')->delete($memoria->arquivo);
         $memoria->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Registro excluido com sucesso!']);
+        return redirect()->back()->with(['success' => 'Registro excluido com sucesso!']);
     }
 }

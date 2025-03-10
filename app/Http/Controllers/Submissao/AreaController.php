@@ -48,7 +48,7 @@ class AreaController extends Controller
             'eventoId' => $request->eventoId,
         ]);
 
-        return redirect()->back()->with(['mensagem' => 'Área cadastrada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Área cadastrada com sucesso!']);
     }
 
     /**
@@ -92,7 +92,7 @@ class AreaController extends Controller
         $area->nome = $request->input('nome_da_área');
         $area->update();
 
-        return redirect()->back()->with(['mensagem' => 'Área atualizada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Área atualizada com sucesso!']);
     }
 
     /**
@@ -116,6 +116,6 @@ class AreaController extends Controller
 
         $area->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Área excluida com sucesso!']);
+        return redirect()->back()->with(['success' => 'Área excluida com sucesso!']);
     }
 }

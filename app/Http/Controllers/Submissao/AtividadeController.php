@@ -232,7 +232,7 @@ class AtividadeController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Atividade cadastrada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Atividade cadastrada com sucesso!']);
     }
 
     /**
@@ -500,7 +500,7 @@ class AtividadeController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Atividade editada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Atividade editada com sucesso!']);
     }
 
     /**
@@ -522,7 +522,7 @@ class AtividadeController extends Controller
 
         $atividade->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Atividade excluida com sucesso!']);
+        return redirect()->back()->with(['success' => 'Atividade excluida com sucesso!']);
     }
 
     // Salva a visibilidade da atividade para participantes

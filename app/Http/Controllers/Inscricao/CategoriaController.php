@@ -86,7 +86,7 @@ class CategoriaController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Categoria criada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Categoria criada com sucesso!']);
     }
 
     /**
@@ -133,21 +133,21 @@ class CategoriaController extends Controller
             for ($i = 0; $i < count($request->linkPagamento); $i++) {
 
                 $link = LinksPagamento::where('link', $request->linkPagamento[$i])->first();
-    
+
                 if (!$link) {
-    
+
                     $novoLink = new LinksPagamento();
                     $novoLink->valor = $request->valorLink[$i];
                     $novoLink->link = $request->linkPagamento[$i];
                     $novoLink->dataInicio = $request->dataInicioLink[$i];
                     $novoLink->dataFim = $request->dataFinalLink[$i];
                     $novoLink->categoria_id = $categoria->id;
-    
+
                     $novoLink->save();
                 }
             }
         }
-        
+
 
         $categoria->nome = $request->input("nome_{$categoria->id}");
         $categoria->valor_total = $request->input("valor_total_{$categoria->id}");
@@ -172,7 +172,7 @@ class CategoriaController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Categoria de participante atualizada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Categoria de participante atualizada com sucesso!']);
     }
 
     /**
@@ -207,15 +207,15 @@ class CategoriaController extends Controller
         $categoria->valores()->delete();
         $categoria->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Categoria excluida com sucesso!']);
+        return redirect()->back()->with(['success' => 'Categoria excluida com sucesso!']);
     }
 
     public function destroyLink($id)
     {
-        
+
         $linkParaApagar = LinksPagamento::find($id);
         $linkParaApagar->delete();
-        return redirect()->back()->with(['mensagem' => 'Link de pagamento excluido com sucesso!']);
+        return redirect()->back()->with(['success' => 'Link de pagamento excluido com sucesso!']);
     }
 
     public function valorAjax(Request $request)

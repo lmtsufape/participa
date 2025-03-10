@@ -71,7 +71,7 @@ class CupomDeDescontoController extends Controller
         $cupomDeDesconto->porcentagem = $request->tipo_valor == 'porcentagem';
         $cupomDeDesconto->save();
 
-        return redirect()->back()->with(['mensagem' => 'Cupom salvo com sucesso!']);
+        return redirect()->back()->with(['success' => 'Cupom salvo com sucesso!']);
     }
 
     /**
@@ -138,7 +138,7 @@ class CupomDeDescontoController extends Controller
         $cupom->porcentagem = $request->input('tipo_valor_cupom_'.$cupom->id) == 'porcentagem';
         $cupom->update();
 
-        return redirect()->back()->with(['mensagem' => 'Cupom atualizado com sucesso!']);
+        return redirect()->back()->with(['success' => 'Cupom atualizado com sucesso!']);
     }
 
     /**
@@ -155,7 +155,7 @@ class CupomDeDescontoController extends Controller
         // Checar se o cupom foi aplicado em alguma inscrição antes de excluir
         $cupom->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Cupom excluido com sucesso!']);
+        return redirect()->back()->with(['success' => 'Cupom excluido com sucesso!']);
     }
 
     public function checar(Request $request)

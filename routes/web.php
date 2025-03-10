@@ -141,7 +141,7 @@ Route::group(['middleware' => ['auth', 'isTemp']], function () {
             Route::get('/users', [AdministradorController::class, 'users'])->name('users');
             Route::get('/edit/user/{id}', [AdministradorController::class, 'editUser'])->name('editUser');
             Route::post('/update/user/{id}', [AdministradorController::class, 'updateUser'])->name('updateUser');
-            Route::get('/delete/user/{id}', [AdministradorController::class, 'deleteUser'])->name('deleteUser');
+            Route::delete('/delete/user/{user_id}', [UserController::class, 'destroy'])->name('user.destroy');
             Route::post('/delete/search', [AdministradorController::class, 'search'])->name('search');
         });
         // rotas da Comissao Cientifica
@@ -369,6 +369,7 @@ Route::group(['middleware' => ['auth', 'isTemp']], function () {
 
         Route::get('/evento/{evento}/downloadInscritos', [EventoController::class, 'exportInscritos'])->name('evento.downloadInscritos');
         Route::get('/evento/{evento}/downloadTrabalhos', [EventoController::class, 'exportTrabalhos'])->name('evento.downloadTrabalhos');
+        Route::post('/evento/{evento}/downloadTrabalhosCertifica', [EventoController::class, 'exportTrabalhosCertifica'])->name('evento.downloadTrabalhosCertifica');
         Route::get('/evento/{evento}/downloadAvaliacoes/{modalidade}/form/{form}', [EventoController::class, 'exportAvaliacoes'])->name('evento.downloadAvaliacoes');
 
         // Encontrar resumo especifico para trabalhos

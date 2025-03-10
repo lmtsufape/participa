@@ -80,7 +80,7 @@ class ComissaoOrganizadoraController extends Controller
 
         $evento->usuariosDaComissaoOrganizadora()->save($user);
 
-        return redirect()->back()->with(['mensagem' => 'Membro da comissão organizadora cadastrado com sucesso!']);
+        return redirect()->back()->with(['success' => 'Membro da comissão organizadora cadastrado com sucesso!']);
     }
 
     /**
@@ -129,7 +129,7 @@ class ComissaoOrganizadoraController extends Controller
         CoordComissaoOrganizadora::where([['user_id', '=', $id], ['eventos_id', '=', $evento->id]])->delete();
         $evento->usuariosDaComissaoOrganizadora()->detach($id);
 
-        return redirect()->back()->with(['mensagem' => 'Membro da comissão organizadora removido com sucesso!']);
+        return redirect()->back()->with(['success' => 'Membro da comissão organizadora removido com sucesso!']);
     }
 
     public function definirCoordenador($id)
@@ -161,6 +161,6 @@ class ComissaoOrganizadoraController extends Controller
         $removidos = array_diff($idsCoordenadores, $validationData['coordComissaoId']);
         CoordComissaoOrganizadora::whereIn('user_id', $removidos)->where('eventos_id', $evento->id)->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Coordenador da comissão organizadora salvo com sucesso!']);
+        return redirect()->back()->with(['success' => 'Coordenador da comissão organizadora salvo com sucesso!']);
     }
 }
