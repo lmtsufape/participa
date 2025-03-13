@@ -40,7 +40,7 @@
             <tbody>
                 <tr>
                     <td style="text-align:center">
-                        <a href="#" data-toggle="modal" data-target="#modalEditarForm{{$form->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                        <a href="#" data-toggle="modal" data-focus="false" data-target="#modalEditarForm{{$form->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
                     </td>
                     <td style="text-align:center">
                         <a href="" data-toggle="modal" data-target="#modalExcluirForm{{$form->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a>
@@ -152,7 +152,7 @@
 
 @foreach ($modalidade->forms as $form)
 <!-- Modal editar modalidade -->
-<div class="modal fade" id="modalEditarForm{{$form->id}}" tabindex="-1" role="dialog" aria-labelledby="modalEditarForm" aria-hidden="true">
+<div class="modal fade" id="modalEditarForm{{$form->id}}" data-focus="false" tabindex="-1" role="dialog" aria-labelledby="modalEditarForm" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
@@ -346,10 +346,7 @@
 
 @section('javascript')
 @parent
-<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-<script type="text/javascript">
+<script>
     CKEDITOR.replaceAll('ckeditorinput');
     let rep = 0;
     let order = 1;

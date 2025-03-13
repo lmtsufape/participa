@@ -5,6 +5,11 @@ color dark: #071b1eff
 
 */
 
+:root {
+    --ck-z-default: 100;
+    --ck-z-panel: calc( var(--ck-z-default) + 999 );
+}
+
 .icon-card{
     width:15px;
     margin-right: 15px;
