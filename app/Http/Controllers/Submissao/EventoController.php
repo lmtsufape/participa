@@ -171,12 +171,25 @@ class EventoController extends Controller
             }])
             ->orderBy('nome')->get();
 
+        $coautoresSemCpfPorTrabalho = collect();
+
+        foreach ($evento->trabalhos as $trabalho) {
+            $coautoresSemCpf = $trabalho->coautors()->whereHas('user', function($user) {
+                return $user->whereNull('cpf')->orWhere('cpf', '');
+            })->with('user')->get();
+    
+            if ($coautoresSemCpf->isNotEmpty()) {
+                $coautoresSemCpfPorTrabalho->put($trabalho->titulo, $coautoresSemCpf);
+            }
+        }
+
         return view('coordenador.trabalhos.listarTrabalhos', [
             'evento' => $evento,
             'areas' => $areas,
             'modalidades' => $modalidades,
             'agora' => now(),
             'status' => $status,
+            'coautoresSemCpfPorTrabalho' => $coautoresSemCpfPorTrabalho,
         ]);
     }
 
