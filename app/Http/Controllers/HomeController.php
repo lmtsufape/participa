@@ -54,24 +54,14 @@ class HomeController extends Controller
 
     public function index()
     {
-        $user = Auth::user();
-        $eventosDestaque = Inscricao::join('eventos', 'inscricaos.evento_id', '=', 'eventos.id')->select('eventos.id', DB::raw('count(inscricaos.evento_id) as total'))->groupBy('eventos.id')->orderBy('total', 'desc')->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->limit(6)->get();
-
-        $eventos = collect();
-        if (count($eventosDestaque) > 0) {
-            foreach ($eventosDestaque as $ev) {
-                $eventos->push(Evento::find($ev->id));
-            }
-        } else {
-            $eventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->get();
-        }
+        $eventos_destaques = Evento::where([ ['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->get();
 
         $proximosEventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '>=', today()]])->whereNull('evento_pai_id')->get();
 
-        $eventosPassados = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '<', today()]])->whereNull('evento_pai_id')->get()->sortDesc()->take(4);
+        $eventos_passados = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '<', today()]])->whereNull('evento_pai_id')->take(6)->get()->sortDesc();
 
         $tiposEvento = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->selectRaw('DISTINCT tipo')->get();
 
-        return view('index',compact('eventos','tiposEvento','proximosEventos','eventosPassados'));
+        return view('index',compact('eventos_destaques','tiposEvento','proximosEventos','eventos_passados'));
     }
 }
