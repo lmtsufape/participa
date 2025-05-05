@@ -16,8 +16,11 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet"> --}}
+
     <link href="{{ asset('css/styleIndex.css') }}" rel="stylesheet">
     <link href="{{ asset('css/dark-mode.css') }}" rel="stylesheet">
     <link href='{{ asset('fullcalendar-5.3.2/lib/main.css') }}' rel='stylesheet' />
@@ -31,32 +34,40 @@
     @yield('css')
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     @include('navbar')
 
-    @hasSection('sidebar')
-        @yield('sidebar')
+    @if(View::hasSection('sidebar'))
+        {{-- <div class="ml-auto mensagem"> apagar o css depois
+        </div> --}}
 
-        <div class="ml-auto mensagem">
-            @include('componentes.mensagens')
-        </div>
+        <main class="flex-grow-1">
+            <div class="row">
+                <div class="col-md-2">
+                    @include('components.sidebar', ['evento' => $evento])
 
-        <main>
-            @yield('content')
+                </div>
+                <div class="col-md-10 my-5">
+                    @include('componentes.mensagens')
+
+                    @yield('content')
+
+                </div>
+            </div>
         </main>
 
     @else
         @include('componentes.mensagens')
 
-        <main class="mt-2">
+        <main class="flex-grow-1 my-5">
             @yield('content')
         </main>
 
-        @include('componentes.footer')
     @endif
 
+    @include('componentes.footer')
+
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
     <script defer src="{{ asset('js/alpine.js') }}"></script>
     <script src="{{ asset('js/dark-mode.js') }}"></script>
