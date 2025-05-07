@@ -20,7 +20,9 @@ class Evento extends Model
         'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim', 'fotoEvento', 'icone',
         'enderecoId', 'coordenadorId', 'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo',
         'evento_pai_id', 'email', 'data_limite_inscricao',
-        'nome_en', 'descricao_en','fotoEvento_en', 'icone_en', 'is_multilingual',
+        'nome_en', 'descricao_en','fotoEvento_en', 'icone_en',
+        'nome_es', 'descricao_es','fotoEvento_es', 'icone_es',
+        'is_multilingual',
     ];
 
     public function endereco()

@@ -29,7 +29,7 @@
                     <option @if($pais == 'outro') selected @endif value="/en/register/outro">{{__('Outro')}}</option>
                 </select>
                 <input type="hidden" name="pais" value="{{$pais}}">
-                <small>{{__('O formulário seguirá os padrões desse país')}}.</small>
+                
 
                 @error('pais')
                     <span class="invalid-feedback" role="alert">
@@ -243,16 +243,6 @@
             </div>
 
             @if($pais == 'brasil')
-                <div class="col-sm-4" id="groupformufinput">
-                    <label for="ufInput" class="col-form-label">{{ __('UF') }}*</label>
-                    <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" required>
-
-                    @error('uf')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ __($message) }}</strong>
-                        </span>
-                    @enderror
-                </div>
 
                 <div class="col-sm-4" id="groupformuf">
                     <label for="uf" class="col-form-label">{{ __('UF') }}*</label>

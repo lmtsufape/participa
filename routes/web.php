@@ -57,7 +57,7 @@ use Illuminate\Support\Facades\Session;
 
 Route::middleware(Setlocale::class)->group(function () {
     Route::get('/idioma/{lang}/{url?}', function (string $lang, $url = null) {
-        if (! in_array($lang, ['en', 'pt-BR'])) {
+        if (! in_array($lang, ['en', 'pt-BR', 'es'])) {
             abort(400);
         }
         App::setLocale($lang);

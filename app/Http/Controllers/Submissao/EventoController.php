@@ -1191,6 +1191,10 @@ class EventoController extends Controller
             $evento->fotoEvento_en = $this->uploadFile($request, $evento);
             $evento->save();
         }
+        if ($request->fotoEvento_es != null) {
+            $evento->fotoEvento_es = $this->uploadFile($request, $evento);
+            $evento->save();
+        }
 
         if ($request->icone != null) {
             $evento->icone = $this->uploadIconeFile($request, $evento);
@@ -1198,6 +1202,10 @@ class EventoController extends Controller
         }
         if ($request->icone_en != null) {
             $evento->icone_en = $this->uploadIconeFile($request, $evento);
+            $evento->save();
+        }
+        if ($request->icone_es != null) {
+            $evento->icone_es = $this->uploadIconeFile($request, $evento);
             $evento->save();
         }
 
@@ -1235,6 +1243,16 @@ class EventoController extends Controller
             return 'eventos/' . $evento->id . '/' . $nome;
         }
 
+        if ($request->hasFile('fotoEvento_es')) {
+            $file = $request->fotoEvento_es;
+            $path = 'eventos/'.$evento->id;
+            $extensao = $request->file('fotoEvento_es')->getClientOriginalExtension();
+            $nome = 'banner-es.'.$extensao;
+            Storage::disk('public')->putFileAs($path, $file, $nome);
+
+            return 'eventos/' . $evento->id . '/' . $nome;
+        }
+
         return null;
     }
 
@@ -1256,6 +1274,17 @@ class EventoController extends Controller
             $path = 'eventos/'.$evento->id;
             $extensao= $request->file('icone_en')->getClientOriginalExtension();
             $nome = 'icone-en.'.$extensao;
+            $image = Image::make($file)->resize(600, 600)->encode();
+            Storage::disk('public')->put($path.'/'.$nome, $image);
+
+            return $path . '/' . $nome;
+        }
+
+        if ($request->hasFile('icone_es')) {
+            $file = $request->icone_es;
+            $path = 'eventos/'.$evento->id;
+            $extensao= $request->file('icone_es')->getClientOriginalExtension();
+            $nome = 'icone-es.'.$extensao;
             $image = Image::make($file)->resize(600, 600)->encode();
             Storage::disk('public')->put($path.'/'.$nome, $image);
 
