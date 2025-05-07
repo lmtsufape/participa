@@ -2,36 +2,23 @@
 
 @section('content')
 
-<div class="container position-relative">
+<div class="container">
 
     {{-- titulo da página --}}
-    <div class="row justify-content-center titulo-detalhes">
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="col-sm-10">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+                <div>
                     <h1>{{__('Meus Eventos')}}</h1>
                 </div>
-                <div class="col-sm-2">
+                <div>
                     <a href="{{route('evento.criar')}}" class="btn btn-primary">{{__('Novo Evento')}}</a>
                 </div>
-            </div>
-        </div>
+
     </div>
-    @if(session('message'))
-        <div class="row">
-            <div class="col-md-12" style="margin-top: 5px;">
-                <div class="alert alert-success">
-                    <p>{{session('message')}}</p>
-                </div>
-            </div>
-        </div>
-    @endif
-    <div class="container-fluid content-row">
-        <div class="row">
+    <div class="row">
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
                 @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
-                    <div class="col-md-4 mt-2 d-flex align-items-stretch">
+                    <div class="col-md-4">
                         <div class="card">
                             @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en' && isset($evento->fotoEvento_en))
                                 <img src="{{asset('storage/'.$evento->fotoEvento_en)}}" class="card-img-top" alt="...">
@@ -41,30 +28,28 @@
                                 <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="..." style="height: 150px;">
                             @endif
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <h5 class="card-title">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="text-decoration: inherit;">
-                                                        @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                                            {{$evento->nome_en}}
-                                                        @else
-                                                            {{$evento->nome}}
-                                                        @endif
-                                                    </a>
-                                                </div>
-                                            </div>
-
-                                        </h5>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p class="card-text">
-                                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px;" style="position: relative; top: -2px;"> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
-                                        {{-- <strong>Submissão:</strong> {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}<br>
-                                        <strong>Revisão:</strong> {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}<br> --}}
+                                <div class="card-title text-justify">
+                                    <h3>
+                                        @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                            {{$evento->nome_en}}
+                                        @else
+                                            {{$evento->nome}}
+                                        @endif
+                                    </h3>
+                                    <p>
+                                        @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                            {{$evento->descricao_en}}
+                                        @else
+                                            {{$evento->descricao}}
+                                        @endif
                                     </p>
+
+                                </div>
+                                <div class="card-text">
+                                    <p class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event" viewBox="0 0 16 16">
+                                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                                      </svg> {{ \Carbon\Carbon::parse($evento->dataFim)->format('l, d F') }}</p>
                                     <p>
                                         <div class="row justify-content-center">
                                             <div class="col-sm-12">
@@ -73,21 +58,24 @@
                                             </div>
                                         </div>
                                     </p>
-                                    <div class="row col-md-12">
-                                        <div class="row col-md-12">
-                                            <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
-                                                <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;{{__('Visualizar evento')}}
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <a class="d-flex flex-column align-items-center text-decoration-none" href="{{route('evento.visualizar',['id'=>$evento->id])}}">
+                                                <i class="far fa-eye" style="color: #008E3B"></i>
+                                                <span style="font-size: 10px"><strong>{{__('Visualizar evento')}}</strong></span>
                                             </a>
                                         </div>
-                                        <div class="row col-md-12">
-                                            <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
-                                                <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;{{__('Configurar evento')}}
+                                        <div class="col-md-4">
+                                            <a class="d-flex flex-column align-items-center text-decoration-none" href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
+                                                <i class="fas fa-cog" style="color: #727272"></i>
+                                                <span style="font-size: 10px"><strong>{{__('Configurar evento')}}</strong></span>
                                             </a>
                                         </div>
                                         @can('isCriador', $evento)
-                                        <div class="row col-md-12">
-                                            <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
-                                                <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;{{__('Deletar')}}
+                                        <div class="col-md-4">
+                                            <a class="d-flex flex-column align-items-center text-decoration-none" href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
+                                                <i class="far fa-trash-alt" style="color: #FF0000"></i>
+                                                <span style="font-size: 10px"><strong>{{__('Deletar evento')}}</strong></span>
                                             </a>
                                         </div>
                                         @endcan

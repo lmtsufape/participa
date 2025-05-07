@@ -1,53 +1,81 @@
-<footer class="footer">
+<footer class="w-100 bg-white shadow">
+    <div class="d-flex justify-content-center align-items-center gap-5 p-4">
+        <div>
+            <a href="http://ufape.edu.br/">
+                <img src="{{asset('img/logo-ufape-colorida.png')}}" style="width: 100px;">
+            </a>
+            <a href="http://www.lmts.ufape.edu.br/" name="lmts">
+                <img src="{{asset('img/logo-lmts-colorida.png')}}" style="margin:20px 0 20px 0" width="200px;" >
+            </a>
+        </div>
+        <div>
+            <p class="m-0">
+                Desenvolvido por: LMTS | Laboratório Multidisciplinar de Tecnologias sociais
+            </p>
+            <address>Avenida Bom Pastor s/n.* Bairro Boa Vista <br>CEP: 55292-270 - Garanhuns - PE</address>
 
-{{--  <div class="row justify-content-center links-rodape">--}}
-{{--      <a href="{{ route('index') }}">Inicio</a>  |--}}
-{{--      --}}{{-- <a href="#">Eventos Acadêmicos</a>  | --}}
-{{--      <a hfer="#" data-toggle="modal" data-target="#modalInfo" >Sobre</a> |--}}
-{{--      <a href=" {{route('termos.de.uso')}} ">Termos de Uso</a>--}}
-{{--  </div>--}}
-  <div class="row" style="margin-bottom: -3.5rem;">
-{{--    <div class="col-sm-12 separador">--}}
-{{--      <hr>--}}
-{{--    </div>--}}
-  </div>
+        </div>
+        <div>
+            <a href="https://www.facebook.com/LMTSUFAPE/">
+                <img src="{{asset('img/icons/facebook-square-brands.svg')}}" alt="" width="45px">
+            </a>
+            <a href="https://www.instagram.com/lmts_ufape/">
+                <img src="{{asset('img/icons/instagram-brands.svg')}}" alt="" width="45px">
+            </a>
+            <a href="https://twitter.com/lmtsufape">
+                <img src="{{asset('img/icons/twitter-brands.svg')}}" alt="" width="45px">
+            </a>
+        </div>
+    </div>
+    <div class="row p-5" style="background-color: #034652">
+        <div class="col-md-3">
+            <h5>
+                Encontre Eventos
+            </h5>
+            <ul>
+                <li>
+                    <a href="">Em destaque nestee momento</a>
+                </li>
+                <li>
+                    <a href="">Últimos eventos realizados</a>
+                </li>
+            </ul>
 
-    <!-- rodapé -->
-    <div style="display: flex; flex-wrap: wrap; justify-content: center;padding-bottom:1rem; ">
-      <div class="row" style="margin-top:5rem;text-align:center">
-          <div class="col-md-4">
-              <div class="row justify-content-center" style="text-align:center; margin-bottom:1rem;">
-                  <div class="col-12">{{__('Desenvolvido por')}}:</div>
-                  <a href="http://www.lmts.ufape.edu.br/" name="lmts">
-                    <img src="{{asset('img/lmts.png')}}" style="margin:20px 0 20px 0" width="200px;" >
-                  </a>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="row justify-content-center" style="text-align:center; margin-bottom:1rem;">
-                  <div class="col-12">{{__('Apoio')}}:</div>
-                  <a href="http://ufape.edu.br/">
-                    <img src="{{asset('img/logo_ufape.png')}}" style="width: 100px;">
-                  </a>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="row justify-content-center" style="text-align:center">
-                  <div class="col-12" style="margin-bottom: 1rem;">{{__('Redes sociais')}}</div>
-                  <a href="https://www.facebook.com/LMTSUFAPE/" style="padding-left: 10px; padding-right: 10px">
-                    <img src="{{asset('img/icons/facebook-square-brands.svg')}}" alt="" width="45px">
-                  </a>
-                  <a href="https://www.instagram.com/lmts_ufape/" style="padding-left: 10px; padding-right: 10px">
-                    <img src="{{asset('img/icons/instagram-brands.svg')}}" alt="" width="45px">
-                  </a>
-                  <a href="https://twitter.com/lmtsufape" style="padding-left: 10px; padding-right: 10px; margin-top:4px">
-                    <img src="{{asset('img/icons/twitter-brands.svg')}}" alt="" width="45px">
-                  </a>
-              </div>
-          </div>
-      </div>
-  </div>
-  <!--x rodapé x-->
+        </div>
+        <div class="col-md-3">
+            <h5>Módulos</h5>
+            <ul>
+                <li>
+                    <a href="">Inscrições</a>
+                </li>
+                <li>
+                    <a href="">Submissões</a>
+                </li>
+                <li>
+                    <a href="">Certificados</a>
+                </li>
+            </ul>
+
+        </div>
+        <div class="col-md-3">
+            <h5>Para produtores</h5>
+            <ul>
+                <li><a href="">Como criar seu evento no participa</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h5>Plataforma</h5>
+            <ul>
+                <li>
+                    <a href="">Ajuda</a>
+                </li>
+                <li>
+                    <a href="">Autenticar certificados</a>
+                </li>
+            </ul>
 
 
+
+        </div>
+    </div>
 </footer>
