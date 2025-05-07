@@ -155,12 +155,14 @@
 
 
                 <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                     <span id="idiomaAtual">
                         @if(Session::get('locale') === 'pt-BR')
                             <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">Português
                         @elseif(Session::get('locale') === 'en')
                             <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">English
+                        @elseif(Session::get('locale') === 'es')
+                            <img src="https://flagicons.lipis.dev/flags/4x3/es.svg" alt="Español" style="width: 20px;">Español
                         @endif
                     </span>
                     </a>
@@ -171,6 +173,9 @@
 
                         <a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'pt-BR']) }}?url={{ urlencode(request()->fullUrl()) }}" >
                             <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">Português</a>
+                        
+                        <a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'es']) }}?url={{ urlencode(request()->fullUrl()) }}" >
+                            <img src="https://flagicons.lipis.dev/flags/4x3/es.svg" alt="Español" style="width: 20px;">Español</a>
                     </div>
                 </li>
             </div>
