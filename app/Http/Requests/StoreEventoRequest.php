@@ -29,13 +29,17 @@ class StoreEventoRequest extends FormRequest
             'nome_en' => [ 'nullable','string'],
             'descricao' => ['required', 'string'],
             'descricao_en' => ['nullable', 'string'],
+            'nome_es' => ['nullable', 'string'],
+            'descricao_es' => ['nullable', 'string'],
             'tipo' => ['required', 'string'],
             'dataInicio' => ['required', 'date', 'after:yesterday'],
             'dataFim' => ['required', 'date'],
             'fotoEvento' => ['file', 'mimes:png, jpg,jpeg'],
             'fotoEvento_en' => ['file', 'mimes:png, jpg,jpeg'],
+            'fotoEvento_es' => ['file', 'mimes:png, jpg,jpeg'],
             'icone' => ['file', 'mimes:png, jpg,jpeg'],
             'icone_en' => ['file', 'mimes:png, jpg,jpeg'],
+            'icone_es' => ['file', 'mimes:png, jpg,jpeg'],
             'rua' => ['required', 'string'],
             'numero' => ['required', 'string'],
             'bairro' => ['required', 'string'],
@@ -76,7 +80,7 @@ class StoreEventoRequest extends FormRequest
 
     public function withValidator($validator)
     {
-        $validator->sometimes(['nome_en', 'descricao_en'], 'required|string', function ($input) {
+        $validator->sometimes(['nome_en', 'descricao_en', 'nome_es', 'descricao_es'], 'required|string', function ($input) {
             return filter_var($input->is_multilingual, FILTER_VALIDATE_BOOLEAN);
         });
     }

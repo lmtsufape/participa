@@ -63,6 +63,15 @@
                         @enderror
                     </div>
 
+                    <div class="col-sm-6 form-group multilingual_fields" style="display: none;">
+                            <label for="nome_es" class="col-form-label">{{ __('Nome em espanhol') }}*</label>
+                            <input id="nome_es" type="text" class="form-control @error('nome_es') is-invalid @enderror"
+                                name="nome_es" value="{{ old('nome_es') }}" autocomplete="nome_es" autofocus>
+                            @error('nome_es')
+                                <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                            @enderror
+                    </div>
+
                     <div class="col-md-6 form-group">
                         <label for="email" class="form-label">{{ __('E-mail de contato') }}*</label>
                         <input class="form-control @error('email') is-invalid @enderror" type="email"
@@ -183,6 +192,16 @@
                         @enderror
                     </div>
 
+                    <div class="form-group multilingual_fields"  style="display: none;">
+                        <label for="exampleFormControlTextarea1">{{__('Descrição em espanhol')}}*</label>
+                        <textarea class="form-control @error('descricao_es') is-invalid @enderror"  autocomplete="descricao_es" autofocus id="descricao_es" name="descricao_es" rows="8">{{ old('descricao_es') }}</textarea>
+                        @error('descricao_es')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+
                 </div>
                 <div class="row">
                     <div class="col-md-6 form-group">
@@ -266,6 +285,41 @@
                             </span>
                         @enderror
                     </div>
+
+                    <div class="col-sm-7 form-group multilingual_fields"  style="display: none;">
+                                    <label for="fotoEvento_es">Banner espanhol</label>
+                                    <div id="imagem-loader-es" class="imagem-loader">
+                                        <img id="logo-preview-es" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                    </div>
+                                    <div style="display: none;">
+                                        <input type="file" id="logo-input-es" class="form-control @error('fotoEvento_es') is-invalid @enderror" name="fotoEvento_es" value="{{ old('fotoEvento_es') }}" id="fotoEvento_es">
+                                    </div>
+                                    <small style="position: relative; top: 5px;">{{__('Tamanho minimo')}}: 1024 x 425;<br>{{__('Formato')}}: JPEG, JPG, PNG</small>
+                                    @error('fotoEvento_es')
+                                    <br>
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{$message}}</strong>
+                                    </span>
+                                    @enderror
+                            </div>
+                            <div class="col-sm-5 form-group multilingual_fields"  style="display: none;">
+                                <label for="icone_es">{{__('Ícone inglês')}}</label>
+                                <div id="imagem-loader-icone-es" class="imagem-loader">
+                                    <img id="icone-preview-es" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                </div>
+                                <div style="display: none;">
+                                    <input type="file" id="icone-input-es" class="form-control @error('icone_es') is-invalid @enderror" name="icone_es" value="{{ old('icone_es') }}" id="icone_es">
+                                </div>
+                                <small style="position: relative; top: 5px;">{{__('O arquivo será redimensionado para')}} 600 x 600;<br>{{__('Formato')}}: JPEG, JPG, PNG</small>
+                                @error('icone_es')
+                                    <br>
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                                    <br>
+                            </div>
+                        </div>
                 </div>
                 <!-- Inicio e fim do evento -->
                 <div class="row">
@@ -615,6 +669,32 @@
                         var file = new FileReader();
                         file.onload = function(e) {
                             document.getElementById("icone-preview-en").src = e.target.result;
+                        };
+                        file.readAsDataURL(this.files[0]);
+                    }
+                })
+            });
+
+            $('#imagem-loader-es').click(function() {
+                $('#logo-input-es').click();
+                $('#logo-input-es').change(function() {
+                    if (this.files && this.files[0]) {
+                        var file = new FileReader();
+                        file.onload = function(e) {
+                            document.getElementById("logo-preview-es").src = e.target.result;
+                        };
+                        file.readAsDataURL(this.files[0]);
+                    }
+                })
+            });
+
+            $('#imagem-loader-icone-es').click(function() {
+                $('#icone-input-es').click();
+                $('#icone-input-es').change(function() {
+                    if (this.files && this.files[0]) {
+                        var file = new FileReader();
+                        file.onload = function(e) {
+                            document.getElementById("icone-preview-es").src = e.target.result;
                         };
                         file.readAsDataURL(this.files[0]);
                     }
