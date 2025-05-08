@@ -1747,19 +1747,65 @@ class EventoController extends Controller
         return $coordenador;
     }
 
-    public function eventosPassados()
+    public function eventosPassados(Request $request)
     {
-
-        $eventosPassados = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '<', today()]])->whereNull('evento_pai_id')->get()->sortDesc();
-
+        $query = Evento::where('publicado', true)
+            ->where('deletado', false)
+            ->where('dataFim', '<', today())
+            ->whereNull('evento_pai_id');
+    
+        if ($request->filled('busca')) {
+            $query->where('nome', 'ilike', '%' . $request->busca . '%');
+        }
+    
+        if ($request->filled('ordenar')) {
+            switch ($request->ordenar) {
+                case 'nome':
+                    $query->orderBy('nome');
+                    break;
+                case 'data':
+                default:
+                    $query->orderBy('dataFim', 'desc');
+                    break;
+            }
+        } else {
+            $query->orderBy('dataFim', 'desc');
+        }
+    
+        $eventosPassados = $query->paginate(9);
+    
         return view('coordenador.evento.eventosPassados', compact('eventosPassados'));
     }
+    
 
-    public function eventosProximos()
+    public function eventosProximos(Request $request)
     {
-
-        $proximosEventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '>=', today()]])->whereNull('evento_pai_id')->get();
-
+        $query = Evento::where('publicado', true)
+            ->where('deletado', false)
+            ->where('dataFim', '>=', today())
+            ->whereNull('evento_pai_id');
+    
+        if ($request->filled('busca')) {
+            $query->where('nome', 'ilike', '%' . $request->busca . '%');
+        }
+    
+        if ($request->filled('ordenar')) {
+            switch ($request->ordenar) {
+                case 'nome':
+                    $query->orderBy('nome');
+                    break;
+                case 'data':
+                default:
+                    $query->orderBy('dataInicio');
+                    break;
+            }
+        } else {
+            $query->orderBy('dataInicio'); // ordenação padrão
+        }
+    
+        $proximosEventos = $query->paginate(9);
+    
         return view('coordenador.evento.eventosProximos', compact('proximosEventos'));
     }
+    
 }

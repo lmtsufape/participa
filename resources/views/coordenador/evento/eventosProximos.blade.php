@@ -1,78 +1,67 @@
 @extends('layouts.app')
-
+@section('main-classes', 'p-0')
 @section('content')
-    <div class="container position-relative">
 
-        {{-- titulo da página --}}
+    {{-- Banner superior --}}
+    <div class="position-relative mb-5">
+        <img src="{{ asset('img/banner-em-destaque.png') }}" alt="Eventos em destaque"
+             class="img-fluid w-100" style="max-height: 300px; object-fit: cover;">
+        <h1 class="position-absolute top-50 start-50 translate-middle text-white fw-semibold"
+            style="font-size: 2rem; text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);">
+            Em destaque neste momento
+        </h1>
+    </div>
 
-        <div class="text-center">
-            <h1>Próximos eventos a serem realizados</h1>
-        </div>
+    <div class="container mb-5">
+        <form method="GET" class="row mb-4 align-items-center">
+            {{-- Campo de busca com botão de lupa à direita --}}
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text"
+                        name="busca"
+                        class="form-control"
+                        placeholder="Pesquise por evento..."
+                        value="{{ request('busca') }}">
 
-
-
-        <div class="container-fluid content-row">
-            <div class="row">
-                @foreach ($proximosEventos as $evento)
-                    <div class="col-md-4 mt-2 d-flex align-items-stretch">
-                        <div class="card">
-                            @if ($evento->icone != null)
-                                <img src="{{ asset('storage/' . $evento->icone) }}" alt="imagem evento" width="100%"
-                                     height="150px">
-                            @elseif($evento->fotoEvento != null)
-                                <img src="{{ asset('storage/' . $evento->fotoEvento) }}" alt="imagem evento" width="100%"
-                                     height="150px">
-                            @else
-                                <img src="{{ asset('img/colorscheme.png') }}" alt="" width="100%" height="150px">
-                            @endif
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <h5 class="card-title">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
-                                                       style="text-decoration: inherit;">
-                                                        {{ $evento->nome }}
-                                                    </a>
-                                                </div>
-                                            </div>
-
-                                        </h5>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p class="card-text">
-                                        <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px;"
-                                             style="position: relative; top: -2px;">
-                                        {{ date('d/m/Y', strtotime($evento->dataInicio)) }} -
-                                        {{ date('d/m/Y', strtotime($evento->dataFim)) }}<br>
-                                        {{-- <strong>Submissão:</strong> {{date('d/m/Y',strtotime($evento->inicioSubmissao))}} - {{date('d/m/Y',strtotime($evento->fimSubmissao))}}<br>
-                                        <strong>Revisão:</strong> {{date('d/m/Y',strtotime($evento->inicioRevisao))}} - {{date('d/m/Y',strtotime($evento->fimRevisao))}}<br> --}}
-                                    </p>
-                                    <p>
-                                    <div class="row justify-content-center">
-                                        <div class="col-sm-12">
-                                            <img src="{{ asset('/img/icons/location_pointer.png') }}" alt=""
-                                                 width="18px" height="auto">
-                                            {{ $evento->endereco->rua }}, {{ $evento->endereco->numero }} -
-                                            {{ $evento->endereco->cidade }} / {{ $evento->endereco->uf }}.
-                                        </div>
-                                    </div>
-                                    </p>
-                                    <div class="row col-md-12">
-                                        <div class="row col-md-12">
-                                            <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
-                                                <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
+                    <button type="submit" class="btn bg-white border-start-0">
+                        <img src="{{ asset('img/icons/search.svg') }}" alt="Buscar" width="20px">
+                    </button>
+                </div>
             </div>
 
+            {{-- Ordenar por (recarrega ao mudar) --}}
+            <div class="col-md-4">
+                <select name="ordenar" class="form-select w-100" onchange="this.form.submit()">
+                    <option value="data" {{ request('ordenar') === 'data' ? 'selected' : '' }}>Ordenar por data</option>
+                    <option value="nome" {{ request('ordenar') === 'nome' ? 'selected' : '' }}>Ordenar por nome</option>
+                </select>
+            </div>
+        </form>
+
+        {{-- Mensagem de erro --}}
+
+
+        {{-- Lista de eventos --}}
+        <div class="row">
+            @foreach ($proximosEventos as $evento)
+                <div class="col-md-4 mt-2 d-flex align-items-stretch">
+                    <x-evento_card
+                        :icone="$evento->icone"
+                        :fotoEvento="$evento->fotoEvento"
+                        :nome="$evento->nome"
+                        :dataInicioFormatada="\Carbon\Carbon::parse($evento->dataInicio)->translatedFormat('l, d \d\e F')"
+                        :dataFimFormatada="\Carbon\Carbon::parse($evento->dataFim)->translatedFormat('l, d \d\e F')"
+                        :descricao="Str::limit(strip_tags($evento->descricao ?? ''), 120)"
+                        :link="route('evento.visualizar', ['id' => $evento->id])"
+                    />
+                </div>
+            @endforeach
         </div>
+
+        {{-- Paginação --}}
+        <div class="mt-5 d-flex justify-content-center">
+            {{ $proximosEventos->appends(request()->query())->links('pagination::bootstrap-5') }}
+        </div>
+    </div>
+
 @endsection
