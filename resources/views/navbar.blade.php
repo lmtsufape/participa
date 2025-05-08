@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse flex-grow-0"  id="navbarNavAltMarkup">
             <div class="navbar-nav text-right">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('validarCertificado') }}" style="margin-right: 5px; margin-left: 5px">
+                    <a class="nav-link text-my-primary fw-semibold" href="{{ route('validarCertificado') }}" style="margin-right: 5px; margin-left: 5px">
                     @lang('public.validarCertificado')
                     </a>
                 </li>
@@ -18,19 +18,19 @@
 
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
+                        <a class="nav-link text-my-primary fw-semibold" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
                             @lang('public.meusEventos')
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('meusCertificados') }}" style="margin-right: 5px; margin-left: 5px">
+                        <a class="nav-link text-my-primary fw-semibold" href="{{ route('meusCertificados') }}" style="margin-right: 5px; margin-left: 5px">
                             @lang('public.meusCertificados')
                         </a>
                     </li>
 
 
                     <li class="nav-item dropdown">
-                        <a id="menuDropdown" class="nav-link dropdown-toggle" href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a id="menuDropdown" class="nav-link dropdown-toggle text-my-primary fw-semibold" href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ Auth::user()->name }}
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="menuDropdown">
@@ -145,39 +145,49 @@
 
                 @else
                     <li class="nav-item dropdown">
-                        <a class="nav-link" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
+                        <a class="nav-link text-my-primary fw-semibold" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link" href="{{ route('register', app()->getLocale()) }}">{{ __('Cadastre-se') }}</a>
+                        <a class="nav-link text-my-primary fw-semibold" href="{{ route('register', app()->getLocale()) }}">{{ __('Cadastre-se') }}</a>
                     </li>
                 @endauth
 
 
 
                 <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                    <span id="idiomaAtual">
+                    <a id="navbarDropdown"
+                    class="nav-link dropdown-toggle d-inline-flex align-items-center gap-2 text-my-primary fw-semibold"
+                    href="#" role="button"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    v-pre>
+                    
                         @if(Session::get('locale') === 'pt-BR')
-                            <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">Português
+                            <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">
+                            Português
                         @elseif(Session::get('locale') === 'en')
-                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">English
+                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">
+                            English
                         @elseif(Session::get('locale') === 'es')
-                            <img src="https://flagicons.lipis.dev/flags/4x3/es.svg" alt="Español" style="width: 20px;">Español
+                            <img src="https://flagicons.lipis.dev/flags/4x3/es.svg" alt="Español" style="width: 20px;">
+                            Español
                         @endif
-                    </span>
                     </a>
 
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'en']) }}?url={{ urlencode(request()->fullUrl()) }}" >
-                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;">English</a>
-
-                        <a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'pt-BR']) }}?url={{ urlencode(request()->fullUrl()) }}" >
-                            <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">Português</a>
-                        
-                        <a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'es']) }}?url={{ urlencode(request()->fullUrl()) }}" >
-                            <img src="https://flagicons.lipis.dev/flags/4x3/es.svg" alt="Español" style="width: 20px;">Español</a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'en']) }}?url={{ urlencode(request()->fullUrl()) }}">
+                            <img src="https://flagicons.lipis.dev/flags/4x3/us.svg" alt="English" style="width: 20px;"> English
+                        </a>
+                        <a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'pt-BR']) }}?url={{ urlencode(request()->fullUrl()) }}">
+                            <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;"> Português
+                        </a>
+                        <a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'es']) }}?url={{ urlencode(request()->fullUrl()) }}">
+                            <img src="https://flagicons.lipis.dev/flags/4x3/es.svg" alt="Español" style="width: 20px;"> Español
+                        </a>
                     </div>
                 </li>
+
             </div>
         </div>
     </div>
