@@ -1,0 +1,23 @@
+
+@each $name, $color in $colors {
+    .btn-my-#{$name} {
+      background-color: $color;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken($color, 10%);
+      }
+    }
+
+    .bg-my-#{$name} {
+      background-color: $color !important;
+    }
+
+    .text-my-#{$name} {
+      color: $color !important;
+    }
+}
