@@ -13,7 +13,7 @@
 
 .btn-my-outline-primary {
   color: #034652;
-  border: 10px solid #034652;
+  border: 1px solid #034652;
   background-color: transparent;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
@@ -48,7 +48,7 @@
 
 .btn-my-outline-secondary {
   color: #D44100;
-  border: 10px solid #D44100;
+  border: 1px solid #D44100;
   background-color: transparent;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
@@ -83,7 +83,7 @@
 
 .btn-my-outline-shadow {
   color: #F5F5F5;
-  border: 10px solid #F5F5F5;
+  border: 1px solid #F5F5F5;
   background-color: transparent;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
