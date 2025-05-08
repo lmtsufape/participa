@@ -59,11 +59,11 @@
         </div>
     </div>
     <div class="container py-5">
-        @include('components.carrossel', ['eventos_destaques' => $eventos_destaques, 'titulo' => 'Vistos recentemente', 'data' => true])
+        @include('components.carrossel', ['eventos' => $eventos_destaques, 'titulo' => 'Vistos recentemente', 'id' => 'vistosRecentimente'])
 
     </div>
     <div class="container py-5">
-        @include('components.carrossel', ['eventos_passados' => $eventos_passados, 'titulo' => 'Últimos eventos realizados'])
+        @include('components.carrossel', ['eventos' => $eventos_passados, 'titulo' => 'Últimos eventos realizados', 'id' => 'eventosRealizados'])
 
     </div>
 
