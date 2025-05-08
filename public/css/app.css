@@ -11,6 +11,20 @@
   background-color: #011c21;
 }
 
+.btn-my-outline-primary {
+  color: #034652;
+  border: 10px solid #034652;
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.btn-my-outline-primary:hover {
+  background-color: #034652;
+  color: white;
+}
+
 .bg-my-primary {
   background-color: #034652 !important;
 }
@@ -32,6 +46,20 @@
   background-color: #a13100;
 }
 
+.btn-my-outline-secondary {
+  color: #D44100;
+  border: 10px solid #D44100;
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.btn-my-outline-secondary:hover {
+  background-color: #D44100;
+  color: white;
+}
+
 .bg-my-secondary {
   background-color: #D44100 !important;
 }
@@ -51,6 +79,20 @@
 
 .btn-my-shadow:hover {
   background-color: gainsboro;
+}
+
+.btn-my-outline-shadow {
+  color: #F5F5F5;
+  border: 10px solid #F5F5F5;
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.btn-my-outline-shadow:hover {
+  background-color: #F5F5F5;
+  color: white;
 }
 
 .bg-my-shadow {
