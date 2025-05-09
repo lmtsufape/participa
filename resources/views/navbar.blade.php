@@ -162,6 +162,9 @@
                     aria-haspopup="true"
                     aria-expanded="false"
                     v-pre>
+                        <?php
+                            $locale = Session::get('locale', 'pt-BR');
+                        ?>
                     
                         @if(Session::get('locale') === 'pt-BR')
                             <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">
