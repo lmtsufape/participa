@@ -3,6 +3,8 @@
         <h2 class="py-2">
             @if ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
                 {{ $evento->nome_en }}
+            @elseif ($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
+                {{ $evento->nome_es }}
             @else
                 {{ $evento->nome }}
             @endif
@@ -12,8 +14,8 @@
                 <a href="{{ route('evento.editar', $evento->id) }}" class="edit-evento"
                     onmouseover="this.children[0].src='{{ asset('img/icons/edit-regular.svg') }}'"
                     onmouseout="this.children[0].src='{{ asset('img/icons/edit-regular-white.svg') }}'"><img
-                        src="{{ asset('img/icons/edit-regular-white.svg') }}" alt="" width="20px;">Atualizar
-                    Evento</a>
+                        src="{{ asset('img/icons/edit-regular-white.svg') }}" alt="" width="20px;">Editar
+                    evento</a>
                 @if ($evento->eventoPai == null)
                     <a href="{{ route('subevento.criar', $evento->id) }}" class=""
                         onmouseover="this.children[0].src='{{ asset('img/icons/plus-square-solid_black.svg') }}'"
