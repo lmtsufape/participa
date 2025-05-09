@@ -163,7 +163,7 @@
                     aria-expanded="false"
                     v-pre>
                     
-                        @if(Session::get('locale') === 'pt-BR')
+                        @if(Session::get('locale') === 'pt-BR' || Session::get('locale') === null)
                             <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">
                             Português
                         @elseif(Session::get('locale') === 'en')

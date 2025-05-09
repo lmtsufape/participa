@@ -17,6 +17,7 @@
     "Se você estiver com problemas para clicar no botão \":actionText\", copie e cole o URL abaixo\nem seu navegador da web: [:actionURL](:actionURL)": "Si tiene problemas para hacer clic en el botón \":actionText\", copie y pegue la siguiente URL\nen su navegador web: [:actionURL](:actionURL)",
     "Assinatura inválida.": "Firma inválida.",
     "Login": "Iniciar sesión",
+    "Cadastre-se": "Regístrate",
     "Sair": "Cerrar sesión",
     "Nome": "Nombre",
     "Não encontrado": "No encontrado",
@@ -162,5 +163,9 @@
     "Sim": "Sí",
     "Subeventos": "Subeventos",
     "Memória": "Memoria",
-    "usuarioInscritoNoEvento": "El usuario con correo electrónico :input debe estar inscrito en el evento"
+    "usuarioInscritoNoEvento": "El usuario con correo electrónico :input debe estar inscrito en el evento",
+    "Em destaque neste momento": "Destacado en este momento",
+    "Vistos recentemente": "Vistos recientemente",
+    "Ver todos:": "Ver todos:",
+    "saiba mais:": "Más información:"
   } 
