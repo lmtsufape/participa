@@ -79,6 +79,9 @@
     @include('componentes.footer')
 
     <!-- Scripts -->
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_MAPS_API_KEY')}}&callback=initMap"></script>
+
     <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
     <script defer src="{{ asset('js/alpine.js') }}"></script>
     <script src="{{ asset('js/dark-mode.js') }}"></script>

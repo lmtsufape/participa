@@ -1,1076 +1,955 @@
 @extends('layouts.app')
 @section('content')
 
-
-
-@foreach ($atividades as $atv)
-<div class="modal fade bd-example modal-show-atividade" id="modalAtividadeShow{{ $atv->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabelAtividadeShow{{ $atv->id }}" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #114048ff; color: white;">
-                <h5 class="modal-title" id="modalLabelAtividadeShow{{ $atv->id }}">{{ $atv->titulo }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <h4 for="tipo">{{__("Tipo")}}</h4>
-                            <p>
-                                {{ $atv->tipoAtividade->descricao }}
-                            </p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row form-group">
-                        <div class="col-sm-12">
-                            <label for="descricao">{{ __("Descrição") }}</label>
-                            <p>
-                                {!! $atv->descricao !!}
-                            </p>
-                        </div>
-
-                    </div>
-                    @if (count($atv->convidados) > 0)
-                    <hr>
-                    <h4>{{__("Convidados")}}</h4>
-                    <div class="convidadosDeUmaAtividade">
-                        <div class="row">
-                            @foreach ($atv->convidados as $convidado)
-                            <div class="col-sm-3 imagemConvidado">
-                                <img src="{{ asset('img/icons/user.png') }}" alt="Foto de {{ $convidado->nome }}" width="50px" height="auto">
-                                <h5 class="convidadoNome">{{ $convidado->nome }}</h5>
-                                <small class="convidadoFuncao">{{ $convidado->funcao }}</small>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    @endif
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <h4 for="local">{{__("Local")}}</h4>
-                            <p class="local">
-                                {{ $atv->local }}
-                            </p>
-                        </div>
-                    </div>
-                    @if ($atv->vagas != null || $atv->valor != null)
-                    <hr>
-                    <div class="row">
-                        @if ($atv->vagas != null)
-                        <div class="col-sm-6">
-                            <label for="vagas">{{__("Vagas")}}:</label>
-                            <h4 class="vagas">{{ $atv->vagas }}</h4>
-                        </div>
-                        @endif
-                        @if ($atv->valor != null)
-                        <div class="col-sm-6">
-                            <label for="valor">{{__("Valor")}}:</label>
-                            <h4 class="valor">R$ {{ $atv->valor }}</h4>
-                        </div>
-                        @endif
-                    </div>
-                    @endif
-                    @if ($atv->carga_horaria != null)
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label for="carga_horaria">{{__("Carga horária para estudantes")}}:</label>
-                            <h4 class="carga_horaria">{{ $atv->carga_horaria }}</h4>
-                        </div>
-                    </div>
-                    @endif
-                    @if($atv->valor != null)
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label for="comprovante" class="">Comprovante de pagamento da taxa de inscrição</label><br>
-                            <input type="file" id="comprovante" class="form-control-file" name="comprovante">
-                            <br>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-            </div>
-            <div class="modal-footer">
-                @if ($isInscrito)
-                @if(!$atv->atividadeInscricoesEncerradas())
-                @if(($atv->vagas > 0 || $atv->vagas == null) && Auth::user()->atividades()->find($atv->id) == null)
-                <form method="POST" action="{{route('atividades.inscricao', ['id'=>$atv->id])}}">
-                    @csrf
-                    <button type="submit" class="button-prevent-multiple-submits btn btn-primary">
-                        {{__("Inscrever-se")}}</button>
-                </form>
-                @elseif(Auth::user()->atividades()->find($atv->id) != null)
-                @if (!$atv->terminou())
-                <form method="POST" action="{{route('atividades.cancelarInscricao', ['id'=>$atv->id, 'user'=> Auth::id()])}}">
-                    @csrf
-                    <button type="submit" class="btn btn-primary button-prevent-multiple-submits">
-                        {{__("Cancelar inscrição")}}</button>
-                </form>
+    <div class="container">
+        @php
+            $bannerPath =
+                $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en
+                    ? $evento->fotoEvento_en
+                    : $evento->fotoEvento;
+        @endphp
+        <div class="row my-5">
+            <div class="col-md-7">
+                @if (isset($evento->fotoEvento))
+                    <img src="{{ asset('storage/' . $bannerPath) }}" class="rounded" width="100%" alt="">
                 @else
-                <button type="button" class="btn btn-primary" disabled>{{__("Inscrito")}}</button>
+                    <img src="{{ asset('img/colorscheme.png') }}" class="rounded" width="100%" alt="">
                 @endif
+            </div>
+            <div class="col-md-5 pt-3">
+                @if ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                    <h1 class="text-my-primary">{{ $evento->nome_en }}</h1>
                 @else
-                <button type="button" class="btn btn-danger" style="pointer-events: none">{{__("Sem Vagas")}}</button>
+                    <h1 class="text-my-primary">{{ $evento->nome }}</h1>
                 @endif
-                @else
-                @if(Auth::user()->atividades()->find($atv->id) != null)
-                <button type="button" class="btn btn-primary" disabled>{{__("Inscrito")}}</button>
-                @else
-                <button type="button" class="btn btn-danger" disabled>{{__("Inscrições encerradas")}}</button>
-                @endif
-                @endif
-                @endif
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Fechar")}}</button>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
-<div class="modal fade" id="modalTrabalho" tabindex="-1" role="dialog" aria-labelledby="modalTrabalho" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">{{__("Submeter nova versão")}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="POST" action="{{ route('trabalho.novaVersao') }}" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <div class="row justify-content-center">
-                        <div class="col-sm-12">
-                            @if ($hasFile)
-                            <input type="hidden" name="trabalhoId" value="" id="trabalhoNovaVersaoId">
-                            @endif
-                            <input type="hidden" name="eventoId" value="{{ $evento->id }}">
-                            {{-- Arquivo --}}
-                            <label for="nomeTrabalho" class="col-form-label">{{ __('Arquivo') }}</label>
-                            <div class="custom-file">
-                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo">
-                            </div>
-                            <small>{{__("O arquivo Selecionado deve ser no formato PDF de até 2mb")}}.</small>
-                            @error('arquivo')
-                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__("Fechar")}}</button>
-                    <button type="submit" class="btn btn-primary">{{__("Salvar")}}</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-@php
-    $bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en ? $evento->fotoEvento_en : $evento->fotoEvento;
-@endphp
-<div class="banner-evento">
-    <div class="row">
-        @if (isset($evento->fotoEvento))
-            <div class="banner-evento">
-                <img style="background-size: cover" src="{{ asset('storage/' . $bannerPath) }}" alt="">
-            </div>
-        @else
-            <div class="banner-evento">
-                <img style="background-size: cover" src="{{ asset('img/colorscheme.png') }}" alt="">
-            </div>
-            {{-- <img class="front-image-evento" src="{{asset('img/colorscheme.png')}}" alt=""> --}}
-        @endif
-    </div>
-</div>
-
-<br>
-
-<div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
-    <div class="modal-dialog @if($evento->possuiFormularioDeInscricao()) modal-lg @endif" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #114048ff; color: white;">
-                @if(auth()->check())
-                <h5 class="modal-title" id="#label">{{__("Confirmação")}}</h5>
-                @else
-                <h5 class="modal-title" id="#label">{{__("Atenção")}}!</h5>
-                @endif
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('inscricao.inscrever', ['evento_id' => $evento->id]) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    @if(!auth()->check())
-                    @include('componentes.mensagens')
-                    <p class="text-justify">{!! __("Para continuar com sua inscrição, é necessário que possua cadastro na plataforma e realize o seu acesso (login). <strong>Caso já possua uma conta</strong>, basta acessar com o seu login (e-mail) e senha.") !!} <br><br>
-                                            {!! __("<strong>Se você ainda não tem</strong>, será necessário efetuar o cadastro, validar sua conta pelo link enviado para o e-mail e retornar a página do evento para realizar sua inscrição.") !!} <br><br>
-                                            {!! __("Após realizar seu login ou cadastro, retorne a esta página, atualize-a (pressionando a tecla F5) e prossiga com sua inscrição no evento.") !!}
+                <span class="d-flex align-items-center gap-1 text-my-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-calendar-event" viewBox="0 0 16 16">
+                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                        <path
+                            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                    </svg>
+                    {{ \Carbon\Carbon::parse($evento->dataFim)->format('l, d F') }}
+                </span>
+                <span class="text-my-primary my-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                    </svg> {{$evento->endereco->rua}}, {{$evento->endereco->numero}}, {{$evento->endereco->cidade}}
+                </span>
+                <div class="text-secondary py-5">
+                    <p class="m-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg>
+                        Organizado por:
                     </p>
-                    <div class="modal-footer text-center">
-                        <a href="{{ route('register', app()->getLocale()) }}" target="_blank">
-                            <button type="button" class="btn btn-secondary">{{ __('Cadastrar-se') }}</button>
-                        </a>
-
-                        <a href="{{ route('login') }}" target="_blank">
-                            <button type="button" class="btn btn-primary button-prevent-multiple-submits">{{ __('Entrar') }}</button>
-                        </a>
-                    </div>
-                    @elseif ($evento->categoriasParticipantes()->where('permite_inscricao', true)->exists())
-                    <div id="formulario" x-data="{ categoria: '' }" class="carousel-categorias container">
-                        <div>
-                            <div x-show="categoria == ''">
-                                <div class="carousel slide" id="carouselCategorias" data-ride="carousel">
-                                    <div class="carousel-inner">
-                                        <input type="hidden" name="categoria" x-model="categoria" required>
-                                        <div class="row justify-content-center mb-2 mt-2">
-                                            <a class="btn btn-outline-primary mx-1" id="categoriaAnterior" href="#carouselCategorias" title="Previous" role="button" data-slide="prev">
-                                                <i class="fa fa-lg fa-chevron-left"></i>
-                                            </a>
-                                            <a class="btn btn-outline-primary mx-1" id="proximaCategoria" href="#carouselCategorias" title="Next" role="button" data-slide="next">
-                                                <i class="fa fa-lg fa-chevron-right"></i>
-                                            </a>
-                                        </div>
-                                        <div class="card-group">
-                                            @foreach ($evento->categoriasQuePermitemInscricao as $categoria)
-
-                                            <div class="carousel-item {{$loop->first ? 'active' : ''}}">
-                                                <div class="col-md-4">
-                                                    <div class="card">
-                                                        <div class="card-header">
-                                                            <h4 class="my-0 font-weight-normal">{{ $categoria->nome }}</h4>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <label for="">{{__("Descrição")}}: </label>
-                                                            <p> {!! $categoria->descricao !!}</p>
-
-                                                            @if($links)
-                                                            @foreach($links->where('categoria_id', $categoria->id) as $link)
-                                                                <label for="">Valor: </label>
-                                                                <p>R${{$link->valor}}</p>
-                                                                <label for="">Link para pagamento: </label>
-                                                                <a href="{{$link->link}}">{{$link->link}}</a>
-                                                            @endforeach
-                                                            @endif
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="btn btn-md btn-block btn-outline-primary" x-on:click="categoria = {{ $categoria->id }}">
-                                                                {{ __('Selecionar') }}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            @endforeach
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div x-show="categoria != ''">
-                            @foreach($evento->categoriasParticipantes as $categoria)
-                            <div x-data="{id: {{$categoria->id}}}">
-                                <template x-if="categoria == id">
-                                    <div class="campos-extras" id="campos-extras-{{$categoria->id}}">
-                                        <div>
-                                            <div class="form-group">
-                                                <label>{{__("Categoria selecionada")}}</label>
-                                                <input type="text" readonly class="form-control" value="{{ $categoria->nome }}">
-                                                <button type="button" x-on:click="categoria = ''" class="btn btn-md btn-block btn-primary mt-2 col-sm-12 col-md-6 col-lg-4">
-                                                    {{__("Alterar categoria")}}</button>
-                                            </div>
-
-                                            <!-- <div class="form-group">
-                                                <label for="">Link</label>
-                                                <input type="text" readonly class="form-control" value="teste">
-                                            </div> -->
-
-                                            @foreach ($categoria->camposNecessarios()->distinct()->orderBy('tipo')->get() as $campo)
-                                            @if($campo->tipo == "endereco")
-                                            <div>
-                                                <div class="form-row">
-                                                    <div class="form-group col-sm-6">
-                                                        <label for="endereco-cep-{{$campo->id}}">{{__("CEP")}}</label>
-                                                        <input id="endereco-cep-{{$campo->id}}" name="endereco-cep-{{$campo->id}}" onblur="pesquisacep(this.value, '{{$campo->id}}');" type="text" class="form-control cep @error('endereco-cep-'.$campo->id) is-invalid @enderror" placeholder="00000-000" @if($campo->obrigatorio) required @endif value="@if(old('endereco-cep-'.$campo->id) != null){{old('endereco-cep-'.$campo->id)}}@endif">
-                                                        @error('endereco-cep-'.$campo->id)
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="form-group col-sm-6">
-                                                        <label for="endereco-bairro-{{$campo->id}}">{{__("Bairro")}}</label>
-                                                        <input type="text" class="form-control @error('endereco-bairro-'.$campo->id) is-invalid @enderror" id="endereco-bairro-{{$campo->id}}" name="endereco-bairro-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-bairro-'.$campo->id) != null){{old('endereco-bairro-'.$campo->id)}}@endif">
-                                                        @error('endereco-bairro-'.$campo->id)
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="form-group col-sm-9">
-                                                        <label for="endereco-rua-{{$campo->id}}">{{__("Rua")}}</label>
-                                                        <input type="text" class="form-control @error('endereco-rua-'.$campo->id) is-invalid @enderror" id="endereco-rua-{{$campo->id}}" name="endereco-rua-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-rua-'.$campo->id) != null){{old('endereco-rua-'.$campo->id)}}@endif">
-                                                        @error('endereco-rua-'.$campo->id)
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="form-group col-sm-3">
-                                                        <label for="endereco-complemento-{{$campo->id}}">{{__("Complemento")}}</label>
-                                                        <input type="text" class="form-control @error('endereco-complemento-'.$campo->id) is-invalid @enderror" id="endereco-complemento-{{$campo->id}}" name="endereco-complemento-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-complemento-'.$campo->id) != null){{old('endereco-complemento-'.$campo->id)}}@endif">
-                                                        @error('endereco-complemento-'.$campo->id)
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="form-group col-sm-6">
-                                                        <label for="endereco-cidade-{{$campo->id}}">{{__("Cidade")}}</label>
-                                                        <input type="text" class="form-control @error('endereco-cidade-'.$campo->id) is-invalid @enderror" id="endereco-cidade-{{$campo->id}}" name="endereco-cidade-{{$campo->id}}" placeholder="" @if($campo->obrigatorio) required @endif value="@if(old('endereco-cidade-'.$campo->id) != null){{old('endereco-cidade-'.$campo->id)}}@endif">
-                                                        @error('endereco-cidade-'.$campo->id)
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="form-group col-sm-3">
-                                                        <label for="endereco-uf-{{$campo->id}}">UF</label>
-                                                        <select class="form-control @error('endereco-uf-'.$campo->id) is-invalid @enderror" id="endereco-uf-{{$campo->id}}" name="endereco-uf-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
-                                                            <option value="" disabled selected hidden>-- UF --</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "AC") selected @endif value="AC">AC</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "AL") selected @endif value="AL">AL</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "AP") selected @endif value="AP">AP</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "AM") selected @endif value="AM">AM</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "BA") selected @endif value="BA">BA</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "CE") selected @endif value="CE">CE</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "DF") selected @endif value="DF">DF</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "ES") selected @endif value="ES">ES</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "GO") selected @endif value="GO">GO</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "MA") selected @endif value="MA">MA</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "MT") selected @endif value="MT">MT</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "MS") selected @endif value="MS">MS</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "MG") selected @endif value="MG">MG</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "PA") selected @endif value="PA">PA</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "PB") selected @endif value="PB">PB</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "PR") selected @endif value="PR">PR</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "PE") selected @endif value="PE">PE</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "PI") selected @endif value="PI">PI</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "RJ") selected @endif value="RJ">RJ</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "RN") selected @endif value="RN">RN</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "RS") selected @endif value="RS">RS</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "RO") selected @endif value="RO">RO</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "RR") selected @endif value="RR">RR</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "SC") selected @endif value="SC">SC</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "SP") selected @endif value="SP">SP</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "SE") selected @endif value="SE">SE</option>
-                                                            <option @if(old('endereco-uf-'.$campo->id) == "TO") selected @endif value="TO">TO</option>
-                                                        </select>
-                                                        @error('endereco-uf-'.$campo->id)
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="form-group col-sm-3">
-                                                        <label for="endereco-numero-{{$campo->id}}">{{__("Número")}}</label>
-                                                        <input type="number" class="form-control numero @error('endereco-numero-'.$campo->id) is-invalid @enderror" id="endereco-numero-{{$campo->id}}" name="endereco-numero-{{$campo->id}}" placeholder="10" @if($campo->obrigatorio) required @endif value="@if(old('endereco-numero-'.$campo->id) != null){{old('endereco-numero-'.$campo->id)}}@endif" maxlength="10">
-                                                        @error('endereco-numero-'.$campo->id)
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @elseif($campo->tipo == "date")
-                                            <div class="form-group">
-                                                <label for="date-{{$campo->id}}">{{$campo->titulo}}@if($campo->obrigatorio)*@endif</label>
-                                                <input class="form-control @error('date-'.$campo->id) is-invalid @enderror" type="date" name="date-{{$campo->id}}" id="date-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('date-'.$campo->id) != null){{old('date-'.$campo->id)}}@endif">
-                                                @error('date-'.$campo->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                            @elseif($campo->tipo == "select")
-                                            <div class="form-group">
-                                                <label for="select{{ $campo->id }}">{{ $campo->titulo }}</label>
-                                                <select class="form-control" id="select{{ $campo->id }}" @if ($campo->obrigatorio) required @endif name="select-{{$campo->id}}">
-                                                    <option @if ($campo->obrigatorio) disabled @endif selected>
-                                                        {{__("Selecione uma opção")}}
-                                                    </option>
-                                                    @foreach ($campo->opcoes as $opcao)
-                                                    <option value="{{ $opcao->nome }}">{{ $opcao->nome }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            @elseif($campo->tipo == "email")
-                                            <div class="form-group">
-                                                <label for="email-{{$campo->id}}">{{$campo->titulo}}@if($campo->obrigatorio)*@endif</label>
-                                                <input class="form-control @error('email-'.$campo->id) is-invalid @enderror" type="email" name="email-{{$campo->id}}" id="email-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('email-'.$campo->id) != null){{old('email-'.$campo->id)}}@endif">
-                                                @error('email-'.$campo->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                            @elseif($campo->tipo == "text")
-                                            <div class="form-group">
-                                                <label for="text-{{$campo->id}}">{{$campo->titulo}}@if($campo->obrigatorio)*@endif</label>
-                                                <input class="form-control @error('text-'.$campo->id) is-invalid @enderror" type="text" name="text-{{$campo->id}}" id="text-{{$campo->id}}" @if($campo->obrigatorio) required @endif value="@if(old('text-'.$campo->id) != null){{old('text-'.$campo->id)}}@endif">
-                                                @error('text-'.$campo->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                            @elseif($campo->tipo == "cpf")
-                                            <div class="form-group">
-                                                <label for="cpf-{{$campo->id}}">{{$campo->titulo}}@if($campo->obrigatorio)*@endif</label>
-                                                <input id="cpf-{{$campo->id}}" type="text" class="form-control cpf @error('cpf-'.$campo->id) is-invalid @enderror" name="cpf-{{$campo->id}}" autocomplete="cpf" autofocus @if($campo->obrigatorio) required @endif value="@if(old('cpf-'.$campo->id) != null){{old('cpf-'.$campo->id)}}@endif">
-                                                @error('cpf-'.$campo->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                            @elseif($campo->tipo == "contato")
-                                            <div class="form-group">
-                                                <label for="contato-{{$campo->id}}">{{$campo->titulo}}@if($campo->obrigatorio)*@endif</label>
-                                                <input id="contato-{{$campo->id}}" type="text" class="form-control celular @error('contato-'.$campo->id) is-invalid @enderror" name="contato-{{$campo->id}}" autocomplete="contato" autofocus @if($campo->obrigatorio) required @endif value="@if(old('contato-'.$campo->id) != null){{old('contato-'.$campo->id)}}@endif">
-                                                @error('contato-'.$campo->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                            @elseif($campo->tipo == "file")
-                                            <div class="form-group">
-                                                <label for="file-{{$campo->id}}" class="">{{$campo->titulo}}@if($campo->obrigatorio)*@endif</label><br>
-                                                <input type="file" id="file-{{$campo->id}}" class="form-control-file  @error('file-'.$campo->id) is-invalid @enderror" name="file-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
-                                                <br>
-                                                @error('file-'.$campo->id)
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                            @endif
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
+                    <p class="m-0 ps-4">
+                        {{$evento->coordenador->name}}
+                    </p>
                 </div>
-                @else
-                @include('componentes.mensagens')
-                <p>{{__("Tem certeza que deseja se inscrever nesse evento?")}}</p>
+
+                @if ($etiquetas->modinscricao == true)
+                    <button id="btn-inscrevase" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
+                        @if ($isInscrito || $encerrada) disabled @endif>
+                        @if ($isInscrito)
+                            {{ __('Já inscrito') }}
+                        @elseif($encerrada)
+                            {{ __('Encerradas') }}
+                        @else
+                            {{ __('Inscreva-se') }}
+                        @endif
+                    </button>
+                    @isset($inscricao)
+                        @isset($inscricao->pagamento)
+                            <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
+                                class="text-center mt-2 w-100">{{ __('Visualizar status do pagamento') }}</a>
+                        @endisset
+                    @endisset
                 @endif
 
-
-                @if(auth()->check())
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
-                </div>
-                @endif
-            </form>
+            </div>
         </div>
-    </div>
-</div>
-</div>
-<div class="div-informacoes-evento container mb-5" style="@if (isset($evento->fotoEvento))margin-top: -25px;@else margin-top: -200px; @endif">
-    <div class="row justify-content-center">
-        <div class="col-sm-10">
-            <div class="row">
-                <div class="col-xl-8">
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-sm-12">
-                            <div class="card sombra-card w-100">
-                                <div class="card-body">
-                                    <div class="container">
-                                        {{-- @if (!Auth::check())
-                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                        <strong> A submissão de um trabalho é possível apenas quando cadastrado no sistema. </strong>
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    @endif --}}
-                                        @if (session('message'))
-                                        <div class="alert alert-success">
-                                            {{ session('message') }}
-                                        </div>
-                                        @endif
-                                        @if (session('error'))
-                                        <div class="alert alert-danger">
-                                            {{ session('error') }}
-                                        </div>
-                                        @endif
-                                        <div class="row">
-
-                                            @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                            <div class="col-sm-12">
-                                                <h2 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{ $evento->nome_en }}</h2>
-                                            </div>
-                                            @else
-                                            <div class="col-sm-12">
-                                                <h2 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{ $evento->nome }}</h2>
-                                            </div>
-                                            @endif
-
-
-                                        </div>
-                                        <br>
-                                        <div class="row">
-                                            @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                            <div class="col-sm-12" style="text-align: justify;">
-                                                {!! $evento->descricao_en !!}
-                                            </div>
-                                            @else
-                                            <div class="col-sm-12" style="text-align: justify;">
-                                                {!! $evento->descricao !!}
-                                            </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @if ($etiquetas->modprogramacao == true && $evento->exibir_calendario_programacao)
-
-                    <div id="mensagem-aviso" class="alert alert-info alert-dismissible fade show" role="alert">
-                        {{__("Para participar das atividades do evento, é preciso primeiro se inscrever no evento e, em seguida, realizar a inscrição na atividade desejada, disponível na seção de Programação.")}}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-
-
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-sm-12">
-                            <div class="card sombra-card" style="width: 100%;">
-                                <div class="card-body">
-                                    <div class="form-row">
-                                        <div class="col-sm-12 form-group">
-                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
-                                                {{$etiquetas->etiquetamoduloprogramacao}}
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="col-sm-12 form-group">
-                                            <div id="wrap">
-                                                <div id='calendar-wrap' style="width: 100%;">
-                                                    <div id='calendar'></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="row">
+            <h4 class="text-my-primary">Descrição do evento</h4>
+            <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
+                <div style="text-align: justify;">
+                    @if ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                        {!! $evento->descricao_en !!}
+                    @else
+                        {!! $evento->descricao !!}
                     @endif
-                </div>
-
-                <div class="col-xl-4">
-                    @if ($etiquetas->modinscricao == true)
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-sm-12">
-                            <div class="card sombra-card" style="width: 100%;">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{__("Inscrições")}}</h4>
-                                        </div>
-                                    </div>
-                                    <div class="row mx-1">
-                                        <button id="btn-inscrevase" class="btn btn-primary" data-toggle="modal" data-target="#modalInscrever" @if ($isInscrito || $encerrada) disabled @endif>@if ($isInscrito)
-                                            {{__("Já inscrito")}} @elseif($encerrada) {{__("Encerradas")}} @else
-                                            {{__("Inscreva-se")}} @endif</button>
-                                        @isset($inscricao)
-                                        @isset($inscricao->pagamento)
-                                        <a href="{{route('checkout.statusPagamento', $evento->id)}}" class="text-center mt-2 w-100">{{__("Visualizar status do pagamento")}}</a>
-                                        @endisset
-                                        @endisset
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-sm-12">
-                            <div class="card sombra-card" style="width: 100%;">
-                                <div class="card-body">
-                                    <div class="form-row">
-                                        <div class="col-sm-12 form-group">
-                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
-                                                {{__("Informações")}}
-                                            </h4>
-                                        </div>
-                                    </div>
-
-
-                                    @if ($evento->exibir_pdf && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null)
-                                    <div class="form-row justify-content-center @if($evento->exibir_pdf && $etiquetas->modprogramacao && $evento->pdf_programacao) mb-3 @endif">
-                                        <div class="col-sm-3 form-group " style="position: relative; text-align: center;">
-                                            <div class="div-icon-programacao">
-                                                <img class="icon-programacao" src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}" alt="PDF com a programação">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-8 form-inline">
-                                            <span class="titulo">
-                                                <a href="{{ asset('storage/' . $evento->pdf_programacao) }}" target="_black">{{ $etiquetas->etiquetamoduloprogramacao }}</a>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    @endif
-                                    @if ($evento->pdf_arquivo != null && $evento->modarquivo)
-                                    <div class="form-row justify-content-center">
-                                        <div class="col-sm-3 form-group " style="position: relative; text-align: center;">
-                                            <div class="div-icon-programacao">
-                                                <img class="icon-programacao" src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}" alt="PDF com a programação">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-8 form-inline">
-                                            <span class="titulo">
-                                                <a href="{{ asset('storage/' . $evento->pdf_arquivo) }}" target="_black">{{ $etiquetas->etiquetaarquivo }}</a>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    @endif
-                                    @foreach ($evento->arquivoInfos as $arquivo)
-                                    <div class="form-row justify-content-center @if(!$loop->last) mb-3 @endif">
-                                        <div class="col-sm-3 form-group  d-flex align-items-center" style="position: relative; text-align: center;">
-                                            <div class="div-icon-programacao">
-                                                <img class="icon-programacao" src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-8 form-inline">
-                                            <span class="titulo">
-                                                <a href="{{ asset('storage/'.$arquivo->path) }}" target="_black">{{ $arquivo->nome }}</a>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                    @if ($etiquetas->modsubmissao == true)
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            {{-- <h5>{{$etiquetas->etiquetasubmissoes}}</h5> --}}
-                                            <div class="accordion" id="accordion_modalidades" style="font-size: 10px;">
-                                                @foreach ($modalidades as $modalidade)
-                                                @if (Carbon\Carbon::parse($modalidade->ultima_data) >= $mytime)
-                                                <div class="accordion-group">
-                                                    <div class="accordion-heading">
-                                                        <a class="accordion-button accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion_modalidades" href="{{ '#collapse_' . $modalidade->id }}">
-                                                            <div class="row">
-                                                                <div class="col-sm-10">
-                                                                    <div class="row">
-                                                                        <div class="col-sm-3">
-                                                                            <img class="enviar-trabalho" src="{{ asset('img/icons/Icon awesome-arrow-up.svg') }}" alt="Enviar trabalho">
-                                                                        </div>
-                                                                        <div class="col-sm-9" style="position: relative; left: 8px; margin-top: 8px; ">
-                                                                            <span style="font-size: 14px;">{{__("Envio de trabalhos")}}</span><br>
-                                                                            <span style="font-size: 12px;">({{__("modalidade")}} <strong>{{ $modalidade->nome }}</strong>)</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-2" style="margin-top: 15px;">
-                                                                    <img src="{{ asset('img/icons/Icon ionic-ios-arrow-down.svg') }}" alt="Seta que abre o accordion" width="15px;">
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </div>
-
-                                                    <div id="{{ 'collapse_' . $modalidade->id }}" class="accordion-body in collapse" style="height: auto;">
-                                                        {{-- <div class="accordion-inner"> --}}
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <table>
-                                                                    <tr>
-                                                                        <td><img class="" src="{{ asset('img/icons/calendar-pink.png') }}" alt="" style="width:20px;"></td>
-                                                                        <td>Envio:</td>
-                                                                        <td>{{ date('d/m/Y H:i', strtotime($modalidade->inicioSubmissao)) }}</td>
-                                                                        <td>- {{ date('d/m/Y H:i', strtotime($modalidade->fimSubmissao)) }}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><img class="" src="{{ asset('img/icons/calendar-yellow.png') }}" alt="" style="width:20px;"></td>
-                                                                        <td>Avaliação:</td>
-                                                                        <td>{{ date('d/m/Y H:i', strtotime($modalidade->inicioRevisao)) }}</td>
-                                                                        <td>- {{ date('d/m/Y H:i', strtotime($modalidade->fimRevisao)) }}</td>
-                                                                    </tr>
-                                                                    @if ($modalidade->inicioCorrecao && $modalidade->fimCorrecao)
-                                                                    <tr>
-                                                                        <td><img class="" src="{{ asset('img/icons/calendar-yellow.png') }}" alt="" style="width:20px;"></td>
-                                                                        <td>Correção:</td>
-                                                                        <td>{{ date('d/m/Y H:i', strtotime($modalidade->inicioCorrecao)) }}</td>
-                                                                        <td>- {{ date('d/m/Y H:i', strtotime($modalidade->fimCorrecao)) }}</td>
-                                                                    </tr>
-                                                                    @endif
-                                                                    @if ($modalidade->inicioValidacao && $modalidade->fimValidacao)
-                                                                    <tr>
-                                                                        <td><img class="" src="{{ asset('img/icons/calendar-yellow.png') }}" alt="" style="width:20px;"></td>
-                                                                        <td>Validação:</td>
-                                                                        <td>{{ date('d/m/Y H:i', strtotime($modalidade->inicioValidacao)) }}</td>
-                                                                        <td>- {{ date('d/m/Y H:i', strtotime($modalidade->fimValidacao)) }}</td>
-                                                                    </tr>
-                                                                    @endif
-                                                                    <tr>
-                                                                        <td><img class="" src="{{ asset('img/icons/calendar-green.png') }}" alt="" style="width:20px;"></td>
-                                                                        <td>Resultado:</td>
-                                                                        <td>{{ date('d/m/Y  H:i', strtotime($modalidade->inicioResultado)) }}</td>
-                                                                    </tr>
-                                                                    @foreach ($modalidade->datasExtras as $data)
-                                                                    <tr>
-                                                                        <td><img class="" src="{{ asset('img/icons/calendar-yellow.png') }}" alt="" style="width:20px;"></td>
-                                                                        <td>{{$data->nome}}:</td>
-                                                                        <td>{{ date('d/m/Y H:i', strtotime($data->inicio)) }}</td>
-                                                                        <td>- {{ date('d/m/Y H:i', strtotime($data->fim)) }}</td>
-                                                                    </tr>
-                                                                    @endforeach
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                @if ($modalidade->arquivo)
-                                                                @if (isset($modalidade->regra))
-                                                                <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                    <a href="{{ route('modalidade.regras.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                        <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixarregra }}
-                                                                    </a>
-                                                                </div>
-                                                                @endif
-                                                                @if (isset($modalidade->modelo_apresentacao))
-                                                                <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                    <a href="{{ route('modalidade.modelos.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                        <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{$evento->formEvento->etiquetabaixarapresentacao}}
-                                                                    </a>
-                                                                </div>
-                                                                @endif
-                                                                @if (isset($modalidade->template))
-                                                                <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                    <a href="{{ route('modalidade.template.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                        <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixartemplate }}
-                                                                    </a>
-                                                                </div>
-                                                                @endif
-                                                                @else
-                                                                @if (isset($modalidade->modelo_apresentacao))
-                                                                <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                    <a href="{{ route('modalidade.modelos.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                        <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{$evento->formEvento->etiquetabaixarapresentacao}}
-                                                                    </a>
-                                                                </div>
-                                                                @endif
-                                                                @if (isset($modalidade->regra))
-                                                                <div style="margin-top: 20px; margin-bottom: 10px;">
-                                                                    <a href="{{ route('modalidade.regras.download', ['id' => $modalidade->id]) }}" target="_new" style="font-size: 14px; color: #114048ff; text-decoration: none;">
-                                                                        <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixarregra }}
-                                                                    </a>
-                                                                </div>
-                                                                @endif
-                                                                @endif
-                                                                @auth
-                                                                @if ($modalidade->estaEmPeriodoDeSubmissao() && $inscricao?->podeSubmeterTrabalho())
-                                                                <a class="btn btn-primary" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">{{__("SUBMETER TRABALHO")}}</a>
-                                                                @else
-                                                                @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
-                                                                <a class="btn btn-primary" href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}" style="width: 100%; font-weight: bold;">{{__("SUBMETER TRABALHO")}}</a>
-                                                                @endcan
-                                                                @endif
-                                                                @endauth
-                                                            </div>
-                                                        </div>
-                                                        {{-- </div> --}}
-                                                    </div>
-                                                </div>
-                                                @endif
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endif
-
-                                    <div class="form-row" style="margin-top: 15px; justify-content: center;">
-                                        <div class="col-sm-3" style="text-align: center;">
-                                            <div class="div-icon-programacao">
-                                                <img src="{{ asset('img/icons/Icon material-email.svg') }}" alt="PDF com a programação" style="margin-top: 5px;">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <a href="mailto:@if($evento->email != null){{$evento->email}}@else{{$evento->coordenador->email}}@endif">
-                                                <div style="margin-top: 18px;">
-                                                    <h6 style="margin-bottom: 0px; font-size: 16px; font-weight: bold;">
-                                                        {{__("Contato")}}
-                                                    </h6>
-                                                    {{-- {{$evento->coordenador->email}} --}}
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    @if ($evento->memorias->count())
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-sm-12">
-                            <div class="card sombra-card" style="width: 100%;">
-                                <div class="card-body">
-                                    <div class="form-row">
-                                        <div class="col-sm-12 form-group">
-                                            <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">{{__("Memória")}}</h4>
-                                        </div>
-                                    </div>
-
-                                    @foreach ($evento->memorias as $memoria)
-                                    <div class="form-row justify-content-center">
-                                        <div class="col-sm-3 form-group ">
-                                            <div class="div-icon-programacao d-flex justify-content-center">
-                                                @if($memoria->arquivo)
-                                                <img class="icon-programacao" src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}" alt="">
-                                                @elseif($memoria->link)
-                                                <img class="icon-programacao" src="{{ asset('img/icons/link-solid.svg') }}" alt="">
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-8 form-inline">
-                                            <span class="titulo">
-                                                @if($memoria->arquivo)
-                                                <a href="/storage/{{ $memoria->arquivo }}" target="_blank">{{ $memoria->titulo }}</a>
-                                                @elseif($memoria->link)
-                                                <a href="{{ $memoria->link }}" target="_blank">{{ $memoria->titulo }}</a>
-                                                @endif
-                                            </span>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-
                 </div>
             </div>
-            @if ($subeventos->count() > 0)
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="card sombra-card" style="width: 100%;">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
-                                        {{__("Subeventos")}}
-                                    </h4>
-                                </div>
-                            </div>
-                            <div class="row">
-                                @foreach ($subeventos as $subevento)
-                                <div class="col-sm-12 col-md-6 col-xl-4 d-flex align-items-stretch justify-content-center">
-                                    <div class="card" style="width: 15rem;">
-                                        @if (isset($subevento->fotoEvento))
 
-                                        <img class="img-card" src="{{ asset('storage/' . $subevento->fotoEvento) }}" class="card-img-top" alt="...">
-                                        @else
-                                        <img class="img-card" src="{{ asset('img/colorscheme.png') }}" class="card-img-top" alt="...">
-                                        @endif
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <h5 class="card-title">
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <a href="{{ route('evento.visualizar', ['id' => $subevento->id]) }}" style="text-decoration: inherit;">
-                                                                    @if($subevento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                                                    {{ $subevento->nome_en }}
-                                                                    @else
-                                                                    {{ $subevento->nome }}
-                                                                    @endif
-                                                                </a>
+
+        </div>
+        <hr class="border-dark">
+
+        <div class="row py-4">
+            <h4 class="text-my-primary">Ver sobre o evento</h4>
+            <div class="d-flex flex-wrap flex-md-nowrap gap-2">
+                <a href="#submissao_trabalho" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                        class="bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                    </svg>
+                    <h6 class="mt-2">Submissão de trabalho</h6>
+                </a>
+                <a href="#info_adicionais" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                        class="bi bi-paperclip" viewBox="0 0 16 16" style="transform: rotate(45deg)">
+                        <path
+                            d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z" />
+                    </svg>
+                    <h6 class="mt-2">Informações adicionais</h6>
+                </a>
+                <a href="#memorias" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                        class="bi bi-bookmark" viewBox="0 0 16 16">
+                        <path
+                            d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
+                    </svg>
+                    <h6 class="mt-2">Memórias</h6>
+                </a>
+                <a href="#programacao" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                        class="bi bi-calendar-event" viewBox="0 0 16 16">
+                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                        <path
+                            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                    </svg>
+                    <h6 class="mt-2">Programação</h6>
+                </a>
+                <a href="#palestrantes" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                        class="bi bi-people" viewBox="0 0 16 16">
+                        <path
+                            d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
+                    </svg>
+                    <h6 class="mt-2">Nossos palestrantes</h6>
+                </a>
+                <a href="#contato" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                        class="bi bi-envelope" viewBox="0 0 16 16">
+                        <path
+                            d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
+                    </svg>
+                    <h6 class="mt-2">Contato da organização</h6>
+                </a>
+                <a href="#local" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                        class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                    </svg>
+                    <h6 class="mt-2">Local</h6>
+                </a>
+            </div>
+        </div>
+        <hr class="border-dark">
+
+        <div id="submissao_trabalho" class="row py-4">
+            <h4 class="text-my-primary">
+                {{ __('Submissão de trabalho') }}
+            </h4>
+            <div class="col-md-6">
+                @if ($etiquetas->modsubmissao == true)
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{-- <h5 class="text-my-primary">{{$etiquetas->etiquetasubmissoes}}</h5> --}}
+                            <div class="accordion" id="accordion_modalidades"
+                                style="font-size: 10px;">
+                                @foreach ($modalidades as $modalidade)
+                                    @if (Carbon\Carbon::parse($modalidade->ultima_data) >= $mytime)
+                                        <div class="accordion-group">
+                                            <div class="accordion-heading">
+                                                <a class="accordion-button accordion-toggle collapsed"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-parent="#accordion_modalidades"
+                                                    href="{{ '#collapse_' . $modalidade->id }}">
+                                                    <div class="row">
+                                                        <div class="col-sm-10">
+                                                            <div class="row">
+                                                                <div class="col-sm-3">
+                                                                    <img class="enviar-trabalho"
+                                                                        src="{{ asset('img/icons/Icon awesome-arrow-up.svg') }}"
+                                                                        alt="Enviar trabalho">
+                                                                </div>
+                                                                <div class="col-sm-9"
+                                                                    style="position: relative; left: 8px; margin-top: 8px; ">
+                                                                    <span
+                                                                        style="font-size: 14px;">{{ __('Envio de trabalhos') }}</span><br>
+                                                                    <span
+                                                                        style="font-size: 12px;">({{ __('modalidade') }}
+                                                                        <strong>{{ $modalidade->nome }}</strong>)</span>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </h5>
-                                                </div>
+                                                        <div class="col-sm-2"
+                                                            style="margin-top: 15px;">
+                                                            <img src="{{ asset('img/icons/Icon ionic-ios-arrow-down.svg') }}"
+                                                                alt="Seta que abre o accordion"
+                                                                width="15px;">
+                                                        </div>
+                                                    </div>
+                                                </a>
                                             </div>
-                                            <div>
-                                                <p class="card-text">
-                                                    <img src="{{ asset('/img/icons/calendar.png') }}" alt="" width="20px;" style="position: relative; top: -2px;"> {{ date('d/m/Y', strtotime($subevento->dataInicio)) }} - {{ date('d/m/Y', strtotime($subevento->dataFim)) }}<br>
-                                                </p>
-                                                <p>
-                                                <div class="row justify-content-center">
+
+                                            <div id="{{ 'collapse_' . $modalidade->id }}"
+                                                class="accordion-body in collapse"
+                                                style="height: auto;">
+                                                {{-- <div class="accordion-inner"> --}}
+                                                <div class="row">
                                                     <div class="col-sm-12">
-                                                        <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="18px" height="auto">
-                                                        {{ $subevento->endereco->rua }}, {{ $subevento->endereco->numero }} - {{ $subevento->endereco->cidade }} / {{ $subevento->endereco->uf }}.
+                                                        <table>
+                                                            <tr>
+                                                                <td><img class=""
+                                                                        src="{{ asset('img/icons/calendar-pink.png') }}"
+                                                                        alt=""
+                                                                        style="width:20px;"></td>
+                                                                <td>Envio:</td>
+                                                                <td>{{ date('d/m/Y H:i', strtotime($modalidade->inicioSubmissao)) }}
+                                                                </td>
+                                                                <td>-
+                                                                    {{ date('d/m/Y H:i', strtotime($modalidade->fimSubmissao)) }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><img class=""
+                                                                        src="{{ asset('img/icons/calendar-yellow.png') }}"
+                                                                        alt=""
+                                                                        style="width:20px;"></td>
+                                                                <td>Avaliação:</td>
+                                                                <td>{{ date('d/m/Y H:i', strtotime($modalidade->inicioRevisao)) }}
+                                                                </td>
+                                                                <td>-
+                                                                    {{ date('d/m/Y H:i', strtotime($modalidade->fimRevisao)) }}
+                                                                </td>
+                                                            </tr>
+                                                            @if ($modalidade->inicioCorrecao && $modalidade->fimCorrecao)
+                                                                <tr>
+                                                                    <td><img class=""
+                                                                            src="{{ asset('img/icons/calendar-yellow.png') }}"
+                                                                            alt=""
+                                                                            style="width:20px;">
+                                                                    </td>
+                                                                    <td>Correção:</td>
+                                                                    <td>{{ date('d/m/Y H:i', strtotime($modalidade->inicioCorrecao)) }}
+                                                                    </td>
+                                                                    <td>-
+                                                                        {{ date('d/m/Y H:i', strtotime($modalidade->fimCorrecao)) }}
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
+                                                            @if ($modalidade->inicioValidacao && $modalidade->fimValidacao)
+                                                                <tr>
+                                                                    <td><img class=""
+                                                                            src="{{ asset('img/icons/calendar-yellow.png') }}"
+                                                                            alt=""
+                                                                            style="width:20px;">
+                                                                    </td>
+                                                                    <td>Validação:</td>
+                                                                    <td>{{ date('d/m/Y H:i', strtotime($modalidade->inicioValidacao)) }}
+                                                                    </td>
+                                                                    <td>-
+                                                                        {{ date('d/m/Y H:i', strtotime($modalidade->fimValidacao)) }}
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
+                                                            <tr>
+                                                                <td><img class=""
+                                                                        src="{{ asset('img/icons/calendar-green.png') }}"
+                                                                        alt=""
+                                                                        style="width:20px;"></td>
+                                                                <td>Resultado:</td>
+                                                                <td>{{ date('d/m/Y  H:i', strtotime($modalidade->inicioResultado)) }}
+                                                                </td>
+                                                            </tr>
+                                                            @foreach ($modalidade->datasExtras as $data)
+                                                                <tr>
+                                                                    <td><img class=""
+                                                                            src="{{ asset('img/icons/calendar-yellow.png') }}"
+                                                                            alt=""
+                                                                            style="width:20px;">
+                                                                    </td>
+                                                                    <td>{{ $data->nome }}:</td>
+                                                                    <td>{{ date('d/m/Y H:i', strtotime($data->inicio)) }}
+                                                                    </td>
+                                                                    <td>-
+                                                                        {{ date('d/m/Y H:i', strtotime($data->fim)) }}
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </table>
                                                     </div>
                                                 </div>
-                                                </p>
-                                                <div>
-                                                    <div>
-                                                        <a href="{{ route('evento.visualizar', ['id' => $subevento->id]) }}">
-                                                            <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;{{__("Visualizar evento")}}
-                                                        </a>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        @if ($modalidade->arquivo)
+                                                            @if (isset($modalidade->regra))
+                                                                <div
+                                                                    style="margin-top: 20px; margin-bottom: 10px;">
+                                                                    <a href="{{ route('modalidade.regras.download', ['id' => $modalidade->id]) }}"
+                                                                        target="_new"
+                                                                        style="font-size: 14px; color: #114048ff; text-decoration: none;">
+                                                                        <img class=""
+                                                                            src="{{ asset('img/icons/file-download-solid.svg') }}"
+                                                                            style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixarregra }}
+                                                                    </a>
+                                                                </div>
+                                                            @endif
+                                                            @if (isset($modalidade->modelo_apresentacao))
+                                                                <div
+                                                                    style="margin-top: 20px; margin-bottom: 10px;">
+                                                                    <a href="{{ route('modalidade.modelos.download', ['id' => $modalidade->id]) }}"
+                                                                        target="_new"
+                                                                        style="font-size: 14px; color: #114048ff; text-decoration: none;">
+                                                                        <img class=""
+                                                                            src="{{ asset('img/icons/file-download-solid.svg') }}"
+                                                                            style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixarapresentacao }}
+                                                                    </a>
+                                                                </div>
+                                                            @endif
+                                                            @if (isset($modalidade->template))
+                                                                <div
+                                                                    style="margin-top: 20px; margin-bottom: 10px;">
+                                                                    <a href="{{ route('modalidade.template.download', ['id' => $modalidade->id]) }}"
+                                                                        target="_new"
+                                                                        style="font-size: 14px; color: #114048ff; text-decoration: none;">
+                                                                        <img class=""
+                                                                            src="{{ asset('img/icons/file-download-solid.svg') }}"
+                                                                            style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixartemplate }}
+                                                                    </a>
+                                                                </div>
+                                                            @endif
+                                                        @else
+                                                            @if (isset($modalidade->modelo_apresentacao))
+                                                                <div
+                                                                    style="margin-top: 20px; margin-bottom: 10px;">
+                                                                    <a href="{{ route('modalidade.modelos.download', ['id' => $modalidade->id]) }}"
+                                                                        target="_new"
+                                                                        style="font-size: 14px; color: #114048ff; text-decoration: none;">
+                                                                        <img class=""
+                                                                            src="{{ asset('img/icons/file-download-solid.svg') }}"
+                                                                            style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixarapresentacao }}
+                                                                    </a>
+                                                                </div>
+                                                            @endif
+                                                            @if (isset($modalidade->regra))
+                                                                <div
+                                                                    style="margin-top: 20px; margin-bottom: 10px;">
+                                                                    <a href="{{ route('modalidade.regras.download', ['id' => $modalidade->id]) }}"
+                                                                        target="_new"
+                                                                        style="font-size: 14px; color: #114048ff; text-decoration: none;">
+                                                                        <img class=""
+                                                                            src="{{ asset('img/icons/file-download-solid.svg') }}"
+                                                                            style="width:20px;">&nbsp;{{ $evento->formEvento->etiquetabaixarregra }}
+                                                                    </a>
+                                                                </div>
+                                                            @endif
+                                                        @endif
+                                                        @auth
+                                                            @if ($modalidade->estaEmPeriodoDeSubmissao() && $inscricao?->podeSubmeterTrabalho())
+                                                                <a class="btn btn-primary"
+                                                                    href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}"
+                                                                    style="width: 100%; font-weight: bold;">{{ __('SUBMETER TRABALHO') }}</a>
+                                                            @else
+                                                                @can('isCoordenadorOrCoordenadorDasComissoes',
+                                                                    $evento)
+                                                                    <a class="btn btn-primary"
+                                                                        href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}"
+                                                                        style="width: 100%; font-weight: bold;">{{ __('SUBMETER TRABALHO') }}</a>
+                                                                @endcan
+                                                            @endif
+                                                        @endauth
                                                     </div>
-                                                    @can('isCoordenadorOrCoordenadorDasComissoes', $subevento)
-                                                    <div>
-                                                        <a href="{{ route('coord.detalhesEvento', ['eventoId' => $subevento->id]) }}">
-                                                            <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;{{__("Configurar evento")}}
-                                                        </a>
-                                                    </div>
-                                                    @can('isCoordenador', $subevento)
-                                                    <div>
-                                                        <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{ $subevento->id }}">
-                                                            <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;{{__("Deletar")}}
-                                                        </a>
-                                                    </div>
-                                                    @endcan
-                                                    @endcan
                                                 </div>
+                                                {{-- </div> --}}
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <!-- Modal de exclusão do evento -->
-                                <x-modal-excluir-evento :evento="$evento"/>
-                                <!-- fim do modal -->
+                                    @endif
                                 @endforeach
                             </div>
                         </div>
                     </div>
+                @endif
+            </div>
+            <div class="col-md-6">
+
+            </div>
+
+        </div>
+        <hr class="border-dark">
+
+        <div id="info_adicionais" class="row py-4">{{-- Informações adicionais --}}
+            <div class="col-md-6">
+                    <h4 class="text-my-primary">
+                        {{ __('Informações adicionais') }}
+                    </h4>
+
+
+                    @if ($evento->exibir_pdf && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null)
+                        <div
+                            class="form-row justify-content-center @if ($evento->exibir_pdf && $etiquetas->modprogramacao && $evento->pdf_programacao) mb-3 @endif">
+                            <div class="col-sm-3 form-group "
+                                style="position: relative; text-align: center;">
+                                <div class="div-icon-programacao">
+                                    <img class="icon-programacao"
+                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
+                                        alt="PDF com a programação">
+                                </div>
+                            </div>
+                            <div class="col-sm-8 form-inline">
+                                <span class="titulo">
+                                    <a href="{{ asset('storage/' . $evento->pdf_programacao) }}"
+                                        target="_black">{{ $etiquetas->etiquetamoduloprogramacao }}</a>
+                                </span>
+                            </div>
+                        </div>
+                    @endif
+                    @if ($evento->pdf_arquivo != null && $evento->modarquivo)
+                        <div class="form-row justify-content-center">
+                            <div class="col-sm-3 form-group "
+                                style="position: relative; text-align: center;">
+                                <div class="div-icon-programacao">
+                                    <img class="icon-programacao"
+                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
+                                        alt="PDF com a programação">
+                                </div>
+                            </div>
+                            <div class="col-sm-8 form-inline">
+                                <span class="titulo">
+                                    <a href="{{ asset('storage/' . $evento->pdf_arquivo) }}"
+                                        target="_black">{{ $etiquetas->etiquetaarquivo }}</a>
+                                </span>
+                            </div>
+                        </div>
+                    @endif
+                    @foreach ($evento->arquivoInfos as $arquivo)
+                        <div
+                            class="form-row justify-content-center @if (!$loop->last) mb-3 @endif">
+                            <div class="col-sm-3 form-group  d-flex align-items-center"
+                                style="position: relative; text-align: center;">
+                                <div class="div-icon-programacao">
+                                    <img class="icon-programacao"
+                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
+                                        alt="">
+                                </div>
+                            </div>
+                            <div class="col-sm-8 form-inline">
+                                <span class="titulo">
+                                    <a href="{{ asset('storage/' . $arquivo->path) }}"
+                                        target="_black">{{ $arquivo->nome }}</a>
+                                </span>
+                            </div>
+                        </div>
+                    @endforeach
+
+
+
+
+            </div>
+            <div class="col-md-6">
+                <h4 class="text-my-primary">{{ __('Memórias') }}</h4>
+                @if ($evento->memorias->count())
+                    <div class="row" style="margin-bottom: 10px;">
+                        <div class="col-sm-12">
+                            <div class="card sombra-card" style="width: 100%;">
+                                <div class="card-body">
+
+                                    @foreach ($evento->memorias as $memoria)
+                                        <div class="form-row justify-content-center">
+                                            <div class="col-sm-3 form-group ">
+                                                <div class="div-icon-programacao d-flex justify-content-center">
+                                                    @if ($memoria->arquivo)
+                                                        <img class="icon-programacao"
+                                                            src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
+                                                            alt="">
+                                                    @elseif($memoria->link)
+                                                        <img class="icon-programacao"
+                                                            src="{{ asset('img/icons/link-solid.svg') }}"
+                                                            alt="">
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8 form-inline">
+                                                <span class="titulo">
+                                                    @if ($memoria->arquivo)
+                                                        <a href="/storage/{{ $memoria->arquivo }}"
+                                                            target="_blank">{{ $memoria->titulo }}</a>
+                                                    @elseif($memoria->link)
+                                                        <a href="{{ $memoria->link }}"
+                                                            target="_blank">{{ $memoria->titulo }}</a>
+                                                    @endif
+                                                </span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
+        <hr class="border-dark">
+
+        <div id="programacao" class="row py-4">{{-- Programação --}}
+            <h4 class="text-my-primary">Programação</h4>
+
+            @if ($etiquetas->modprogramacao == true && $evento->exibir_calendario_programacao)
+                <div id="mensagem-aviso" class="alert alert-info alert-dismissible fade show" role="alert">
+                    {{ __('Para participar das atividades do evento, é preciso primeiro se inscrever no evento e, em seguida, realizar a inscrição na atividade desejada, disponível na seção de Programação.') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-sm-12">
+                        <div class="card sombra-card" style="width: 100%;">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-sm-12 form-group">
+                                        <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
+                                            {{ $etiquetas->etiquetamoduloprogramacao }}
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-sm-12 form-group">
+                                        <div id="wrap">
+                                            <div id='calendar-wrap' style="width: 100%;">
+                                                <div id='calendar'></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            @if ($subeventos->count() > 0)
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card sombra-card" style="width: 100%;">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
+                                            {{ __('Subeventos') }}
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    @foreach ($subeventos as $subevento)
+                                        <div
+                                            class="col-sm-12 col-md-6 col-xl-4 d-flex align-items-stretch justify-content-center">
+                                            <div class="card" style="width: 15rem;">
+                                                @if (isset($subevento->fotoEvento))
+                                                    <img class="img-card"
+                                                        src="{{ asset('storage/' . $subevento->fotoEvento) }}"
+                                                        class="card-img-top" alt="...">
+                                                @else
+                                                    <img class="img-card" src="{{ asset('img/colorscheme.png') }}"
+                                                        class="card-img-top" alt="...">
+                                                @endif
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <h5 class="card-title">
+                                                                <div class="row">
+                                                                    <div class="col-sm-12">
+                                                                        <a href="{{ route('evento.visualizar', ['id' => $subevento->id]) }}"
+                                                                            style="text-decoration: inherit;">
+                                                                            @if ($subevento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                                                                {{ $subevento->nome_en }}
+                                                                            @else
+                                                                                {{ $subevento->nome }}
+                                                                            @endif
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <p class="card-text">
+                                                            <img src="{{ asset('/img/icons/calendar.png') }}"
+                                                                alt="" width="20px;"
+                                                                style="position: relative; top: -2px;">
+                                                            {{ date('d/m/Y', strtotime($subevento->dataInicio)) }} -
+                                                            {{ date('d/m/Y', strtotime($subevento->dataFim)) }}<br>
+                                                        </p>
+                                                        <p>
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-sm-12">
+                                                                <img src="{{ asset('/img/icons/location_pointer.png') }}"
+                                                                    alt="" width="18px" height="auto">
+                                                                {{ $subevento->endereco->rua }},
+                                                                {{ $subevento->endereco->numero }} -
+                                                                {{ $subevento->endereco->cidade }} /
+                                                                {{ $subevento->endereco->uf }}.
+                                                            </div>
+                                                        </div>
+                                                        </p>
+                                                        <div>
+                                                            <div>
+                                                                <a
+                                                                    href="{{ route('evento.visualizar', ['id' => $subevento->id]) }}">
+                                                                    <i class="far fa-eye"
+                                                                        style="color: black"></i>&nbsp;&nbsp;{{ __('Visualizar evento') }}
+                                                                </a>
+                                                            </div>
+                                                            @can('isCoordenadorOrCoordenadorDasComissoes', $subevento)
+                                                                <div>
+                                                                    <a
+                                                                        href="{{ route('coord.detalhesEvento', ['eventoId' => $subevento->id]) }}">
+                                                                        <i class="fas fa-cog"
+                                                                            style="color: black"></i>&nbsp;&nbsp;{{ __('Configurar evento') }}
+                                                                    </a>
+                                                                </div>
+                                                                @can('isCoordenador', $subevento)
+                                                                    <div>
+                                                                        <a href="#" data-toggle="modal"
+                                                                            data-target="#modalExcluirEvento{{ $subevento->id }}">
+                                                                            <i class="far fa-trash-alt"
+                                                                                style="color: black"></i>&nbsp;&nbsp;{{ __('Deletar') }}
+                                                                        </a>
+                                                                    </div>
+                                                                @endcan
+                                                            @endcan
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Modal de exclusão do evento -->
+                                        <x-modal-excluir-evento :evento="$evento" />
+                                        <!-- fim do modal -->
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+        </>
+        <hr class="border-dark">
+
+        <div id="palestrantes" class="row py-4">{{-- Nossos palestrantes --}}
+            <h4 class="text-my-primary">Nossos palestrantes</h4>
+            @include('evento.carrossel-palestrantes', ['id' => 'palestrantes', 'palestrantes' => $evento->palestrantes])
+        </div>
+        <hr class="border-dark">
+
+        <div id="contato" class="row py-4">{{-- Contatos --}}
+            <h4 class="text-my-primary">{{ __('Contato') }}</h4>
+            <div class="col-md-2">
+                <img src="" class="" alt="">
+            </div>
+            <div class="col-md-10">
+                <h4>{{$evento->coordenador->name}}</h4>
+                <div class="d-flex justify-content-evenly">
+                    <a href="mailto:@if ($evento->email != null) {{ $evento->email }}@else{{ $evento->coordenador->email }} @endif" class="btn btn-my-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
+                        </svg> Entre em contato
+                    </a>
+                    <a href="" class="btn btn-my-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                            <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
+                        </svg> Instagram
+                    </a>
                 </div>
             </div>
-            @endif
+
         </div>
+        <hr class="border-dark">
+
+        <div id="local" class="row py-4">{{-- Local --}}
+            <h4 class="text-my-primary">Local</h4>
+            <div id="mapaGoogle" class="shadow rounded w-100" style="height: 400px;">
+
+            </div>
+        </div>
+        @include('evento.modal-inscricao')
+        @include('evento.modal-submeter-trabalho')
+
     </div>
-</div>
+
+
+    @foreach ($atividades as $atv)
+        <div class="modal fade bd-example modal-show-atividade" id="modalAtividadeShow{{ $atv->id }}"
+            tabindex="-1" role="dialog" aria-labelledby="modalLabelAtividadeShow{{ $atv->id }}"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #114048ff; color: white;">
+                        <h5 class="modal-title" id="modalLabelAtividadeShow{{ $atv->id }}">{{ $atv->titulo }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            style="color: white;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h4 for="tipo">{{ __('Tipo') }}</h4>
+                                    <p>
+                                        {{ $atv->tipoAtividade->descricao }}
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row form-group">
+                                <div class="col-sm-12">
+                                    <label for="descricao">{{ __('Descrição') }}</label>
+                                    <p>
+                                        {!! $atv->descricao !!}
+                                    </p>
+                                </div>
+
+                            </div>
+                            @if (count($atv->convidados) > 0)
+                                <hr>
+                                <h4>{{ __('Convidados') }}</h4>
+                                <div class="convidadosDeUmaAtividade">
+                                    <div class="row">
+                                        @foreach ($atv->convidados as $convidado)
+                                            <div class="col-sm-3 imagemConvidado">
+                                                <img src="{{ asset('img/icons/user.png') }}"
+                                                    alt="Foto de {{ $convidado->nome }}" width="50px" height="auto">
+                                                <h5 class="convidadoNome">{{ $convidado->nome }}</h5>
+                                                <small class="convidadoFuncao">{{ $convidado->funcao }}</small>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h4 for="local">{{ __('Local') }}</h4>
+                                    <p class="local">
+                                        {{ $atv->local }}
+                                    </p>
+                                </div>
+                            </div>
+                            @if ($atv->vagas != null || $atv->valor != null)
+                                <hr>
+                                <div class="row">
+                                    @if ($atv->vagas != null)
+                                        <div class="col-sm-6">
+                                            <label for="vagas">{{ __('Vagas') }}:</label>
+                                            <h4 class="vagas">{{ $atv->vagas }}</h4>
+                                        </div>
+                                    @endif
+                                    @if ($atv->valor != null)
+                                        <div class="col-sm-6">
+                                            <label for="valor">{{ __('Valor') }}:</label>
+                                            <h4 class="valor">R$ {{ $atv->valor }}</h4>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                            @if ($atv->carga_horaria != null)
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label for="carga_horaria">{{ __('Carga horária para estudantes') }}:</label>
+                                        <h4 class="carga_horaria">{{ $atv->carga_horaria }}</h4>
+                                    </div>
+                                </div>
+                            @endif
+                            @if ($atv->valor != null)
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label for="comprovante" class="">Comprovante de pagamento da taxa de
+                                            inscrição</label><br>
+                                        <input type="file" id="comprovante" class="form-control-file"
+                                            name="comprovante">
+                                        <br>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        @if ($isInscrito)
+                            @if (!$atv->atividadeInscricoesEncerradas())
+                                @if (($atv->vagas > 0 || $atv->vagas == null) && Auth::user()->atividades()->find($atv->id) == null)
+                                    <form method="POST"
+                                        action="{{ route('atividades.inscricao', ['id' => $atv->id]) }}">
+                                        @csrf
+                                        <button type="submit" class="button-prevent-multiple-submits btn btn-primary">
+                                            {{ __('Inscrever-se') }}</button>
+                                    </form>
+                                @elseif(Auth::user()->atividades()->find($atv->id) != null)
+                                    @if (!$atv->terminou())
+                                        <form method="POST"
+                                            action="{{ route('atividades.cancelarInscricao', ['id' => $atv->id, 'user' => Auth::id()]) }}">
+                                            @csrf
+                                            <button type="submit"
+                                                class="btn btn-primary button-prevent-multiple-submits">
+                                                {{ __('Cancelar inscrição') }}</button>
+                                        </form>
+                                    @else
+                                        <button type="button" class="btn btn-primary"
+                                            disabled>{{ __('Inscrito') }}</button>
+                                    @endif
+                                @else
+                                    <button type="button" class="btn btn-danger"
+                                        style="pointer-events: none">{{ __('Sem Vagas') }}</button>
+                                @endif
+                            @else
+                                @if (Auth::user()->atividades()->find($atv->id) != null)
+                                    <button type="button" class="btn btn-primary" disabled>{{ __('Inscrito') }}</button>
+                                @else
+                                    <button type="button" class="btn btn-danger"
+                                        disabled>{{ __('Inscrições encerradas') }}</button>
+                                @endif
+                            @endif
+                        @endif
+                        <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">{{ __('Fechar') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+
+
+
+
 
 @endsection
+
 @section('javascript')
-<script>
-    $('#carouselCategorias').carousel({
-        interval: 10000
-    })
+    <script>
+        function initMap() {
+                const local = { lat: -23.55052, lng: -46.633308 };
+                const mapa = new google.maps.Map(document.getElementById("mapaGoogle"), {
+                    zoom: 13,
+                    center: local,
+                });
+                new google.maps.Marker({
+                    position: local,
+                    map: mapa,
+                });
+            }
 
-    $('.carousel-categorias .carousel .carousel-item').each(function() {
-        var minPerSlide = 3;
-        var next = $(this).next();
-        if (!next.length) {
-            next = $(this).siblings(':first');
-        }
-        next.children(':first-child').clone().appendTo($(this));
+        window.onload = initMap;
 
-        for (var i = 0; i < minPerSlide; i++) {
-            next = next.next();
+        $('#carouselCategorias').carousel({
+            interval: 10000
+        })
+
+        $('.carousel-categorias .carousel .carousel-item').each(function() {
+            var minPerSlide = 3;
+            var next = $(this).next();
             if (!next.length) {
                 next = $(this).siblings(':first');
             }
-
             next.children(':first-child').clone().appendTo($(this));
-        }
-    });
-</script>
-@if(session('abrirmodalinscricao'))
-<script>
-    $('#modalInscrever').modal('show')
-</script>
-@endif
-<script>
-    $(document).ready(function() {
-        $(".accordion-button").click(function() {
-            var img = this.children[0].children[1].children[0];
-            if (this.classList.contains("collapsed")) {
-                img.src = "{{ asset('img/icons/Icon ionic-ios-arrow-up.svg') }}";
-            } else {
-                img.src = "{{ asset('img/icons/Icon ionic-ios-arrow-down.svg') }}";
+
+            for (var i = 0; i < minPerSlide; i++) {
+                next = next.next();
+                if (!next.length) {
+                    next = $(this).siblings(':first');
+                }
+
+                next.children(':first-child').clone().appendTo($(this));
             }
         });
-    });
-    var botoes = document.getElementsByClassName('cor-aleatoria');
-    for (var i = 0; i < botoes.length; i++) {
-        botoes[i].style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-    }
+    </script>
+    @if (session('abrirmodalinscricao'))
+        <script>
+            $('#modalInscrever').modal('show')
+        </script>
+    @endif
+    <script>
+        $(document).ready(function() {
+            $(".accordion-button").click(function() {
+                var img = this.children[0].children[1].children[0];
+                if (this.classList.contains("collapsed")) {
+                    img.src = "{{ asset('img/icons/Icon ionic-ios-arrow-up.svg') }}";
+                } else {
+                    img.src = "{{ asset('img/icons/Icon ionic-ios-arrow-down.svg') }}";
+                }
+            });
+        });
+        var botoes = document.getElementsByClassName('cor-aleatoria');
+        for (var i = 0; i < botoes.length; i++) {
+            botoes[i].style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+        }
 
-    function changeTrabalho(x) {
-        document.getElementById('trabalhoNovaVersaoId').value = x;
-    }
-</script>
-@if ($dataInicial != '' && $evento->exibir_calendario_programacao)
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        /* initialize the external events
-        -----------------------------------------------------------------*/
-        // var containerEl = document.getElementById('external-events-list');
-        // new FullCalendar.Draggable(containerEl, {
-        //   itemSelector: '.fc-event',
-        //   eventData: function(eventEl) {
-        //     return {
-        //       title: eventEl.innerText.trim()
-        //     }
-        //   }
-        // });
-        //// the individual way to do it
-        // var containerEl = document.getElementById('external-events-list');
-        // var eventEls = Array.prototype.slice.call(
-        //   containerEl.querySelectorAll('.fc-event')
-        // );
-        // eventEls.forEach(function(eventEl) {
-        //   new FullCalendar.Draggable(eventEl, {
-        //     eventData: {
-        //       title: eventEl.innerText.trim(),
-        //     }
-        //   });
-        // });
-        /* initialize the calendar
-        -----------------------------------------------------------------*/
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialDate: "{{ $dataInicial->data }}",
-            headerToolbar: {
-                left: 'dayGridMonth,timeGridWeek,timeGridDay,listYear',
-                center: 'title',
-                right: 'prev,next today'
-            },
-            initialView: 'listYear',
-            locale: 'pt-br',
-            editable: false,
-            eventClick: function(info) {
-                var idModal = "#modalAtividadeShow" + info.event.id;
-                $(idModal).modal('show');
-            },
-            events: "{{ route('atividades.json', ['id' => $evento->id]) }}",
+        function changeTrabalho(x) {
+            document.getElementById('trabalhoNovaVersaoId').value = x;
+        }
+    </script>
+    @if ($dataInicial != '' && $evento->exibir_calendario_programacao)
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                /* initialize the external events
+                -----------------------------------------------------------------*/
+                // var containerEl = document.getElementById('external-events-list');
+                // new FullCalendar.Draggable(containerEl, {
+                //   itemSelector: '.fc-event',
+                //   eventData: function(eventEl) {
+                //     return {
+                //       title: eventEl.innerText.trim()
+                //     }
+                //   }
+                // });
+                //// the individual way to do it
+                // var containerEl = document.getElementById('external-events-list');
+                // var eventEls = Array.prototype.slice.call(
+                //   containerEl.querySelectorAll('.fc-event')
+                // );
+                // eventEls.forEach(function(eventEl) {
+                //   new FullCalendar.Draggable(eventEl, {
+                //     eventData: {
+                //       title: eventEl.innerText.trim(),
+                //     }
+                //   });
+                // });
+                /* initialize the calendar
+                -----------------------------------------------------------------*/
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialDate: "{{ $dataInicial->data }}",
+                    headerToolbar: {
+                        left: 'dayGridMonth,timeGridWeek,timeGridDay,listYear',
+                        center: 'title',
+                        right: 'prev,next today'
+                    },
+                    initialView: 'listYear',
+                    locale: 'pt-br',
+                    editable: false,
+                    eventClick: function(info) {
+                        var idModal = "#modalAtividadeShow" + info.event.id;
+                        $(idModal).modal('show');
+                    },
+                    events: "{{ route('atividades.json', ['id' => $evento->id]) }}",
+                });
+                calendar.render();
+            });
+        </script>
+    @endif
+    <script>
+        // Fecha a caixa de aviso quando o botão de fechar é clicado
+        $(document).ready(function() {
+            $('.alert-dismissible').on('closed.bs.alert', function() {
+                // Envia uma requisição para o servidor para marcar a mensagem como lida, se necessário
+                // Exemplo: usar AJAX para enviar um POST request para marcar a mensagem como lida no banco de dados
+            });
         });
-        calendar.render();
-    });
-</script>
-@endif
-<script>
-    // Fecha a caixa de aviso quando o botão de fechar é clicado
-    $(document).ready(function() {
-        $('.alert-dismissible').on('closed.bs.alert', function() {
-            // Envia uma requisição para o servidor para marcar a mensagem como lida, se necessário
-            // Exemplo: usar AJAX para enviar um POST request para marcar a mensagem como lida no banco de dados
-        });
-    });
-</script>
+    </script>
 @endsection
