@@ -43,6 +43,7 @@
                 <div class="col-md-12">
                     <label for="pais" class="col-form-label">{{ __('País') }}</label>
                     <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" class="form-control @error('pais') is-invalid @enderror" id="pais">
+                        <option value="/pt-BR/register/brasil" disabled selected hidden>{{__('Brasil')}}</option>
                         <option @if($pais == 'afeganistao') selected @endif value="/pt-BR/register/afeganistao">{{__('Afeganistão')}}</option>
                         <option @if($pais == 'albania') selected @endif value="/pt-BR/register/albania">{{__('Albânia')}}</option>
                         <option @if($pais == 'algeria') selected @endif value="/pt-BR/register/algeria">{{__('Argélia')}}</option>
@@ -66,7 +67,7 @@
                         <option @if($pais == 'bolivia') selected @endif value="/pt-BR/register/bolivia">{{__('Bolívia')}}</option>
                         <option @if($pais == 'bosnia_herzegovina') selected @endif value="/pt-BR/register/bosnia_herzegovina">{{__('Bósnia e Herzegovina')}}</option>
                         <option @if($pais == 'botswana') selected @endif value="/pt-BR/register/botswana">{{__('Botswana')}}</option>
-                        <option @if($pais == 'brasil') selected @endif value="/pt-BR/register/brasil" selected hidden>{{__('Brasil')}}</option>
+                        <option @if($pais == 'brasil') selected @endif value="/pt-BR/register/brasil">{{__('Brasil')}}</option>
                         <option @if($pais == 'brunei') selected @endif value="/pt-BR/register/brunei">{{__('Brunei')}}</option>
                         <option @if($pais == 'bulgaria') selected @endif value="/pt-BR/register/bulgaria">{{__('Bulgária')}}</option>
                         <option @if($pais == 'burkina_faso') selected @endif value="/pt-BR/register/burkina_faso">{{__('Burquina Faso')}}</option>
@@ -691,13 +692,6 @@
         document.getElementById('etapa-1').style.display = 'block';
         document.getElementById('etapa-2').style.display = 'none';
     }
-    
-    $(document).ready(function() {
-        $('#pais').select2({
-            placeholder: '-- {{__('País')}} --',
-            allowClear: true
-        });
-    });
 
   </script>
 
