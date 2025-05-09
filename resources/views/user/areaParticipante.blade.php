@@ -12,7 +12,7 @@
 
     <div class="container mb-5">
         <form method="GET" class="row mb-4 align-items-center">
-            <div class="col-md-8">
+            <div class="col-md-4">
                 <div class="input-group">
                     <input type="text"
                         name="busca"
@@ -25,6 +25,8 @@
                     </button>
                 </div>
             </div>
+
+            <div class="col-md-4"></div>
 
             <div class="col-md-4">
                 <select name="ordenar" class="form-select w-100" onchange="this.form.submit()">
