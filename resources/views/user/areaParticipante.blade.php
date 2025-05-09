@@ -1,70 +1,60 @@
 @extends('layouts.app')
-
+@section('main-classes', 'p-0')
 @section('content')
+    <br><br>
 
-<div class="container position-relative">
-
-    {{-- titulo da página --}}
-    <div class="row justify-content-center titulo-detalhes">
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="col-sm-10">
-                    <h1>Meus Eventos - Participante</h1>
-                </div>
-            </div>
-        </div>
+    <div class="position-relative mb-5">
+        <h1 class="position-absolute top-50 start-50 translate-middle fw-semibold"
+            style="font-size: 2rem; color: #034652;">
+            Meus Eventos
+        </h1>
     </div>
 
-    <div class="row">
+    <div class="container mb-5">
+        <form method="GET" class="row mb-4 align-items-center">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text"
+                        name="busca"
+                        class="form-control"
+                        placeholder="Pesquise por evento..."
+                        value="{{ request('busca') }}">
 
-        @if($eventos->count() != 0)
-        @foreach ($eventos as $evento)
-        <div class="card" style="width: 18rem;">
-            @if(isset($evento->fotoEvento))
-
-            @php
-                $bannerPath = $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en ? $evento->fotoEvento_en : $evento->fotoEvento;
-            @endphp
-
-            <img src="{{ asset('storage/' . $bannerPath) }}" class="card-img-top" alt="...">
-            @else
-            <img src="{{asset('img/colorscheme.png')}}" class="card-img-top" alt="...">
-            @endif
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h4 class="card-title">
-                            <div class="row justify-content-center">
-                                <div class="col-sm-12">
-                                    {{$evento->nome}}
-                                </div>
-
-                            </div>
-
-                        </h4>
-
-                    </div>
+                    <button type="submit" class="btn bg-white border-start-0">
+                        <img src="{{ asset('img/icons/search.svg') }}" alt="Buscar" width="20px">
+                    </button>
                 </div>
-                <p class="card-text">
-                    <strong>Realização:</strong> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
-
-                </p>
-                <p>
-                    <a href="{{  route('evento.visualizar',['id'=>$evento->id])  }}" class="visualizarEvento">Visualizar Evento</a>
-                </p>
             </div>
 
-        </div>
-        @endforeach
-        @else
-        <div class="card">
-            <div class="card-body">
-                <p class="card-text" >Você ainda não participou de nenhum evento.</p>
+            <div class="col-md-4">
+                <select name="ordenar" class="form-select w-100" onchange="this.form.submit()">
+                    <option value="data" {{ request('ordenar') === 'data' ? 'selected' : '' }}>Ordenar por data</option>
+                    <option value="nome" {{ request('ordenar') === 'nome' ? 'selected' : '' }}>Ordenar por nome</option>
+                </select>
             </div>
+        </form>
+
+        <div class="row">
+            @foreach ($eventos as $evento)
+                <div class="col-md-4 mt-2 d-flex align-items-stretch">
+                    <x-evento_card
+                        :icone="$evento->icone"
+                        :fotoEvento="$evento->fotoEvento"
+                        :nome="$evento->nome"
+                        :dataInicioFormatada="\Carbon\Carbon::parse($evento->dataInicio)->translatedFormat('l, d \d\e F')"
+                        :dataFimFormatada="\Carbon\Carbon::parse($evento->dataFim)->translatedFormat('l, d \d\e F')"
+                        :descricao="Str::limit(strip_tags($evento->descricao ?? ''), 120)"
+                        :link="route('evento.visualizar', ['id' => $evento->id])"
+                    />
+                </div>
+            @endforeach
         </div>
-        @endif
+
+        {{-- Paginação --}}
+        <div class="mt-5 d-flex justify-content-center">
+            {{ $eventos->appends(request()->query())->links('pagination::bootstrap-5') }}
+        </div>
+        
     </div>
-
-</div>
 
 @endsection
