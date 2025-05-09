@@ -38,6 +38,10 @@
 
     <!--CSS DINAMICO-->
     @yield('css')
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100" style="background-color: #f5f5f5;">
