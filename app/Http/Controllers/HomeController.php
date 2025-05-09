@@ -28,7 +28,7 @@ class HomeController extends Controller
     public function home(Request $request)
     {
         $user = Auth::user();
-        $quer = collect();
+        $eventos = collect();
         if ($user->administradors()->exists()) {
             $eventos = $eventos->concat(Evento::all());
 
