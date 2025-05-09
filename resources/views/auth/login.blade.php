@@ -21,11 +21,13 @@ p{
 <div class="container my-5">
     <div class="row">
         <section class="col-md-6 d-flex flex-column justify-content-center">
-            <h2><strong>Patrimônio</strong></h2>
+            <a class="navbar-brand" href="{{route('index')}}">
+                <img src="{{ asset('/img/logo.png') }}" alt="logo" width="50%">
+            </a>
 
-            <p class="mt-3 fs-3 text-justify">O Participa é um sistema de Gestão de Eventos Científicos que busca contribuir com
+            <p class="mt-3 fs-3 text-justify">É um sistema de Gestão de Eventos Científicos que busca contribuir com
                 instituições acadêmicas públicas ou privadas que necessitem de uma ferramenta
-                para gerenciar eventos científicos. </p>
+                para gerenciar eventos científicos.</p>
         </section>
 
         <div class="col-md-6 d-flex align-items-center justify-content-end">
