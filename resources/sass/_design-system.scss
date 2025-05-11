@@ -10,6 +10,14 @@
 
       &:hover {
         background-color: darken($color, 10%);
+        color: white;
+      }
+      &:disabled,
+      &.disabled {
+        background-color: lighten($color, 15%);
+        color: white;
+        cursor: not-allowed;
+        opacity: 0.65;
       }
     }
     .btn-my-outline-#{$name} {
