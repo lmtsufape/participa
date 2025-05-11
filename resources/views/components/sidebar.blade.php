@@ -1,4 +1,4 @@
-<aside class="sidebar p-3 border-end vh-100 overflow-auto w-100" style="background-color: white; color: black;">
+<aside class="sidebar p-3 border-end h-100 overflow-auto w-100" style="background-color: white; color: black;">
     <div class="mb-4">
         <h2 class="py-2">
             @if ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
@@ -38,7 +38,7 @@
             </li>
             @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
                 <li id="programacao" class="nav-item">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="collapse"
+                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                         href="#collapseProgramacao" role="button" aria-expanded="false" aria-controls="collapseProgramacao">
                         <img src="{{ asset('img/icons/slideshow.svg') }}" width="20px" alt="">
                         <span>Programação</span>
