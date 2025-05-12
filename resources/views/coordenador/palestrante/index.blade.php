@@ -323,10 +323,10 @@
                                 @foreach ($palestras as $palestra)
                                     <tbody>
                                         <th>
-                                        <td data-toggle="modal"
-                                            data-target="#modalPalestraEdit{{ $palestra->id }}">{{ $palestra->titulo }}</td>
-                                        <td data-toggle="modal"
-                                            data-target="#modalExcluirPalestra{{ $palestra->id }}"><button
+                                        <td data-bs-toggle="modal"
+                                            data-bs-target="#modalPalestraEdit{{ $palestra->id }}">{{ $palestra->titulo }}</td>
+                                        <td data-bs-toggle="modal"
+                                            data-bs-target="#modalExcluirPalestra{{ $palestra->id }}"><button
                                                 style="border: none; background-color: rgba(255, 255, 255, 0);"><img
                                                     src="{{ asset('img/icons/trash-alt-regular.svg') }}"
                                                     class="icon-card"

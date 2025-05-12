@@ -8,7 +8,7 @@
         </div>
         <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
             <div class="btn-group" role="group">
-                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     Opções
                 </button>
@@ -99,14 +99,14 @@
                                                         <a
                                                             href="{{ route('downloadTrabalho', ['id' => $trabalho->id]) }}">
                                                             <span class="d-inline-block"
-                                                                class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                                class="d-inline-block" tabindex="0" data-bs-toggle="tooltip"
                                                                 title="{{ $trabalho->titulo }}">
                                                                 {{ $trabalho->titulo }}
                                                             </span>
                                                         </a>
                                                     @else
                                                         <span class="d-inline-block" class="d-inline-block"
-                                                            tabindex="0" data-toggle="tooltip"
+                                                            tabindex="0" data-bs-toggle="tooltip"
                                                             title="{{ $trabalho->titulo }}">
                                                             {{ $trabalho->titulo }}
                                                         </span>

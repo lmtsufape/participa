@@ -28,7 +28,7 @@
             <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
           </a>
           @else
-          <a href="#" onclick="return false;" data-toggle="popover" data-trigger="focus" data-trigger="focus" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;">
+          <a href="#" onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-trigger="focus" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;">
             <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
           </a>
           @endif

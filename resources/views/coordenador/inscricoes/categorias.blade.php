@@ -16,7 +16,7 @@
                             <h6 class="card-subtitle mb-2 text-muted">Categorias cadastradas no seu evento</h6>
                         </div>
                         <div class="col-md-6 d-flex justify-content-sm-start justify-content-md-end align-items-center">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 Cadastrar categoria
                             </button>
                             <!-- Modal criar categoria -->
@@ -157,13 +157,13 @@
                                     <td>{{ $categoria->permite_inscricao ? "Sim" : "Não" }}</td>
                                     <td>{{ $categoria->limite_inscricao?->format('d/m/Y H:i')}}</td>
                                     <td style="text-align:center">
-                                        <a href="#" data-toggle="modal" data-target="#modalEditarCategoria{{ $categoria->id }}"><img src="{{ asset('img/icons/edit-regular.svg') }}" style="width:20px"></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarCategoria{{ $categoria->id }}"><img src="{{ asset('img/icons/edit-regular.svg') }}" style="width:20px"></a>
                                     </td>
                                     <td style="text-align:center">
                                         <form id="formExcluirCategoria{{ $categoria->id }}" action="{{ route('categoria.participante.destroy', $categoria->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <a href="#" data-toggle="modal" data-target="#modalExcluirCategoria{{ $categoria->id }}">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirCategoria{{ $categoria->id }}">
                                                 <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" class="icon-card" alt="">
                                             </a>
                                         </form>
@@ -277,7 +277,7 @@
                             <!-- <form id="formExcluirLink{{ $link->id }}" action="{{ route('link.pagamento.destroy', $link->id) }}" method="DELETE"> -->
                                 <!-- @csrf
                                 @method('DELETE') -->
-                                <!-- <a href="#" data-toggle="modal" data-target="#modalExcluirCategoria{{ $categoria->id }}">
+                                <!-- <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirCategoria{{ $categoria->id }}">
                                                 <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" class="icon-card" alt="">
                                             </a> -->
                                 <!--  -->

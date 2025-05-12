@@ -1026,10 +1026,10 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-9">
-                            <button id="adicionarPdf" data-toggle="modal" data-target="#modalAdicionarPdf" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; left: 100px;">+ PDF com as atividades</button>
+                            <button id="adicionarPdf" data-bs-toggle="modal" data-bs-target="#modalAdicionarPdf" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; left: 100px;">+ PDF com as atividades</button>
                         </div>
                         <div class="col-sm-3">
-                            <button id="criarAtividade" data-toggle="modal" data-target="#modalCriarAtividade" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; margin-left: 20px;">+ Criar atividade</button>
+                            <button id="criarAtividade" data-bs-toggle="modal" data-bs-target="#modalCriarAtividade" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; margin-left: 20px;">+ Criar atividade</button>
                         </div>
                     </div>
                 </div>
@@ -1052,15 +1052,15 @@
 
                     <tbody>
                         <th>
-                        <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->titulo}}</td>
-                        <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->tipoAtividade->descricao}}</td>
-                        <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->vagas)) Ilimitado @else {{$atv->vagas}} @endif</td>
-                        <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->valor)) Grátis @else R$ {{$atv->valor}},00 @endif</td>
-                        <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->local}}</td>
-                        <td data-toggle="modal" data-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->carga_horaria)) Nenhuma @else {{$atv->carga_horaria}} @endif</td>
+                        <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->titulo}}</td>
+                        <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->tipoAtividade->descricao}}</td>
+                        <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->vagas)) Ilimitado @else {{$atv->vagas}} @endif</td>
+                        <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->valor)) Grátis @else R$ {{$atv->valor}},00 @endif</td>
+                        <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->local}}</td>
+                        <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->carga_horaria)) Nenhuma @else {{$atv->carga_horaria}} @endif</td>
                         <td><input id="checkbox_{{$atv->id}}" type="checkbox" @if($atv->visibilidade_participante) checked @endif onclick="setVisibilidadeAtv({{$atv->id}})"></td>
                         <td><a type="button" class="btn btn-primary" href="{{route('atividades.inscritos',['id'=> $atv->id])}}">Lista</a></td>
-                        <td data-toggle="modal" data-target="#modalExcluirAtividade{{$atv->id}}"><button style="border: none; background-color: rgba(255, 255, 255, 0);"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></button></td>
+                        <td data-bs-toggle="modal" data-bs-target="#modalExcluirAtividade{{$atv->id}}"><button style="border: none; background-color: rgba(255, 255, 255, 0);"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></button></td>
                         </th>
                     </tbody>
                     @endforeach

@@ -346,7 +346,7 @@
                                                                         <h5 class="card-subtitle mb-2 text-muted">{{$atv->tipoAtividade->descricao}}</h5>
                                                                         <h6 class="card-subtitle mb-2 text-muted">{{$atv->local}}</h6>
                                                                         <p class="card-text">{{$atv->descricao}}</p>
-                                                                        <a href='#' class='card-link' data-toggle='modal' data-target='#modalDetalheAtividade{{$atv->id}}'>Detalhes</a>
+                                                                        <a href='#' class='card-link' data-bs-toggle='modal' data-bs-target='#modalDetalheAtividade{{$atv->id}}'>Detalhes</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -383,7 +383,7 @@
                                                                             <h5 class="card-subtitle mb-2 text-muted">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->tipoAtividade->descricao}}</h5>
                                                                             <h6 class="card-subtitle mb-2 text-muted">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->local}}</h6>
                                                                             <p class="card-text">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->descricao}}</p>
-                                                                            <a href='#' class='card-link' data-toggle='modal' data-target='#modalDetalheAtividade{{old('atividadesPromo.'.$key)}}'>Detalhes</a>
+                                                                            <a href='#' class='card-link' data-bs-toggle='modal' data-bs-target='#modalDetalheAtividade{{old('atividadesPromo.'.$key)}}'>Detalhes</a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -407,7 +407,7 @@
                                                     <h4>Atividades adicionais</h4>
                                                 </div>
                                                 <div class="col-sm-6" style="text-align: right;">
-                                                    <a href="#" class="btn btn-secondary" style="font-size: 14px; text-align: right;" data-toggle="modal" data-target="#modalAdicionarAtividade">Adicionar atividade</a>
+                                                    <a href="#" class="btn btn-secondary" style="font-size: 14px; text-align: right;" data-bs-toggle="modal" data-bs-target="#modalAdicionarAtividade">Adicionar atividade</a>
                                                 </div>
                                             </div>
                                             <div id="atividadesAdicionadas" class="row">
@@ -428,7 +428,7 @@
                                                                     <h6 class="card-subtitle mb-2 text-muted">{{$atv->local}}</h6>
                                                                     <p class="card-text">{{$atv->descricao}}</p>
                                                                     <div id="linksAtv{{$atv->id}}">
-                                                                        <a href='#' class='card-link' data-toggle='modal' data-target='#modalDetalheAtividade{{$atv->id}}'>Detalhes</a>
+                                                                        <a href='#' class='card-link' data-bs-toggle='modal' data-bs-target='#modalDetalheAtividade{{$atv->id}}'>Detalhes</a>
                                                                         <a href='#' class='card-link' onclick='removerAtividade({{$atv->id}})'>Remover</a>
                                                                     </div>
                                                                 </div>
@@ -748,7 +748,7 @@
                                                                         <h5 class="card-subtitle mb-2 text-muted">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->tipoAtividade->descricao}}</h5>
                                                                         <h6 class="card-subtitle mb-2 text-muted">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->local}}</h6>
                                                                         <p class="card-text">{{App\Models\Submissao\Atividade::find(old('atividadesPromo.'.$key))->descricao}}</p>
-                                                                        <a href='#' class='card-link' data-toggle='modal' data-target='#modalDetalheAtividade{{old('atividadesPromo.'.$key)}}'>Detalhes</a>
+                                                                        <a href='#' class='card-link' data-bs-toggle='modal' data-bs-target='#modalDetalheAtividade{{old('atividadesPromo.'.$key)}}'>Detalhes</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -770,7 +770,7 @@
                                                     <h4>Atividades adicionais</h4>
                                                 </div>
                                                 <div class="col-sm-6" style="text-align: right;">
-                                                    <a href="#" class="btn btn-secondary" style="font-size: 14px; text-align: right;" data-toggle="modal" data-target="#modalAdicionarAtividade">Adicionar atividade</a>
+                                                    <a href="#" class="btn btn-secondary" style="font-size: 14px; text-align: right;" data-bs-toggle="modal" data-bs-target="#modalAdicionarAtividade">Adicionar atividade</a>
                                                 </div>
                                             </div>
                                             <div id="atividadesAdicionadas" class="row">
@@ -1147,7 +1147,7 @@
     }
 
     function adicionarLinksDaAtividade(id) {
-        var links = "<a href='#' class='card-link' data-toggle='modal' data-target='#modalDetalheAtividade"+id+"'>Detalhes</a>" +
+        var links = "<a href='#' class='card-link' data-bs-toggle='modal' data-bs-target='#modalDetalheAtividade"+id+"'>Detalhes</a>" +
                     "<a href='#' class='card-link' onclick='removerAtividade("+id+")'>Remover</a>";
 
         $('#linksAtv'+id).html("");
@@ -1238,7 +1238,7 @@
                                                 "<h5 class='card-subtitle mb-2 text-muted'>"+obj.tipo+"</h5>" +
                                                 "<h6 class='card-subtitle mb-2 text-muted'>"+obj.local+"</h6>" +
                                                 "<p class='card-text'>"+obj.descricao+"</p>" +
-                                                "<a href='#' class='card-link' data-toggle='modal' data-target='#modalDetalheAtividade"+obj.id+"'>Detalhes</a>" +
+                                                "<a href='#' class='card-link' data-bs-toggle='modal' data-bs-target='#modalDetalheAtividade"+obj.id+"'>Detalhes</a>" +
                                             "</div>" +
                                         "</div>" +
                                     "</div>";

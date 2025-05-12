@@ -3,7 +3,7 @@
         <a class="navbar-brand" href="{{route('index')}}">
             <img src="{{ asset('/img/logo.png') }}" alt="" width="150vw">
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Alterna navegação">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Alterna navegação">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse flex-grow-0"  id="navbarNavAltMarkup">
@@ -162,7 +162,7 @@
                     aria-haspopup="true"
                     aria-expanded="false"
                     v-pre>
-                    
+
                         @if(Session::get('locale') === 'pt-BR' || Session::get('locale') === null)
                             <img src="https://flagicons.lipis.dev/flags/4x3/br.svg" alt="Português" style="width: 20px;">
                             Português

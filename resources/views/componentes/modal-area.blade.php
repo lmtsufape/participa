@@ -1,8 +1,8 @@
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
     Cadastrar área
   </button>
-  
+
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -15,7 +15,7 @@
         </div>
         <div class="modal-body">
             <div class="row justify-content-center">
-                <div class="col-sm-12">                    
+                <div class="col-sm-12">
                     <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova área para o seu evento</h6>
                     <form method="POST" action="{{route('area.store')}}">
                         @csrf
@@ -40,12 +40,12 @@
                             {{ __('Finalizar') }}
                         </button>
                     </div>
-                    
+
                     </form>
                 </div>
             </div>
         </div>
-        
+
       </div>
     </div>
   </div>

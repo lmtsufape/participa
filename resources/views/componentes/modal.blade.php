@@ -1,6 +1,6 @@
 <!-- Button trigger modal -->
 
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#email_lembrar_{{$revisor->id}}">
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#email_lembrar_{{$revisor->id}}">
     Enviar e-mail
   </button>
 

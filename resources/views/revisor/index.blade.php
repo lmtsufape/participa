@@ -55,7 +55,7 @@
                                         </div>
                                         <div class="col-sm-2">
                                             <div class="btn-group dropright dropdown-options">
-                                                <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <a id="options" class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
                                                         <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
                                                     </div>
@@ -152,7 +152,7 @@
                                     @endif
                                     <td style="text-align:center">
                                     @if ($trabalho->resumo != null)
-                                        <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
+                                        <a class="resumoTrabalho" href="#" data-bs-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-bs-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
                                     @else
                                         Sem resumo
                                     @endif
@@ -165,7 +165,7 @@
                                     @if (!$trabalho->avaliado(auth()->user())){{--avaliacao do revisor aqui--}}
                                         @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao)
                                             {{-- <td>
-                                            <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
+                                            <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-bs-toggle="modal" data-bs-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
                                             </td> --}}
                                             <td>
                                             <form action="{{route('revisor.responde')}}" method="get">

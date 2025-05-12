@@ -1,8 +1,8 @@
  <!-- Button trigger modal -->
- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal{{$area->id}}">
+ <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Modal{{$area->id}}">
     Atribuir
   </button>
-  
+
   <!-- Modal -->
   <div class="modal fade" id="Modal{{$area->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -17,7 +17,7 @@
             @csrf
             <div class="input-group mb-3">
                 <select name="revisor" class="custom-select" id="inputGroupSelect{{$area->id}}">
-                
+
                 @if (!$revisores->contains($area->id))
                     @foreach ($revisores as $revisor)
                         <option value="{{$revisor->id}}" >{{$revisor->user->email}}</option>
@@ -25,7 +25,7 @@
                 @else
                     <option>Não há revisores</option>
                 @endif
-                                
+
                 </select>
             </div>
             <div class="modal-footer">
@@ -36,7 +36,7 @@
         <form action="{{route('atribuir.revisor.lote')}}" method="post">
             @csrf
             <div class="modal-body">
-                
+
             </div>
             <div class="modal-footer">
                 <div class="input-group mb-3">
@@ -50,7 +50,7 @@
                     <option value="2">Two</option>
                     <option value="3">Three</option>
                   </select>
-                </div>                
+                </div>
             </div>
         </form>
       </div>

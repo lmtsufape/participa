@@ -88,7 +88,7 @@
                                 </div>
                                 @can('isCoordenador', $evento)
                                 <div>
-                                    <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirEvento{{$evento->id}}">
                                         <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar
                                     </a>
                                 </div>

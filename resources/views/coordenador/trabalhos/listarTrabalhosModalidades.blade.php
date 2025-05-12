@@ -13,7 +13,7 @@
         <div class="col-sm-3">
           <form method="GET" action="{{route('distribuicao')}}">
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
-            <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
+            <button onclick="event.preventDefault();" data-bs-toggle="modal" data-bs-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
               {{ __('Distribuir trabalhos') }}
             </button>
           </form>
@@ -43,7 +43,7 @@
           <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
 
             <div class="btn-group" role="group">
-              <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Opções
               </button>
               <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -144,12 +144,12 @@
                       <td>
                         @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                             <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
-                                <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                     {{$trabalho->titulo}}
                                 </span>
                             </a>
                         @else
-                            <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                            <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                 {{$trabalho->titulo}}
                             </span>
                         @endif
@@ -159,7 +159,7 @@
                                 <td>
                                     @if($trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first() != null)
                                         <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}" >
-                                            <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
+                                            <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
                                                 <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                                             </span>
                                         </a>
@@ -168,7 +168,7 @@
                             @endforeach
                         @endif
                       <td>
-                        <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
+                        <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
                           {{$trabalho->area->nome}}
                         </span>
 
@@ -186,7 +186,7 @@
 
                       </td>--}}
                       <td style="text-align:center">
-                        <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalTrabalho{{$trabalho->id}}">
                           <i class="fas fa-file-alt"></i>
                         </a>
 
@@ -205,7 +205,7 @@
                       </td>
                       <td style="text-align:center">
                         @if ($trabalho->status == 'arquivado')
-                          <a href="#" data-toggle="modal" data-target="#modalExcluirTrabalho_{{$trabalho->id}}">
+                          <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{$trabalho->id}}">
                               <i class="fas fa-trash"></i>
                           </a>
                         @endif

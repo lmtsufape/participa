@@ -65,7 +65,7 @@
                                             <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao', ['id' => $user->id])}}" method="POST">
                                               @csrf
                                               <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                                              <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
+                                              <a href="#" data-bs-toggle="modal" data-bs-target="#modalRemoverComissao{{$user->id}}">
                                                 <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
                                               </a>
                                             </form>
@@ -84,7 +84,7 @@
                                             <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao', ['id' => $user->id])}}" method="POST">
                                               @csrf
                                               <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                                              <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
+                                              <a href="#" data-bs-toggle="modal" data-bs-target="#modalRemoverComissao{{$user->id}}">
                                                 <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
                                               </a>
                                             </form>

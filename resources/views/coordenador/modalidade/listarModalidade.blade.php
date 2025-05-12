@@ -32,10 +32,10 @@
                             <tr>
                                 <td>{{$modalidade->nome}}</td>
                                 <td style="text-align:center">
-                                    <a href="#" data-toggle="modal" data-target="#modalEditarModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
                                 </td>
                                 <td style="text-align:center">
-                                    <a href="" data-toggle="modal" data-target="#modalExcluirModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a>
+                                    <a href="" data-bs-toggle="modal" data-bs-target="#modalExcluirModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a>
                                 </td>
                             </tr>
                             @endforeach

@@ -45,13 +45,13 @@
                                 <tr>
                                   <td>{{$area->nome}}</td>
                                   <td style="text-align:center">
-                                    <a href="#" data-toggle="modal" data-target="#modalEditarArea{{$area->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarArea{{$area->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
                                   </td>
                                   <td style="text-align:center">
                                     <form id="formExcluirArea{{$area->id}}" method="POST" action="{{route('area.destroy',$area->id)}}">
                                       {{ csrf_field() }}
                                       {{ method_field('DELETE') }}
-                                      <a href="#" data-toggle="modal" data-target="#modalExcluirArea{{$area->id}}">
+                                      <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirArea{{$area->id}}">
                                         <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt="">
                                       </a>
                                     </form>
