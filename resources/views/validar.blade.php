@@ -3,14 +3,15 @@
 @section('content')
 <style>
 
-.form-home{
+.form-home {
     border-radius: 10px;
     background-color: white;
     width: 500px;
-    height: 480px;
-    padding: 20px 30px;
 
+    min-height: 200px;
+    padding: 1.5rem 2rem;
 }
+
 
 p{
     text-align: justify;
