@@ -9,7 +9,7 @@
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-10">
-                    <h1>Meus Eventos - Coordenação Comissão Organizadora</h1>
+                    <h1>{{ __('Meus eventos - Coordenação comissão organizadora') }}</h1>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <p class="card-text">
-                    <strong>Realização:</strong> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
+                    <strong>{{ __('Realização:') }}</strong> {{date('d/m/Y',strtotime($evento->dataInicio))}} - {{date('d/m/Y',strtotime($evento->dataFim))}}<br>
                 </p>
                 <div class="row col-md-12">
                     <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
@@ -60,7 +60,7 @@
         @else
         <div class="card">
             <div class="card-body">
-                <p class="card-text">Você ainda não participou de nenhum evento.</p>
+                <p class="card-text">{{ __('Você ainda não participou de nenhum evento.') }}</p>
             </div>
         </div>
         @endif

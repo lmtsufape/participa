@@ -8,7 +8,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Cadastrar Área</h5>
+          <h5 class="modal-title" id="exampleModalLabel">{{ __('Cadastrar Área') }}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -16,7 +16,7 @@
         <div class="modal-body">
             <div class="row justify-content-center">
                 <div class="col-sm-12">
-                    <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova área para o seu evento</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ __('Cadastre uma nova área para o seu evento') }}</h6>
                     <form method="POST" action="{{route('area.store')}}">
                         @csrf
                         <input type="hidden" name="eventoId" value="{{$evento->id}}">
@@ -35,7 +35,7 @@
                         </div>
                     </p>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Fechar') }}</button>
                         <button type="submit" class="btn btn-primary" >
                             {{ __('Finalizar') }}
                         </button>

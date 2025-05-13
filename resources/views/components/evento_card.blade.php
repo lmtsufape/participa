@@ -17,7 +17,7 @@
                 <img src="{{ asset('img/icons/calendar.png') }}" width="16px" alt="Data">
                 <span class="text-my-secondary">{{ $dataInicioFormatada }}</span>
             </div>
-            <a href="{{ $link }}" class="btn btn-my-outline-primary rounded-pill btn-sm px-3">Saiba mais</a>
+            <a href="{{ $link }}" class="btn btn-my-outline-primary rounded-pill btn-sm px-3">{{ __('Saiba mais') }}</a>
 
         </div>
 

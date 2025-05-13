@@ -18,7 +18,7 @@
 
 <div class="d-flex justify-content-sm-between align-items-center pb-5">
   <h2 class="text-my-primary">{{ $titulo }}</h2>
-  <a href="{{ $urlVerTodos }}" class="btn btn-my-outline-primary rounded-5">Ver todos</a>
+  <a href="{{ $urlVerTodos }}" class="btn btn-my-outline-primary rounded-5">{{ __('Ver todos') }}</a>
 </div>
 
 <div id="carouselComponentCaptions{{$id}}" class="carousel slide carousel-dark" data-bs-ride="false">
@@ -62,7 +62,7 @@
                     </div>
                     <a href="{{ route('evento.visualizar', $evento->id) }}"
                        class="btn btn-my-outline-primary rounded-pill btn-sm px-3">
-                      Saiba mais
+                      {{ __('Saiba mais') }}
                     </a>
                   </div>
 

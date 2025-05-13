@@ -383,10 +383,10 @@
         <div id="etapa-2" style="display: none;">
             <div class="etapas">
                 <div class="etapa">
-                    <p>1. Informações pessoais</p>
+                    <p>1. {{ __('Informações Pessoais') }}</p>
                 </div>
                 <div class="etapa ativa">
-                    <p>2. Endereço</p>
+                    <p>2. {{__('Endereço')}}</p>
                 </div>
             </div>
 

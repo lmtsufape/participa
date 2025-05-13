@@ -8,7 +8,7 @@
              class="img-fluid w-100" style="max-height: 300px; object-fit: cover;">
         <h1 class="position-absolute top-50 start-50 translate-middle text-white fw-semibold"
             style="font-size: 2rem; text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);">
-            Últimos eventos realizados
+            {{ __('Últimos eventos realizados') }}
         </h1>
     </div>
 

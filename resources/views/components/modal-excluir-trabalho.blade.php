@@ -12,13 +12,13 @@
           <form id="formExcluirTrab{{$trabalho->id}}" action="{{route('excluir.trabalho', ['id' => $trabalho->id])}}" method="POST">
             @csrf
             <p>
-              Tem certeza que deseja excluir esse trabalho?
+              {{ __('Tem certeza que deseja excluir esse trabalho?') }}
             </p>
-            <small>Ninguém poderá ver seu trabalho após a exclusão.</small>
+            <small>{{ __('Ninguém poderá ver seu trabalho após a exclusão.') }}</small>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Não') }}</button>
           <button type="submit" class="btn btn-primary" form="formExcluirTrab{{$trabalho->id}}">Sim</button>
         </div>
       </div>

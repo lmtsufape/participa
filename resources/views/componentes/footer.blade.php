@@ -10,7 +10,7 @@
         </div>
         <div>
             <p class="m-0 text-secondary">
-                Desenvolvido por: LMTS | Laboratório Multidisciplinar de Tecnologias Sociais
+                {{ __('Desenvolvido por: LMTS | Laboratório Multidisciplinar de Tecnologias Sociais') }}
             </p>
             <address class="m-0 text-secondary">Avenida Bom Pastor, s/n.º - Bairro Boa Vista<br>CEP: 55292-270 - Garanhuns - PE</address>
 
@@ -32,31 +32,31 @@
 
     <div class="row text-center p-4 text-white" style="background-color: #034652">
         <div class="col-6 col-md-3 mb-3 mb-md-0">
-            <h6 class="fw-bold">Encontre eventos</h6>
+            <h6 class="fw-bold">{{ __('Encontre eventos') }}</h6>
             <ul class="list-unstyled small">
-                <li><a href="#" class="text-white text-decoration-none">Em destaque neste momento</a></li>
-                <li><a href="#" class="text-white text-decoration-none">Últimos eventos realizados</a></li>
+                <li><a href="#" class="text-white text-decoration-none">{{ __('Em destaque neste momento') }}</a></li>
+                <li><a href="#" class="text-white text-decoration-none">{{ __('Últimos eventos realizados') }}</a></li>
             </ul>
         </div>
         <div class="col-6 col-md-3 mb-3 mb-md-0">
-            <h6 class="fw-bold">Módulos</h6>
+            <h6 class="fw-bold">{{ __('Módulos') }}</h6>
             <ul class="list-unstyled small">
-                <li><a href="#" class="text-white text-decoration-none">Inscrições</a></li>
-                <li><a href="#" class="text-white text-decoration-none">Submissões</a></li>
-                <li><a href="#" class="text-white text-decoration-none">Certificados</a></li>
+                <li><a href="#" class="text-white text-decoration-none">{{ __('Inscrições') }}</a></li>
+                <li><a href="#" class="text-white text-decoration-none">{{ __('Submissões') }}</a></li>
+                <li><a href="#" class="text-white text-decoration-none">{{ __('Certificados') }}</a></li>
             </ul>
         </div>
         <div class="col-6 col-md-3 mb-3 mb-md-0">
-            <h6 class="fw-bold">Para produtores</h6>
+            <h6 class="fw-bold">{{ __('Para produtores') }}</h6>
             <ul class="list-unstyled small">
-                <li><a href="#" class="text-white text-decoration-none">Como criar seu evento no participa</a></li>
+                <li><a href="#" class="text-white text-decoration-none">{{ __('Como criar seu evento no participa') }}</a></li>
             </ul>
         </div>
         <div class="col-6 col-md-3 mb-3 mb-md-0">
-            <h6 class="fw-bold">Plataforma</h6>
+            <h6 class="fw-bold">{{ __('Plataforma') }}</h6>
             <ul class="list-unstyled small">
-                <li><a href="#" class="text-white text-decoration-none">Ajuda</a></li>
-                <li><a href="#" class="text-white text-decoration-none">Autenticar Certificados</a></li>
+                <li><a href="#" class="text-white text-decoration-none">{{ __('Ajuda') }}</a></li>
+                <li><a href="#" class="text-white text-decoration-none">{{ __('Autenticar Certificados') }}</a></li>
             </ul>
         </div>
     </div>
