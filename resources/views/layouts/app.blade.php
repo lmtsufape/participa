@@ -37,6 +37,20 @@
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" > -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <!-- <link href="{{ asset('css/styleIndex.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/dark-mode.css') }}" rel="stylesheet"> -->
+    <style>
+        /* Realça todas as inputs do sistema */
+        .form-control {
+            border: 1px solid rgba(108, 117, 125, 0.47) !important;   /* tom de cinza mais escuro */
+        }
+        .form-control:focus {
+            border-color:rgb(3, 70, 82) !important;       /* padrão azul Bootstrap */
+            box-shadow: 0 0 0 .2rem rgba(3, 70, 82, 0.25) !important;
+        }
+    </style>
+
+
 
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
