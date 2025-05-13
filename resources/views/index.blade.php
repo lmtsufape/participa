@@ -83,10 +83,16 @@
 @section('content')
 
     <div class="container d-flex flex-column pb-5">
-        <div class="d-flex align-items-center mb-3">
-            <h2 class="mx-auto text-my-primary">Em destaque neste momento</h2>
-            <a href="{{ route('eventos.proximos') }}" class="btn btn-my-outline-primary rounded-5">Ver todos</a>
+        <div class="container d-flex align-items-center mb-3 position-relative">
+            <h2 class="text-my-primary position-absolute start-50 translate-middle-x">
+                Em destaque neste momento
+            </h2>
+            <a href="{{ route('eventos.proximos') }}"
+                class="btn btn-my-outline-primary rounded-5 ms-auto">
+                Ver todos
+            </a>
         </div>
+
 
         <!-- Swiper -->
         <div class="swiper mySwiper">
@@ -121,12 +127,12 @@
         </div>
     </div>
 
-    <div class="container py-5">
+    <!-- <div class="container py-5">
         @include('components.carrossel', ['eventos' => $eventos_destaques, 'titulo' => 'Vistos recentemente', 'id' => 'vistosRecentimente'])
-    </div>
+    </div> -->
 
     <div class="container py-5">
-        @include('components.carrossel', ['eventos' => $eventos_passados, 'titulo' => 'Últimos eventos realizados', 'id' => 'eventosRealizados'])
+        @include('components.carrossel', ['eventos' => $eventos_passados, 'titulo' => 'Últimos eventos realizados', 'id' => 'eventosRealizados', 'urlVerTodos'  => route('eventos.passados')])
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
