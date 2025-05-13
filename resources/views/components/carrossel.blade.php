@@ -1,3 +1,7 @@
+@php
+    $urlVerTodos = $urlVerTodos ?? route('eventos.proximos');
+@endphp
+
 <style>
     .carousel-indicators button.active {
         background-color: #000 !important;
@@ -9,13 +13,13 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
-
 </style>
-<div class="d-flex justify-content-sm-between align-items-center px-5">
-    <h2 class="text-my-primary">{{$titulo}}</h2>
-    <a href="{{route('eventos.proximos')}}" class="btn border rounded-pill">Ver todos</a>
+
+<div class="d-flex justify-content-sm-between align-items-center pb-5">
+    <h2 class="text-my-primary">{{ $titulo }}</h2>
+    <a href="{{ $urlVerTodos }}" class="btn btn-my-outline-primary rounded-5">Ver todos</a>
 </div>
+
 <div id="carouselComponentCaptions{{$id}}" class="carousel slide carousel-dark" data-bs-ride="false">
     <div class="carousel-inner">
         @foreach ($eventos->chunk(3) as $eventosChunk)

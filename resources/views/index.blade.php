@@ -121,12 +121,12 @@
         </div>
     </div>
 
-    <div class="container py-5">
+    <!-- <div class="container py-5">
         @include('components.carrossel', ['eventos' => $eventos_destaques, 'titulo' => 'Vistos recentemente', 'id' => 'vistosRecentimente'])
-    </div>
+    </div> -->
 
     <div class="container py-5">
-        @include('components.carrossel', ['eventos' => $eventos_passados, 'titulo' => 'Últimos eventos realizados', 'id' => 'eventosRealizados'])
+        @include('components.carrossel', ['eventos' => $eventos_passados, 'titulo' => 'Últimos eventos realizados', 'id' => 'eventosRealizados', 'urlVerTodos'  => route('eventos.passados')])
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
