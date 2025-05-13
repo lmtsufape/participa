@@ -170,7 +170,17 @@
     "Em destaque neste momento": "Featured right now",
     "Vistos recentemente": "Recently viewed",
     "Ver todos:": "See all:",
-    "saiba mais:": "Learn more:"
-
-
+    "saiba mais:": "Learn more:",
+    "Nome do evento": "Event name",
+    "Estado": "State",
+    "Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):": "Banner (size: 1024 x 425, format: JPEG, JPG and PNG):",
+    "Banner Inglês": "English Banner",
+    "Banner Espanhol": "Spanish Banner",
+    "Ícone (tamanho: 600 x 600, formato: JPEG, JPG e PNG):": "Icon (size: 600 x 600, format: JPEG, JPG and PNG):",
+    "Ícone inglês": "English Icon",
+    "Ícone espanhol": "Spanish Icon",
+    "Data de início": "Start date",
+    "Data de término": "End date",
+    "Endereço e data": "Address and date",
+    "Informações gerais": "General information"
 }
