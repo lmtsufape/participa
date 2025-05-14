@@ -75,11 +75,11 @@
     <div class="container d-flex flex-column pb-5">
         <div class="container d-flex align-items-center mb-3 position-relative">
             <h2 class="text-my-primary position-absolute start-50 translate-middle-x">
-                Em destaque neste momento
+                {{ __('Em destaque neste momento') }}
             </h2>
             <a href="{{ route('eventos.proximos') }}"
                class="btn btn-my-outline-primary rounded-5 ms-auto">
-                Ver todos
+                {{ __('Ver todos') }}
             </a>
         </div>
 
@@ -107,7 +107,7 @@
                                 </p>
                                 <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
                                    class="btn btn-outline-light rounded-3">
-                                    Saiba mais
+                                    {{ __('Saiba mais') }}
                                 </a>
                             </div>
                         </div>
@@ -124,7 +124,7 @@
     <div class="container py-5">
         @include('components.carrossel', [
             'eventos'     => $eventos_passados,
-            'titulo'      => 'Últimos eventos realizados',
+            'titulo'      => __('Últimos eventos realizados'),
             'id'          => 'eventosRealizados',
             'urlVerTodos' => route('eventos.passados'),
         ])

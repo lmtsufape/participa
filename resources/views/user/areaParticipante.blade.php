@@ -6,7 +6,7 @@
     <div class="position-relative mb-5">
         <h1 class="position-absolute top-50 start-50 translate-middle fw-semibold"
             style="font-size: 2rem; color: #034652;">
-            Meus Eventos
+            {{ __('Meus Eventos') }}
         </h1>
     </div>
 
@@ -17,7 +17,7 @@
                     <input type="text"
                         name="busca"
                         class="form-control"
-                        placeholder="Pesquise por evento..."
+                        placeholder="{{ __('Pesquise por evento...') }}"
                         value="{{ request('busca') }}">
 
                     <button type="submit" class="btn bg-white border-start-0">
@@ -30,8 +30,8 @@
 
             <div class="col-md-4">
                 <select name="ordenar" class="form-select w-100" onchange="this.form.submit()">
-                    <option value="data" {{ request('ordenar') === 'data' ? 'selected' : '' }}>Ordenar por data</option>
-                    <option value="nome" {{ request('ordenar') === 'nome' ? 'selected' : '' }}>Ordenar por nome</option>
+                    <option value="data" {{ request('ordenar') === 'data' ? 'selected' : '' }}>{{ __('Ordenar por data') }}</option>
+                    <option value="nome" {{ request('ordenar') === 'nome' ? 'selected' : '' }}>{{ __('Ordenar por nome') }}</option>
                 </select>
             </div>
         </form>

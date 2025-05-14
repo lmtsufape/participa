@@ -9,7 +9,7 @@
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-10">
-                    <h1>Eventos como Membro da Comissão Científica</h1>
+                    <h1>{{ __('Eventos como Membro da Comissão Científica') }}</h1>
                 </div>
                 {{-- <div class="col-sm-2">
                     <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
@@ -59,13 +59,13 @@
                             <div>
                                 <div>
                                     <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
-                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;{{ __('Visualizar evento') }}
                                     </a>
                                 </div>
                                 @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                                 <div>
                                     <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
-                                        <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
+                                        <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;{{ __('Configurar evento') }}
                                     </a>
                                 </div>
                                 @endcan

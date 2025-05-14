@@ -21,6 +21,8 @@
                         </div>
                         @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
                             <h2 class="card-title">{{$evento->nome_en}}</h2>
+                        @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
+                            <h2 class="card-title">{{$evento->nome_es}}</h2>
                         @else
                             <h2 class="card-title">{{$evento->nome}}</h2>
                         @endif

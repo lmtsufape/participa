@@ -32,7 +32,7 @@ p{
                 @csrf
 
                 <div class="d-flex justify-content-center">
-                    <h3>Validar certificado</h3>
+                    <h3>{{ __('Validar certificado') }}</h3>
                 </div>
                 <hr class="border-secondary">
 

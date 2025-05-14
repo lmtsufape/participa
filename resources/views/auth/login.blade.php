@@ -25,15 +25,13 @@ p{
                 <img src="{{ asset('/img/logo.png') }}" alt="logo" width="50%">
             </a>
 
-            <p class="mt-3 fs-3 text-justify">É um sistema de Gestão de Eventos Científicos que busca contribuir com
-                instituições acadêmicas públicas ou privadas que necessitem de uma ferramenta
-                para gerenciar eventos científicos.</p>
+            <p class="mt-3 fs-3 text-justify">{{ __('É um sistema de Gestão de Eventos Científicos que busca contribuir com instituições acadêmicas públicas ou privadas que necessitem de uma ferramenta para gerenciar eventos científicos') }}.</p>
         </section>
 
         <div class="col-md-6 d-flex align-items-center justify-content-end">
             <form class="shadow form-home" method="POST" action="{{ route('login') }}">
                 @csrf
-                <h4 class="text-md-center"><strong>Entrar</strong></h4>
+                <h4 class="text-md-center"><strong>{{ __('Entrar') }}</strong></h4>
                 <hr class="border-secondary">
 
                 <div class="form-group py-4">
@@ -75,7 +73,7 @@ p{
                 </div>
 
                 <div class="text-md-center pt-4">
-                    <span>{{ __(key: 'Não possui conta?') }}</span>
+                    <span>{{ __('Não possui conta?') }}</span>
                     <a class="text-my-secondary fw-bold" href="{{ route('register', app()->getLocale()) }}">
                         {{ __('Crie agora') }}
                     </a>

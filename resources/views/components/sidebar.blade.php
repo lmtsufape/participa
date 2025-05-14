@@ -14,13 +14,13 @@
                 <a href="{{ route('evento.editar', $evento->id) }}"
                     class="d-flex align-items-center gap-2 text-decoration-none text-dark">
                     <img src="{{ asset('img/icons/edit-regular-white.svg') }}" alt="" width="20px" class="edit-icon">
-                    Editar evento
+                    {{ __('Editar evento') }}
                 </a>
                 @if ($evento->eventoPai == null)
                     <a href="{{ route('subevento.criar', $evento->id) }}"
                         class="d-flex align-items-center gap-2 text-decoration-none text-dark">
                         <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px" class="add-icon">
-                        Criar Subevento
+                        {{ __('Criar subevento') }}
                     </a>
                     <hr class="my-2">
                 @endif
@@ -33,7 +33,7 @@
                 <a class="nav-link d-flex align-items-center gap-2" id="informacoes"
                     href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
                     <img src="{{ asset('img/icons/info-circle-solid.svg') }}" width="20px" alt="">
-                    <span>Informações</span>
+                    <span>{{ __('Informações') }}</span>
                 </a>
             </li>
             @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
@@ -41,7 +41,7 @@
                     <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                         href="#collapseProgramacao" role="button" aria-expanded="false" aria-controls="collapseProgramacao">
                         <img src="{{ asset('img/icons/slideshow.svg') }}" width="20px" alt="">
-                        <span>Programação</span>
+                        <span>{{ __('Programação') }}</span>
                     </a>
                     <div class="collapse" id="collapseProgramacao" @if (
                             request()->is('coord/evento/atividade*') ||
@@ -54,7 +54,7 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="cadastrarModalidade"
                                     href="{{ route('coord.atividades', ['id' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/plus-square-solid.svg') }}" width="20px" alt="">
-                                    <span>Atividades</span>
+                                    <span>{{ __('Atividades') }}</span>
                                 </a>
                             </li>
 
@@ -62,14 +62,14 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="cadastrarModalidade"
                                     href="{{ route('checkout.pagamentos', ['id' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/edit-regular-white.svg') }}" width="20px" alt="">
-                                    <span>Pagamentos</span>
+                                    <span>{{ __('Pagamentos') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="pdfadicional"
                                     href="{{ route('coord.arquivos-adicionais', $evento) }}">
                                     <img src="{{ asset('img/icons/file-alt-regular.svg') }}" width="20px" alt="">
-                                    <span>Arquivos adicionais</span>
+                                    <span>{{ __('Arquivos adicionais') }}</span>
                                 </a>
                             </li>
 
@@ -78,7 +78,7 @@
                                     data-bs-toggle="collapse" href="#dropdownPalestrantes" aria-controls="dropdownPalestrantes"
                                     role="button" aria-expanded="false">
                                     <img src="{{ asset('img/icons/user-tie-solid.svg') }}" width="20px" alt="">
-                                    <span>Palestrantes</span>
+                                    <span>{{ __('Palestrantes') }}</span>
                                 </a>
                                 <div class="collapse" id="dropdownPalestrantes">
                                     <ul class="nav flex-column">
@@ -86,14 +86,14 @@
                                             <a class="nav-link d-flex align-items-center gap-2" id="cadastrarPalestrante"
                                                 href="{{ route('coord.palestrantes.create', ['eventoId' => $evento->id]) }}">
                                                 <img src="{{ asset('img/icons/user-plus-solid.svg') }}" width="20px" alt="">
-                                                <span>Cadastrar palestra</span>
+                                                <span>{{ __('Cadastrar palestra') }}</span>
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link d-flex align-items-center gap-2" id="listarPalestrantes"
                                                 href="{{ route('coord.palestrantes.index', ['eventoId' => $evento->id]) }}">
                                                 <img src="{{ asset('img/icons/list.svg') }}" width="20px" alt="">
-                                                <span>Listar palestras</span>
+                                                <span>{{ __('Listar palestras') }}</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -107,7 +107,7 @@
                 <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                     href="#collapseAreas" role="button" aria-expanded="false" aria-controls="collapseAreas">
                     <img src="{{ asset('img/icons/area.svg') }}" alt="" width="20px">
-                    <span>Áreas</span>
+                    <span>{{ __('Áreas') }}</span>
                 </a>
                 <div class="collapse" id="collapseAreas" @if (request()->is('coord/evento/areas*')) style='display: block;'
                 @endif>
@@ -116,7 +116,7 @@
                             <a class="nav-link d-flex align-items-center gap-2" id="listarAreas"
                                 href="{{ route('coord.listarAreas', ['eventoId' => $evento->id]) }}">
                                 <img src="{{ asset('img/icons/list.svg') }}" width="20px" alt="">
-                                <span>Listar Áreas</span>
+                                <span>{{ __('Listar áreas') }}</span>
                             </a>
                         </li>
                     </ul>
@@ -126,7 +126,7 @@
                 <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                     href="#collapseModalidades" role="button" aria-expanded="false" aria-controls="collapseModalidades">
                     <img src="{{ asset('img/icons/sitemap-solid.svg') }}" alt="" width="20px">
-                    <span>Modalidades</span>
+                    <span>{{ __('Modalidades') }}</span>
                 </a>
                 <div class="collapse" id="collapseModalidades" @if (request()->is('coord/evento/modalidade*'))
                 style='display: block;' @endif>
@@ -135,14 +135,14 @@
                             <a class="nav-link d-flex align-items-center gap-2" id="cadastrarModalidade"
                                 href="{{ route('coord.cadastrarModalidade', ['eventoId' => $evento->id]) }}">
                                 <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                <span>Cadastrar Modalidade</span>
+                                <span>{{ __('Cadastrar modalidade') }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center gap-2" id="listarModalidade"
                                 href="{{ route('coord.listarModalidade', ['eventoId' => $evento->id]) }}">
                                 <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                <span>Listar Modalidades</span>
+                                <span>{{ __('Listar modalidades') }}</span>
                             </a>
                         </li>
                         @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
@@ -150,21 +150,21 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="cadastrarCriterio"
                                     href="{{ route('coord.cadastrarCriterio', ['eventoId' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                    <span>Cadastrar Critérios</span>
+                                    <span>{{ __('Cadastrar critérios') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="listarCriterios"
                                     href="{{ route('coord.listarCriterios', ['eventoId' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>Listar Critérios</span>
+                                    <span>{{ __('Listar critérios') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="forms"
                                     href="{{ route('coord.forms', ['eventoId' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                    <span>Formulário</span>
+                                    <span>{{ __('Formulário') }}</span>
                                 </a>
                             </li>
                         @endcan
@@ -175,7 +175,7 @@
                 <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                     href="#collapseComissao" role="button" aria-expanded="false" aria-controls="collapseComissao">
                     <img src="{{ asset('img/icons/user-tie-solid.svg') }}" alt="" width="20px">
-                    <span>Comissão Científica</span>
+                    <span>{{ __('Comissão científica') }}</span>
                 </a>
                 <div class="collapse" id="collapseComissao" @if (request()->is('coord/evento/comissaoCientifica*'))
                 style='display: block;' @endif>
@@ -184,7 +184,7 @@
                             <a class="nav-link d-flex align-items-center gap-2" id="cadastrarComissao"
                                 href="{{ route('coord.cadastrarComissao', ['eventoId' => $evento->id]) }}">
                                 <img src="{{ asset('img/icons/user-plus-solid.svg') }}" alt="" width="20px">
-                                <span>Cadastrar membro</span>
+                                <span>{{ __('Cadastrar membro') }}</span>
                             </a>
                         </li>
                         @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
@@ -192,7 +192,7 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="definirCoordComissao"
                                     href="{{ route('coord.definirCoordComissao', ['eventoId' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/crown-solid.svg') }}" alt="" width="20px">
-                                    <span>Definir Coordenador</span>
+                                    <span>{{ __('Definir coordenador') }}</span>
                                 </a>
                             </li>
                         @endcan
@@ -200,7 +200,7 @@
                             <a class="nav-link d-flex align-items-center gap-2" id="listarComissao"
                                 href="{{ route('coord.listarComissao', ['eventoId' => $evento->id]) }}">
                                 <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                <span>Listar Comissão</span>
+                                <span>{{ __('Listar comissão') }}</span>
                             </a>
                         </li>
                     </ul>
@@ -211,7 +211,7 @@
                     href="#collapseComissaoOrganizadora" role="button" aria-expanded="false"
                     aria-controls="collapseComissaoOrganizadora">
                     <img src="{{ asset('img/icons/user-tie-solid.svg') }}" alt="" width="20px">
-                    <span>Comissão Organizadora</span>
+                    <span>{{ __('Comissão organizadora') }}</span>
                 </a>
                 <div class="collapse" id="collapseComissaoOrganizadora" @if (request()->is('comissaoOrganizadora*'))
                 style='display: block;' @endif>
@@ -221,14 +221,14 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="cadastrarComissaoOrganizadora"
                                     href="{{ route('coord.comissao.organizadora.create', ['id' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/user-plus-solid.svg') }}" alt="" width="20px">
-                                    <span>Cadastrar membro</span>
+                                    <span>{{ __('Cadastrar membro') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="definirCoordComissaoOrganizadora"
                                     href="{{ route('coord.definir.coordComissaoOrganizadora', ['id' => $evento]) }}">
                                     <img src="{{ asset('img/icons/crown-solid.svg') }}" alt="" width="20px">
-                                    <span>Definir Coordenador</span>
+                                    <span>{{ __('Definir coordenador') }}</span>
                                 </a>
                             </li>
                         @endcan
@@ -236,7 +236,7 @@
                             <a class="nav-link d-flex align-items-center gap-2" id="listarComissaoOrganizadora"
                                 href="{{ route('coord.listar.comissaoOrganizadora', ['id' => $evento]) }}">
                                 <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                <span>Listar Comissão</span>
+                                <span>{{ __('Listar comissão') }}</span>
                             </a>
                         </li>
                     </ul>
@@ -247,7 +247,7 @@
                     href="#collapseOutrasComissoes" role="button" aria-expanded="false"
                     aria-controls="collapseOutrasComissoes">
                     <img src="{{ asset('img/icons/user-tie-solid.svg') }}" alt="" width="20px">
-                    <span>Outras comissões</span>
+                    <span>{{ __('Outras comissões') }}</span>
                 </a>
                 <div class="collapse" id="collapseOutrasComissoes" @if (request()->is('coord/evento/*/tipocomissao*'))
                 style='display: block;' @endif>
@@ -256,7 +256,7 @@
                             <a class="nav-link d-flex align-items-center gap-2" id="cadastrarOutraComissao"
                                 href="{{ route('coord.tipocomissao.create', $evento) }}">
                                 <img src="{{ asset('img/icons/user-plus-solid.svg') }}" alt="" width="20px">
-                                <span>Cadastrar comissão</span>
+                                <span>{{ __('Cadastrar comissão') }}</span>
                             </a>
                         </li>
                         @foreach ($evento->outrasComissoes as $comissao)
@@ -276,7 +276,7 @@
                     <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                         href="#CollapseRevisores" role="button" aria-expanded="false" aria-controls="CollapseRevisores">
                         <img src="{{ asset('img/icons/glasses-solid.svg') }}" alt="" width="20px">
-                        <span>Avaliadores</span>
+                        <span>{{ __('Avaliadores') }}</span>
                     </a>
                     <div class="collapse" id="CollapseRevisores" @if (request()->is('coord/evento/revisores*'))
                     style='display: block;' @endif>
@@ -285,7 +285,7 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="listarRevisores"
                                     href="{{ route('coord.listarRevisores', ['eventoId' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>Listar Avaliadores</span>
+                                    <span>{{ __('Listar avaliadores') }}</span>
                                 </a>
                             </li>
                         </ul>
@@ -297,7 +297,7 @@
                     <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                         href="#CollapseInscricoes" role="button" aria-expanded="false" aria-controls="CollapseInscricoes">
                         <img src="{{ asset('img/icons/edit-regular-white.svg') }}" alt="" width="20px">
-                        <span>Inscrições</span>
+                        <span>{{ __('Inscrições') }}</span>
                     </a>
                     <div class="collapse" id="CollapseInscricoes" @if (request()->is($evento->id . '/inscricoes*'))
                     style='display: block;' @endif>
@@ -306,21 +306,21 @@
                                 <a class="nav-link d-flex align-items-center gap-2"
                                     href="{{ route('inscricao.categorias', $evento) }}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>Categorias</span>
+                                    <span>{{ __('Categorias') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2"
                                     href="{{ route('inscricao.formulario', $evento) }}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>Formulário</span>
+                                    <span>{{ __('Formulário') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2"
                                     href="{{ route('inscricao.inscritos', $evento) }}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>Inscritos</span>
+                                    <span>{{ __('Inscritos') }}</span>
                                 </a>
                             </li>
                         </ul>
@@ -332,7 +332,7 @@
                     <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                         href="#collapseTrabalhos" role="button" aria-expanded="false" aria-controls="collapseTrabalhos">
                         <img src="{{ asset('img/icons/file-alt-regular.svg') }}" alt="" width="20px">
-                        <span>Submissões</span>
+                        <span>{{ __('Submissões') }}</span>
                     </a>
                     <div class="collapse" id="collapseTrabalhos" @if (request()->is('coord/evento/trabalhos*'))
                     style='display: block;' @endif>
@@ -341,7 +341,7 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="submissoesTrabalhos"
                                     href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                    <span>Definir Submissões</span>
+                                    <span>{{ __('Definir submissões') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -349,7 +349,7 @@
                                     data-bs-toggle="collapse" data-bs-target="#dropdownSubmeterTrabalho" aria-expanded="false"
                                     aria-controls="dropdownSubmeterTrabalho">
                                     <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                    <span>Submeter Trabalho</span>
+                                    <span>{{ __('Submeter trabalho') }}</span>
                                 </a>
                                 <div class="collapse" id="dropdownSubmeterTrabalho">
                                     @foreach ($evento->modalidades()->get() as $modalidade)
@@ -365,7 +365,7 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="resultadosTrabalhos"
                                     href="{{ route('coord.resultados', ['id' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                    <span>Resultado</span>
+                                    <span>{{ __('Resultado') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -373,12 +373,12 @@
                                     data-bs-toggle="collapse" data-bs-target="#dropdownListarTrabalhos" aria-expanded="false"
                                     aria-controls="dropdownListarTrabalhos">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>Listar Trabalhos</span>
+                                    <span>{{ __('Listar trabalhos') }}</span>
                                 </a>
                                 <div class="collapse" id="dropdownListarTrabalhos">
                                     <a class="nav-link d-flex align-items-center gap-2"
                                         href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}">
-                                        <span>Todos os Trabalhos</span>
+                                        <span>{{ __('Todos os trabalhos') }}</span>
                                     </a>
                                     @foreach ($evento->modalidades()->get() as $modalidade)
                                         <a class="nav-link d-flex align-items-center gap-2"
@@ -394,12 +394,12 @@
                                     data-bs-toggle="collapse" data-bs-target="#dropdownListarAvaliacoes" aria-expanded="false"
                                     aria-controls="dropdownListarAvaliacoes">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>Listar Avaliações</span>
+                                    <span>{{ __('Listar avaliações') }}</span>
                                 </a>
                                 <div class="collapse" id="dropdownListarAvaliacoes">
                                     <a class="nav-link d-flex align-items-center gap-2"
                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}">
-                                        <span>Todas as Avaliações</span>
+                                        <span>{{ __('Todas as Avaliações') }}</span>
                                     </a>
                                     @foreach ($evento->modalidades()->get() as $modalidade)
                                         <a class="nav-link d-flex align-items-center gap-2"
@@ -414,7 +414,7 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="correcoesTrabalhos"
                                     href="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>Listar Correções</span>
+                                    <span>{{ __('Listar correções') }}</span>
                                 </a>
                             </li>
                         </ul>
@@ -426,7 +426,7 @@
                     <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                         href="#CollapseCertificados" role="button" aria-expanded="false" aria-controls="CollapseCertificados">
                         <img src="{{ asset('img/icons/publish.svg') }}" alt="" width="20px">
-                        <span>Certificados</span>
+                        <span>{{ __('Certificados') }}</span>
                     </a>
                     <div class="collapse" id="CollapseCertificados" @if (request()->is('coord/evento/certificado*'))
                     style='display: block;' @endif>
@@ -435,35 +435,35 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="cadastrarAssinatura"
                                     href="{{ route('coord.cadastrarAssinatura', ['eventoId' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                    <span>Cadastrar Assinatura</span>
+                                    <span>{{ __('Cadastrar assinatura') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="listarAssinaturas"
                                     href="{{ route('coord.listarAssinaturas', ['eventoId' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>Listar Assinaturas</span>
+                                    <span>{{ __('Listar assinaturas') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="cadastrarCertificado"
                                     href="{{ route('coord.cadastrarCertificado', ['eventoId' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                    <span>Cadastrar Certificado</span>
+                                    <span>{{ __('Cadastrar certificado') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="listarCertificados"
                                     href="{{ route('coord.listarCertificados', ['eventoId' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>Listar Certificados</span>
+                                    <span>{{ __('Listar certificados') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="emitirCertificado"
                                     href="{{ route('coord.emitirCertificado', ['eventoId' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                    <span>Emitir Certificado</span>
+                                    <span>{{ __('Emitir certificado') }}</span>
                                 </a>
                             </li>
                         </ul>
@@ -474,7 +474,7 @@
                 <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                     href="#CollapseMemoria" role="button" aria-expanded="false" aria-controls="CollapseMemoria">
                     <img src="{{ asset('img/icons/slideshow.svg') }}" alt="" width="20px">
-                    <span>Memórias</span>
+                    <span>{{ __('Memórias') }}</span>
                 </a>
                 <div class="collapse" id="CollapseMemoria" @if (request()->is('coord/*/memoria*')) style='display: block;'
                 @endif>
@@ -483,14 +483,14 @@
                             <a class="nav-link d-flex align-items-center gap-2" id="cadastrarMemoria"
                                 href="{{ route('coord.memoria.create', $evento) }}">
                                 <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                <span>Adicionar registro</span>
+                                <span>{{ __('Adicionar registro') }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center gap-2" id="listarMemorias"
                                 href="{{ route('coord.memoria.index', $evento) }}">
                                 <img src="{{ asset('img/icons/edit-regular-white.svg') }}" alt="" width="20px">
-                                <span>Listar registros</span>
+                                <span>{{ __('Listar registros') }}</span>
                             </a>
                         </li>
                     </ul>
@@ -500,7 +500,7 @@
                 <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                     href="#CollapseEvento" role="button" aria-expanded="false" aria-controls="CollapseEvento">
                     <img src="{{ asset('img/icons/palestrante.svg') }}" alt="" width="20px">
-                    <span>Outras configurações</span>
+                    <span>{{ __('Outras configurações') }}</span>
                 </a>
                 <div class="collapse" id="CollapseEvento" @if (request()->is('coord/evento/eventos*'))
                 style='display: block;' @endif>
@@ -509,14 +509,14 @@
                             <a class="nav-link d-flex align-items-center gap-2" id="editarEtiqueta"
                                 href="{{ route('coord.editarEtiqueta', ['eventoId' => $evento->id]) }}">
                                 <img src="{{ asset('img/icons/edit-regular-white.svg') }}" alt="" width="20px">
-                                <span>Etiquetas dos Eventos</span>
+                                <span>{{ __('Etiquetas dos eventos') }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center gap-2" id="editarEtiquetaSubTrabalhos"
                                 href="{{ route('coord.etiquetasTrabalhos', ['eventoId' => $evento->id]) }}">
                                 <img src="{{ asset('img/icons/edit-regular-white.svg') }}" alt="" width="20px">
-                                <span>Etiquetas dos Trabalhos</span>
+                                <span>{{ __('Etiquetas dos trabalhos') }}</span>
                             </a>
                         </li>
                         @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
@@ -524,7 +524,7 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="modulos"
                                     href="{{ route('coord.modulos', ['id' => $evento->id]) }}">
                                     <img src="{{ asset('img/icons/modulos.png') }}" alt="" width="20px">
-                                    <span>Módulos</span>
+                                    <span>{{ __('Módulos') }}</span>
                                 </a>
                             </li>
                         @endcan
@@ -536,7 +536,7 @@
                     <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                         href="#collapsePublicar" role="button" aria-expanded="false" aria-controls="collapsePublicar">
                         <img src="{{ asset('img/icons/publish.svg') }}" alt="" width="20px">
-                        <span>Publicar</span>
+                        <span>{{ __('Publicar') }}</span>
                     </a>
                     <div class="collapse" id="collapsePublicar">
                         <div style="display: none;">
@@ -550,14 +550,14 @@
                                 <a class="nav-link d-flex align-items-center gap-2" id="publicarEvento"
                                     onclick="habilitarEvento()">
                                     <img src="{{ asset('img/icons/alto-falante.svg') }}" alt="" width="20px">
-                                    <span>Publicar Evento</span>
+                                    <span>{{ __('Publicar evento') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="desabilitarEventoPublicado"
                                     onclick="desabilitarEvento()">
                                     <img src="{{ asset('img/icons/alto-falante-nao.svg') }}" alt="" width="20px">
-                                    <span>Desfazer publicação</span>
+                                    <span>{{ __('Desfazer publicação') }}</span>
                                 </a>
                             </li>
                         </ul>
