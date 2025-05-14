@@ -76,7 +76,7 @@ class ModalidadeStoreRequest extends FormRequest
             'maxcaracteres' => ['required_if:limit,limit-option1', 'nullable', 'integer', 'gte:mincaracteres'],
             'minpalavras' => ['required_if:limit,limit-option2', 'nullable', 'integer', 'lte:maxpalavras'],
             'maxpalavras' => ['required_if:limit,limit-option2', 'nullable', 'integer', 'gte:minpalavras'],
-            'arquivoRegras' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
+            'arquivoRegras' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
             'arquivoInstrucoes' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
             'arquivoModelo' => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,pdf,ppt,pptx,odp', 'max:2048'],
             'arquivosTemplates' => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf,pptx', 'max:2048'],
