@@ -48,6 +48,8 @@
                 <label>Evento</label>
                 @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
                     <input type="text" class="form-control" disabled value="{{$evento->nome_en}}">
+                @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
+                    <input type="text" class="form-control" disabled value="{{$evento->nome_es}}">
                 @else
                     <input type="text" class="form-control" disabled value="{{$evento->nome}}">
                 @endif
