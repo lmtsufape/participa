@@ -18,11 +18,11 @@
             </div>
             <div class="col-md-5 pt-3">
                 @if ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                    <h1 class="text-my-primary">{{ $evento->nome_en }}</h1>
+                    <h2 class="text-my-primary">{{ $evento->nome_en }}</h2>
                 @elseif ($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
-                    <h1 class="text-my-primary">{{ $evento->nome_es }}</h1>
+                    <h2 class="text-my-primary">{{ $evento->nome_es }}</h2>
                 @else
-                    <h1 class="text-my-primary">{{ $evento->nome }}</h1>
+                    <h2 class="text-my-primary">{{ $evento->nome }}</h2>
                 @endif
                 <span class="d-flex align-items-center gap-1 text-my-secondary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -38,7 +38,7 @@
                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
                     </svg> {{$evento->endereco->rua}}, {{$evento->endereco->numero}}, {{$evento->endereco->cidade}}
                 </span>
-                <div class="text-secondary py-5">
+                <div class="text-secondary py-4">
                     <p class="m-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
@@ -100,22 +100,35 @@
                     </svg>
                     <h6 class="mt-2">{{ __('Submissão de trabalhos') }}</h6>
                 </a>
-                <a href="#info_adicionais" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
-                        class="bi bi-paperclip" viewBox="0 0 16 16" style="transform: rotate(45deg)">
-                        <path
-                            d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z" />
-                    </svg>
-                    <h6 class="mt-2">{{ __('Informações adicionais') }}</h6>
-                </a>
-                <a href="#memorias" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
-                        class="bi bi-bookmark" viewBox="0 0 16 16">
-                        <path
-                            d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
-                    </svg>
-                    <h6 class="mt-2">{{ __('Memórias') }}</h6>
-                </a>
+                @php
+                    $temPdfProg = $evento->exibir_pdf 
+                    && $etiquetas->modprogramacao 
+                    && $evento->pdf_programacao;
+                    $temPdfArquivo = $evento->pdf_arquivo 
+                    && $evento->modarquivo;
+                    $temInfosExtras = $evento->arquivoInfos->isNotEmpty();
+                @endphp
+        
+                @if($temPdfProg || $temPdfArquivo || $temInfosExtras)
+                    <a href="#info_adicionais" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                            class="bi bi-paperclip" viewBox="0 0 16 16" style="transform: rotate(45deg)">
+                            <path
+                                d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z" />
+                        </svg>
+                        <h6 class="mt-2">{{ __('Informações adicionais') }}</h6>
+                    </a>
+                @endif
+                @if($evento->memorias->isNotEmpty())
+                    <a href="#memorias" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                            class="bi bi-bookmark" viewBox="0 0 16 16">
+                            <path
+                                d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
+                        </svg>
+                        <h6 class="mt-2">{{ __('Memórias') }}</h6>
+                    </a>
+                @endif
                 <a href="#programacao" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
                         class="bi bi-calendar-event" viewBox="0 0 16 16">
@@ -171,14 +184,14 @@
                                             @if (Carbon\Carbon::parse($modalidade->ultima_data) >= $mytime)
                                                 <div class="accordion-group">
                                                     <div class="accordion-heading">
-                                                        <a class="accordion-button accordion-toggle collapsed" data-bs-toggle="collapse"
+                                                        <a class="accordion-button collapsed bg-transparent text-dark" data-bs-toggle="collapse"
                                                             data-bs-parent="#accordion_modalidades" href="#collapse_{{ $modalidade->id }}">
                                                                 <span> <strong>{{ $modalidade->nome }}</strong></span>
                                                         </a>
                                                     </div>
 
                                                     <div id="collapse_{{ $modalidade->id }}" class="accordion-body in collapse" style="height: auto;">
-                                                        <lu>
+                                                        <ul class="list-unstyled fs-6">
                                                             <li>
                                                                 <img class="" src="{{ asset('img/icons/calendar-pink.png') }}" alt="" style="width:20px;">
                                                                 {{ __('Envio') }}: {{ date('d/m/Y H:i', strtotime($modalidade->inicioSubmissao)) }} -
@@ -214,7 +227,7 @@
                                                                     {{ date('d/m/Y H:i', strtotime($data->fim)) }}
                                                                 </li>
                                                             @endforeach
-                                                        </lu>
+                                                        </ul>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 @if ($modalidade->arquivo)
@@ -322,7 +335,7 @@
                             </ul>
                             @if($areas->count() > 5)
                                 <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn btn-link p-0 btn-ver-mais-areas" data-bs-toggle="modal" data-bs-target="#modalTodasAreas">
+                                    <button type="button" class="btn btn-my-outline-primary rounded-3" data-bs-toggle="modal" data-bs-target="#modalTodasAreas">
                                         {{ __('Ver todos') }}
                                     </button>
                                 </div>
@@ -336,118 +349,118 @@
             </div>
 
         </div>
-        <hr class="border-dark">
 
-        <div id="info_adicionais" class="row py-4">{{-- Informações adicionais --}}
-            <div class="col-md-6">
-                    <h4 class="text-my-primary">
-                        {{ __('Informações adicionais') }}
-                    </h4>
+        @if($temPdfProg || $temPdfArquivo || $temInfosExtras)
+        <hr class="border-dark my-4">
+            <div id="info_adicionais" class="row py-4">{{-- Informações adicionais --}}
+                <div class="col-md-6">
+                        <h4 class="text-my-primary">
+                            {{ __('Informações adicionais') }}
+                        </h4>
 
 
-                    @if ($evento->exibir_pdf && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null)
-                        <div
-                            class="form-row justify-content-center @if ($evento->exibir_pdf && $etiquetas->modprogramacao && $evento->pdf_programacao) mb-3 @endif">
-                            <div class="col-sm-3 form-group "
-                                style="position: relative; text-align: center;">
-                                <div class="div-icon-programacao">
-                                    <img class="icon-programacao"
-                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
-                                        alt="PDF com a programação">
+                        @if ($evento->exibir_pdf && $etiquetas->modprogramacao == true && $evento->pdf_programacao != null)
+                            <div
+                                class="form-row justify-content-center @if ($evento->exibir_pdf && $etiquetas->modprogramacao && $evento->pdf_programacao) mb-3 @endif">
+                                <div class="col-sm-3 form-group "
+                                    style="position: relative; text-align: center;">
+                                    <div class="div-icon-programacao">
+                                        <img class="icon-programacao"
+                                            src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
+                                            alt="PDF com a programação">
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 form-inline">
+                                    <span class="titulo">
+                                        <a href="{{ asset('storage/' . $evento->pdf_programacao) }}"
+                                            target="_black">{{ $etiquetas->etiquetamoduloprogramacao }}</a>
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-sm-8 form-inline">
-                                <span class="titulo">
-                                    <a href="{{ asset('storage/' . $evento->pdf_programacao) }}"
-                                        target="_black">{{ $etiquetas->etiquetamoduloprogramacao }}</a>
-                                </span>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($evento->pdf_arquivo != null && $evento->modarquivo)
-                        <div class="form-row justify-content-center">
-                            <div class="col-sm-3 form-group "
-                                style="position: relative; text-align: center;">
-                                <div class="div-icon-programacao">
-                                    <img class="icon-programacao"
-                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
-                                        alt="PDF com a programação">
+                        @endif
+                        @if ($evento->pdf_arquivo != null && $evento->modarquivo)
+                            <div class="form-row justify-content-center">
+                                <div class="col-sm-3 form-group "
+                                    style="position: relative; text-align: center;">
+                                    <div class="div-icon-programacao">
+                                        <img class="icon-programacao"
+                                            src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
+                                            alt="PDF com a programação">
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 form-inline">
+                                    <span class="titulo">
+                                        <a href="{{ asset('storage/' . $evento->pdf_arquivo) }}"
+                                            target="_black">{{ $etiquetas->etiquetaarquivo }}</a>
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-sm-8 form-inline">
-                                <span class="titulo">
-                                    <a href="{{ asset('storage/' . $evento->pdf_arquivo) }}"
-                                        target="_black">{{ $etiquetas->etiquetaarquivo }}</a>
-                                </span>
-                            </div>
-                        </div>
-                    @endif
-                    @foreach ($evento->arquivoInfos as $arquivo)
-                        <div
-                            class="form-row justify-content-center @if (!$loop->last) mb-3 @endif">
-                            <div class="col-sm-3 form-group  d-flex align-items-center"
-                                style="position: relative; text-align: center;">
-                                <div class="div-icon-programacao">
-                                    <img class="icon-programacao"
-                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
-                                        alt="">
+                        @endif
+                        @foreach ($evento->arquivoInfos as $arquivo)
+                            <div
+                                class="form-row justify-content-center @if (!$loop->last) mb-3 @endif">
+                                <div class="col-sm-3 form-group  d-flex align-items-center"
+                                    style="position: relative; text-align: center;">
+                                    <div class="div-icon-programacao">
+                                        <img class="icon-programacao"
+                                            src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
+                                            alt="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 form-inline">
+                                    <span class="titulo">
+                                        <a href="{{ asset('storage/' . $arquivo->path) }}"
+                                            target="_black">{{ $arquivo->nome }}</a>
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-sm-8 form-inline">
-                                <span class="titulo">
-                                    <a href="{{ asset('storage/' . $arquivo->path) }}"
-                                        target="_black">{{ $arquivo->nome }}</a>
-                                </span>
-                            </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                </div>
+            @endif
+            @if($evento->memorias->isNotEmpty())
+                <div class="col-md-6">
+                    <h4 class="text-my-primary">{{ __('Memórias') }}</h4>
+                    @if ($evento->memorias->count())
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col-sm-12">
+                                <div class="card sombra-card" style="width: 100%;">
+                                    <div class="card-body">
 
-
-
-
-            </div>
-            <div class="col-md-6">
-                <h4 class="text-my-primary">{{ __('Memórias') }}</h4>
-                @if ($evento->memorias->count())
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-sm-12">
-                            <div class="card sombra-card" style="width: 100%;">
-                                <div class="card-body">
-
-                                    @foreach ($evento->memorias as $memoria)
-                                        <div class="form-row justify-content-center">
-                                            <div class="col-sm-3 form-group ">
-                                                <div class="div-icon-programacao d-flex justify-content-center">
-                                                    @if ($memoria->arquivo)
-                                                        <img class="icon-programacao"
-                                                            src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
-                                                            alt="">
-                                                    @elseif($memoria->link)
-                                                        <img class="icon-programacao"
-                                                            src="{{ asset('img/icons/link-solid.svg') }}"
-                                                            alt="">
-                                                    @endif
+                                        @foreach ($evento->memorias as $memoria)
+                                            <div class="form-row justify-content-center">
+                                                <div class="col-sm-3 form-group ">
+                                                    <div class="div-icon-programacao d-flex justify-content-center">
+                                                        @if ($memoria->arquivo)
+                                                            <img class="icon-programacao"
+                                                                src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
+                                                                alt="">
+                                                        @elseif($memoria->link)
+                                                            <img class="icon-programacao"
+                                                                src="{{ asset('img/icons/link-solid.svg') }}"
+                                                                alt="">
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8 form-inline">
+                                                    <span class="titulo">
+                                                        @if ($memoria->arquivo)
+                                                            <a href="/storage/{{ $memoria->arquivo }}"
+                                                                target="_blank">{{ $memoria->titulo }}</a>
+                                                        @elseif($memoria->link)
+                                                            <a href="{{ $memoria->link }}"
+                                                                target="_blank">{{ $memoria->titulo }}</a>
+                                                        @endif
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-8 form-inline">
-                                                <span class="titulo">
-                                                    @if ($memoria->arquivo)
-                                                        <a href="/storage/{{ $memoria->arquivo }}"
-                                                            target="_blank">{{ $memoria->titulo }}</a>
-                                                    @elseif($memoria->link)
-                                                        <a href="{{ $memoria->link }}"
-                                                            target="_blank">{{ $memoria->titulo }}</a>
-                                                    @endif
-                                                </span>
-                                            </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @endif
-            </div>
+                    @endif
+                </div>
+            @endif
         </div>
         <hr class="border-dark">
 
@@ -457,10 +470,13 @@
             @if ($etiquetas->modprogramacao == true && $evento->exibir_calendario_programacao)
                 <div id="mensagem-aviso" class="alert alert-info alert-dismissible fade show" role="alert">
                     {{ __('Para participar das atividades do evento, é preciso primeiro se inscrever no evento e, em seguida, realizar a inscrição na atividade desejada, disponível na seção de Programação.') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Fechar">
                     </button>
                 </div>
+
 
 
                 <div class="row" style="margin-bottom: 10px;">
@@ -605,28 +621,23 @@
         </div>
         <hr class="border-dark">
 
-        <div id="contato" class="row py-4">{{-- Contatos --}}
-            <h4 class="text-my-primary">{{ __('Contato') }}</h4>
-            <div class="col-md-2">
+        <div id="contato" class="row py-4 d-flex">{{-- Contatos --}}
+            <h4 class="text-my-primary mb-4">{{ __('Evento organizado por:') }}</h4>
+            <!-- <div class="col-md-2">
                 <img src="" class="" alt="">
+            </div> -->
+             <div class=" d-flex flex-column align-items-center">
+                <h4 class="mb-3">{{ $evento->coordenador->name }}</h4>
+                
+                <a href="mailto:@if($evento->email){{ $evento->email }}@else{{ $evento->coordenador->email }}@endif" class="btn btn-my-secondary rounded-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope me-1" viewBox="0 0 16 16">
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
+                    </svg>
+                    {{ __('Entre em contato') }}
+                </a>        
             </div>
-            <div class="col-md-10">
-                <h4>{{$evento->coordenador->name}}</h4>
-                <div class="d-flex justify-content-evenly">
-                    <a href="mailto:@if ($evento->email != null) {{ $evento->email }}@else{{ $evento->coordenador->email }} @endif" class="btn btn-my-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
-                        </svg> {{ __('Entre em contato') }}
-                    </a>
-                    <a href="" class="btn btn-my-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
-                            <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
-                        </svg> Instagram
-                    </a>
-                </div>
-            </div>
-
         </div>
+        
         <hr class="border-dark">
 
         <div id="local" class="row py-4">{{-- Local --}}
@@ -781,11 +792,6 @@
             </div>
         </div>
     @endforeach
-
-
-
-
-
 
 @endsection
 
