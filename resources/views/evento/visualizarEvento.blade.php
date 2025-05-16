@@ -314,7 +314,25 @@
                         <h5 class="text-white">{{ __('Áreas temáticas') }}</h5>
                     </div>
                     <div class="card-body">
+                        @if(isset($areas) && count($areas) > 0)
+                            <ul>
+                                @foreach($areas->take(5) as $area)
+                                    <li>{{ $area->nome }}</li>
+                                @endforeach
+                            </ul>
+                            @if($areas->count() > 5)
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-link p-0 btn-ver-mais-areas" data-bs-toggle="modal" data-bs-target="#modalTodasAreas">
+                                        {{ __('Ver todos') }}
+                                    </button>
+                                </div>
+                                @include('evento.modal-areas')
+                            @endif
+                        @else
+                            <p>{{ __('Nenhuma área cadastrada.') }}</p>
+                        @endif
                     </div>
+                </div>
             </div>
 
         </div>

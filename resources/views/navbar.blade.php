@@ -125,10 +125,15 @@
                             </li>
 
                             {{-- Link Trabalhos --}}
-                            <a class="dropdown-item" href="{{ route('user.meusTrabalhos') }}">
-                                <img src="{{asset('img/icons/file-alt-regular-black.svg')}}"  width="20px"  alt="">
-                                {{ __('Trabalhos Submetidos') }}
-                            </a>
+                            @if (
+                                (Auth::user()->trabalho()->where('status', '!=', 'arquivado')->exists() ||
+                                Auth::user()->coautor()->exists())
+                            )                            
+                                <a class="dropdown-item" href="{{ route('user.meusTrabalhos') }}">
+                                    <img src="{{asset('img/icons/file-alt-regular-black.svg')}}"  width="20px"  alt="">
+                                    {{ __('Trabalhos Submetidos') }}
+                                </a>
+                            @endif
 
                             {{-- Link Logout --}}
                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

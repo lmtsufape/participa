@@ -265,13 +265,13 @@
 
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="fotoEvento" class="fw-bold mb-3">{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
+                            <label for="fotoEvento" class="fw-bold mb-3 required-field" >{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
                             <div id="imagem-loader" class="imagem-loader">
                                 <img id="logo-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
                             <div style="display: none;">
                                 <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror" 
-                                    name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
+                                    name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento" required>
                             </div>
                             @error('fotoEvento')
                                 <br>
@@ -282,13 +282,13 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="icone" class="fw-bold mb-3">{{ __('Ícone (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
+                            <label for="icone" class="fw-bold mb-3 required-field">{{ __('Ícone (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
                             <div id="imagem-loader-icone" class="imagem-loader">
                                 <img id="icone-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
                             <div style="display: none;">
                                 <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror" 
-                                    name="icone" value="{{ old('icone') }}" id="icone">
+                                    name="icone" value="{{ old('icone') }}" id="icone" required>
                             </div>
                             @error('icone')
                                 <br>
@@ -403,7 +403,7 @@
                     {{-- Endereço --}}
                     <div class="form-group row">
                         <div class="col-md-6 form-group">
-                           <label for="cep" class="col-form-label">{{ __('CEP') }}*</label>
+                           <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
                            <input value="{{ old('cep') }}" onblur="pesquisacep(this.value);" id="cep"
                                name="cep" type="text" class="form-control @error('cep') is-invalid @enderror"
                                required autocomplete="cep">
@@ -685,12 +685,26 @@
             });*/
 
             $('#is_multilingual').change(function() {
-                if ($(this).is(':checked')) {
-                    $('.multilingual_fields').show();
-                } else {
-                    $('.multilingual_fields').hide();
-                }
-            });
+                const isChecked = $(this).is(':checked');
+                $('.multilingual_fields').toggle(isChecked); // Show/hide the whole section
+
+                // For all inputs and textareas within multilingual_fields
+                $('.multilingual_fields').find('input[type="text"], textarea, input[type="file"]').each(function() {
+                    const campoMulti = $(this);
+                    campoMulti.prop('required', isChecked); // Set required based on checkbox
+
+                    if (!isChecked) { // If checkbox is unchecked (fields are hidden and not required)
+                        campoMulti.removeClass('is-invalid'); // Remove validation class from input/textarea
+                        if (campoMulti.is('input[type="file"]')) {
+                            const loaderDiv = campoMulti.parent().prev('.imagem-loader');
+                            if (loaderDiv.length) {
+                                loaderDiv.removeClass('border border-danger'); // Remove error style from loader
+                            }
+                        }
+                        // Opcional: $(this).val(''); // Limpar valor ao desmarcar (cuidado com file inputs)
+                    }
+                });
+            }).trigger('change'); // Apply on page load
 
             $('#imagem-loader').click(function() {
                 $('#logo-input').click();
@@ -829,13 +843,99 @@
         };
 
         function proximaEtapa() {
-            document.getElementById('etapa-1').style.display = 'none';
-            document.getElementById('etapa-2').style.display = 'block';
+            let primeiroCampoInvalido = null;
+            let formEtapa1Valido = true;
+
+            // Seleciona todos os campos que podem ser validados na etapa 1
+            const camposEtapa1 = $('#etapa-1').find('input, select, textarea');
+
+            camposEtapa1.each(function() {
+                const campo = $(this);
+                // Limpa a validação anterior do Bootstrap (se houver)
+                campo.removeClass('is-invalid');
+                if (campo.is('input[type="file"]')) {
+                    const loaderDiv = campo.parent().prev('.imagem-loader');
+                    if (loaderDiv.length) {
+                        loaderDiv.removeClass('border border-danger'); // Clear previous error style
+                    }
+                }
+                
+                if (campo.prop('required')) { // Verifica se o campo está marcado como 'required'
+                    let isFieldValid = true;
+                    let fieldIsEffectivelyVisible = campo.is(':visible');
+
+                    // Para campos de arquivo, a visibilidade efetiva depende se sua seção (multilíngue ou não) está visível.
+                    if (campo.is('input[type="file"]')) {
+                        const multilingualParent = campo.closest('.multilingual_fields');
+                        if (multilingualParent.length > 0) { // É um campo de arquivo multilíngue
+                            fieldIsEffectivelyVisible = multilingualParent.is(':visible');
+                        } else { // É um campo de arquivo principal (não multilíngue)
+                            fieldIsEffectivelyVisible = true; // Considerado sempre visível para validação se 'required'
+                        }
+                    }
+
+                    if (fieldIsEffectivelyVisible) { // Apenas valida se o campo (ou seu controlador) está visível
+                        if (campo.is('input[type="file"]')) {
+                            if (this.files.length === 0) {
+                                isFieldValid = false;
+                                campo.addClass('is-invalid'); // Adiciona classe ao próprio input
+                                const loaderDiv = campo.parent().prev('.imagem-loader');
+                                if (loaderDiv.length) {
+                                    loaderDiv.addClass('border border-danger'); // Adiciona borda ao visualizador
+                                    if (!primeiroCampoInvalido) {
+                                        primeiroCampoInvalido = loaderDiv; // Prioriza o visualizador para foco/scroll
+                                    }
+                                } else if (!primeiroCampoInvalido) {
+                                    primeiroCampoInvalido = campo; // Fallback para o input se o visualizador não for encontrado
+                                }
+                            }
+                        } else { // Para text, select, textarea
+                            if (!this.checkValidity()) { // Usa a validação nativa do navegador
+                                isFieldValid = false;
+                                campo.addClass('is-invalid');
+                                if (!primeiroCampoInvalido) {
+                                    primeiroCampoInvalido = campo;
+                                }
+                            }
+                        }
+                    }
+                    // Se o campo não for válido E era para ser validado (visível e obrigatório), marca o formulário como inválido.
+                    if (!isFieldValid && fieldIsEffectivelyVisible) { 
+                        formEtapa1Valido = false;
+                    }
+                }
+            });
+
+            if (formEtapa1Valido) {
+                document.getElementById('etapa-1').style.display = 'none';
+                document.getElementById('etapa-2').style.display = 'block';
+                // Atualiza a interface de etapas
+                $('.etapas .etapa').removeClass('ativa');
+                $('.etapas .etapa').eq(1).addClass('ativa');
+                window.scrollTo(0, 0); // Rola para o topo para o usuário ver a nova etapa
+            } else {
+                if (primeiroCampoInvalido) {
+                    // Rola para o elemento e tenta focar
+                    if (primeiroCampoInvalido.is('div.imagem-loader')) { // Se for o nosso visualizador de imagem
+                        $('html, body').animate({
+                            scrollTop: primeiroCampoInvalido.offset().top - 100 // Ajuste o offset conforme necessário
+                        }, 500);
+                        // Adicionar tabindex para tornar o div focável pode ser uma opção para leitores de tela
+                        // primeiroCampoInvalido.attr('tabindex', -1).focus(); 
+                    } else {
+                        primeiroCampoInvalido.focus(); // Foca em inputs de texto, select, etc.
+                    }
+                }
+            }
         }
 
         function etapaAnterior() {
             document.getElementById('etapa-1').style.display = 'block';
             document.getElementById('etapa-2').style.display = 'none';
+            // Atualiza a interface de etapas
+            $('.etapas .etapa').removeClass('ativa'); // Remove de todas
+            $('.etapas .etapa').eq(0).addClass('ativa'); // Ativa a primeira etapa
+            window.scrollTo(0, 0);
         }
 
     </script>
