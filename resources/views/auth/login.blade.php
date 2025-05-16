@@ -25,7 +25,7 @@ p{
                 <img src="{{ asset('/img/logo.png') }}" alt="logo" width="50%">
             </a>
 
-            <p class="mt-3 fs-3 text-justify">{{ __('É um sistema de Gestão de Eventos Científicos que busca contribuir com instituições acadêmicas públicas ou privadas que necessitem de uma ferramenta para gerenciar eventos científicos') }}.</p>
+            <p class="mt-3 fs-4 text-justify">{{ __('É um sistema de Gestão de Eventos Científicos que busca contribuir com instituições acadêmicas públicas ou privadas que necessitem de uma ferramenta para gerenciar eventos científicos') }}.</p>
         </section>
 
         <div class="col-md-6 d-flex align-items-center justify-content-end">
@@ -35,7 +35,7 @@ p{
                 <hr class="border-secondary">
 
                 <div class="form-group py-4">
-                    <label for="email" class="form-label">{{ __('Endereço de E-mail') }}</label>
+                    <label for="email" class="form-label">{{ __('E-mail') }}</label>
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                     @error('email')
                         <span class="invalid-feedback" role="alert">
@@ -56,7 +56,7 @@ p{
 
                 <div class="d-flex justify-content-between align-items-center pb-5" >
                     <div>
-                        <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                        <input class="form-check-input border-dark" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                         <label class="form-check-label" for="remember">{{ __('Lembre-se de mim') }}</label>
                     </div>
                     @if (Route::has('password.request'))
