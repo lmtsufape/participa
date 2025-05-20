@@ -974,9 +974,9 @@
                                                 <div id="div-add-coautor" class="col-sm-4">
                                                     <div class="float-right">
                                                         <button @click="adicionaAutor" id="addCoautor" class="btn btn-primary btn-padding border mb-2"
-                                                        style="text-decoration: none; border-radius: 14px; background-color: #D44100"
+                                                        style="text-decoration: none; border-radius: 10px; background-color: #D44100"
                                                         title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}, se houver">
-                                                            <img id="icone-add-coautor" class="mt-2" src="{{asset('img/icons/user-plus-solid.svg')}}"
+                                                            <img id="icone-add-coautor" src="{{asset('img/icons/user-plus-solid.svg')}}"
                                                                 alt="ícone de adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}" width="30px">
                                                              {{$evento->formSubTrab->etiquetacoautortrabalho}}
                                                         </button>
