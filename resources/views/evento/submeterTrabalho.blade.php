@@ -967,16 +967,17 @@
                                     @endforeach
 
                                     @if(in_array('etiquetacoautortrabalho', $ordemCampos))
-                                        <div id="div-add-coautor" class="col-sm-2"
-                                            style="margin-top:50px; position: fixed; right: 2%; padding-left: 0px;">
-                                            <div class="float-right">
-                                                <button @click="adicionaAutor" id="addCoautor" class="btn btn-primary btn-padding border mb-2"
-                                                style="text-decoration: none; border-radius: 14px; background-color: #E5B300"
-                                                title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}, se houver">
-                                                    <img id="icone-add-coautor" class="mt-2" src="{{asset('img/icons/user-plus-solid.svg')}}"
-                                                        alt="ícone de adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}" width="30px">
-                                                    <br> Adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}
-                                                </button>
+                                        <div class="row">
+                                            <div id="div-add-coautor" class="col-sm-4">
+                                                <div class="float-right">
+                                                    <button @click="adicionaAutor" id="addCoautor" class="btn btn-primary btn-padding border mb-2"
+                                                    style="text-decoration: none; border-radius: 14px; background-color: #E5B300"
+                                                    title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}, se houver">
+                                                        <img id="icone-add-coautor" class="mt-2" src="{{asset('img/icons/user-plus-solid.svg')}}"
+                                                            alt="ícone de adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}" width="30px">
+                                                        <br> Adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     @endif
@@ -993,7 +994,7 @@
 
                                         <div class="col-md-3">
                                             <button type="submit" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;">
-                                                {{ __('Confirmar Cadastro') }}
+                                                {{ __('Enviar') }}
                                             </button>
                                         </div>
                                     </div>
