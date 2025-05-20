@@ -311,7 +311,7 @@
 
                                             @endif
                                         @endif
-                                        @if ($indice == "etiquetaareatrabalho")
+                                        {{-- @if ($indice == "etiquetaareatrabalho")
                                             <!-- Areas -->
                                             <div class="row justify-content-center">
                                                 <div class="col-sm-12">
@@ -323,7 +323,7 @@
                                                         <option value="" disabled selected hidden>
                                                             -- {{ $formSubTraba->etiquetaareatrabalho }} --
                                                         </option>
-                                                        {{-- Apenas um teste abaixo --}}
+                                                        
                                                         @foreach($areas as $area)
                                                             <option value="{{$area->id}}"
                                                                     @if(old('areaId') == $area->id) selected @endif>{{$area->nome}}</option>
@@ -337,7 +337,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                        @endif
+                                        @endif --}}
                                         @if ($indice == "apresentacao")
                                             @if ($modalidade->apresentacao)
                                                 <div class="row justify-content-center mt-4">
@@ -964,6 +964,21 @@
                                         @endif
                                     @endforeach
 
+                                    @if(in_array('etiquetacoautortrabalho', $ordemCampos))
+                                        <div id="div-add-coautor" class="col-sm-2"
+                                            style="margin-top:50px; position: fixed; right: 2%; padding-left: 0px;">
+                                            <div class="float-right">
+                                                <button @click="adicionaAutor" id="addCoautor" class="btn btn-primary btn-padding border mb-2"
+                                                style="text-decoration: none; border-radius: 14px; background-color: #E5B300"
+                                                title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}, se houver">
+                                                    <img id="icone-add-coautor" class="mt-2" src="{{asset('img/icons/user-plus-solid.svg')}}"
+                                                        alt="ícone de adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}" width="30px">
+                                                    <br> Adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endif
+
                                     <br>
 
                                     <div class="row form-group">
@@ -986,20 +1001,6 @@
                     </div>
                 </div>
             </div>
-            @if(in_array('etiquetacoautortrabalho', $ordemCampos))
-                <div id="div-add-coautor" class="col-sm-2"
-                     style="margin-top:50px; position: fixed; right: 2%; padding-left: 0px;">
-                    <div class="float-right">
-                        <button @click="adicionaAutor" id="addCoautor" class="btn btn-primary btn-padding border mb-2"
-                           style="text-decoration: none; border-radius: 14px; background-color: #E5B300"
-                           title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}, se houver">
-                            <img id="icone-add-coautor" class="mt-2" src="{{asset('img/icons/user-plus-solid.svg')}}"
-                                 alt="ícone de adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}" width="30px">
-                            <br> Adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}
-                        </button>
-                    </div>
-                </div>
-            @endif
         </div>
     </div>
 @endsection
