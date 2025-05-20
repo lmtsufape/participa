@@ -72,63 +72,66 @@
 @endsection
 
 @section('content')
-    <div class="container d-flex flex-column pb-5">
-        <div class="container d-flex align-items-center mb-3 position-relative">
-            <h2 class="text-my-primary position-absolute start-50 translate-middle-x">
-                {{ __('Em destaque neste momento') }}
-            </h2>
-            <a href="{{ route('eventos.proximos') }}"
-               class="btn btn-my-outline-primary rounded-5 ms-auto">
-                {{ __('Ver todos') }}
-            </a>
-        </div>
+    @if($eventos_destaques->isNotEmpty())
+        <div class="container d-flex flex-column pb-5">
+            <div class="container d-flex align-items-center mb-3 position-relative">
+                <h2 class="text-my-primary position-absolute start-50 translate-middle-x">
+                    {{ __('Em destaque neste momento') }}
+                </h2>
+                <a href="{{ route('eventos.proximos') }}"
+                class="btn btn-my-outline-primary rounded-5 ms-auto">
+                    {{ __('Ver todos') }}
+                </a>
+            </div>
 
-        <!-- Swiper -->
-        <div class="swiper mySwiper">
-            <div class="swiper-wrapper">
-                @foreach ($eventos_destaques->take(5) as $evento)
-                    <div class="swiper-slide">
-                        <img src="{{ Storage::url($evento->fotoEvento) }}" alt="Foto do evento">
-                        <div class="carousel-caption">
-                            <h1 class="text-start">{{ $evento->nome }}</h1>
-                            <div class="caption-row">
-                                <p class="info mb-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                         fill="currentColor" class="bi bi-calendar-event"
-                                         viewBox="0 0 16 16">
-                                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
-                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0
-                                                 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0
-                                                 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5
-                                                 0 0 1 .5-.5M1 4v10a1 1 0 0
-                                                 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-                                    </svg>
-                                    {{ \Carbon\Carbon::parse($evento->dataFim)->format('l, d F') }}
-                                </p>
-                                <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
-                                   class="btn btn-outline-light rounded-3">
-                                    {{ __('Saiba mais') }}
-                                </a>
+            <!-- Swiper -->
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    @foreach ($eventos_destaques->take(5) as $evento)
+                        <div class="swiper-slide">
+                            <img src="{{ Storage::url($evento->fotoEvento) }}" alt="Foto do evento">
+                            <div class="carousel-caption">
+                                <h1 class="text-start">{{ $evento->nome }}</h1>
+                                <div class="caption-row">
+                                    <p class="info mb-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-calendar-event"
+                                            viewBox="0 0 16 16">
+                                            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0
+                                                    1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0
+                                                    1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5
+                                                    0 0 1 .5-.5M1 4v10a1 1 0 0
+                                                    0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                                        </svg>
+                                        {{ \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'))->translatedFormat('l, d F') }}
+                                    </p>
+                                    <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
+                                    class="btn btn-outline-light rounded-3">
+                                        {{ __('Saiba mais') }}
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
+                <!-- Navegação do Swiper -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
             </div>
-            <!-- Navegação do Swiper -->
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-pagination"></div>
         </div>
-    </div>
-
-    <div class="container py-5">
-        @include('components.carrossel', [
-            'eventos'     => $eventos_passados,
-            'titulo'      => __('Últimos eventos realizados'),
-            'id'          => 'eventosRealizados',
-            'urlVerTodos' => route('eventos.passados'),
-        ])
-    </div>
+    @endif
+    @if($eventos_passados->isNotEmpty())
+        <div class="container py-5">
+            @include('components.carrossel', [
+                'eventos'     => $eventos_passados,
+                'titulo'      => __('Últimos eventos realizados'),
+                'id'          => 'eventosRealizados',
+                'urlVerTodos' => route('eventos.passados'),
+            ])
+        </div>
+    @endif
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
