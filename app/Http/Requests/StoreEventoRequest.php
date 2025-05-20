@@ -80,7 +80,7 @@ class StoreEventoRequest extends FormRequest
 
     public function withValidator($validator)
     {
-        $validator->sometimes(['nome_en', 'descricao_en', 'nome_es', 'descricao_es', 'fotoEvento_en', 'fotoEvento_es'], 'required|string', function ($input) {
+        $validator->sometimes(['nome_en', 'descricao_en', 'nome_es', 'descricao_es'], 'required|string', function ($input) {
             return filter_var($input->is_multilingual, FILTER_VALIDATE_BOOLEAN);
         });
     }
