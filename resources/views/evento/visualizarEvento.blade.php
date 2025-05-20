@@ -94,7 +94,7 @@
             <div class="d-flex flex-wrap flex-md-nowrap gap-2">   
                 @php
                     $modalidadesAtivas = collect($modalidades)->filter(function($m) use($mytime) {
-                        return Carbon::parse($m->ultima_data) >= $mytime;
+                        return \Carbon\Carbon::parse($m->ultima_data) >= $mytime;
                     });
                     
                     // flags de exibição
