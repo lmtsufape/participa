@@ -9,10 +9,10 @@
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-10">
-                    <h1>Meus Eventos - Coordenação Comissão Científica</h1>
+                    <h1>{{ __('Meus eventos - Coordenação comissão científica') }}</h1>
                 </div>
                 <div class="col-sm-2">
-                    <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
+                    <a href="{{route('evento.criar')}}" class="btn btn-primary">{{ __('Novo evento') }}</a>
                 </div>
             </div>
         </div>
@@ -61,12 +61,12 @@
                             <div>
                                 <div>
                                     <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
-                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;{{ __('Visualizar evento') }}
                                     </a>
                                 </div>
                                 <div>
                                     <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
-                                        <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
+                                        <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;{{ __('Configurar evento') }}
                                     </a>
                                 </div>
                             </div>

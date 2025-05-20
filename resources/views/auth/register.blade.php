@@ -233,7 +233,6 @@
                     </select>
                     <input type="hidden" name="pais" value="{{$pais}}">
 
-                    <small>{{__('O formulário seguirá os padrões desse país')}}.</small>
 
                     @error('pais')
                         <span class="invalid-feedback" role="alert">
@@ -247,10 +246,10 @@
 
             <div class="etapas" style="font-weight: 500;">
                 <div class="etapa ativa">
-                    <p>1. Informações pessoais</p>
+                    <p>1. {{ __('Informações pessoais') }}</p>
                 </div>
                 <div class="etapa">
-                    <p>2. Endereço</p>
+                    <p>2. {{__('Endereço')}}</p>
                 </div>
             </div>
 
@@ -358,7 +357,7 @@
                     <div class="col-md-6">
                         <label for="password" class="col-form-label required-field">{{ __('Senha') }}</label>
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password"  autocomplete="new-password">
-                        <small>{{__('Deve ter no mínimo 8 caracteres (letras ou números)')}}.</small>
+                        <small>{{__('OBS: A senha deve ter no mínimo 8 caracteres (letras ou números)')}}.</small>
                         @error('password')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
@@ -389,10 +388,10 @@
         <div id="etapa-2" style="display: none;">
             <div class="etapas">
                 <div class="etapa">
-                    <p>1. Informações pessoais</p>
+                    <p>1. {{ __('Informações pessoais') }}</p>
                 </div>
                 <div class="etapa ativa">
-                    <p>2. Endereço</p>
+                    <p>2. {{__('Endereço')}}</p>
                 </div>
             </div>
 

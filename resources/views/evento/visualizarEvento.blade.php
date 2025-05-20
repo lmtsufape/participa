@@ -19,6 +19,8 @@
             <div class="col-md-5 pt-3">
                 @if ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
                     <h1 class="text-my-primary">{{ $evento->nome_en }}</h1>
+                @elseif ($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
+                    <h1 class="text-my-primary">{{ $evento->nome_es }}</h1>
                 @else
                     <h1 class="text-my-primary">{{ $evento->nome }}</h1>
                 @endif
@@ -29,7 +31,7 @@
                         <path
                             d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
                     </svg>
-                    {{ \Carbon\Carbon::parse($evento->dataFim)->format('l, d F') }}
+                    {{ \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'))->translatedFormat('l, d F') }}
                 </span>
                 <span class="text-my-primary my-1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
@@ -41,7 +43,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                         </svg>
-                        Organizado por:
+                        {{ __('Organizado por:') }}
                     </p>
                     <p class="m-0 ps-4">
                         {{$evento->coordenador->name}}
@@ -70,11 +72,13 @@
             </div>
         </div>
         <div class="row">
-            <h4 class="text-my-primary">Descrição do evento</h4>
+            <h4 class="text-my-primary">{{ __('Descrição do evento') }}</h4>
             <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
                 <div style="text-align: justify;">
                     @if ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
                         {!! $evento->descricao_en !!}
+                    @elseif ($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
+                        {!! $evento->descricao_es !!}
                     @else
                         {!! $evento->descricao !!}
                     @endif
@@ -86,7 +90,7 @@
         <hr class="border-dark">
 
         <div class="row py-4">
-            <h4 class="text-my-primary">Ver sobre o evento</h4>
+            <h4 class="text-my-primary">{{ __('Ver sobre o evento') }}</h4>
             <div class="d-flex flex-wrap flex-md-nowrap gap-2">
                 <a href="#submissao_trabalho" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
@@ -94,7 +98,7 @@
                         <path fill-rule="evenodd"
                             d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
                     </svg>
-                    <h6 class="mt-2">Submissão de trabalho</h6>
+                    <h6 class="mt-2">{{ __('Submissão de trabalhos') }}</h6>
                 </a>
                 <a href="#info_adicionais" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
@@ -102,7 +106,7 @@
                         <path
                             d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z" />
                     </svg>
-                    <h6 class="mt-2">Informações adicionais</h6>
+                    <h6 class="mt-2">{{ __('Informações adicionais') }}</h6>
                 </a>
                 <a href="#memorias" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
@@ -110,7 +114,7 @@
                         <path
                             d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
                     </svg>
-                    <h6 class="mt-2">Memórias</h6>
+                    <h6 class="mt-2">{{ __('Memórias') }}</h6>
                 </a>
                 <a href="#programacao" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
@@ -119,7 +123,7 @@
                         <path
                             d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
                     </svg>
-                    <h6 class="mt-2">Programação</h6>
+                    <h6 class="mt-2">{{ __('Programação') }}</h6>
                 </a>
                 <a href="#palestrantes" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
@@ -127,7 +131,7 @@
                         <path
                             d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
                     </svg>
-                    <h6 class="mt-2">Nossos palestrantes</h6>
+                    <h6 class="mt-2">{{ __('Nossos palestrantes') }}</h6>
                 </a>
                 <a href="#contato" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
@@ -135,14 +139,14 @@
                         <path
                             d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
                     </svg>
-                    <h6 class="mt-2">Contato da organização</h6>
+                    <h6 class="mt-2">{{ __('Contato da organização') }}</h6>
                 </a>
                 <a href="#local" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
                         class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
                     </svg>
-                    <h6 class="mt-2">Local</h6>
+                    <h6 class="mt-2">{{ __('Local') }}</h6>
                 </a>
             </div>
         </div>
@@ -155,7 +159,7 @@
             <div class="col-md-6">
                 <div class="card rounded">
                     <div class="card-heading bg-my-primary rounded pt-3 pb-1 ps-3">
-                        <h5 class="text-white">Modalidades</h5>
+                        <h5 class="text-white">{{ __('Modalidades') }}</h5>
                     </div>
                     <div class="card-body">
                         @if ($etiquetas->modsubmissao == true)
@@ -177,31 +181,31 @@
                                                         <lu>
                                                             <li>
                                                                 <img class="" src="{{ asset('img/icons/calendar-pink.png') }}" alt="" style="width:20px;">
-                                                                Envio: {{ date('d/m/Y H:i', strtotime($modalidade->inicioSubmissao)) }} -
+                                                                {{ __('Envio') }}: {{ date('d/m/Y H:i', strtotime($modalidade->inicioSubmissao)) }} -
                                                                 {{ date('d/m/Y H:i', strtotime($modalidade->fimSubmissao)) }}
                                                             </li>
                                                             <li>
                                                                 <img class="" src="{{ asset('img/icons/calendar-yellow.png') }}" alt="" style="width:20px;">
-                                                                Avaliação: {{ date('d/m/Y H:i', strtotime($modalidade->inicioRevisao)) }} -
+                                                                {{ __('Avaliação') }}: {{ date('d/m/Y H:i', strtotime($modalidade->inicioRevisao)) }} -
                                                                 {{ date('d/m/Y H:i', strtotime($modalidade->fimRevisao)) }}
                                                             </li>
                                                             @if ($modalidade->inicioCorrecao && $modalidade->fimCorrecao)
                                                                 <li>
                                                                     <img class="" src="{{ asset('img/icons/calendar-yellow.png') }}" alt="" style="width:20px;">
-                                                                    Correção: {{ date('d/m/Y H:i', strtotime($modalidade->inicioCorrecao)) }} -
+                                                                    {{ __('Correção') }}: {{ date('d/m/Y H:i', strtotime($modalidade->inicioCorrecao)) }} -
                                                                     {{ date('d/m/Y H:i', strtotime($modalidade->fimCorrecao)) }}
                                                                 </li>
                                                             @endif
                                                             @if ($modalidade->inicioValidacao && $modalidade->fimValidacao)
                                                                 <li>
                                                                     <img class="" src="{{ asset('img/icons/calendar-yellow.png') }}" alt="" style="width:20px;">
-                                                                    Validação: {{ date('d/m/Y H:i', strtotime($modalidade->inicioValidacao)) }} -
+                                                                    {{ __('Validação') }}: {{ date('d/m/Y H:i', strtotime($modalidade->inicioValidacao)) }} -
                                                                     {{ date('d/m/Y H:i', strtotime($modalidade->fimValidacao)) }}
                                                                 </li>
                                                             @endif
                                                             <li>
                                                                 <img class="" src="{{ asset('img/icons/calendar-green.png') }}" alt="" style="width:20px;">
-                                                                Resultado: {{ date('d/m/Y  H:i', strtotime($modalidade->inicioResultado)) }}
+                                                                {{ __('Resultado') }}: {{ date('d/m/Y  H:i', strtotime($modalidade->inicioResultado)) }}
                                                             </li>
                                                             @foreach ($modalidade->datasExtras as $data)
                                                                 <li>
@@ -307,10 +311,28 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-heading bg-my-primary rounded pt-3 pb-1 ps-3">
-                        <h5 class="text-white">Áreas temáticas</h5>
+                        <h5 class="text-white">{{ __('Áreas temáticas') }}</h5>
                     </div>
                     <div class="card-body">
+                        @if(isset($areas) && count($areas) > 0)
+                            <ul>
+                                @foreach($areas->take(5) as $area)
+                                    <li>{{ $area->nome }}</li>
+                                @endforeach
+                            </ul>
+                            @if($areas->count() > 5)
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-link p-0 btn-ver-mais-areas" data-bs-toggle="modal" data-bs-target="#modalTodasAreas">
+                                        {{ __('Ver todos') }}
+                                    </button>
+                                </div>
+                                @include('evento.modal-areas')
+                            @endif
+                        @else
+                            <p>{{ __('Nenhuma área cadastrada.') }}</p>
+                        @endif
                     </div>
+                </div>
             </div>
 
         </div>
@@ -430,7 +452,7 @@
         <hr class="border-dark">
 
         <div id="programacao" class="row py-4">{{-- Programação --}}
-            <h4 class="text-my-primary">Programação</h4>
+            <h4 class="text-my-primary">{{ __('Programação') }}</h4>
 
             @if ($etiquetas->modprogramacao == true && $evento->exibir_calendario_programacao)
                 <div id="mensagem-aviso" class="alert alert-info alert-dismissible fade show" role="alert">
@@ -501,6 +523,8 @@
                                                                             style="text-decoration: inherit;">
                                                                             @if ($subevento->is_multilingual && Session::get('idiomaAtual') === 'en')
                                                                                 {{ $subevento->nome_en }}
+                                                                            @elseif ($subevento->is_multilingual && Session::get('idiomaAtual') === 'es')
+                                                                                {{ $subevento->nome_es }}
                                                                             @else
                                                                                 {{ $subevento->nome }}
                                                                             @endif
@@ -576,7 +600,7 @@
         <hr class="border-dark">
 
         <div id="palestrantes" class="row py-4">{{-- Nossos palestrantes --}}
-            <h4 class="text-my-primary">Nossos palestrantes</h4>
+            <h4 class="text-my-primary">{{ __('Nossos palestrantes') }}</h4>
             @include('evento.carrossel-palestrantes', ['id' => 'palestrantes', 'palestrantes' => $evento->palestrantes])
         </div>
         <hr class="border-dark">
@@ -592,7 +616,7 @@
                     <a href="mailto:@if ($evento->email != null) {{ $evento->email }}@else{{ $evento->coordenador->email }} @endif" class="btn btn-my-secondary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
                             <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
-                        </svg> Entre em contato
+                        </svg> {{ __('Entre em contato') }}
                     </a>
                     <a href="" class="btn btn-my-secondary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
@@ -606,7 +630,7 @@
         <hr class="border-dark">
 
         <div id="local" class="row py-4">{{-- Local --}}
-            <h4 class="text-my-primary">Local</h4>
+            <h4 class="text-my-primary">{{ __('Local') }}</h4>
             <div id="mapaGoogle" class="shadow rounded w-100" style="height: 400px;">
 
             </div>
@@ -705,8 +729,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label for="comprovante" class="">Comprovante de pagamento da taxa de
-                                            inscrição</label><br>
+                                        <label for="comprovante" class="">{{ __('Comprovante de pagamento da taxa de inscrição') }}</label><br>
                                         <input type="file" id="comprovante" class="form-control-file"
                                             name="comprovante">
                                         <br>

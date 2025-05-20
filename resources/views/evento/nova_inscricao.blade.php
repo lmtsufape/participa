@@ -7,6 +7,10 @@
             <div class="banner-evento">
                 <img src="{{asset('storage/'.$evento->fotoEvento_en)}}" alt="">
             </div>
+        @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es' && isset($evento->fotoEvento_es))
+            <div class="banner-evento">
+                <img src="{{asset('storage/'.$evento->fotoEvento_es)}}" alt="">
+            </div>
         @elseif(isset($evento->fotoEvento))
           <div class="banner-evento">
               <img src="{{asset('storage/eventos/'.$evento->id.'/logo.png')}}" alt="">
@@ -28,6 +32,8 @@
                     <div class="col-sm-12">
                         @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
                             <h1>New registration for {{$evento->nome_en}}</h1>
+                        @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
+                            <h1>Nueva inscripción para {{$evento->nome_es}}</h1>
                         @else
                             <h1>Nova inscrição para {{$evento->nome}}</h1>
                         @endif

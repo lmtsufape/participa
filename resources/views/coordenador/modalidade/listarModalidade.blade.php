@@ -680,7 +680,7 @@
                                             <div class="custom-file">
                                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegras{{$modalidade->id}}">
                                             </div>
-                                            <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small><br>
+                                            <small>O arquivo Selecionado deve ser no formato PDF de até 10mb.</small><br>
                                             <small>Se deseja alterar o arquivo, envie a nova versão.</small>
                                             @error('arquivoRegras'.$modalidade->id)
                                             <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">

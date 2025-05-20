@@ -8,7 +8,7 @@
              class="img-fluid w-100" style="max-height: 300px; object-fit: cover;">
         <h1 class="position-absolute top-50 start-50 translate-middle text-white fw-semibold"
             style="font-size: 2rem; text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);">
-            Últimos eventos realizados
+            {{ __('Últimos eventos realizados') }}
         </h1>
     </div>
 
@@ -20,7 +20,7 @@
                     <input type="text"
                         name="busca"
                         class="form-control"
-                        placeholder="Pesquise por evento..."
+                        placeholder="{{ __('Pesquise por evento...') }}"
                         value="{{ request('busca') }}">
 
                     <button type="submit" class="btn bg-white border-start-0">
@@ -32,8 +32,8 @@
             {{-- Ordenar por (recarrega ao mudar) --}}
             <div class="col-md-4">
                 <select name="ordenar" class="form-select w-100" onchange="this.form.submit()">
-                    <option value="data" {{ request('ordenar') === 'data' ? 'selected' : '' }}>Ordenar por data</option>
-                    <option value="nome" {{ request('ordenar') === 'nome' ? 'selected' : '' }}>Ordenar por nome</option>
+                    <option value="data" {{ request('ordenar') === 'data' ? 'selected' : '' }}>{{ __('Ordenar por data') }}</option>
+                    <option value="nome" {{ request('ordenar') === 'nome' ? 'selected' : '' }}>{{ __('Ordenar por nome') }}</option>
                 </select>
             </div>
         </form>
