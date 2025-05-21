@@ -7,7 +7,7 @@
         .swiper {
             width: 100% !important;
             max-width: 100%;
-            height: 380px;
+            height: 425px;
             overflow: hidden;
             position: relative;
         }
@@ -68,6 +68,27 @@
             flex-shrink: 0;
         }
         /* ------------------------- */
+        /* ajuste de altura para tablets */
+        @media (max-width: 992px) {
+            .swiper {
+                height: 300px;
+            }
+        }
+
+        /* ajuste de altura para telas menores */
+        @media (max-width: 768px) {
+            .swiper {
+                height: 240px;
+            }
+        }
+
+        /* ajuste de altura para mobile */
+        @media (max-width: 576px) {
+            .swiper {
+                height: 180px;
+            }
+        }
+
     </style>
 @endsection
 
