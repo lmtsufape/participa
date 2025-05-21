@@ -969,6 +969,8 @@
                                             @endif
                                         @endforeach
 
+                                        <br>
+                                        
                                         @if(in_array('etiquetacoautortrabalho', $ordemCampos))
                                             <div class="row">
                                                 <div id="div-add-coautor" class="col-sm-4">
