@@ -433,37 +433,46 @@
             <h4 class="text-my-primary">Programação</h4>
 
             @if ($etiquetas->modprogramacao == true && $evento->exibir_calendario_programacao)
-                <div id="mensagem-aviso" class="alert alert-info alert-dismissible fade show" role="alert">
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
                     {{ __('Para participar das atividades do evento, é preciso primeiro se inscrever no evento e, em seguida, realizar a inscrição na atividade desejada, disponível na seção de Programação.') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
 
-                <div class="row" style="margin-bottom: 10px;">
-                    <div class="col-sm-12">
-                        <div class="card sombra-card" style="width: 100%;">
-                            <div class="card-body">
-                                <div class="form-row">
-                                    <div class="col-sm-12 form-group">
-                                        <h4 style="font-weight: bold; border-bottom: solid 3px #114048ff;">
-                                            {{ $etiquetas->etiquetamoduloprogramacao }}
-                                        </h4>
+                <div class="row">
+                    @foreach($atividades as $atividade)
+                        <div class="col-md-4">
+                            <div class="card ratio ratio-1x1 w-75 shadow">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <span><strong>{{ $atividade->datasAtividade->first()->hora_inicio }} - </strong></span>
+                                        <span><strong>{{ $atividade->datasAtividade->first()->hora_fim }}</strong></span>
+                                        <p>{{ $atividade->titulo }}</p>
+                <div class="row">
+                    @foreach($atividades as $atividade)
+                        <div class="col-md-4">
+                            <div class="card ratio ratio-1x1 w-75 shadow">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <span><strong>{{ $atividade->datasAtividade->first()->hora_inicio }} - </strong></span>
+                                        <span><strong>{{ $atividade->datasAtividade->first()->hora_fim }}</strong></span>
+                                        <p>{{ $atividade->titulo }}</p>
                                     </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="col-sm-12 form-group">
-                                        <div id="wrap">
-                                            <div id='calendar-wrap' style="width: 100%;">
-                                                <div id='calendar'></div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <button class="btn btn-my-outline-primary btn-sm rounded-pill mt-auto" type="button"
+                                        data-bs-toggle="modal" data-bs-target="#modalAtividadeShow{{ $atividade->id }}">
+                                        Saiba mais
+                                    </button>
+                                    <button class="btn btn-my-outline-primary btn-sm rounded-pill mt-auto" type="button"
+                                        data-bs-toggle="modal" data-bs-target="#modalAtividadeShow{{ $atividade->id }}">
+                                        Saiba mais
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endforeach
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             @endif
             @if ($subeventos->count() > 0)
@@ -623,24 +632,72 @@
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color: #114048ff; color: white;">
-                        <h5 class="modal-title" id="modalLabelAtividadeShow{{ $atv->id }}">{{ $atv->titulo }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            style="color: white;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <div class="modal-header bg-my-shadow">
+                        <h5 class="modal-title text-my-primary" id="modalLabelAtividadeShow{{ $atv->id }}">{{ $atv->titulo }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="container">
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <h4 for="tipo">{{ __('Tipo') }}</h4>
-                                    <p>
-                                        {{ $atv->tipoAtividade->descricao }}
+                                <div class="col-md-6">
+                                    <p class="text-my-secondary">
+                                        <strong>{{ __('Tipo') }}: {{ $atv->tipoAtividade->descricao }}</strong>
                                     </p>
+
+                                    <span class="d-flex align-items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                            class="bi bi-calendar-event" viewBox="0 0 16 16">
+                                            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                                            <path
+                                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                                        </svg>
+                                        {{ \Carbon\Carbon::parse($evento->dataFim)->format('l, d F') }}
+                                    </span>
+                                    <span class="my-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                                        </svg> {{ $atv->local }}
+                                    </span>
+                                </div>
+                                <div class="col-md-6">
+                                    @if ($isInscrito)
+                                        @if (!$atv->atividadeInscricoesEncerradas())
+                                            @if (($atv->vagas > 0 || $atv->vagas == null) && Auth::user()->atividades()->find($atv->id) == null)
+                                                <form method="POST"
+                                                    action="{{ route('atividades.inscricao', ['id' => $atv->id]) }}">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-my-success">
+                                                        {{ __('Inscrever-se') }}</button>
+                                                </form>
+                                            @elseif(Auth::user()->atividades()->find($atv->id) != null)
+                                                @if (!$atv->terminou())
+                                                    <form method="POST"
+                                                        action="{{ route('atividades.cancelarInscricao', ['id' => $atv->id, 'user' => Auth::id()]) }}">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="btn btn-primary">
+                                                            {{ __('Cancelar inscrição') }}</button>
+                                                    </form>
+                                                @else
+                                                    <button type="button" class="btn btn-primary"
+                                                        disabled>{{ __('Inscrito') }}</button>
+                                                @endif
+                                            @else
+                                                <button type="button" class="btn btn-danger"
+                                                    style="pointer-events: none">{{ __('Sem Vagas') }}</button>
+                                            @endif
+                                        @else
+                                            @if (Auth::user()->atividades()->find($atv->id) != null)
+                                                <button type="button" class="btn btn-primary" disabled>{{ __('Inscrito') }}</button>
+                                            @else
+                                                <button type="button" class="btn btn-danger"
+                                                    disabled>{{ __('Inscrições encerradas') }}</button>
+                                            @endif
+                                        @endif
+                                    @endif
                                 </div>
                             </div>
-                            <hr>
+                            <hr class="border-dark">
                             <div class="row form-group">
                                 <div class="col-sm-12">
                                     <label for="descricao">{{ __('Descrição') }}</label>
@@ -650,31 +707,8 @@
                                 </div>
 
                             </div>
-                            @if (count($atv->convidados) > 0)
-                                <hr>
-                                <h4>{{ __('Convidados') }}</h4>
-                                <div class="convidadosDeUmaAtividade">
-                                    <div class="row">
-                                        @foreach ($atv->convidados as $convidado)
-                                            <div class="col-sm-3 imagemConvidado">
-                                                <img src="{{ asset('img/icons/user.png') }}"
-                                                    alt="Foto de {{ $convidado->nome }}" width="50px" height="auto">
-                                                <h5 class="convidadoNome">{{ $convidado->nome }}</h5>
-                                                <small class="convidadoFuncao">{{ $convidado->funcao }}</small>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endif
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <h4 for="local">{{ __('Local') }}</h4>
-                                    <p class="local">
-                                        {{ $atv->local }}
-                                    </p>
-                                </div>
-                            </div>
+
+
                             @if ($atv->vagas != null || $atv->valor != null)
                                 <hr>
                                 <div class="row">
@@ -714,45 +748,27 @@
                                 </div>
                             @endif
                         </div>
+                        @if (count($atv->convidados) > 0)
+                            <hr class="border-dark">
+                            <h7>{{ __('Convidados') }}</h7>
+                            <div class="convidadosDeUmaAtividade">
+                                <div class="row">
+                                    @foreach ($atv->convidados as $convidado)
+                                        <div class="col-sm-3 imagemConvidado">
+                                            <img src="{{ asset('img/icons/user.png') }}"
+                                                alt="Foto de {{ $convidado->nome }}" width="50px" height="auto">
+                                            <h5 class="convidadoNome">{{ $convidado->nome }}</h5>
+                                            <small class="convidadoFuncao">{{ $convidado->funcao }}</small>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <div class="modal-footer">
-                        @if ($isInscrito)
-                            @if (!$atv->atividadeInscricoesEncerradas())
-                                @if (($atv->vagas > 0 || $atv->vagas == null) && Auth::user()->atividades()->find($atv->id) == null)
-                                    <form method="POST"
-                                        action="{{ route('atividades.inscricao', ['id' => $atv->id]) }}">
-                                        @csrf
-                                        <button type="submit" class="button-prevent-multiple-submits btn btn-primary">
-                                            {{ __('Inscrever-se') }}</button>
-                                    </form>
-                                @elseif(Auth::user()->atividades()->find($atv->id) != null)
-                                    @if (!$atv->terminou())
-                                        <form method="POST"
-                                            action="{{ route('atividades.cancelarInscricao', ['id' => $atv->id, 'user' => Auth::id()]) }}">
-                                            @csrf
-                                            <button type="submit"
-                                                class="btn btn-primary button-prevent-multiple-submits">
-                                                {{ __('Cancelar inscrição') }}</button>
-                                        </form>
-                                    @else
-                                        <button type="button" class="btn btn-primary"
-                                            disabled>{{ __('Inscrito') }}</button>
-                                    @endif
-                                @else
-                                    <button type="button" class="btn btn-danger"
-                                        style="pointer-events: none">{{ __('Sem Vagas') }}</button>
-                                @endif
-                            @else
-                                @if (Auth::user()->atividades()->find($atv->id) != null)
-                                    <button type="button" class="btn btn-primary" disabled>{{ __('Inscrito') }}</button>
-                                @else
-                                    <button type="button" class="btn btn-danger"
-                                        disabled>{{ __('Inscrições encerradas') }}</button>
-                                @endif
-                            @endif
-                        @endif
+
                         <button type="button" class="btn btn-secondary"
-                            data-dismiss="modal">{{ __('Fechar') }}</button>
+                            data-bs-dismiss="modal" aria-label="Close">{{ __('Fechar') }}</button>
                     </div>
                 </div>
             </div>
@@ -786,23 +802,6 @@
             interval: 10000
         })
 
-        $('.carousel-categorias .carousel .carousel-item').each(function() {
-            var minPerSlide = 3;
-            var next = $(this).next();
-            if (!next.length) {
-                next = $(this).siblings(':first');
-            }
-            next.children(':first-child').clone().appendTo($(this));
-
-            for (var i = 0; i < minPerSlide; i++) {
-                next = next.next();
-                if (!next.length) {
-                    next = $(this).siblings(':first');
-                }
-
-                next.children(':first-child').clone().appendTo($(this));
-            }
-        });
     </script>
     @if (session('abrirmodalinscricao'))
         <script>
@@ -810,20 +809,8 @@
         </script>
     @endif
     <script>
-        $(document).ready(function() {
-            $(".accordion-button").click(function() {
-                var img = this.children[0].children[1].children[0];
-                if (this.classList.contains("collapsed")) {
-                    img.src = "{{ asset('img/icons/Icon ionic-ios-arrow-up.svg') }}";
-                } else {
-                    img.src = "{{ asset('img/icons/Icon ionic-ios-arrow-down.svg') }}";
-                }
-            });
-        });
-        var botoes = document.getElementsByClassName('cor-aleatoria');
-        for (var i = 0; i < botoes.length; i++) {
-            botoes[i].style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-        }
+
+
 
         function changeTrabalho(x) {
             document.getElementById('trabalhoNovaVersaoId').value = x;
@@ -878,13 +865,5 @@
             });
         </script>
     @endif
-    <script>
-        // Fecha a caixa de aviso quando o botão de fechar é clicado
-        $(document).ready(function() {
-            $('.alert-dismissible').on('closed.bs.alert', function() {
-                // Envia uma requisição para o servidor para marcar a mensagem como lida, se necessário
-                // Exemplo: usar AJAX para enviar um POST request para marcar a mensagem como lida no banco de dados
-            });
-        });
-    </script>
+
 @endsection
