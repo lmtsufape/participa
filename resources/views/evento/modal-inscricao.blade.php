@@ -1,15 +1,11 @@
 <div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
-    <div class="modal-dialog @if ($evento->possuiFormularioDeInscricao()) modal-lg @endif" role="document">
+    <div class="modal-dialog modal-lg " role="document">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: #114048ff; color: white;">
-                @if (auth()->check())
-                    <h5 class="modal-title" id="#label">{{ __('Confirmação') }}</h5>
-                @else
-                    <h5 class="modal-title" id="#label">{{ __('Atenção') }}!</h5>
-                @endif
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header position-relative" style="background-color: #114048ff; color: white;">
+                <h5 class="modal-title w-100 text-center m-0">
+                    @if (auth()->check()) {{ __('Confirmação') }}
+                    @else {{ __('Atenção') }}! @endif</h5>
+                <button type="button" class="btn-close btn-close-white position-absolute end-0 top-50 translate-middle-y me-3" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('inscricao.inscrever', ['evento_id' => $evento->id]) }}" method="POST"
                 enctype="multipart/form-data">
@@ -41,58 +37,59 @@
                         <div id="formulario" x-data="{ categoria: '' }" class="carousel-categorias container">
                             <div>
                                 <div x-show="categoria == ''">
-                                    <div class="carousel slide" id="carouselCategorias" data-ride="carousel">
+                                    <div class="carousel slide" id="carouselCategorias" data-bs-ride="carousel">
                                         <div class="carousel-inner">
                                             <input type="hidden" name="categoria" x-model="categoria" required>
-                                            <div class="row justify-content-center mb-2 mt-2">
-                                                <a class="btn btn-outline-primary mx-1" id="categoriaAnterior"
+                                            <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+                                                <a class="carousel-arrow-btn btn" id="categoriaAnterior"
                                                     href="#carouselCategorias" title="Previous" role="button"
-                                                    data-slide="prev">
-                                                    <i class="fa fa-lg fa-chevron-left"></i>
+                                                    data-bs-slide="prev">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="carousel-arrow-svg" viewBox="0 0 16 16">
+                                                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                                                    </svg>
                                                 </a>
-                                                <a class="btn btn-outline-primary mx-1" id="proximaCategoria"
+                                                <a class="carousel-arrow-btn btn" id="proximaCategoria"
                                                     href="#carouselCategorias" title="Next" role="button"
-                                                    data-slide="next">
-                                                    <i class="fa fa-lg fa-chevron-right"></i>
+                                                    data-bs-slide="next">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="carousel-arrow-svg" viewBox="0 0 16 16">
+                                                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                                                    </svg>
                                                 </a>
                                             </div>
                                             <div class="card-group">
-                                                @foreach ($evento->categoriasQuePermitemInscricao as $categoria)
+                                                @foreach ($evento->categoriasQuePermitemInscricao->chunk(3) as $chunk)
                                                     <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                                        <div class="col-md-4">
-                                                            <div class="card">
-                                                                <div class="card-header">
-                                                                    <h4 class="my-0 font-weight-normal">
-                                                                        {{ $categoria->nome }}</h4>
+                                                        <div class="row">
+                                                            @foreach ($chunk as $categoria)
+                                                                <div class="col-md-4">
+                                                                    <div class="card shadow" style="">
+                                                                        <div class="card-header" style="background-color: #114048ff; color: white;">
+                                                                            <h4 class="my-0 font-weight-normal text-center">{{ $categoria->nome }}</h4>
+                                                                        </div>
+                                                                        <div class="card-body">
+                                                                            <label for="">{{ __('Descrição') }}:</label>
+                                                                            <p> {!! $categoria->descricao !!}</p>
+                                                                            @if ($links)
+                                                                                @foreach ($links->where('categoria_id', $categoria->id) as $link)
+                                                                                    <label for="">Valor: </label>
+                                                                                    <p>R${{ $link->valor }}</p>
+                                                                                    <label for="">Link para pagamento:</label>
+                                                                                    <a href="{{ $link->link }}">{{ $link->link }}</a>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </div>
+                                                                        <div class="card-footer d-flex justify-content-center">
+                                                                            <button type="button" class="btn btn-outline-primary btn-select-categoria" x-on:click="categoria = {{ $categoria->id }}">
+                                                                                {{ __('Selecionar') }}
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="card-body">
-                                                                    <label for="">{{ __('Descrição') }}:
-                                                                    </label>
-                                                                    <p> {!! $categoria->descricao !!}</p>
-
-                                                                    @if ($links)
-                                                                        @foreach ($links->where('categoria_id', $categoria->id) as $link)
-                                                                            <label for="">Valor: </label>
-                                                                            <p>R${{ $link->valor }}</p>
-                                                                            <label for="">Link para pagamento:
-                                                                            </label>
-                                                                            <a
-                                                                                href="{{ $link->link }}">{{ $link->link }}</a>
-                                                                        @endforeach
-                                                                    @endif
-                                                                </div>
-                                                                <div class="card-footer">
-                                                                    <button type="button"
-                                                                        class="btn btn-md btn-block btn-outline-primary"
-                                                                        x-on:click="categoria = {{ $categoria->id }}">
-                                                                        {{ __('Selecionar') }}</button>
-                                                                </div>
-                                                            </div>
+                                                            @endforeach
                                                         </div>
                                                     </div>
                                                 @endforeach
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -108,7 +105,7 @@
                                                         <input type="text" readonly class="form-control"
                                                             value="{{ $categoria->nome }}">
                                                         <button type="button" x-on:click="categoria = ''"
-                                                            class="btn btn-md btn-block btn-primary mt-2 col-sm-12 col-md-6 col-lg-4">
+                                                            class="btn btn-md btn-block btn-primary mt-2 col-sm-12 col-md-6 col-lg-4" style="background-color: #114048ff; border-color: #114048ff;">
                                                             {{ __('Alterar categoria') }}</button>
                                                     </div>
 
@@ -120,7 +117,7 @@
                                                     @foreach ($categoria->camposNecessarios()->distinct()->orderBy('tipo')->get() as $campo)
                                                         @if ($campo->tipo == 'endereco')
                                                             <div>
-                                                                <div class="form-row">
+                                                                <div class="row">
                                                                     <div class="form-group col-sm-6">
                                                                         <label
                                                                             for="endereco-cep-{{ $campo->id }}">{{ __('CEP') }}</label>
@@ -155,7 +152,7 @@
                                                                         @enderror
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-row">
+                                                                <div class="row">
                                                                     <div class="form-group col-sm-9">
                                                                         <label
                                                                             for="endereco-rua-{{ $campo->id }}">{{ __('Rua') }}</label>
@@ -479,12 +476,49 @@
 
                 @if (auth()->check())
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit"
-                            class="btn btn-primary button-prevent-multiple-submits">Confirmar</button>
+                            class="btn btn-primary button-prevent-multiple-submits" style="background-color: #114048ff; border-color: #114048ff;">Confirmar</button>
                     </div>
                 @endif
             </form>
         </div>
     </div>
 </div>
+
+<style>
+.carousel-arrow-btn {
+    border: 1px solid #114048ff !important;
+    background: #fff !important;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border 0.2s;
+    padding: 0;
+    margin-bottom: 40px;
+}
+.carousel-arrow-svg {
+    color: #114048ff;
+    transition: color 0.2s;
+}
+.carousel-arrow-btn:hover, .carousel-arrow-btn:focus {
+    background: #114048ff !important;
+    
+}
+.carousel-arrow-btn:hover .carousel-arrow-svg, .carousel-arrow-btn:focus .carousel-arrow-svg {
+    color: #fff;
+}
+.btn-select-categoria {
+    border-color: #114048ff !important;
+    color: black !important;
+    min-width: 140px;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-select-categoria:hover, .btn-select-categoria:focus {
+    background: #114048ff !important;
+    color: #fff !important;
+}
+</style>

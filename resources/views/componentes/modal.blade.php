@@ -1,7 +1,7 @@
 <!-- Button trigger modal -->
 
   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#email_lembrar_{{$revisor->id}}">
-    Enviar e-mail
+    {{ __('Enviar e-mail') }}
   </button>
 
   <!-- Modal -->
@@ -9,7 +9,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="email_lembrar_{{$revisor->id}}_label">Enviar E-mail</h5>
+          <h5 class="modal-title" id="email_lembrar_{{$revisor->id}}_label">{{ __('Enviar e-mail') }}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -17,9 +17,9 @@
         <div class="modal-body">
             <div class="row ">
                 <div class="col-sm-12">
-                    <h6 class="card-subtitle mb-2 text-muted">Edite o texto do email para o envio</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ __('Edite o texto do email para o envio') }}</h6>
                     <br>
-                    <h6 class="card-subtitle mb-2 text-muted">Para: {{$revisor->email}}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ __('Para:') }} {{$revisor->email}}</h6>
                     <form id="form-enviar-email-revisor-{{$revisor->id}}" method="POST" action="{{route('revisor.email')}}">
                       @csrf
                       <p class="card-text">
@@ -51,7 +51,7 @@
             </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" >Fechar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" >{{ __('Fechar') }}</button>
           <button type="submit" class="btn btn-primary" form="form-enviar-email-revisor-{{$revisor->id}}" >
               {{ __('Finalizar') }}
           </button>

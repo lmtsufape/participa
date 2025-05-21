@@ -1322,6 +1322,7 @@ class EventoController extends Controller
             // $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
             $modalidades = Modalidade::where('evento_id', $evento->id)->get();
             $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
+            $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
             $atividades = Atividade::where('eventoId', $id)->get();
             $dataInicial = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
 
@@ -1356,7 +1357,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'dataInicial', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'dataInicial', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -1370,6 +1371,7 @@ class EventoController extends Controller
             $dataInicial = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where([['eventoId', '=', $id], ['visibilidade_participante', '=', true]])->first();
             $modalidades = Modalidade::where('evento_id', $id)->get();
             $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
+            $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
             $mytime = Carbon::now('America/Recife');
             // dd(false);
             $isInscrito = false;
@@ -1378,7 +1380,7 @@ class EventoController extends Controller
             }
 
 
-            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'mytime', 'etiquetas', 'formSubTraba', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada'));
+            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'mytime', 'etiquetas', 'formSubTraba', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas'));
         }
     }
 

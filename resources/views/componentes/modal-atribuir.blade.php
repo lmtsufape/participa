@@ -41,7 +41,7 @@
             <div class="modal-footer">
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Fechar') }}</button>
                       <button type="submit" class="btn btn-primary">Salvar</button>
                   </div>
                   <select class="custom-select" id="inputGroupSelect03" aria-label="Example select with button addon">
