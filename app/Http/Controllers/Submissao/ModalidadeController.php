@@ -59,6 +59,7 @@ class ModalidadeController extends Controller
         $modalidade->palavras = $request->limit == 'limit-option2';
         $modalidade->evento_id = $request->eventoId;
         $modalidade->apresentacao = $request->apresentacao ? true : false;
+        $modalidade->numMaxCoautores = $request->numMaxCoautores;
         $modalidade->save();
 
         if ($request->has('nomeDataExtra')) {
@@ -196,6 +197,7 @@ class ModalidadeController extends Controller
             'fimValidação' . $request->modalidadeEditId => ['nullable', 'date', 'after:inícioValidação' . $request->modalidadeEditId, 'required_with:inícioValidação' . $request->modalidadeEditId],
 
             'resultado' . $request->modalidadeEditId => ['required', 'date', 'after:fimRevisão' . $request->modalidadeEditId],
+            'numMaxCoautores' . $request->modalidadeEditId => ['nullable', 'integer', 'min:0'],
             'texto' . $request->modalidadeEditId => ['nullable'],
             'limit' . $request->modalidadeEditId => ['nullable'],
             'arquivoEdit' . $request->modalidadeEditId => ['nullable'],
@@ -365,6 +367,7 @@ class ModalidadeController extends Controller
         $modalidadeEdit->inicioValidacao = $request->input('inícioValidação' . $request->modalidadeEditId);
         $modalidadeEdit->fimValidacao = $request->input('fimValidação' . $request->modalidadeEditId);
         $modalidadeEdit->inicioResultado = $request->input('resultado' . $request->modalidadeEditId);
+        $modalidadeEdit->numMaxCoautores = $request->input('numMaxCoautores' . $request->modalidadeEditId);
         $modalidadeEdit->texto = $request->input('texto' . $request->modalidadeEditId);
         $modalidadeEdit->arquivo = $request->input('arquivoEdit' . $request->modalidadeEditId);
         $modalidadeEdit->caracteres = $caracteres;
@@ -468,6 +471,15 @@ class ModalidadeController extends Controller
                 Storage::delete($path);
             }
             $modalidadeEdit->modelo_apresentacao = null;
+        }
+
+        if ($request->input('numMaxCoautores') != null) {
+            $path = $modalidadeEdit->numMaxCoautores;
+            if ($path  && Storage::exists($path)) {
+                Storage::delete($path);
+            }
+            $modalidadeEdit->numMaxCoautores = $request->input('numMaxCoautores');
+            $modalidadeEdit->save();
         }
 
         if ($request->apresentacao) {

@@ -275,7 +275,21 @@
                                         </div>
                                     </div>
                                     {{-- end Data: resultado --}}
+                                    {{-- Data: Numeros de coautores --}}
+                                    <div class="row">
 
+                                        <div class="col-sm-6">
+                                            <label for="numMaxCoautores" class="col-form-label font-weight-bold">{{ __('Número de coautores') }}</label>
+                                            <input id="numMaxCoautores" type="text" class="form-control @error('numMaxCoautores') is-invalid @enderror" name="numMaxCoautores" value="@if(old('numMaxCoautores'.$modalidade->id)!=null){{old('numMaxCoautores'.$modalidade->id)}}@else{{$modalidade->numMaxCoautores}}@endif" autocomplete="numMaxCoautores" autofocus>
+
+                                            @error('numMaxCoautores')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    {{-- end Data: Numeros de coautores --}}
                                     <div id="datas">
                                         <template x-for="(data, index) in datas" :key="index">
                                             <div class="row mt-2 justify-content-center">
