@@ -32,6 +32,18 @@
             margin-left: 2px;
         }
     </style>
+
+    @if(session('sucesso'))
+        <div class="alert alert-success">
+            {{ session('sucesso') }}
+        </div>
+    @endif
+
+    @if(session('erro'))
+        <div class="alert alert-danger">
+            {{ session('erro') }}
+        </div>
+    @endif
     
     <br><br>
 
@@ -245,11 +257,11 @@
             <br>
 
             <div class="etapas" style="font-weight: 500;">
-                <div class="etapa ativa">
-                    <p>1. {{ __('Informações pessoais') }}</p>
-                </div>
                 <div class="etapa">
-                    <p>2. {{__('Endereço')}}</p>
+                    <p>1. {{ __('Validação de cadastro') }}</p>
+                </div>
+                <div class="etapa ativa">
+                    <p>2. {{__('Informações de cadastro')}}</p>
                 </div>
             </div>
 
@@ -261,7 +273,7 @@
                 <div class="form-group row">
                     <div class="col-md-12">
                         <label for="name" class="col-form-label required-field">{{ __('Nome completo') }}</label>
-                        <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}"  autocomplete="name" autofocus>
+                        <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" value="{{ session('nome') }}"  autocomplete="name" autofocus disabled>
 
                         @error('name')
                             <span class="invalid-feedback" role="alert">
@@ -275,17 +287,17 @@
                     <div class="col-md-6">
                         <div class="custom-control custom-radio custom-control-inline col-form-label">
                             <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
-                            <label class="custom-control-label me-2" for="customRadioInline1">CPF</label>
+                            <label class="custom-control-label me-2" for="customRadioInline1" disabled>CPF</label>
 
-                            <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
-                            <label class="custom-control-label me-2" for="customRadioInline2">{{__('CNPJ')}}</label>
+                            <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input" disabled>
+                            <label class="custom-control-label me-2" for="customRadioInline2" disabled>{{__('CNPJ')}}</label>
 
-                            <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input">
-                            <label class="custom-control-label " for="customRadioInline3">{{__('Passaporte')}}</label>
+                            <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input" disabled>
+                            <label class="custom-control-label " for="customRadioInline3" disabled>{{__('Passaporte')}}</label>
                         </div>
 
                         <div id="fieldCPF" @error('passaporte') style="display: none" @enderror>
-                            <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ old('cpf') }}" autocomplete="cpf" placeholder="CPF" autofocus>
+                            <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ session('cpf') }}" autocomplete="cpf" placeholder="CPF" autofocus disabled>
 
                             @error('cpf')
                                 <span class="invalid-feedback" role="alert">
@@ -293,8 +305,8 @@
                                 </span>
                             @enderror
                         </div>
-                        <div id="fieldCNPJ" @error('passaporte') style="display: block" @enderror style="display: none" >
-                            <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" value="{{ old('cnpj') }}"  autocomplete="cnpj" autofocus>
+                        <div id="fieldCNPJ" @error('passaporte') style="display: block" @enderror style="display: none">
+                            <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" value="{{ old('cnpj') }}"  autocomplete="cnpj" autofocus disabled>
 
                             @error('cnpj')
                             <span class="invalid-feedback" role="alert">
@@ -303,7 +315,7 @@
                             @enderror
                         </div>
                         <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: none" >
-                            <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="{{__('Passaporte')}}" value="{{ old('passaporte') }}"  autocomplete="passaporte" autofocus>
+                            <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="{{__('Passaporte')}}" value="{{ old('passaporte') }}"  autocomplete="passaporte" autofocus disabled>
 
                             @error('passaporte')
                                 <span class="invalid-feedback" role="alert">
@@ -342,7 +354,7 @@
 
                     <div class="col-md-6">
                         <label for="email" class="col-form-label required-field">{{ __('E-mail') }}</label>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"  autocomplete="email">
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ session('email') }}"  autocomplete="email" disabled>
 
                         @error('email')
                             <span class="invalid-feedback" role="alert">
