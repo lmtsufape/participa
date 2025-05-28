@@ -494,5 +494,5 @@ Route::namespace('Submissao')->group(function () {
 
 Route::get('/cadastro/validacao-cadastro', [PreRegistroController::class, 'preRegistro'])->name('preRegistro');
 Route::post('/cadastro/enviar-email-codigo', [PreRegistroController::class, 'enviarCodigo'])->name('enviarCodigo');
-Route::get('/cadastro/inserir-codigo/{email}', [PreRegistroController::class, 'inserirCodigo'])->name('inserirCodigo');
+Route::get('/cadastro/inserir-codigo/{id}', [PreRegistroController::class, 'inserirCodigo'])->name('inserirCodigo');
 Route::post('/cadastro/validar-codigo', [PreRegistroController::class, 'verificarCodigo'])->name('verificarCodigo');

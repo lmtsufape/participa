@@ -69,12 +69,12 @@
             @csrf
             {{-- Nome | CPF | E-mail --}}
             <div class="container card my-3">
-                <input type="hidden" value="{{ $email }}" name="email">
+                <input type="hidden" value="{{ $id }}" name="id">
 
-                <div class="form-group row">
+                <div class="form-group row mt-3">
                     <div class="col-md-12">
                         <label for="codigo" class="col-form-label required-field">{{ __('Código') }}</label>
-                        <input id="codigo" type="text" class="form-control @error('codigo') is-invalid @enderror" name="codigo" value="{{ old('codigo') }}"  autocomplete="codigo" autofocus>
+                        <input id="codigo" type="text" class="form-control @error('codigo') is-invalid @enderror" name="codigo" value="{{ old('codigo') }}"  autocomplete="codigo" placeholder="Insira o código de validação que foi enviado para o seu e-mail">
                     </div>
                 </div>
 

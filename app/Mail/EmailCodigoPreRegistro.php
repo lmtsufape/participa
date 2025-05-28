@@ -13,17 +13,17 @@ class EmailCodigoPreRegistro extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $codigo;
+    public $preRegistro;
 
-    public function __construct($codigo)
+    public function __construct($preRegistro)
     {
-        $this->codigo = $codigo;
+        $this->preRegistro = $preRegistro;
     }
 
     public function build()
     {
-        return $this->subject('Seu código de verificação')
+        return $this->subject('(ABA - Plataforma de eventos) - Código de validação')
             ->view('emails.emailCodigoPreRegistro')
-            ->with(['codigo' => $this->codigo]);
+            ->with(['preRegistro' => $this->preRegistro], );
     }
 }

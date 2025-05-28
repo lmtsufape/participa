@@ -23,6 +23,10 @@ class PreRegistroController extends Controller
             'nome' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'cpf' => 'required|string|unique:users,cpf',
+            'pais' => 'required|string',
+        ],[
+            'email.unique' => 'Este email já está cadastrado no sistema.',
+            'cpf.unique' => 'Este CPF já está cadastrado no sistema.',
         ]);
 
         // Verifica se já existe um código ainda válido para esse e-mail ou CPF
@@ -33,7 +37,7 @@ class PreRegistroController extends Controller
 
         if ($registroExistente) {
             // Já existe um código válido. Redireciona para a etapa de confirmação.
-            return redirect()->route('inserirCodigo', ['email' => $request->email])->with(['sucesso' => "Você já solicitou um código! Verifique seu e-mail e insira-o abaixo."]);
+            return redirect()->route('inserirCodigo', ['id' => $registroExistente->id])->with(['sucesso' => "Você já solicitou um código! Verifique seu e-mail e insira-o abaixo."]);
         }
 
         do {
@@ -42,45 +46,45 @@ class PreRegistroController extends Controller
 
         $expiracao = Carbon::now()->addMinutes(15);
 
-        PreRegistro::create([
-            'nome' => $request->nome,
-            'cpf' => $request->cpf,
-            'email' => $request->email,
-            'codigo' => $codigo,
-            'expiracao' => $expiracao,
-        ]);
+        $preRegistro = PreRegistro::create([
+                            'nome' => $request->nome,
+                            'cpf' => $request->cpf,
+                            'email' => $request->email,
+                            'codigo' => $codigo,
+                            'pais' => $request->pais,
+                            'expiracao' => $expiracao,
+                        ]);
 
-        Mail::to($request->email)->send(new \App\Mail\EmailCodigoPreRegistro($codigo));
+        Mail::to($request->email)->send(new \App\Mail\EmailCodigoPreRegistro($preRegistro));
 
-        $email = $request->email;
+        $id = $preRegistro->id;
 
-        return redirect()->route('inserirCodigo', compact('email'))->with(['sucesso' => "Código de validação enviado para o e-mail informado!"]);
+        return redirect()->route('inserirCodigo', compact('id'))->with(['sucesso' => "Código de validação enviado para o e-mail informado!"]);
     }
 
-    public function inserirCodigo($email)
+    public function inserirCodigo($id)
     {
-        return view('auth.confirmarCodigoPreRegistro', ['email' => $email]);
+        return view('auth.confirmarCodigoPreRegistro', ['id' => $id]);
     }
 
     public function verificarCodigo(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'id' => 'required',
             'codigo' => 'required|string'
         ]);
 
-        $entrar = PreRegistro::where('email', $request->email)
+        $entrar = PreRegistro::where('id', $request->id)
             ->where('codigo', $request->codigo)
             ->where('expiracao', '>', now())
             ->first();
 
         if(!$entrar) {
-            return redirect()->route('inserirCodigo', ['email' => $request->email])->with('erro', "O código informado expirou ou está incorreto!");
+            return redirect()->route('inserirCodigo', ['id' => $request->id])->with('erro', "O código informado expirou ou está incorreto!");
         }
 
-        // Aqui você pode armazenar na sessão ou gerar token temporário
         session(['verified_pre_registration' => $entrar->id]);
 
-        return redirect()->route('register', ['locale' => app()->getLocale()])->with(['nome' => $entrar->nome, 'cpf' => $entrar->cpf, 'email' => $entrar->email, 'sucesso' => 'Código verificado! Prossiga com o cadastro.']);
+        return redirect()->route('register', ['locale' => app()->getLocale()])->with(['nome' => $entrar->nome, 'cpf' => $entrar->cpf, 'email' => $entrar->email, 'pais' => $entrar->pais, 'sucesso' => 'Código verificado! Prossiga com o cadastro.']);
     }
 }

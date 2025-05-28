@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('cpf');
             $table->string('email');
             $table->string('codigo');
+            $table->string( 'pais');
             $table->timestamp('expiracao');
             $table->timestamps();
         });

@@ -44,10 +44,8 @@
             {{ session('erro') }}
         </div>
     @endif
-    
-    <br><br>
 
-    <div class="row titulo text-center" style="color: #034652;">
+    <div class="row titulo text-center mt-3" style="color: #034652;">
         <h2 style="font-weight: bold;">{{__('Cadastro')}}</h2>
     </div>
 
@@ -57,206 +55,7 @@
         <form method="POST" action="{{ route('register', app()->getLocale())}}">
     @endif
         <div id="etapa-1">
-            <div class="form-group row">
-                <div class="col-md-12">
-                    <label for="pais" class="col-form-label required-field">{{ __('País') }}</label>
-                    <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" class="form-control @error('pais') is-invalid @enderror" id="pais">
-                        <option value="/pt-BR/register/brasil" disabled selected hidden>{{__('Brasil')}}</option>
-                        <option @if($pais == 'afeganistao') selected @endif value="/pt-BR/register/afeganistao">{{__('Afeganistão')}}</option>
-                        <option @if($pais == 'albania') selected @endif value="/pt-BR/register/albania">{{__('Albânia')}}</option>
-                        <option @if($pais == 'algeria') selected @endif value="/pt-BR/register/algeria">{{__('Argélia')}}</option>
-                        <option @if($pais == 'andorra') selected @endif value="/pt-BR/register/andorra">{{__('Andorra')}}</option>
-                        <option @if($pais == 'angola') selected @endif value="/pt-BR/register/angola">{{__('Angola')}}</option>
-                        <option @if($pais == 'antigua_barbuda') selected @endif value="/pt-BR/register/antigua_barbuda">{{__('Antígua e Barbuda')}}</option>
-                        <option @if($pais == 'argelia') selected @endif value="/pt-BR/register/argelia">{{__('Argélia')}}</option>
-                        <option @if($pais == 'argentina') selected @endif value="/pt-BR/register/argentina">{{__('Argentina')}}</option>
-                        <option @if($pais == 'armenia') selected @endif value="/pt-BR/register/armenia">{{__('Armênia')}}</option>
-                        <option @if($pais == 'australia') selected @endif value="/pt-BR/register/australia">{{__('Austrália')}}</option>
-                        <option @if($pais == 'austria') selected @endif value="/pt-BR/register/austria">{{__('Áustria')}}</option>
-                        <option @if($pais == 'azerbaijao') selected @endif value="/pt-BR/register/azerbaijao">{{__('Azerbaijão')}}</option>
-                        <option @if($pais == 'bahamas') selected @endif value="/pt-BR/register/bahamas">{{__('Bahamas')}}</option>
-                        <option @if($pais == 'bahrain') selected @endif value="/pt-BR/register/bahrain">{{__('Bahrein')}}</option>
-                        <option @if($pais == 'bangladesh') selected @endif value="/pt-BR/register/bangladesh">{{__('Bangladesh')}}</option>
-                        <option @if($pais == 'barbados') selected @endif value="/pt-BR/register/barbados">{{__('Barbados')}}</option>
-                        <option @if($pais == 'belgica') selected @endif value="/pt-BR/register/belgica">{{__('Bélgica')}}</option>
-                        <option @if($pais == 'belize') selected @endif value="/pt-BR/register/belize">{{__('Belize')}}</option>
-                        <option @if($pais == 'benin') selected @endif value="/pt-BR/register/benin">{{__('Benin')}}</option>
-                        <option @if($pais == 'bhutao') selected @endif value="/pt-BR/register/bhutao">{{__('Butão')}}</option>
-                        <option @if($pais == 'bolivia') selected @endif value="/pt-BR/register/bolivia">{{__('Bolívia')}}</option>
-                        <option @if($pais == 'bosnia_herzegovina') selected @endif value="/pt-BR/register/bosnia_herzegovina">{{__('Bósnia e Herzegovina')}}</option>
-                        <option @if($pais == 'botswana') selected @endif value="/pt-BR/register/botswana">{{__('Botswana')}}</option>
-                        <option @if($pais == 'brasil') selected @endif value="/pt-BR/register/brasil">{{__('Brasil')}}</option>
-                        <option @if($pais == 'brunei') selected @endif value="/pt-BR/register/brunei">{{__('Brunei')}}</option>
-                        <option @if($pais == 'bulgaria') selected @endif value="/pt-BR/register/bulgaria">{{__('Bulgária')}}</option>
-                        <option @if($pais == 'burkina_faso') selected @endif value="/pt-BR/register/burkina_faso">{{__('Burquina Faso')}}</option>
-                        <option @if($pais == 'burundi') selected @endif value="/pt-BR/register/burundi">{{__('Burundi')}}</option>
-                        <option @if($pais == 'cabo_verde') selected @endif value="/pt-BR/register/cabo_verde">{{__('Cabo Verde')}}</option>
-                        <option @if($pais == 'camarões') selected @endif value="/pt-BR/register/camarao">{{__('Camarões')}}</option>
-                        <option @if($pais == 'canada') selected @endif value="/pt-BR/register/canada">{{__('Canadá')}}</option>
-                        <option @if($pais == 'catari') selected @endif value="/pt-BR/register/catari">{{__('Catar')}}</option>
-                        <option @if($pais == 'chade') selected @endif value="/pt-BR/register/chade">{{__('Chade')}}</option>
-                        <option @if($pais == 'chile') selected @endif value="/pt-BR/register/chile">{{__('Chile')}}</option>
-                        <option @if($pais == 'china') selected @endif value="/pt-BR/register/china">{{__('China')}}</option>
-                        <option @if($pais == 'chipre') selected @endif value="/pt-BR/register/chipre">{{__('Chipre')}}</option>
-                        <option @if($pais == 'colombia') selected @endif value="/pt-BR/register/colombia">{{__('Colômbia')}}</option>
-                        <option @if($pais == 'comores') selected @endif value="/pt-BR/register/comores">{{__('Comores')}}</option>
-                        <option @if($pais == 'congo') selected @endif value="/pt-BR/register/congo">{{__('Congo')}}</option>
-                        <option @if($pais == 'coreia_do_norte') selected @endif value="/pt-BR/register/coreia_do_norte">{{__('Coreia do Norte')}}</option>
-                        <option @if($pais == 'coreia_do_sul') selected @endif value="/pt-BR/register/coreia_do_sul">{{__('Coreia do Sul')}}</option>
-                        <option @if($pais == 'croacia') selected @endif value="/pt-BR/register/croacia">{{__('Croácia')}}</option>
-                        <option @if($pais == 'cuba') selected @endif value="/pt-BR/register/cuba">{{__('Cuba')}}</option>
-                        <option @if($pais == 'dinamarca') selected @endif value="/pt-BR/register/dinamarca">{{__('Dinamarca')}}</option>
-                        <option @if($pais == 'dominica') selected @endif value="/pt-BR/register/dominica">{{__('Dominica')}}</option>
-                        <option @if($pais == 'egito') selected @endif value="/pt-BR/register/egito">{{__('Egito')}}</option>
-                        <option @if($pais == 'el_salvador') selected @endif value="/pt-BR/register/el_salvador">{{__('El Salvador')}}</option>
-                        <option @if($pais == 'embudos') selected @endif value="/pt-BR/register/embudos">{{__('Embudos')}}</option>
-                        <option @if($pais == 'emirados_arabes_unidos') selected @endif value="/pt-BR/register/emirados_arabes_unidos">{{__('Emirados Árabes Unidos')}}</option>
-                        <option @if($pais == 'equador') selected @endif value="/pt-BR/register/equador">{{__('Equador')}}</option>
-                        <option @if($pais == 'eritrea') selected @endif value="/pt-BR/register/eritrea">{{__('Eritreia')}}</option>
-                        <option @if($pais == 'eslovaquia') selected @endif value="/pt-BR/register/eslovaquia">{{__('Eslováquia')}}</option>
-                        <option @if($pais == 'eslovenia') selected @endif value="/pt-BR/register/eslovenia">{{__('Eslovênia')}}</option>
-                        <option @if($pais == 'espanha') selected @endif value="/pt-BR/register/espanha">{{__('Espanha')}}</option>
-                        <option @if($pais == 'estados_unidos') selected @endif value="/pt-BR/register/estados_unidos">{{__('Estados Unidos da América')}}</option>
-                        <option @if($pais == 'estonia') selected @endif value="/pt-BR/register/estonia">{{__('Estônia')}}</option>
-                        <option @if($pais == 'etiópia') selected @endif value="/pt-BR/register/etopia">{{__('Etiópia')}}</option>
-                        <option @if($pais == 'fiji') selected @endif value="/pt-BR/register/fiji">{{__('Fiji')}}</option>
-                        <option @if($pais == 'filipinas') selected @endif value="/pt-BR/register/filipinas">{{__('Filipinas')}}</option>
-                        <option @if($pais == 'finlandia') selected @endif value="/pt-BR/register/finlandia">{{__('Finlândia')}}</option>
-                        <option @if($pais == 'franca') selected @endif value="/pt-BR/register/franca">{{__('França')}}</option>
-                        <option @if($pais == 'gabon') selected @endif value="/pt-BR/register/gabon">{{__('Gabão')}}</option>
-                        <option @if($pais == 'gambia') selected @endif value="/pt-BR/register/gambia">{{__('Gâmbia')}}</option>
-                        <option @if($pais == 'georgia') selected @endif value="/pt-BR/register/georgia">{{__('Geórgia')}}</option>
-                        <option @if($pais == 'gibraltar') selected @endif value="/pt-BR/register/gibraltar">{{__('Gibraltar')}}</option>
-                        <option @if($pais == 'granada') selected @endif value="/pt-BR/register/granada">{{__('Granada')}}</option>
-                        <option @if($pais == 'greece') selected @endif value="/pt-BR/register/greece">{{__('Grécia')}}</option>
-                        <option @if($pais == 'guatemala') selected @endif value="/pt-BR/register/guatemala">{{__('Guatemala')}}</option>
-                        <option @if($pais == 'guinea') selected @endif value="/pt-BR/register/guinea">{{__('Guiné')}}</option>
-                        <option @if($pais == 'guine_bissau') selected @endif value="/pt-BR/register/guine_bissau">{{__('Guiné-Bissau')}}</option>
-                        <option @if($pais == 'guyana') selected @endif value="/pt-BR/register/guyana">{{__('Guiana')}}</option>
-                        <option @if($pais == 'haiti') selected @endif value="/pt-BR/register/haiti">{{__('Haiti')}}</option>
-                        <option @if($pais == 'honduras') selected @endif value="/pt-BR/register/honduras">{{__('Honduras')}}</option>
-                        <option @if($pais == 'hong_kong') selected @endif value="/pt-BR/register/hong_kong">{{__('Hong Kong')}}</option>
-                        <option @if($pais == 'hungria') selected @endif value="/pt-BR/register/hungria">{{__('Hungria')}}</option>
-                        <option @if($pais == 'iacos') selected @endif value="/pt-BR/register/iacos">{{__('Iacós')}}</option>
-                        <option @if($pais == 'islândia') selected @endif value="/pt-BR/register/islandia">{{__('Islândia')}}</option>
-                        <option @if($pais == 'india') selected @endif value="/pt-BR/register/india">{{__('Índia')}}</option>
-                        <option @if($pais == 'indonesia') selected @endif value="/pt-BR/register/indonesia">{{__('Indonésia')}}</option>
-                        <option @if($pais == 'irlanda') selected @endif value="/pt-BR/register/irlanda">{{__('Irlanda')}}</option>
-                        <option @if($pais == 'irã') selected @endif value="/pt-BR/register/ira">{{__('Irã')}}</option>
-                        <option @if($pais == 'iraque') selected @endif value="/pt-BR/register/iraque">{{__('Iraque')}}</option>
-                        <option @if($pais == 'israel') selected @endif value="/pt-BR/register/israel">{{__('Israel')}}</option>
-                        <option @if($pais == 'italia') selected @endif value="/pt-BR/register/italia">{{__('Itália')}}</option>
-                        <option @if($pais == 'jamaica') selected @endif value="/pt-BR/register/jamaica">{{__('Jamaica')}}</option>
-                        <option @if($pais == 'japão') selected @endif value="/pt-BR/register/japao">{{__('Japão')}}</option>
-                        <option @if($pais == 'jordania') selected @endif value="/pt-BR/register/jordania">{{__('Jordânia')}}</option>
-                        <option @if($pais == 'juliano') selected @endif value="/pt-BR/register/juliano">{{__('Juliano')}}</option>
-                        <option @if($pais == 'laos') selected @endif value="/pt-BR/register/laos">{{__('Laos')}}</option>
-                        <option @if($pais == 'lesoto') selected @endif value="/pt-BR/register/lesoto">{{__('Lesoto')}}</option>
-                        <option @if($pais == 'letonia') selected @endif value="/pt-BR/register/letonia">{{__('Letônia')}}</option>
-                        <option @if($pais == 'libano') selected @endif value="/pt-BR/register/libano">{{__('Líbano')}}</option>
-                        <option @if($pais == 'liberia') selected @endif value="/pt-BR/register/liberia">{{__('Libéria')}}</option>
-                        <option @if($pais == 'liechtenstein') selected @endif value="/pt-BR/register/liechtenstein">{{__('Liechtenstein')}}</option>
-                        <option @if($pais == 'lituania') selected @endif value="/pt-BR/register/lituania">{{__('Lituânia')}}</option>
-                        <option @if($pais == 'luxemburgo') selected @endif value="/pt-BR/register/luxemburgo">{{__('Luxemburgo')}}</option>
-                        <option @if($pais == 'macedonia') selected @endif value="/pt-BR/register/macedonia">{{__('Macedônia')}}</option>
-                        <option @if($pais == 'madagascar') selected @endif value="/pt-BR/register/madagascar">{{__('Madagáscar')}}</option>
-                        <option @if($pais == 'malasia') selected @endif value="/pt-BR/register/malasia">{{__('Malásia')}}</option>
-                        <option @if($pais == 'malaui') selected @endif value="/pt-BR/register/malaui">{{__('Malawi')}}</option>
-                        <option @if($pais == 'maldivas') selected @endif value="/pt-BR/register/maldivas">{{__('Maldivas')}}</option>
-                        <option @if($pais == 'mali') selected @endif value="/pt-BR/register/mali">{{__('Mali')}}</option>
-                        <option @if($pais == 'malta') selected @endif value="/pt-BR/register/malta">{{__('Malta')}}</option>
-                        <option @if($pais == 'marianas') selected @endif value="/pt-BR/register/marianas">{{__('Marianas')}}</option>
-                        <option @if($pais == 'marrocos') selected @endif value="/pt-BR/register/marrocos">{{__('Marrocos')}}</option>
-                        <option @if($pais == 'martinica') selected @endif value="/pt-BR/register/martinica">{{__('Martinica')}}</option>
-                        <option @if($pais == 'mauricio') selected @endif value="/pt-BR/register/mauricio">{{__('Maurício')}}</option>
-                        <option @if($pais == 'mauritania') selected @endif value="/pt-BR/register/mauritania">{{__('Mauritânia')}}</option>
-                        <option @if($pais == 'mexico') selected @endif value="/pt-BR/register/mexico">{{__('México')}}</option>
-                        <option @if($pais == 'micronesia') selected @endif value="/pt-BR/register/micronesia">{{__('Micronésia')}}</option>
-                        <option @if($pais == 'moçambique') selected @endif value="/pt-BR/register/mocambique">{{__('Moçambique')}}</option>
-                        <option @if($pais == 'moldavia') selected @endif value="/pt-BR/register/moldavia">{{__('Moldávia')}}</option>
-                        <option @if($pais == 'monaco') selected @endif value="/pt-BR/register/monaco">{{__('Mônaco')}}</option>
-                        <option @if($pais == 'mongolia') selected @endif value="/pt-BR/register/mongolia">{{__('Mongólia')}}</option>
-                        <option @if($pais == 'montenegro') selected @endif value="/pt-BR/register/montenegro">{{__('Montenegro')}}</option>
-                        <option @if($pais == 'namibia') selected @endif value="/pt-BR/register/namibia">{{__('Namíbia')}}</option>
-                        <option @if($pais == 'nauru') selected @endif value="/pt-BR/register/nauru">{{__('Nauru')}}</option>
-                        <option @if($pais == 'nepal') selected @endif value="/pt-BR/register/nepal">{{__('Nepal')}}</option>
-                        <option @if($pais == 'nicaragua') selected @endif value="/pt-BR/register/nicaragua">{{__('Nicarágua')}}</option>
-                        <option @if($pais == 'niger') selected @endif value="/pt-BR/register/niger">{{__('Níger')}}</option>
-                        <option @if($pais == 'nigeria') selected @endif value="/pt-BR/register/nigeria">{{__('Nigéria')}}</option>
-                        <option @if($pais == 'niue') selected @endif value="/pt-BR/register/niue">{{__('Niue')}}</option>
-                        <option @if($pais == 'nova_zelandia') selected @endif value="/pt-BR/register/nova_zelandia">{{__('Nova Zelândia')}}</option>
-                        <option @if($pais == 'nicaragua') selected @endif value="/pt-BR/register/nicaragua">{{__('Nicarágua')}}</option>
-                        <option @if($pais == 'noruega') selected @endif value="/pt-BR/register/noruega">{{__('Noruega')}}</option>
-                        <option @if($pais == 'nova_zelandia') selected @endif value="/pt-BR/register/nova_zelandia">{{__('Nova Zelândia')}}</option>
-                        <option @if($pais == 'panama') selected @endif value="/pt-BR/register/panama">{{__('Panamá')}}</option>
-                        <option @if($pais == 'papua_nova_guinea') selected @endif value="/pt-BR/register/papua_nova_guinea">{{__('Papua Nova Guiné')}}</option>
-                        <option @if($pais == 'paquistao') selected @endif value="/pt-BR/register/paquistao">{{__('Paquistão')}}</option>
-                        <option @if($pais == 'paraguai') selected @endif value="/pt-BR/register/paraguai">{{__('Paraguai')}}</option>
-                        <option @if($pais == 'peru') selected @endif value="/pt-BR/register/peru">{{__('Peru')}}</option>
-                        <option @if($pais == 'polonia') selected @endif value="/pt-BR/register/polonia">{{__('Polônia')}}</option>
-                        <option @if($pais == 'portugal') selected @endif value="/pt-BR/register/portugal">{{__('Portugal')}}</option>
-                        <option @if($pais == 'quenia') selected @endif value="/pt-BR/register/kenia">{{__('Quênia')}}</option>
-                        <option @if($pais == 'quiribati') selected @endif value="/pt-BR/register/quiribati">{{__('Quiribati')}}</option>
-                        <option @if($pais == 'reino_unido') selected @endif value="/pt-BR/register/reino_unido">{{__('Reino Unido')}}</option>
-                        <option @if($pais == 'república_dominicana') selected @endif value="/pt-BR/register/republica_dominicana">{{__('República Dominicana')}}</option>
-                        <option @if($pais == 'república_checa') selected @endif value="/pt-BR/register/republica_checa">{{__('República Checa')}}</option>
-                        <option @if($pais == 'ruanda') selected @endif value="/pt-BR/register/ruanda">{{__('Ruanda')}}</option>
-                        <option @if($pais == 'romênia') selected @endif value="/pt-BR/register/romenia">{{__('Romênia')}}</option>
-                        <option @if($pais == 'rússia') selected @endif value="/pt-BR/register/russia">{{__('Rússia')}}</option>
-                        <option @if($pais == 'saint_kitts_nevis') selected @endif value="/pt-BR/register/saint_kitts_nevis">{{__('Saint Kitts e Nevis')}}</option>
-                        <option @if($pais == 'saint_lucia') selected @endif value="/pt-BR/register/saint_lucia">{{__('Saint Lucia')}}</option>
-                        <option @if($pais == 'samoa') selected @endif value="/pt-BR/register/samoa">{{__('Samoa')}}</option>
-                        <option @if($pais == 'san_marino') selected @endif value="/pt-BR/register/san_marino">{{__('San Marino')}}</option>
-                        <option @if($pais == 'santa_lucia') selected @endif value="/pt-BR/register/santa_lucia">{{__('Santa Lúcia')}}</option>
-                        <option @if($pais == 'senegal') selected @endif value="/pt-BR/register/senegal">{{__('Senegal')}}</option>
-                        <option @if($pais == 'serra_leoa') selected @endif value="/pt-BR/register/serra_leoa">{{__('Serra Leoa')}}</option>
-                        <option @if($pais == 'seychelles') selected @endif value="/pt-BR/register/seychelles">{{__('Seicheles')}}</option>
-                        <option @if($pais == 'singapura') selected @endif value="/pt-BR/register/singapura">{{__('Singapura')}}</option>
-                        <option @if($pais == 'siria') selected @endif value="/pt-BR/register/siria">{{__('Síria')}}</option>
-                        <option @if($pais == 'somalia') selected @endif value="/pt-BR/register/somalia">{{__('Somália')}}</option>
-                        <option @if($pais == 'sri_lanka') selected @endif value="/pt-BR/register/sri_lanka">{{__('Sri Lanka')}}</option>
-                        <option @if($pais == 'sudan') selected @endif value="/pt-BR/register/sudan">{{__('Sudão')}}</option>
-                        <option @if($pais == 'suriname') selected @endif value="/pt-BR/register/suriname">{{__('Suriname')}}</option>
-                        <option @if($pais == 'suécia') selected @endif value="/pt-BR/register/suecia">{{__('Suécia')}}</option>
-                        <option @if($pais == 'suíça') selected @endif value="/pt-BR/register/suica">{{__('Suíça')}}</option>
-                        <option @if($pais == 'sri_lanka') selected @endif value="/pt-BR/register/sri_lanka">{{__('Sri Lanka')}}</option>
-                        <option @if($pais == 'tailandia') selected @endif value="/pt-BR/register/tailandia">{{__('Tailândia')}}</option>
-                        <option @if($pais == 'taishe') selected @endif value="/pt-BR/register/taishe">{{__('Taishe')}}</option>
-                        <option @if($pais == 'taiwan') selected @endif value="/pt-BR/register/taiwan">{{__('Taiwan')}}</option>
-                        <option @if($pais == 'tanzânia') selected @endif value="/pt-BR/register/tanzania">{{__('Tanzânia')}}</option>
-                        <option @if($pais == 'timor_leste') selected @endif value="/pt-BR/register/timor_leste">{{__('Timor Leste')}}</option>
-                        <option @if($pais == 'togo') selected @endif value="/pt-BR/register/togo">{{__('Togo')}}</option>
-                        <option @if($pais == 'tonga') selected @endif value="/pt-BR/register/tonga">{{__('Tonga')}}</option>
-                        <option @if($pais == 'trinidad_tobago') selected @endif value="/pt-BR/register/trinidad_tobago">{{__('Trinidad e Tobago')}}</option>
-                        <option @if($pais == 'tunisia') selected @endif value="/pt-BR/register/tunisia">{{__('Tunísia')}}</option>
-                        <option @if($pais == 'turcomenistão') selected @endif value="/pt-BR/register/turcomenistao">{{__('Turcomenistão')}}</option>
-                        <option @if($pais == 'turquia') selected @endif value="/pt-BR/register/turquia">{{__('Turquia')}}</option>
-                        <option @if($pais == 'tuvalu') selected @endif value="/pt-BR/register/tuvalu">{{__('Tuvalu')}}</option>
-                        <option @if($pais == 'uganda') selected @endif value="/pt-BR/register/uganda">{{__('Uganda')}}</option>
-                        <option @if($pais == 'uruguai') selected @endif value="/pt-BR/register/uruguai">{{__('Uruguai')}}</option>
-                        <option @if($pais == 'uzbequistão') selected @endif value="/pt-BR/register/uzbequistao">{{__('Uzbequistão')}}</option>
-                        <option @if($pais == 'vanuatu') selected @endif value="/pt-BR/register/vanuatu">{{__('Vanuatu')}}</option>
-                        <option @if($pais == 'vaticano') selected @endif value="/pt-BR/register/vaticano">{{__('Vaticano')}}</option>
-                        <option @if($pais == 'venezuela') selected @endif value="/pt-BR/register/venezuela">{{__('Venezuela')}}</option>
-                        <option @if($pais == 'vietnam') selected @endif value="/pt-BR/register/vietname">{{__('Vietnã')}}</option>
-                        <option @if($pais == 'wallis_futuna') selected @endif value="/pt-BR/register/wallis_futuna">{{__('Wallis e Futuna')}}</option>
-                        <option @if($pais == 'zambia') selected @endif value="/pt-BR/register/zambia">{{__('Zâmbia')}}</option>
-                        <option @if($pais == 'zimbabue') selected @endif value="/pt-BR/register/zimbabue">{{__('Zimbábue')}}</option>
-                    </select>
-                    <input type="hidden" name="pais" value="{{$pais}}">
-
-
-                    @error('pais')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ __($message) }}</strong>
-                        </span>
-                    @enderror
-                </div>
-            </div>
-
-            <br>
-
-            <div class="etapas" style="font-weight: 500;">
+            <div class="etapas mt-3" style="font-weight: 500;">
                 <div class="etapa">
                     <p>1. {{ __('Validação de cadastro') }}</p>
                 </div>
@@ -265,17 +64,41 @@
                 </div>
             </div>
 
+            <input type="hidden" name="name" class="form-control" value="{{ session('nome') ?? old('nome') }}">
+            <input type="hidden" name="email" class="form-control" value="{{ session('email') ?? old('email') }}">
+            <input type="hidden" name="cpf" class="form-control" value="{{ session('cpf') ?? old('cpf') }}">
+            <input type="hidden" name="pais" class="form-control" value="{{ session('pais') }}">
+
             @csrf
             {{-- Nome | CPF --}}
-            <div class="container card">
-                <br>
+            <div class="container card my-3">
+                 <div class="row mt-3">
+                    <div class="col-md-8">
+                        <div>
+                            <span class="h5" style="color: #034652; font-weight: bold;">Dados pessoais</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="border-top: 1px solid#034652">
 
                 <div class="form-group row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <label for="name" class="col-form-label required-field">{{ __('Nome completo') }}</label>
-                        <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" value="{{ session('nome') }}"  autocomplete="name" autofocus disabled>
+                        <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" value="{{ session('nome') ?? old('name') }}"  autocomplete="name" autofocus disabled>
 
                         @error('name')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ __($message) }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="nome-social" class="col-form-label">{{ __('Nome social') }}</label>
+                        <input id="nome-social" type="text" class="form-control apenasLetras @error('nome-social') is-invalid @enderror" name="nome-social" value="{{ old('nome-social') }}"  autocomplete="nome-social" autofocus>
+
+                        @error('nome-social')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
                             </span>
@@ -287,17 +110,17 @@
                     <div class="col-md-6">
                         <div class="custom-control custom-radio custom-control-inline col-form-label">
                             <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
-                            <label class="custom-control-label me-2" for="customRadioInline1" disabled>CPF</label>
+                            <label class="custom-control-label me-2" for="customRadioInline1">CPF</label>
 
-                            <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input" disabled>
-                            <label class="custom-control-label me-2" for="customRadioInline2" disabled>{{__('CNPJ')}}</label>
+                            <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
+                            <label class="custom-control-label me-2" for="customRadioInline2">{{__('CNPJ')}}</label>
 
-                            <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input" disabled>
-                            <label class="custom-control-label " for="customRadioInline3" disabled>{{__('Passaporte')}}</label>
+                            <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input">
+                            <label class="custom-control-label " for="customRadioInline3">{{__('Passaporte')}}</label>
                         </div>
 
                         <div id="fieldCPF" @error('passaporte') style="display: none" @enderror>
-                            <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ session('cpf') }}" autocomplete="cpf" placeholder="CPF" autofocus disabled>
+                            <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ session('cpf') ?? old('cpf') }}" autocomplete="cpf" placeholder="CPF" autofocus disabled>
 
                             @error('cpf')
                                 <span class="invalid-feedback" role="alert">
@@ -306,7 +129,7 @@
                             @enderror
                         </div>
                         <div id="fieldCNPJ" @error('passaporte') style="display: block" @enderror style="display: none">
-                            <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" value="{{ old('cnpj') }}"  autocomplete="cnpj" autofocus disabled>
+                            <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" value="{{ old('cnpj') }}"  autocomplete="cnpj" autofocus>
 
                             @error('cnpj')
                             <span class="invalid-feedback" role="alert">
@@ -315,7 +138,7 @@
                             @enderror
                         </div>
                         <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: none" >
-                            <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="{{__('Passaporte')}}" value="{{ old('passaporte') }}"  autocomplete="passaporte" autofocus disabled>
+                            <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="{{__('Passaporte')}}" value="{{ old('passaporte') }}"  autocomplete="passaporte" autofocus>
 
                             @error('passaporte')
                                 <span class="invalid-feedback" role="alert">
@@ -339,9 +162,9 @@
 
                 {{-- Instituição de Ensino e Celular --}}
                 <div class="form-group row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="celular" class="col-form-label required-field">{{ __('Celular') }}</label><br>
-                        <input id="phone" class="form-control celular @error('celular') is-invalid @enderror" type="tel" name="celular" value="{{old('celular')}}" required autocomplete="celular" onkeyup="process(event)">
+                        <input id="phone" class="form-control celular @error('celular') is-invalid @enderror" type="tel" name="celular" value="{{old('celular')}}" style="width: 100% !important;" required autocomplete="celular" onkeyup="process(event)">
                         <div class="alert alert-info mt-1" style="display: none"></div>
                         <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
 
@@ -352,9 +175,20 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <label for="data-nascimento" class="col-form-label required-field">{{ __('Data de nascimento') }}</label>
+                        <input id="data-nasacimento" type="date" class="form-control @error('data-nascimento') is-invalid @enderror" name="data-nascimento" value="{{ old('data-nascimento')}}"  autocomplete="data-nascimento" required>
+
+                        @error('data-nascimento')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ __($message) }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-4">
                         <label for="email" class="col-form-label required-field">{{ __('E-mail') }}</label>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ session('email') }}"  autocomplete="email" disabled>
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ session('email') ?? old('email')}}"  autocomplete="email" disabled>
 
                         @error('email')
                             <span class="invalid-feedback" role="alert">
@@ -365,7 +199,7 @@
                 </div>
 
                 {{-- Email | Senha | Confirmar Senha --}}
-                <div class="form-group row">
+                <div class="form-group row mb-3">
                     <div class="col-md-6">
                         <label for="password" class="col-form-label required-field">{{ __('Senha') }}</label>
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password"  autocomplete="new-password">
@@ -382,190 +216,348 @@
                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation"  autocomplete="new-password">
                     </div>
                 </div>
-
-                <div class="row form-group">
-                    <div class="col-md-10"></div>
-
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;" onclick="proximaEtapa()">
-                            {{ __('Continuar') }}
-                        </button>
-                    </div>
-                </div>
-
-                <br>
             </div>
         </div>
 
-        <div id="etapa-2" style="display: none;">
-            <div class="etapas">
-                <div class="etapa">
-                    <p>1. {{ __('Informações pessoais') }}</p>
-                </div>
-                <div class="etapa ativa">
-                    <p>2. {{__('Endereço')}}</p>
+        <div class="container card my-3" style="font-weight: 500;">
+            <div class="row mt-3">
+                <div class="col-md-8">
+                    <div>
+                        <span class="h5" style="color: #034652; font-weight: bold;">Endereço</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="container card" style="font-weight: 500;">
-                <br>
-                {{-- Rua | Número | Bairro --}}
-                <div class="form-group row">
-                    <div class="col-md-12">
-                        <label for="cep" class="col-form-label required-field">{{ __('CEP') }}@if($pais != 'outro') @endif</label>
-                        <input value="{{old('cep')}}" id="cep" type="text"  autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="9" @if($pais != 'outro') required @endif >
-                        @error('cep')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ __($message) }}</strong>
-                            </span>
-                        @enderror
-                    </div>
+            <hr style="border-top: 1px solid#034652">
+            {{-- Rua | Número | Bairro --}}
+            <div class="form-group row mt-3">
+                <div class="col-md-12">
+                    <label for="cep" class="col-form-label required-field">{{ __('CEP') }}@if($pais != 'outro') @endif</label>
+                    <input value="{{old('cep')}}" id="cep" type="text"  autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="9" @if($pais != 'outro') required @endif >
+                    @error('cep')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ __($message) }}</strong>
+                        </span>
+                    @enderror
                 </div>
-                <div class="form-group row">
-                    <div class="col-md-6">
-                        <label for="rua" class="col-form-label required-field">{{ __('Rua') }}</label>
-                        <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua"  autocomplete="new-password" required>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label for="rua" class="col-form-label required-field">{{ __('Rua') }}</label>
+                    <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua"  autocomplete="new-password" required>
 
-                        @error('rua')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ __($message) }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="numero" class="col-form-label required-field">{{ __('Número') }}@if($pais != 'outro') @endif</label>
-                        <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero" maxlength="10" @if($pais != 'outro') required @endif>
-
-                        @error('numero')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ __($message) }}</strong>
-                            </span>
-                        @enderror
-                    </div>
+                    @error('rua')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ __($message) }}</strong>
+                        </span>
+                    @enderror
                 </div>
 
-                <div class="form-group row">
-                    <div class="col-md-6">
-                        <label for="bairro" class="col-form-label required-field">{{ __('Bairro') }}</label>
-                        <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro"  autocomplete="bairro" required>
+                <div class="col-md-6">
+                    <label for="numero" class="col-form-label required-field">{{ __('Número') }}@if($pais != 'outro') @endif</label>
+                    <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero" maxlength="10" @if($pais != 'outro') required @endif>
 
-                        @error('bairro')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ __($message) }}</strong>
-                            </span>
-                        @enderror
-                        <br>
-                    </div>
+                    @error('numero')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ __($message) }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
 
-                    <div class="col-md-6">
-                        <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
-                        <input type="text" value="{{old('complemento')}}" id="complemento" class="form-control  @error('complemento') is-invalid @enderror" name="complemento" >
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label for="bairro" class="col-form-label required-field">{{ __('Bairro') }}</label>
+                    <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro"  autocomplete="bairro" required>
 
-                        @error('complemento')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ __($message) }}</strong>
-                            </span>
-                        @enderror
-                    </div>
+                    @error('bairro')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ __($message) }}</strong>
+                        </span>
+                    @enderror
+                    <br>
                 </div>
 
-                <div class="form-group row">
-                    <div class="col-md-6">
-                        <label for="cidade" class="col-form-label required-field">{{ __('Cidade') }}</label>
-                        <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade"  autocomplete="cidade" required>
+                <div class="col-md-6">
+                    <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
+                    <input type="text" value="{{old('complemento')}}" id="complemento" class="form-control  @error('complemento') is-invalid @enderror" name="complemento" >
 
-                        @error('cidade')
+                    @error('complemento')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ __($message) }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <div class="col-md-6">
+                    <label for="cidade" class="col-form-label required-field">{{ __('Cidade') }}</label>
+                    <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade"  autocomplete="cidade" required>
+
+                    @error('cidade')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ __($message) }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                @if(session('pais') == 'brasil' || session('pais') == null)
+                    <!-- <div class="col-sm-6" id="groupformufinput">
+                        <label for="ufInput" class="col-form-label">{{ __('UF') }}*</label>
+                        <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" required>
+
+                        @error('uf')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ __($message) }}</strong>
+                            </span>
+                        @enderror
+                    </div> -->
+
+                    <div class="col-sm-6" id="groupformuf">
+                        <label for="uf" class="col-form-label required-field">{{ __('Estado') }}</label>
+                        {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}"  autocomplete="uf" autofocus> --}}
+                        <select class="form-control @error('uf') is-invalid @enderror required-field" id="uf" name="uf" required>
+                            <option value="" disabled selected hidden>{{__()}}</option>
+                            <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
+                            <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
+                            <option @if(old('uf') == 'AP') selected @endif value="AP">Amapá</option>
+                            <option @if(old('uf') == 'AM') selected @endif value="AM">Amazonas</option>
+                            <option @if(old('uf') == 'BA') selected @endif value="BA">Bahia</option>
+                            <option @if(old('uf') == 'CE') selected @endif value="CE">Ceará</option>
+                            <option @if(old('uf') == 'DF') selected @endif value="DF">Distrito Federal</option>
+                            <option @if(old('uf') == 'ES') selected @endif value="ES">Espírito Santo</option>
+                            <option @if(old('uf') == 'GO') selected @endif value="GO">Goiás</option>
+                            <option @if(old('uf') == 'MA') selected @endif value="MA">Maranhão</option>
+                            <option @if(old('uf') == 'MT') selected @endif value="MT">Mato Grosso</option>
+                            <option @if(old('uf') == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
+                            <option @if(old('uf') == 'MG') selected @endif value="MG">Minas Gerais</option>
+                            <option @if(old('uf') == 'PA') selected @endif value="PA">Pará</option>
+                            <option @if(old('uf') == 'PB') selected @endif value="PB">Paraíba</option>
+                            <option @if(old('uf') == 'PR') selected @endif value="PR">Paraná</option>
+                            <option @if(old('uf') == 'PE') selected @endif value="PE">Pernambuco</option>
+                            <option @if(old('uf') == 'PI') selected @endif value="PI">Piauí</option>
+                            <option @if(old('uf') == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
+                            <option @if(old('uf') == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
+                            <option @if(old('uf') == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
+                            <option @if(old('uf') == 'RO') selected @endif value="RO">Rondônia</option>
+                            <option @if(old('uf') == 'RR') selected @endif value="RR">Roraima</option>
+                            <option @if(old('uf') == 'SC') selected @endif value="SC">Santa Catarina</option>
+                            <option @if(old('uf') == 'SP') selected @endif value="SP">São Paulo</option>
+                            <option @if(old('uf') == 'SE') selected @endif value="SE">Sergipe</option>
+                            <option @if(old('uf') == 'TO') selected @endif value="TO">Tocantins</option>
+                        </select>
+
+                        @error('uf')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ __($message) }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                @else
+                    <div class="col-md-6" id="etapa-2">
+                        <label for="uf" class="col-form-label required-field">{{ __('Estado/Província/Região') }}</label>
+                        <input type="text" value="{{old('uf')}}" id="uf" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
+
+                        @error('uf')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
                             </span>
                         @enderror
                     </div>
+                @endif
+            </div>
+        </div>
 
-                    @if($pais == 'brasil' || $pais == null)
-                        <!-- <div class="col-sm-6" id="groupformufinput">
-                            <label for="ufInput" class="col-form-label">{{ __('UF') }}*</label>
-                            <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" required>
+        <div class="container card my-3" style="font-weight: 500;">
+            <div class="row mt-3">
+                <div class="col-md-8">
+                    <div>
+                        <span class="h5" style="color: #034652; font-weight: bold;">Perfil social e identitário</span>
+                    </div>
+                </div>
+            </div>
 
-                            @error('uf')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ __($message) }}</strong>
-                                </span>
-                            @enderror
-                        </div> -->
+            <hr style="border-top: 1px solid #034652">
 
-                        <div class="col-sm-6" id="groupformuf">
-                            <label for="uf" class="col-form-label required-field">{{ __('Estado') }}</label>
-                            {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}"  autocomplete="uf" autofocus> --}}
-                            <select class="form-control @error('uf') is-invalid @enderror required-field" id="uf" name="uf" required>
-                                <option value="" disabled selected hidden>{{__()}}</option>
-                                <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
-                                <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
-                                <option @if(old('uf') == 'AP') selected @endif value="AP">Amapá</option>
-                                <option @if(old('uf') == 'AM') selected @endif value="AM">Amazonas</option>
-                                <option @if(old('uf') == 'BA') selected @endif value="BA">Bahia</option>
-                                <option @if(old('uf') == 'CE') selected @endif value="CE">Ceará</option>
-                                <option @if(old('uf') == 'DF') selected @endif value="DF">Distrito Federal</option>
-                                <option @if(old('uf') == 'ES') selected @endif value="ES">Espírito Santo</option>
-                                <option @if(old('uf') == 'GO') selected @endif value="GO">Goiás</option>
-                                <option @if(old('uf') == 'MA') selected @endif value="MA">Maranhão</option>
-                                <option @if(old('uf') == 'MT') selected @endif value="MT">Mato Grosso</option>
-                                <option @if(old('uf') == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
-                                <option @if(old('uf') == 'MG') selected @endif value="MG">Minas Gerais</option>
-                                <option @if(old('uf') == 'PA') selected @endif value="PA">Pará</option>
-                                <option @if(old('uf') == 'PB') selected @endif value="PB">Paraíba</option>
-                                <option @if(old('uf') == 'PR') selected @endif value="PR">Paraná</option>
-                                <option @if(old('uf') == 'PE') selected @endif value="PE">Pernambuco</option>
-                                <option @if(old('uf') == 'PI') selected @endif value="PI">Piauí</option>
-                                <option @if(old('uf') == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
-                                <option @if(old('uf') == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
-                                <option @if(old('uf') == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
-                                <option @if(old('uf') == 'RO') selected @endif value="RO">Rondônia</option>
-                                <option @if(old('uf') == 'RR') selected @endif value="RR">Roraima</option>
-                                <option @if(old('uf') == 'SC') selected @endif value="SC">Santa Catarina</option>
-                                <option @if(old('uf') == 'SP') selected @endif value="SP">São Paulo</option>
-                                <option @if(old('uf') == 'SE') selected @endif value="SE">Sergipe</option>
-                                <option @if(old('uf') == 'TO') selected @endif value="TO">Tocantins</option>
-                            </select>
-
-                            @error('uf')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ __($message) }}</strong>
-                            </span>
-                            @enderror
+            {{-- Gênero --}}
+            <div class="form-group row mt-3">
+                <label class="col-md-12 col-form-label required-field">Gênero</label>
+                <div class="col-md-12">
+                    @php
+                        $generos = [
+                            'mulher_sis' => 'Mulher Sis',
+                            'homem_sis' => 'Homem Sis',
+                            'transgenero' => 'Transgênero',
+                            'nao_binario' => 'Não binário',
+                            'outro' => 'Outro',
+                            'prefiro_nao_responder' => 'Prefiro não responder',
+                        ];
+                    @endphp
+                    @foreach($generos as $key => $label)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="genero" id="genero_{{ $key }}" value="{{ $key }}">
+                            <label class="form-check-label" for="genero_{{ $key }}">{{ $label }}</label>
                         </div>
-                    @else
-                        <div class="col-md-6" id="etapa-2">
-                            <label for="uf" class="col-form-label required-field">{{ __('Estado/Província/Região') }}</label>
-                            <input type="text" value="{{old('uf')}}" id="uf" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
+                    @endforeach
+                    <input type="text" name="genero_outro" id="genero_outro" class="form-control mt-2" placeholder="Especifique outro gênero" style="max-width: 300px;">
+                </div>
+            </div>
 
-                            @error('uf')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ __($message) }}</strong>
-                                </span>
-                            @enderror
+            {{-- Raça (auto-declaração) --}}
+            <div class="form-group row mt-3">
+                <label class="col-md-12 col-form-label required-field">Raça (auto-declaração)</label>
+                <div class="col-md-12">
+                    @php
+                        $racas = [
+                            'pessoa_negra' => 'Pessoa negra',
+                            'pessoas_parda' => 'Pessoas parda',
+                            'indigena' => 'Indígena',
+                            'pessoa_branca' => 'Pessoa branca',
+                            'outro_raca' => 'Outro',
+                            'prefiro_nao_responder_raca' => 'Prefiro não responder',
+                        ];
+                    @endphp
+                    @foreach($racas as $key => $label)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="raca" id="raca_{{ $key }}" value="{{ $key }}">
+                            <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>
                         </div>
-                    @endif
+                    @endforeach
+                    <input type="text" name="raca_outro" id="raca_outro" class="form-control mt-2" placeholder="Especifique outra raça" style="max-width: 300px;">
                 </div>
+            </div>
 
-                <br>
-
-                <div class="row form-group">
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;" onclick="etapaAnterior()">
-                            {{ __('Voltar') }}
-                        </button>
+            {{-- Comunidade ou povo tradicional --}}
+            <div class="form-group row mt-3">
+                <label class="col-md-12 col-form-label required-field">Você pertence ou atua em alguma comunidade ou povo tradicional?</label>
+                <div class="col-md-12">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="comunidade_tradicional" id="comunidade_nao" value="nao" checked>
+                        <label class="form-check-label" for="comunidade_nao">Não</label>
                     </div>
-                    <div class="col-md-8"></div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="comunidade_tradicional" id="comunidade_sim" value="sim">
+                        <label class="form-check-label" for="comunidade_sim">Sim</label>
+                    </div>
+                    <input type="text" name="qual_comunidade" id="qual_comunidade" class="form-control mt-2" placeholder="Qual? (se sim)" style="max-width: 400px;">
+                </div>
+            </div>
 
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;">
-                            {{ __('Confirmar Cadastro') }}
-                        </button>
+            {{-- Pessoa LGBTQIA+ --}}
+            <div class="form-group row mt-3">
+                <label class="col-md-12 col-form-label required-field">Você se identifica como Pessoa LGBTQIA+?</label>
+                <div class="col-md-12">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim" value="sim">
+                        <label class="form-check-label" for="lgbtqia_sim">Sim</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_nao" value="nao" checked>
+                        <label class="form-check-label" for="lgbtqia_nao">Não</label>
                     </div>
                 </div>
+            </div>
 
-                <br><br>
+            {{-- Pessoa com deficiência ou idosos --}}
+            <div class="form-group row mt-3">
+                <label class="col-md-12 col-form-label required-field">Você é pessoa com deficiência ou idoso?</label>
+                <div class="col-md-12">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="deficiencia_idoso" id="deficiencia_sim" value="sim">
+                        <label class="form-check-label" for="deficiencia_sim">Sim</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="deficiencia_idoso" id="deficiencia_nao" value="nao" checked>
+                        <label class="form-check-label" for="deficiencia_nao">Não</label>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Informações sobre necessidades especiais --}}
+            <div class="form-group row mt-3">
+                <label class="col-md-12 col-form-label required-field">Informações sobre necessidades especiais</label>
+                <div class="col-md-12">
+                    @php
+                        $necessidades = [
+                            'libras' => 'Libras',
+                            'audiodescricao' => 'Audiodescrição',
+                            'espaco_acessivel' => 'Espaço acessível',
+                            'acompanhante' => 'Acompanhante',
+                            'outro_necessidade' => 'Outro',
+                        ];
+                    @endphp
+                    @foreach($necessidades as $key => $label)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="necessidades_especiais[]" id="necessidade_{{ $key }}" value="{{ $key }}">
+                            <label class="form-check-label" for="necessidade_{{ $key }}">{{ $label }}</label>
+                        </div>
+                    @endforeach
+                    <input type="text" name="necessidade_outro" id="necessidade_outro" class="form-control mt-2" placeholder="Outro (especifique)" style="max-width: 300px;">
+                </div>
+            </div>
+
+            {{-- Associado da ABA Agroecologia --}}
+            <div class="form-group row mt-3">
+                <label class="col-md-12 col-form-label required-field">Já é Associado da ABA Agroecologia?</label>
+                <div class="col-md-12">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="associado_aba" id="associado_sim" value="sim">
+                        <label class="form-check-label" for="associado_sim">Sim</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="associado_aba" id="associado_nao" value="nao" checked>
+                        <label class="form-check-label" for="associado_nao">Não</label>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Gostaria de receber mais informações sobre ABA --}}
+            <div class="form-group row mt-3">
+                <label class="col-md-12 col-form-label required-field">Se não, gostaria de receber mais informações sobre a ABA?</label>
+                <div class="col-md-12">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="receber_info_aba" id="receber_info_sim" value="sim">
+                        <label class="form-check-label" for="receber_info_sim">Sim</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="receber_info_aba" id="receber_info_nao" value="nao" checked>
+                        <label class="form-check-label" for="receber_info_nao">Não</label>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Informações institucionais e de atuação --}}
+            <div class="form-group row mt-3">
+                <label for="vinculo_institucional" class="col-md-12 col-form-label">Informações Institucionais e de Atuação (preenchimento opcional)</label>
+                <div class="col-md-12">
+                    <input type="text" name="vinculo_institucional" id="vinculo_institucional" class="form-control" placeholder="Vínculo institucional ou coletivo (se houver)">
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <label class="col-md-12 col-form-label">Você participa de alguma organização, rede ou movimento?</label>
+                <div class="col-md-12">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="participa_organizacao" id="participa_nao" value="nao" checked>
+                        <label class="form-check-label" for="participa_nao">Não</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="participa_organizacao" id="participa_sim" value="sim">
+                        <label class="form-check-label" for="participa_sim">Sim</label>
+                    </div>
+                    <input type="text" name="qual_organizacao" id="qual_organizacao" class="form-control mt-2" placeholder="Qual? (se sim)" style="max-width: 400px;">
+                </div>
+            </div>
+
+            <div class="row form-group my-3">
+                <div class="col-md-10"></div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;">
+                        {{ __('Confirmar Cadastro') }}
+                    </button>
+                </div>
             </div>
         </div>
     </form>
@@ -709,6 +701,13 @@
         document.getElementById('etapa-1').style.display = 'block';
         document.getElementById('etapa-2').style.display = 'none';
     }
+
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('.iti').css('width', '100%');
+            $('.iti input').css('width', '100%');
+        }, 100); // pequeno atraso para garantir que o plugin já aplicou os elementos
+    });
 
   </script>
 
