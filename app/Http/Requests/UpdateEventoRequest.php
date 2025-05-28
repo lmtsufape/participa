@@ -42,6 +42,7 @@ class UpdateEventoRequest extends FormRequest
             'cep' => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
             'email_coordenador' => ['nullable', 'exclude_if:email_coordenador,null', 'email'],
+            'instagram' => ['nullable', 'string'],
         ];
     }
 }
