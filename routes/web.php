@@ -51,6 +51,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\PreRegistroController;
 
 
 
@@ -83,6 +84,7 @@ Route::get('/eventospassados',[EventoController::class, 'eventosPassados'])->nam
 Route::get('/eventosproximos',[EventoController::class, 'eventosProximos'])->name('eventos.proximos');
 
 Route::view('/termos-de-uso', 'termosdeuso')->name('termos.de.uso');
+Route::view('/aviso-de-privacidade', 'avisodeprivacidade')->name('aviso.de.privacidade');
 Route::get('/evento/busca', [EventoController::class, 'buscaLivre'])->name('busca.eventos');
 Route::get('/evento/buscar-livre', [EventoController::class, 'buscaLivreAjax'])->name('busca.livre.ajax');
 
@@ -492,3 +494,8 @@ Route::namespace('Submissao')->group(function () {
 });
 
 });
+
+Route::get('/cadastro/validacao-cadastro', [PreRegistroController::class, 'preRegistro'])->name('preRegistro');
+Route::post('/cadastro/enviar-email-codigo', [PreRegistroController::class, 'enviarCodigo'])->name('enviarCodigo');
+Route::get('/cadastro/inserir-codigo/{id}', [PreRegistroController::class, 'inserirCodigo'])->name('inserirCodigo');
+Route::post('/cadastro/validar-codigo', [PreRegistroController::class, 'verificarCodigo'])->name('verificarCodigo');
