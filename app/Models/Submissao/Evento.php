@@ -25,7 +25,7 @@ class Evento extends Model
         'evento_pai_id', 'email', 'data_limite_inscricao',
         'nome_en', 'descricao_en','fotoEvento_en', 'icone_en',
         'nome_es', 'descricao_es','fotoEvento_es', 'icone_es',
-        'is_multilingual',
+        'is_multilingual', 'instagram'
     ];
 
     public function endereco()

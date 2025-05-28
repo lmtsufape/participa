@@ -9,7 +9,7 @@
             margin-bottom: 20px;
             font-family: sans-serif;
         }
-        
+
         .etapa {
             flex: 1;
             text-align: left;
@@ -18,7 +18,7 @@
             font-weight: normal;
             border-bottom: 2px solid transparent;
         }
-        
+
         .etapa.ativa {
             color: #004d51;
             font-weight: bold;
@@ -50,7 +50,7 @@
             @if ($eventoPai ?? '')
                 <input type="hidden" name="eventoPai" value="{{ $eventoPai->id }}">
             @endif
-            
+
             <div id="etapa-1">
                 <div class="row mb-4">
                     <div class="col-12">
@@ -69,7 +69,7 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <div class="container card shadow">
                     <br>
                     {{-- nome | Participantes | Tipo --}}
@@ -133,7 +133,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-6 @endif">
+                        <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
                             <label for="tipo" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Tipo') }}</label>
                             <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror"
                                 name="tipo" required>
@@ -161,7 +161,7 @@
                             @enderror
                         </div>
 
-                        <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-6 @endif">
+                        <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
                             <label for="recolhimento" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Recolhimento') }}</label>
                             <select name="recolhimento" id="recolhimento"
                                 class="form-control @error('recolhimento') is-invalid @enderror">
@@ -184,6 +184,18 @@
                                 </span>
                             @enderror
                         </div>
+                        <div class="col-md-4">
+                            <label for="instagram" class="col-form-label text-start d-block fw-bold mb-3">{{ __('ID do Instagram') }}</label>
+                            <input class="form-control @error('instagram') is-invalid @enderror" type="text"
+                                value="{{ old('instagram') }}" name="instagram" id="instagram" autofocus
+                                autocomplete="instagram">
+
+                            @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                     </div>
 
                     <div class="form-group row">
@@ -201,11 +213,11 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
 
                     <div class="form-group row">
-                        
+
 
                         @if ($eventoPai ?? '')
                             <div class="col-md-6">
@@ -222,7 +234,7 @@
                         @endif
                     </div>
 
-                    
+
 
                     <div class="form-group row">
                         <div class="col-md-12">
@@ -253,7 +265,7 @@
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
                             <label for="exampleFormControlTextarea1" class="fw-bold mb-3 required-field">{{__('Descrição em espanhol')}}</label>
-                            <textarea class="form-control @error('descricao_es') is-invalid @enderror" autocomplete="descricao_es" autofocus 
+                            <textarea class="form-control @error('descricao_es') is-invalid @enderror" autocomplete="descricao_es" autofocus
                                 id="descricao_es" name="descricao_es" rows="8">{{ old('descricao_es') }}</textarea>
                             @error('descricao_es')
                                 <span class="invalid-feedback" role="alert">
@@ -270,7 +282,7 @@
                                 <img id="logo-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
                             <div style="display: none;">
-                                <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror" 
+                                <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror"
                                     name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento" required>
                             </div>
                             @error('fotoEvento')
@@ -287,7 +299,7 @@
                                 <img id="icone-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
                             <div style="display: none;">
-                                <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror" 
+                                <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror"
                                     name="icone" value="{{ old('icone') }}" id="icone" required>
                             </div>
                             @error('icone')
@@ -306,7 +318,7 @@
                                 <img id="logo-preview-en" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
                             <div style="display: none;">
-                                <input type="file" id="logo-input-en" class="form-control @error('fotoEvento_en') is-invalid @enderror" 
+                                <input type="file" id="logo-input-en" class="form-control @error('fotoEvento_en') is-invalid @enderror"
                                     name="fotoEvento_en" value="{{ old('fotoEvento_en') }}" id="fotoEvento_en">
                             </div>
                             @error('fotoEvento_en')
@@ -323,7 +335,7 @@
                                 <img id="icone-preview-en" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
                             <div style="display: none;">
-                                <input type="file" id="icone-input-en" class="form-control @error('icone_en') is-invalid @enderror" 
+                                <input type="file" id="icone-input-en" class="form-control @error('icone_en') is-invalid @enderror"
                                     name="icone_en" value="{{ old('icone_en') }}" id="icone_en">
                             </div>
                             @error('icone_en')
@@ -342,7 +354,7 @@
                                 <img id="logo-preview-es" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
                             <div style="display: none;">
-                                <input type="file" id="logo-input-es" class="form-control @error('fotoEvento_es') is-invalid @enderror" 
+                                <input type="file" id="logo-input-es" class="form-control @error('fotoEvento_es') is-invalid @enderror"
                                     name="fotoEvento_es" value="{{ old('fotoEvento_es') }}" id="fotoEvento_es">
                             </div>
                             @error('fotoEvento_es')
@@ -359,7 +371,7 @@
                                 <img id="icone-preview-es" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
                             <div style="display: none;">
-                                <input type="file" id="icone-input-es" class="form-control @error('icone_es') is-invalid @enderror" 
+                                <input type="file" id="icone-input-es" class="form-control @error('icone_es') is-invalid @enderror"
                                     name="icone_es" value="{{ old('icone_es') }}" id="icone_es">
                             </div>
                             <small style="position: relative; top: 5px;">{{ __('O arquivo será redimensionado para') }} 600 x 600;<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
@@ -417,9 +429,9 @@
 
                         <div class="col-md-6">
                             <label for="rua" class="col-form-label text-start d-block fw-bold ">{{ __('Rua') }}</label>
-                            <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" 
+                            <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror"
                             name="rua" autocomplete="new-password" required>
-                            
+
                             @error('rua')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
@@ -428,9 +440,9 @@
                         </div>
 
                     </div>
-                    
 
-                        
+
+
                         <div class="form-group row">
                             <div class="col-md-6">
                             <label for="numero" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Número') }}</label>
@@ -446,7 +458,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="bairro" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Bairro') }}</label>
-                                <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" 
+                                <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror"
                                     name="bairro" autocomplete="bairro" required>
 
                                 @error('bairro')
@@ -455,11 +467,11 @@
                                     </span>
                                 @enderror
                             </div>
-                            
+
                         </div>
                         <div class="col-md-12">
                             <label for="complemento" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Complemento') }}</label>
-                            <input type="text" value="{{old('complemento')}}" id="complemento" 
+                            <input type="text" value="{{old('complemento')}}" id="complemento"
                                 class="form-control @error('complemento') is-invalid @enderror" name="complemento">
 
                             @error('complemento')
@@ -472,8 +484,8 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="cidade" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Cidade') }}</label>
-                            <input value="{{old('cidade')}}" id="cidade" type="text" 
-                                class="form-control apenasLetras @error('cidade') is-invalid @enderror" 
+                            <input value="{{old('cidade')}}" id="cidade" type="text"
+                                class="form-control apenasLetras @error('cidade') is-invalid @enderror"
                                 name="cidade" autocomplete="cidade" required>
 
                             @error('cidade')
@@ -556,9 +568,9 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="dataInicio" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Data de início') }}</label>
-                            <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror" 
+                            <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror"
                                 name="dataInicio" value="{{ old('dataInicio') }}" required autocomplete="dataInicio" autofocus>
-                            
+
                             @error('dataInicio')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -570,7 +582,7 @@
                             <label for="dataFim" class="col-form-label text-start d-block fw-bold mb-3 ">{{ __('Data de término') }}</label>
                             <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror"
                                 name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim" autofocus>
-                            
+
                             @error('dataFim')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -859,7 +871,7 @@
                         loaderDiv.removeClass('border border-danger'); // Clear previous error style
                     }
                 }
-                
+
                 if (campo.prop('required')) { // Verifica se o campo está marcado como 'required'
                     let isFieldValid = true;
                     let fieldIsEffectivelyVisible = campo.is(':visible');
@@ -900,7 +912,7 @@
                         }
                     }
                     // Se o campo não for válido E era para ser validado (visível e obrigatório), marca o formulário como inválido.
-                    if (!isFieldValid && fieldIsEffectivelyVisible) { 
+                    if (!isFieldValid && fieldIsEffectivelyVisible) {
                         formEtapa1Valido = false;
                     }
                 }
@@ -921,7 +933,7 @@
                             scrollTop: primeiroCampoInvalido.offset().top - 100 // Ajuste o offset conforme necessário
                         }, 500);
                         // Adicionar tabindex para tornar o div focável pode ser uma opção para leitores de tela
-                        // primeiroCampoInvalido.attr('tabindex', -1).focus(); 
+                        // primeiroCampoInvalido.attr('tabindex', -1).focus();
                     } else {
                         primeiroCampoInvalido.focus(); // Foca em inputs de texto, select, etc.
                     }

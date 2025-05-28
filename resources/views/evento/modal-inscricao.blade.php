@@ -67,8 +67,10 @@
                                                                             <h4 class="my-0 font-weight-normal text-center">{{ $categoria->nome }}</h4>
                                                                         </div>
                                                                         <div class="card-body">
-                                                                            <label for="">{{ __('Descrição') }}:</label>
-                                                                            <p> {!! $categoria->descricao !!}</p>
+                                                                            @if ($categoria->descricao)
+                                                                                <label for="">{{ __('Descrição') }}:</label>
+                                                                                <p> {!! $categoria->descricao !!}</p>
+                                                                            @endif
                                                                             @if ($links)
                                                                                 @foreach ($links->where('categoria_id', $categoria->id) as $link)
                                                                                     <label for="">Valor: </label>
@@ -506,7 +508,7 @@
 }
 .carousel-arrow-btn:hover, .carousel-arrow-btn:focus {
     background: #114048ff !important;
-    
+
 }
 .carousel-arrow-btn:hover .carousel-arrow-svg, .carousel-arrow-btn:focus .carousel-arrow-svg {
     color: #fff;
