@@ -83,6 +83,7 @@ Route::get('/eventospassados',[EventoController::class, 'eventosPassados'])->nam
 Route::get('/eventosproximos',[EventoController::class, 'eventosProximos'])->name('eventos.proximos');
 
 Route::view('/termos-de-uso', 'termosdeuso')->name('termos.de.uso');
+Route::view('/aviso-de-privacidade', 'avisodeprivacidade')->name('aviso.de.privacidade');
 Route::get('/evento/busca', [EventoController::class, 'buscaLivre'])->name('busca.eventos');
 Route::get('/evento/buscar-livre', [EventoController::class, 'buscaLivreAjax'])->name('busca.livre.ajax');
 
