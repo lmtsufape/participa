@@ -19,6 +19,7 @@ use App\Models\Submissao\AreaModalidade;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Avaliacao;
 use App\Models\Submissao\Criterio;
+use App\Models\Submissao\DatasAtividade;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Form;
@@ -1330,6 +1331,15 @@ class EventoController extends Controller
             return abort(404);
         }
         $encerrada = $evento->eventoInscricoesEncerradas();
+        $datas = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where([['eventoId', '=', $id], ['visibilidade_participante', '=', true]])->get();
+        $atividades = Atividade::join('datas_atividades', 'atividades.id', '=', 'datas_atividades.atividade_id')
+        ->select('atividades.*', 'datas_atividades.data', 'datas_atividades.hora_inicio')
+        ->orderBy('datas_atividades.data')
+        ->orderBy('datas_atividades.hora_inicio')
+        ->with('datasAtividade')
+        ->get();
+        $atividadesAgrupadas = $atividades->groupBy('data');
+      
         if (auth()->user()) {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -1378,7 +1388,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'dataInicial', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -1401,7 +1411,7 @@ class EventoController extends Controller
             }
 
 
-            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'mytime', 'etiquetas', 'formSubTraba', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas'));
+            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas'));
         }
     }
 
