@@ -119,6 +119,17 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="numMaxCoautores" class="col-form-label font-weight-bold">{{ __('Número de coautores') }}</label>
+                                    <input id="numMaxCoautores" type="text" class="form-control @error('numMaxCoautores') is-invalid @enderror" name="numMaxCoautores" value="{{ old('numMaxCoautores') }}" autocomplete="numMaxCoautores" autofocus>
+                                    @error('numMaxCoautores')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
                             <div id="datas" x-data="handler()">
                                 <template x-for="(data, index) in datas" :key="index">
                                     <div class="form-row">

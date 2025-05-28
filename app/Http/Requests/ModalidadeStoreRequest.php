@@ -81,6 +81,7 @@ class ModalidadeStoreRequest extends FormRequest
             'arquivoModelo' => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,pdf,ppt,pptx,odp', 'max:2048'],
             'arquivosTemplates' => ['nullable', 'file', 'mimes:odt,ott,docx,doc,rtf,txt,pdf,pptx', 'max:2048'],
             'documentosExtra.*' => ['nullable', 'array', 'min:2'],
+            'numMaxCoautores' => ['nullable', 'integer', 'min:0'],
         ];
 
         if(request()->has('avaliacaoDuranteSubmissao') && request()->boolean('avaliacaoDuranteSubmissao')){

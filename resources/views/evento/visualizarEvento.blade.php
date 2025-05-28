@@ -283,7 +283,8 @@
                                                                 target="_blank"
                                                                 class="d-inline-block">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
-                                                                    {{ $evento->formEvento->etiquetabaixartemplate }}
+                                                                    {{-- {{ $evento->formEvento->etiquetabaixartemplate }} --}}
+                                                                    {{ __('Modelo (template)') }}
                                                                 </a>
                                                             </div>
                                                         @endif
@@ -315,7 +316,7 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-heading bg-my-primary rounded pt-3 pb-1 ps-3">
-                                <h5 class="text-white">{{ __('Áreas temáticas') }}</h5>
+                                <h5 class="text-white">{{ __('Eixos temáticos') }}</h5>
                             </div>
                             <div class="card-body">
                                 <ul>
