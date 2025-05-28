@@ -215,6 +215,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
             Route::get('comissaoCientifica/cadastrarComissao', [EventoController::class, 'cadastrarComissao'])->name('cadastrarComissao');
             Route::get('comissaoCientifica/definirCoordComissao', [EventoController::class, 'definirCoordComissao'])->name('definirCoordComissao');
+            Route::get('comissaoCientifica/definirCoordEixo', [EventoController::class, 'definirCoordEixo'])->name('definirCoordEixo');
             Route::get('comissaoCientifica/listarComissao', [EventoController::class, 'listarComissao'])->name('listarComissao');
             //Outras comissoes
             Route::get('/{evento}/tipocomissao/{comissao}', [TipoComissaoController::class, 'show'])->name('tipocomissao.show');
@@ -413,6 +414,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     // Cadastrar Comissão
     Route::post('/evento/cadastrarComissao', [ComissaoController::class, 'store'])->name('cadastrar.comissao');
     Route::post('/evento/cadastrarCoordComissao', [ComissaoController::class, 'coordenadorComissao'])->name('cadastrar.coordComissao');
+    Route::post('/evento/cadastrarCoordEixo', [ComissaoController::class, 'coordenadorEixo'])->name('cadastrar.coordEixo');
 
     Route::name('coord.')->group(function () {
         Route::get('comissaoOrganizadora/{id}/cadastrar', [ComissaoOrganizadoraController::class, 'create'])->name('comissao.organizadora.create');

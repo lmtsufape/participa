@@ -195,6 +195,14 @@
                                     <span>{{ __('Definir coordenador') }}</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" id="definirCoordEixo"
+                                    href="{{ route('coord.definirCoordEixo', ['eventoId' => $evento->id]) }}">
+                                    <img src="{{ asset('img/icons/crown-solid.svg') }}" alt="" width="20px">
+                                    <span>{{ __('Definir coordenador de eixo') }}</span>
+                                </a>
+                            </li>
+
                         @endcan
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center gap-2" id="listarComissao"
@@ -346,20 +354,22 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="submeterTrabalho" href="#"
-                                    data-bs-toggle="collapse" data-bs-target="#dropdownSubmeterTrabalho" aria-expanded="false"
-                                    aria-controls="dropdownSubmeterTrabalho">
+                                    data-bs-toggle="collapse" data-bs-target="#dropdownSubmeterTrabalho{{$evento->id}}" aria-expanded="false"
+                                    aria-controls="dropdownSubmeterTrabalho{{$evento->id}}">
                                     <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
                                     <span>{{ __('Submeter trabalho') }}</span>
                                 </a>
-                                <div class="collapse" id="dropdownSubmeterTrabalho">
+                                <ul class="collapse" id="dropdownSubmeterTrabalho{{$evento->id}}">
                                     @foreach ($evento->modalidades()->get() as $modalidade)
-                                        <a class="nav-link d-flex align-items-center gap-2"
-                                            id="submeterTrabalho{{ $modalidade->id }}"
-                                            href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}">
-                                            <span>{{ $modalidade->nome }}</span>
-                                        </a>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center gap-2"
+                                                id="submeterTrabalho{{ $modalidade->id }}"
+                                                href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}">
+                                                <span>{{ $modalidade->nome }}</span>
+                                            </a>
+                                        </li>
                                     @endforeach
-                                </div>
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="resultadosTrabalhos"
@@ -369,46 +379,54 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="listarTrabalhos" href="#"
-                                    data-bs-toggle="collapse" data-bs-target="#dropdownListarTrabalhos" aria-expanded="false"
-                                    aria-controls="dropdownListarTrabalhos">
+                                <a class="nav-link d-flex align-items-center gap-2" id="listarTrabalhos" role="button"
+                                    data-bs-toggle="collapse" data-bs-target="#dropdownListarTrabalhos{{$evento->id}}" aria-expanded="false"
+                                    aria-controls="dropdownListarTrabalhos{{$evento->id}}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
                                     <span>{{ __('Listar trabalhos') }}</span>
                                 </a>
-                                <div class="collapse" id="dropdownListarTrabalhos">
-                                    <a class="nav-link d-flex align-items-center gap-2"
-                                        href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}">
-                                        <span>{{ __('Todos os trabalhos') }}</span>
-                                    </a>
-                                    @foreach ($evento->modalidades()->get() as $modalidade)
+                                <ul class="collapse" id="dropdownListarTrabalhos{{$evento->id}}">
+                                    <li class="nav-item">
                                         <a class="nav-link d-flex align-items-center gap-2"
-                                            id="listarTrabalhos{{ $modalidade->id }}"
-                                            href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho']) }}">
-                                            <span>{{ $modalidade->nome }}</span>
+                                            href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}">
+                                            <span>{{ __('Todos os trabalhos') }}</span>
                                         </a>
+                                    </li>
+                                    @foreach ($evento->modalidades()->get() as $modalidade)
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center gap-2"
+                                                id="listarTrabalhos{{ $modalidade->id }}"
+                                                href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho']) }}">
+                                                <span>{{ $modalidade->nome }}</span>
+                                            </a>
+                                        </li>
                                     @endforeach
-                                </div>
+                                </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="listarAvaliacoes" href="#"
-                                    data-bs-toggle="collapse" data-bs-target="#dropdownListarAvaliacoes" aria-expanded="false"
-                                    aria-controls="dropdownListarAvaliacoes">
+                                <a class="nav-link d-flex align-items-center gap-2" id="listarAvaliacoes"
+                                    data-bs-toggle="collapse" data-bs-target="#dropdownListarAvaliacoes{{$evento->id}}" aria-expanded="false"
+                                    aria-controls="dropdownListarAvaliacoes{{$evento->id}}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
                                     <span>{{ __('Listar avaliações') }}</span>
                                 </a>
-                                <div class="collapse" id="dropdownListarAvaliacoes">
-                                    <a class="nav-link d-flex align-items-center gap-2"
-                                        href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}">
-                                        <span>{{ __('Todas as Avaliações') }}</span>
-                                    </a>
-                                    @foreach ($evento->modalidades()->get() as $modalidade)
+                                <ul class="collapse" id="dropdownListarAvaliacoes{{$evento->id}}">
+                                    <li class="nav-item">
                                         <a class="nav-link d-flex align-items-center gap-2"
-                                            id="listarAvaliacoesModalidade{{ $modalidade->id }}"
-                                            href="{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
-                                            <span>{{ $modalidade->nome }}</span>
+                                            href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}">
+                                            <span>{{ __('Todas as Avaliações') }}</span>
                                         </a>
+                                    </li>
+                                    @foreach ($evento->modalidades()->get() as $modalidade)
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center gap-2"
+                                                id="listarAvaliacoesModalidade{{ $modalidade->id }}"
+                                                href="{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
+                                                <span>{{ $modalidade->nome }}</span>
+                                            </a>
+                                        </li>
                                     @endforeach
-                                </div>
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="correcoesTrabalhos"

@@ -96,6 +96,15 @@
                                             </a>
                                         </li>
                                     @endif
+                                    @if (Auth::user()->coordEixosTematicos()->exists())
+                                    {{-- Rota - Área de coordenador de eixo temático --}}
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('home.membro') }}">
+                                                <img src="{{asset('img/icons/comissao.png')}}"  width="20px"  alt="">
+                                                {{ __('Área do Coordenador de Eixo Temático') }}
+                                            </a>
+                                        </li>
+                                    @endif
                                     @if (Auth::user()->outrasComissoes->count())
                                         {{-- Rota - Area da Comissao --}}
                                         <li>
@@ -128,7 +137,7 @@
                             @if (
                                 (Auth::user()->trabalho()->where('status', '!=', 'arquivado')->exists() ||
                                 Auth::user()->coautor()->exists())
-                            )                            
+                            )
                                 <a class="dropdown-item" href="{{ route('user.meusTrabalhos') }}">
                                     <img src="{{asset('img/icons/file-alt-regular-black.svg')}}"  width="20px"  alt="">
                                     {{ __('Trabalhos Submetidos') }}
@@ -215,6 +224,6 @@
             .catch(error => console.error('Erro ao mudar idioma:', error));
     }
 </script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
 
