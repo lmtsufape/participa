@@ -57,11 +57,11 @@
                                                 </a>
                                             </div>
                                             <div class="card-group">
-                                                @foreach ($evento->categoriasQuePermitemInscricao->chunk(3) as $chunk)
+                                                @foreach ($evento->categoriasPermitidasParaUsuario()->chunk(4) as $chunk)
                                                     <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                                                         <div class="row">
                                                             @foreach ($chunk as $categoria)
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-6 mb-4">
                                                                     <div class="card shadow" style="">
                                                                         <div class="card-header" style="background-color: #114048ff; color: white;">
                                                                             <h4 class="my-0 font-weight-normal text-center">{{ $categoria->nome }}</h4>
