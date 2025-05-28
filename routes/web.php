@@ -51,6 +51,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\PreRegistroController;
 
 
 
@@ -493,3 +494,8 @@ Route::namespace('Submissao')->group(function () {
 });
 
 });
+
+Route::get('/cadastro/validacao-cadastro', [PreRegistroController::class, 'preRegistro'])->name('preRegistro');
+Route::post('/cadastro/enviar-email-codigo', [PreRegistroController::class, 'enviarCodigo'])->name('enviarCodigo');
+Route::get('/cadastro/inserir-codigo/{id}', [PreRegistroController::class, 'inserirCodigo'])->name('inserirCodigo');
+Route::post('/cadastro/validar-codigo', [PreRegistroController::class, 'verificarCodigo'])->name('verificarCodigo');
