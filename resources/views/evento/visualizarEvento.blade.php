@@ -24,16 +24,16 @@
                 @else
                     <h2 class="text-my-primary">{{ $evento->nome }}</h2>
                 @endif
-                <span class="d-flex align-items-center gap-1 text-my-secondary">
+                <span class="d-flex align-items-center gap-1 text-my-secondary mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-calendar-event" viewBox="0 0 16 16">
                         <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
                         <path
                             d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
                     </svg>
-                    {{ \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'))->translatedFormat('l, d F') }}
+                    {{ \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'))->translatedFormat('l, d \d\e F \d\e Y') }}
                 </span>
-                <span class="text-my-primary my-1">
+                <span class="text-my-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
                     </svg> {{$evento->endereco->rua}}, {{$evento->endereco->numero}}, {{$evento->endereco->cidade}}
@@ -283,7 +283,8 @@
                                                                 target="_blank"
                                                                 class="d-inline-block">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
-                                                                    {{ $evento->formEvento->etiquetabaixartemplate }}
+                                                                    {{-- {{ $evento->formEvento->etiquetabaixartemplate }} --}}
+                                                                    {{ __('Modelo (template)') }}
                                                                 </a>
                                                             </div>
                                                         @endif
@@ -315,7 +316,7 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-heading bg-my-primary rounded pt-3 pb-1 ps-3">
-                                <h5 class="text-white">{{ __('Áreas temáticas') }}</h5>
+                                <h5 class="text-white">{{ __('Eixos temáticos') }}</h5>
                             </div>
                             <div class="card-body">
                                 <ul>
@@ -466,41 +467,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
-
                 <div class="row">
-                    @foreach($atividades as $atividade)
-                        <div class="col-md-4">
-                            <div class="card ratio ratio-1x1 w-75 shadow">
-                                <div class="card-body d-flex flex-column justify-content-between">
-                                    <div>
-                                        <span><strong>{{ $atividade->datasAtividade->first()->hora_inicio }} - </strong></span>
-                                        <span><strong>{{ $atividade->datasAtividade->first()->hora_fim }}</strong></span>
-                                        <p>{{ $atividade->titulo }}</p>
-                <div class="row">
-                    @foreach($atividades as $atividade)
-                        <div class="col-md-4">
-                            <div class="card ratio ratio-1x1 w-75 shadow">
-                                <div class="card-body d-flex flex-column justify-content-between">
-                                    <div>
-                                        <span><strong>{{ $atividade->datasAtividade->first()->hora_inicio }} - </strong></span>
-                                        <span><strong>{{ $atividade->datasAtividade->first()->hora_fim }}</strong></span>
-                                        <p>{{ $atividade->titulo }}</p>
-                                    </div>
-                                    <button class="btn btn-my-outline-primary btn-sm rounded-pill mt-auto" type="button"
-                                        data-bs-toggle="modal" data-bs-target="#modalAtividadeShow{{ $atividade->id }}">
-                                        Saiba mais
-                                    </button>
-                                    <button class="btn btn-my-outline-primary btn-sm rounded-pill mt-auto" type="button"
-                                        data-bs-toggle="modal" data-bs-target="#modalAtividadeShow{{ $atividade->id }}">
-                                        Saiba mais
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                            </div>
-                        </div>
-                    @endforeach
+                    <div class="flex space-x-2 mt-4">
+                        @foreach($datas as $indice => $data)
+                            <button
+                                class="px-4 py-2 rounded carregar-cards {{ $loop->first ? 'btn-my-secondary' : 'btn-my-primary' }}"
+                                data-data = "{{ $data->data }}"
+                                id="btn-{{ $data->data }}"
+                            >
+                                {{ \Carbon\Carbon::parse($data->data)->translatedFormat('D, d/m') }}
+                            </button>
+                        @endforeach
+                    </div>
+                    <div class="col-md-4 p-4" id="cards-atividade">
+                        {{-- cards das atividades --}}
+                    </div>
                 </div>
             @endif
             @if ($subeventos->count() > 0)
@@ -798,11 +779,46 @@
             </div>
         </div>
     @endforeach
-
 @endsection
 
 @section('javascript')
     <script>
+        $(document).ready(function(){
+            let atividades  = @json($atividadesAgrupadas);
+
+            function gerarCards(atividade){
+                return `<div class="card ratio ratio-1x1 w-75 shadow">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <span><strong>${ atividade.datas_atividade[0].hora_inicio } - </strong></span>
+                            <span><strong>${ atividade.datas_atividade[0].hora_fim }</strong></span>
+                            <p>${ atividade.titulo }</p>
+                        </div>
+                        <button class="btn btn-my-outline-primary btn-sm rounded-pill mt-auto" type="button"
+                            data-bs-toggle="modal" data-bs-target="#modalAtividadeShow${ atividade.id }">
+                            Saiba mais
+                        </button>
+                    </div>
+                </div>`
+            }
+
+            $('.carregar-cards').on('click', function(){
+                $('#cards-atividade').empty();
+                let agrupamento = atividades[$(this).data('data')]
+                if (!Array.isArray(agrupamento)) {
+                    agrupamento = [agrupamento];
+                }
+
+                agrupamento.forEach(element => {
+
+                    $('#cards-atividade').append(gerarCards(element))
+
+                });
+
+            })
+        })
+
+
         function initMap() {
                 const local = { lat: -23.55052, lng: -46.633308 };
                 const mapa = new google.maps.Map(document.getElementById("mapaGoogle"), {

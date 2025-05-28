@@ -30,7 +30,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    //protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -67,7 +67,7 @@ class RegisterController extends Controller
             'cep' => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
         ];
-        if ($data['pais'] == 'outro'){
+        if ($data['pais'] != 'brasil'){
             $validations['uf'] = ['nullable', 'string'];
             $validations['numero'] = ['nullable', 'string'];
             $validations['cep'] = ['nullable', 'string'];
@@ -109,5 +109,10 @@ class RegisterController extends Controller
         app()->setLocale('pt-BR');
 
         return $user;
+    }
+
+    protected function redirectTo()
+    {
+        return route('evento.visualizar', ['id' => 3]);
     }
 }

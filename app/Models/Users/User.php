@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use Notifiable;
     use HasFactory;
@@ -185,5 +185,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function atividades()
     {
         return $this->belongsToMany(Atividade::class, 'atividades_user', 'user_id', 'atividade_id');
+    }
+
+    public function coordEixosTematicos(){
+        return $this->hasMany(CoordEixoTematico::class);
     }
 }

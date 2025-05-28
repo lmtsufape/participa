@@ -3,7 +3,7 @@
     <div class="modal-dialog  modal-lg" >
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
-                <h5 class="modal-title" id="modalTodasAreasLabel">{{ __('Todas as áreas temáticas') }}</h5>
+                <h5 class="modal-title" id="modalTodasAreasLabel">{{ __('Todos os eixos temáticos') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Fechar') }}"></button>
             </div>
             <div class="modal-body">

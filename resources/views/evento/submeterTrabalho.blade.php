@@ -9,7 +9,7 @@
             margin-bottom: 20px;
             font-family: sans-serif;
         }
-        
+
         .etapa {
             flex: 1;
             text-align: left;
@@ -18,7 +18,7 @@
             font-weight: normal;
             border-bottom: 2px solid transparent;
         }
-        
+
         .etapa.ativa {
             color: #004d51;
             font-weight: bold;
@@ -35,13 +35,13 @@
     <div class="container content">
         <div class="row justify-content-center" x-data="handler()">
             <div class="col-sm-10" style="padding-right: 0px;">
-                
+
                 <br>
 
                 <div class="row titulo text-center" style="color: #034652;">
                     <h2 style="font-weight: bold;">{{__('Submissao de trabalho')}}</h2>
                 </div>
-                
+
                 <br>
 
                 <div style="margin-top:25px;">
@@ -68,18 +68,17 @@
                             <h2 class="card-title">{{$evento->nome}}</h2>
                         @endif
 
-                        <h4 class="card-title">{{__('Modalidade')}}: {{$modalidade->nome}}</h4> 
+                        <h4 class="card-title">{{__('Modalidade')}}: {{$modalidade->nome}}</h4>
 
                         <div class="titulo-detalhes"></div>
                         <br>
                         <h4 class="card-title">{{__('Enviar Trabalho')}}</h4>
                         <p class="card-text"> --}}
 
-                            <form method="POST" action="{{route('trabalho.store', $modalidade->id)}}"
+                            <form method="POST" action="{{route('trabalho.store')}}"
                                 enctype="multipart/form-data" class="form-prevent-multiple-submits">
                                 @csrf
                                 <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                                <input type="hidden" name="modalidadeId" value="{{$modalidade->id}}">
                                 <div>
                                     @error('tipoExtensao')
                                         @include('componentes.mensagens')
@@ -95,7 +94,6 @@
                                         @include('componentes.mensagens')
                                     @enderror
                                 </div>
-                                
                                 <div id="etapa-1">
                                     <div class="etapas" style="font-weight: 500;">
                                         <div class="etapa ativa">
@@ -135,21 +133,21 @@
                                                     </div>
 
                                                     <div class="col-sm-6">
-                                                        <label for="area"
+                                                        <label for="modalidade"
                                                             class="col-form-label"><strong>Modalidade</strong>
                                                         </label>
-                                                        <select class="form-control text-center @error('areaId') is-invalid @enderror" id="area"
-                                                                name="areaId">
+                                                        <select class="form-control text-center @error('modalidadeId') is-invalid @enderror" id="modalidade"
+                                                                name="modalidadeId">
                                                             <option value="" disabled selected hidden>
                                                                 -- Modalidade --
                                                             </option>
                                                             {{-- Apenas um teste abaixo --}}
-                                                            @foreach($areas as $area)
-                                                                <option value="{{$area->id}}"
-                                                                        @if(old('areaId') == $area->id) selected @endif>{{$area->nome}}</option>
+                                                            @foreach($modalidades as $modalidade)
+                                                                <option value="{{$modalidade->id}}"
+                                                                        @if(old('modalidadeId') == $modalidade->id) selected @endif>{{$modalidade->nome}}</option>
                                                             @endforeach
                                                         </select>
-                                                        @error('areaId')
+                                                        @error('modalidadeId')
                                                         <span class="invalid-feedback" role="alert"
                                                             style="overflow: visible; display:block">
                                                             <strong>{{ $message }}</strong>
@@ -159,9 +157,7 @@
                                                 </div>
                                             @endif
                                         @endforeach
-                                        
                                         <br>
-                                        
                                         @foreach ($ordemCampos as $indice)
                                             @if ($indice == "etiquetatitulotrabalho")
                                                 @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
@@ -202,7 +198,7 @@
                                                     </div>
                                                 @endif
                                             @endif
-                                            
+
                                             {{--@if ($indice == "etiquetaautortrabalho")--}}
                                             {{-- <div class="row justify-content-center">
                                             Autor
@@ -326,7 +322,7 @@
                                                             <option value="" disabled selected hidden>
                                                                 -- {{ $formSubTraba->etiquetaareatrabalho }} --
                                                             </option>
-                                                            
+
                                                             @foreach($areas as $area)
                                                                 <option value="{{$area->id}}"
                                                                         @if(old('areaId') == $area->id) selected @endif>{{$area->nome}}</option>
@@ -373,7 +369,7 @@
                                                             <label for="nomeTrabalho"
                                                                 class="col-form-label"><strong>{{$formSubTraba->etiquetauploadtrabalho}}</strong>
                                                             </label>
-                                                            
+
                                                             @if($modalidade->submissaoUnica == true)
                                                             <div>
                                                             <strong style="color: red;">ATENÇÃO: Nesta modalidade só é possível submeter o trabalho apenas uma vez.</strong>
@@ -911,7 +907,7 @@
                                             <p>2. Autoria</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="card card-body">
                                         @foreach ($ordemCampos as $indice)
                                             @if($indice == "etiquetacoautortrabalho")
@@ -970,12 +966,12 @@
                                         @endforeach
 
                                         <br>
-                                        
+
                                         @if(in_array('etiquetacoautortrabalho', $ordemCampos))
                                             <div class="row">
                                                 <div id="div-add-coautor" class="col-sm-4">
                                                     <div class="float-right">
-                                                        <button @click="adicionaAutor" id="addCoautor" class="btn btn-primary btn-padding border mb-2"
+                                                        <button @click.prevent="adicionaAutor" id="addCoautor" class="btn btn-primary btn-padding border mb-2"
                                                         style="text-decoration: none; border-radius: 10px; background-color: #D44100"
                                                         title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}, se houver">
                                                             <img id="icone-add-coautor" src="{{asset('img/icons/user-plus-solid.svg')}}"
@@ -1002,7 +998,7 @@
                                                     {{ __('Enviar') }}
                                                 </button>
                                                 </div>
-                                        </div>  
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -1132,26 +1128,6 @@
             }
         }
 
-        $(function () {
-            // Exibir modalidade de acordo com a área
-            $("#area").change(function () {
-                // console.log($(this).val());
-                addModalidade($(this).val());
-            });
-
-
-        });
-
-        function addModalidade(areaId) {
-            // console.log(modalidades)
-            $("#modalidade").empty();
-            for (let i = 0; i < modalidades.length; i++) {
-                if (modalidades[i].areaId == areaId) {
-                    // console.log(modalidades[i]);
-                    $("#modalidade").append("<option value=" + modalidades[i].modalidadeId + ">" + modalidades[i].modalidadeNome + "</option>")
-                }
-            }
-        }
 
         function proximaEtapa() {
             document.getElementById('etapa-1').style.display = 'none';

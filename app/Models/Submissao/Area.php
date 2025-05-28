@@ -2,6 +2,7 @@
 
 namespace App\Models\Submissao;
 
+use App\Models\Users\CoordEixoTematico;
 use Illuminate\Database\Eloquent\Model;
 
 class Area extends Model
@@ -43,5 +44,9 @@ class Area extends Model
     public function mensagensParecer()
     {
         return $this->hasMany('App\Models\Submissao\MensagemParecer');
+    }
+
+    public function coordEixosTematicos(){
+        return $this->hasMany(CoordEixoTematico::class);
     }
 }
