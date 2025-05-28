@@ -43,11 +43,11 @@ class HomeController extends Controller
             $eventos = Evento::whereHas('inscricaos', function($query) use ($user) {
                 $query->where('user_id', $user->id);
             });
-    
+
             if ($request->filled('busca')) {
                 $eventos->where('nome', 'ilike', '%' . $request->busca . '%');
             }
-        
+
             if ($request->filled('ordenar')) {
                 switch ($request->ordenar) {
                     case 'nome':
@@ -75,7 +75,7 @@ class HomeController extends Controller
 
     public function index()
     {
-        $eventos_destaques = Evento::where([ ['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->get();
+        $eventos_destaques = Evento::where([ ['publicado', '=', 'true'], ['dataFim', '>=', 'today()']])->get();
 
         $proximosEventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '>=', today()]])->whereNull('evento_pai_id')->get();
 
