@@ -186,4 +186,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Atividade::class, 'atividades_user', 'user_id', 'atividade_id');
     }
+
+    public function coordEixosTematicos(){
+        return $this->hasMany(CoordEixoTematico::class);
+    }
 }

@@ -31,6 +31,7 @@ use App\Models\Submissao\Resposta;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
 use App\Models\Users\ComissaoEvento;
+use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\CoordenadorEvento;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
@@ -177,7 +178,7 @@ class EventoController extends Controller
             $coautoresSemCpf = $trabalho->coautors()->whereHas('user', function($user) {
                 return $user->whereNull('cpf')->orWhere('cpf', '');
             })->with('user')->get();
-    
+
             if ($coautoresSemCpf->isNotEmpty()) {
                 $coautoresSemCpfPorTrabalho->put($trabalho->titulo, $coautoresSemCpf);
             }
@@ -414,6 +415,26 @@ class EventoController extends Controller
         $users = $evento->usuariosDaComissao;
         $coordenadores = $evento->coordComissaoCientifica->pluck('id')->all();
         return view('coordenador.comissao.definirCoordComissao', compact('evento', 'users', 'coordenadores'));
+    }
+
+    public function definirCoordEixo(Request $request)
+    {
+
+        $evento = Evento::find($request->eventoId);
+
+        $users = $evento->usuariosDaComissao->map(function ($user) use ($evento) {
+            $areas = CoordEixoTematico::where('evento_id', $evento->id)
+                ->where('user_id', $user->id)
+                ->pluck('area_id')
+                ->toArray();
+
+            $user->areas = $areas;
+
+            return $user;
+        });
+
+        $areas = $evento->areas;
+        return view('coordenador.comissao.definirCoordEixo', compact('evento', 'users', 'areas'));
     }
 
     public function listarComissao(Request $request)
@@ -1755,11 +1776,11 @@ class EventoController extends Controller
             ->where('deletado', false)
             ->where('dataFim', '<', today())
             ->whereNull('evento_pai_id');
-    
+
         if ($request->filled('busca')) {
             $query->where('nome', 'ilike', '%' . $request->busca . '%');
         }
-    
+
         if ($request->filled('ordenar')) {
             switch ($request->ordenar) {
                 case 'nome':
@@ -1773,12 +1794,12 @@ class EventoController extends Controller
         } else {
             $query->orderBy('dataFim', 'desc');
         }
-    
+
         $eventosPassados = $query->paginate(9);
-    
+
         return view('coordenador.evento.eventosPassados', compact('eventosPassados'));
     }
-    
+
 
     public function eventosProximos(Request $request)
     {
@@ -1786,11 +1807,11 @@ class EventoController extends Controller
             ->where('deletado', false)
             ->where('dataFim', '>=', today())
             ->whereNull('evento_pai_id');
-    
+
         if ($request->filled('busca')) {
             $query->where('nome', 'ilike', '%' . $request->busca . '%');
         }
-    
+
         if ($request->filled('ordenar')) {
             switch ($request->ordenar) {
                 case 'nome':
@@ -1804,10 +1825,10 @@ class EventoController extends Controller
         } else {
             $query->orderBy('dataInicio'); // ordenação padrão
         }
-    
+
         $proximosEventos = $query->paginate(9);
-    
+
         return view('coordenador.evento.eventosProximos', compact('proximosEventos'));
     }
-    
+
 }

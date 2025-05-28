@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Submissao\Evento;
+use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -118,6 +119,16 @@ class EventoPolicy
     {
         return $this->isCoordenadorDeOutrasComissoes($user, $evento)
             || $this->isCoordenadorOrCoordenadorDasComissoes($user, $evento);
+    }
+
+    public function isCoordenadorEixo(User $user, Evento $evento){
+        return CoordEixoTematico::where('user_id', $user->id)->where('evento_id', $evento->id)->exists();
+    }
+
+    public function isMembro(User $user, Evento $evento){
+        $membro = $evento->usuariosDaComissao()->where('user_id', $user->id)->first();
+
+        return $this->isCoordenador($user, $evento) || ! (is_null($membro));
     }
 
     public function isCoordenadorOrComissaoOrRevisorComAtribuicao(User $user, Evento $evento)

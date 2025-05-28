@@ -2,6 +2,7 @@
 
 namespace App\Models\Submissao;
 
+use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -250,5 +251,9 @@ class Evento extends Model
         }
 
         return $encerrada;
+    }
+
+    public function coordEixosTematicos(){
+        return $this->hasMany(CoordEixoTematico::class);
     }
 }
