@@ -1,21 +1,14 @@
 <nav class="navbar navbar-expand-lg bg-white shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{route('index')}}">
-            <img src="{{ asset('/img/logo.png') }}" alt="" width="150vw">
+            <img src="{{ asset('/img/logo.png') }}" alt="" width="250vw">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Alterna navegação">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse flex-grow-0"  id="navbarNavAltMarkup">
             <div class="navbar-nav text-right">
-                <li class="nav-item">
-                    <a class="nav-link text-my-primary fw-semibold" href="{{ route('validarCertificado') }}" style="margin-right: 5px; margin-left: 5px">
-                    @lang('public.validarCertificado')
-                    </a>
-                </li>
-
-
-
+                
                 @auth
                     <li class="nav-item">
                         <a class="nav-link text-my-primary fw-semibold" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
@@ -160,6 +153,11 @@
                 @else
                     <li class="nav-item dropdown">
                         <a class="nav-link text-my-primary fw-semibold" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <div class="nav-link text-my-primary fw-semibold">
+                            |
+                        </div>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link text-my-primary fw-semibold" href="{{ route('preRegistro') }}">{{ __('Cadastre-se') }}</a>

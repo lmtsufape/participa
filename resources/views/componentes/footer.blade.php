@@ -30,34 +30,43 @@
         </div>
     </div>
 
-    <div class="row text-center p-4 text-white" style="background-color: #034652">
-        <div class="col-6 col-md-3 mb-3 mb-md-0">
-            <h6 class="fw-bold">{{ __('Encontre eventos') }}</h6>
-            <ul class="list-unstyled small">
-                <li><a href="#" class="text-white text-decoration-none">{{ __('Em destaque neste momento') }}</a></li>
-                <li><a href="#" class="text-white text-decoration-none">{{ __('Últimos eventos realizados') }}</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md-3 mb-3 mb-md-0">
-            <h6 class="fw-bold">{{ __('Módulos') }}</h6>
-            <ul class="list-unstyled small">
-                <li><a href="#" class="text-white text-decoration-none">{{ __('Inscrições') }}</a></li>
-                <li><a href="#" class="text-white text-decoration-none">{{ __('Submissões') }}</a></li>
-                <li><a href="#" class="text-white text-decoration-none">{{ __('Certificados') }}</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md-3 mb-3 mb-md-0">
-            <h6 class="fw-bold">{{ __('Para produtores') }}</h6>
-            <ul class="list-unstyled small">
-                <li><a href="#" class="text-white text-decoration-none">{{ __('Como criar seu evento no participa') }}</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md-3 mb-3 mb-md-0">
-            <h6 class="fw-bold">{{ __('Plataforma') }}</h6>
-            <ul class="list-unstyled small">
-                <li><a href="#" class="text-white text-decoration-none">{{ __('Ajuda') }}</a></li>
-                <li><a href="#" class="text-white text-decoration-none">{{ __('Autenticar Certificados') }}</a></li>
-            </ul>
+    <div class="p-4 text-white" style="background-color: #034652">
+        <div class="container mx-auto">  <!-- Centraliza o container -->
+            <div class="d-flex flex-wrap justify-content-between text-center">  <!-- Distribui os itens -->
+                <div class="mb-3 mb-md-0" style="flex: 0 0 auto; width: auto;">  <!-- Largura automática -->
+                    <a class="navbar-brand d-inline-block" href="{{route('index')}}">
+                        <img src="{{ asset('/img/LOGO-RODAPE.png') }}" alt="" style="width: 150px; max-width: 100%;">
+                    </a>
+                </div>
+                <div class="mb-3 mb-md-0" style="flex: 0 0 auto; width: auto;">
+                    <h6 class="fw-bold">{{ __('Encontre eventos') }}</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="#" class="text-white text-decoration-none">{{ __('Em destaque neste momento') }}</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">{{ __('Últimos eventos realizados') }}</a></li>
+                    </ul>
+                </div>
+                <div class="mb-3 mb-md-0" style="flex: 0 0 auto; width: auto;">
+                    <h6 class="fw-bold">{{ __('Módulos') }}</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="#" class="text-white text-decoration-none">{{ __('Inscrições') }}</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">{{ __('Submissões') }}</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">{{ __('Certificados') }}</a></li>
+                    </ul>
+                </div>
+                <div class="mb-3 mb-md-0" style="flex: 0 0 auto; width: auto;">
+                    <h6 class="fw-bold">{{ __('Para produtores') }}</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="#" class="text-white text-decoration-none">{{ __('Como criar seu evento no participa') }}</a></li>
+                    </ul>
+                </div>
+                <div class="mb-3 mb-md-0" style="flex: 0 0 auto; width: auto;">
+                    <h6 class="fw-bold">{{ __('Plataforma') }}</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="#" class="text-white text-decoration-none">{{ __('Ajuda') }}</a></li>
+                        <li><a href="{{ route('validarCertificado') }}" class="text-white text-decoration-none">{{ __('Validar Certificado') }}</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </footer>
