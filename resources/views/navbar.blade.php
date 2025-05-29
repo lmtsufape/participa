@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-white shadow-sm">
+<nav class="navbar navbar-expand-lg shadow-sm" style="background-color: #FFF9F2">
     <div class="container">
         <a class="navbar-brand" href="{{route('index')}}">
             <img src="{{ asset('/img/logo.png') }}" alt="" width="250vw">

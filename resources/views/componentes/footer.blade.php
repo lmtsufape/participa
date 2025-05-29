@@ -30,41 +30,37 @@
         </div>
     </div>
 
-    <div class="p-4 text-white" style="background-color: #034652">
-        <div class="container mx-auto">  <!-- Centraliza o container -->
-            <div class="d-flex flex-wrap justify-content-between text-center">  <!-- Distribui os itens -->
-                <div class="mb-3 mb-md-0" style="flex: 0 0 auto; width: auto;">  <!-- Largura automática -->
+    <div class="p-4 text-white" style="background-color: #DA2E38">
+        <div class="container mx-auto"> 
+            <div class="d-flex flex-wrap justify-content-between text-center">  
+                <div class="mb-3 mb-md-0 d-flex flex-column flex-md-row align-items-center gap-3" style="flex: 0 0 auto; width: auto;"> 
                     <a class="navbar-brand d-inline-block" href="{{route('index')}}">
                         <img src="{{ asset('/img/LOGO-RODAPE.png') }}" alt="" style="width: 150px; max-width: 100%;">
                     </a>
+
+                    <div class="text-center text-md-start list-unstyled small mt-5"> 
+                        <p class="m-0">@2025 | ABA - Associação Brasileira de Agroecologia</p>
+                        <p class="m-0">Rua das Palmeiras 90 - Bairro Botafogo</p>
+                        <p class="m-0">- CEP 22270-070, Rio de Janeiro</p>
+                    </div>
                 </div>
-                <div class="mb-3 mb-md-0" style="flex: 0 0 auto; width: auto;">
-                    <h6 class="fw-bold">{{ __('Encontre eventos') }}</h6>
-                    <ul class="list-unstyled small">
-                        <li><a href="#" class="text-white text-decoration-none">{{ __('Em destaque neste momento') }}</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">{{ __('Últimos eventos realizados') }}</a></li>
-                    </ul>
-                </div>
-                <div class="mb-3 mb-md-0" style="flex: 0 0 auto; width: auto;">
+                
+                <div class="d-flex flex-column flex-md-row align-items-center gap-3 gap-md-5">
+                    <div class="mb-3 mt-4 mt-mb-md-0" style="flex: 0 0 auto; width: auto;">
                     <h6 class="fw-bold">{{ __('Módulos') }}</h6>
                     <ul class="list-unstyled small">
                         <li><a href="#" class="text-white text-decoration-none">{{ __('Inscrições') }}</a></li>
                         <li><a href="#" class="text-white text-decoration-none">{{ __('Submissões') }}</a></li>
                         <li><a href="#" class="text-white text-decoration-none">{{ __('Certificados') }}</a></li>
                     </ul>
-                </div>
-                <div class="mb-3 mb-md-0" style="flex: 0 0 auto; width: auto;">
-                    <h6 class="fw-bold">{{ __('Para produtores') }}</h6>
-                    <ul class="list-unstyled small">
-                        <li><a href="#" class="text-white text-decoration-none">{{ __('Como criar seu evento no participa') }}</a></li>
-                    </ul>
-                </div>
-                <div class="mb-3 mb-md-0" style="flex: 0 0 auto; width: auto;">
-                    <h6 class="fw-bold">{{ __('Plataforma') }}</h6>
-                    <ul class="list-unstyled small">
-                        <li><a href="#" class="text-white text-decoration-none">{{ __('Ajuda') }}</a></li>
-                        <li><a href="{{ route('validarCertificado') }}" class="text-white text-decoration-none">{{ __('Validar Certificado') }}</a></li>
-                    </ul>
+                    </div>
+                    <div class="mb-3 mt-4 mt-mb-md-0" style="flex: 0 0 auto; width: auto; margin-left: 50px;">
+                        <h6 class="fw-bold">{{ __('Plataforma') }}</h6>
+                        <ul class="list-unstyled small">
+                            <li><a href="#" class="text-white text-decoration-none">{{ __('Ajuda') }}</a></li>
+                            <li><a href="{{ route('validarCertificado') }}" class="text-white text-decoration-none">{{ __('Validar Certificado') }}</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
