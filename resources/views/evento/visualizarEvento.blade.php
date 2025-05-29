@@ -24,7 +24,7 @@
                 @else
                     <h2 class="text-my-primary">{{ $evento->nome }}</h2>
                 @endif
-                <span class="d-flex align-items-center gap-1 text-my-secondary mb-4">
+                <span class="d-flex align-items-center gap-1 text-my-secondary mb-4 gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-calendar-event" viewBox="0 0 16 16">
                         <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
@@ -295,10 +295,12 @@
                                                             <div class="mb-2">
                                                                 <a href="{{ route('modalidade.template.download', $modalidade->id) }}"
                                                                 target="_blank"
-                                                                class="d-inline-block">
+                                                                class="d-inline-block text-decoration-none">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
-                                                                    {{-- {{ $evento->formEvento->etiquetabaixartemplate }} --}}
-                                                                    {{ __('Modelo (template)') }}
+                                                                    <span class="text-decoration-underline fs-6">
+                                                                        {{-- {{ $evento->formEvento->etiquetabaixartemplate }} --}}
+                                                                        {{ __('Modelo (template)') }}
+                                                                    </span>
                                                                 </a>
                                                             </div>
                                                         @endif
@@ -474,7 +476,7 @@
 
         <div id="programacao" class="row py-4">{{-- Programação --}}
             <h4 class="text-my-primary">{{ __('Programação') }}</h4>
-
+            
             @if ($etiquetas->modprogramacao == true && $evento->exibir_calendario_programacao)
                 <div class="alert alert-info alert-dismissible fade show" role="alert">
                     {{ __('Para participar das atividades do evento, é preciso primeiro se inscrever no evento e, em seguida, realizar a inscrição na atividade desejada, disponível na seção de Programação.') }}
