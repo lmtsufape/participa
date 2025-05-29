@@ -10,7 +10,7 @@
             margin-bottom: 20px;
             font-family: sans-serif;
         }
-        
+
         .etapa {
             flex: 1;
             text-align: left;
@@ -19,7 +19,7 @@
             font-weight: normal;
             border-bottom: 2px solid transparent;
         }
-        
+
         .etapa.ativa {
             color: #004d51;
             font-weight: bold;
@@ -95,10 +95,10 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="nome-social" class="col-form-label">{{ __('Nome social') }}</label>
-                        <input id="nome-social" type="text" class="form-control apenasLetras @error('nome-social') is-invalid @enderror" name="nome-social" value="{{ old('nome-social') }}"  autocomplete="nome-social" autofocus>
+                        <label for="nomeSocial" class="col-form-label">{{ __('Nome social') }}</label>
+                        <input id="nomeSocial" type="text" class="form-control apenasLetras @error('nomeSocial') is-invalid @enderror" name="nomeSocial" value="{{ old('nomeSocial') }}"  autocomplete="nomeSocial" autofocus>
 
-                        @error('nome-social')
+                        @error('nomeSocial')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
                             </span>
@@ -176,10 +176,10 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="data-nascimento" class="col-form-label required-field">{{ __('Data de nascimento') }}</label>
-                        <input id="data-nasacimento" type="date" class="form-control @error('data-nascimento') is-invalid @enderror" name="data-nascimento" value="{{ old('data-nascimento')}}"  autocomplete="data-nascimento" required>
+                        <label for="dataNascimento" class="col-form-label required-field">{{ __('Data de nascimento') }}</label>
+                        <input id="dataNascimento" type="date" class="form-control @error('dataNascimento') is-invalid @enderror" name="dataNascimento" value="{{ old('dataNascimento')}}"  autocomplete="dataNascimento" required>
 
-                        @error('data-nascimento')
+                        @error('dataNascimento')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
                             </span>
@@ -400,7 +400,7 @@
                             <label class="form-check-label" for="genero_{{ $key }}">{{ $label }}</label>
                         </div>
                     @endforeach
-                    <input type="text" name="genero_outro" id="genero_outro" class="form-control mt-2" placeholder="Especifique outro gênero" style="max-width: 300px;">
+                    <input type="text" name="generoOutro" id="generoOutro" class="form-control mt-2" placeholder="Especifique outro gênero" style="max-width: 300px;">
                 </div>
             </div>
 
@@ -424,7 +424,7 @@
                             <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>
                         </div>
                     @endforeach
-                    <input type="text" name="raca_outro" id="raca_outro" class="form-control mt-2" placeholder="Especifique outra raça" style="max-width: 300px;">
+                    <input type="text" name="outraRaca" id="outraRaca" class="form-control mt-2" placeholder="Especifique outra raça" style="max-width: 300px;">
                 </div>
             </div>
 
@@ -433,14 +433,14 @@
                 <label class="col-md-12 col-form-label required-field">Você pertence ou atua em alguma comunidade ou povo tradicional?</label>
                 <div class="col-md-12">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="comunidade_tradicional" id="comunidade_nao" value="nao" checked>
+                        <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_nao" value="nao" checked>
                         <label class="form-check-label" for="comunidade_nao">Não</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="comunidade_tradicional" id="comunidade_sim" value="sim">
+                        <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_sim" value="sim">
                         <label class="form-check-label" for="comunidade_sim">Sim</label>
                     </div>
-                    <input type="text" name="qual_comunidade" id="qual_comunidade" class="form-control mt-2" placeholder="Qual? (se sim)" style="max-width: 400px;">
+                    <input type="text" name="nomeComunidadeTradicional" id="nomeComunidadeTradicional" class="form-control mt-2" placeholder="Qual? (se sim)" style="max-width: 400px;">
                 </div>
             </div>
 
@@ -464,11 +464,11 @@
                 <label class="col-md-12 col-form-label required-field">Você é pessoa com deficiência ou idoso?</label>
                 <div class="col-md-12">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="deficiencia_idoso" id="deficiencia_sim" value="sim">
+                        <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_sim" value="sim">
                         <label class="form-check-label" for="deficiencia_sim">Sim</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="deficiencia_idoso" id="deficiencia_nao" value="nao" checked>
+                        <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_nao" value="nao" checked>
                         <label class="form-check-label" for="deficiencia_nao">Não</label>
                     </div>
                 </div>
@@ -489,11 +489,11 @@
                     @endphp
                     @foreach($necessidades as $key => $label)
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="necessidades_especiais[]" id="necessidade_{{ $key }}" value="{{ $key }}">
+                            <input class="form-check-input" type="checkbox" name="necessidadesEspeciais[]" id="necessidade_{{ $key }}" value="{{ $key }}">
                             <label class="form-check-label" for="necessidade_{{ $key }}">{{ $label }}</label>
                         </div>
                     @endforeach
-                    <input type="text" name="necessidade_outro" id="necessidade_outro" class="form-control mt-2" placeholder="Outro (especifique)" style="max-width: 300px;">
+                    <input type="text" name="outraNecessidadeEspecial" id="outraNecessidadeEspecial" class="form-control mt-2" placeholder="Outro (especifique)" style="max-width: 300px;">
                 </div>
             </div>
 
@@ -502,11 +502,11 @@
                 <label class="col-md-12 col-form-label required-field">Já é Associado da ABA Agroecologia?</label>
                 <div class="col-md-12">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="associado_aba" id="associado_sim" value="sim">
+                        <input class="form-check-input" type="radio" name="associadoAba" id="associado_sim" value="sim">
                         <label class="form-check-label" for="associado_sim">Sim</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="associado_aba" id="associado_nao" value="nao" checked>
+                        <input class="form-check-input" type="radio" name="associadoAba" id="associado_nao" value="nao" checked>
                         <label class="form-check-label" for="associado_nao">Não</label>
                     </div>
                 </div>
@@ -517,11 +517,11 @@
                 <label class="col-md-12 col-form-label required-field">Se não, gostaria de receber mais informações sobre a ABA?</label>
                 <div class="col-md-12">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="receber_info_aba" id="receber_info_sim" value="sim">
+                        <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_sim" value="sim">
                         <label class="form-check-label" for="receber_info_sim">Sim</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="receber_info_aba" id="receber_info_nao" value="nao" checked>
+                        <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_nao" value="nao" checked>
                         <label class="form-check-label" for="receber_info_nao">Não</label>
                     </div>
                 </div>
@@ -529,9 +529,9 @@
 
             {{-- Informações institucionais e de atuação --}}
             <div class="form-group row mt-3">
-                <label for="vinculo_institucional" class="col-md-12 col-form-label">Informações Institucionais e de Atuação (preenchimento opcional)</label>
+                <label for="vinculoInstitucional" class="col-md-12 col-form-label">Informações Institucionais e de Atuação (preenchimento opcional)</label>
                 <div class="col-md-12">
-                    <input type="text" name="vinculo_institucional" id="vinculo_institucional" class="form-control" placeholder="Vínculo institucional ou coletivo (se houver)">
+                    <input type="text" name="vinculoInstitucional" id="vinculoInstitucional" class="form-control" placeholder="Vínculo institucional ou coletivo (se houver)">
                 </div>
             </div>
 
@@ -539,14 +539,14 @@
                 <label class="col-md-12 col-form-label">Você participa de alguma organização, rede ou movimento?</label>
                 <div class="col-md-12">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="participa_organizacao" id="participa_nao" value="nao" checked>
+                        <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_nao" value="nao" checked>
                         <label class="form-check-label" for="participa_nao">Não</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="participa_organizacao" id="participa_sim" value="sim">
+                        <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_sim" value="sim">
                         <label class="form-check-label" for="participa_sim">Sim</label>
                     </div>
-                    <input type="text" name="qual_organizacao" id="qual_organizacao" class="form-control mt-2" placeholder="Qual? (se sim)" style="max-width: 400px;">
+                    <input type="text" name="nomeOrganizacao" id="nomeOrganizacao" class="form-control mt-2" placeholder="Qual? (se sim)" style="max-width: 400px;">
                 </div>
             </div>
 
