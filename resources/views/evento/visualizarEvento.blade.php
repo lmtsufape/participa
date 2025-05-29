@@ -41,15 +41,39 @@
                     </svg>
 
                     @if ($dataInicio->isSameMonth($dataFim))
-                        De
-                        {{ $dataInicio->translatedFormat('d') }}
-                        a
-                        {{ $dataFim->translatedFormat('d \d\e F \d\e Y') }}
+                        @if(Session::get('idiomaAtual') === 'en')
+                            From
+                            {{ $dataInicio->translatedFormat('d F') }}
+                            to
+                            {{ $dataFim->translatedFormat('d  F  Y') }}
+                        @elseif(Session::get('idiomaAtual') === 'es')
+                            Desde
+                            {{ $dataInicio->translatedFormat('d \d\e F') }}
+                            hasta
+                            {{ $dataFim->translatedFormat('d \d\e F \d\e Y') }}
+                        @else
+                            De
+                            {{ $dataInicio->translatedFormat('d') }}
+                            a
+                            {{ $dataFim->translatedFormat('d \d\e F \d\e Y') }}
+                        @endif
                     @else
-                        De
-                        {{ $dataInicio->translatedFormat('d \d\e F') }}
-                        a
-                        {{ $dataFim->translatedFormat('d \d\e F \d\e Y') }}
+                        @if(Session::get('idiomaAtual') === 'en')
+                            From
+                            {{ $dataInicio->translatedFormat('d F') }}
+                            to
+                            {{ $dataFim->translatedFormat('d F Y') }}
+                        @elseif(Session::get('idiomaAtual') === 'es')
+                            Desde
+                            {{ $dataInicio->translatedFormat('d \d\e F') }}
+                            hasta
+                            {{ $dataFim->translatedFormat('d \d\e F \d\e Y') }}
+                        @else
+                            De
+                            {{ $dataInicio->translatedFormat('d \d\e F') }}
+                            a
+                            {{ $dataFim->translatedFormat('d \d\e F \d\e Y') }}
+                        @endif
                     @endif
 
                 </span>
