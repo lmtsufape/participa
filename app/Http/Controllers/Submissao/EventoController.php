@@ -90,7 +90,7 @@ class EventoController extends Controller
             ])
             ->find($request->eventoId);
 
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoesOrIsCoordenadorDeOutrasComissoes', $evento);
+        $this->authorize('isUsuarioDaComissao', $evento);
 
         $evento->loadCount([
             'inscricaos',
@@ -126,7 +126,7 @@ class EventoController extends Controller
     public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         // $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
@@ -198,7 +198,7 @@ class EventoController extends Controller
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $trabalhos = null;
         if ($column == 'autor') {
@@ -276,7 +276,7 @@ class EventoController extends Controller
     public function listarTrabalhosModalidades(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $modalidade = Modalidade::find($request->modalidadeId);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
@@ -469,7 +469,7 @@ class EventoController extends Controller
 
     public function exportTrabalhos(Evento $evento)
     {
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $trabalhos = Trabalho::where('eventoId', $evento->id)
             ->get()->map(function ($trabalho) {
                 return [
@@ -663,7 +663,7 @@ class EventoController extends Controller
     public function listarCorrecoes(Request $request, $column = 'titulo', $direction = 'asc')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
 
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
@@ -972,7 +972,7 @@ class EventoController extends Controller
 
     public function resumosToPdf(Evento $evento, Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $trabalhos = null;
@@ -1035,7 +1035,7 @@ class EventoController extends Controller
     public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         // $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
@@ -1340,6 +1340,7 @@ class EventoController extends Controller
         ->with('datasAtividade')
         ->get();
         $atividadesAgrupadas = $atividades->groupBy('data');
+
         $dataInicio = Carbon::parse($evento->dataInicio);
         $dataFim    = Carbon::parse($evento->dataFim);
         if (auth()->user()) {
@@ -1742,7 +1743,7 @@ class EventoController extends Controller
 
     public function avisoCorrecao(Evento $evento, Request $request)
     {
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isUsuarioDaComissao', $evento);
 
         $request->validate([
             'trabalhosSelecionados' => 'array|min:1|required',

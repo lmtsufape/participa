@@ -28,14 +28,14 @@
         </div>
     </div>
     <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2" id="informacoes"
+            href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
+                <img src="{{ asset('img/icons/info-circle-solid.svg') }}" width="20px" alt="">
+                <span>{{ __('Informações') }}</span>
+            </a>
+        </li>
         @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2" id="informacoes"
-                    href="{{ route('coord.informacoes', ['eventoId' => $evento->id]) }}">
-                    <img src="{{ asset('img/icons/info-circle-solid.svg') }}" width="20px" alt="">
-                    <span>{{ __('Informações') }}</span>
-                </a>
-            </li>
             @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
                 <li id="programacao" class="nav-item">
                     <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
@@ -279,72 +279,75 @@
                     </ul>
                 </div>
             </li>
-            @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
-                <li id="revisores" class="nav-item">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
-                        href="#CollapseRevisores" role="button" aria-expanded="false" aria-controls="CollapseRevisores">
-                        <img src="{{ asset('img/icons/glasses-solid.svg') }}" alt="" width="20px">
-                        <span>{{ __('Avaliadores') }}</span>
-                    </a>
-                    <div class="collapse" id="CollapseRevisores" @if (request()->is('coord/evento/revisores*'))
-                    style='display: block;' @endif>
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="listarRevisores"
-                                    href="{{ route('coord.listarRevisores', ['eventoId' => $evento->id]) }}">
-                                    <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Listar avaliadores') }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            @endcan
-            @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
-                <li id="inscricoes" class="nav-item">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
-                        href="#CollapseInscricoes" role="button" aria-expanded="false" aria-controls="CollapseInscricoes">
-                        <img src="{{ asset('img/icons/edit-regular-white.svg') }}" alt="" width="20px">
-                        <span>{{ __('Inscrições') }}</span>
-                    </a>
-                    <div class="collapse" id="CollapseInscricoes" @if (request()->is($evento->id . '/inscricoes*'))
-                    style='display: block;' @endif>
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2"
-                                    href="{{ route('inscricao.categorias', $evento) }}">
-                                    <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Categorias') }}</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2"
-                                    href="{{ route('inscricao.formulario', $evento) }}">
-                                    <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Formulário') }}</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2"
-                                    href="{{ route('inscricao.inscritos', $evento) }}">
-                                    <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Inscritos') }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            @endcan
-            @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
-                <li id="trabalhos" class="nav-item">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
-                        href="#collapseTrabalhos" role="button" aria-expanded="false" aria-controls="collapseTrabalhos">
-                        <img src="{{ asset('img/icons/file-alt-regular.svg') }}" alt="" width="20px">
-                        <span>{{ __('Submissões') }}</span>
-                    </a>
-                    <div class="collapse" id="collapseTrabalhos" @if (request()->is('coord/evento/trabalhos*'))
-                    style='display: block;' @endif>
-                        <ul class="nav flex-column">
+        @endcan
+        @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
+            <li id="revisores" class="nav-item">
+                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
+                    href="#CollapseRevisores" role="button" aria-expanded="false" aria-controls="CollapseRevisores">
+                    <img src="{{ asset('img/icons/glasses-solid.svg') }}" alt="" width="20px">
+                    <span>{{ __('Avaliadores') }}</span>
+                </a>
+                <div class="collapse" id="CollapseRevisores" @if (request()->is('coord/evento/revisores*'))
+                style='display: block;' @endif>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2" id="listarRevisores"
+                                href="{{ route('coord.listarRevisores', ['eventoId' => $evento->id]) }}">
+                                <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                <span>{{ __('Listar avaliadores') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endcan
+        @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
+            <li id="inscricoes" class="nav-item">
+                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
+                    href="#CollapseInscricoes" role="button" aria-expanded="false" aria-controls="CollapseInscricoes">
+                    <img src="{{ asset('img/icons/edit-regular-white.svg') }}" alt="" width="20px">
+                    <span>{{ __('Inscrições') }}</span>
+                </a>
+                <div class="collapse" id="CollapseInscricoes" @if (request()->is($evento->id . '/inscricoes*'))
+                style='display: block;' @endif>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2"
+                                href="{{ route('inscricao.categorias', $evento) }}">
+                                <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                <span>{{ __('Categorias') }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2"
+                                href="{{ route('inscricao.formulario', $evento) }}">
+                                <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                <span>{{ __('Formulário') }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2"
+                                href="{{ route('inscricao.inscritos', $evento) }}">
+                                <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                <span>{{ __('Inscritos') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endcan
+        @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento)
+            <li id="trabalhos" class="nav-item">
+                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
+                    href="#collapseTrabalhos" role="button" aria-expanded="false" aria-controls="collapseTrabalhos">
+                    <img src="{{ asset('img/icons/file-alt-regular.svg') }}" alt="" width="20px">
+                    <span>{{ __('Submissões') }}</span>
+                </a>
+                <div class="collapse" id="collapseTrabalhos" @if (request()->is('coord/evento/trabalhos*'))
+                style='display: block;' @endif>
+                    <ul class="nav flex-column">
+                        @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
+
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="submissoesTrabalhos"
                                     href="{{ route('coord.definirSubmissoes', ['eventoId' => $evento->id]) }}">
@@ -352,6 +355,9 @@
                                     <span>{{ __('Definir submissões') }}</span>
                                 </a>
                             </li>
+                        @endcan
+                        @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento)
+
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="submeterTrabalho" href="#"
                                     data-bs-toggle="collapse" data-bs-target="#dropdownSubmeterTrabalho{{$evento->id}}" aria-expanded="false"
@@ -371,6 +377,8 @@
                                     @endforeach
                                 </ul>
                             </li>
+                        @endcan
+                        @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="resultadosTrabalhos"
                                     href="{{ route('coord.resultados', ['id' => $evento->id]) }}">
@@ -378,6 +386,9 @@
                                     <span>{{ __('Resultado') }}</span>
                                 </a>
                             </li>
+                        @endcan
+                        @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento)
+
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="listarTrabalhos" role="button"
                                     data-bs-toggle="collapse" data-bs-target="#dropdownListarTrabalhos{{$evento->id}}" aria-expanded="false"
@@ -435,59 +446,61 @@
                                     <span>{{ __('Listar correções') }}</span>
                                 </a>
                             </li>
-                        </ul>
-                    </div>
-                </li>
-            @endcan
-            @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
-                <li id="certificados" class="nav-item">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
-                        href="#CollapseCertificados" role="button" aria-expanded="false" aria-controls="CollapseCertificados">
-                        <img src="{{ asset('img/icons/publish.svg') }}" alt="" width="20px">
-                        <span>{{ __('Certificados') }}</span>
-                    </a>
-                    <div class="collapse" id="CollapseCertificados" @if (request()->is('coord/evento/certificado*'))
-                    style='display: block;' @endif>
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="cadastrarAssinatura"
-                                    href="{{ route('coord.cadastrarAssinatura', ['eventoId' => $evento->id]) }}">
-                                    <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Cadastrar assinatura') }}</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="listarAssinaturas"
-                                    href="{{ route('coord.listarAssinaturas', ['eventoId' => $evento->id]) }}">
-                                    <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Listar assinaturas') }}</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="cadastrarCertificado"
-                                    href="{{ route('coord.cadastrarCertificado', ['eventoId' => $evento->id]) }}">
-                                    <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Cadastrar certificado') }}</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="listarCertificados"
-                                    href="{{ route('coord.listarCertificados', ['eventoId' => $evento->id]) }}">
-                                    <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Listar certificados') }}</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="emitirCertificado"
-                                    href="{{ route('coord.emitirCertificado', ['eventoId' => $evento->id]) }}">
-                                    <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Emitir certificado') }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            @endcan
+                        @endcan
+                    </ul>
+                </div>
+            </li>
+        @endcan
+        @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
+            <li id="certificados" class="nav-item">
+                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
+                    href="#CollapseCertificados" role="button" aria-expanded="false" aria-controls="CollapseCertificados">
+                    <img src="{{ asset('img/icons/publish.svg') }}" alt="" width="20px">
+                    <span>{{ __('Certificados') }}</span>
+                </a>
+                <div class="collapse" id="CollapseCertificados" @if (request()->is('coord/evento/certificado*'))
+                style='display: block;' @endif>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2" id="cadastrarAssinatura"
+                                href="{{ route('coord.cadastrarAssinatura', ['eventoId' => $evento->id]) }}">
+                                <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
+                                <span>{{ __('Cadastrar assinatura') }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2" id="listarAssinaturas"
+                                href="{{ route('coord.listarAssinaturas', ['eventoId' => $evento->id]) }}">
+                                <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                <span>{{ __('Listar assinaturas') }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2" id="cadastrarCertificado"
+                                href="{{ route('coord.cadastrarCertificado', ['eventoId' => $evento->id]) }}">
+                                <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
+                                <span>{{ __('Cadastrar certificado') }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2" id="listarCertificados"
+                                href="{{ route('coord.listarCertificados', ['eventoId' => $evento->id]) }}">
+                                <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                <span>{{ __('Listar certificados') }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2" id="emitirCertificado"
+                                href="{{ route('coord.emitirCertificado', ['eventoId' => $evento->id]) }}">
+                                <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
+                                <span>{{ __('Emitir certificado') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endcan
+        @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
             <li id="memorias" class="nav-item">
                 <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                     href="#CollapseMemoria" role="button" aria-expanded="false" aria-controls="CollapseMemoria">
@@ -549,39 +562,39 @@
                     </ul>
                 </div>
             </li>
-            @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
-                <li id="publicar" class="nav-item">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
-                        href="#collapsePublicar" role="button" aria-expanded="false" aria-controls="collapsePublicar">
-                        <img src="{{ asset('img/icons/publish.svg') }}" alt="" width="20px">
-                        <span>{{ __('Publicar') }}</span>
-                    </a>
-                    <div class="collapse" id="collapsePublicar">
-                        <div style="display: none;">
-                            <form id="habilitarEventoForm" method="GET"
-                                action="{{ route('evento.habilitar', ['id' => $evento->id]) }}"></form>
-                            <form id="desabilitarEventoForm" method="GET"
-                                action="{{ route('evento.desabilitar', ['id' => $evento->id]) }}"></form>
-                        </div>
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="publicarEvento"
-                                    onclick="habilitarEvento()">
-                                    <img src="{{ asset('img/icons/alto-falante.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Publicar evento') }}</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="desabilitarEventoPublicado"
-                                    onclick="desabilitarEvento()">
-                                    <img src="{{ asset('img/icons/alto-falante-nao.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Desfazer publicação') }}</span>
-                                </a>
-                            </li>
-                        </ul>
+        @endcan
+        @can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento)
+            <li id="publicar" class="nav-item">
+                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
+                    href="#collapsePublicar" role="button" aria-expanded="false" aria-controls="collapsePublicar">
+                    <img src="{{ asset('img/icons/publish.svg') }}" alt="" width="20px">
+                    <span>{{ __('Publicar') }}</span>
+                </a>
+                <div class="collapse" id="collapsePublicar">
+                    <div style="display: none;">
+                        <form id="habilitarEventoForm" method="GET"
+                            action="{{ route('evento.habilitar', ['id' => $evento->id]) }}"></form>
+                        <form id="desabilitarEventoForm" method="GET"
+                            action="{{ route('evento.desabilitar', ['id' => $evento->id]) }}"></form>
                     </div>
-                </li>
-            @endcan
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2" id="publicarEvento"
+                                onclick="habilitarEvento()">
+                                <img src="{{ asset('img/icons/alto-falante.svg') }}" alt="" width="20px">
+                                <span>{{ __('Publicar evento') }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2" id="desabilitarEventoPublicado"
+                                onclick="desabilitarEvento()">
+                                <img src="{{ asset('img/icons/alto-falante-nao.svg') }}" alt="" width="20px">
+                                <span>{{ __('Desfazer publicação') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
         @endcan
     </ul>
 </aside>
