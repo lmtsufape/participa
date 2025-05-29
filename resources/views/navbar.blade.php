@@ -162,6 +162,11 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link text-my-primary fw-semibold" href="{{ route('preRegistro') }}">{{ __('Cadastre-se') }}</a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <div class="nav-link text-my-primary fw-semibold">
+                            |
+                        </div>
+                    </li>
                 @endauth
 
 

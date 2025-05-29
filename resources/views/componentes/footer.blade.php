@@ -49,15 +49,15 @@
                     <div class="mb-3 mt-4 mt-mb-md-0" style="flex: 0 0 auto; width: auto;">
                     <h6 class="fw-bold">{{ __('Módulos') }}</h6>
                     <ul class="list-unstyled small">
-                        <li><a href="#" class="text-white text-decoration-none">{{ __('Inscrições') }}</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">{{ __('Submissões') }}</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">{{ __('Certificados') }}</a></li>
+                        <li><a href="{{ route('evento.visualizar', ['id' => 3]) }}" class="text-white text-decoration-none">{{ __('Inscrições') }}</a></li>
+                        <li><a href="{{ route('evento.visualizar', ['id' => 3]) }}" class="text-white text-decoration-none">{{ __('Submissões') }}</a></li>
+                        <li><a href="{{ route('evento.visualizar', ['id' => 3]) }}" class="text-white text-decoration-none">{{ __('Certificados') }}</a></li>
                     </ul>
                     </div>
                     <div class="mb-3 mt-4 mt-mb-md-0" style="flex: 0 0 auto; width: auto; margin-left: 90px;">
                         <h6 class="fw-bold">{{ __('Plataforma') }}</h6>
                         <ul class="list-unstyled small">
-                            <li><a href="#" class="text-white text-decoration-none">{{ __('Ajuda') }}</a></li>
+                            <li><a href="{{ route('evento.visualizar', ['id' => 3]) }}" class="text-white text-decoration-none">{{ __('Ajuda') }}</a></li>
                             <li><a href="{{ route('validarCertificado') }}" class="text-white text-decoration-none">{{ __('Validar Certificado') }}</a></li>
                         </ul>
                     </div>
