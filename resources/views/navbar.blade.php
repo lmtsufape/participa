@@ -99,7 +99,7 @@
                                     @if (Auth::user()->coordEixosTematicos()->exists())
                                     {{-- Rota - Área de coordenador de eixo temático --}}
                                         <li>
-                                            <a class="dropdown-item" href="{{ route('home.membro') }}">
+                                            <a class="dropdown-item" href="{{ route('coord.eixo.index') }}">
                                                 <img src="{{asset('img/icons/comissao.png')}}"  width="20px"  alt="">
                                                 {{ __('Área do Coordenador de Eixo Temático') }}
                                             </a>

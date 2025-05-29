@@ -24,6 +24,7 @@ use App\Models\Submissao\Resposta;
 use App\Models\Submissao\TemplateSubmis;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
+use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use App\Notifications\SubmissaoTrabalhoNotification;
@@ -32,6 +33,7 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
@@ -60,7 +62,7 @@ class TrabalhoController extends Controller
 
         $mytime = Carbon::now('America/Recife');
         if (!$modalidade->estaEmPeriodoDeSubmissao()) {
-            $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+            $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         }
         // dd($formSubTraba);
         return view('evento.submeterTrabalho', [
@@ -403,7 +405,7 @@ class TrabalhoController extends Controller
     {
         $trabalho = Trabalho::find($id);
         $evento = $trabalho->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         if ($trabalho->status == 'avaliado' && $status == 'rascunho') {
             $trabalho->update(['status' => $status]);
 
@@ -462,7 +464,7 @@ class TrabalhoController extends Controller
         $trabalho = Trabalho::find($id);
         $modalidades = Modalidade::where('evento_id', $trabalho->eventoId)->get();
         $evento = Evento::find($trabalho->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
 
         return view('coordenador.trabalhos.trabalho_edit', compact('trabalho', 'modalidades', 'evento'));
     }
@@ -960,11 +962,7 @@ class TrabalhoController extends Controller
         $usuariosDaComissaoOrganizadora = $evento->usuariosDaComissaoOrganizadora;
 
         if (
-            $evento->coordenadorId == $usuarioLogado->id
-            || $usuariosDaComissaoCientifica->contains($usuarioLogado)
-            || $usuariosDaComissaoOrganizadora->contains($usuarioLogado)
-            || $evento->userIsCoordComissaoCientifica($usuarioLogado)
-            || $evento->userIsCoordComissaoOrganizadora($usuarioLogado)
+            Gate::any(['isUsuarioDaComissao'], $evento)
             || $trabalho->autorId == $usuarioLogado->id
             || $ehCoautor
             || $usuarioLogado->administradors()->exists()
@@ -974,7 +972,7 @@ class TrabalhoController extends Controller
                 return Storage::download($arquivo->nome);
             }
 
-            return abort(404);
+            return redirect()->back()->with('error', 'Arquivo não existe');
         }
 
         return abort(403);

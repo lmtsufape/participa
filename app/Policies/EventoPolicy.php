@@ -121,14 +121,26 @@ class EventoPolicy
             || $this->isCoordenadorOrCoordenadorDasComissoes($user, $evento);
     }
 
+    public function isUsuarioDaComissao(User $user, Evento $evento){
+        return $this->isCoordenadorOrCoordenadorDasComissoesOrIsCoordenadorDeOutrasComissoes($user, $evento) ||
+                $this->isCoordenadorEixo($user, $evento) || $this->isMembro($user, $evento);
+    }
+
+    public function isCoordenadorOrCoordCientificaOrCoordEixo(User $user, Evento $evento)
+    {
+        return $this->isCoordenador($user, $evento) ||
+                $this->isCoordenadorDaComissaoCientifica($user, $evento) ||
+                $this->isCoordenadorEixo($user,$evento);
+    }
+
     public function isCoordenadorEixo(User $user, Evento $evento){
         return CoordEixoTematico::where('user_id', $user->id)->where('evento_id', $evento->id)->exists();
     }
 
     public function isMembro(User $user, Evento $evento){
-        $membro = $evento->usuariosDaComissao()->where('user_id', $user->id)->first();
 
-        return $this->isCoordenador($user, $evento) || ! (is_null($membro));
+        return $evento->usuariosDaComissao()->where('user_id', $user->id)->exists() ||
+                $evento->usuariosDaComissaoOrganizadora()->where('user_id', $user->id)->exists();
     }
 
     public function isCoordenadorOrComissaoOrRevisorComAtribuicao(User $user, Evento $evento)

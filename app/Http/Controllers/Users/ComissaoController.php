@@ -182,6 +182,14 @@ class ComissaoController extends Controller
         return redirect()->back()->with(['success' => 'Coordenador da comissão científica salvo com sucesso!']);
     }
 
+    public function indexCoordEixo(){
+
+        $eventos = auth()->user()->eventosComoCoordEixo;
+
+        return view('comissao.coordEixo.index')->with(['eventos' => $eventos]);
+
+    }
+
     public function show($id)
     {
         //

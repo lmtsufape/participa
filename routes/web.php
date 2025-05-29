@@ -146,6 +146,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         });
         // rotas da Comissao Cientifica
         Route::get('comissao', [MembroComissaoController::class, 'index'])->name('home.membro');
+        Route::get('coordenador/eixos', [ComissaoController::class, 'indexCoordEixo'])->name('coord.eixo.index');
         Route::get('comissaoCientifica/home', [CoordComissaoCientificaController::class, 'index'])->name('cientifica.home');
         Route::get('comissaoCientifica/editais', [CoordComissaoCientificaController::class, 'index'])->name('cientifica.editais');
         Route::get('comissaoCientifica/areas', [CoordComissaoCientificaController::class, 'index'])->name('cientifica.areas');

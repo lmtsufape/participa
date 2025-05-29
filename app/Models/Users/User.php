@@ -4,6 +4,7 @@ namespace App\Models\Users;
 
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
+use App\Models\Submissao\Evento;
 use App\Notifications\recuperacaoSenha;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
@@ -189,5 +190,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function coordEixosTematicos(){
         return $this->hasMany(CoordEixoTematico::class);
+    }
+
+    public function eventosComoCoordEixo()
+    {
+        return $this->hasManyThrough(
+            Evento::class,           // Modelo final (evento)
+            CoordEixoTematico::class,// Modelo intermediário (coord_eixo_tematico)
+            'user_id',               // Chave estrangeira no intermediário que aponta para users.id
+            'id',                    // Chave primária do evento (evento.id) - evento_id está no intermediário
+            'id',                    // Chave primária local no user (users.id)
+            'evento_id'              // Chave no intermediário que aponta para eventos.id
+        );
     }
 }
