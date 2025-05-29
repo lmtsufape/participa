@@ -74,7 +74,7 @@ p{
 
                 <div class="text-md-center pt-4">
                     <span>{{ __('Não possui conta?') }}</span>
-                    <a class="text-my-secondary fw-bold" href="{{ route('register', app()->getLocale()) }}">
+                    <a class="text-my-secondary fw-bold" href="{{ route('preRegistro') }}">
                         {{ __('Crie agora') }}
                     </a>
                 </div>
