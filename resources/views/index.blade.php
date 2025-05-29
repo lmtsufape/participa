@@ -36,7 +36,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            padding: 1rem 1.5rem;
+            padding: 0.3rem 1.3rem 0.3rem 1.5rem;
             background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             display: flex;
             flex-direction: column;
@@ -110,18 +110,14 @@
                 <div class="swiper-wrapper">
                     @foreach ($eventos_destaques->take(5) as $evento)
                         <div class="swiper-slide">
-                            <img src="{{ Storage::url($evento->fotoEvento) }}" alt="Foto do evento">
+                            <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
+                                class="text-decoration-none">
+                                <img src="{{ Storage::url($evento->fotoEvento) }}" alt="Foto do evento">
+                            </a>
+
                             <div class="carousel-caption">
-                                <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
-                                    {{-- <h1 class="text-start">
-                                        {{__('13º Congresso Brasileiro de Agroecologia')}}
-                                    </h1> --}}
-                                    {{-- <h5 class="text-start">
-                                        {{__(' ')}}
-                                    </h5> --}}
-                                </a>
-                                <div class="caption-row position-absolute bottom-0  w-100 d-flex justify-content-between align-items-center">
-                                    <p class="info mb-0 mt-5">
+                                <div class="caption-row pt-5">
+                                    <span class="info">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-calendar-event"
                                             viewBox="0 0 16 16">
@@ -145,10 +141,10 @@
                                             }
                                         ?>
                                         {{ $textoData }}
-                                    </p>
+                                        </span>
                                     <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
-                                    class="btn btn-outline-light rounded-3 mt-5">
-                                        {{ __('Inscreva-se e submeta seus trabalhos') }}
+                                    class="btn btn-outline-light rounded-3">
+                                        {{ __('Cadastre-se, inscreva-se e submeta seus trabalhos') }}
                                     </a>
                                 </div>
                             </div>
