@@ -31,7 +31,19 @@
                         <path
                             d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
                     </svg>
-                    {{ \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'))->translatedFormat('l, d \d\e F \d\e Y') }}
+
+                    @if ($dataInicio->isSameMonth($dataFim))
+                        De
+                        {{ $dataInicio->translatedFormat('d') }}
+                        a
+                        {{ $dataFim->translatedFormat('d \d\e F \d\e Y') }}
+                    @else
+                        De
+                        {{ $dataInicio->translatedFormat('d \d\e F') }}
+                        a
+                        {{ $dataFim->translatedFormat('d \d\e F \d\e Y') }}
+                    @endif
+
                 </span>
                 <span class="text-my-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
@@ -45,7 +57,7 @@
                         </svg>
                         {{ __('Organizado por:') }}
                     </p>
-                    <p class="m-0 ps-4">
+                    <p class="m-0" style="padding-left: 1.3rem !important;">
                         {{$evento->coordenador->name}}
                     </p>
                 </div>
@@ -151,14 +163,16 @@
                     </svg>
                     <h6 class="mt-2">{{ __('Programação') }}</h6>
                 </a>
-                <a href="#palestrantes" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
-                        class="bi bi-people" viewBox="0 0 16 16">
-                        <path
-                            d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
-                    </svg>
-                    <h6 class="mt-2">{{ __('Nossos palestrantes') }}</h6>
-                </a>
+                @if($evento->palestrantes->isNotEmpty())
+                    <a href="#palestrantes" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                            class="bi bi-people" viewBox="0 0 16 16">
+                            <path
+                                d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
+                        </svg>
+                        <h6 class="mt-2">{{ __('Nossos palestrantes') }}</h6>
+                    </a>
+                @endif
                 <a href="#contato" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
                         class="bi bi-envelope" viewBox="0 0 16 16">
@@ -167,13 +181,13 @@
                     </svg>
                     <h6 class="mt-2">{{ __('Contato da organização') }}</h6>
                 </a>
-                <a href="#local" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                {{-- <a href="#local" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
                         class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
                     </svg>
                     <h6 class="mt-2">{{ __('Local') }}</h6>
-                </a>
+                </a> --}}
             </div>
         </div>
         <hr class="border-dark">
@@ -283,7 +297,8 @@
                                                                 target="_blank"
                                                                 class="d-inline-block">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
-                                                                    {{ $evento->formEvento->etiquetabaixartemplate }}
+                                                                    {{-- {{ $evento->formEvento->etiquetabaixartemplate }} --}}
+                                                                    {{ __('Modelo (template)') }}
                                                                 </a>
                                                             </div>
                                                         @endif
@@ -315,7 +330,7 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-heading bg-my-primary rounded pt-3 pb-1 ps-3">
-                                <h5 class="text-white">{{ __('Áreas temáticas') }}</h5>
+                                <h5 class="text-white">{{ __('Eixos temáticos') }}</h5>
                             </div>
                             <div class="card-body">
                                 <ul>
@@ -482,6 +497,10 @@
                         {{-- cards das atividades --}}
                     </div>
                 </div>
+            @else
+                <div class="alert alert-warning" role="alert">
+                    {{ __('A programação deste evento será disponibilizada em breve.') }}
+                </div>
             @endif
             @if ($subeventos->count() > 0)
                 <div class="row">
@@ -594,37 +613,51 @@
         </div>
         <hr class="border-dark">
 
-        <div id="palestrantes" class="row py-4">{{-- Nossos palestrantes --}}
-            <h4 class="text-my-primary">{{ __('Nossos palestrantes') }}</h4>
-            @include('evento.carrossel-palestrantes', ['id' => 'palestrantes', 'palestrantes' => $evento->palestrantes])
-        </div>
-        <hr class="border-dark">
+        @if ($evento->palestrantes->isNotEmpty())
+
+            <div id="palestrantes" class="row py-4">{{-- Nossos palestrantes --}}
+                <h4 class="text-my-primary">{{ __('Nossos palestrantes') }}</h4>
+                @include('evento.carrossel-palestrantes', ['id' => 'palestrantes', 'palestrantes' => $evento->palestrantes])
+            </div>
+            <hr class="border-dark">
+        @endif
 
         <div id="contato" class="row py-4 d-flex">{{-- Contatos --}}
             <h4 class="text-my-primary mb-4">{{ __('Evento organizado por:') }}</h4>
             <!-- <div class="col-md-2">
                 <img src="" class="" alt="">
             </div> -->
-             <div class=" d-flex flex-column align-items-center">
+            <div class=" d-flex flex-column align-items-center">
                 <h4 class="mb-3">{{ $evento->coordenador->name }}</h4>
-
+            </div>
+             <div class="col-12 d-flex justify-content-center align-items-center gap-2">
                 <a href="mailto:@if($evento->email){{ $evento->email }}@else{{ $evento->coordenador->email }}@endif" class="btn btn-my-secondary rounded-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope me-1" viewBox="0 0 16 16">
                         <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
                     </svg>
                     {{ __('Entre em contato') }}
                 </a>
+                @if(!empty($evento->instagram))
+                 <a href="https://instagram.com/{{$evento->instagram}}" class="btn btn-my-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" target="_blank" class="bi bi-instagram" viewBox="0 0 16 16">
+                            <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
+                        </svg> Instagram
+                    </a>
+                @endif
+
             </div>
         </div>
 
+        {{--
         <hr class="border-dark">
 
-        <div id="local" class="row py-4">{{-- Local --}}
+        <div id="local" class="row py-4">
             <h4 class="text-my-primary">{{ __('Local') }}</h4>
             <div id="mapaGoogle" class="shadow rounded w-100" style="height: 400px;">
 
             </div>
         </div>
+        --}}
         @include('evento.modal-inscricao')
         @include('evento.modal-submeter-trabalho')
 

@@ -1187,6 +1187,7 @@ class EventoController extends Controller
         $data['enderecoId'] = $endereco->id;
         $data['coordenadorId'] = Auth::user()->id;
         $data['data_limite_inscricao'] = $request->dataLimiteInscricao;
+        $data['instagram'] = $request->instagram;
         $evento = Evento::create($data);
 
         $user = Auth::user();
@@ -1340,6 +1341,8 @@ class EventoController extends Controller
         ->get();
         $atividadesAgrupadas = $atividades->groupBy('data');
 
+        $dataInicio = Carbon::parse($evento->dataInicio);
+        $dataFim    = Carbon::parse($evento->dataFim);
         if (auth()->user()) {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -1388,7 +1391,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -1411,7 +1414,7 @@ class EventoController extends Controller
             }
 
 
-            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas'));
+            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim'));
         }
     }
 

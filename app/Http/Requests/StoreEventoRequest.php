@@ -51,6 +51,7 @@ class StoreEventoRequest extends FormRequest
             'email_coordenador' => ['exclude_if:eventoPai,null', 'exclude_if:email_coordenador,null', 'nullable', 'email'],
             'termos' => ['required'],
             'dataLimiteInscricao' => ['nullable', 'date'],
+            'instagram' => ['nullable', 'string'],
         ];
     }
 

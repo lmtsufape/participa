@@ -52,17 +52,20 @@ class TrabalhoController extends Controller
         $evento = Evento::find($id);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $areas = $areas->sortBy('nome', SORT_NATURAL)->values()->all();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
+        $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
         $formSubTraba = FormSubmTraba::where('eventoId', $evento->id)->first();
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
         $ordemCampos = explode(',', $formSubTraba->ordemCampos);
         array_splice($ordemCampos, 6, 0, 'midiaExtra');
         array_splice($ordemCampos, 5, 0, 'apresentacao');
-        $modalidade = Modalidade::find($idModalidade);
 
         $mytime = Carbon::now('America/Recife');
-        if (!$modalidade->estaEmPeriodoDeSubmissao()) {
-            $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+        foreach ($modalidades as $modalidade){
+            if (!$modalidade->estaEmPeriodoDeSubmissao()) {
+                $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+            }
         }
         // dd($formSubTraba);
         return view('evento.submeterTrabalho', [
@@ -81,7 +84,7 @@ class TrabalhoController extends Controller
             'ordemCampos' => $ordemCampos,
             'regras' => $regra,
             'templates' => $template,
-            'modalidade' => $modalidade,
+            'modalidades' => $modalidades,
         ]);
     }
 
@@ -154,17 +157,16 @@ class TrabalhoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(TrabalhoPostRequest $request, $modalidadeId)
+    public function store(TrabalhoPostRequest $request)
     {
         //Obtendo apenas os tipos de extensões selecionadas
 
         try {
             $validatedData = $request->validated();
             $evento = Evento::find($request->eventoId);
-            $modalidade = Modalidade::find($modalidadeId);
-            //   dd($request->all());
+            $modalidade = Modalidade::find($request->modalidadeId);
 
-            if ($this->validarTipoDoArquivo($request->arquivo, $modalidade)) {
+            if ($this->validarTipoDoArquivo($request->file('arquivo'), $modalidade)) {
                 return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
           Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
             }
