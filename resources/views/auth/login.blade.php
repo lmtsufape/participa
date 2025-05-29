@@ -22,7 +22,7 @@ p{
     <div class="row">
         <section class="col-md-6 d-flex flex-column justify-content-center">
             <a class="navbar-brand" href="{{route('index')}}">
-                <img src="{{ asset('/img/logo.png') }}" alt="logo" width="50%">
+                <img src="{{ asset('/img/logoatualizada.png') }}" alt="logo" width="50%">
             </a>
 
             <p class="mt-3 fs-4 text-justify">{{ __('É um sistema de Gestão de Eventos Científicos que busca contribuir com instituições acadêmicas públicas ou privadas que necessitem de uma ferramenta para gerenciar eventos científicos') }}.</p>

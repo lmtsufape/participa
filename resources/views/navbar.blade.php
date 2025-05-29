@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg shadow-sm" style="background-color: #FFF9F2">
     <div class="container">
         <a class="navbar-brand" href="{{route('index')}}">
-            <img src="{{ asset('/img/logo.png') }}" alt="" width="250vw">
+            <img src="{{ asset('/img/logoatualizada.png') }}" alt="" width="250vw">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Alterna navegação">
             <span class="navbar-toggler-icon"></span>
