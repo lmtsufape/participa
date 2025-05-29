@@ -139,7 +139,7 @@
                                             $fim = \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'));
 
                                             if ($inicio->month === $fim->month) {
-                                                $textoData = $inicio->translatedFormat('d ') . ' a ' . $fim->translatedFormat('d \d\e F');
+                                                $textoData = $inicio->translatedFormat('d ') . ' a ' . $fim->translatedFormat('d \d\e F \d\e Y');
                                             } else {
                                                 $textoData = $inicio->translatedFormat('d \d\e F ') . ' a ' . $fim->translatedFormat('d \d\e F \d\e Y');
                                             }
