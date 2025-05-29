@@ -39,26 +39,14 @@
                 <br>
 
                 <div class="row titulo text-center" style="color: #034652;">
-                    <h2 style="font-weight: bold;">{{__('Submissao de trabalho')}}</h2>
+                    <h2 style="font-weight: bold;">{{__('Submissão de trabalho')}}</h2>
                 </div>
 
                 <br>
 
                 <div style="margin-top:25px;">
                     <div class="">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
+
 
                         {{-- @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
                             <h2 class="card-title">{{$evento->nome_en}}</h2>
@@ -79,21 +67,6 @@
                                 enctype="multipart/form-data" class="form-prevent-multiple-submits">
                                 @csrf
                                 <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                                <div>
-                                    @error('tipoExtensao')
-                                        @include('componentes.mensagens')
-                                    @enderror
-                                </div>
-                                <div>
-                                    @error('numeroMax')
-                                        @include('componentes.mensagens')
-                                    @enderror
-                                </div>
-                                <div>
-                                    @error('emailCoautor.*')
-                                        @include('componentes.mensagens')
-                                    @enderror
-                                </div>
                                 <div id="etapa-1">
                                     <div class="etapas" style="font-weight: 500;">
                                         <div class="etapa ativa">
@@ -938,7 +911,8 @@
                                                                                 x-init="$nextTick(() => centralizarTela(index))"
                                                                                 x-on:focusout="checarNome(index)"
                                                                                 x-model="autor.email"
-                                                                                :readonly="@can('isCoordenadorOrComissaoCientifica', $evento) undefined @else index == 0 @endcan">
+                                                                                :readonly="@can('isCoordenadorOrComissaoCientifica', $evento) undefined @else index == 0 @endcan"
+                                                                                required>
                                                                         </div>
                                                                         <div :class="index == 0 ? 'col-md-6' : 'col-md-4 col-lg-5'">
                                                                             <label :for="'nome' + index">Nome Completo</label>
@@ -947,13 +921,14 @@
                                                                                 name="nomeCoautor[]" placeholder="Nome"
                                                                                 :id="'nome' + index"
                                                                                 x-model="autor.nome"
-                                                                                :readonly="@can('isCoordenadorOrComissaoCientifica', $evento) undefined @else index == 0 @endcan">
+                                                                                :readonly="@can('isCoordenadorOrComissaoCientifica', $evento) undefined @else index == 0 @endcan"
+                                                                                required>
                                                                         </div>
                                                                         <template x-if="index > 0">
                                                                             <div class="col-md-4 col-lg-3 justify-content-center d-flex align-items-end btn-group pb-1">
-                                                                                <button type="button" @click="removeAutor(index)" style="color: #d30909;" class="btn"><i class="fas fa-user-times fa-2x"></i></button>
-                                                                                <button type="button" @click="sobeAutor(index)" class="btn btn-link"><i class="fas fa-arrow-up fa-2x"></i></button>
-                                                                                <button type="button" @click="desceAutor(index)" class="btn btn-link"><i class="fas fa-arrow-down fa-2x"></i></button>
+                                                                                <button type="button" @click="removeAutor(index)" style="color: #d30909;" class="btn"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" width="24" alt="Remover"></button>
+                                                                                <button type="button" @click="sobeAutor(index)" class="btn btn-link"><img src="{{asset('img/icons/sobe.png')}}" class="icon-card" width="24" alt="Subir"></button>
+                                                                                <button type="button" @click="desceAutor(index)" class="btn btn-link"><img src="{{asset('img/icons/desce.png')}}" class="icon-card" width="24" alt="Descer"></button>
                                                                             </div>
                                                                         </template>
                                                                     </div>
