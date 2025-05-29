@@ -68,14 +68,14 @@
                                 @csrf
                                 <input type="hidden" name="eventoId" value="{{$evento->id}}">
                                 <div id="etapa-1">
-                                    <div class="etapas" style="font-weight: 500;">
+                                    <!-- <div class="etapas" style="font-weight: 500;">
                                         <div class="etapa ativa">
                                             <p>1. Informações do trabalho</p>
                                         </div>
                                         <div class="etapa">
                                             <p>2. Autoria</p>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <div class="card card-body">
                                         @foreach ($ordemCampos as $indice)
@@ -83,11 +83,10 @@
                                                 <!-- Areas -->
                                                 <div class="row">
                                                     <div class="col-sm-6">
-                                                        <label for="area"
-                                                            class="col-form-label"><strong>Área temática</strong>
-                                                        </label>
+                                                        <label for="area" class="col-form-label required-field"><strong>Área temática</strong></label>
                                                         <select class="form-control text-center @error('areaId') is-invalid @enderror" id="area"
-                                                                name="areaId">
+                                                                name="areaId"
+                                                                required>
                                                             <option value="" disabled selected hidden>
                                                                 -- {{ $formSubTraba->etiquetaareatrabalho }} --
                                                             </option>
@@ -106,11 +105,10 @@
                                                     </div>
 
                                                     <div class="col-sm-6">
-                                                        <label for="modalidade"
-                                                            class="col-form-label"><strong>Modalidade</strong>
-                                                        </label>
+                                                        <label for="modalidade" class="col-form-label required-field"><strong>Modalidade</strong></label>
                                                         <select class="form-control text-center @error('modalidadeId') is-invalid @enderror" id="modalidade"
-                                                                name="modalidadeId">
+                                                                name="modalidadeId"
+                                                                required>
                                                             <option value="" disabled selected hidden>
                                                                 -- Modalidade --
                                                             </option>
@@ -138,9 +136,9 @@
                                                         {{-- Nome Trabalho Ingles  --}}
                                                         <div class="col-sm-12">
                                                             <label for="nomeTrabalho_en"
-                                                                class="col-form-label"><strong>{{ $formSubTraba->etiquetatitulotrabalho_en }}</strong>
+                                                                class="col-form-label required-field"><strong>{{ $formSubTraba->etiquetatitulotrabalho_en }}</strong>
                                                             </label>
-                                                            <input id="nomeTrabalho_en" type="text"
+                                                            <input id="nomeTrabalho_en" type="text" required
                                                                 class="form-control @error('nomeTrabalho_en') is-invalid @enderror"
                                                                 name="nomeTrabalho_en" value="{{ old('nomeTrabalho_en') }}"
                                                                 autocomplete="nomeTrabalho_en" autofocus>
@@ -155,10 +153,8 @@
                                                     <div class="row justify-content-center">
                                                         {{-- Nome Trabalho  --}}
                                                         <div class="col-sm-12">
-                                                            <label for="nomeTrabalho"
-                                                                class="col-form-label"><strong>{{ $formSubTraba->etiquetatitulotrabalho }}</strong>
-                                                            </label>
-                                                            <input id="nomeTrabalho" type="text"
+                                                            <label for="nomeTrabalho" class="col-form-label required-field"><strong>{{ $formSubTraba->etiquetatitulotrabalho }}</strong></label>
+                                                            <input id="nomeTrabalho" type="text" required
                                                                 class="form-control @error('nomeTrabalho') is-invalid @enderror"
                                                                 name="nomeTrabalho" value="{{ old('nomeTrabalho') }}"
                                                                 autocomplete="nomeTrabalho" autofocus>
@@ -851,37 +847,9 @@
                                             @endif
                                         @endforeach
 
-                                        <br>
+                                    
 
-                                        <div class="row form-group">
-                                            <div class="col-md-2">
-                                                <a href="{{route('evento.visualizar',['id'=>$evento->id])}}"
-                                                    class="btn btn-secondary" style="width:100%">{{__('Cancelar')}}
-                                                </a>
-                                            </div>
-
-                                            <div class="col-md-8"></div>
-
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;" onclick="proximaEtapa()">
-                                                    {{ __('Continuar') }}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="etapa-2" style="display: none">
-                                    <div class="etapas" style="font-weight: 500;">
-                                        <div class="etapa">
-                                            <p>1. Informações do trabalho</p>
-                                        </div>
-                                        <div class="etapa ativa">
-                                            <p>2. Autoria</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="card card-body">
+                                    
                                         @foreach ($ordemCampos as $indice)
                                             @if($indice == "etiquetacoautortrabalho")
                                                 <div style="margin-top:20px">
@@ -900,12 +868,13 @@
                                                                         <b>{{$evento->formSubTrab->etiquetacoautortrabalho}}</b>
                                                                     </label>
                                                                 </template>
-                                                                <div class="item card w-100 mt-0">
+                                                                <div class="item card w-100 mb-2">
                                                                     <div class="row card-body">
                                                                         <div :class="index == 0 ? 'col-md-6' : 'col-md-4 col-lg-4'">
                                                                             <label :for="'email' + index">E-mail</label>
                                                                             <input type="email" style="margin-bottom:10px"
                                                                                 class="form-control emailCoautor"
+                                                                                :class="index === 0 ? 'bg-light text-muted' : ''"
                                                                                 name="emailCoautor[]" placeholder="E-mail"
                                                                                 :id="'email' + index"
                                                                                 x-init="$nextTick(() => centralizarTela(index))"
@@ -918,6 +887,7 @@
                                                                             <label :for="'nome' + index">Nome Completo</label>
                                                                             <input type="text" style="margin-bottom:10px"
                                                                                 class="form-control emailCoautor"
+                                                                                :class="index === 0 ? 'bg-light text-muted' : ''"
                                                                                 name="nomeCoautor[]" placeholder="Nome"
                                                                                 :id="'nome' + index"
                                                                                 x-model="autor.nome"
@@ -961,12 +931,13 @@
                                         <br>
 
                                         <div class="row form-group">
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;" onclick="etapaAnterior()">
-                                                    {{ __('Voltar') }}
-                                                </button>
+                                            <div class="col-md-3">
+                                                <a href="{{route('evento.visualizar',['id'=>$evento->id])}}"
+                                                    class="btn btn-secondary" style="width:100%">{{__('Cancelar')}}
+                                                </a>
                                             </div>
-                                            <div class="col-md-7"></div>
+
+                                            <div class="col-md-6"></div>
 
                                             <div class="col-md-3">
                                                 <button type="submit" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;">
@@ -976,6 +947,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+
                             </form>
                         </p>
                     </div>
