@@ -7,7 +7,7 @@
         .swiper {
             width: 100% !important;
             max-width: 100%;
-            height: 425px;
+            max-height: 100%;
             overflow: hidden;
             position: relative;
         }
@@ -112,9 +112,16 @@
                         <div class="swiper-slide">
                             <img src="{{ Storage::url($evento->fotoEvento) }}" alt="Foto do evento">
                             <div class="carousel-caption">
-                                <h1 class="text-start">{{ $evento->nome }}</h1>
-                                <div class="caption-row">
-                                    <p class="info mb-0">
+                                <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
+                                    {{-- <h1 class="text-start">
+                                        {{__('13º Congresso Brasileiro de Agroecologia')}}
+                                    </h1> --}}
+                                    {{-- <h5 class="text-start">
+                                        {{__(' ')}}
+                                    </h5> --}}
+                                </a>
+                                <div class="caption-row position-absolute bottom-0  w-100 d-flex justify-content-between align-items-center">
+                                    <p class="info mb-0 mt-5">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-calendar-event"
                                             viewBox="0 0 16 16">
@@ -125,11 +132,23 @@
                                                     0 0 1 .5-.5M1 4v10a1 1 0 0
                                                     0 1 1h12a1 1 0 0 0 1-1V4z"/>
                                         </svg>
-                                        {{ \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'))->translatedFormat('l, d F') }}
+                                        <?php
+
+
+                                            $inicio = \Carbon\Carbon::parse($evento->dataInicio)->locale(Session::get('idiomaAtual', 'pt'));
+                                            $fim = \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'));
+
+                                            if ($inicio->month === $fim->month) {
+                                                $textoData = $inicio->translatedFormat('d ') . ' a ' . $fim->translatedFormat('d \d\e F');
+                                            } else {
+                                                $textoData = $inicio->translatedFormat('d \d\e F ') . ' a ' . $fim->translatedFormat('d \d\e F \d\e Y');
+                                            }
+                                        ?>
+                                        {{ $textoData }}
                                     </p>
                                     <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
-                                    class="btn btn-outline-light rounded-3">
-                                        {{ __('Saiba mais') }}
+                                    class="btn btn-outline-light rounded-3 mt-5">
+                                        {{ __('Inscreva-se e submeta seus trabalhos') }}
                                     </a>
                                 </div>
                             </div>
