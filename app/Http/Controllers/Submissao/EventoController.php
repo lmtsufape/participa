@@ -1355,7 +1355,7 @@ class EventoController extends Controller
             // $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
             // $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
             $modalidades = Modalidade::where('evento_id', $evento->id)->get();
-            $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
+            $modalidades = $modalidades->sortByDesc('nome', SORT_NATURAL)->values()->all();
             $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
             $atividades = Atividade::where('eventoId', $id)->get();
             $dataInicial = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
