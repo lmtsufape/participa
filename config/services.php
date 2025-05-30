@@ -36,4 +36,8 @@ return [
         'token' => env('ASSOCIADOS_API_TOKEN'),
     ],
 
+    'google_maps' => [
+        'key' => env('GOOGLE_MAPS_API_KEY'),
+    ],
+
 ];
