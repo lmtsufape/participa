@@ -67,6 +67,8 @@
             <input type="hidden" name="name" class="form-control" value="{{ session('nome') ?? old('nome') }}">
             <input type="hidden" name="email" class="form-control" value="{{ session('email') ?? old('email') }}">
             <input type="hidden" name="cpf" class="form-control" value="{{ session('cpf') ?? old('cpf') }}">
+            <input type="hidden" name="cnpj" class="form-control" value="{{ session('cnpj') ?? old('cnpj') }}">
+            <input type="hidden" name="passaporte" class="form-control" value="{{ session('passaporte') ?? old('passaporte') }}">
             <input type="hidden" name="pais" class="form-control" value="{{ session('pais') }}">
 
             @csrf
@@ -108,44 +110,70 @@
 
                 <div class="form-group row">
                     <div class="col-md-6">
-                        <div class="custom-control custom-radio custom-control-inline col-form-label">
-                            <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
-                            <label class="custom-control-label me-2" for="customRadioInline1">CPF</label>
+                        @if(session('cpf'))
+                            <div class="custom-control custom-radio custom-control-inline col-form-label">
+                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
+                                <label class="custom-control-label me-2" for="customRadioInline1">CPF</label>
 
-                            <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
-                            <label class="custom-control-label me-2" for="customRadioInline2">{{__('CNPJ')}}</label>
+                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
+                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('CNPJ')}}</label>
 
-                            <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input">
-                            <label class="custom-control-label " for="customRadioInline3">{{__('Passaporte')}}</label>
-                        </div>
+                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input">
+                                <label class="custom-control-label " for="customRadioInline3">{{__('Passaporte')}}</label>
+                            </div>
 
-                        <div id="fieldCPF" @error('passaporte') style="display: none" @enderror>
-                            <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ session('cpf') ?? old('cpf') }}" autocomplete="cpf" placeholder="CPF" autofocus disabled>
+                            <div id="fieldCPF" @error('cpf') style="display: none" @enderror>
+                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ session('cpf') ?? old('cpf') }}" autocomplete="cpf" placeholder="CPF" autofocus disabled>
 
-                            @error('cpf')
+                                @error('cpf')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ __($message) }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        @elseif(session('cnpj'))
+                            <div class="custom-control custom-radio custom-control-inline col-form-label">
+                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input">
+                                <label class="custom-control-label me-2" for="customRadioInline1">CPF</label>
+
+                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input" checked>
+                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('CNPJ')}}</label>
+
+                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input">
+                                <label class="custom-control-label " for="customRadioInline3">{{__('Passaporte')}}</label>
+                            </div>
+
+                            <div id="fieldCNPJ" @error('cnpj') style="display: block" @enderror style="display: block">
+                                <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" value="{{ session('cnpj') ?? old('cnpj') }}"  autocomplete="cnpj" autofocus disabled>
+
+                                @error('cnpj')
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ __($message) }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div id="fieldCNPJ" @error('passaporte') style="display: block" @enderror style="display: none">
-                            <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" value="{{ old('cnpj') }}"  autocomplete="cnpj" autofocus>
+                                        <strong>{{ __($message) }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        @elseif(session('passaporte'))
+                            <div class="custom-control custom-radio custom-control-inline col-form-label">
+                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input">
+                                <label class="custom-control-label me-2" for="customRadioInline1">CPF</label>
 
-                            @error('cnpj')
-                            <span class="invalid-feedback" role="alert">
-                                    <strong>{{ __($message) }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: none" >
-                            <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="{{__('Passaporte')}}" value="{{ old('passaporte') }}"  autocomplete="passaporte" autofocus>
+                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
+                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('CNPJ')}}</label>
 
-                            @error('passaporte')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ __($message) }}</strong>
-                                </span>
-                            @enderror
-                        </div>
+                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input" checked>
+                                <label class="custom-control-label " for="customRadioInline3">{{__('Passaporte')}}</label>
+                            </div>
+
+                            <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: block" >
+                                <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="{{__('Passaporte')}}" value="{{ session('passaporte') ?? old('passaporte') }}"  autocomplete="passaporte" autofocus disabled>
+
+                                @error('passaporte')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ __($message) }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        @endif
                     </div>
 
                     <div class="col-md-6">
