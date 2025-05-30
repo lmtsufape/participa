@@ -129,15 +129,36 @@
                                                     0 1 1h12a1 1 0 0 0 1-1V4z"/>
                                         </svg>
                                         <?php
+                                            $lang   = Session::get('idiomaAtual', 'pt');
+                                            $inicio = \Carbon\Carbon::parse($evento->dataInicio)->locale($lang);
+                                            $fim    = \Carbon\Carbon::parse($evento->dataFim)->locale($lang);
 
+                                            $sameMonth = $inicio->month === $fim->month;
 
-                                            $inicio = \Carbon\Carbon::parse($evento->dataInicio)->locale(Session::get('idiomaAtual', 'pt'));
-                                            $fim = \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'));
+                                            switch ($lang) {
+                                                case 'en':
 
-                                            if ($inicio->month === $fim->month) {
-                                                $textoData = $inicio->translatedFormat('d ') . ' a ' . $fim->translatedFormat('d \d\e F \d\e Y');
-                                            } else {
-                                                $textoData = $inicio->translatedFormat('d \d\e F ') . ' a ' . $fim->translatedFormat('d \d\e F \d\e Y');
+                                                    $start = $inicio->translatedFormat('d F');
+                                                    $end   = $fim->translatedFormat('d F Y');
+                                                    $textoData = "From {$start} to {$end}";
+                                                    break;
+
+                                                case 'es':
+
+                                                    $start = $inicio->translatedFormat('d \d\e F');
+                                                    $end   = $fim->translatedFormat('d \d\e F \d\e Y');
+                                                    $textoData = "Desde {$start} hasta {$end}";
+                                                    break;
+
+                                                default:
+                                                    if ($sameMonth) {
+                                                        $start = $inicio->translatedFormat('d');
+                                                    } else {
+                                                        $start = $inicio->translatedFormat('d \d\e F');
+                                                    }
+                                                    $end = $fim->translatedFormat('d \d\e F \d\e Y');
+                                                    $textoData = "De {$start} a {$end}";
+                                                    break;
                                             }
                                         ?>
                                         {{ $textoData }}
