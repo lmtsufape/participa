@@ -185,6 +185,27 @@ class EventoController extends Controller
             }
         }
 
+        $user_logado = auth()->user();
+
+        //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
+        if (
+            $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ) {
+
+            $areasCoordEixo = auth()->user()
+            ->areasComoCoordEixoNoEvento($evento->id)
+            ->pluck('areas.id');
+            foreach ($modalidades as $modalidade) {
+                if ($modalidade->trabalho) {
+                    $modalidade->setRelation('trabalho',
+                    $modalidade->trabalho->whereIn('areaId', $areasCoordEixo));
+                    $modalidade->trabalhos_count = count($modalidade->trabalho);
+                }
+            }
+        }
+
         return view('coordenador.trabalhos.listarTrabalhos', [
             'evento' => $evento,
             'areas' => $areas,
@@ -264,6 +285,26 @@ class EventoController extends Controller
             }
         }
 
+
+        $user_logado = auth()->user();
+
+        //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
+        if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ){
+
+            $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+
+            $trabalhos = $trabalhos->map(function ($subCollection) use ($areasCoordEixo) {
+                return $subCollection->filter(function ($trabalho) use ($areasCoordEixo) {
+                    return $areasCoordEixo->contains($trabalho->areaId);
+                });
+            })->filter(function ($subCollection) {
+                return $subCollection->isNotEmpty();
+            });
+        }
+
         return view(
             'coordenador.trabalhos.listarRespostas',
             [
@@ -312,6 +353,20 @@ class EventoController extends Controller
                 // Busca os trabalhos da forma como era feita antes
                 $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId]])->orderBy($column, $direction)->get();
             }
+        }
+        $user_logado = auth()->user();
+        //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
+        if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+            ){
+
+            $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->get();
+
+            $trabalhos = $trabalhos->filter(function ($trabalho) use ($areasCoordEixo) {
+
+                return $areasCoordEixo->contains($trabalho->areaId);
+            });
         }
 
         return view('coordenador.trabalhos.listarTrabalhosModalidades', [
@@ -679,8 +734,10 @@ class EventoController extends Controller
                         SORT_REGULAR
                     ));
                 }
+                $trabalhosArea = $trabalhosArea->filter(function ($collection) {
+                    return $collection->isNotEmpty();
+                });
                 $trabalhos->push($trabalhosArea);
-                //dd($trabalhosArea);
             }
         } elseif ($column == 'data') {
             foreach ($modalidades as $modalidade) {
@@ -702,7 +759,30 @@ class EventoController extends Controller
             }
         }
 
-        //dd($trabalhos);
+        $trabalhos = $trabalhos->filter(function($collection){
+            return $collection->isNotEmpty();
+        });
+
+        $user_logado = auth()->user();
+
+        //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
+        if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ){
+
+            $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+
+            $trabalhos = $trabalhos->map(function ($subCollection) use ($areasCoordEixo) {
+                return $subCollection->map(function($subSubCollection) use ($areasCoordEixo){
+                    return $subSubCollection->filter(function ($trabalho) use ($areasCoordEixo) {
+                        return $areasCoordEixo->contains($trabalho->areaId);
+                    });
+                })->filter(function ($subCollection) {
+                    return $subCollection->isNotEmpty();
+                });
+            });
+        }
 
         return view('coordenador.trabalhos.listarTrabalhosCorrecoes', [
             'evento' => $evento,
@@ -1067,6 +1147,21 @@ class EventoController extends Controller
             } else {
                 $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '=', $status]])->orderBy($column, $direction)->get();
             }
+        }
+
+        $user_logado = auth()->user();
+        //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
+        if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+            ){
+
+            $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->get();
+
+            $trabalhos = $trabalhos->filter(function ($trabalho) use ($areasCoordEixo) {
+
+                return $areasCoordEixo->contains($trabalho->areaId);
+            });
         }
 
         return view('coordenador.trabalhos.listarRespostasTrabalhos', [
