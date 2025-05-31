@@ -13,7 +13,7 @@ class Area extends Model
      * @var array
      */
     protected $fillable = [
-        'nome', 'eventoId',
+        'nome', 'eventoId', 'resumo', 'resumo_en', 'resumo_es', 'nome_en', 'nome_es'
     ];
 
     public function modalidade()
