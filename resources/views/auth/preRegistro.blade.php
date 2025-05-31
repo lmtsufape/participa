@@ -315,7 +315,8 @@
                             @enderror
                         </div>
                         <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: none" >
-                            <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="{{__('Passaporte')}}" value="{{ old('passaporte') }}"  autocomplete="passaporte" autofocus>
+                            <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" minlength="6" maxlength="9" pattern="[A-Za-z0-9]{6,9}"
+                                title="O passaporte deve conter apenas letras e números, com 6 a 9 caracteres." placeholder="{{__('Passaporte')}}" value="{{ old('passaporte') }}"  autocomplete="passaporte" autofocus>
 
                             @error('passaporte')
                                 <span class="invalid-feedback" role="alert">

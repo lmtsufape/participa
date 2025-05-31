@@ -232,11 +232,13 @@ class UserController extends Controller
 
     public function areaParticipante(){
         $user = Auth::user();
+       
         $eventos = Evento::whereHas('inscricaos', function($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->get();
+                $query->where('user_id', $user->id);
+            });
 
-
+        $eventos = $eventos->paginate(9);
+        
         return view('user.areaParticipante', ['eventos' => $eventos]);
 
     }
