@@ -60,9 +60,11 @@
         </div>
         @endforeach
         @else
-        <div class="card">
-            <div class="card-body">
-                <p class="card-text">{{ __('Você ainda não participou de nenhum evento.') }}</p>
+        <div class="d-flex justify-content-center align-items-center flex-column py-5">
+            <div class="d-flex justify-content-center align-items-center flex-column card text-center shadow-sm border-0 p-4" style="max-width: 600px;">
+                <img src="{{asset('img/iconeCalendario.png')}}" style="width: 100px; margin-bottom: 10px;"/>
+                <h2 class="fw-semibold text-dark mb-3">{{ __('Você ainda não participou ou criou nenhum evento.') }}</h2>
+                <p class="text-muted mb-0">{{ __('Explore os eventos disponíveis na plataforma, inscreva-se ou crie seu próprio evento para começar a interagir.') }}</p>
             </div>
         </div>
         @endif
