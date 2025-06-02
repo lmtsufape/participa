@@ -17,10 +17,10 @@
                 <div class="d-flex flex-column flex-md-row align-items-start" style="margin-right: 20px;">
                     <div class=" mt-2 mt-mb-md-0 text-center" style="flex: 0 0 auto; width: auto;">
                         <h6 class="fw-bold">{{ __('Desenvolvido por:') }}</h6>
-                        <a href="http://ufape.edu.br/">
+                        <a href="http://ufape.edu.br/" target="_blank">
                             <img src="{{asset('img/logo_ufape.png')}}" style="width: 100px;">
                         </a>
-                        <a href="http://www.lmts.ufape.edu.br/" name="lmts">
+                        <a href="http://www.lmts.ufape.edu.br/" target="_blank" name="lmts">
                             <img src="{{asset('img/lmts.png')}}" style="margin:20px 0 20px 0" width="200px;" >
                         </a>
                     </div>

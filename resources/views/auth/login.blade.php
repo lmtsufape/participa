@@ -25,7 +25,7 @@ p{
                 <img src="{{ asset('/img/logoatualizada.png') }}" alt="logo" width="50%">
             </a>
 
-            <p class="mt-3 fs-4 text-justify">{{ __('É um sistema de Gestão de Eventos Científicos que busca contribuir com instituições acadêmicas públicas ou privadas que necessitem de uma ferramenta para gerenciar eventos científicos') }}.</p>
+            <p class="mt-3 fs-4 text-justify">{{ __('Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA), desenvolvida e mantida pelo Laboratório Multidisciplinar de Tecnologias Sociais da Universidade Federal do Agreste de Pernambuco') }}.</p>
         </section>
 
         <div class="col-md-6 d-flex align-items-center justify-content-end">
@@ -46,7 +46,12 @@ p{
 
                 <div class="form-group py-1 ">
                     <label for="password" class="form-label">{{ __('Senha') }}</label>
-                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                    <div class="input-group">
+                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                        <button type="button" class="btn btn-outline-secondary" id="togglePassword" tabindex="-1">
+                            <i class="bi bi-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
                     @error('password')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -84,4 +89,21 @@ p{
 
 </div>
 
+@endsection
+@section('javascript')
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const togglePassword = document.getElementById("togglePassword");
+        const password = document.getElementById("password");
+        const eyeIcon = document.getElementById("eyeIcon");
+
+        togglePassword.addEventListener("click", function () {
+            const type = password.getAttribute("type") === "password" ? "text" : "password";
+            password.setAttribute("type", type);
+
+            eyeIcon.classList.toggle("bi-eye");
+            eyeIcon.classList.toggle("bi-eye-slash");
+        });
+    });
+</script>
 @endsection
