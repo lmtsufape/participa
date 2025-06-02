@@ -31,4 +31,29 @@ class PerfilIdentitario extends Model
         'nomeOrganizacao',
         'userId',
     ];
+
+    protected $casts = [
+        'necessidadesEspeciais' => 'array',
+    ];
+
+    public function setAttributes($data)
+    {
+        $this->nomeSocial = $data['nomeSocial'];
+        $this->dataNascimento = $data['dataNascimento'];
+        $this->genero = $data['genero'];
+        $this->outroGenero = $data['outroGenero'];
+        $this->raca = $data['raca'];
+        $this->outraRaca = $data['outraRaca'];
+        $this->comunidadeTradicional = $data['comunidadeTradicional'];
+        $this->nomeComunidadeTradicional = $data['nomeComunidadeTradicional'];
+        $this->lgbtqia = $data['lgbtqia'];
+        $this->deficienciaIdoso = $data['deficienciaIdoso'];
+        $this->necessidadesEspeciais = !empty($data['necessidadesEspeciais']) ? $data['necessidadesEspeciais'] : ['nenhuma'];
+        $this->outraNecessidadeEspecial = $data['outraNecessidadeEspecial'];
+        $this->associadoAba = $data['associadoAba'];
+        $this->receberInfoAba = $data['receberInfoAba'];
+        $this->vinculoInstitucional = $data['vinculoInstitucional'];
+        $this->participacaoOrganizacao = $data['participacaoOrganizacao'];
+        $this->nomeOrganizacao = $data['nomeOrganizacao'];
+    }
 }
