@@ -273,7 +273,7 @@
                 <div class="form-group row">
                     <div class="col-md-12">
                         <label for="nome" class="col-form-label required-field">{{ __('Nome completo') }}</label>
-                        <input id="nome" type="text" class="form-control apenasLetras @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}"  autocomplete="nome" autofocus>
+                        <input id="nome" type="text" class="form-control apenasLetras @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}"  autocomplete="nome" autofocus required>
 
                         @error('nome')
                             <span class="invalid-feedback" role="alert">
@@ -297,7 +297,8 @@
                         </div>
 
                         <div id="fieldCPF" @error('passaporte') style="display: none" @enderror>
-                            <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ old('cpf') }}" autocomplete="cpf" placeholder="CPF" autofocus>
+                            <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ old('cpf') }}" 
+                                autocomplete="cpf" placeholder="CPF" minlength="14" maxlength="14" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="O CPF deve conter 11 caracteres" autofocus>
 
                             @error('cpf')
                                 <span class="invalid-feedback" role="alert">
@@ -306,7 +307,8 @@
                             @enderror
                         </div>
                         <div id="fieldCNPJ" @error('passaporte') style="display: block" @enderror style="display: none" >
-                            <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" value="{{ old('cnpj') }}"  autocomplete="cnpj" autofocus>
+                            <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" 
+                                value="{{ old('cnpj') }}"  autocomplete="cnpj" minlength="18" maxlength="18" pattern="\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}" title="O CNPJ deve conter 14 caracteres" autofocus>
 
                             @error('cnpj')
                             <span class="invalid-feedback" role="alert">
@@ -328,7 +330,7 @@
 
                     <div class="col-md-6">
                         <label for="email" class="col-form-label required-field">{{ __('E-mail') }}</label>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"  autocomplete="email">
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"  autocomplete="email" required>
 
                         @error('email')
                             <span class="invalid-feedback" role="alert">
@@ -458,21 +460,21 @@
     $(document).ready(function(){
         // $("#fieldPassaporte").hide();
         $("#customRadioInline1").click(function(){
-            $("#fieldPassaporte").hide();
-            $("#fieldCNPJ").hide();
+            $("#fieldPassaporte").hide().find('input').val('');;
+            $("#fieldCNPJ").hide().find('input').val('');;
             $("#fieldCPF").show();
         });
 
         $("#customRadioInline2").click(function(){
-            $("#fieldPassaporte").hide();
+            $("#fieldPassaporte").hide().find('input').val('');;
             $("#fieldCNPJ").show();
-            $("#fieldCPF").hide();
+            $("#fieldCPF").hide().find('input').val('');;
         });
 
         $("#customRadioInline3").click(function(){
             $("#fieldPassaporte").show();
-            $("#fieldCNPJ").hide();
-            $("#fieldCPF").hide();
+            $("#fieldCNPJ").hide().find('input').val('');;
+            $("#fieldCPF").hide().find('input').val('');;
         });
 
     });
