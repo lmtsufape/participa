@@ -52,7 +52,7 @@
     @if(Auth::check())
         <form method="POST" action="{{ route('administrador.criarUsuario', app()->getLocale()) }}">
     @else
-        <form method="POST" action="{{ route('register', app()->getLocale())}}">
+        <form method="POST" action="{{ route('register', app()->getLocale())}}"> 
     @endif
         <div id="etapa-1">
             <div class="etapas mt-3" style="font-weight: 500;">
@@ -399,188 +399,225 @@
 
         <div class="container card my-3" style="font-weight: 500;">
             <div class="row mt-3">
-                <div class="col-md-8">
-                    <div>
-                        <span class="h5" style="color: #034652; font-weight: bold;">Perfil social e identitário</span>
-                    </div>
+                <div class="col-md-12">
+                    <span class="h5" style="color: #034652; font-weight: bold;">Perfil social e identitário</span>
                 </div>
             </div>
 
             <hr style="border-top: 1px solid #034652">
 
-            {{-- Gênero --}}
-            <div class="form-group row mt-3">
-                <label class="col-md-12 col-form-label required-field">Gênero</label>
-                <div class="col-md-12">
-                    @php
-                        $generos = [
-                            'mulher_sis' => 'Mulher Sis',
-                            'homem_sis' => 'Homem Sis',
-                            'transgenero' => 'Transgênero',
-                            'nao_binario' => 'Não binário',
-                            'outro' => 'Outro',
-                            'prefiro_nao_responder' => 'Prefiro não responder',
-                        ];
-                    @endphp
-                    @foreach($generos as $key => $label)
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="genero" id="genero_{{ $key }}" value="{{ $key }}">
-                            <label class="form-check-label" for="genero_{{ $key }}">{{ $label }}</label>
+            <div class="row">
+                {{-- Gênero --}}
+                <div class="col-md-6">
+                    <div class="form-group mt-3">
+                        <label class="col-form-label required-field">Gênero</label>
+                        <div>
+                            @php
+                                $generos = [
+                                    'mulher_sis' => 'Mulher Sis',
+                                    'homem_sis' => 'Homem Sis',
+                                    'transgenero' => 'Transgênero',
+                                    'nao_binario' => 'Não binário',
+                                    'outro' => 'Outro',
+                                    'prefiro_nao_responder' => 'Prefiro não responder',
+                                ];
+                            @endphp
+                            @foreach($generos as $key => $label)
+                                <div class="form-check">
+                                    <input class="form-check-input" 
+                                        type="radio" 
+                                        name="genero" 
+                                        id="genero_{{ $key }}" 
+                                        value="{{ $key }}"
+                                        @if ($loop->first) required @endif>
+                                    <label class="form-check-label" for="genero_{{ $key }}">{{ $label }}</label>
+                                </div>
+                            @endforeach
+                            <input type="text" name="outroGenero" id="outroGenero" class="form-control mt-2" placeholder="Se marcou 'Outro', especifique" style="max-width: 300px;">
                         </div>
-                    @endforeach
-                    <input type="text" name="generoOutro" id="generoOutro" class="form-control mt-2" placeholder="Especifique outro gênero" style="max-width: 300px;">
+                    </div>
                 </div>
-            </div>
 
-            {{-- Raça (auto-declaração) --}}
-            <div class="form-group row mt-3">
-                <label class="col-md-12 col-form-label required-field">Raça (auto-declaração)</label>
-                <div class="col-md-12">
-                    @php
-                        $racas = [
-                            'pessoa_negra' => 'Pessoa negra',
-                            'pessoas_parda' => 'Pessoas parda',
-                            'indigena' => 'Indígena',
-                            'pessoa_branca' => 'Pessoa branca',
-                            'outro_raca' => 'Outro',
-                            'prefiro_nao_responder_raca' => 'Prefiro não responder',
-                        ];
-                    @endphp
-                    @foreach($racas as $key => $label)
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="raca" id="raca_{{ $key }}" value="{{ $key }}">
-                            <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>
+                {{-- Raça (auto-declaração) --}}
+                <div class="col-md-6">
+                    <div class="form-group mt-3">
+                        <label class="col-form-label required-field">Raça (auto-declaração)</label>
+                        <div>
+                            @php
+                                $racas = [
+                                    'pessoa_negra' => 'Pessoa negra',
+                                    'pessoas_parda' => 'Pessoas parda',
+                                    'indigena' => 'Indígena',
+                                    'pessoa_branca' => 'Pessoa branca',
+                                    'outra_raca' => 'Outra',
+                                    'prefiro_nao_responder_raca' => 'Prefiro não responder',
+                                ];
+                            @endphp
+                            @foreach($racas as $key => $label)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="raca" id="raca_{{ $key }}" value="{{ $key }}"
+                                        @if ($loop->first) required @endif>
+                                    <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>
+                                </div>
+                            @endforeach
+                            <input type="text" name="outraRaca" id="outraRaca" class="form-control mt-2" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;">
                         </div>
-                    @endforeach
-                    <input type="text" name="outraRaca" id="outraRaca" class="form-control mt-2" placeholder="Especifique outra raça" style="max-width: 300px;">
-                </div>
-            </div>
-
-            {{-- Comunidade ou povo tradicional --}}
-            <div class="form-group row mt-3">
-                <label class="col-md-12 col-form-label required-field">Você pertence ou atua em alguma comunidade ou povo tradicional?</label>
-                <div class="col-md-12">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_nao" value="nao" checked>
-                        <label class="form-check-label" for="comunidade_nao">Não</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_sim" value="sim">
-                        <label class="form-check-label" for="comunidade_sim">Sim</label>
-                    </div>
-                    <input type="text" name="nomeComunidadeTradicional" id="nomeComunidadeTradicional" class="form-control mt-2" placeholder="Qual? (se sim)" style="max-width: 400px;">
-                </div>
-            </div>
-
-            {{-- Pessoa LGBTQIA+ --}}
-            <div class="form-group row mt-3">
-                <label class="col-md-12 col-form-label required-field">Você se identifica como Pessoa LGBTQIA+?</label>
-                <div class="col-md-12">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim" value="sim">
-                        <label class="form-check-label" for="lgbtqia_sim">Sim</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_nao" value="nao" checked>
-                        <label class="form-check-label" for="lgbtqia_nao">Não</label>
                     </div>
                 </div>
             </div>
 
-            {{-- Pessoa com deficiência ou idosos --}}
-            <div class="form-group row mt-3">
-                <label class="col-md-12 col-form-label required-field">Você é pessoa com deficiência ou idoso?</label>
-                <div class="col-md-12">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_sim" value="sim">
-                        <label class="form-check-label" for="deficiencia_sim">Sim</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_nao" value="nao" checked>
-                        <label class="form-check-label" for="deficiencia_nao">Não</label>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Informações sobre necessidades especiais --}}
-            <div class="form-group row mt-3">
-                <label class="col-md-12 col-form-label required-field">Informações sobre necessidades especiais</label>
-                <div class="col-md-12">
-                    @php
-                        $necessidades = [
-                            'libras' => 'Libras',
-                            'audiodescricao' => 'Audiodescrição',
-                            'espaco_acessivel' => 'Espaço acessível',
-                            'acompanhante' => 'Acompanhante',
-                            'outro_necessidade' => 'Outro',
-                        ];
-                    @endphp
-                    @foreach($necessidades as $key => $label)
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="necessidadesEspeciais[]" id="necessidade_{{ $key }}" value="{{ $key }}">
-                            <label class="form-check-label" for="necessidade_{{ $key }}">{{ $label }}</label>
+            <div class="row">
+                {{-- Comunidade ou povo tradicional --}}
+                <div class="col-md-6">
+                    <div class="form-group mt-3">
+                        <label class="col-form-label required-field">Você pertence ou atua em alguma comunidade ou povo tradicional?</label>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_sim" value="true" required>
+                                <label class="form-check-label" for="comunidade_sim">Sim</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_nao" value="false">
+                                <label class="form-check-label" for="comunidade_nao">Não</label>
+                            </div>
+                            <input type="text" name="nomeComunidadeTradicional" id="nomeComunidadeTradicional" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;">
                         </div>
-                    @endforeach
-                    <input type="text" name="outraNecessidadeEspecial" id="outraNecessidadeEspecial" class="form-control mt-2" placeholder="Outro (especifique)" style="max-width: 300px;">
-                </div>
-            </div>
-
-            {{-- Associado da ABA Agroecologia --}}
-            <div class="form-group row mt-3">
-                <label class="col-md-12 col-form-label required-field">Já é Associado da ABA Agroecologia?</label>
-                <div class="col-md-12">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="associadoAba" id="associado_sim" value="sim">
-                        <label class="form-check-label" for="associado_sim">Sim</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="associadoAba" id="associado_nao" value="nao" checked>
-                        <label class="form-check-label" for="associado_nao">Não</label>
                     </div>
                 </div>
-            </div>
 
-            {{-- Gostaria de receber mais informações sobre ABA --}}
-            <div class="form-group row mt-3">
-                <label class="col-md-12 col-form-label required-field">Se não, gostaria de receber mais informações sobre a ABA?</label>
-                <div class="col-md-12">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_sim" value="sim">
-                        <label class="form-check-label" for="receber_info_sim">Sim</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_nao" value="nao" checked>
-                        <label class="form-check-label" for="receber_info_nao">Não</label>
+                {{-- Pessoa LGBTQIA+ --}}
+                <div class="col-md-6">
+                    <div class="form-group mt-3">
+                        <label class="col-form-label required-field">Você se identifica como Pessoa LGBTQIA+?</label>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim" value="sim" required>
+                                <label class="form-check-label" for="lgbtqia_sim">Sim</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_nao" value="false">
+                                <label class="form-check-label" for="lgbtqia_nao">Não</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Informações institucionais e de atuação --}}
-            <div class="form-group row mt-3">
-                <label for="vinculoInstitucional" class="col-md-12 col-form-label">Informações Institucionais e de Atuação (preenchimento opcional)</label>
-                <div class="col-md-12">
-                    <input type="text" name="vinculoInstitucional" id="vinculoInstitucional" class="form-control" placeholder="Vínculo institucional ou coletivo (se houver)">
+            <div class="row">
+                {{-- Informações sobre necessidades especiais --}}
+                <div class="col-md-6">
+                    <div class="form-group mt-3">
+                        <label class="col-form-label required-field">Informações sobre necessidades especiais</label>
+                        <div>
+                            @php
+                                $necessidades = [
+                                    'libras' => 'Libras',
+                                    'audiodescricao' => 'Audiodescrição',
+                                    'espaco_acessivel' => 'Espaço acessível',
+                                    'acompanhante' => 'Acompanhante',
+                                    'outra_necessidade' => 'Outra',
+                                    'nenhuma' => 'Nenhuma',
+                                ];
+                            @endphp
+                            @foreach($necessidades as $key => $label)
+                                <div class="form-check">
+                                    <input class="form-check-input" 
+                                        type="checkbox" 
+                                        name="necessidadesEspeciais[]" 
+                                        id="necessidade_{{ $key }}" 
+                                        value="{{ $key }}">
+                                    <label class="form-check-label" for="necessidade_{{ $key }}">{{ $label }}</label>
+                                </div>
+                            @endforeach
+                            <input type="text" name="outraNecessidadeEspecial" id="outraNecessidadeEspecial" class="form-control mt-2" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;">
+                        </div>
+                    </div>
+                </div>
+                
+                {{-- Pessoa com deficiência ou idosos --}}
+                <div class="col-md-6">
+                    <div class="form-group mt-3">
+                        <label class="col-form-label required-field">Você é pessoa com deficiência ou idoso?</label>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_sim" value="true" required>
+                                <label class="form-check-label" for="deficiencia_sim">Sim</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_nao" value="false">
+                                <label class="form-check-label" for="deficiencia_nao">Não</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group row mb-3">
-                <label class="col-md-12 col-form-label">Você participa de alguma organização, rede ou movimento?</label>
-                <div class="col-md-12">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_nao" value="nao" checked>
-                        <label class="form-check-label" for="participa_nao">Não</label>
+            <div class="row">
+                {{-- Associado da ABA Agroecologia --}}
+                <div class="col-md-6">
+                    <div class="form-group mt-3">
+                        <label class="col-form-label required-field">Já é Associado da ABA Agroecologia?</label>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="associadoAba" id="associado_sim" value="true" required>
+                                <label class="form-check-label" for="associado_sim">Sim</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="associadoAba" id="associado_nao" value="false">
+                                <label class="form-check-label" for="associado_nao">Não</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_sim" value="sim">
-                        <label class="form-check-label" for="participa_sim">Sim</label>
+                </div>
+
+                {{-- Gostaria de receber mais informações sobre ABA --}}
+                <div class="col-md-6">
+                    <div class="form-group mt-3">
+                        <label class="col-form-label required-field">Se não, gostaria de receber mais informações sobre a ABA?</label>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_sim" value="true" required>
+                                <label class="form-check-label" for="receber_info_sim">Sim</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_nao" value="false">
+                                <label class="form-check-label" for="receber_info_nao">Não</label>
+                            </div>
+                        </div>
                     </div>
-                    <input type="text" name="nomeOrganizacao" id="nomeOrganizacao" class="form-control mt-2" placeholder="Qual? (se sim)" style="max-width: 400px;">
+                </div>
+            </div>
+
+            <div class="row">
+                {{-- Participa de organização, rede ou movimento --}}
+                <div class="col-md-6">
+                    <div class="form-group mt-3">
+                        <label class="col-form-label required-field">Você participa de alguma organização, rede ou movimento?</label>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_sim" value="true" required>
+                                <label class="form-check-label" for="participa_sim">Sim</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_nao" value="false">
+                                <label class="form-check-label" for="participa_nao">Não</label>
+                            </div>
+                            <input type="text" name="nomeOrganizacao" id="nomeOrganizacao" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;">
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Informações institucionais e de atuação --}}
+                <div class="col-md-6">
+                    <div class="form-group mt-3">
+                        <label for="vinculoInstitucional" class="col-form-label">Informações Institucionais e de Atuação (preenchimento opcional)</label>
+                        <input type="text" name="vinculoInstitucional" id="vinculoInstitucional" class="form-control" placeholder="Vínculo institucional ou coletivo (se houver)">
+                    </div>
                 </div>
             </div>
 
             <div class="row form-group my-3">
                 <div class="col-md-10"></div>
-
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;">
                         {{ __('Confirmar Cadastro') }}
@@ -696,8 +733,8 @@
   <script src="{{ asset('js/celular.js') }}" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+  
   <script type="text/javascript">
-
     $(document).ready(function(){
         // $("#fieldPassaporte").hide();
         $("#customRadioInline1").click(function(){
@@ -736,7 +773,6 @@
             $('.iti input').css('width', '100%');
         }, 100); // pequeno atraso para garantir que o plugin já aplicou os elementos
     });
-
   </script>
 
 @endsection

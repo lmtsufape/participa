@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\PerfilIdentitario;
 use App\Models\Submissao\Endereco;
 use App\Models\Users\User;
 use App\Providers\RouteServiceProvider;
@@ -86,6 +87,7 @@ class RegisterController extends Controller
         $user = new User();
         $user->name = $data['name'];
         $user->email = strtolower($data['email']);
+        $user->email_verified_at = now();
         $user->password = bcrypt($data['password']);
         $user->cpf = $data['cpf'];
         $user->cnpj = $data['cnpj'];
@@ -99,12 +101,21 @@ class RegisterController extends Controller
             $user->enderecoId = $end->id;
             $user->save();
 
+            $perfilIdentitario = new PerfilIdentitario();
+            $perfilIdentitario->setAttributes($data);
+            $perfilIdentitario->userId = $user->id;
+            $perfilIdentitario->save();
+
             return $user;
         }
 
         $user->enderecoId = null;
         $user->save();
 
+        $perfilIdentitario = new PerfilIdentitario();
+        $perfilIdentitario->setAttributes($data);
+        $perfilIdentitario->userId = $user->id;
+        $perfilIdentitario->save();
 
         app()->setLocale('pt-BR');
 
