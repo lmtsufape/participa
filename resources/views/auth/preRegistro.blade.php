@@ -491,4 +491,11 @@
 
   </script>
 
+    @section('javascript')
+        <script>
+            $(document).ready(function () {
+                $('#pais').select2();
+            });
+        </script>
+    @endsection
 @endsection
