@@ -21,7 +21,7 @@ class CheckoutController extends Controller
 
     public function telaPagamento(Evento $evento)
     {
-        $key = env('MERCADOPAGO_PUBLIC_KEY');
+        $key = config('mercadopago.public_key');
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $categoria = $inscricao?->categoria;
@@ -35,7 +35,7 @@ class CheckoutController extends Controller
 
     public function statusPagamento(Evento $evento)
     {
-        $key = env('MERCADOPAGO_PUBLIC_KEY');
+        $key = config('mercadopago.public_key');
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $pagamento = $inscricao?->pagamento;
@@ -57,7 +57,7 @@ class CheckoutController extends Controller
 
     private function cartao(Request $request)
     {
-        \MercadoPago\SDK::setAccessToken(env('MERCADOPAGO_ACCESS_TOKEN'));
+        \MercadoPago\SDK::setAccessToken(config('mercadopago.access_token'));
         $contents = $request->all();
         $evento = Evento::find($contents['evento']);
         $user = auth()->user();
@@ -100,7 +100,7 @@ class CheckoutController extends Controller
 
     private function pix(Request $request)
     {
-        \MercadoPago\SDK::setAccessToken(env('MERCADOPAGO_ACCESS_TOKEN'));
+        \MercadoPago\SDK::setAccessToken(config('mercadopago.access_token'));
         $evento = Evento::find($request->evento);
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
@@ -153,7 +153,7 @@ class CheckoutController extends Controller
 
     private function boleto(Request $request)
     {
-        \MercadoPago\SDK::setAccessToken(env('MERCADOPAGO_ACCESS_TOKEN'));
+        \MercadoPago\SDK::setAccessToken(config('mercadopago.access_token'));
         $contents = $request->all();
         $evento = Evento::find($contents['evento']);
         $user = auth()->user();
@@ -219,7 +219,7 @@ class CheckoutController extends Controller
 
     public function notifications(Request $request)
     {
-        \MercadoPago\SDK::setAccessToken(env('MERCADOPAGO_ACCESS_TOKEN'));
+        \MercadoPago\SDK::setAccessToken(config('mercadopago.access_token'));
         $contents = $request->all();
         switch($contents["type"]) {
             case "payment":
