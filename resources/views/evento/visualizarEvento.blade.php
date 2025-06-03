@@ -345,11 +345,25 @@
                                                             </div>
                                                         @endif
 
+                                                            {{-- Caso 1: O usuario n está logado -> O botão de submeter redireciona para a pagina de login --}}
+                                                            @if (!Auth::user())
+                                                            <button type="button" data-bs-toggle="modal" data-bs-target="#modalLoginPrompt"
+                                                            class="btn btn-my-success w-100 mt-3">
+                                                            {{ __('SUBMETER TRABALHO') }}
+                                                            </button>
+                                                        @endif
                                                         @auth
                                                             @php
                                                                 $pode = $modalidade->estaEmPeriodoDeSubmissao() && ($inscricao?->podeSubmeterTrabalho() || auth()->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento));
                                                             @endphp
-                                                            @if($pode)
+                                                            {{-- Caso 2: O usuario está logado, mas n está inscrito no evento --}}
+                                                            @if (!$isInscrito)
+                                                                <button type="button"
+                                                                        class="btn btn-my-success w-100 mt-3 btn-caso2-confirm">
+                                                                    {{ __('SUBMETER TRABALHO') }}
+                                                                </button>
+                                                            {{-- Caso 3: O usuario está logado e inscrito no evento --}}
+                                                            @elseif($pode)
                                                                 <a href="{{ route('trabalho.index', ['id'=>$evento->id,'idModalidade'=>$modalidade->id]) }}"
                                                                 class="btn btn-my-success w-100 mt-3">
                                                                     {{ __('SUBMETER TRABALHO') }}
@@ -405,6 +419,23 @@
 
             <hr class="border-dark my-4">
         @endif
+            <div class="modal fade" id="modalLoginPrompt" tabindex="-1" aria-labelledby="modalLoginPromptLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header justify-content-center">
+                            <h5 class="modal-title text-center" id="modalLoginPromptLabel">{{ __('Atenção') }}</h5>
+                            <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="{{ __('Fechar') }}"></button>
+                        </div>
+                        <div class="modal-body">
+                            {{ __('Você precisa entrar na sua conta para poder submeter um trabalho.') }}
+                        </div>
+                        <div class="modal-footer">
+                            <a href="{{ route('login') }}" class="btn btn-primary">{{ __('Fazer Login') }}</a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancelar') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         @if(
             ($evento->exibir_pdf && $etiquetas->modprogramacao && $evento->pdf_programacao)
@@ -708,6 +739,7 @@
         --}}
         @include('evento.modal-inscricao')
         @include('evento.modal-submeter-trabalho')
+        @include('evento.modal-confirm-inscricao')
 
     </div>
 
