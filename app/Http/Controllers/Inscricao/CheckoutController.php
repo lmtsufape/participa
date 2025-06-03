@@ -13,6 +13,7 @@ use Artistas\PagSeguro\PagSeguroException;
 use Exception;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
+use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\MercadoPagoConfig;
 use Illuminate\Support\Facades\Log;
@@ -88,8 +89,11 @@ class CheckoutController extends Controller
                 ],
             ],
         );
+        $request_options = new RequestOptions();
+        $request_options->setCustomHeaders(["X-Idempotency-Key: ".Str::uuid()]);
+
         try {
-            $payment = $client->create($request);
+            $payment = $client->create($request, $request_options);
             $tipo_pagamento = TipoPagamento::where('descricao', 'cartao')->first();
             $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
             $pagamento = Pagamento::create([
@@ -148,9 +152,11 @@ class CheckoutController extends Controller
                 ),
             ),
         );
+        $request_options = new RequestOptions();
+        $request_options->setCustomHeaders(["X-Idempotency-Key: ".Str::uuid()]);
 
         try {
-            $payment = $client->create($request);
+            $payment = $client->create($request, $request_options);
             $tipo_pagamento = TipoPagamento::where('descricao', 'pix')->first();
             $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
             $pagamento = Pagamento::create([
@@ -218,8 +224,11 @@ class CheckoutController extends Controller
             )
         );
 
+        $request_options = new RequestOptions();
+        $request_options->setCustomHeaders(["X-Idempotency-Key: ".Str::uuid()]);
+
         try {
-            $payment = $client->create($request);
+            $payment = $client->create($request, $request_options);
             $tipo_pagamento = TipoPagamento::where('descricao', 'boleto')->first();
             $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
             $pagamento = Pagamento::create([
