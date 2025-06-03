@@ -92,18 +92,24 @@ p{
 @endsection
 @section('javascript')
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const togglePassword = document.getElementById("togglePassword");
-        const password = document.getElementById("password");
-        const eyeIcon = document.getElementById("eyeIcon");
+    if (!window.__togglePasswordInitialized) {
+        window.__togglePasswordInitialized = true;
 
-        togglePassword.addEventListener("click", function () {
-            const type = password.getAttribute("type") === "password" ? "text" : "password";
-            password.setAttribute("type", type);
+        document.addEventListener("DOMContentLoaded", function () {
+            const togglePassword = document.getElementById("togglePassword");
+            const password = document.getElementById("password");
+            const eyeIcon = document.getElementById("eyeIcon");
 
-            eyeIcon.classList.toggle("bi-eye");
-            eyeIcon.classList.toggle("bi-eye-slash");
+            if (!togglePassword || !password || !eyeIcon) return;
+
+            togglePassword.addEventListener("click", function () {
+                const type = password.getAttribute("type") === "password" ? "text" : "password";
+                password.setAttribute("type", type);
+
+                eyeIcon.classList.toggle("bi-eye");
+                eyeIcon.classList.toggle("bi-eye-slash");
+            });
         });
-    });
+    }
 </script>
 @endsection
