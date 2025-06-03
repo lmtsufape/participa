@@ -16,6 +16,8 @@ use Ramsey\Uuid\Uuid;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\MercadoPagoConfig;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use MercadoPago\Exceptions\MPApiException;
 use Throwable;
 
 // use Ramsey\Uuid\Uuid;
@@ -100,7 +102,7 @@ class CheckoutController extends Controller
             $inscricao->pagamento_id = $pagamento->id;
             $inscricao->save();
             return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
-        } catch (Throwable $th) {
+        } catch (Throwable $e) {
             Log::error('Erro em operação de pagamento com cartão', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -161,7 +163,14 @@ class CheckoutController extends Controller
             $inscricao->pagamento_id = $pagamento->id;
             $inscricao->save();
             return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
-        } catch (Throwable $th) {
+        } catch (MPApiException $e) {
+            Log::error('MPApiException: Erro em operação de pagamento com pix', [
+                'status_code' => $e->getApiResponse()->getStatusCode(),
+                'content' => $e->getApiResponse()->getContent(),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Exception: ' . $e->getMessage());
+        } catch (Throwable $e) {
             Log::error('Erro em operação de pagamento com pix', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -223,7 +232,7 @@ class CheckoutController extends Controller
             $inscricao->pagamento_id = $pagamento->id;
             $inscricao->save();
             return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             Log::error('Erro em operação de pagamento com boleto', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
