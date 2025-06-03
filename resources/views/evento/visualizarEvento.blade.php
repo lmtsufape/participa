@@ -80,7 +80,7 @@
                 <span class="text-my-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
-                    </svg> {{$evento->endereco->rua}}, {{$evento->endereco->numero}}, {{$evento->endereco->cidade}}
+                    </svg> {{$evento->endereco->rua}}, {{$evento->endereco->numero}}, {{$evento->endereco->cidade}}-{{$evento->endereco->uf}}
                 </span>
                 <div class="text-secondary py-4">
                     <p class="m-0">
@@ -221,13 +221,13 @@
                     </svg>
                     <h6 class="mt-2">{{ __('Contato da organização') }}</h6>
                 </a>
-                {{-- <a href="#local" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
+                 <a href="#local" class="btn card d-flex justify-content-center align-items-center text-my-primary shadow p-3" style="width: 180px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
                         class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
                     </svg>
                     <h6 class="mt-2">{{ __('Local') }}</h6>
-                </a> --}}
+                </a>
             </div>
         </div>
         <hr class="border-dark">
@@ -696,16 +696,16 @@
             </div>
         </div>
 
-        {{--
-        <hr class="border-dark">
 
-        <div id="local" class="row py-4">
-            <h4 class="text-my-primary">{{ __('Local') }}</h4>
-            <div id="mapaGoogle" class="shadow rounded w-100" style="height: 400px;">
+            <hr class="border-dark">
+
+            <div id="local" class="row py-4">
+                <h4 class="text-my-primary">{{ __('Local') }}</h4>
+                <div id="mapaGoogle" class="shadow rounded w-100" style="height: 400px;">
 
             </div>
         </div>
-        --}}
+
         @include('evento.modal-inscricao')
         @include('evento.modal-submeter-trabalho')
 
@@ -863,6 +863,33 @@
 
 @section('javascript')
     <script>
+        window.initMap = function() {
+            // monta o endereço completo;
+            const address = "{{ $evento->endereco->rua }}, {{ $evento->endereco->numero }}, {{ $evento->endereco->cidade }}, {{$evento->endereco->uf}}, Brasil";
+
+            const geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({ address }, (results, status) => {
+                if (status === 'OK' && results[0]) {
+                    const local = results[0].geometry.location;
+                    const mapa = new google.maps.Map(
+                        document.getElementById("mapaGoogle"),
+                        { center: local, zoom: 15 }
+                    );
+                    new google.maps.Marker({ position: local, map: mapa });
+                } else {
+                    console.error('Geocode falhou: ' + status);
+                    // fallback: exiba o mapa em São Paulo centro, por exemplo
+                    const fallback = { lat: -8.906580454895977, lng: -36.49428189189237 };
+                    const mapa = new google.maps.Map(
+                        document.getElementById("mapaGoogle"),
+                        { center: fallback, zoom: 12 }
+                    );
+                }
+            });
+        };
+    </script>
+    <script>
         $(document).ready(function(){
             let atividades  = @json($atividadesAgrupadas);
 
@@ -899,19 +926,6 @@
         })
 
 
-        function initMap() {
-                const local = { lat: -23.55052, lng: -46.633308 };
-                const mapa = new google.maps.Map(document.getElementById("mapaGoogle"), {
-                    zoom: 13,
-                    center: local,
-                });
-                new google.maps.Marker({
-                    position: local,
-                    map: mapa,
-                });
-            }
-
-        window.onload = initMap;
 
         $('#carouselCategorias').carousel({
             interval: 10000
