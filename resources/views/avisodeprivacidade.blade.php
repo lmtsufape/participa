@@ -9,14 +9,14 @@
             <li>
                 <ul style="list-style-type: none;"> 
                     <li><h5>1. Introdução</h5></li>
-                    <li>Bem-vindo ao aviso de privacidade do Sistema de Gestão de Eventos Acadêmicos Participa. Estes termos regem o uso do nosso aplicativo web.</li>
+                    <li>Bem-vindo ao aviso de privacidade da Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA). Estes termos regem o uso do nosso aplicativo web.</li>
                 </ul>
             </li>
             <br/>
             <li>
                 <ul style="list-style-type: none;"> 
                     <li><h5>2. Aceitação da Política de Privacidade</h5></li>
-                    <li>2.1 - Ao utilizar o Sistema de Gestão de Eventos Acadêmicos Participa, o usuário confirma que leu, compreendeu e que aceita os termos e políticas aplicáveis e fica a eles vinculado.</li>
+                    <li>2.1 - Ao utilizar a Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA), o usuário confirma que leu, compreendeu e que aceita os termos e políticas aplicáveis e fica a eles vinculado.</li>
                     <li>2.2 - Caso não concorde com as regras presentes nestes Termos, o Usuário não poderá acessar e utilizar o sistema e dispor dos seus serviços. </li>
                 </ul style="list-style-type: none;">
             </li>
@@ -61,7 +61,7 @@
                     <li><h5>7. Compartilhamento de dados</h5></li>
                     <li>7.1 - Tendo em vista a preservação de privacidade, o portal gov.br não compartilhará dados pessoais com nenhum terceiro não autorizado, salvo por:</li>
                     <li>7.1.1 - Determinação legal, requirimento, requisição ou ordem judicial, com autoridades judiciais, administrativas ou governamentais competentes.</li>
-                    <li>7.1.2 - Proteção dos direitos da Universidade Federal do Agreste de Pernambuco ou do Sistema de Gestão de Eventos Acadêmicos Participa em qualquer tipo de conflito, inclusive os de teor judicial.</li>
+                    <li>7.1.2 - Proteção dos direitos da Universidade Federal do Agreste de Pernambuco ou da Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA) em qualquer tipo de conflito, inclusive os de teor judicial.</li>
                 </ul>
             </li>
             <br/>
@@ -77,7 +77,7 @@
             <li>
                 <ul style="list-style-type: none;"> 
                     <li><h5>9. Responsabilidade</h5></li>
-                    <li>O Sistema de Gestão de Eventos Acadêmicos Participa prevê  a responsabilidade dos agentes que atuam nos processos de tratamento de dados, em conformidade com os arts. 42 ao 45 da LGPD.</li>
+                    <li>A Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA) prevê  a responsabilidade dos agentes que atuam nos processos de tratamento de dados, em conformidade com os arts. 42 ao 45 da LGPD.</li>
                     <li>E se compromete em manter este Aviso de Privacidade atualizado, observando suas determinações e zelando por seu cumprimento. Além disso, também assume o compromisso de buscar condições técnicas e organizacionais aptas a proteger todo o processo de tratamento de dados.</li>
                 </ul>
             </li>
@@ -87,7 +87,7 @@
                     <li><h5>10. Isenção de responsabilidade</h5></li>
                     <li>Conforme mencionado anteriormente, embora sejam adotados elevados padrões de segurança a fim de evitar incidentes, não há nenhuma página virtual inteiramente livre de riscos. Nesse sentido, a Universidade Federal do Agreste de Pernambuco não se responsabiliza por:</li>
                     <li>I - Quaisquer consequências decorrentes do descaso ou descuido dos usuários em relação a seus dados individuais. A Universidade se responsabiliza apenas pela segurança dos processos de tratamento de dados e do cumprimento das finalidades descritas neste Aviso de Privacidade. Destaca-se ainda que a responsabilidade em relação à confidencialidade dos dados de acesso é do usuário.</li>
-                    <li>II - Ações maliciosas de terceiros, como ataques cibernéticos, exceto se comprovada conduta culposa ou deliberada do Sistema de Gestão de Eventos Acadêmicos Participa.</li>
+                    <li>II - Ações maliciosas de terceiros, como ataques cibernéticos, exceto se comprovada conduta culposa ou deliberada da Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA).</li>
                     <li>III - Inveracidade das informações inseridas pelo usuário nos registros necessários para a utilização dos serviços e quaisquer consequências decorrentes de informações falsas ou inseridas de má-fé são de total responsabilidade do usuário.</li>
                 </ul>
             </li>

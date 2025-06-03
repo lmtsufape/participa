@@ -377,7 +377,13 @@
                             <div class="card-body">
                                 <ul>
                                     @foreach($areas->take(5) as $area)
-                                        <li>{{ $area->nome }}</li>
+                                        @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
+                                            <li>{{ $area->nome_en }}</li>
+                                        @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
+                                            <li>{{ $area->nome_es }}</li>
+                                        @else
+                                            <li>{{ $area->nome }}</li>
+                                        @endif
                                     @endforeach
                                 </ul>
                                 @if($areas->count() > 5)
