@@ -32,7 +32,7 @@ class CheckoutController extends Controller
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $categoria = $inscricao?->categoria;
-       
+
         if ($inscricao->pagamento != null) {
             return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
         }
@@ -75,7 +75,7 @@ class CheckoutController extends Controller
         $categoria = $inscricao->categoria;
 
         $request = array(
-            "transaction_amount" => $categoria->valor_total,
+            "transaction_amount" => (float) $categoria->valor_total,
             "token" => $contents['token'],
             "installments" => $contents['installments'],
             "payment_method_id" => $contents['payment_method_id'],
@@ -97,7 +97,7 @@ class CheckoutController extends Controller
             $tipo_pagamento = TipoPagamento::where('descricao', 'cartao')->first();
             $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
             $pagamento = Pagamento::create([
-                'valor' => $categoria->valor_total,
+                'valor' => (float) $categoria->valor_total,
                 'tipo_pagamento_id' => $tipo_pagamento->id,
                 'descricao' => $descricao,
                 'codigo' => $payment->id,
@@ -130,7 +130,7 @@ class CheckoutController extends Controller
         $contents = $request->all();
 
         $request = array(
-            "transaction_amount" => $categoria->valor_total,
+            "transaction_amount" => (float) $categoria->valor_total,
             "description" => $descricao,
             "payment_method_id" => "pix",
             "notification_url" => route('checkout.notifications'),
@@ -160,7 +160,7 @@ class CheckoutController extends Controller
             $tipo_pagamento = TipoPagamento::where('descricao', 'pix')->first();
             $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
             $pagamento = Pagamento::create([
-                'valor' => $categoria->valor_total,
+                'valor' => (float) $categoria->valor_total,
                 'tipo_pagamento_id' => $tipo_pagamento->id,
                 'descricao' => $descricao,
                 'codigo' => $payment->id,
@@ -185,7 +185,7 @@ class CheckoutController extends Controller
             ]);
             return redirect()->back()->withErrors(['msg' => 'Ocorreu um erro ao tentar realizar o pagamento, tente novamente.']);
         }
-        
+
     }
 
     private function boleto(Request $request)
@@ -232,7 +232,7 @@ class CheckoutController extends Controller
             $tipo_pagamento = TipoPagamento::where('descricao', 'boleto')->first();
             $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
             $pagamento = Pagamento::create([
-                'valor' => $categoria->valor_total,
+                'valor' => (float) $categoria->valor_total,
                 'tipo_pagamento_id' => $tipo_pagamento->id,
                 'descricao' => $descricao,
                 'codigo' => $payment->id,
@@ -294,7 +294,7 @@ class CheckoutController extends Controller
 
     public function index(Request $request, $id)
     {
-   
+
         if (! auth()->check()) {
             return redirect()->route('login');
         }
