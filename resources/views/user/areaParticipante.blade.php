@@ -40,7 +40,7 @@
             @foreach ($eventos as $evento)
                 <div class="col-md-4 mt-2 d-flex align-items-stretch">
                     <x-evento_card
-                        :icone="$evento->icone"
+                        :icone="$evento->fotoEvento ? null : $evento->icone"
                         :fotoEvento="$evento->fotoEvento"
                         :nome="$evento->nome"
                         :dataInicioFormatada="\Carbon\Carbon::parse($evento->dataInicio)->translatedFormat('l, d \d\e F')"
