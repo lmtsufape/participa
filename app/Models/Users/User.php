@@ -2,6 +2,7 @@
 
 namespace App\Models\Users;
 
+use App\Models\Submissao\Area;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Evento;
@@ -202,5 +203,17 @@ class User extends Authenticatable
             'id',                    // Chave primária local no user (users.id)
             'evento_id'              // Chave no intermediário que aponta para eventos.id
         );
+    }
+
+    public function areasComoCoordEixoNoEvento($evento_id)
+    {
+        return $this->hasManyThrough(
+            Area::class,
+            CoordEixoTematico::class,
+            'user_id',
+            'id',
+            'id',
+            'area_id'
+        )->where('coordenadores_eixos_tematicos.evento_id', $evento_id);
     }
 }

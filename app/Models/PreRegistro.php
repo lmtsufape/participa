@@ -9,6 +9,6 @@ class PreRegistro extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome', 'cpf', 'email', 'codigo', 'pais', 'expiracao'];
+    protected $fillable = ['nome', 'cpf', 'email', 'codigo', 'pais', 'expiracao', 'cnpj', 'passaporte'];
     protected $dates = ['expiracao'];
 }
