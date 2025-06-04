@@ -13,11 +13,11 @@
             $bannerPath =
                 $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en
                     ? $evento->fotoEvento_en
-                    : $evento->fotoEvento;
+                    : $evento->icone;
         @endphp
         <div class="row my-5">
             <div class="col-md-7">
-                @if (isset($evento->fotoEvento))
+                @if (isset($evento->icone))
                     <img src="{{ asset('storage/' . $bannerPath) }}" class="rounded" width="100%" alt="">
                 @else
                     <img src="{{ asset('img/colorscheme.png') }}" class="rounded" width="100%" alt="">
