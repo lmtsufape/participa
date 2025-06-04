@@ -2,13 +2,6 @@
 
 @section('content')
 <div id="paymentBrick_container">
-    <div class="card">
-        <div class="card-body">
-            <p>Comprovante enviado</p>
-            <p>Aguarde confirmação</p>
-            <p>{{$key}}</p>
-        </div>
-    </div>
 </div>
 @endsection
 
