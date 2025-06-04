@@ -7,7 +7,7 @@
                     @else {{ __('Atenção') }}! @endif</h5>
                 <button type="button" class="btn-close btn-close-white position-absolute end-0 top-50 translate-middle-y me-3" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('inscricao.inscrever', ['evento_id' => $evento->id]) }}" method="POST"
+            <form action="{{ route('inscricao.inscrever', ['evento_id' => $evento->id]) }}" x-data="{ categoria: '' }" method="POST"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
@@ -34,7 +34,7 @@
                             </a>
                         </div>
                     @elseif ($evento->categoriasParticipantes()->where('permite_inscricao', true)->exists())
-                        <div id="formulario" x-data="{ categoria: '' }" class="carousel-categorias container">
+                        <div id="formulario" class="carousel-categorias container">
                             <div>
                                 <div x-show="categoria == ''">
                                     <div class="carousel slide" id="carouselCategorias" data-bs-ride="carousel">
