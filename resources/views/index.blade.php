@@ -36,7 +36,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            padding: 0.3rem 1.3rem 0.3rem 1.5rem;
+            padding: 1rem 1.5rem;
             background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             display: flex;
             flex-direction: column;
@@ -110,14 +110,14 @@
                 <div class="swiper-wrapper">
                     @foreach ($eventos_destaques->take(5) as $evento)
                         <div class="swiper-slide">
-                            <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
-                                class="text-decoration-none">
-                                <img src="{{ Storage::url($evento->fotoEvento) }}" alt="Foto do evento">
-                            </a>
-
+                            <img src="{{ Storage::url($evento->fotoEvento) }}" alt="Foto do evento">
                             <div class="carousel-caption">
-                                <div class="caption-row pt-5">
-                                    <span class="info">
+                                <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
+                                    <h1 class="text-start mb-4">{{ __('13º Congresso Brasileiro de Agroecologia: inscrições e submissões de trabalhos') }}</h1>
+                                </a>
+                                <div class="caption-row">
+                                    <p class="info mb-2">
+
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-calendar-event"
                                             viewBox="0 0 16 16">
@@ -128,44 +128,23 @@
                                                     0 0 1 .5-.5M1 4v10a1 1 0 0
                                                     0 1 1h12a1 1 0 0 0 1-1V4z"/>
                                         </svg>
-                                        <?php
-                                            $lang   = Session::get('idiomaAtual', 'pt');
-                                            $inicio = \Carbon\Carbon::parse($evento->dataInicio)->locale($lang);
-                                            $fim    = \Carbon\Carbon::parse($evento->dataFim)->locale($lang);
+                                         <?php
 
-                                            $sameMonth = $inicio->month === $fim->month;
 
-                                            switch ($lang) {
-                                                case 'en':
+                                            $inicio = \Carbon\Carbon::parse($evento->dataInicio)->locale(Session::get('idiomaAtual', 'pt'));
+                                            $fim = \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'));
 
-                                                    $start = $inicio->translatedFormat('d F');
-                                                    $end   = $fim->translatedFormat('d F Y');
-                                                    $textoData = "From {$start} to {$end}";
-                                                    break;
-
-                                                case 'es':
-
-                                                    $start = $inicio->translatedFormat('d \d\e F');
-                                                    $end   = $fim->translatedFormat('d \d\e F \d\e Y');
-                                                    $textoData = "Desde {$start} hasta {$end}";
-                                                    break;
-
-                                                default:
-                                                    if ($sameMonth) {
-                                                        $start = $inicio->translatedFormat('d');
-                                                    } else {
-                                                        $start = $inicio->translatedFormat('d \d\e F');
-                                                    }
-                                                    $end = $fim->translatedFormat('d \d\e F \d\e Y');
-                                                    $textoData = "De {$start} a {$end}";
-                                                    break;
+                                            if ($inicio->month === $fim->month) {
+                                                $textoData = $inicio->translatedFormat('d ') . ' a ' . $fim->translatedFormat('d \d\e F');
+                                            } else {
+                                                $textoData = $inicio->translatedFormat('d \d\e F ') . ' a ' . $fim->translatedFormat('d \d\e F \d\e Y');
                                             }
                                         ?>
                                         {{ $textoData }}
-                                        </span>
+                                    </p>
                                     <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
                                     class="btn btn-outline-light rounded-3">
-                                        {{ __('Cadastre-se, inscreva-se e submeta seus trabalhos') }}
+                                        {{ __('Saiba mais') }}
                                     </a>
                                 </div>
                             </div>
