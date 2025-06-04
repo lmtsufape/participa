@@ -182,10 +182,6 @@ class InscricaoController extends Controller
             $campo->inscricoesFeitas()->detach($inscricao->id);
         }
 
-        if ($inscricao->pagamento()->exists()) {
-            $inscricao->pagamento->delete();
-        }
-
         $inscricao->delete();
     }
 

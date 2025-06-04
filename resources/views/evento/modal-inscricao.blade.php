@@ -480,7 +480,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit"
-                            class="btn btn-primary button-prevent-multiple-submits" style="background-color: #114048ff; border-color: #114048ff;">Confirmar</button>
+                            class="btn btn-primary button-prevent-multiple-submits" style="background-color: #114048ff; border-color: #114048ff;" :disabled="!categoria || categoria === ''">Confirmar</button>
                     </div>
                 @endif
             </form>
