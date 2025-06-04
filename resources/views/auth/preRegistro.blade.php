@@ -489,6 +489,9 @@
         document.getElementById('etapa-2').style.display = 'none';
     }
 
-  </script>
+    $(document).ready(function () {
+        $('#pais').select2();
+    });
 
+  </script>
 @endsection
