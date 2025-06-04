@@ -1,7 +1,7 @@
 <footer class="w-100 bg-white shadow">
     <div class="pt-1 text-white" style="background-color: #DA2E38">
         <div class="container mx-auto"> 
-            <div class="d-flex flex-wrap justify-content-between text-center">  
+            <div class="d-flex flex-wrap justify-content-between text-center p-2">  
                 <div class=" mb-md-0 d-flex flex-column flex-md-row align-items-center gap-3" style="flex: 0 0 auto; width: auto;"> 
                     <a class="navbar-brand d-inline-block" href="{{route('index')}}">
                         <img src="{{ asset('/img/LOGO-RODAPE.png') }}" alt="" style="width: 150px; max-width: 100%;">
