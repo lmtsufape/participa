@@ -429,7 +429,10 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
 
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize(function ($user, $evento) {
+            return $user->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento) ||
+                   $user->can('isCoordenadorEixo', $evento);
+        }, $evento);
         $revisores = User::whereHas('revisor', function (Builder $query) use ($evento) {
             $query->where('evento_id', $evento->id);
         })->orderBy('name')->get();
@@ -1381,7 +1384,7 @@ class EventoController extends Controller
             $path = 'eventos/' . $evento->id;
             $extensao = $request->file('icone')->getClientOriginalExtension();
             $nome = 'icone.' . $extensao;
-            $image = Image::make($file)->resize(600, 600)->encode();
+            $image = Image::make($file)->resize(1024, 425)->encode();
             Storage::disk('public')->put($path . '/' . $nome, $image);
 
             return $path.'/'.$nome;
@@ -1392,7 +1395,7 @@ class EventoController extends Controller
             $path = 'eventos/'.$evento->id;
             $extensao= $request->file('icone_en')->getClientOriginalExtension();
             $nome = 'icone-en.'.$extensao;
-            $image = Image::make($file)->resize(600, 600)->encode();
+            $image = Image::make($file)->resize(1024, 425)->encode();
             Storage::disk('public')->put($path.'/'.$nome, $image);
 
             return $path . '/' . $nome;
@@ -1403,7 +1406,7 @@ class EventoController extends Controller
             $path = 'eventos/'.$evento->id;
             $extensao= $request->file('icone_es')->getClientOriginalExtension();
             $nome = 'icone-es.'.$extensao;
-            $image = Image::make($file)->resize(600, 600)->encode();
+            $image = Image::make($file)->resize(1024, 425)->encode();
             Storage::disk('public')->put($path.'/'.$nome, $image);
 
             return $path . '/' . $nome;
@@ -1584,7 +1587,7 @@ class EventoController extends Controller
 
             $evento->update();
 
-            $image = Image::make($file)->resize(600, 600)->encode();
+            $image = Image::make($file)->resize(1024,425)->encode();
             Storage::disk('public')->put($path . '/' . $nome, $image);
         }
 
