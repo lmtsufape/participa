@@ -1384,7 +1384,7 @@ class EventoController extends Controller
             $path = 'eventos/' . $evento->id;
             $extensao = $request->file('icone')->getClientOriginalExtension();
             $nome = 'icone.' . $extensao;
-            $image = Image::make($file)->resize(1024, 425)->encode();
+            $image = Image::make($file)->encode();
             Storage::disk('public')->put($path . '/' . $nome, $image);
 
             return $path.'/'.$nome;
@@ -1395,7 +1395,7 @@ class EventoController extends Controller
             $path = 'eventos/'.$evento->id;
             $extensao= $request->file('icone_en')->getClientOriginalExtension();
             $nome = 'icone-en.'.$extensao;
-            $image = Image::make($file)->resize(1024, 425)->encode();
+            $image = Image::make($file)->encode();
             Storage::disk('public')->put($path.'/'.$nome, $image);
 
             return $path . '/' . $nome;
@@ -1406,7 +1406,7 @@ class EventoController extends Controller
             $path = 'eventos/'.$evento->id;
             $extensao= $request->file('icone_es')->getClientOriginalExtension();
             $nome = 'icone-es.'.$extensao;
-            $image = Image::make($file)->resize(1024, 425)->encode();
+            $image = Image::make($file)->encode();
             Storage::disk('public')->put($path.'/'.$nome, $image);
 
             return $path . '/' . $nome;
@@ -1587,7 +1587,7 @@ class EventoController extends Controller
 
             $evento->update();
 
-            $image = Image::make($file)->resize(1024,425)->encode();
+            $image = Image::make($file)->encode();
             Storage::disk('public')->put($path . '/' . $nome, $image);
         }
 
