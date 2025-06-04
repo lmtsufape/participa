@@ -491,7 +491,7 @@
                         <label class="col-form-label required-field">Você se identifica como Pessoa LGBTQIA+?</label>
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim" value="sim" required>
+                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim" value="true" required>
                                 <label class="form-check-label" for="lgbtqia_sim">Sim</label>
                             </div>
                             <div class="form-check">
