@@ -176,9 +176,7 @@
                 <form id="formEditarCategoria{{ $categoria->id }}" action="{{ route('categoria.participante.update', ['id' => $categoria->id]) }}" method="POST">
                     @csrf
                     @method('PUT')
-                    <input type="hidden" name="valor_total_{{ $categoria->id }}" value="0">
                     <input type="hidden" name="editarCategoria" value="{{ $categoria->id }}">
-                    <input type="hidden" id="linkIdExcluir" name="linkIdExcluir[]" value="">
                     <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
                         <label for="nome_">Nome*</label>
                         <input id="nome_" type="text" class="form-control @error('nome_') is-invalid @enderror" name="nome_{{ $categoria->id }}" value="{{ old('nome_'.$categoria->id, $categoria->nome) }}">
@@ -199,8 +197,19 @@
                     </div>
 
                     <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
-                        <label for="limite_inscricao_">Valor*</label>
-                        <input id="limite_inscricao_" type="datetime-local" class="form-control @error('limite_inscricao_') is-invalid @enderror" name="limite_inscricao_{{ $categoria->id }}" value="{{ old('limite_inscricao_'.$categoria->id, $categoria->limite_inscricao) }}">
+                        <label for="valor_total_edit_{{ $categoria->id }}">Valor*</label>
+                        <input id="valor_total_edit_{{ $categoria->id }}" type="number" step="0.01" min="0" class="form-control @error('valor_total_'.$categoria->id) is-invalid @enderror" name="valor_total_{{ $categoria->id }}" value="{{ old('valor_total_'.$categoria->id, $categoria->valor_total) }}" required>
+                        <small>(0 para inscrição gratuita)</small>
+                        @error('valor_total_'.$categoria->id)
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
+                        <label for="limite_inscricao_edit_{{ $categoria->id }}">Data limite de inscrição</label>
+                        <input id="limite_inscricao_edit_{{ $categoria->id }}" type="datetime-local" class="form-control @error('limite_inscricao_'.$categoria->id) is-invalid @enderror" name="limite_inscricao_{{ $categoria->id }}" value="{{ old('limite_inscricao_'.$categoria->id, $categoria->limite_inscricao ? \Carbon\Carbon::parse($categoria->limite_inscricao)->format('Y-m-d\TH:i') : '') }}">
                         @error('limite_inscricao_'.$categoria->id)
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
