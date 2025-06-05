@@ -12,14 +12,34 @@
                         <ul class="list-unstyled">
                             @foreach($areas->slice(0, ceil($areas->count()/2)) as $area)
                                 <li class="d-flex align-items-center mb-2">
-                                    @if ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                        <span class="flex-grow-1">{{ $area->nome_en }}</span>
-                                    @elseif ($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
-                                        <span class="flex-grow-1">{{ $area->nome_es }}</span>
-                                    @else
-                                        <span class="flex-grow-1">{{ $area->nome }}</span>
+                                    @php
+                                        if ($evento->is_multilingual && $area->nome_en && Session::get('idiomaAtual') === 'en') {
+                                            $nomeArea = $area->nome_en;
+                                        } elseif ($evento->is_multilingual &&  $area->nome_es && Session::get('idiomaAtual') === 'es') {
+                                            $nomeArea = $area->nome_es;
+                                        } else {
+                                            $nomeArea = $area->nome;
+                                        }
 
-                                    @endif
+                                        // Regex para capturar o prefixo "eixo" no seu idioma
+                                        if (preg_match('/^(Eixo\s*\d+:\s*)/i', $nomeArea, $matches)
+                                            || preg_match('/^(Axis\s*\d+:\s*)/i', $nomeArea, $matches)
+                                            || preg_match('/^(Eje\s*\d+:\s*)/i', $nomeArea, $matches)) {
+                                            $prefixo = $matches[1];
+                                            $resto   = mb_substr($nomeArea, mb_strlen($prefixo));
+                                        } else {
+                                            $prefixo = '';
+                                            $resto   = $nomeArea;
+                                        }
+                                    @endphp
+
+                                    <span class="flex-grow-1">
+                                        @if($prefixo)
+                                            <strong>{{ $prefixo }}</strong>{{ $resto }}
+                                        @else
+                                            {{ $resto }}
+                                        @endif
+                                    </span>
                                     <button
                                         type="button"
                                         class="btn btn-outline-primary btn-sm p-1 d-flex align-items-center justify-content-center"
@@ -43,17 +63,33 @@
                         <ul class="list-unstyled">
                            @foreach($areas->slice(ceil($areas->count()/2)) as $area)
                                 <li class="d-flex align-items-center mb-2">
-                                    @if ($evento->is_multilingual)
-                                        @if (Session::get('idiomaAtual') === 'en')
-                                            <span class="flex-grow-1">{{ $area->nome_en }}</span>
-                                        @elseif (Session::get('idiomaAtual') === 'es')
-                                            <span class="flex-grow-1">{{ $area->nome_es }}</span>
+                                   @php
+                                        if ($evento->is_multilingual && $area->nome_en && Session::get('idiomaAtual') === 'en') {
+                                            $nomeArea = $area->nome_en;
+                                        } elseif ($evento->is_multilingual &&  $area->nome_es && Session::get('idiomaAtual') === 'es') {
+                                            $nomeArea = $area->nome_es;
+                                        } else {
+                                            $nomeArea = $area->nome;
+                                        }
+                                        // Regex para capturar o prefixo "eixo" no seu idioma
+                                        if (preg_match('/^(Eixo\s*\d+:\s*)/i', $nomeArea, $matches)
+                                            || preg_match('/^(Axis\s*\d+:\s*)/i', $nomeArea, $matches)
+                                            || preg_match('/^(Eje\s*\d+:\s*)/i', $nomeArea, $matches)) {
+                                            $prefixo = $matches[1];
+                                            $resto   = mb_substr($nomeArea, mb_strlen($prefixo));
+                                        } else {
+                                            $prefixo = '';
+                                            $resto   = $nomeArea;
+                                        }
+                                    @endphp
+
+                                    <span class="flex-grow-1">
+                                        @if($prefixo)
+                                            <strong>{{ $prefixo }}</strong>{{ $resto }}
                                         @else
-                                            <span class="flex-grow-1">{{ $area->nome }}</span>
+                                            {{ $resto }}
                                         @endif
-                                    @else
-                                        <span class="flex-grow-1">{{ $area->nome }}</span>
-                                    @endif
+                                    </span>
                                     <button
                                         type="button"
                                         class="btn btn-outline-primary btn-sm p-1 d-flex align-items-center justify-content-center"
