@@ -48,8 +48,8 @@ class Inscricao extends Model
     public function podeSubmeterTrabalho()
     {
         if ($this->categoria()->exists()) {
-            return $this->finalizada && $this->categoria->permite_submissao;
+            return $this->categoria->permite_submissao;
         }
-        return $this->finalizada;
+        return false;
     }
 }
