@@ -258,17 +258,27 @@
 
             <hr style="border-top: 1px solid#034652">
             {{-- Rua | Número | Bairro --}}
-            <div class="form-group row mt-3">
-                <div class="col-md-12">
-                    <label for="cep" class="col-form-label required-field">{{ __('CEP') }}@if($pais != 'outro') @endif</label>
-                    <input value="{{old('cep')}}" id="cep" type="text"  autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="9" @if($pais != 'outro') required @endif >
-                    @error('cep')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ __($message) }}</strong>
-                        </span>
-                    @enderror
+
+            @if(session('pais') == 'brasil' || session('pais') == null)
+                <div class="form-group row mt-3">
+                    <div class="col-md-12">
+                        <label for="cep" class="col-form-label required-field">{{ __('CEP') }}@if($pais != 'outro') @endif</label>
+                        <input value="{{old('cep')}}" id="cep" type="text"  autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="9" @if($pais != 'outro') required @endif >
+                        @error('cep')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ __($message) }}</strong>
+                            </span>
+                        @enderror
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="form-group row mt-3">
+                    <div class="col-md-12">
+                        <label for="cep" class="col-form-label required-field">{{ __('CEP/Código Postal') }}</label>
+                        <input value="{{old('cep')}}" id="cepOutroPais" type="text"  oninput="this.value = this.value.replace(/[^a-zA-Z0-9\- ]/g, '')" autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="10">
+                    </div>
+                </div>
+            @endif
             <div class="form-group row">
                 <div class="col-md-6">
                     <label for="rua" class="col-form-label required-field">{{ __('Rua') }}</label>
@@ -303,7 +313,6 @@
                             <strong>{{ __($message) }}</strong>
                         </span>
                     @enderror
-                    <br>
                 </div>
 
                 <div class="col-md-6">
@@ -331,7 +340,7 @@
                 </div>
 
                 @if(session('pais') == 'brasil' || session('pais') == null)
-                    <!-- <div class="col-sm-6" id="groupformufinput">
+                    {{-- <div class="col-sm-6" id="groupformufinput">
                         <label for="ufInput" class="col-form-label">{{ __('UF') }}*</label>
                         <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" required>
 
@@ -340,9 +349,9 @@
                                 <strong>{{ __($message) }}</strong>
                             </span>
                         @enderror
-                    </div> -->
+                    </div> --}}
 
-                    <div class="col-sm-6" id="groupformuf">
+                    <div class="col-md-6" id="groupformuf">
                         <label for="uf" class="col-form-label required-field">{{ __('Estado') }}</label>
                         {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}"  autocomplete="uf" autofocus> --}}
                         <select class="form-control @error('uf') is-invalid @enderror required-field" id="uf" name="uf" required>
@@ -383,7 +392,7 @@
                         @enderror
                     </div>
                 @else
-                    <div class="col-md-6" id="etapa-2">
+                    <div class="col-md-6" id="">
                         <label for="uf" class="col-form-label required-field">{{ __('Estado/Província/Região') }}</label>
                         <input type="text" value="{{old('uf')}}" id="uf" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
 
