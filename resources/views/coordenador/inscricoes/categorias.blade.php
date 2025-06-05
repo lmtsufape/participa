@@ -147,7 +147,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirCategoria{{ $categoria->id }}">
-                                                <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" class="icon-card" alt="">
+                                                <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" class="icon-card" style="width:20px; height:auto;" alt="">
                                             </a>
                                         </form>
                                     </td>
