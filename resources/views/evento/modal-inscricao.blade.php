@@ -68,16 +68,20 @@
                                                                         </div>
                                                                         <div class="card-body">
                                                                             @if ($categoria->descricao)
-                                                                                <label for="">{{ __('Descrição') }}:</label>
+                                                                                <label for=""><strong>{{ __('Descrição') }}:</strong></label>
                                                                                 <p> {!! $categoria->descricao !!}</p>
                                                                             @endif
-                                                                            @if ($links)
+                                                                            {{-- @if ($links)
                                                                                 @foreach ($links->where('categoria_id', $categoria->id) as $link)
                                                                                     <label for="">Valor: </label>
                                                                                     <p>R${{ $link->valor }}</p>
                                                                                     <label for="">Link para pagamento:</label>
                                                                                     <a href="{{ $link->link }}">{{ $link->link }}</a>
                                                                                 @endforeach
+                                                                            @endif --}}
+                                                                            @if($categoria->valor_total)
+                                                                                <label for=""><strong>{{__('Valor')}}:</strong> R$ {{$categoria->valor_total}}</label>
+
                                                                             @endif
                                                                         </div>
                                                                         <div class="card-footer d-flex justify-content-center">
