@@ -391,13 +391,33 @@
                             <div class="card-body">
                                 <ul>
                                     @foreach($areas->take(5) as $area)
-                                        @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                            <li>{{ $area->nome_en }}</li>
-                                        @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
-                                            <li>{{ $area->nome_es }}</li>
+                                        @php
+                                        if ($evento->is_multilingual && $area->nome_en && Session::get('idiomaAtual') === 'en') {
+                                            $nomeArea = $area->nome_en;
+                                        } elseif ($evento->is_multilingual &&  $area->nome_es && Session::get('idiomaAtual') === 'es') {
+                                            $nomeArea = $area->nome_es;
+                                        } else {
+                                            $nomeArea = $area->nome;
+                                        }
+
+                                        if (preg_match('/^(Eixo\s*\d+:\s*)/i', $nomeArea, $matches)
+                                            || preg_match('/^(Axis\s*\d+:\s*)/i', $nomeArea, $matches)
+                                            || preg_match('/^(Eje\s*\d+:\s*)/i', $nomeArea, $matches)) {
+                                            $prefixo = $matches[1];
+                                            $resto   = mb_substr($nomeArea, mb_strlen($prefixo));
+                                        } else {
+                                            $prefixo = '';
+                                            $resto   = $nomeArea;
+                                        }
+                                    @endphp
+
+                                    <li>
+                                        @if($prefixo)
+                                            <strong>{{ $prefixo }}</strong>{{ $resto }}
                                         @else
-                                            <li>{{ $area->nome }}</li>
+                                            {{ $resto }}
                                         @endif
+                                    </li>
                                     @endforeach
                                 </ul>
                                 @if($areas->count() > 5)
