@@ -429,10 +429,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
 
-        $this->authorize(function ($user, $evento) {
-            return $user->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento) ||
-                   $user->can('isCoordenadorEixo', $evento);
-        }, $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $revisores = User::whereHas('revisor', function (Builder $query) use ($evento) {
             $query->where('evento_id', $evento->id);
         })->orderBy('name')->get();
