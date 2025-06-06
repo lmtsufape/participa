@@ -68,7 +68,7 @@
                                                                         </div>
                                                                         <div class="card-body">
                                                                             @if ($categoria->descricao)
-                                                                                <label for=""><strong>{{ __('Descrição') }}:</strong></label>
+                                                                                <label for="">{{ __('Descrição') }}:</label>
                                                                                 <p> {!! $categoria->descricao !!}</p>
                                                                             @endif
                                                                             <p class="fw-bold">
