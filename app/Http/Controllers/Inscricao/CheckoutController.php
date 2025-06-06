@@ -82,11 +82,11 @@ class CheckoutController extends Controller
 
         try {
             $payment = $client->create($request, $request_options);
-            $tipo_pagamento = TipoPagamento::where('descricao', $contents['payment_method_id'])->first();
+            // $tipo_pagamento = TipoPagamento::where('descricao', $contents['payment_method_id'])->first();
             $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
             $pagamento = Pagamento::create([
                 'valor' => (float) $categoria->valor_total,
-                'tipo_pagamento_id' => $tipo_pagamento->id,
+                // 'tipo_pagamento_id' => $tipo_pagamento->id,
                 'descricao' => $descricao,
                 'codigo' => $payment->id,
                 'status' => $payment->status,
@@ -115,8 +115,8 @@ class CheckoutController extends Controller
     private function gerarRequest($contents, CategoriaParticipante $categoria)
     {
         $request = [];
-        switch ($contents['payment_method_id']) {
-            case 'pix':
+        switch ($contents['payment_type_id']) {
+            case 'bank_transfer':
                 $request = [
                     "transaction_amount" => (float) $contents['transaction_amount'],
                     "payment_method_id" => "pix",
@@ -126,7 +126,7 @@ class CheckoutController extends Controller
                     ],
                 ];
                 break;
-            case 'boleto':
+            case 'ticket':
                 $request = [
                     "transaction_amount" => (float) $contents['transaction_amount'],
                     "description" => $contents['description'],
@@ -151,7 +151,7 @@ class CheckoutController extends Controller
                     ]
                 ];
                 break;
-            case 'cartao':
+            case 'credit_card':
                 $request = [
                     "transaction_amount" => (float) $categoria->valor_total,
                     "token" => $contents['token'],
@@ -169,7 +169,7 @@ class CheckoutController extends Controller
                 ];
                 break;
             default:
-                throw new Exception('Método de pagamento não suportado: '.$contents['payment_method_id']);
+                throw new Exception('Método de pagamento não suportado: '.$contents['payment_type_id']);
         }
         return $request;
     }
