@@ -71,13 +71,16 @@
                                                                                 <label for="">{{ __('Descrição') }}:</label>
                                                                                 <p> {!! $categoria->descricao !!}</p>
                                                                             @endif
-                                                                            @if ($links)
-                                                                                @foreach ($links->where('categoria_id', $categoria->id) as $link)
-                                                                                    <label for="">Valor: </label>
-                                                                                    <p>R${{ $link->valor }}</p>
-                                                                                    <label for="">Link para pagamento:</label>
-                                                                                    <a href="{{ $link->link }}">{{ $link->link }}</a>
-                                                                                @endforeach
+                                                                            <p class="fw-bold">
+                                                                            {{ __('Valor da Inscrição:') }}
+                                                                            @if($categoria->valor_total > 0)
+                                                                                R$ {{ number_format($categoria->valor_total, 2, ',', '.') }}
+                                                                            @else
+                                                                                {{ __('Gratuita') }}
+                                                                            @endif
+                                                                            </p>
+                                                                            @if($categoria->limite_inscricao)
+                                                                            <p class="text-danger"><small>{{__('Inscrições até:')}} {{ \Carbon\Carbon::parse($categoria->limite_inscricao)->format('d/m/Y H:i') }}</small></p>
                                                                             @endif
                                                                         </div>
                                                                         <div class="card-footer d-flex justify-content-center">

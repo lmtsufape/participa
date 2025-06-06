@@ -35,7 +35,7 @@
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
                                 </td>
                                 <td style="text-align:center">
-                                    <a href="" data-bs-toggle="modal" data-bs-target="#modalExcluirModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a>
+                                    <a href="" data-bs-toggle="modal" data-bs-target="#modalExcluirModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" style="width:20px; height:auto;" alt="Remover" ></a>
                                 </td>
                             </tr>
                             @endforeach
@@ -152,6 +152,38 @@
                                         </div>
 
                                     </div>{{-- end row--}}
+                                    @if ($evento->is_multilingual)
+                                    <div class="row mt-2"> {{-- Label Row (mt-2 para espaçamento opcional) --}}
+                                        <div class="col-sm-12">
+                                            <label for="nomeModalidadeEdit_en{{$modalidade->id}}" class="col-form-label font-weight-bold">{{ __('Nome (Inglês)') }}</label> {{-- Sem '*' se for nullable --}}
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center"> {{-- Input Row --}}
+                                        <div class="col-sm-12">
+                                            <input id="nomeModalidadeEdit_en{{$modalidade->id}}" type="text" class="form-control @error('nome_en'.$modalidade->id) is-invalid @enderror" name="nome_en{{$modalidade->id}}" value="{{ old('nome_en'.$modalidade->id, $modalidade->nome_en) }}" autocomplete="off"> {{-- Sem 'required' se for nullable --}}
+                                            @error('nome_en'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>{{-- end row --}}    
+                                    <div class="row mt-2"> {{-- Label Row (mt-2 para espaçamento opcional) --}}
+                                        <div class="col-sm-12">
+                                            <label for="nomeModalidadeEdit_es{{$modalidade->id}}" class="col-form-label font-weight-bold">{{ __('Nome (Espanhol)') }}</label> {{-- Sem '*' se for nullable --}}
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center"> {{-- Input Row --}}
+                                        <div class="col-sm-12">
+                                            <input id="nomeModalidadeEdit_es{{$modalidade->id}}" type="text" class="form-control @error('nome_es'.$modalidade->id) is-invalid @enderror" name="nome_es{{$modalidade->id}}" value="{{ old('nome_es'.$modalidade->id, $modalidade->nome_es) }}" autocomplete="off"> {{-- Sem 'required' se for nullable --}}
+                                            @error('nome_es'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>{{-- end row --}}
+                                    @endif
 
                                     </p>
 

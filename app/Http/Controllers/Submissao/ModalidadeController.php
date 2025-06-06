@@ -186,6 +186,8 @@ class ModalidadeController extends Controller
         // dd($request);
         $validatedData = $request->validate([
             'nome' . $request->modalidadeEditId => ['required', 'string'],
+            'nome_en' . $request->modalidadeEditId => ['required', 'string'],
+            'nome_es' . $request->modalidadeEditId => ['required', 'string'],
             'inícioSubmissão' . $request->modalidadeEditId => ['required', 'date'],
             'fimSubmissão' . $request->modalidadeEditId => ['required', 'date', 'after:inícioSubmissão' . $request->modalidadeEditId],
 
@@ -358,6 +360,8 @@ class ModalidadeController extends Controller
         }
 
         $modalidadeEdit->nome = $request->input('nome' . $request->modalidadeEditId);
+        $modalidadeEdit->nome_en = $request->input('nome_en' . $request->modalidadeEditId);
+        $modalidadeEdit->nome_es = $request->input('nome_es' . $request->modalidadeEditId);
         $modalidadeEdit->inicioSubmissao = $request->input('inícioSubmissão' . $request->modalidadeEditId);
         $modalidadeEdit->fimSubmissao = $request->input('fimSubmissão' . $request->modalidadeEditId);
         $modalidadeEdit->inicioRevisao = $request->input('inícioRevisão' . $request->modalidadeEditId);

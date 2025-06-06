@@ -50,13 +50,14 @@
 
                         {{-- @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
                             <h2 class="card-title">{{$evento->nome_en}}</h2>
+                            <h4 class="card-title">{{__('Modalidade')}}: {{$modalidade->nome_en}}</h4>
                         @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
                             <h2 class="card-title">{{$evento->nome_es}}</h2>
+                            <h4 class="card-title">{{__('Modalidade')}}: {{$modalidade->nome_es}}</h4>
                         @else
                             <h2 class="card-title">{{$evento->nome}}</h2>
+                            <h4 class="card-title">{{__('Modalidade')}}: {{$modalidade->nome}}</h4>
                         @endif
-
-                        <h4 class="card-title">{{__('Modalidade')}}: {{$modalidade->nome}}</h4>
 
                         <div class="titulo-detalhes"></div>
                         <br>
@@ -114,8 +115,19 @@
                                                             </option>
                                                             {{-- Apenas um teste abaixo --}}
                                                             @foreach($modalidades as $modalidade)
+                                                                @php
+                                                                    $nomeModalidadeExibir = $modalidade->nome; 
+
+                                                                    if (isset($evento) && $evento->is_multilingual) {
+                                                                        if (Session::get('idiomaAtual') === 'en' && !empty($modalidade->nome_en)) {
+                                                                            $nomeModalidadeExibir = $modalidade->nome_en;
+                                                                        } elseif (Session::get('idiomaAtual') === 'es' && !empty($modalidade->nome_es)) {
+                                                                            $nomeModalidadeExibir = $modalidade->nome_es;
+                                                                        }
+                                                                    }
+                                                                @endphp
                                                                 <option value="{{$modalidade->id}}"
-                                                                        @if(old('modalidadeId') == $modalidade->id) selected @endif>{{$modalidade->nome}}</option>
+                                                                        @if(old('modalidadeId') == $modalidade->id) selected @endif>{{$nomeModalidadeExibir}}</option>
                                                             @endforeach
                                                         </select>
                                                         @error('modalidadeId')

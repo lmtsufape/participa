@@ -32,6 +32,8 @@ class ModalidadeStoreRequest extends FormRequest
     {
         $rules = [
             'nome' => ['required', 'string'],
+            'nome_en' => ['nullable', 'string'],
+            'nome_es' => ['nullable', 'string', 'max:255'],
             'inicioSubmissao' => ['required', 'date'],
             'fimSubmissao' => ['required', 'date', 'after:inicioSubmissao'],
             'inicioRevisao' => ['nullable'],
