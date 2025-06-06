@@ -113,10 +113,11 @@ class CheckoutController extends Controller
     }
 
     private function gerarRequest($contents, CategoriaParticipante $categoria)
-    {
+    {;
+        // dd($contents);
         $request = [];
-        switch ($contents['payment_type_id']) {
-            case 'bank_transfer':
+        switch ($contents['payment_method_id']) {
+            case 'pix':
                 $request = [
                     "transaction_amount" => (float) $contents['transaction_amount'],
                     "payment_method_id" => "pix",
@@ -126,10 +127,10 @@ class CheckoutController extends Controller
                     ],
                 ];
                 break;
-            case 'ticket':
+            case 'bolbradesco':
                 $request = [
                     "transaction_amount" => (float) $contents['transaction_amount'],
-                    "description" => $contents['description'],
+                    // "description" => $contents['description'],
                     "payment_method_id" => $contents['payment_method_id'],
                     "notification_url" => route('checkout.notifications'),
                     "payer" => [
@@ -151,7 +152,12 @@ class CheckoutController extends Controller
                     ]
                 ];
                 break;
-            case 'credit_card':
+            case 'master':
+            case 'amex':
+            case 'cabal':
+            case 'hipercard':
+            case 'elo':
+            case 'visa':
                 $request = [
                     "transaction_amount" => (float) $categoria->valor_total,
                     "token" => $contents['token'],
