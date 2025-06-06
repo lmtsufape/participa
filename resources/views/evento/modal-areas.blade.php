@@ -123,7 +123,6 @@
                             <div class="card card-body p-2" style="text-align:justify;">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h5 class="mb-0">
-                                    {{ __('Apresentação do eixo') }}:
                                     @if ($evento->is_multilingual)
                                         @if (Session::get('idiomaAtual') === 'en')
                                             {{ $area->nome_en }}

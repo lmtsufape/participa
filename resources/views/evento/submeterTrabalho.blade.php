@@ -116,7 +116,7 @@
                                                             {{-- Apenas um teste abaixo --}}
                                                             @foreach($modalidades as $modalidade)
                                                                 @php
-                                                                    $nomeModalidadeExibir = $modalidade->nome; 
+                                                                    $nomeModalidadeExibir = $modalidade->nome;
 
                                                                     if (isset($evento) && $evento->is_multilingual) {
                                                                         if (Session::get('idiomaAtual') === 'en' && !empty($modalidade->nome_en)) {
@@ -361,14 +361,11 @@
                                                                     data-placeholder="Nenhum arquivo" data-text="Selecionar"
                                                                     data-btnClass="btn-primary-lmts" name="arquivo" required>
                                                             </div>
-                                                            <small><strong>Extensão de arquivos aceitas:</strong>
-                                                                @foreach ($modalidade->tiposAceitos() as $item)
-                                                                    @if ($loop->last)
-                                                                        <span> .{{$item}}.</span>
-                                                                    @else
-                                                                        <span> .{{$item}},</span>
-                                                                    @endif
-                                                                @endforeach</small>
+                                                            <small>
+                                                                <strong>Extensão de arquivos aceitas:</strong>
+                                                                <span id="extensoes-aceitas"></span>
+                                                                </span>
+                                                            </small>
                                                             @error('arquivo')
                                                             <span class="invalid-feedback" role="alert"
                                                                 style="overflow: visible; display:block">
@@ -859,9 +856,9 @@
                                             @endif
                                         @endforeach
 
-                                    
 
-                                    
+
+
                                         @foreach ($ordemCampos as $indice)
                                             @if($indice == "etiquetacoautortrabalho")
                                                 <div style="margin-top:20px">
@@ -968,10 +965,42 @@
             </div>
         </div>
     </div>
+    @php
+        $extensoesPorModalidade = [];
+        foreach($modalidades as $m) {
+            $extensoesPorModalidade[$m->id] = $m->tiposAceitos();
+        }
+    @endphp
 @endsection
 
 @section('javascript')
     <script>
+        const modalidadesData = @json(
+            array_map(function($m) {
+                return [
+                    'id'           => $m->id,
+                    'maxCoautores' => $m->numMaxCoautores
+                ];
+            }, $modalidades)
+        );
+        const modalidadesExtensoes = @json($extensoesPorModalidade);
+        document.addEventListener('DOMContentLoaded', function() {
+        const selectModalidade = document.getElementById('modalidade');
+        const spanExtensoes    = document.getElementById('extensoes-aceitas');
+        function atualizarExtensoes() {
+            // id da modalidade:
+            const modalidadeId = selectModalidade.value;
+            // array de extensões
+            const extensoes = modalidadesExtensoes[modalidadeId] || [];
+            let html = '';
+            extensoes.forEach((extensao, idx) => {
+                html += `<span>.${extensao}${idx === extensoes.length - 1 ? '.' : ','}</span>`;
+            });
+            spanExtensoes.innerHTML = html;
+        }
+        atualizarExtensoes();
+        selectModalidade.addEventListener('change', atualizarExtensoes);
+        });
         function handler() {
             usuario = @json(auth()->user());
             oldEmail = @json(old('emailCoautor'));
@@ -992,7 +1021,25 @@
             }
             return {
                 autores: inicial,
+                modalidades: modalidadesData,
                 adicionaAutor() {
+                    const select = document.getElementById('modalidade');
+                    const selectedId = select ? select.value : null;
+                    if (!selectedId) {
+                        alert('Selecione primeiro uma modalidade antes de adicionar coautor.');
+                        return;
+                    }
+                    const modalidadeEscolhida = this.modalidades.find(
+                        m => m.id === Number(selectedId)
+                    );
+                    const maxCo = modalidadeEscolhida.maxCoautores;
+                    if (maxCo != null){
+                        const coautoresAtuais = this.autores.length - 1; // Para não contar o autor principal
+                        if (coautoresAtuais >= maxCo) {
+                            alert(`Você já atingiu o número máximo de coautores (${maxCo}).`);
+                            return;
+                        }
+                    }
                     this.autores.push({
                         nome: '',
                         email: ''
