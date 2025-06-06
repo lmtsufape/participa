@@ -49,6 +49,7 @@
                                 <th>Email</th>
                                 <th>Cidade</th>
                                 <th>Estado</th>
+                                <th>Status</th>
                                 <th>Aprovada</th>
                                 <th></th>
                             </th>
@@ -64,6 +65,13 @@
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->email}}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->endereco ? $inscricao->user->endereco->cidade : 'Endereço não cadastrado'}}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->endereco ? $inscricao->user->endereco->uf : 'Endereço não cadastrado'}}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">
+                                        @if($inscricao->finalizada == true)
+                                            Inscrito
+                                        @else
+                                            Pré-inscrito
+                                        @endif
+                                    </td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->finalizada ? 'Sim' : 'Não'}}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}"><img src="{{asset('img/icons/eye-regular.svg')}}" alt="" style="width: 14px; fill: #000 !important;"></td>
                                 </th>
