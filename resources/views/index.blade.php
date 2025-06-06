@@ -131,16 +131,41 @@
                                          <?php
 
 
-                                            $inicio = \Carbon\Carbon::parse($evento->dataInicio)->locale(Session::get('idiomaAtual', 'pt'));
-                                            $fim = \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'));
+                                            $dataInicio = \Carbon\Carbon::parse($evento->dataInicio);
+                                            $dataFim = \Carbon\Carbon::parse($evento->dataFim);
 
-                                            if ($inicio->month === $fim->month) {
-                                                $textoData = $inicio->translatedFormat('d ') . ' a ' . $fim->translatedFormat('d \d\e F');
-                                            } else {
-                                                $textoData = $inicio->translatedFormat('d \d\e F ') . ' a ' . $fim->translatedFormat('d \d\e F \d\e Y');
+                                            $idioma = Session::get('idiomaAtual', 'pt');
+                                            $mesIgual = $dataInicio->isSameMonth($dataFim);
+
+                                            switch ($idioma) {
+                                                case 'en':
+                                                    $suffixo      = 'to';
+                                                    $startFormat = 'd F';
+                                                    $endFormat   = 'd F Y';
+                                                    break;
+
+                                                case 'es':
+                                                    $suffixo     = 'hasta';
+                                                    $startFormat = 'd \\d\\e F';
+                                                    $endFormat   = 'd \\d\\e F \\d\\e Y';
+                                                    break;
+
+                                                default:
+                                                    $suffixo = 'a';
+                                                    if ($mesIgual) {
+                                                        $startFormat = 'd';
+                                                        $endFormat   = 'd \\d\\e F \\d\\e Y';
+                                                    } else {
+                                                        $startFormat = 'd \\d\\e F';
+                                                        $endFormat   = 'd \\d\\e F \\d\\e Y';
+                                                    }
+                                                    break;
                                             }
                                         ?>
-                                        {{ $textoData }}
+
+                                    {{ $dataInicio->translatedFormat($startFormat) }}
+                                    {{ $suffixo }}
+                                    {{ $dataFim->translatedFormat($endFormat) }}
                                     </p>
                                     <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
                                     class="btn btn-outline-light rounded-3">
