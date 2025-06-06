@@ -259,13 +259,15 @@
                                                 data-bs-toggle="collapse"
                                                 data-bs-parent="#accordion_modalidades"
                                                 href="#collapse_{{ $modalidade->id }}">
-                                                    {{-- @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                                        <strong>{{ $modalidade->nome_en }}</strong>
-                                                    @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
-                                                        <strong>{{ $modalidade->nome_es }}</strong>
-                                                    @else
-                                                        <strong>{{ $modalidade->nome }}</strong>
-                                                    @endif}}
+                                                    <strong>
+                                                        @if (isset($evento) && $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && !empty($modalidade->nome_en))
+                                                            {{ $modalidade->nome_en }}
+                                                        @elseif (isset($evento) && $evento->is_multilingual && Session::get('idiomaAtual') === 'es' && !empty($modalidade->nome_es))
+                                                            {{ $modalidade->nome_es }}
+                                                        @else
+                                                            {{ $modalidade->nome }}
+                                                        @endif
+                                                    </strong>
                                                 </a>
                                             </div>
                                             <div id="collapse_{{ $modalidade->id }}"
