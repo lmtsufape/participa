@@ -455,38 +455,6 @@ class EventoController extends Controller
         ]);
     }
 
-    public function listarCandidatos(Request $request)
-    {
-        $evento = Evento::find($request->eventoId);
-        $candidaturas = collect([
-            (object)[
-                'id' => 1,
-                'user' => (object)['name' => 'Ana Carolina', 'email' => 'ana.carolina@example.com'],
-                'aprovado' => false,
-                'link_lattes' => '#',
-                'resumo_lattes' => 'Resumo do Lattes da Ana.',
-                'area_candidato_avaliador' => collect([(object)['area' => (object)['nome' => 'Eixo 01']], (object)['area' => (object)['nome' => 'Eixo 02']]]),
-                'ja_avaliou_cba' => true,
-                'disponibilidade_idiomas' => 'espanhol'
-            ],
-            (object)[
-                'id' => 2,
-                'user' => (object)['name' => 'Bruno Martins', 'email' => 'bruno.martins@example.com'],
-                'aprovado' => true,
-                'link_lattes' => '#',
-                'resumo_lattes' => 'Resumo do Lattes do Bruno.',
-                'area_candidato_avaliador' => collect([(object)['area' => (object)['nome' => 'Eixo 03']]]),
-                'ja_avaliou_cba' => false,
-                'disponibilidade_idiomas' => 'nao'
-            ],
-        ]);
-        // ---- FIM DO BLOCO DE DADOS DE EXEMPLO ----
-
-        return view('coordenador.revisores.listarCandidatos', [
-            'evento'       => $evento,
-            'candidaturas' => $candidaturas,
-        ]);
-    }
 
     public function listarUsuarios(Request $request)
     {
