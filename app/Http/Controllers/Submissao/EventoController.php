@@ -13,6 +13,7 @@ use App\Http\Requests\UpdateEventoRequest;
 use App\Mail\AvisoPeriodoCorrecao;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EventoCriado;
+use App\Models\CandidatoAvaliador;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\AreaModalidade;
@@ -453,6 +454,7 @@ class EventoController extends Controller
             'contadores' => $contadores,
         ]);
     }
+
 
     public function listarUsuarios(Request $request)
     {
@@ -1459,6 +1461,9 @@ class EventoController extends Controller
             $inscricao = $qry->first();
             $isInscrito = $qry->count();
 
+            $jaCandidatou = CandidatoAvaliador::where('evento_id', $evento->id)
+                ->where('user_id', Auth::user()->id)
+                ->exists();
             // if($trabalhosCount != 0){
             //   $hasTrabalho = true;
             //   $hasFile = true;
@@ -1486,7 +1491,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;

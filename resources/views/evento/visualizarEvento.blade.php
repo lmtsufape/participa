@@ -113,9 +113,9 @@
                         </svg>
 
                         {{__('Inscrição sujeita à confirmação do pagamento.')}}</span>
-                        
+
                     <br>
-                    
+
                     @isset($inscricao)
                         @isset($inscricao->pagamento)
                             <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
@@ -320,6 +320,7 @@
                                                             {{ date('d/m/Y H:i', strtotime($data->fim)) }}
                                                         </li>
                                                     @endforeach
+
                                                 </ul>
 
                                                 {{-- links de download e botão de submissão --}}
@@ -389,6 +390,19 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                    @auth
+                                        @if (!$jaCandidatou)
+                                            <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalInscreverAvaliador">
+                                                {{ __('Quero ser avaliador') }}
+                                            </button>
+                                        @else
+                                            <button class="btn btn-my-success w-100 rounded btn-lg mt-3" disabled>
+                                                {{ __('Você já se candidatou a avaliador neste evento') }}
+                                            </button>
+                                        @endif
+                                    @endauth
                                 </div>
                             </div>
                         </div>
@@ -775,6 +789,7 @@
         @include('evento.modal-inscricao')
         @include('evento.modal-submeter-trabalho')
         @include('evento.modal-confirm-inscricao')
+        @include('evento.modal-inscricao-avaliador')
 
     </div>
 

@@ -80,7 +80,7 @@
                                                                             @endif
                                                                             </p>
                                                                             @if($categoria->limite_inscricao)
-                                                                            <p class="text-danger"><small>{{__('Inscrições até:')}} {{ \Carbon\Carbon::parse($categoria->limite_inscricao)->format('d/m/Y H:i') }}</small></p>
+                                                                            <p class="text-danger"><small>{{__('Inscrições até:')}} {{ \Carbon\Carbon::parse($categoria->limite_inscricao)->format('d/m/Y') }}</small></p>
                                                                             @endif
                                                                         </div>
                                                                         <div class="card-footer d-flex justify-content-center">
