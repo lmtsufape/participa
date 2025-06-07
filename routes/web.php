@@ -205,6 +205,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('revisores/cadastrarRevisores', [EventoController::class, 'cadastrarRevisores'])->name('cadastrarRevisores');
 
             Route::get('revisores/listarRevisores', [EventoController::class, 'listarRevisores'])->name('listarRevisores');
+            Route::get('revisores/listarCandidatos', [EventoController::class, 'listarCandidatos'])->name('listarCandidatos');
             Route::get('revisores/listarUsuarios', [EventoController::class, 'listarUsuarios'])->name('listarUsuarios');
 
             // Regristros de memória
