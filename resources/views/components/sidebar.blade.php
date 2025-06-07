@@ -280,7 +280,7 @@
                 </div>
             </li>
         @endcan
-        @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
+        @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento)
             <li id="revisores" class="nav-item">
                 <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
                     href="#CollapseRevisores" role="button" aria-expanded="false" aria-controls="CollapseRevisores">
@@ -299,7 +299,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center gap-2" id="listarCandidatosAvaliadores"
-                                href="{{ route('coord.listarCandidatos', ['eventoId' => $evento->id]) }}"> {{-- Substituir '#' por uma rota como route('coord.avaliadores.candidatos', $evento) --}}
+                                href="{{ route('coord.candidatoAvaliador.listarCandidatos', ['evento' => $evento->id]) }}">
                                 <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
                                 <span>{{ __('Listar candidatos') }}</span>
                             </a>
