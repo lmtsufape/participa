@@ -1427,7 +1427,16 @@ class EventoController extends Controller
             return abort(404);
         }
         $encerrada = $evento->eventoInscricoesEncerradas();
-        $datas = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where([['eventoId', '=', $id], ['visibilidade_participante', '=', true]])->get();
+        $datas = DB::table('atividades')
+            ->join('datas_atividades', 'atividades.id', '=', 'datas_atividades.atividade_id')
+            ->where('eventoId', $id)
+            ->where('visibilidade_participante', true)
+            // seleciona só a parte DATE(), zero‐padded
+            ->select(DB::raw('DATE(data) as data'))
+            ->distinct()
+            ->orderBy('data')          // <-- garante que o banco já ordene por data
+            ->get();
+
         $atividades = Atividade::join('datas_atividades', 'atividades.id', '=', 'datas_atividades.atividade_id')
         ->select('atividades.*', 'datas_atividades.data', 'datas_atividades.hora_inicio')
         ->orderBy('datas_atividades.data')
