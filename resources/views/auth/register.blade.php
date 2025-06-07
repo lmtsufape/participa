@@ -52,7 +52,7 @@
     @if(Auth::check())
         <form method="POST" action="{{ route('administrador.criarUsuario', app()->getLocale()) }}">
     @else
-        <form method="POST" action="{{ route('register', app()->getLocale())}}"> 
+        <form method="POST" action="{{ route('register', app()->getLocale())}}">
     @endif
         <div id="etapa-1">
             <div class="etapas mt-3" style="font-weight: 500;">
@@ -423,20 +423,21 @@
                         <div>
                             @php
                                 $generos = [
-                                    'mulher_sis' => 'Mulher Sis',
-                                    'homem_sis' => 'Homem Sis',
-                                    'transgenero' => 'Transgênero',
-                                    'nao_binario' => 'Não binário',
+                                    'feminino' => 'Feminino',
+                                    'masculino' => 'Masculino',
+                                    'agênero' => 'Agênero',
+                                    'nao_binario' => 'Não-Binário',
+                                    'nao_conforme_ao_genero' => 'Não-conforme ao Gênero',
                                     'outro' => 'Outro',
                                     'prefiro_nao_responder' => 'Prefiro não responder',
                                 ];
                             @endphp
                             @foreach($generos as $key => $label)
                                 <div class="form-check">
-                                    <input class="form-check-input" 
-                                        type="radio" 
-                                        name="genero" 
-                                        id="genero_{{ $key }}" 
+                                    <input class="form-check-input"
+                                        type="radio"
+                                        name="genero"
+                                        id="genero_{{ $key }}"
                                         value="{{ $key }}"
                                         @if ($loop->first) required @endif>
                                     <label class="form-check-label" for="genero_{{ $key }}">{{ $label }}</label>
@@ -454,10 +455,10 @@
                         <div>
                             @php
                                 $racas = [
-                                    'pessoa_negra' => 'Pessoa negra',
-                                    'pessoas_parda' => 'Pessoas parda',
+                                    'negra' => 'Negra',
+                                    'parda' => 'Parda',
                                     'indigena' => 'Indígena',
-                                    'pessoa_branca' => 'Pessoa branca',
+                                    'branca' => 'Branca',
                                     'outra_raca' => 'Outra',
                                     'prefiro_nao_responder_raca' => 'Prefiro não responder',
                                 ];
@@ -469,7 +470,7 @@
                                     <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>
                                 </div>
                             @endforeach
-                            <input type="text" name="outraRaca" id="outraRaca" class="form-control mt-2" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;">
+                            <input type="text" name="outraRaca" id="outraRaca" class="form-control mt-4" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;">
                         </div>
                     </div>
                 </div>
@@ -530,10 +531,10 @@
                             @endphp
                             @foreach($necessidades as $key => $label)
                                 <div class="form-check">
-                                    <input class="form-check-input" 
-                                        type="checkbox" 
-                                        name="necessidadesEspeciais[]" 
-                                        id="necessidade_{{ $key }}" 
+                                    <input class="form-check-input"
+                                        type="checkbox"
+                                        name="necessidadesEspeciais[]"
+                                        id="necessidade_{{ $key }}"
                                         value="{{ $key }}">
                                     <label class="form-check-label" for="necessidade_{{ $key }}">{{ $label }}</label>
                                 </div>
@@ -542,11 +543,11 @@
                         </div>
                     </div>
                 </div>
-                
+
                 {{-- Pessoa com deficiência ou idosos --}}
                 <div class="col-md-6">
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Você é pessoa com deficiência ou idoso?</label>
+                        <label class="col-form-label required-field">Você é uma pessoa idosa ou com deficiência?</label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_sim" value="true" required>
@@ -565,7 +566,7 @@
                 {{-- Associado da ABA Agroecologia --}}
                 <div class="col-md-6">
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Já é Associado da ABA Agroecologia?</label>
+                        <label class="col-form-label required-field">Você é uma pessoa associada à Associação Brasileira de Agroecologia (ABA-Agroecologia)?</label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="associadoAba" id="associado_sim" value="true" required>
@@ -582,7 +583,7 @@
                 {{-- Gostaria de receber mais informações sobre ABA --}}
                 <div class="col-md-6">
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Se não, gostaria de receber mais informações sobre a ABA?</label>
+                        <label class="col-form-label required-field">Se não, gostaria de receber mais informações sobre a ABA-Agroecologia?</label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_sim" value="true" required>
@@ -624,6 +625,14 @@
                     </div>
                 </div>
             </div>
+            <div class="mb-3 mt-3">
+                <input name="termos" class="form-check-input "
+                    type="checkbox" value="true" id="termos" required>
+                <label class="form-check-label" for="termos">
+                    {{ __('Concordo e respeitarei os') }}
+                    <a  href="#modal-termo-de-uso" data-bs-toggle="modal" data-bs-target="#modal-termo-de-uso">Termos de uso</a>
+                </label>
+            </div>
 
             <div class="row form-group my-3">
                 <div class="col-md-10"></div>
@@ -636,7 +645,7 @@
         </div>
     </form>
 </div>
-
+@include('auth.modal-termo-de-uso')
 
 
 @endsection
@@ -742,7 +751,7 @@
   <script src="{{ asset('js/celular.js') }}" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
-  
+
   <script type="text/javascript">
     $(document).ready(function(){
         // $("#fieldPassaporte").hide();
