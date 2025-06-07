@@ -94,7 +94,7 @@
                     </p>
                 </div>
 
-                @if ($etiquetas->modinscricao == true)
+                @if ($etiquetas->modinscricao == true)
                     <button id="btn-inscrevase" class="btn btn-my-success w-50 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
                         @if ($isInscrito || $encerrada) disabled @endif>
                         @if ($isInscrito)
@@ -320,15 +320,7 @@
                                                             {{ date('d/m/Y H:i', strtotime($data->fim)) }}
                                                         </li>
                                                     @endforeach
-                                                    <li>
-                                                        <button class="btn btn-my-success w-50 rounded btn-lg mt-3" 
-                                                                data-bs-toggle="modal" 
-                                                                data-bs-target="#modalInscreverAvaliador"
-                                                                @if (isset($isAvaliador) && $isAvaliador) disabled @endif>
-                                                            
-                                                                {{ __('Quero ser avaliador da ABA') }}
-                                                        </button>
-                                                    </li>
+                                            
                                                 </ul>
 
                                                 {{-- links de download e botão de submissão --}}
@@ -398,6 +390,13 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                    <button class="btn btn-my-success w-50 rounded btn-lg mt-3" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#modalInscreverAvaliador"
+                                                @if (isset($isAvaliador) && $isAvaliador) disabled @endif>
+                                            
+                                                {{ __('Quero ser avaliador') }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
