@@ -94,7 +94,7 @@
                     </p>
                 </div>
 
-                @if (true)
+                @if ($etiquetas->modinscricao == true)
                     <button id="btn-inscrevase" class="btn btn-my-success w-50 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
                         @if ($isInscrito || $encerrada) disabled @endif>
                         @if ($isInscrito)

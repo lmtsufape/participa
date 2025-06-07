@@ -297,6 +297,13 @@
                                 <span>{{ __('Listar avaliadores') }}</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2" id="listarCandidatosAvaliadores"
+                                href="{{ route('coord.listarCandidatos', ['eventoId' => $evento->id]) }}"> {{-- Substituir '#' por uma rota como route('coord.avaliadores.candidatos', $evento) --}}
+                                <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                <span>{{ __('Listar candidatos') }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>
