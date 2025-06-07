@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container py-5">
-    <h1 class="mb-4">Aviso de Privacidade</h1>
+    <h1 class="mb-4">Aviso de Privacidade da Plataforma</h1>
 
     <div class="bg-white p-4 shadow rounded" style="line-height: 1.6; font-size: 1rem;">
         <ul style="list-style-type: none; padding-left: 0;">
