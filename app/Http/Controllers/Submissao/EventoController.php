@@ -13,6 +13,7 @@ use App\Http\Requests\UpdateEventoRequest;
 use App\Mail\AvisoPeriodoCorrecao;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EventoCriado;
+use App\Models\CandidatoAvaliador;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\AreaModalidade;
@@ -454,38 +455,6 @@ class EventoController extends Controller
         ]);
     }
 
-    public function listarCandidatos(Request $request)
-    {
-        $evento = Evento::find($request->eventoId);
-        $candidaturas = collect([
-            (object)[
-                'id' => 1,
-                'user' => (object)['name' => 'Ana Carolina', 'email' => 'ana.carolina@example.com'],
-                'aprovado' => false,
-                'link_lattes' => '#',
-                'resumo_lattes' => 'Resumo do Lattes da Ana.',
-                'area_candidato_avaliador' => collect([(object)['area' => (object)['nome' => 'Eixo 01']], (object)['area' => (object)['nome' => 'Eixo 02']]]),
-                'ja_avaliou_cba' => true,
-                'disponibilidade_idiomas' => 'espanhol'
-            ],
-            (object)[
-                'id' => 2,
-                'user' => (object)['name' => 'Bruno Martins', 'email' => 'bruno.martins@example.com'],
-                'aprovado' => true,
-                'link_lattes' => '#',
-                'resumo_lattes' => 'Resumo do Lattes do Bruno.',
-                'area_candidato_avaliador' => collect([(object)['area' => (object)['nome' => 'Eixo 03']]]),
-                'ja_avaliou_cba' => false,
-                'disponibilidade_idiomas' => 'nao'
-            ],
-        ]);
-        // ---- FIM DO BLOCO DE DADOS DE EXEMPLO ----
-
-        return view('coordenador.revisores.listarCandidatos', [
-            'evento'       => $evento,
-            'candidaturas' => $candidaturas,
-        ]);
-    }
 
     public function listarUsuarios(Request $request)
     {
@@ -1492,6 +1461,9 @@ class EventoController extends Controller
             $inscricao = $qry->first();
             $isInscrito = $qry->count();
 
+            $jaCandidatou = CandidatoAvaliador::where('evento_id', $evento->id)
+                ->where('user_id', Auth::user()->id)
+                ->exists();
             // if($trabalhosCount != 0){
             //   $hasTrabalho = true;
             //   $hasFile = true;
@@ -1519,7 +1491,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
