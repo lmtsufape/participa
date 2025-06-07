@@ -764,9 +764,10 @@
 
             <hr class="border-dark">
 
+
             <div id="local" class="row py-4">
                 <h4 class="text-my-primary">{{ __('Local') }}</h4>
-                <div id="mapaGoogle" class="shadow rounded w-100" style="height: 400px;">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3936.088668407275!2d-40.51881532409689!3d-9.413620090663885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7737101a3531eb9%3A0x36e94720fbc52c53!2sAv.%20Ant%C3%B4nio%20C.%20Magalh%C3%A3es%2C%20510%20-%20Country%20Club%2C%20Juazeiro%20-%20BA%2C%2048902-300!5e0!3m2!1spt-BR!2sbr!4v1749258428058!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
             </div>
         </div>
