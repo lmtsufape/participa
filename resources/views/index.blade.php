@@ -97,7 +97,7 @@
         <div class="container d-flex flex-column pb-5">
             <div class="container d-flex align-items-center mb-3 position-relative">
                 <h2 class="text-my-primary position-absolute start-50 translate-middle-x">
-                    {{ __('Em destaque neste momento') }}
+                    {{ __('Inscrições abertas') }}
                 </h2>
                 <a href="{{ route('eventos.proximos') }}"
                 class="btn btn-my-outline-primary rounded-5 ms-auto">
@@ -109,6 +109,7 @@
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
                     @foreach ($eventos_destaques->take(5) as $evento)
+                    <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
                         <div class="swiper-slide">
                             <img src="{{ Storage::url($evento->fotoEvento) }}" alt="Foto do evento">
                             <div class="carousel-caption">
@@ -170,6 +171,7 @@
                                 </div>
                             </div>
                         </div>
+                    </a>
                     @endforeach
                 </div>
                 <!-- Navegação do Swiper -->
