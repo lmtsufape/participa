@@ -607,20 +607,29 @@
                     {{ __('Para participar das atividades do evento, é preciso primeiro se inscrever no evento e, em seguida, realizar a inscrição na atividade desejada, disponível na seção de Programação.') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-
                 <div class="row">
-                    <div class="flex space-x-2 mt-4">
-                        @foreach($datas as $indice => $data)
-                            <button
-                                class="px-4 py-2 rounded carregar-cards {{ $loop->first ? 'btn-my-secondary' : 'btn-my-primary' }}"
-                                data-data = "{{ $data->data }}"
-                                id="btn-{{ $data->data }}"
-                            >
-                                {{ \Carbon\Carbon::parse($data->data)->translatedFormat('D, d/m') }}
-                            </button>
-                        @endforeach
+
+                    <div class="d-flex align-items-center bg-my-primary p-1 rounded">
+
+                        {{-- Botão Anterior --}}
+                        <button id="prevDates" class="btn btn-link text-white text-decoration-none fs-4 flex-shrink-0" disabled>&lt;</button>
+
+                        {{-- Contêiner para os botões de data --}}
+                        <div class="d-flex flex-grow-1 overflow-hidden">
+                            @foreach($datas as $indice => $data)
+                                <button class="btn btn-outline-primary text-white border-0 carregar-cards
+                                    flex-shrink-0 w-25" data-data="{{ $data->data }}" id="btn-{{ $data->data }}">
+                                    {{ \Carbon\Carbon::parse($data->data)->translatedFormat('D, d/m') }}
+                                </button>
+                            @endforeach
+                        </div>
+
+
+                        <button id="nextDates" class="btn btn-link text-white text-decoration-none fs-4 flex-shrink-0">&gt;</button>
                     </div>
-                    <div class="col-md-4 p-4" id="cards-atividade">
+
+
+                    <div id="cards-atividade" class="row row-cols-1 row-cols-md-3 g-4">
                         {{-- cards das atividades --}}
                     </div>
                 </div>
@@ -795,6 +804,14 @@
 
 
     @foreach ($atividades as $atv)
+        @php
+            $datas = $atv->datasAtividade
+                          ->sortBy('data')
+                          ->values();
+
+            $primeira = $datas->first();
+            $ultima   = $datas->last();
+        @endphp
         <div class="modal fade bd-example modal-show-atividade" id="modalAtividadeShow{{ $atv->id }}"
             tabindex="-1" role="dialog" aria-labelledby="modalLabelAtividadeShow{{ $atv->id }}"
             aria-hidden="true">
@@ -807,59 +824,85 @@
                     <div class="modal-body">
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <p class="text-my-secondary">
+                                <div class="col-md-6 d-flex flex-column gap-3">
+                                    <p class="text-my-secondary mb-0">
                                         <strong>{{ __('Tipo') }}: {{ $atv->tipoAtividade->descricao }}</strong>
                                     </p>
+                                    @if($primeira)
+                                        {{-- Sempre mostramos a data de início --}}
+                                        <div class="d-flex align-items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                 class="bi bi-calendar-event" viewBox="0 0 16 16">
+                                                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                                                <path
+                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                                            </svg>
+                                            <span>
+                                                 {{ \Carbon\Carbon::parse($primeira->data)->translatedFormat('l, d F') }}
+                                            </span>
+                                        </div>
 
-                                    <span class="d-flex align-items-center gap-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                            class="bi bi-calendar-event" viewBox="0 0 16 16">
-                                            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
-                                            <path
-                                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
-                                        </svg>
-                                        {{ \Carbon\Carbon::parse($evento->dataFim)->format('l, d F') }}
-                                    </span>
-                                    <span class="my-1">
+                                        {{-- Se tiver mais de uma data, renderiza também a do último dia --}}
+                                        @if($datas->count() > 1)
+                                            <div class="d-flex align-items-center gap-2 mt-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                     class="bi bi-calendar-event" viewBox="0 0 16 16">
+                                                    <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                                                    <path
+                                                        d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                                                </svg>
+                                                <span>
+                                                    {{ \Carbon\Carbon::parse($ultima->data)->translatedFormat('l, d F') }}
+                                                </span>
+                                            </div>
+                                        @endif
+                                    @endif
+                                    <div class="d-flex align-items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                             <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
-                                        </svg> {{ $atv->local }}
-                                    </span>
+                                        </svg>
+                                        <span>{{ $atv->local }}</span>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 d-flex align-items-center justify-content-end">
                                     @if ($isInscrito)
                                         @if (!$atv->atividadeInscricoesEncerradas())
                                             @if (($atv->vagas > 0 || $atv->vagas == null) && Auth::user()->atividades()->find($atv->id) == null)
                                                 <form method="POST"
-                                                    action="{{ route('atividades.inscricao', ['id' => $atv->id]) }}">
+                                                      action="{{ route('atividades.inscricao', ['id' => $atv->id]) }}">
                                                     @csrf
                                                     <button type="submit" class="btn btn-my-success">
-                                                        {{ __('Inscrever-se') }}</button>
+                                                        {{ __('Inscrever-se') }}
+                                                    </button>
                                                 </form>
                                             @elseif(Auth::user()->atividades()->find($atv->id) != null)
                                                 @if (!$atv->terminou())
                                                     <form method="POST"
-                                                        action="{{ route('atividades.cancelarInscricao', ['id' => $atv->id, 'user' => Auth::id()]) }}">
+                                                          action="{{ route('atividades.cancelarInscricao', ['id' => $atv->id, 'user' => Auth::id()]) }}">
                                                         @csrf
-                                                        <button type="submit"
-                                                            class="btn btn-primary">
-                                                            {{ __('Cancelar inscrição') }}</button>
+                                                        <button type="submit" class="btn btn-primary">
+                                                            {{ __('Cancelar inscrição') }}
+                                                        </button>
                                                     </form>
                                                 @else
-                                                    <button type="button" class="btn btn-primary"
-                                                        disabled>{{ __('Inscrito') }}</button>
+                                                    <button type="button" class="btn btn-primary" disabled>
+                                                        {{ __('Inscrito') }}
+                                                    </button>
                                                 @endif
                                             @else
-                                                <button type="button" class="btn btn-danger"
-                                                    style="pointer-events: none">{{ __('Sem Vagas') }}</button>
+                                                <button type="button" class="btn btn-danger" disabled style="pointer-events: none">
+                                                    {{ __('Sem Vagas') }}
+                                                </button>
                                             @endif
                                         @else
                                             @if (Auth::user()->atividades()->find($atv->id) != null)
-                                                <button type="button" class="btn btn-primary" disabled>{{ __('Inscrito') }}</button>
+                                                <button type="button" class="btn btn-primary" disabled>
+                                                    {{ __('Inscrito') }}
+                                                </button>
                                             @else
-                                                <button type="button" class="btn btn-danger"
-                                                    disabled>{{ __('Inscrições encerradas') }}</button>
+                                                <button type="button" class="btn btn-danger" disabled>
+                                                    {{ __('Inscrições encerradas') }}
+                                                </button>
                                             @endif
                                         @endif
                                     @endif
@@ -945,6 +988,60 @@
 
 @section('javascript')
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const prevBtn  = document.getElementById('prevDates');
+            const nextBtn  = document.getElementById('nextDates');
+            // o container de datas é o próximo irmão de prevBtn
+            const datesContainer = prevBtn.nextElementSibling;
+            const dateBtns       = Array.from(datesContainer.querySelectorAll('button.carregar-cards'));
+
+            // calcula largura de scroll = largura do botão + margem direita
+            function scrollAmount() {
+                const btn = dateBtns[0];
+                const style = window.getComputedStyle(btn);
+                const marginRight = parseFloat(style.marginRight);
+                return btn.getBoundingClientRect().width + marginRight;
+            }
+
+            // ativa/desativa as setas
+            function updateArrows() {
+                prevBtn.disabled = datesContainer.scrollLeft <= 0;
+                nextBtn.disabled = datesContainer.scrollLeft + datesContainer.clientWidth >= datesContainer.scrollWidth - 1;
+            }
+
+            // clique em “<”
+            prevBtn.addEventListener('click', () => {
+                datesContainer.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
+            });
+
+            // clique em “>”
+            nextBtn.addEventListener('click', () => {
+                datesContainer.scrollBy({ left:  scrollAmount(), behavior: 'smooth' });
+            });
+
+            // ao terminar qualquer scroll, atualiza estado das setas
+            datesContainer.addEventListener('scroll', updateArrows);
+
+            // estado inicial das setas
+            updateArrows();
+
+            // Handler de clique em cada data
+            dateBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 1) Highlight
+                    dateBtns.forEach(x => {
+                        x.classList.remove('btn-my-secondary','pill');
+                        x.classList.add   ('btn-transparent','rounded-0');
+                    });
+                    btn.classList.add   ('btn-my-secondary','pill');
+                    btn.classList.remove('btn-transparent','rounded-0');
+
+                    // 2) Carrega as cards via AJAX/Fetch
+                    const data = btn.getAttribute('data-data');
+
+                });
+            });
+        });
         window.initMap = function() {
             // monta o endereço completo;
             const address = "{{ $evento->endereco->rua }}, {{ $evento->endereco->numero }}, {{ $evento->endereco->cidade }}, {{$evento->endereco->uf}}, Brasil";
@@ -973,39 +1070,68 @@
     </script>
     <script>
         $(document).ready(function(){
-            let atividades  = @json($atividadesAgrupadas);
+            // dados vindos do controller
+            let atividades = @json($atividadesAgrupadas);
 
-            function gerarCards(atividade){
-                return `<div class="card ratio ratio-1x1 w-75 shadow">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <span><strong>${ atividade.datas_atividade[0].hora_inicio } - </strong></span>
-                            <span><strong>${ atividade.datas_atividade[0].hora_fim }</strong></span>
-                            <p>${ atividade.titulo }</p>
-                        </div>
-                        <button class="btn btn-my-outline-primary btn-sm rounded-pill mt-auto" type="button"
-                            data-bs-toggle="modal" data-bs-target="#modalAtividadeShow${ atividade.id }">
-                            Saiba mais
-                        </button>
-                    </div>
-                </div>`
+            function formatHora(hora) {
+                return hora.slice(0,5);
+
+            }
+
+
+            function gerarCard(ativ) {
+                const inicio = formatHora(ativ.datas_atividade[0].hora_inicio);
+                const fim    = formatHora(ativ.datas_atividade[0].hora_fim);
+                return `
+      <div class="card shadow w-100 d-flex flex-column">
+        <div class="card shadow w-100 d-flex flex-column">
+            <div class="card-body d-flex flex-column justify-content-between align-items-start">
+                <div>
+                    <strong>${inicio} - ${fim}</strong>
+                    <p class="mb-0">${ativ.titulo}</p>
+                </div>
+                <button
+                    class="btn btn-my-outline-primary btn-sm px-3 py-1 rounded-pill align-self-start mt-auto"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalAtividadeShow${ativ.id}"
+                >
+                    Saiba mais
+                </button>
+            </div>
+        </div>
+      </div>`;
+            }
+
+
+            function equalizeHeights() {
+                const cards = $('#cards-atividade .card');
+                cards.css('height', 'auto');
+                let max = 0;
+                cards.each(function(){
+                    max = Math.max(max, $(this).outerHeight());
+                });
+                cards.height(max);
             }
 
             $('.carregar-cards').on('click', function(){
+                const dia = $(this).data('data');
+                const agrup = atividades[dia] || [];
+
                 $('#cards-atividade').empty();
-                let agrupamento = atividades[$(this).data('data')]
-                if (!Array.isArray(agrupamento)) {
-                    agrupamento = [agrupamento];
-                }
 
-                agrupamento.forEach(element => {
-
-                    $('#cards-atividade').append(gerarCards(element))
-
+                agrup.forEach(item => {
+                    $('#cards-atividade').append(`
+        <div class="col d-flex align-items-stretch">
+          ${gerarCard(item)}
+        </div>
+      `);
                 });
+                equalizeHeights();
+            });
 
-            })
-        })
+            $(window).on('resize', equalizeHeights);
+        });
 
 
 
