@@ -629,8 +629,8 @@
                 <input name="termos" class="form-check-input "
                     type="checkbox" value="true" id="termos" required>
                 <label class="form-check-label" for="termos">
-                    {{ __('Concordo e respeitarei os') }}
-                    <a  href="#modal-termo-de-cessao" data-bs-toggle="modal" data-bs-target="#modal-termo-de-cessao">Termos de cessão de imagem</a>
+                    {{ __('Concordo com o') }}
+                    <a  href="#modal-termo-de-cessao" data-bs-toggle="modal" data-bs-target="#modal-termo-de-cessao">Termo de cessão de imagem</a>.
                 </label>
             </div>
 
@@ -639,7 +639,7 @@
                     type="checkbox" value="true" id="termos" required>
                 <label class="form-check-label" for="termos">
                     {{ __('Concordo e respeitarei os') }}
-                    <a  href="#modal-termo-de-uso" data-bs-toggle="modal" data-bs-target="#modal-termo-de-uso">Termos de uso da plataforma</a>
+                    <a  href="#modal-termo-de-uso" data-bs-toggle="modal" data-bs-target="#modal-termo-de-uso">Termos de uso da plataforma</a>.
                 </label>
             </div>
 

@@ -32,8 +32,8 @@
                     <div class=" mt-2 mt-mb-md-0" style="flex: 0 0 auto; width: auto; ">
                         <h6 class="fw-bold">{{ __('Módulos') }}</h6>
                         <ul class="list-unstyled small">
-                            <li><a href="{{ route('evento.visualizar', ['id' => 3]) }}" class="text-white text-decoration-none">{{ __('Inscrições') }}</a></li>
-                            <li><a href="{{ route('evento.visualizar', ['id' => 3]) }}" class="text-white text-decoration-none">{{ __('Submissões') }}</a></li>
+                            <li><a href="{{ route('evento.visualizar', ['id' => 2]) }}" class="text-white text-decoration-none">{{ __('Inscrições') }}</a></li>
+                            <li><a href="{{ route('evento.visualizar', ['id' => 2]) }}" class="text-white text-decoration-none">{{ __('Submissões') }}</a></li>
                             <li><a href="{{ route('meusCertificados') }}" class="text-white text-decoration-none">{{ __('Certificados') }}</a></li>
                         </ul>
                     </div>
