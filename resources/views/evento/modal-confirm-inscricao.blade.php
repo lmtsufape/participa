@@ -6,7 +6,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Fechar') }}"></button>
       </div>
       <div class="modal-body">
-        {{ __('Para submeter um trabalho, você precisa se inscrever no evento primeiro. Deseja prosseguir para a inscrição?') }}
+        {{ __('Para submeter um trabalho, você precisa estar pré-inscrito no evento. Deseja prosseguir para a pré-inscrição?') }}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -15,7 +15,7 @@
         <button type="button"
                 class="btn btn-my-success"
                 id="btnConfirmarInscricao">
-          {{ __('Sim, quero me inscrever') }}
+          {{ __('Sim, quero me pré-inscrever') }}
         </button>
       </div>
     </div>
