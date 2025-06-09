@@ -617,4 +617,24 @@ class RevisorController extends Controller
             return false;
         }
     }
+
+    public function verificarCorrecao(Request $request, $trabalho_id){
+        $trabalho = Trabalho::find($trabalho_id);
+        switch ($request->status_correcao) {
+            case 'corrigido':
+                $trabalho->update(['avaliado' => 'corrigido']);
+                // Lógica específica para "completamente"
+                break;
+            case 'corrigido_parcialmente':
+                $trabalho->update(['avaliado' => 'corrigido_parcialmente']);
+                // Lógica específica para "parcialmente"
+                break;
+            case 'nao_corrigido':
+                $trabalho->update(['avaliado' => 'nao_corrigido']);
+                // Lógica específica para "nao"
+                break;
+        }
+
+        return redirect()->back()->with('success', 'Status de trabalho alterado com sucesso');
+    }
 }
