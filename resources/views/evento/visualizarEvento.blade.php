@@ -241,14 +241,14 @@
 
         @if($temSubmissao || $temAreas)
             <div id="submissao_trabalho" class="row py-4">
-                <h4 class="text-my-primary">{{ __('Submissão de trabalho') }}</h4>
+                <h4 class="text-my-primary">{{ __('Submeta seu Trabalho') }}</h4>
 
                 {{-- coluna de Modalidades --}}
                 @if($temSubmissao)
                     <div class="col-md-6">
                         <div class="card rounded">
                             <div class="card-heading bg-my-primary rounded pt-3 pb-1 ps-3">
-                                <h5 class="text-white">{{ __('Modalidades') }}</h5>
+                                <h5 class="text-white">{{ __('Escolha a modalidade e envie o seu trabalho') }}</h5>
                             </div>
                             <div class="card-body">
                                 <div class="accordion" id="accordion_modalidades" style="font-size: 10px;">
