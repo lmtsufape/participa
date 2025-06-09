@@ -9,7 +9,7 @@ const phoneInput = window.intlTelInput(phoneInputField, {
 
     customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
         if (selectedCountryData.iso2 === 'br') {
-            return '(DDD) 00000-0000';
+            return '(00) 00000-0000';
         }
         return selectedCountryPlaceholder;
     }

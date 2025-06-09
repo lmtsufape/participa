@@ -110,7 +110,7 @@
 
                 <div class="form-group row">
                     <div class="col-md-6">
-                        @if(session('cpf'))
+                        @if(session('cpf') || old('cpf'))
                             <div class="custom-control custom-radio custom-control-inline col-form-label">
                                 <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
                                 <label class="custom-control-label me-2" for="customRadioInline1"><strong>CPF</strong></label>
@@ -131,7 +131,7 @@
                                     </span>
                                 @enderror
                             </div>
-                        @elseif(session('cnpj'))
+                        @elseif(session('cnpj') || old('cnpj'))
                             <div class="custom-control custom-radio custom-control-inline col-form-label">
                                 <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input">
                                 <label class="custom-control-label me-2" for="customRadioInline1"><strong>CPF</strong></label>
@@ -152,7 +152,7 @@
                                     </span>
                                 @enderror
                             </div>
-                        @elseif(session('passaporte'))
+                        @elseif(session('passaporte') || old('passaporte'))
                             <div class="custom-control custom-radio custom-control-inline col-form-label">
                                 <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input">
                                 <label class="custom-control-label me-2" for="customRadioInline1"><strong>CPF</strong></label>
