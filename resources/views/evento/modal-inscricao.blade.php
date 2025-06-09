@@ -40,6 +40,7 @@
                                     <div class="carousel slide" id="carouselCategorias" data-bs-ride="carousel">
                                         <div class="carousel-inner">
                                             <input type="hidden" name="categoria" x-model="categoria" required>
+                                            @if ($evento->categoriasPermitidasParaUsuario()->count() > 4)
                                             <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
                                                 <a class="carousel-arrow-btn btn" id="categoriaAnterior"
                                                     href="#carouselCategorias" title="Previous" role="button"
@@ -56,6 +57,7 @@
                                                     </svg>
                                                 </a>
                                             </div>
+                                            @endif
                                             <div class="card-group">
                                                 @foreach ($evento->categoriasPermitidasParaUsuario()->chunk(4) as $chunk)
                                                     <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
