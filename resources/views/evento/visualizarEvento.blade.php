@@ -130,7 +130,7 @@
             </div>
         </div>
         <div class="row">
-            <h4 class="text-my-primary">{{ __('Sobre o/a') }} {{$evento->nome}}</h4>
+            <h4 class="text-my-primary">{{ __('Sobre o') }} {{$evento->nome}}</h4>
             <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
                 <div style="text-align: justify;">
                     @if ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
