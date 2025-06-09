@@ -415,11 +415,11 @@
 
             <hr style="border-top: 1px solid #034652">
 
-            <div class="row">
+            <div>
                 {{-- Gênero --}}
-                <div class="col-md-6">
+                <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Gênero</label>
+                        <label class="col-form-label required-field"><strong>Gênero</strong></label>
                         <div>
                             @php
                                 $generos = [
@@ -443,15 +443,15 @@
                                     <label class="form-check-label" for="genero_{{ $key }}">{{ $label }}</label>
                                 </div>
                             @endforeach
-                            <input type="text" name="outroGenero" id="outroGenero" class="form-control mt-2" placeholder="Se marcou 'Outro', especifique" style="max-width: 300px;">
+                            <input type="text" name="outroGenero" id="outroGenero" class="form-control mt-2" placeholder="Se marcou 'Outro', especifique" style="max-width: 300px;" maxlength="200">
                         </div>
                     </div>
                 </div>
 
                 {{-- Raça (auto-declaração) --}}
-                <div class="col-md-6">
+                <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Raça (auto-declaração)</label>
+                        <label class="col-form-label required-field"><strong>Raça (auto-declaração)</strong></label>
                         <div>
                             @php
                                 $racas = [
@@ -470,17 +470,17 @@
                                     <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>
                                 </div>
                             @endforeach
-                            <input type="text" name="outraRaca" id="outraRaca" class="form-control mt-4" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;">
+                            <input type="text" name="outraRaca" id="outraRaca" class="form-control mt-4" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;" maxlength="200">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
+            <div>
                 {{-- Comunidade ou povo tradicional --}}
-                <div class="col-md-6">
+                <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Você pertence ou atua em alguma comunidade ou povo tradicional?</label>
+                        <label class="col-form-label required-field"><strong>Você pertence ou atua em alguma comunidade ou povo tradicional?</strong></label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_sim" value="true" required>
@@ -490,15 +490,15 @@
                                 <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_nao" value="false">
                                 <label class="form-check-label" for="comunidade_nao">Não</label>
                             </div>
-                            <input type="text" name="nomeComunidadeTradicional" id="nomeComunidadeTradicional" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;">
+                            <input type="text" name="nomeComunidadeTradicional" id="nomeComunidadeTradicional" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;" maxlength="200">
                         </div>
                     </div>
                 </div>
 
                 {{-- Pessoa LGBTQIA+ --}}
-                <div class="col-md-6">
+                <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Você se identifica como Pessoa LGBTQIA+?</label>
+                        <label class="col-form-label required-field"><strong>Você se identifica como Pessoa LGBTQIA+?</strong></label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim" value="true" required>
@@ -513,11 +513,11 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div>
                 {{-- Informações sobre necessidades especiais --}}
-                <div class="col-md-6">
+                <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Informações sobre necessidades especiais</label>
+                        <label class="col-form-label required-field"><strong>Informações sobre necessidades</strong></label>
                         <div>
                             @php
                                 $necessidades = [
@@ -539,15 +539,15 @@
                                     <label class="form-check-label" for="necessidade_{{ $key }}">{{ $label }}</label>
                                 </div>
                             @endforeach
-                            <input type="text" name="outraNecessidadeEspecial" id="outraNecessidadeEspecial" class="form-control mt-2" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;">
+                            <input type="text" name="outraNecessidadeEspecial" id="outraNecessidadeEspecial" class="form-control mt-2" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;" maxlength="200">
                         </div>
                     </div>
                 </div>
 
                 {{-- Pessoa com deficiência ou idosos --}}
-                <div class="col-md-6">
+                <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Você é uma pessoa idosa ou com deficiência?</label>
+                        <label class="col-form-label required-field"><strong>Você é uma pessoa idosa ou com deficiência?</strong></label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_sim" value="true" required>
@@ -562,11 +562,11 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div>
                 {{-- Associado da ABA Agroecologia --}}
-                <div class="col-md-6">
+                <div >
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Você é uma pessoa associada à Associação Brasileira de Agroecologia (ABA-Agroecologia)?</label>
+                        <label class="col-form-label required-field"><strong>Você é uma pessoa associada à Associação Brasileira de Agroecologia (ABA-Agroecologia)?</strong></label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="associadoAba" id="associado_sim" value="true" required>
@@ -581,9 +581,9 @@
                 </div>
 
                 {{-- Gostaria de receber mais informações sobre ABA --}}
-                <div class="col-md-6">
+                <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Se não, gostaria de receber mais informações sobre a ABA-Agroecologia?</label>
+                        <label class="col-form-label required-field"><strong>Se não, gostaria de receber mais informações sobre a ABA-Agroecologia?</strong></label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_sim" value="true" required>
@@ -598,11 +598,11 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div>
                 {{-- Participa de organização, rede ou movimento --}}
-                <div class="col-md-6">
+                <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field">Você participa de alguma organização, rede ou movimento?</label>
+                        <label class="col-form-label required-field"><strong>Você participa de alguma organização, rede ou movimento?</strong></label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_sim" value="true" required>
@@ -612,16 +612,16 @@
                                 <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_nao" value="false">
                                 <label class="form-check-label" for="participa_nao">Não</label>
                             </div>
-                            <input type="text" name="nomeOrganizacao" id="nomeOrganizacao" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;">
+                            <input type="text" name="nomeOrganizacao" id="nomeOrganizacao" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;" maxlength="200">
                         </div>
                     </div>
                 </div>
 
                 {{-- Informações institucionais e de atuação --}}
-                <div class="col-md-6">
+                <div>
                     <div class="form-group mt-3">
-                        <label for="vinculoInstitucional" class="col-form-label">Informações Institucionais e de Atuação (preenchimento opcional)</label>
-                        <input type="text" name="vinculoInstitucional" id="vinculoInstitucional" class="form-control" placeholder="Vínculo institucional ou coletivo (se houver)">
+                        <label for="vinculoInstitucional" class="col-form-label"><strong>Informações Institucionais e de Atuação (preenchimento opcional)</strong></label>
+                        <textarea name="vinculoInstitucional" id="vinculoInstitucional" class="form-control" placeholder="Vínculo institucional ou coletivo (se houver)" maxlength="1000" rows="5" style="height: 120px; resize: none; overflow: hidden;"> </textarea>
                     </div>
                 </div>
             </div>
@@ -630,7 +630,7 @@
                     type="checkbox" value="true" id="termos" required>
                 <label class="form-check-label" for="termos">
                     {{ __('Concordo com o') }}
-                    <a  href="#modal-termo-de-cessao" data-bs-toggle="modal" data-bs-target="#modal-termo-de-cessao">Termo de cessão de imagem</a>.
+                    <a  href="#modal-termo-de-cessao" data-bs-toggle="modal" data-bs-target="#modal-termo-de-cessao">Termo de autorização de imagem, voz e performance</a>.
                 </label>
             </div>
 
