@@ -292,14 +292,14 @@
                                                 <ul class="list-unstyled fs-6">
                                                     <li>
                                                         <img src="{{ asset('img/icons/calendar-pink.png') }}" alt="" style="width:20px;">
-                                                        {{ __('Envio') }}:
+                                                        <strong>{{ __('Envio') }}:</strong>
                                                         {{ date('d/m/Y H:i', strtotime($modalidade->inicioSubmissao)) }}
                                                         –
                                                         {{ date('d/m/Y H:i', strtotime($modalidade->fimSubmissao)) }}
                                                     </li>
                                                     <li>
                                                         <img src="{{ asset('img/icons/calendar-yellow.png') }}" alt="" style="width:20px;">
-                                                        {{ __('Avaliação') }}:
+                                                        <strong>{{ __('Avaliação') }}:</strong>
                                                         {{ date('d/m/Y H:i', strtotime($modalidade->inicioRevisao)) }}
                                                         –
                                                         {{ date('d/m/Y H:i', strtotime($modalidade->fimRevisao)) }}
@@ -307,7 +307,7 @@
                                                     @if($modalidade->inicioCorrecao && $modalidade->fimCorrecao)
                                                         <li>
                                                             <img src="{{ asset('img/icons/calendar-yellow.png') }}" alt="" style="width:20px;">
-                                                            {{ __('Correção') }}:
+                                                            <strong>{{ __('Correção') }}:</strong>
                                                             {{ date('d/m/Y H:i', strtotime($modalidade->inicioCorrecao)) }}
                                                             –
                                                             {{ date('d/m/Y H:i', strtotime($modalidade->fimCorrecao)) }}
@@ -316,7 +316,7 @@
                                                     @if($modalidade->inicioValidacao && $modalidade->fimValidacao)
                                                         <li>
                                                             <img src="{{ asset('img/icons/calendar-yellow.png') }}" alt="" style="width:20px;">
-                                                            {{ __('Validação') }}:
+                                                            <strong>{{ __('Validação') }}:</strong>
                                                             {{ date('d/m/Y H:i', strtotime($modalidade->inicioValidacao)) }}
                                                             –
                                                             {{ date('d/m/Y H:i', strtotime($modalidade->fimValidacao)) }}
@@ -324,7 +324,7 @@
                                                     @endif
                                                     <li>
                                                         <img src="{{ asset('img/icons/calendar-green.png') }}" alt="" style="width:20px;">
-                                                        {{ __('Resultado') }}:
+                                                        <strong>{{ __('Resultado') }}:</strong>
                                                         {{ date('d/m/Y H:i', strtotime($modalidade->inicioResultado)) }}
                                                     </li>
                                                     @foreach($modalidade->datasExtras as $data)
@@ -360,7 +360,9 @@
                                                                 target="_blank"
                                                                 class="d-inline-block">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
-                                                                    {{ $evento->formEvento->etiquetabaixarapresentacao }}
+                                                                    <span class="text-decoration-underline fs-6">
+                                                                        {{ $evento->formEvento->etiquetabaixarapresentacao }}
+                                                                    </span>
                                                                 </a>
                                                             </div>
                                                         @endif

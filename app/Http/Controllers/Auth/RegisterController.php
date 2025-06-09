@@ -67,6 +67,13 @@ class RegisterController extends Controller
             'uf' => ['required', 'string'],
             'cep' => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
+            //perfil identário
+            'outroGenero' => ['nullable', 'string', 'max:200'],
+            'outraRaca' => ['nullable', 'string', 'max:200'],
+            'nomeComunidadeTradicional' => ['nullable', 'string', 'max:200'],
+            'outraNecessidadeEspecial' => ['nullable', 'string', 'max:200'],
+            'nomeOrganizacao' => ['nullable', 'string', 'max:200'],
+            'vinculoInstitucional' => ['nullable', 'string', 'max:1000'],
         ];
         if ($data['pais'] != 'brasil'){
             $validations['uf'] = ['nullable', 'string'];
@@ -124,6 +131,6 @@ class RegisterController extends Controller
 
     protected function redirectTo()
     {
-        return route('evento.visualizar', ['id' => 3]);
+        return route('evento.visualizar', ['id' => 2]);
     }
 }

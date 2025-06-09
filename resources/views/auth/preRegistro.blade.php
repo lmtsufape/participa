@@ -340,6 +340,11 @@
                     </div>
                 </div>
 
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    {{ __('Enviaremos um código de validação do seu cadastro para este e-mail.') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
                 <div class="row form-group mb-3">
                     <div class="col-md-10"></div>
 
