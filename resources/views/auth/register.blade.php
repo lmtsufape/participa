@@ -86,7 +86,7 @@
 
                 <div class="form-group row">
                     <div class="col-md-6">
-                        <label for="name" class="col-form-label required-field">{{ __('Nome completo') }}</label>
+                        <label for="name" class="col-form-label required-field"><strong>{{ __('Nome completo') }}</strong></label>
                         <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" value="{{ session('nome') ?? old('name') }}"  autocomplete="name" autofocus disabled>
 
                         @error('name')
@@ -97,7 +97,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="nomeSocial" class="col-form-label">{{ __('Nome social') }}</label>
+                        <label for="nomeSocial" class="col-form-label"><strong>{{ __('Nome social') }}</strong></label>
                         <input id="nomeSocial" type="text" class="form-control apenasLetras @error('nomeSocial') is-invalid @enderror" name="nomeSocial" value="{{ old('nomeSocial') }}"  autocomplete="nomeSocial" autofocus>
 
                         @error('nomeSocial')
@@ -110,16 +110,16 @@
 
                 <div class="form-group row">
                     <div class="col-md-6">
-                        @if(session('cpf'))
+                        @if(session('cpf') || old('cpf'))
                             <div class="custom-control custom-radio custom-control-inline col-form-label">
                                 <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
-                                <label class="custom-control-label me-2" for="customRadioInline1">CPF</label>
+                                <label class="custom-control-label me-2" for="customRadioInline1"><strong>CPF</strong></label>
 
                                 <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('CNPJ')}}</label>
+                                <label class="custom-control-label me-2" for="customRadioInline2"><strong>{{__('CNPJ')}}</strong></label>
 
                                 <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label " for="customRadioInline3">{{__('Passaporte')}}</label>
+                                <label class="custom-control-label " for="customRadioInline3"><strong>{{__('Passaporte')}}</strong></label>
                             </div>
 
                             <div id="fieldCPF" @error('cpf') style="display: none" @enderror>
@@ -131,16 +131,16 @@
                                     </span>
                                 @enderror
                             </div>
-                        @elseif(session('cnpj'))
+                        @elseif(session('cnpj') || old('cnpj'))
                             <div class="custom-control custom-radio custom-control-inline col-form-label">
                                 <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label me-2" for="customRadioInline1">CPF</label>
+                                <label class="custom-control-label me-2" for="customRadioInline1"><strong>CPF</strong></label>
 
                                 <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input" checked>
-                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('CNPJ')}}</label>
+                                <label class="custom-control-label me-2" for="customRadioInline2"><strong>{{__('CNPJ')}}</strong></label>
 
                                 <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label " for="customRadioInline3">{{__('Passaporte')}}</label>
+                                <label class="custom-control-label " for="customRadioInline3"><strong>{{__('Passaporte')}}</strong></label>
                             </div>
 
                             <div id="fieldCNPJ" @error('cnpj') style="display: block" @enderror style="display: block">
@@ -152,16 +152,16 @@
                                     </span>
                                 @enderror
                             </div>
-                        @elseif(session('passaporte'))
+                        @elseif(session('passaporte') || old('passaporte'))
                             <div class="custom-control custom-radio custom-control-inline col-form-label">
                                 <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label me-2" for="customRadioInline1">CPF</label>
+                                <label class="custom-control-label me-2" for="customRadioInline1"><strong>CPF</strong></label>
 
                                 <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('CNPJ')}}</label>
+                                <label class="custom-control-label me-2" for="customRadioInline2"><strong>{{__('CNPJ')}}</strong></label>
 
                                 <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input" checked>
-                                <label class="custom-control-label " for="customRadioInline3">{{__('Passaporte')}}</label>
+                                <label class="custom-control-label " for="customRadioInline3"><strong>{{__('Passaporte')}}</strong></label>
                             </div>
 
                             <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: block" >
@@ -177,7 +177,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="instituicao" class="col-form-label required-field">{{ __('Instituição') }}</label>
+                        <label for="instituicao" class="col-form-label required-field"><strong>{{ __('Instituição') }}</strong></label>
                         <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" value="{{ old('instituicao') }}"  autocomplete="instituicao" autofocus>
 
                         @error('instituicao')
@@ -191,7 +191,7 @@
                 {{-- Instituição de Ensino e Celular --}}
                 <div class="form-group row">
                     <div class="col-md-4">
-                        <label for="celular" class="col-form-label required-field">{{ __('Celular') }}</label><br>
+                        <label for="celular" class="col-form-label required-field"><strong>{{ __('Celular') }}</strong></label><br>
                         <input id="phone" class="form-control celular @error('celular') is-invalid @enderror" type="tel" name="celular" value="{{old('celular')}}" style="width: 100% !important;" required autocomplete="celular" onkeyup="process(event)">
                         <div class="alert alert-info mt-1" style="display: none"></div>
                         <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
@@ -204,7 +204,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="dataNascimento" class="col-form-label required-field">{{ __('Data de nascimento') }}</label>
+                        <label for="dataNascimento" class="col-form-label required-field"><strong>{{ __('Data de nascimento') }}</strong></label>
                         <input id="dataNascimento" type="date" class="form-control @error('dataNascimento') is-invalid @enderror" name="dataNascimento" value="{{ old('dataNascimento')}}"  autocomplete="dataNascimento" required>
 
                         @error('dataNascimento')
@@ -215,7 +215,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="email" class="col-form-label required-field">{{ __('E-mail') }}</label>
+                        <label for="email" class="col-form-label required-field"><strong>{{ __('E-mail') }}</strong></label>
                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ session('email') ?? old('email')}}"  autocomplete="email" disabled>
 
                         @error('email')
@@ -229,7 +229,7 @@
                 {{-- Email | Senha | Confirmar Senha --}}
                 <div class="form-group row mb-3">
                     <div class="col-md-6">
-                        <label for="password" class="col-form-label required-field">{{ __('Senha') }}</label>
+                        <label for="password" class="col-form-label required-field"><strong>{{ __('Senha') }}</strong></label>
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password"  autocomplete="new-password">
                         <small>{{__('OBS: A senha deve ter no mínimo 8 caracteres (letras ou números)')}}.</small>
                         @error('password')
@@ -240,7 +240,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="password-confirm" class="col-form-label required-field">{{ __('Confirmar senha') }}</label>
+                        <label for="password-confirm" class="col-form-label required-field"><strong>{{ __('Confirmar senha') }}</strong></label>
                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation"  autocomplete="new-password">
                     </div>
                 </div>
@@ -262,7 +262,7 @@
             @if(session('pais') == 'brasil' || session('pais') == null)
                 <div class="form-group row mt-3">
                     <div class="col-md-12">
-                        <label for="cep" class="col-form-label required-field">{{ __('CEP') }}@if($pais != 'outro') @endif</label>
+                        <label for="cep" class="col-form-label required-field"><strong>{{ __('CEP') }}@if($pais != 'outro') @endif</strong></label>
                         <input value="{{old('cep')}}" id="cep" type="text"  autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="9" @if($pais != 'outro') required @endif >
                         @error('cep')
                             <span class="invalid-feedback" role="alert">
@@ -274,14 +274,14 @@
             @else
                 <div class="form-group row mt-3">
                     <div class="col-md-12">
-                        <label for="cep" class="col-form-label required-field">{{ __('CEP/Código Postal') }}</label>
+                        <label for="cep" class="col-form-label required-field"><strong>{{ __('CEP/Código Postal') }}</strong></label>
                         <input value="{{old('cep')}}" id="cepOutroPais" type="text"  oninput="this.value = this.value.replace(/[^a-zA-Z0-9\- ]/g, '')" autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="10">
                     </div>
                 </div>
             @endif
             <div class="form-group row">
                 <div class="col-md-6">
-                    <label for="rua" class="col-form-label required-field">{{ __('Rua') }}</label>
+                    <label for="rua" class="col-form-label required-field"><strong>{{ __('Rua') }}</strong></label>
                     <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua"  autocomplete="new-password" required>
 
                     @error('rua')
@@ -292,7 +292,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="numero" class="col-form-label required-field">{{ __('Número') }}@if($pais != 'outro') @endif</label>
+                    <label for="numero" class="col-form-label required-field"><strong>{{ __('Número') }}@if($pais != 'outro') @endif</strong></label>
                     <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero" maxlength="10" @if($pais != 'outro') required @endif>
 
                     @error('numero')
@@ -305,7 +305,7 @@
 
             <div class="form-group row">
                 <div class="col-md-6">
-                    <label for="bairro" class="col-form-label required-field">{{ __('Bairro') }}</label>
+                    <label for="bairro" class="col-form-label required-field"><strong>{{ __('Bairro') }}</strong></label>
                     <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro"  autocomplete="bairro" required>
 
                     @error('bairro')
@@ -316,7 +316,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
+                    <label for="complemento" class="col-form-label"><strong>{{ __('Complemento') }}</strong></label>
                     <input type="text" value="{{old('complemento')}}" id="complemento" class="form-control  @error('complemento') is-invalid @enderror" name="complemento" >
 
                     @error('complemento')
@@ -329,7 +329,7 @@
 
             <div class="form-group row mb-3">
                 <div class="col-md-6">
-                    <label for="cidade" class="col-form-label required-field">{{ __('Cidade') }}</label>
+                    <label for="cidade" class="col-form-label required-field"><strong>{{ __('Cidade') }}</strong></label>
                     <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade"  autocomplete="cidade" required>
 
                     @error('cidade')
@@ -341,7 +341,7 @@
 
                 @if(session('pais') == 'brasil' || session('pais') == null)
                     {{-- <div class="col-sm-6" id="groupformufinput">
-                        <label for="ufInput" class="col-form-label">{{ __('UF') }}*</label>
+                        <label for="ufInput" class="col-form-label"><strong>{{ __('UF') }}</strong>*</label>
                         <input type="text" value="{{old('uf')}}" id="ufInput" class="form-control  @error('uf') is-invalid @enderror" name="uf" required>
 
                         @error('uf')
@@ -352,7 +352,7 @@
                     </div> --}}
 
                     <div class="col-md-6" id="groupformuf">
-                        <label for="uf" class="col-form-label required-field">{{ __('Estado') }}</label>
+                        <label for="uf" class="col-form-label required-field"><strong>{{ __('Estado') }}</strong></label>
                         {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}"  autocomplete="uf" autofocus> --}}
                         <select class="form-control @error('uf') is-invalid @enderror required-field" id="uf" name="uf" required>
                             <option value="" disabled selected hidden>{{__()}}</option>
@@ -393,7 +393,7 @@
                     </div>
                 @else
                     <div class="col-md-6" id="">
-                        <label for="uf" class="col-form-label required-field">{{ __('Estado/Província/Região') }}</label>
+                        <label for="uf" class="col-form-label required-field"><strong>{{ __('Estado/Província/Região') }}</strong></label>
                         <input type="text" value="{{old('uf')}}" id="uf" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
 
                         @error('uf')
@@ -629,8 +629,17 @@
                 <input name="termos" class="form-check-input "
                     type="checkbox" value="true" id="termos" required>
                 <label class="form-check-label" for="termos">
+                    {{ __('Concordo com o') }}
+                    <a  href="#modal-termo-de-cessao" data-bs-toggle="modal" data-bs-target="#modal-termo-de-cessao">Termo de cessão de imagem</a>.
+                </label>
+            </div>
+
+            <div class="mb-3">
+                <input name="termos" class="form-check-input "
+                    type="checkbox" value="true" id="termos" required>
+                <label class="form-check-label" for="termos">
                     {{ __('Concordo e respeitarei os') }}
-                    <a  href="#modal-termo-de-uso" data-bs-toggle="modal" data-bs-target="#modal-termo-de-uso">Termos de uso</a>
+                    <a  href="#modal-termo-de-uso" data-bs-toggle="modal" data-bs-target="#modal-termo-de-uso">Termos de uso da plataforma</a>.
                 </label>
             </div>
 
@@ -646,6 +655,7 @@
     </form>
 </div>
 @include('auth.modal-termo-de-uso')
+@include('auth.modal-termo-de-cessao')
 
 
 @endsection

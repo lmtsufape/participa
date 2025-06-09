@@ -30,7 +30,60 @@
             color: #D44100;
             margin-left: 2px;
         }
+        .custom-select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            text-align: left;
+            padding-right: 2.5rem;
+            background-color: #fff;
+            background-image:
+                url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23666' d='M2 5L0 3L4 3Z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right .75rem top 10px;
+            background-size: .65em .65em;
+        }
+
+        .upload-icon {
+            /* primeiro deixamos tudo preto (brightness(0)), depois invertemos (invert(1)) */
+            filter: brightness(0) invert(1);
+        }
+
+
+        .custom-select:required:invalid {
+            color: #6c757d;
+        }
+
+        /* quando o usuário escolhe uma opção válida, mostra o texto em cor normal */
+        .custom-select:required:valid {
+            color: #212529;
+        }
     </style>
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-danger">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Erro de Validação</h5>
+                    <!-- botão × removido -->
+                </div>
+                <div class="modal-body">
+                    <ul id="errorModalMessages" class="mb-0">
+                        {{-- mensagens serão injetadas via JS --}}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        id="btnFecharErrorModal"
+                        type="button"
+                        class="btn btn-danger"
+                        data-bs-dismiss="modal"
+                    >
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container content">
         <div class="row justify-content-center" x-data="handler()">
@@ -85,11 +138,11 @@
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <label for="area" class="col-form-label required-field"><strong>Área temática</strong></label>
-                                                        <select class="form-control text-center @error('areaId') is-invalid @enderror" id="area"
+                                                        <select class="form-control custom-select @error('areaId') is-invalid @enderror" id="area"
                                                                 name="areaId"
                                                                 required>
                                                             <option value="" disabled selected hidden>
-                                                                -- {{ $formSubTraba->etiquetaareatrabalho }} --
+                                                                Selecione a área temática
                                                             </option>
                                                             {{-- Apenas um teste abaixo --}}
                                                             @foreach($areas as $area)
@@ -107,11 +160,11 @@
 
                                                     <div class="col-sm-6">
                                                         <label for="modalidade" class="col-form-label required-field"><strong>Modalidade</strong></label>
-                                                        <select class="form-control text-center @error('modalidadeId') is-invalid @enderror" id="modalidade"
+                                                        <select class="form-control custom-select @error('modalidadeId') is-invalid @enderror" id="modalidade"
                                                                 name="modalidadeId"
                                                                 required>
                                                             <option value="" disabled selected hidden>
-                                                                -- Modalidade --
+                                                                Selecione a modalidade
                                                             </option>
                                                             {{-- Apenas um teste abaixo --}}
                                                             @foreach($modalidades as $modalidade)
@@ -357,14 +410,25 @@
                                                             </div>
                                                             @endif
                                                             <div class="custom-file">
-                                                                <input type="file" class="filestyle"
-                                                                    data-placeholder="Nenhum arquivo" data-text="Selecionar"
-                                                                    data-btnClass="btn-primary-lmts" name="arquivo" required>
+                                                                <label for="arquivo"
+                                                                       class="btn btn-primary btn-padding border"
+                                                                       style="text-decoration:none; border-radius:10px; background-color:#D44100;"
+                                                                       title="Clique aqui para selecionar um arquivo">
+                                                                    <img src="{{ asset('img/icons/upload.svg') }}" class="upload-icon" alt="upload"
+                                                                         alt="ícone de upload" width="24px"
+                                                                         style="margin-right:8px; vertical-align:middle;">
+                                                                    Selecionar arquivo
+                                                                </label>
+                                                                <input type="file"
+                                                                       id="arquivo"
+                                                                       name="arquivo"
+                                                                       required
+                                                                       style="display:none;">
                                                             </div>
+
                                                             <small>
-                                                                <strong>Extensão de arquivos aceitas:</strong>
+                                                                <strong >Extensão de arquivos aceitas:</strong>
                                                                 <span id="extensoes-aceitas"></span>
-                                                                </span>
                                                             </small>
                                                             @error('arquivo')
                                                             <span class="invalid-feedback" role="alert"
@@ -865,7 +929,17 @@
                                                     <div class="row align-items-center justify-content-between"
                                                         style="flex-wrap: unset">
                                                         <div class="col-md-12">
-                                                            <label><b>{{$evento->formSubTrab->etiquetaautortrabalho}}</b></label>
+                                                            <label class="mt-3 mb-0"> <b>{{$evento->formSubTrab->etiquetaautortrabalho}}</b> </label>
+                                                            @if(in_array('etiquetacoautortrabalho', $ordemCampos))
+                                                                    <button @click.prevent="adicionaAutor" id="addCoautor" class="btn btn-primary btn-padding border mb-2 float-end"
+                                                                            style="text-decoration: none; border-radius: 10px; background-color: #D44100"
+                                                                            title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}, se houver">
+                                                                        <img id="icone-add-coautor" src="{{asset('img/icons/user-plus-solid.svg')}}"
+                                                                             alt="ícone de adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}" width="30px">
+                                                                        Adicione um coautor(a)
+                                                                    </button>
+
+                                                            @endif
                                                         </div>
                                                     </div>
                                                     <div id="coautores" class="mb-2">
@@ -921,21 +995,6 @@
 
                                         <br>
 
-                                        @if(in_array('etiquetacoautortrabalho', $ordemCampos))
-                                            <div class="row">
-                                                <div id="div-add-coautor" class="col-sm-4">
-                                                    <div class="float-right">
-                                                        <button @click.prevent="adicionaAutor" id="addCoautor" class="btn btn-primary btn-padding border mb-2"
-                                                        style="text-decoration: none; border-radius: 10px; background-color: #D44100"
-                                                        title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}, se houver">
-                                                            <img id="icone-add-coautor" src="{{asset('img/icons/user-plus-solid.svg')}}"
-                                                                alt="ícone de adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}" width="30px">
-                                                             {{$evento->formSubTrab->etiquetacoautortrabalho}}
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endif
 
                                         <br>
 
@@ -1026,7 +1085,7 @@
                     const select = document.getElementById('modalidade');
                     const selectedId = select ? select.value : null;
                     if (!selectedId) {
-                        alert('Selecione primeiro uma modalidade antes de adicionar coautor.');
+                        showErrorModal('Selecione primeiro uma modalidade antes de adicionar coautor.');
                         return;
                     }
                     const modalidadeEscolhida = this.modalidades.find(
@@ -1036,7 +1095,7 @@
                     if (maxCo != null){
                         const coautoresAtuais = this.autores.length - 1; // Para não contar o autor principal
                         if (coautoresAtuais >= maxCo) {
-                            alert(`Você já atingiu o número máximo de coautores (${maxCo}).`);
+                            showErrorModal(`Você já atingiu o número máximo de coautores (${maxCo}).`);
                             return;
                         }
                     }
@@ -1144,6 +1203,13 @@
         function etapaAnterior() {
             document.getElementById('etapa-1').style.display = 'block';
             document.getElementById('etapa-2').style.display = 'none';
+        }
+
+        function showErrorModal(message) {
+            // coloca a mensagem dentro de uma <li>
+            $('#errorModal .modal-body ul').html('<li>' + message + '</li>');
+            // abre o modal
+            $('#errorModal').modal('show');
         }
     </script>
 @endsection
