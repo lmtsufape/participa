@@ -1,6 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+    @if(session('sucesso'))
+        <div class="alert alert-success text-center">
+            {!! session('sucesso') !!}
+        </div>
+    @endif
+
+    @if(session('erro'))
+        <div class="alert alert-danger text-center">
+            {{ session('erro') }}
+        </div>
+    @endif
+
 <div id="paymentBrick_container">
 </div>
 @endsection

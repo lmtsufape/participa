@@ -357,7 +357,7 @@ class InscricaoController extends Controller
         }
 
         if ($categoria != null && $categoria->valor_total != 0) {
-            return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $request->evento_id]);
+            return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $request->evento_id])->with('sucesso', 'Sua pré-inscrição já está realizada! Conclua o pagamento para garantir a sua participação no CBA. <a href="https://inscricoes.cbagroecologia.org.br/evento/2#submissao_trabalho" target="_blank">Clique aqui </a>para fazer a submissão de seu trabalho.');
         } else {
             $modvalidarinscricao = !$evento->formEvento->modvalidarinscricao;
             $inscricao->finalizada = $modvalidarinscricao;
