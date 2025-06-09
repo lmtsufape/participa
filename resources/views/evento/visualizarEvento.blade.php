@@ -829,7 +829,6 @@
                                         <strong>{{ __('Tipo') }}: {{ $atv->tipoAtividade->descricao }}</strong>
                                     </p>
                                     @if($primeira)
-                                        {{-- Sempre mostramos a data de início --}}
                                         <div class="d-flex align-items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                  class="bi bi-calendar-event" viewBox="0 0 16 16">
@@ -842,7 +841,6 @@
                                             </span>
                                         </div>
 
-                                        {{-- Se tiver mais de uma data, renderiza também a do último dia --}}
                                         @if($datas->count() > 1)
                                             <div class="d-flex align-items-center gap-2 mt-1">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
