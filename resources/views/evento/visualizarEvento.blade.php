@@ -330,9 +330,11 @@
                                                             <div class="mb-2">
                                                                 <a href="{{ route('modalidade.regras.download', $modalidade->id) }}"
                                                                 target="_blank"
-                                                                class="d-inline-block">
+                                                                class="d-inline-block text-decoration-none">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
-                                                                    {{ $evento->formEvento->etiquetabaixarregra }}
+                                                                    <span class="text-decoration-underline fs-6">
+                                                                        {{ $evento->formEvento->etiquetabaixarregra }}
+                                                                    </span>
                                                                 </a>
                                                             </div>
                                                         @endif
@@ -353,8 +355,7 @@
                                                                 class="d-inline-block text-decoration-none">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
                                                                     <span class="text-decoration-underline fs-6">
-                                                                        {{-- {{ $evento->formEvento->etiquetabaixartemplate }} --}}
-                                                                        {{ __('Modelo (template)') }}
+                                                                        {{ $evento->formEvento->etiquetabaixartemplate }}
                                                                     </span>
                                                                 </a>
                                                             </div>
