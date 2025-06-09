@@ -18,12 +18,12 @@
         <div class="row my-5">
             <div class="col-md-7">
                 @if (isset($evento->icone))
-                    <img src="{{ asset('storage/' . $bannerPath) }}" class="rounded" width="100%" alt="">
+                    <img src="{{ asset('storage/' . $bannerPath) }}" class="rounded" width="98%" alt="">
                 @else
-                    <img src="{{ asset('img/colorscheme.png') }}" class="rounded" width="100%" alt="">
+                    <img src="{{ asset('img/colorscheme.png') }}" class="rounded" width="98%" alt="">
                 @endif
             </div>
-            <div class="col-md-5 pt-3">
+            <div class="col-md-5">
                 @if ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
                     <h2 class="text-my-primary">{{ $evento->nome_en }}</h2>
                 @elseif ($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
@@ -31,7 +31,6 @@
                 @else
                     <h2 class="text-my-primary">{{ $evento->nome }}</h2>
                 @endif
-                <br>
                 <span class="d-flex align-items-center gap-1 text-my-secondary mb-4 gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-calendar-event" viewBox="0 0 16 16">
@@ -82,7 +81,7 @@
                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
                     </svg> {{$evento->endereco->rua}}, {{$evento->endereco->numero}}, {{$evento->endereco->cidade}}-{{$evento->endereco->uf}}
                 </span>
-                <div class="text-secondary py-4">
+                <div class="text-secondary py-3">
                     <p class="m-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
@@ -95,24 +94,41 @@
                 </div>
 
                 @if ($etiquetas->modinscricao == true)
-                    <button id="btn-inscrevase" class="btn btn-my-success w-50 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
+                    <button id="btn-inscrevase" class="btn btn-my-success w-55 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
                         @if ($isInscrito || $encerrada) disabled @endif>
                         @if ($isInscrito)
-                            {{ __('Já inscrito') }}
+                            @if($inscricao->finalizada)
+                                {{ __('Já inscrito!') }}
+                            @else
+                                {{ __('Pré-inscrito!') }}
+                            @endif
                         @elseif($encerrada)
-                            {{ __('Encerradas') }}
+                            {{ __('Encerradas!') }}
                         @else
-                            {{ __('Inscreva-se') }}
+                            {{ __('Realize sua pré-inscrição aqui!') }}
                         @endif
                     </button>
                     <br>
-                    <span class="text mt-2" style="font-style: semi-bold;">
+
+                    @if($inscricao)
+                        @if(!$inscricao->finalizada)
+                            <span class="text mt-2" style="font-style: semi-bold;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16" style="color: red">
+                                <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
+                                <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                                </svg>
+
+                                {{__('Inscrição sujeita à confirmação do pagamento.')}}</span>
+                        @endif
+                    @else
+                        <span class="text mt-2" style="font-style: semi-bold;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16" style="color: red">
                         <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
                         <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
                         </svg>
 
                         {{__('Inscrição sujeita à confirmação do pagamento.')}}</span>
+                    @endif
 
                     <br>
 
