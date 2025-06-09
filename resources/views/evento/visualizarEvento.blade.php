@@ -110,7 +110,7 @@
                     </button>
                     <br>
 
-                    @if($inscricao)
+                    @if(isset($inscricao) && $inscricao)
                         @if(!$inscricao->finalizada)
                             <span class="text mt-2" style="font-style: semi-bold;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16" style="color: red">
