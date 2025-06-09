@@ -602,11 +602,18 @@
         <div id="programacao" class="row py-4">{{-- Programação --}}
             <h4 class="text-my-primary">{{ __('Programação') }}</h4>
 
-            @if ($etiquetas->modprogramacao == true && $evento->exibir_calendario_programacao)
-                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                    {{ __('Para participar das atividades do evento, é preciso primeiro se inscrever no evento e, em seguida, realizar a inscrição na atividade desejada, disponível na seção de Programação.') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+            @if ($etiquetas->modprogramacao && $evento->exibir_calendario_programacao)
+                @if($atividades->whereNotNull('vagas')->isEmpty())
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {{ __('Para participar do evento, é preciso se cadastrar na plataforma e se inscrever.') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @else
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {{ __('Para participar das atividades do evento, é preciso primeiro se inscrever no evento e, em seguida, realizar a inscrição na atividade desejada, disponível na seção de Programação.') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
                 <div class="row">
 
                     <div class="d-flex align-items-center bg-my-primary p-1 rounded">
@@ -863,9 +870,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 d-flex align-items-center justify-content-end">
-                                    @if ($isInscrito)
+                                    @if ($isInscrito && $atv->vagas != null)
                                         @if (!$atv->atividadeInscricoesEncerradas())
-                                            @if (($atv->vagas > 0 || $atv->vagas == null) && Auth::user()->atividades()->find($atv->id) == null)
+                                            @if (($atv->vagas > 0) && Auth::user()->atividades()->find($atv->id) == null)
                                                 <form method="POST"
                                                       action="{{ route('atividades.inscricao', ['id' => $atv->id]) }}">
                                                     @csrf
@@ -989,11 +996,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             const prevBtn  = document.getElementById('prevDates');
             const nextBtn  = document.getElementById('nextDates');
-            // o container de datas é o próximo irmão de prevBtn
+
             const datesContainer = prevBtn.nextElementSibling;
             const dateBtns       = Array.from(datesContainer.querySelectorAll('button.carregar-cards'));
 
-            // calcula largura de scroll = largura do botão + margem direita
             function scrollAmount() {
                 const btn = dateBtns[0];
                 const style = window.getComputedStyle(btn);
@@ -1001,29 +1007,29 @@
                 return btn.getBoundingClientRect().width + marginRight;
             }
 
-            // ativa/desativa as setas
+
             function updateArrows() {
                 prevBtn.disabled = datesContainer.scrollLeft <= 0;
                 nextBtn.disabled = datesContainer.scrollLeft + datesContainer.clientWidth >= datesContainer.scrollWidth - 1;
             }
 
-            // clique em “<”
+
             prevBtn.addEventListener('click', () => {
                 datesContainer.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
             });
 
-            // clique em “>”
+
             nextBtn.addEventListener('click', () => {
                 datesContainer.scrollBy({ left:  scrollAmount(), behavior: 'smooth' });
             });
 
-            // ao terminar qualquer scroll, atualiza estado das setas
+
             datesContainer.addEventListener('scroll', updateArrows);
 
-            // estado inicial das setas
+
             updateArrows();
 
-            // Handler de clique em cada data
+
             dateBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     // 1) Highlight
@@ -1077,28 +1083,49 @@
             }
 
 
+
             function gerarCard(ativ) {
                 const inicio = formatHora(ativ.datas_atividade[0].hora_inicio);
                 const fim    = formatHora(ativ.datas_atividade[0].hora_fim);
+
+
+                let botVagas = '';
+                if (ativ.vagas != null) {
+                    if (ativ.vagas > 0) {
+                        botVagas = `
+                         <div class="col-auto">
+                            <button type="button" class="btn btn-success btn-sm px-3 py-1 rounded-pill"> Vagas disponíveis </button>
+                         </div>`;
+                    } else {
+                        botVagas = `
+                        <div class="col-auto">
+                        <button type="button" class="btn btn-danger btn-sm px-3 py-1 rounded-pill"> Vagas encerradas </button>
+                        </div>`;
+                    }
+                }
+
                 return `
-      <div class="card shadow w-100 d-flex flex-column">
-        <div class="card shadow w-100 d-flex flex-column">
-            <div class="card-body d-flex flex-column justify-content-between align-items-start">
+                <div class="card shadow w-100 d-flex flex-column">
+                    <div class="card-body d-flex flex-column justify-content-between align-items-start">
                 <div>
                     <strong>${inicio} - ${fim}</strong>
                     <p class="mb-0">${ativ.titulo}</p>
                 </div>
-                <button
-                    class="btn btn-my-outline-primary btn-sm px-3 py-1 rounded-pill align-self-start mt-auto"
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalAtividadeShow${ativ.id}"
-                >
-                    Saiba mais
-                </button>
+                <div class="row mt-3 gx-2">
+                    <div class="col-auto">
+                        <button
+                        class="btn btn-my-outline-primary btn-sm px-3 py-1 rounded-pill"
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalAtividadeShow${ativ.id}"
+                        >
+                        Saiba mais
+                        </button>
+                    </div>
+                     ${botVagas}
+                </div>
             </div>
-        </div>
-      </div>`;
+            </div>`;
             }
 
 
