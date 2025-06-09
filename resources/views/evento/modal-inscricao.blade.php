@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header position-relative" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title w-100 text-center m-0">
-                    @if (auth()->check()) {{ __('Confirmação') }}
+                    @if (auth()->check()) {{ __('Escolha uma das categorias abaixo e clique em "Confirmar" para realizar a sua pré-inscrição!') }}
                     @else {{ __('Atenção') }}! @endif</h5>
                 <button type="button" class="btn-close btn-close-white position-absolute end-0 top-50 translate-middle-y me-3" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -11,6 +11,11 @@
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
+                    <h6>Atenção!</h6>
+                    <ul>
+                        <li>Para participar do 13º CBA, você precisa concluir a sua inscrição e realizar o pagamento.</li>
+                        <li>Informações sobre isenções serão divulgadas em breve.</li>
+                    </ul>
                     @if (!auth()->check())
                         @include('componentes.mensagens')
                         <p class="text-justify">{!! __(
@@ -70,11 +75,11 @@
                                                                         </div>
                                                                         <div class="card-body">
                                                                             @if ($categoria->descricao)
-                                                                                <label for="">{{ __('Descrição') }}:</label>
+                                                                                <label for=""><strong>{{ __('Descrição') }}:</strong></label>
                                                                                 <p> {!! $categoria->descricao !!}</p>
                                                                             @endif
-                                                                            <p class="fw-bold">
-                                                                            {{ __('Valor da Inscrição:') }}
+                                                                            <p>
+                                                                            <strong>{{ __('Valor da Inscrição:') }}</strong>
                                                                             @if($categoria->valor_total > 0)
                                                                                 R$ {{ number_format($categoria->valor_total, 2, ',', '.') }}
                                                                             @else
@@ -82,7 +87,7 @@
                                                                             @endif
                                                                             </p>
                                                                             @if($categoria->limite_inscricao)
-                                                                            <p class="text-danger"><small>{{__('Inscrições até:')}} {{ \Carbon\Carbon::parse($categoria->limite_inscricao)->format('d/m/Y') }}</small></p>
+                                                                            <p><small><strong>{{__('Inscrições até:')}}</strong> {{ \Carbon\Carbon::parse($categoria->limite_inscricao)->format('d/m/Y') }}</small></p>
                                                                             @endif
                                                                         </div>
                                                                         <div class="card-footer d-flex justify-content-center">
