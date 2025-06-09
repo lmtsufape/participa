@@ -49,8 +49,43 @@
                                     <p class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event" viewBox="0 0 16 16">
                                         <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
                                         <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-                                      </svg> {{ \Carbon\Carbon::parse($evento->dataFim)->locale(Session::get('idiomaAtual', 'pt'))->translatedFormat('l, d F') }}</p>
-                                    <p>
+                                      </svg>
+
+                                      <?php
+
+
+                                            $dataInicio = \Carbon\Carbon::parse($evento->dataInicio);
+                                            $dataFim = \Carbon\Carbon::parse($evento->dataFim);
+
+                                            $idioma = Session::get('idiomaAtual', 'pt');
+                                            $mesIgual = $dataInicio->isSameMonth($dataFim);
+                                            switch ($idioma) {
+                                                case 'en':
+                                                    $suffixo      = 'to';
+                                                    $startFormat = 'd F';
+                                                    $endFormat   = 'd F Y';
+                                                    break;
+                                                case 'es':
+                                                    $suffixo     = 'hasta';
+                                                    $startFormat = 'd \\d\\e F';
+                                                    $endFormat   = 'd \\d\\e F \\d\\e Y';
+                                                    break;
+                                                default:
+                                                    $suffixo = 'a';
+                                                    if ($mesIgual) {
+                                                        $startFormat = 'd';
+                                                        $endFormat   = 'd \\d\\e F \\d\\e Y';
+                                                    } else {
+                                                        $startFormat = 'd \\d\\e F';
+                                                        $endFormat   = 'd \\d\\e F \\d\\e Y';
+                                                    }
+                                                    break;
+                                            }
+                                        ?>
+                                        {{ $dataInicio->translatedFormat($startFormat) }}
+                                        {{ $suffixo }}
+                                        {{ $dataFim->translatedFormat($endFormat) }}
+                                    </p>
                                         <div class="row justify-content-center">
                                             <div class="col-sm-12">
                                                 <img src="{{ asset('/img/icons/location_pointer.png') }}" alt="" width="18px" height="auto">
