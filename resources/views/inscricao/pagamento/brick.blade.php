@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-    @if(session('sucesso'))
-        <div class="alert alert-success text-center">
-            {!! session('sucesso') !!}
-        </div>
-    @endif
+    <div class="alert alert-success text-center">
+        <span class="fw-bold text-center" style="font-size: 20px;">
+            Sua pré-inscrição já está realizada! Conclua o pagamento para garantir a sua participação no CBA.
+        </span>
 
-    @if(session('erro'))
-        <div class="alert alert-danger text-center">
-            {{ session('erro') }}
+        <div class="text-center" style="font-size: 18px;">
+            <a href="https://inscricoes.cbagroecologia.org.br/evento/2#submissao_trabalho" target="_blank">
+                Clique aqui</a>
+            para fazer a submissão de seu trabalho.
         </div>
-    @endif
+    </div>
 
 <div id="paymentBrick_container">
 </div>
