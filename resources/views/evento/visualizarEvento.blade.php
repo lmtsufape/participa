@@ -381,7 +381,7 @@
 
                                                             {{-- Caso 1: O usuario n está logado -> O botão de submeter redireciona para a pagina de login --}}
                                                             @if (!Auth::user())
-                                                            <button type="button" data-bs-toggle="modal" data-bs-target="#modalLoginPrompt"
+                                                            <button type="button" data-bs-toggle="modal" data-bs-target="#modalLoginPrompt" data-acao="{{ __('submeter um trabalho') }}"
                                                             class="btn btn-my-success w-100 mt-3">
                                                             {{ __('SUBMETER TRABALHO') }}
                                                             </button>
@@ -409,7 +409,7 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                    @auth
+                                    @if(Auth::user())
                                         @if (!$jaCandidatou)
                                             <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
                                                 data-bs-toggle="modal"
@@ -421,7 +421,14 @@
                                                 {{ __('Você já se candidatou a avaliador neste evento') }}
                                             </button>
                                         @endif
-                                    @endauth
+                                    @else
+                                            <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalLoginPrompt"
+                                                data-acao="{{ __('se candidatar a avaliador') }}">
+                                                {{ __('Quero ser avaliador') }}
+                                            </button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -490,11 +497,11 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header justify-content-center">
-                            <h5 class="modal-title text-center" id="modalLoginPromptLabel">{{ __('Atenção') }}</h5>
+                            <h5 class="modal-title text-center" id="modalLoginPromptLabel">{{ __('Atenção') }}!</h5>
                             <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="{{ __('Fechar') }}"></button>
                         </div>
                         <div class="modal-body">
-                            {{ __('Você precisa entrar na sua conta para poder submeter um trabalho.') }}
+                            {{__('Você precisa entrar na sua conta para poder')}} <span id="modalActionText"></span>.
                         </div>
                         <div class="modal-footer">
                             <a href="{{ route('login') }}" class="btn btn-primary">{{ __('Fazer Login') }}</a>
@@ -1091,6 +1098,15 @@
             });
         };
     </script>
+    <script>
+        var loginModal = document.getElementById('modalLoginPrompt');
+        loginModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var acao = button.getAttribute('data-acao');
+            loginModal.querySelector('#modalActionText').textContent = acao;
+        });
+    </script>
+
     <script>
         $(document).ready(function(){
             // dados vindos do controller
