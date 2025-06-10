@@ -157,6 +157,8 @@
                         {!! $evento->descricao !!}
                     @endif
                 </div>
+                <br>
+                <strong>Para mais informações, <a href="https://cba.aba-agroecologia.org.br/">clique aqui</a> e acesse o site oficial do 13º CBA.</strong>
             </div>
 
 
