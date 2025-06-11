@@ -424,12 +424,17 @@
                                                                        name="arquivo"
                                                                        required
                                                                        style="display:none;">
+                                                                <span id="nome-arquivo" style="margin-left:10px; vertical-align:middle;">Nenhum arquivo selecionado</span>
                                                             </div>
 
                                                             <small>
-                                                                <strong >Extensão de arquivos aceitas:</strong>
+                                                                <strong>Extensão de arquivos aceitas:</strong>
                                                                 <span id="extensoes-aceitas"></span>
+                                                                <br>
+                                                                <span>O tamanho máximo para arquivos de vídeo é de 50 MB. Os demais tipos possuem tamanho máximo de 2 MB.</span>
                                                             </small>
+
+
                                                             @error('arquivo')
                                                             <span class="invalid-feedback" role="alert"
                                                                 style="overflow: visible; display:block">
@@ -1193,6 +1198,16 @@
                 }
             }
         }
+
+        document.getElementById('arquivo').addEventListener('change', function() {
+            const arquivo = this.files[0];
+            const nomeArquivoSpan = document.getElementById('nome-arquivo');
+            if (arquivo) {
+                nomeArquivoSpan.textContent = arquivo.name;
+            } else {
+                nomeArquivoSpan.textContent = '';
+            }
+        });
 
 
         function proximaEtapa() {
