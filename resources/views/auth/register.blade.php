@@ -455,18 +455,22 @@
                         <div>
                             @php
                                 $racas = [
-                                    'negra' => 'Negra',
+                                    'preta' => 'Preta',
                                     'parda' => 'Parda',
                                     'indigena' => 'Indígena',
+                                    'amarela' => 'Amarela',
                                     'branca' => 'Branca',
-                                    'outra_raca' => 'Outra',
+                                    'outra_raca' => 'Outra (especificar)',
                                     'prefiro_nao_responder_raca' => 'Prefiro não responder',
                                 ];
                             @endphp
                             @foreach($racas as $key => $label)
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="raca" id="raca_{{ $key }}" value="{{ $key }}"
-                                        @if ($loop->first) required @endif>
+                                    <input class="form-check-input"
+                                        type="checkbox" 
+                                        name="raca[]" 
+                                        id="raca_{{ $key }}"
+                                        value="{{ $key }}">
                                     <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>
                                 </div>
                             @endforeach
