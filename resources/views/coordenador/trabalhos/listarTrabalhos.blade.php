@@ -28,8 +28,13 @@
                 <a class="btn btn-primary col-sm" href="{{route('evento.downloadTrabalhos', $evento)}}">Exportar trabalhos .csv</a>
             </div>
             <div class="row mt-1">
-                <a class="btn btn-primary col-sm" data-bs-toggle="modal" data-bs-target="#exportCertificaModal">Exportar XLSX para o Certifica</a>
+                <a class="btn btn-primary col-sm" href="{{route('evento.downloadTrabalhosAprovadosPDF', $evento)}}">
+                    Lista de Trabalhos Aprovados (PDF)
+                </a>
             </div>
+            <!-- <div class="row mt-1">
+                <a class="btn btn-primary col-sm" data-bs-toggle="modal" data-bs-target="#exportCertificaModal">Exportar XLSX para o Certifica</a>
+            </div> -->
         </div>
       </div>
 
