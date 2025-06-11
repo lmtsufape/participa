@@ -227,30 +227,30 @@
                                                         <td>{{ date("d/m/Y H:i", strtotime($trabalho->created_at)) }}</td>
                                                         <td style="text-align:center">
                                                             <a href="#" data-bs-toggle="modal" data-bs-target="#modalTrabalho{{$trabalho->id}}">
-                                                                <i class="fas fa-file-alt"></i>
+                                                                <img src="{{asset('img/icons/documento.svg')}}" class="icon-card" width="20" alt="atribuir">
                                                             </a>
                                                         </td>
                                                         <td style="text-align:center">
                                                             @if ($trabalho->status == 'arquivado')
-                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" class="btn btn-info" >
+                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" >
                                                                     <i class="fas fa-folder-open"></i>
                                                                 </a>
                                                             @else
-                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}" class="btn btn-info" >
-                                                                    <i class="fas fa-archive"></i>
+                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}" >
+                                                                    <img src="{{asset('img/icons/archive.png')}}" class="icon-card" width="20" alt="Arquivar">
                                                                 </a>
                                                             @endif
                                                         </td>
                                                         <td style="text-align:center">
                                                             @if ($trabalho->status == 'arquivado')
                                                                 <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{$trabalho->id}}">
-                                                                    <i class="fas fa-trash"></i>
+                                                                    <img src="{{asset('img/icons/lixo.png')}}" class="icon-card" width="20" alt="Excluir">
                                                                 </a>
                                                             @endif
                                                         </td>
                                                         <td style="text-align:center">
                                                             <a href="{{ route('coord.trabalho.edit', ['id' => $trabalho->id]) }}" >
-                                                                <i class="fas fa-edit"></i>
+                                                                <img src="{{asset('img/icons/edit-regular.svg')}}" class="icon-card" width="20" alt="Editar">
                                                             </a>
                                                         </td>
                                                     </tr>
