@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Models\PerfilIdentitario;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Submissao\Area;
@@ -39,12 +40,16 @@ class UserController extends Controller
             app()->setLocale('pt-BR');
         }
         $areas = Area::orderBy('nome')->get();
+        $perfilIdentitario = PerfilIdentitario::query()
+            ->where('userId', $user->id)
+            ->first();
 
-        return view('user.perfilUser', compact('user', 'end', 'areas', 'pais'));
+        return view('user.perfilUser', compact('user', 'end', 'areas', 'pais', 'perfilIdentitario'));
     }
 
     public function editarPerfil(Request $request)
     {
+
         if ($request->passaporte != null && $request->cpf != null ||
             $request->passaporte != null && $request->cnpj != null ) {
 
@@ -62,7 +67,7 @@ class UserController extends Controller
             'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf'] : 'nullable'),
             'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['bail', 'required'] : 'nullable'),
             'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10'] : ['nullable']),
-            'celular' => 'required|string|max:20',
+            'celular' => '|string|max:20',
             'instituicao' => 'required|string| max:255',
             'rua' => 'required|string|max:255',
             'numero' => 'required|string',
@@ -148,6 +153,14 @@ class UserController extends Controller
             $end->fill($validator);
             $end->update();
         }
+
+        $perfilIdentitario = PerfilIdentitario::query()
+            ->where('userId', $user->id)
+            ->first();
+
+        $perfilIdentitario->editAttributes($data);
+        $perfilIdentitario->save();
+
         app()->setLocale('pt-BR');
 
         return back()->with(['message' => 'Atualizado com sucesso!']);
@@ -232,13 +245,13 @@ class UserController extends Controller
 
     public function areaParticipante(){
         $user = Auth::user();
-       
+
         $eventos = Evento::whereHas('inscricaos', function($query) use ($user) {
                 $query->where('user_id', $user->id);
             });
 
         $eventos = $eventos->paginate(9);
-        
+
         return view('user.areaParticipante', ['eventos' => $eventos]);
 
     }
