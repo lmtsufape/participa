@@ -36,6 +36,7 @@ class PerfilIdentitario extends Model
         'necessidadesEspeciais' => 'array',
     ];
 
+
     public function setAttributes($data)
     {
         $this->nomeSocial = $data['nomeSocial'];
@@ -56,4 +57,26 @@ class PerfilIdentitario extends Model
         $this->participacaoOrganizacao = $data['participacaoOrganizacao'];
         $this->nomeOrganizacao = $data['nomeOrganizacao'];
     }
+
+    public function editAttributes($data)
+    {
+        $this->nomeSocial = $data['nomeSocial'] ?? $this->nomeSocial;
+        $this->dataNascimento = $data['dataNascimento'] ?? $this->dataNascimento;
+        $this->genero = $data['genero'] ?? $this->genero;
+        $this->outroGenero = $data['outroGenero'] ?? $this->outroGenero;
+        $this->raca = $data['raca'] ?? $this->raca;
+        $this->outraRaca = $data['outraRaca'] ?? $this->outraRaca;
+        $this->comunidadeTradicional = $data['comunidadeTradicional'] ?? $this->comunidadeTradicional;
+        $this->nomeComunidadeTradicional = $data['nomeComunidadeTradicional'] ?? $this->nomeComunidadeTradicional;
+        $this->lgbtqia = $data['lgbtqia'] ?? $this->lgbtqia;
+        $this->deficienciaIdoso = $data['deficienciaIdoso'] ?? $this->deficienciaIdoso;
+        $this->necessidadesEspeciais = !empty($data['necessidadesEspeciais']) ? $data['necessidadesEspeciais'] : $this->necessidadesEspeciais;
+        $this->outraNecessidadeEspecial = $data['outraNecessidadeEspecial'] ?? $this->outraNecessidadeEspecial;
+        $this->associadoAba = $data['associadoAba'] ?? $this->associadoAba;
+        $this->receberInfoAba = $data['receberInfoAba'] ?? $this->receberInfoAba;
+        $this->vinculoInstitucional = $data['vinculoInstitucional'] ?? $this->vinculoInstitucional;
+        $this->participacaoOrganizacao = $data['participacaoOrganizacao'] ?? $this->participacaoOrganizacao;
+        $this->nomeOrganizacao = $data['nomeOrganizacao'] ?? $this->nomeOrganizacao;
+    }
+
 }
