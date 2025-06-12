@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
+use App\Mail\EmailConfirmacaoPagamento;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\Pagamento;
 use App\Models\Inscricao\TipoPagamento;
@@ -194,6 +196,9 @@ class CheckoutController extends Controller
                     $inscricao = $pagamento->inscricao;
                     $inscricao->finalizada = true;
                     $inscricao->save();
+                    $evento = $inscricao->evento;
+
+                    Mail::to($inscricao->user->email)->send(new EmailConfirmacaoPagamento($inscricao, $evento));
                 }
                 $pagamento->status = $payment->status;
                 $pagamento->save();

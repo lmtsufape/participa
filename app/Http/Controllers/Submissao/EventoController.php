@@ -561,6 +561,36 @@ class EventoController extends Controller
         return Excel::download(new TrabalhosExportForCertifica($evento->trabalhos()->with(['autor', 'coautors.user'])->get(), $request->ch), $nome . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 
+    public function downloadTrabalhosAprovadosPDF(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+        
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+            ->orderBy('nome')
+            ->get();
+            
+        $trabalhosPorModalidade = collect();
+        foreach ($modalidades as $modalidade) {
+            $trabalhos = Trabalho::where([
+                ['modalidadeId', $modalidade->id],
+                ['aprovado', true]
+            ])
+            ->orderBy('titulo')
+            ->get();
+            
+            if ($trabalhos->isNotEmpty()) {
+                $trabalhosPorModalidade->push($trabalhos);
+            }
+        }
+
+        $pdf = Pdf::loadView('coordenador.trabalhos.trabalhosAprovadosPdf', [
+            'trabalhosPorModalidade' => $trabalhosPorModalidade,
+            'evento' => $evento
+        ])->setOptions(['defaultFont' => 'sans-serif']);
+
+        return $pdf->download("trabalhos-aprovados-{$evento->nome}.pdf");
+    }
+
     private function somenteLetrasNumeros($string)
     {
         return preg_replace('/[^A-Za-z0-9\_ ]/', '', $string);

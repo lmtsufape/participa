@@ -1121,9 +1121,11 @@
 
 
 
-            function gerarCard(ativ) {
-                const inicio = formatHora(ativ.datas_atividade[0].hora_inicio);
-                const fim    = formatHora(ativ.datas_atividade[0].hora_fim);
+            function gerarCard(ativ, dia) {
+                const dataAtividade = ativ.datas_atividade.find(d => d.data === dia);
+
+                const inicio = formatHora(dataAtividade.hora_inicio);
+                const fim    = formatHora(dataAtividade.hora_fim);
 
 
                 let botVagas = '';
@@ -1185,7 +1187,7 @@
                 agrup.forEach(item => {
                     $('#cards-atividade').append(`
         <div class="col d-flex align-items-stretch">
-          ${gerarCard(item)}
+          ${gerarCard(item, dia)}
         </div>
       `);
                 });
