@@ -17,7 +17,7 @@
                             'Para continuar com sua inscrição, é necessário que possua cadastro na plataforma e realize o seu acesso (login). <strong>Caso já possua uma conta</strong>, basta acessar com o seu login (e-mail) e senha.',
                         ) !!} <br><br>
                             {!! __(
-                                '<strong>Se você ainda não tem</strong>, será necessário efetuar o cadastro, validar sua conta pelo link enviado para o e-mail e retornar a página do evento para realizar sua inscrição.',
+                                '<strong>Se você ainda não tem</strong>, será necessário efetuar o cadastro e retornar a página do evento para realizar sua inscrição.',
                             ) !!} <br><br>
                             {!! __(
                                 'Após realizar seu login ou cadastro, retorne a esta página, atualize-a (pressionando a tecla F5) e prossiga com sua inscrição no evento.',
@@ -38,7 +38,7 @@
                         <ul>
                             <li>Para participar do 13º CBA, você precisa concluir a sua inscrição e realizar o pagamento.</li>
                             <li>Informações sobre isenções serão divulgadas em breve.</li>
-                            <li>Caso você seja uma pessoa associada à ABA-Agroecologia e não esteja visualizando a sua categoria de associada/o abaixo para fazer a inscrição com desconto, por favor, entre em contato com a organização do evento pelo e-mail: <a href="mailto:tesouraria@aba-agroecologia.org.br" target="_blank">tesouraria@aba-agroecologia.org.br</a>.</li>
+                            <li>Caso você seja uma pessoa associada à ABA-Agroecologia e não esteja visualizando a sua categoria de associada/o abaixo para fazer a inscrição com desconto, por favor, entre em contato com a organização do evento através do e-mail <a href="mailto:tesouraria@aba-agroecologia.org.br" target="_blank">tesouraria@aba-agroecologia.org.br</a>.</li>
                         </ul>
                         <div id="formulario" class="carousel-categorias container">
                             <div>
