@@ -11,12 +11,6 @@
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    <h6>Atenção!</h6>
-                    <ul>
-                        <li>Para participar do 13º CBA, você precisa concluir a sua inscrição e realizar o pagamento.</li>
-                        <li>Informações sobre isenções serão divulgadas em breve.</li>
-                        <li>Caso você seja associado e não esteja encontrando a sua categoria para inscrição, entre em contato com a organização do evento pelo e-mail: <a href="mailto:tesouraria@aba-agroecologia.org.br" target="_blank">tesouraria@aba-agroecologia.org.br</a>.</li>
-                    </ul>
                     @if (!auth()->check())
                         @include('componentes.mensagens')
                         <p class="text-justify">{!! __(
@@ -40,6 +34,12 @@
                             </a>
                         </div>
                     @elseif ($evento->categoriasParticipantes()->where('permite_inscricao', true)->exists())
+                        <h6>Atenção!</h6>
+                        <ul>
+                            <li>Para participar do 13º CBA, você precisa concluir a sua inscrição e realizar o pagamento.</li>
+                            <li>Informações sobre isenções serão divulgadas em breve.</li>
+                            <li>Caso você seja uma pessoa associada à ABA-Agroecologia e não esteja visualizando a sua categoria de associada/o abaixo para fazer a inscrição com desconto, por favor, entre em contato com a organização do evento pelo e-mail: <a href="mailto:tesouraria@aba-agroecologia.org.br" target="_blank">tesouraria@aba-agroecologia.org.br</a>.</li>
+                        </ul>
                         <div id="formulario" class="carousel-categorias container">
                             <div>
                                 <div x-show="categoria == ''">
