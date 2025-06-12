@@ -38,7 +38,7 @@
                         <ul>
                             <li>Para participar do 13º CBA, você precisa concluir a sua inscrição e realizar o pagamento.</li>
                             <li>Informações sobre isenções serão divulgadas em breve.</li>
-                            <li>Caso você seja uma pessoa associada à ABA-Agroecologia e não esteja visualizando a sua categoria de associada/o abaixo para fazer a inscrição com desconto, por favor, entre em contato com a organização do evento pelo e-mail: <a href="mailto:tesouraria@aba-agroecologia.org.br" target="_blank">tesouraria@aba-agroecologia.org.br</a>.</li>
+                            <li>Caso você seja uma pessoa associada à ABA-Agroecologia e não esteja visualizando a sua categoria de associada/o abaixo para fazer a inscrição com desconto, por favor, entre em contato com a organização do evento através do e-mail <a href="mailto:tesouraria@aba-agroecologia.org.br" target="_blank">tesouraria@aba-agroecologia.org.br</a>.</li>
                         </ul>
                         <div id="formulario" class="carousel-categorias container">
                             <div>
