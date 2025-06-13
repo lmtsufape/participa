@@ -197,7 +197,20 @@
                             @enderror
                         </div>
                     </div>
-
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <!-- link do contato de suporte -->
+                            <label for="contato_suporte" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Link do contato de suporte') }}</label>
+                            <input class="form-control @error('contato_suporte') is-invalid @enderror" type="text"
+                                value="{{ old('contato_suporte') }}" name="contato_suporte" id="contato_suporte"
+                                autocomplete="contato_suporte">
+                            @error('contato_suporte')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <div class="col-md-6">
                             <div class="custom-control custom-radio custom-control-inline col-form-label">
