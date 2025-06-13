@@ -52,6 +52,7 @@ class StoreEventoRequest extends FormRequest
             'termos' => ['required'],
             'dataLimiteInscricao' => ['nullable', 'date'],
             'instagram' => ['nullable', 'string'],
+            'contato_suporte' => ['nullable', 'string'],
         ];
     }
 
