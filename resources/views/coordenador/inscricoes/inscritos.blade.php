@@ -204,8 +204,15 @@
                     <div class="form-group col-md-6">
                         <label for="">Raça</label>
                         <input type="text" class="form-control"
-                               value="{{ isset($perfilIdentitario) && $perfilIdentitario->raca && $perfilIdentitario->raca !== 'outro' ? ucfirst($perfilIdentitario->raca) : (isset($perfilIdentitario) && $perfilIdentitario->outraRaca ? ucfirst($perfilIdentitario->outraRaca) : 'Não informado') }}"
-                               disabled>
+                            value="{{ isset($perfilIdentitario, $perfilIdentitario->raca) && is_array($perfilIdentitario->raca) && !empty($perfilIdentitario->raca) ?
+                                        collect($perfilIdentitario->raca)->map(function($raca) use ($perfilIdentitario) {
+                                            if ($raca === 'outra_raca' && !empty($perfilIdentitario->outraRaca)) {
+                                                return 'Outra: ' . ucfirst($perfilIdentitario->outraRaca);
+                                            }
+                                            return ucfirst(str_replace('_raca', '', str_replace('_', ' ', $raca)));
+                                        })->implode(', ')
+                                        : 'Não informado' }}"
+                            disabled>
                     </div>
 
                     @if(isset($perfilIdentitario) && ($perfilIdentitario->comunidadeTradicional === true || $perfilIdentitario->comunidadeTradicional === 'true'))
