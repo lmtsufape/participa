@@ -4,6 +4,7 @@ namespace App\Models\Submissao;
 
 use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\User;
+use App\Models\CandidatoAvaliador;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -284,5 +285,9 @@ class Evento extends Model
 
     public function coordEixosTematicos(){
         return $this->hasMany(CoordEixoTematico::class);
+    }
+
+    public function candidatosAvaliadores(){
+        return $this->hasMany(CandidatoAvaliador::class, 'evento_id');
     }
 }

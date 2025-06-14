@@ -13,6 +13,8 @@ use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\CandidatosAvaliadoresExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CandidatoAvaliadorController extends Controller
 {
@@ -130,6 +132,13 @@ class CandidatoAvaliadorController extends Controller
 
         return redirect()->back()
             ->with('sucesso', 'Candidatura aprovada e candidato notificado.');
+    }
+
+    public function exportar(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+
+        return Excel::download(new CandidatosAvaliadoresExport($evento->id), 'candidatos-avaliadores-'.$evento->nome.'.xlsx');
     }
 
     public function rejeitar(Request $request)
