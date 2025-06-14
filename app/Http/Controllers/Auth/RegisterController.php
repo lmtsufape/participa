@@ -10,6 +10,8 @@ use App\Providers\RouteServiceProvider;
 use App\Rules\UniqueCaseInsensitive;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailConfirmacaoCadastro;
 
 class RegisterController extends Controller
 {
@@ -113,6 +115,7 @@ class RegisterController extends Controller
             $perfilIdentitario->userId = $user->id;
             $perfilIdentitario->save();
 
+            Mail::to($user->email)->send(new EmailConfirmacaoCadastro($user));
             return $user;
         }
 
@@ -123,6 +126,8 @@ class RegisterController extends Controller
         $perfilIdentitario->setAttributes($data);
         $perfilIdentitario->userId = $user->id;
         $perfilIdentitario->save();
+        
+        Mail::to($user->email)->send(new EmailConfirmacaoCadastro($user));
 
         app()->setLocale('pt-BR');
 
