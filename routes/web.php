@@ -211,6 +211,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('revisores/listarCandidatos/{evento}', [CandidatoAvaliadorController::class, 'listarCandidatos'])->name('candidatoAvaliador.listarCandidatos');
             Route::put('candidaturas/{candidato}/aprovar', [CandidatoAvaliadorController::class, 'aprovar'])->name('candidaturas.aprovar');
             Route::post('candidaturas/{candidato}/rejeitar', [CandidatoAvaliadorController::class, 'rejeitar'])->name('candidaturas.rejeitar');
+            Route::get('/{evento}/candidatos/exportar', [CandidatoAvaliadorController::class, 'exportar'])->name('candidatos.exportar');
 
             // Regristros de memória
             Route::get('/{evento}/memoria/create', [MemoriaController::class, 'create'])->name('memoria.create');

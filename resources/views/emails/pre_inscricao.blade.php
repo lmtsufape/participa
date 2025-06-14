@@ -33,7 +33,7 @@
                     <tr>
                         <td bgcolor="#004d51" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #ffffff; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
                             <img src="{{ $message->embed(public_path('img/LOGO-RODAPE.png')) }}" width="125" height="120" style="display: block; border: 0px;"  />
-                            <h5 class="small" style="font-weight: 400; margin: 2; font-size: 24px;">Pré-inscrição Realizada</h5>
+                            <h5 class="small" style="font-weight: 400; margin: 2; font-size: 24px;">Pré-inscrição realizada</h5>
                         </td>
                     </tr>
                 </table>

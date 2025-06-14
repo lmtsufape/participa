@@ -104,6 +104,10 @@ class EventoController extends Controller
             'revisors as revisores_count' => fn ($query) => $query->select(DB::raw('count(distinct user_id)')),
             'usuariosDaComissao as comissao_cientifica_count',
             'usuariosDaComissaoOrganizadora as comissao_organizadora_count',
+            'candidatosAvaliadores as candidaturas_count' => fn($query) => $query->select(DB::raw('count(distinct user_id)')),
+            'candidatosAvaliadores as candidaturas_aprovadas_count' => fn($query) => $query->where('aprovado', true)->select(DB::raw('count(distinct user_id)')),
+            'candidatosAvaliadores as candidaturas_pendentes_count' => fn($query) => $query->where('em_analise', true)->select(DB::raw('count(distinct user_id)')),
+            'candidatosAvaliadores as candidaturas_rejeitadas_count' => fn($query) => $query->where('aprovado', false)->where('em_analise', false)->select(DB::raw('count(distinct user_id)')),
         ]);
 
         return view('coordenador.informacoes', [
