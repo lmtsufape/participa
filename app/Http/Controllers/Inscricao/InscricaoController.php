@@ -16,6 +16,7 @@ use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
 use App\Notifications\InscricaoAprovada;
 use App\Notifications\InscricaoEvento;
+use App\Notifications\PreInscricao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -355,6 +356,8 @@ class InscricaoController extends Controller
         if ($possuiFormulario) {
             $this->salvarCamposExtras($inscricao, $request, $categoria);
         }
+
+        auth()->user()->notify(new PreInscricao($evento, auth()->user()));
 
         if ($categoria != null && $categoria->valor_total != 0) {
             return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $request->evento_id]);
