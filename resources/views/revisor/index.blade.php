@@ -196,6 +196,9 @@
                                         <div class="d-flex justify-content-center">
                                             <td style="text-align:center">
                                                 <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Trabalho já avaliado">
+                                                <a href="{{route('user.visualizarParecer', ['eventoId' => $trabalho->eventoId, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'id' => $trabalho->id, 'revisorId' => $trabalho->userRevisorTrabalho()])}}">
+                                                    <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
+                                                </a>
                                             </td>
                                         </div>
                                     @endif
