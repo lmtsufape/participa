@@ -60,11 +60,16 @@ class TrabalhoController extends Controller
         $ordemCampos = explode(',', $formSubTraba->ordemCampos);
         array_splice($ordemCampos, 6, 0, 'midiaExtra');
         array_splice($ordemCampos, 5, 0, 'apresentacao');
+        $user = Auth::user();
 
         $mytime = Carbon::now('America/Recife');
-        foreach ($modalidades as $modalidade){
+        foreach ($modalidades as $key => $modalidade){
             if (!$modalidade->estaEmPeriodoDeSubmissao()) {
-                $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+                if($user->can('isCoordenadorOrCoordCientificaOrCoordEixo', $evento)){
+                    $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+                } else {
+                     unset($modalidades[$key]);
+                }
             }
         }
         // dd($formSubTraba);
