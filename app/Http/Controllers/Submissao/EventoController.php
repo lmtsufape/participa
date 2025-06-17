@@ -568,11 +568,11 @@ class EventoController extends Controller
     public function downloadTrabalhosAprovadosPDF(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-        
+
         $modalidades = Modalidade::where('evento_id', $evento->id)
             ->orderBy('nome')
             ->get();
-            
+
         $trabalhosPorModalidade = collect();
         foreach ($modalidades as $modalidade) {
             $trabalhos = Trabalho::where([
@@ -581,7 +581,7 @@ class EventoController extends Controller
             ])
             ->orderBy('titulo')
             ->get();
-            
+
             if ($trabalhos->isNotEmpty()) {
                 $trabalhosPorModalidade->push($trabalhos);
             }
@@ -1503,6 +1503,7 @@ class EventoController extends Controller
             $qry = Inscricao::where('user_id', Auth()->user()->id)->where('evento_id', $evento->id);
             $inscricao = $qry->first();
             $isInscrito = $qry->count();
+            $InscritoSemCategoria = $inscricao? $inscricao->categoria_participante_id == null : false;
 
             $jaCandidatou = CandidatoAvaliador::where('evento_id', $evento->id)
                 ->where('user_id', Auth::user()->id)
@@ -1534,7 +1535,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;

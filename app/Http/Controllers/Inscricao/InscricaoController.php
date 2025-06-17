@@ -320,11 +320,16 @@ class InscricaoController extends Controller
     {
         auth()->user() != null;
         $evento = Evento::find($request->evento_id);
-        if (Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->exists()) {
+        //"pre inscrição" feita na submissão de trabalhos por um user não inscrito, sem categoria e pagamento
+        $preInscricao = false;
+        if (Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->where('finalizada', true)->exists()) {
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição já realizada.');
         }
         if ($evento->eventoInscricoesEncerradas()) {
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrições encerradas.');
+        }
+        if(Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->where('finalizada', false)->exists()){
+            $preInscricao = true;
         }
         $categoria = CategoriaParticipante::find($request->categoria);
         $possuiFormulario = $evento->possuiFormularioDeInscricao();
@@ -346,12 +351,22 @@ class InscricaoController extends Controller
                     ->with('abrirmodalinscricao', true);
             }
         }
-        $inscricao = new Inscricao();
-        $inscricao->categoria_participante_id = $request->categoria;
-        $inscricao->user_id = auth()->user()->id;
-        $inscricao->evento_id = $request->evento_id;
-        $inscricao->finalizada = false;
-        $inscricao->save();
+        if ($preInscricao){
+            $inscricao = Inscricao::where('user_id', auth()->user()->id)
+                ->where('evento_id', $evento->id)
+                ->first();
+            if ($inscricao != null) {
+                $inscricao->categoria_participante_id = $request->categoria;
+                $inscricao->save();
+            }
+        } else {
+            $inscricao = new Inscricao();
+            $inscricao->categoria_participante_id = $request->categoria;
+            $inscricao->user_id = auth()->user()->id;
+            $inscricao->evento_id = $request->evento_id;
+            $inscricao->finalizada = false;
+            $inscricao->save();
+        }
 
         if ($possuiFormulario) {
             $this->salvarCamposExtras($inscricao, $request, $categoria);

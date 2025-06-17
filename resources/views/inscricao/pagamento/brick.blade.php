@@ -3,14 +3,9 @@
 @section('content')
     <div class="alert alert-success text-center">
         <span class="fw-bold text-center" style="font-size: 20px;">
-            Sua pré-inscrição já está realizada! Conclua o pagamento para garantir a sua participação no CBA.
+            Conclua o pagamento para garantir a sua inscrição no CBA!
         </span>
 
-        <div class="text-center" style="font-size: 18px;">
-            <a href="https://inscricoes.cbagroecologia.org.br/evento/2#submissao_trabalho" target="_blank">
-                Clique aqui</a>
-            para fazer a submissão de seu trabalho.
-        </div>
     </div>
 
 <div id="paymentBrick_container">

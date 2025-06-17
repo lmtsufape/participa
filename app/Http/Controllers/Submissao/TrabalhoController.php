@@ -17,6 +17,7 @@ use App\Models\Submissao\Arquivoextra;
 use App\Models\Submissao\Avaliacao;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\FormSubmTraba;
+use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\Parecer;
 use App\Models\Submissao\RegraSubmis;
@@ -170,6 +171,20 @@ class TrabalhoController extends Controller
             $validatedData = $request->validated();
             $evento = Evento::find($request->eventoId);
             $modalidade = Modalidade::find($request->modalidadeId);
+
+            // Cria uma pré-inscrição se o usuário não estiver inscrito
+            if (!Inscricao::where('user_id', Auth::user()->id)->where('evento_id', $evento->id)->exists()) {
+                if ($evento->eventoInscricoesEncerradas()) {
+                    return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrições encerradas.');
+                }
+
+                $inscricao = new Inscricao();
+                $inscricao->user_id = Auth::user()->id;
+                $inscricao->evento_id = $evento->id;
+                $inscricao->categoria_participante_id = null;
+                $inscricao->finalizada = false;
+                $inscricao->save();
+            }
 
             if ($this->validarTipoDoArquivo($request->file('arquivo'), $modalidade)) {
                 return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
