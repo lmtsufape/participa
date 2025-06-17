@@ -632,4 +632,29 @@ class InscricaoController extends Controller
         return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['message' => 'Participante inscrito com sucesso!']);
 
     }
+
+    public function alterarCategoria(Request $request, Inscricao $inscricao)
+    {
+        if (auth()->user()->id !== $inscricao->user_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
+        if ($inscricao->finalizada) {
+            return redirect()->back()->with(['message' => 'Não é possível alterar a categoria de uma inscrição já finalizada.', 'class' => 'danger']);
+        }
+        
+        $validator = Validator::make($request->all(), [
+            'categoria' => 'required|exists:categoria_participantes,id',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $inscricao->categoria_participante_id = $request->categoria;
+        $inscricao->save();
+
+        return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $inscricao->evento_id])
+                       ->with('message', 'Categoria alterada com sucesso! Prossiga com o pagamento.');
+    }
 }
