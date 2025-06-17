@@ -94,22 +94,29 @@
                 </div>
 
                 @if ($etiquetas->modinscricao == true)
-                    <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
-                        @if (($isInscrito && !$InscritoSemCategoria)  || $encerrada) disabled @endif>
-                        @if ($isInscrito)
-                            @if($inscricao->finalizada)
-                                {{ __('Já inscrito') }}
-                            @elseif($InscritoSemCategoria)
-                                {{ __('Realize sua inscrição aqui!') }}
+                    <div class="d-flex flex-wrap gap-2">
+                        <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
+                            @if (($isInscrito && !$InscritoSemCategoria)  || $encerrada) disabled @endif>
+                            @if ($isInscrito)
+                                @if($inscricao->finalizada)
+                                    {{ __('Já inscrito') }}
+                                @elseif($InscritoSemCategoria)
+                                    {{ __('Realize sua inscrição aqui!') }}
+                                @else
+                                    {{ __('Inscrição com pendência de pagamento!') }}
+                                @endif
+                            @elseif($encerrada)
+                                {{ __('Encerradas!') }}
                             @else
-                                {{ __('Inscrição com pendência de pagamento!') }}
+                                {{ __('Realize sua inscrição aqui!') }}
                             @endif
-                        @elseif($encerrada)
-                            {{ __('Encerradas!') }}
-                        @else
-                            {{ __('Realize sua inscrição aqui!') }}
+                        </button>
+                        @if ($isInscrito && !$inscricao->finalizada && !$InscritoSemCategoria)
+                            <button type="button" class="btn btn-my-success w-60 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalAlterarCategoria">
+                                {{ __('Alterar Categoria') }}
+                            </button>
                         @endif
-                    </button>
+                    </div>
                     <br>
 
                     @if(isset($inscricao) && $inscricao)
@@ -835,6 +842,7 @@
         </div>
 
         @include('evento.modal-inscricao')
+        @include('evento.modal-alterar-categoria')
         @include('evento.modal-submeter-trabalho')
         @include('evento.modal-confirm-inscricao')
         @include('evento.modal-inscricao-avaliador')
