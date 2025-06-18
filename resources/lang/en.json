@@ -170,6 +170,7 @@
     "Subeventos": "Subevents",
     "Memória": "Memory",
     "usuarioInscritoNoEvento": "The user with email :input must be registered for the event",
+    "usuarioCadastradoNaPlataforma": "The user with email :input must be registered on the platform",
     "Em destaque neste momento": "Featured right now",
     "Vistos recentemente": "Recently viewed",
     "Ver todos:": "See all:",

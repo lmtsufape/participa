@@ -167,6 +167,7 @@
     "Subeventos": "Subeventos",
     "Memória": "Memoria",
     "usuarioInscritoNoEvento": "El usuario con correo electrónico :input debe estar inscrito en el evento",
+    "usuarioCadastradoNaPlataforma": "El usuario con correo electrónico :input debe estar registrado en la plataforma",
     "Em destaque neste momento": "Destacado en este momento",
     "Vistos recentemente": "Vistos recientemente",
     "Ver todos:": "Ver todos:",
