@@ -47,7 +47,7 @@
                             <p style="margin: 0;">
                                 Olá, <strong>{{ $user->name }}</strong>,
                                 <br><br>
-                                Sua pré-inscrição no evento <strong>{{ $evento->nome }}</strong> foi realizada com sucesso!
+                                Sua inscrição no evento <strong>{{ $evento->nome }}</strong> foi realizada com sucesso!
                                 <br><br>
                                 O próximo passo é a realização do pagamento da sua inscrição. 
                                 <br><br>

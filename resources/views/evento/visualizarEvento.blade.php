@@ -111,11 +111,6 @@
                                 {{ __('Realize sua inscrição aqui!') }}
                             @endif
                         </button>
-                        @if ($isInscrito && !$inscricao->finalizada && !$InscritoSemCategoria)
-                            <button type="button" class="btn btn-my-success w-60 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalAlterarCategoria">
-                                {{ __('Alterar Categoria') }}
-                            </button>
-                        @endif
                     </div>
                     <br>
 
@@ -148,6 +143,10 @@
                         @elseif(!$InscritoSemCategoria)
                             <a href="{{ route('checkout.telaPagamento', $evento) }}"
                                     class="text-center mt-2 w-100">{{ __('Realizar pagamento') }}</a>
+                            
+                            <a href="#" class="ms-3" data-bs-toggle="modal" data-bs-target="#modalAlterarCategoria">
+                                {{ __('Alterar categoria') }}
+                            </a>
                         @endif
                     @endisset
                 @endif
