@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Trabalho</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

@@ -34,6 +34,7 @@ class PerfilIdentitario extends Model
 
     protected $casts = [
         'necessidadesEspeciais' => 'array',
+        'raca' => 'array',
     ];
 
 
@@ -43,7 +44,7 @@ class PerfilIdentitario extends Model
         $this->dataNascimento = $data['dataNascimento'];
         $this->genero = $data['genero'];
         $this->outroGenero = $data['outroGenero'];
-        $this->raca = $data['raca'];
+        $this->raca = !empty($data['raca']) ? $data['raca'] : [];
         $this->outraRaca = $data['outraRaca'];
         $this->comunidadeTradicional = $data['comunidadeTradicional'];
         $this->nomeComunidadeTradicional = $data['nomeComunidadeTradicional'];
