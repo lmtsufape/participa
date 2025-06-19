@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    //
+
     public function perfil($pais = null)
     {
         $user = User::find(Auth::user()->id);
@@ -44,11 +44,16 @@ class UserController extends Controller
             ->where('userId', $user->id)
             ->first();
 
+        if ($user->usuarioTemp) {
+            app()->setLocale('pt-BR');
+        }
+
         return view('user.perfilUser', compact('user', 'end', 'areas', 'pais', 'perfilIdentitario'));
     }
 
     public function editarPerfil(Request $request)
     {
+
 
         if ($request->passaporte != null && $request->cpf != null ||
             $request->passaporte != null && $request->cnpj != null ) {
@@ -62,6 +67,10 @@ class UserController extends Controller
         }
 
         $user = User::find($request->id);
+
+        $temp = $user->usuarioTemp;
+
+
         $validations = [
             'name' => 'required|string|max:255',
             'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf'] : 'nullable'),
@@ -89,10 +98,6 @@ class UserController extends Controller
             $validations['bairro'] = ['nullable', 'string'];
             $validations['cep'] = ['nullable', 'string'];
         }
-        if ($user->usuarioTemp) {
-            $validations['password'] = 'required|string|min:8|confirmed';
-            $validations['email'] = '';
-        }
         $validator = $request->validate($validations);
 
         if ($request->senha_atual != null) {
@@ -117,9 +122,6 @@ class UserController extends Controller
             $user->password = $password;
         }
 
-        if ($user->usuarioTemp) {
-            $user->password = Hash::make($request->password);
-        }
 
         if ($user->email != $request->email && !$user->usuarioTemp) {
             $check_user_email = User::where('email', $request->email)->first();
@@ -158,10 +160,20 @@ class UserController extends Controller
             ->where('userId', $user->id)
             ->first();
 
-        $perfilIdentitario->editAttributes($data);
-        $perfilIdentitario->save();
+        if ($perfilIdentitario == null) {
+            $perfilIdentitario = new PerfilIdentitario();
+            $perfilIdentitario->userId = $user->id;
+            $perfilIdentitario->setAttributes($data);
+            $perfilIdentitario->save();
+        }
+        else{
+            $perfilIdentitario->editAttributes($data);
+            $perfilIdentitario->save();
+        }
 
-        app()->setLocale('pt-BR');
+        if($temp){
+            return redirect()->route('index')->with(['message' => 'Perfil atualizado com sucesso!']);
+        }
 
         return back()->with(['message' => 'Atualizado com sucesso!']);
     }
