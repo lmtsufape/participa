@@ -21,7 +21,7 @@
                                     <th>Especialidade</th>
                                     <th>Celular</th>
                                     <th>E-mail</th>
-                                    <th>Direção</th>
+                                    <th>Função</th>
                                     <th style="text-align:center">Remover</th>
                                 </th>
                             </thead>
@@ -57,9 +57,18 @@
                                           <td>{{$user->celular}}</td>
                                           <td>{{$user->email}}</td>
                                           <td>
-                                            @if($evento->userIsCoordComissaoCientifica($user))
-                                                Coordenador
-                                            @endif
+                                              @if($evento->userIsCoordComissaoCientifica($user))
+                                                  Coordenador(a) da Comissão
+                                              @elseif($user->eixosCoordenados->isNotEmpty())
+                                                  Coordenador(a) de Eixo:
+                                                  <ul class="list-unstyled mb-0 ps-3">
+                                                      @foreach($user->eixosCoordenados as $eixoNome)
+                                                          <li><small>- {{ $eixoNome }}</small></li>
+                                                      @endforeach
+                                                  </ul>
+                                              @else
+                                                  Membro da Comissão
+                                              @endif
                                           </td>
                                           <td style="text-align:center">
                                             <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao', ['id' => $user->id])}}" method="POST">

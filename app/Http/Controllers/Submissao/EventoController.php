@@ -504,13 +504,24 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
 
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        
         $users = $evento->usuariosDaComissao;
+
+        foreach ($users as $user) {
+            $eixos = CoordEixoTematico::where('evento_id', $evento->id)
+                                        ->where('user_id', $user->id)
+                                        ->with('area')
+                                        ->get();
+                                        
+            $user->eixosCoordenados = $eixos->pluck('area.nome');
+        }
 
         return view('coordenador.comissao.listarComissao', [
             'evento' => $evento,
             'users' => $users,
         ]);
     }
+
 
     public function exportInscritos(Evento $evento, Request $request)
     {
