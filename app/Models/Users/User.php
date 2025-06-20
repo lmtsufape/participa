@@ -52,6 +52,24 @@ class User extends Authenticatable
         'deleted_at' => 'datetime',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function (User $user) {
+            if ($user->isForceDeleting()) {
+                $user->inscricaos()->forceDelete();
+            }
+            else {
+                $user->inscricaos()->delete();
+            }
+        });
+
+        static::restoring(function (User $user) {
+            $user->inscricaos()->withTrashed()->restore();
+        });
+    }
+
     public function comissaoEvento()
     {
         return $this->hasMany(ComissaoEvento::class);
