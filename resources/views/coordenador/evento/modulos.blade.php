@@ -179,6 +179,21 @@
                             @enderror
                         </div>
 
+                        <div class="col-sm-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" @if($modulos->modinscritonaplataforma) checked @endif name="modinscritonaplataforma" id="modinscritonaplataforma" value="1">
+                                <label class="form-check-label" for="modinscritonaplataforma">
+                                    Co-autores precisam estar cadastrados na plataforma
+                                </label>
+                            </div>
+
+                            @error('modinscritonaplataforma')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+
                     </div>{{-- end row--}}
 
                     </p>

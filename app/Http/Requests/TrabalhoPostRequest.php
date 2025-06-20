@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Modalidade;
+use App\Rules\CoautorCadastrado;
 use App\Rules\CoautorInscritoNoEvento;
 use App\Rules\FileType;
 use App\Rules\MaxTrabalhosCoautor;
@@ -53,7 +54,7 @@ class TrabalhoPostRequest extends FormRequest
             'resumo_en' => ['nullable', 'string'],
             'nomeCoautor.*' => ['string'],
             'emailCoautor' => [new MaxCoautoresNaModalidade($modalidade)],
-            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores), 'email', 'exists:users,email', new CoautorInscritoNoEvento($evento)],
+            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores), new CoautorInscritoNoEvento($evento), new CoautorCadastrado($evento)],
             'arquivo' => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
@@ -93,7 +94,6 @@ class TrabalhoPostRequest extends FormRequest
     {
         return [
             'arquivo.max' => 'O tamanho máximo permitido é de 2mb',
-            'emailCoautor.*.exists' => 'O usuário com o e-mail :input precisa estar cadastrado no sistema.',
         ];
     }
 

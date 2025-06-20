@@ -211,6 +211,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('revisores/listarCandidatos/{evento}', [CandidatoAvaliadorController::class, 'listarCandidatos'])->name('candidatoAvaliador.listarCandidatos');
             Route::put('candidaturas/{candidato}/aprovar', [CandidatoAvaliadorController::class, 'aprovar'])->name('candidaturas.aprovar');
             Route::post('candidaturas/{candidato}/rejeitar', [CandidatoAvaliadorController::class, 'rejeitar'])->name('candidaturas.rejeitar');
+            Route::get('/{evento}/candidatos/exportar', [CandidatoAvaliadorController::class, 'exportar'])->name('candidatos.exportar');
 
             // Regristros de memória
             Route::get('/{evento}/memoria/create', [MemoriaController::class, 'create'])->name('memoria.create');
@@ -449,6 +450,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::post('/inscricoes/campo-excluir/{id}', [CampoFormularioController::class, 'destroy'])->name('campo.destroy');
     Route::post('inscricoes/editar-campo/{id}', [CampoFormularioController::class, 'update'])->name('campo.edit');
     Route::post('/inscricoes/inscreverParticipante', [InscricaoController::class, 'inscreverParticipante'])->name('inscricao.inscreverParticipante');
+    Route::put('/inscricoes/{inscricao}/alterar-categoria', [InscricaoController::class, 'alterarCategoria'])->name('inscricao.alterarCategoria');
+
     // Checkout
     Route::prefix('checkout')->name('checkout.')->group(function () {
         Route::get('/tela-pagamento/{evento}', [CheckoutController::class, 'telaPagamento'])->name('telaPagamento');

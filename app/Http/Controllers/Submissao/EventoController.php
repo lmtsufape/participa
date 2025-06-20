@@ -104,6 +104,10 @@ class EventoController extends Controller
             'revisors as revisores_count' => fn ($query) => $query->select(DB::raw('count(distinct user_id)')),
             'usuariosDaComissao as comissao_cientifica_count',
             'usuariosDaComissaoOrganizadora as comissao_organizadora_count',
+            'candidatosAvaliadores as candidaturas_count' => fn($query) => $query->select(DB::raw('count(distinct user_id)')),
+            'candidatosAvaliadores as candidaturas_aprovadas_count' => fn($query) => $query->where('aprovado', true)->select(DB::raw('count(distinct user_id)')),
+            'candidatosAvaliadores as candidaturas_pendentes_count' => fn($query) => $query->where('em_analise', true)->select(DB::raw('count(distinct user_id)')),
+            'candidatosAvaliadores as candidaturas_rejeitadas_count' => fn($query) => $query->where('aprovado', false)->where('em_analise', false)->select(DB::raw('count(distinct user_id)')),
         ]);
 
         return view('coordenador.informacoes', [
@@ -500,13 +504,24 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
 
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        
         $users = $evento->usuariosDaComissao;
+
+        foreach ($users as $user) {
+            $eixos = CoordEixoTematico::where('evento_id', $evento->id)
+                                        ->where('user_id', $user->id)
+                                        ->with('area')
+                                        ->get();
+                                        
+            $user->eixosCoordenados = $eixos->pluck('area.nome');
+        }
 
         return view('coordenador.comissao.listarComissao', [
             'evento' => $evento,
             'users' => $users,
         ]);
     }
+
 
     public function exportInscritos(Evento $evento, Request $request)
     {
@@ -564,11 +579,11 @@ class EventoController extends Controller
     public function downloadTrabalhosAprovadosPDF(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-        
+
         $modalidades = Modalidade::where('evento_id', $evento->id)
             ->orderBy('nome')
             ->get();
-            
+
         $trabalhosPorModalidade = collect();
         foreach ($modalidades as $modalidade) {
             $trabalhos = Trabalho::where([
@@ -577,7 +592,7 @@ class EventoController extends Controller
             ])
             ->orderBy('titulo')
             ->get();
-            
+
             if ($trabalhos->isNotEmpty()) {
                 $trabalhosPorModalidade->push($trabalhos);
             }
@@ -1499,6 +1514,7 @@ class EventoController extends Controller
             $qry = Inscricao::where('user_id', Auth()->user()->id)->where('evento_id', $evento->id);
             $inscricao = $qry->first();
             $isInscrito = $qry->count();
+            $InscritoSemCategoria = $inscricao? $inscricao->categoria_participante_id == null : false;
 
             $jaCandidatou = CandidatoAvaliador::where('evento_id', $evento->id)
                 ->where('user_id', Auth::user()->id)
@@ -1530,7 +1546,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;

@@ -167,6 +167,7 @@
     "Subeventos": "Subeventos",
     "Memória": "Memoria",
     "usuarioInscritoNoEvento": "El usuario con correo electrónico :input debe estar inscrito en el evento",
+    "usuarioCadastradoNaPlataforma": "El usuario con correo electrónico :input debe estar registrado en la plataforma",
     "Em destaque neste momento": "Destacado en este momento",
     "Vistos recentemente": "Vistos recientemente",
     "Ver todos:": "Ver todos:",
@@ -339,5 +340,7 @@
   "Realize sua pré-inscrição aqui!": "¡Realiza tu preinscripción aquí!",
   "Encerradas!": "¡Cerradas!",
   "Pré-inscrito!": "¡Preinscrito!",
-  "Já inscrito!": "¡Ya inscrito!"
+  "Já inscrito!": "¡Ya inscrito!",
+  "Canal de suporte": "Canal de soporte",
+  "Link do contato de suporte": "Enlace de contacto de soporte"
   }

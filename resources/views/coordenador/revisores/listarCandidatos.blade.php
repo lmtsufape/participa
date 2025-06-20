@@ -18,11 +18,15 @@
                         <h5 class="card-title">Candidatos</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Lista de candidatos a avaliadores para o evento</h6>
                     </div>
+                    <div>
+                        <a href="{{ route('coord.candidatos.exportar', $evento) }}" class="btn btn-primary">Exportar .xlsx</a>
+                    </div>
                   </div>
                   <p class="card-text">
                     <table class="table table-hover table-responsive-lg table-sm">
                         <thead>
                           <tr>
+                            <th scope="col">#</th>
                             <th scope="col">Nome</th>
                             <th scope="col">E-mail</th>
                               <th scope="col">Modalidade</th>
@@ -35,6 +39,7 @@
 
                         @foreach($candidaturas  as $candidatura)
                             <tr>
+                              <td>{{$loop->iteration}}</td>  
                               <td>{{$candidatura->user->name}}</td>
                               <td>{{$candidatura->user->email}}</td>
                               <td class="text-center">
