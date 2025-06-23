@@ -31,15 +31,30 @@ class PreRegistroController extends Controller
         ];
 
         if ($request->filled('cpf')) {
-            $rules['cpf'] = 'required|string|unique:users,cpf';
+            $rules['cpf'] = 'required|string';
+            // Verifica se existe um usuário ativo com esse CPF
+            $userCpfAtivo = User::where('cpf', $request->cpf)->whereNull('deleted_at')->first();
+            if ($userCpfAtivo) {
+                return back()->withErrors(['cpf' => 'Este CPF já está cadastrado no sistema.']);
+            }
             $messages['cpf.unique'] = 'Este CPF já está cadastrado no sistema.';
         } elseif ($request->filled('cnpj')) {
-            $rules['cnpj'] = 'required|string|unique:users,cnpj';
+            $rules['cnpj'] = 'required|string';
+            // Verifica se existe um usuário ativo com esse CNPJ
+            $userCnpjAtivo = User::where('cnpj', $request->cnpj)->whereNull('deleted_at')->first();
+            if ($userCnpjAtivo) {
+                return back()->withErrors(['cnpj' => 'Este CNPJ já está cadastrado no sistema.']);
+            }
             $messages['cnpj.unique'] = 'Este CNPJ já está cadastrado no sistema.';
         } elseif ($request->filled('passaporte')) {
-            $rules['passaporte'] = 'required|string|min:6|max:9|regex:/^[A-Za-z0-9]{6,9}$/|unique:users,passaporte';
-            $messages['passaporte.unique'] = 'Este passaporte já está cadastrado no sistema.';
+            $rules['passaporte'] = 'required|string|min:6|max:9|regex:/^[A-Za-z0-9]{6,9}$/';
             $messages['passaporte.regex'] = 'O passaporte deve conter apenas letras e números (sem símbolos) e ter entre 6 e 9 caracteres.';
+            // Verifica se existe um usuário ativo com esse passaporte
+            $userPassaporteAtivo = User::where('passaporte', $request->passaporte)->whereNull('deleted_at')->first();
+            if ($userPassaporteAtivo) {
+                return back()->withErrors(['passaporte' => 'Este passaporte já está cadastrado no sistema.']);
+            }
+            $messages['passaporte.unique'] = 'Este passaporte já está cadastrado no sistema.';
         }
 
         $request->validate($rules, $messages);
