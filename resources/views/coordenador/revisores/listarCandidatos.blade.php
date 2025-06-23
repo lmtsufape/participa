@@ -29,6 +29,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Nome</th>
                             <th scope="col">E-mail</th>
+                              <th scope="col">Modalidade</th>
                             <th scope="col" style="text-align:center">Status</th>
                             <th scope="col" style="text-align:center">Ações</th>
                           </tr>
