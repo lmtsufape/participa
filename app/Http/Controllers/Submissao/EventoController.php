@@ -177,7 +177,7 @@ class EventoController extends Controller
             $coautoresSemCpf = $trabalho->coautors()->whereHas('user', function($user) {
                 return $user->whereNull('cpf')->orWhere('cpf', '');
             })->with('user')->get();
-    
+
             if ($coautoresSemCpf->isNotEmpty()) {
                 $coautoresSemCpfPorTrabalho->put($trabalho->titulo, $coautoresSemCpf);
             }

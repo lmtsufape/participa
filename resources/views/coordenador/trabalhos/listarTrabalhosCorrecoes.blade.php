@@ -145,7 +145,7 @@
                                                 <td class="text-center">{{$trabalho->lembrete_enviado ? 'Sim' : 'Não'}}</td>
 
                                                 <td class="text-center">
-                                                    @switch($trabalho->aprovado)
+                                                    @switch($trabalho->avaliado)
                                                         @case('corrigido')
                                                             Finalizado: aprovado completamente
                                                             @break
