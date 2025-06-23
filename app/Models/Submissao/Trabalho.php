@@ -6,6 +6,7 @@ use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Trabalho extends Model
 {
@@ -77,6 +78,19 @@ class Trabalho extends Model
     public function evento()
     {
         return $this->belongsTo('App\Models\Submissao\Evento', 'eventoId');
+    }
+
+    public function userRevisorTrabalho(): ?Revisor
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return null;
+        }
+
+        return $this->atribuicoes()
+                    ->where('user_id', $user->id)
+                    ->first();
     }
 
     public function avaliacoes()

@@ -416,6 +416,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::post('revisores/resposta/salvar', [RevisorController::class, 'salvarRespostas'])->name('revisor.salvar.respostas');
         Route::post('revisores/resposta/editar', [RevisorController::class, 'editarRespostasFormulario'])->name('revisor.editar.respostas');
         Route::post('/reenviaremail/revisor/{id}/{evento_id}', [RevisorController::class, 'reenviarEmailRevisor'])->name('revisor.reenviarEmail');
+        Route::put('revisores/correcao/{trabalho_id}', [RevisorController::class, 'verificarCorrecao'])->name('revisor.verificarCorrecao');
     });
     // Visualizar trabalhos do usuário
     Route::get('/user/trabalhos', [UserController::class, 'meusTrabalhos'])->name('user.meusTrabalhos');
