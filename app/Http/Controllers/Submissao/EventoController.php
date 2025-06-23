@@ -110,6 +110,8 @@ class EventoController extends Controller
             'candidatosAvaliadores as candidaturas_rejeitadas_count' => fn($query) => $query->where('aprovado', false)->where('em_analise', false)->select(DB::raw('count(distinct user_id)')),
         ]);
 
+        $evento->total_arrecadado = $evento->inscricaos()->where('finalizada', true)->with('categoria')->get()->sum(fn($inscricao) => $inscricao->categoria->valor_total ?? 0);
+
         return view('coordenador.informacoes', [
             'evento' => $evento,
         ]);
@@ -531,6 +533,15 @@ class EventoController extends Controller
             'Content-Type' => 'text/csv',
         ]);
     }
+
+    public function exportarInscritosXLSX(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        $nomeArquivo = Str::slug($evento->nome) . '-inscritos.xlsx';
+
+        return Excel::download(new InscritosExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
+    }
+    
 
     public function exportInscritosCertifica(Evento $evento, Request $request)
     {
