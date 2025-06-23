@@ -137,7 +137,8 @@
                                 <th scope="col" style="text-align:center">Resumo</th>
                                 <th scope="col" style="text-align:center">Baixar</th>
                                 {{-- <th scope="col">Avaliar</th> --}}
-                                <th scope="col" style="text-align:center">Questionário</th>
+                                <th scope="col" style="text-align:center">Avaliação do trabalho</th>
+                                <th scope="col" style="text-align:center">Validação das correções</th>
                                 <th scope="col" style="text-align:center">Atribuído em</th>
                                 </tr>
                             </thead>
@@ -193,13 +194,26 @@
                                         <div class="d-flex justify-content-center">
                                             <td style="text-align:center">
                                                 <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Trabalho já avaliado">
+                                                <a href="{{route('user.visualizarParecer', ['eventoId' => $trabalho->eventoId, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'id' => $trabalho->id, 'revisorId' => $trabalho->userRevisorTrabalho()])}}">
+                                                    <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
+                                                </a>
                                             </td>
                                         </div>
                                     @endif
-                                    <td style="text-align:center">
-                                        {{date('d/m/Y H:i',strtotime($trabalho->atribuicoes->first()->pivot->created_at))}}
-                                    </td>
-                                </tr>
+                                        <td class="d-flex flex-column align-items-center">
+                                            @if ($trabalho->arquivoCorrecao != null)
+                                                <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
+                                                <a type="button" data-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-toggle="modal" class="btn btn-sm btn-primary mt-2">
+                                                    Fazer validação
+                                                </a>
+
+                                            @endif
+                                        </td>
+                                        <td style="text-align:center">
+                                            {{date('d/m/Y H:i',strtotime($trabalho->atribuicoes->first()->pivot->created_at))}}
+                                        </td>
+                                    </tr>
+                                    @include('revisor.validarCorrecao-modal')
                             @endforeach
                             </table>
                         </p>
