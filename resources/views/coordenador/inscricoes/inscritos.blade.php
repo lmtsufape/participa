@@ -49,8 +49,8 @@
                                 @endif
                                 <th>Nome</th>
                                 <th>Email</th>
+                                <th>Categoria</th>
                                 <th scope="col">Valor</th>
-                                <th scope="col">Isento</th>
                                 <th>Status</th>
                                 <th>Aprovada</th>
                                 <th></th>
@@ -65,8 +65,8 @@
                                     @endif
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->name}}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->email}}</td>
-                                    <td>R$ {{ $inscricao->categoria ? number_format($inscricao->categoria->valor_total, 2, ',', '.') : 'N/A' }}</td>
-                                    <td>{{ $inscricao->categoria && $inscricao->categoria->valor_total == 0 ? 'Sim' : 'Não' }}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->categoria->nome}}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">R$ {{ $inscricao->categoria ? number_format($inscricao->categoria->valor_total, 2, ',', '.') : 'N/A' }}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">
                                         @if($inscricao->finalizada == true)
                                             Inscrito
@@ -103,10 +103,6 @@
                     <div class="col-md-4">
                         <label class="text-center">Valor da Inscrição</label>
                         <input type="text" class="form-control" value="R$ {{ number_format($inscricao->categoria->valor_total, 2, ',', '.') }}" disabled>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="text-center">Isento</label>
-                        <input type="text" class="form-control" value="{{ $inscricao->categoria->valor_total == 0 ? 'Sim' : 'Não' }}" disabled>
                     </div>
                 </div>
                 @endif

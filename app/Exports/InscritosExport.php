@@ -3,6 +3,8 @@
 namespace App\Exports;
 
 use App\Models\Submissao\Evento;
+use App\Models\PerfilIdentitario;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -30,28 +32,11 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         $camposBase = [
-            '#',
-            'Evento/Subevento',
-            'Nome',
-            'E-mail',
-            'Instituição',
-            'Celular',
-            'CPF',
-            'Passaporte',
-            'Especialização Profissional',
-            'Rua',
-            'Número',
-            'Bairro',
-            'Cidade',
-            'Estado',
-            'CEP',
-            'Complemento',
-            'País',
-            'Status',
-            'Pagamento Confirmado',
-            'Categoria',
-            'Valor (R$)',
-            'Isento',
+            '#', 'Status', 'Pagamento Confirmado', 'Nome Completo', 'Nome Social', 'E-mail', 'CPF/CNPJ/Passaporte',
+            'Data de Nascimento', 'Gênero', 'Raça/Cor', 'Comunidade Tradicional', 'LGBTQIA+', 
+            'Pessoa Idosa ou com Deficiência', 'Necessidades Especiais', 'Associado à ABA',
+            'Instituição', 'Celular', 'País', 'Estado', 'Cidade', 'Bairro', 'Rua', 'Número', 'CEP', 'Complemento',
+            'Categoria', 'Valor (R$)',
         ];
 
         $camposExtras = $this->evento->camposFormulario()->pluck('titulo')->all();
@@ -65,32 +50,47 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
      */
     public function map($inscricao): array
     {
-        $valor = $inscricao->categoria ? number_format($inscricao->categoria->valor_total, 2, ',', '.') : 'N/A';
-        $isento = $inscricao->categoria && $inscricao->categoria->valor_total == 0 ? 'Sim' : 'Não';
-        
+        $user = $inscricao->user;
+        $categoria = $inscricao->categoria;
+
+        $perfil = PerfilIdentitario::where('userId', $user->id)->first();
+
+        $valor = $categoria ? number_format($categoria->valor_total, 2, ',', '.') : 'N/A';
+        $documento = $user->cpf ?? ($user->cnpj ?? $user->passaporte);
+        $genero = ($perfil->genero ?? '') === 'outro' ? $perfil->outroGenero : ucfirst($perfil->genero ?? '');
+        $raca = is_array($perfil->raca ?? []) ? implode(', ', array_map('ucfirst', str_replace('_', ' ', $perfil->raca))) : '';
+        if (str_contains($raca, 'Outra raca')) {
+            $raca = 'Outra: ' . $perfil->outraRaca;
+        }
+
         $valoresBase = [
             $inscricao->id,
-            $inscricao->evento->nome,
-            $inscricao->user->name,
-            $inscricao->user->email,
-            $inscricao->user->instituicao,
-            $inscricao->user->celular,
-            $inscricao->user->cpf,
-            $inscricao->user->passaporte,
-            $inscricao->user->especProfissional,
-            $inscricao->user->endereco ? $inscricao->user->endereco->rua : '',
-            $inscricao->user->endereco ? $inscricao->user->endereco->numero : '',
-            $inscricao->user->endereco ? $inscricao->user->endereco->bairro : '',
-            $inscricao->user->endereco ? $inscricao->user->endereco->cidade : '',
-            $inscricao->user->endereco ? $inscricao->user->endereco->uf : '',
-            $inscricao->user->endereco ? $inscricao->user->endereco->cep : '',
-            $inscricao->user->endereco ? $inscricao->user->endereco->complemento : '',
-            $inscricao->user->endereco ? $inscricao->user->endereco->pais : '',
             $inscricao->finalizada ? 'Inscrito' : 'Pré-inscrito',
             $inscricao->finalizada ? 'Sim' : 'Não',
-            $inscricao->categoria->nome ?? 'Não definida',
+            $user->name,
+            $perfil->nomeSocial ?? '',
+            $user->email,
+            $documento,
+            $perfil && $perfil->dataNascimento ? Carbon::parse($perfil->dataNascimento)->format('d/m/Y') : '',
+            $genero,
+            $raca,
+            ($perfil->comunidadeTradicional ?? false) ? $perfil->nomeComunidadeTradicional : 'Não',
+            ($perfil->lgbtqia ?? false) ? 'Sim' : 'Não',
+            ($perfil->deficienciaIdoso ?? false) ? 'Sim' : 'Não',
+            is_array($perfil->necessidadesEspeciais ?? []) ? implode(', ', $perfil->necessidadesEspeciais) : '',
+            ($perfil->associadoAba ?? false) ? 'Sim' : 'Não',
+            $user->instituicao,
+            $user->celular,
+            $user->endereco->pais ?? '',
+            $user->endereco->uf ?? '',
+            $user->endereco->cidade ?? '',
+            $user->endereco->bairro ?? '',
+            $user->endereco->rua ?? '',
+            $user->endereco->numero ?? '',
+            $user->endereco->cep ?? '',
+            $user->endereco->complemento ?? '',
+            $categoria->nome ?? 'Não definida',
             $valor,
-            $isento,
         ];
         
         $camposExtrasValores = [];
